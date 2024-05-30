@@ -1,0 +1,66 @@
+<app-feature-background />
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <app-feature-header
+        title="Expense types"
+        help="Here you can manage your expense types, helping to keep track of your expenses."
+        [isBackAvailable]="true"
+      ></app-feature-header>
+      <div class="dashboard-card">
+        <app-feature-search
+          [addButton]="true"
+          route="expense-type/v2"
+          [page]="page"
+          [enable]="false"
+          (onChange)="onUpdateData($event)"
+          (onLoadingChange)="onUpdateLoadingStatus($event)"
+          (updatePage)="onUpdatePage()"
+          (onNewQuery)="page = 1"
+        ></app-feature-search>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of dataSource">
+                <td (click)="openDialog('children', item.id)">
+                  {{ item.name }}
+                </td>
+                <td (click)="openDialog('children', item.id)">
+                  {{ item.description }}
+                </td>
+                <td>
+                  <button mat-icon-button [matMenuTriggerFor]="menu">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <button
+                      mat-menu-item
+                      (click)="openDialog('update', item.id)"
+                    >
+                      <mat-icon>edit</mat-icon>
+                      <span>Edit</span>
+                    </button>
+                    <button
+                      mat-menu-item
+                      (click)="openDialog('delete', item.id)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                      <span>Delete</span>
+                    </button>
+                  </mat-menu>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

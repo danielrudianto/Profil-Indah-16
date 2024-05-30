@@ -1,0 +1,13 @@
+<app-feature-background />
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <app-transaction-header
+        title="Deposit"
+        help="Here you can manage your customers data."
+        [availbleMenus]="availableMenus"
+      ></app-transaction-header>
+      <router-outlet />
+    </div>
+  </div>
+</div>

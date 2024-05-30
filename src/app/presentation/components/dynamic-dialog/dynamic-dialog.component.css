@@ -1,0 +1,21 @@
+.dynamic__wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  opacity: 0;
+}
+
+.dynamic__background {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.5;
+}
+
+.dynamic__content {
+  z-index: 21;
+  width: 300px;
+}

@@ -1,0 +1,67 @@
+<mat-drawer-container class="h-100">
+  <mat-drawer [mode]="drawerMode" [opened]="isDrawerOpened" class="sidenav">
+    <mat-nav-list class="sidenav__menu-wrapper">
+      <div mat-subheader>Frequently Used</div>
+      <mat-list-item
+        [routerLink]="['/Purchasing/Stock']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Stock Level</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Purchasing/Good-receipt']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Goods Receipt</div>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      <div mat-subheader>Master Data</div>
+      <mat-list-item
+        [routerLink]="['/Purchasing/Product']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Products</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Purchasing/Product-brand']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Brands</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Purchasing/Product-type']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Types</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Purchasing/Package']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Package</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Purchasing/Supplier']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Supplier</div>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-drawer>
+  <mat-drawer-content>
+    <app-topbar
+      [hidden]="isHidden"
+      [name]="name"
+      [menuButtonAvailable]="isMenuButtonAvailable"
+      (onMenuButtonClicked)="clickMenuButton()"
+    />
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

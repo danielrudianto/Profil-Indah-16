@@ -1,0 +1,76 @@
+<mat-drawer-container class="h-100">
+  <mat-drawer [mode]="drawerMode" [opened]="isDrawerOpened" class="sidenav">
+    <mat-nav-list class="sidenav__menu-wrapper">
+      <div mat-subheader>Frequently Used</div>
+      <mat-list-item
+        [routerLink]="['/Sales/Stock']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Stock Level</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Sales/Sales-invoice']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Sales</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Sales/Deposit']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Deposit</div>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      <div mat-subheader>Master Data</div>
+      <mat-list-item
+        [routerLink]="['/Sales/Customer']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Customer</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Sales/Package']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Package</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Sales/Price']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Price</div>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      <div mat-subheader>Implementations</div>
+      <mat-list-item
+        [routerLink]="['/Sales/Sales-return']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Sales return</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Sales/Receivable']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Receivable</div>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-drawer>
+  <mat-drawer-content>
+    <app-topbar
+      [hidden]="isHidden"
+      [name]="name"
+      [menuButtonAvailable]="isMenuButtonAvailable"
+      (onMenuButtonClicked)="clickMenuButton()"
+    />
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

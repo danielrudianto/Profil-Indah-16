@@ -1,0 +1,15 @@
+.sidenav {
+  height: 100%;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidenav__menu-wrapper {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.active {
+  background-color: #f0f0f0;
+}

@@ -1,0 +1,73 @@
+<app-archives
+  [@slideInOutAnimation]="mode == 0 ? 'in' : 'out'"
+  route="purchase-invoice"
+  (onMonthSelected)="onMonthSelected($event)"
+/>
+
+<div class="container" [@slideInOutAnimation]="mode == 1 ? 'in' : 'out'">
+  <div class="row">
+    <div class="col-12">
+      <div class="dashboard-card">
+        <app-archive-search
+          [isFilterAvailable]="true"
+          (onQueryChanged)="onQueryChanged($event)"
+          (onFilterButtonClicked)="openFilter()"
+        />
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 250px">Date</th>
+                <th style="width: 250px">Name</th>
+                <th style="width: 250px">Company</th>
+                <th style="width: 250px">Good Receipt Name</th>
+                <th style="width: 250px">Tax Invoice</th>
+                <th style="width: 250px">Supplier</th>
+                <th style="width: 100px">Status</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="isLoading">
+              <tr>
+                <td colspan="6">
+                  <mat-spinner id="spinner"></mat-spinner>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length == 0">
+              <tr>
+                <td colspan="6">
+                  <empty-table />
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length > 0">
+              <tr
+                *ngFor="let item of dataSource; index as i"
+                (click)="viewArchive(item.id)"
+              >
+                <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.company_name }}</td>
+                <td>{{ item.good_receipt_name }}</td>
+                <td>{{ item.faktur == null ? "N/A" : item.faktur }}</td>
+                <td>{{ item.supplier_name }}</td>
+                <td>{{ item.is_delete ? "Deleted" : "Active" }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="paginator__wrapper">
+          <button class="action-button p-relative" (click)="backToYear()">
+            Back to previous
+          </button>
+          <mat-paginator
+            [length]="dataCount"
+            [pageSize]="20"
+            [pageIndex]="page - 1"
+            (page)="changePage($event)"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

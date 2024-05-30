@@ -1,0 +1,84 @@
+<app-feature-background />
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <app-feature-header
+        title="Promotion"
+        help="Here you can manage your current and past promotion."
+        [isBackAvailable]="true"
+      ></app-feature-header>
+      <div class="dashboard-card">
+        <app-feature-search
+          [addButton]="true"
+          route="promotion"
+          [page]="page"
+          [enable]="true"
+          (onChange)="onUpdateData($event)"
+          (onLoadingChange)="onUpdateLoadingStatus($event)"
+          (updatePage)="onUpdatePage()"
+          (onNewQuery)="page = 1"
+        ></app-feature-search>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 150px">Name</th>
+                <th style="width: 300px">Description</th>
+                <th style="width: 200px">Supplier</th>
+                <th style="width: 150px">Start date</th>
+                <th style="width: 150px">End date</th>
+                <th style="width: 150px">Brand</th>
+                <th>Target</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="isLoading">
+              <tr>
+                <td colspan="8">
+                  <mat-spinner id="spinner"></mat-spinner>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length == 0">
+              <tr>
+                <td colspan="8">No data</td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length > 0">
+              <tr
+                *ngFor="let data of dataSource; index as i"
+                (click)="viewPromotion(i)"
+              >
+                <td>{{ data.name }}</td>
+                <td>{{ data.description }}</td>
+                <td>{{ data.supplier }}</td>
+                <td>{{ data.start | date : "dd/MM/yyyy" }}</td>
+                <td>
+                  {{
+                    data.end == null
+                      ? "Continuous"
+                      : (data.end | date : "dd/MM/yyyy")
+                  }}
+                </td>
+                <td>{{ data.brand }}</td>
+                <td>{{ data.target | number }}</td>
+                <td>{{ data.status }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <mat-paginator
+          class="paginator"
+          [pageIndex]="page - 1"
+          [length]="dataCount"
+          [pageSize]="10"
+          (page)="changePage($event)"
+          aria-label="Select page"
+          hidePageSize="true"
+          *ngIf="!isLoading"
+        >
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

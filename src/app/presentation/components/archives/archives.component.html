@@ -1,0 +1,20 @@
+<div *ngFor="let year of years" class="archive__year-wrapper">
+  <h1>{{ year }}</h1>
+  <mat-divider class="mb-3" />
+  <mat-grid-list
+    [cols]="columnNumber"
+    [rowHeight]="aspectRatio"
+    gutterSize="20px"
+  >
+    <mat-grid-tile *ngFor="let month of monthData(year)">
+      <app-archive-card
+        (click)="selectMonth(year, month.month)"
+        class="w-100 h-100 p-2"
+        title="{{
+          getDateFromMonthYear(month.month - 1, year) | date : 'MMMM YYYY'
+        }}"
+        [count]="month.count"
+      />
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>

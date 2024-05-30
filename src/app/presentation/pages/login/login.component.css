@@ -1,0 +1,114 @@
+.header__bar {
+  background: linear-gradient(
+    139deg,
+    #0d47a1,
+    #3772b2,
+    #7f8c8d,
+    #a14c9b,
+    #fb8817,
+    #ff4b01
+  );
+  width: 100%;
+  height: 10px;
+  margin-bottom: 30px;
+}
+
+.avatar__wrapper__border {
+  width: 205px;
+  height: 205px;
+  background-color: #0d47a1;
+  position: relative;
+  border-radius: 50%;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+.avatar__wrapper {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: aliceblue;
+  position: relative;
+  object-fit: contain;
+  margin-left: 50%;
+  margin-top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.avatar__bear {
+  position: absolute;
+  height: 200px;
+  width: 200px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.avatar__wrapper .avatar__body {
+  position: absolute;
+  top: 55%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  object-fit: contain;
+}
+
+.avatar__wrapper .avatar__body img {
+  width: 80%;
+  margin-bottom: -70px;
+  animation-name: bodyAnimation;
+  animation-duration: 3s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  object-fit: contain;
+}
+
+@keyframes bodyAnimation {
+  0% {
+    transform: rotate(-15deg);
+    transform-origin: bottom center;
+  }
+  50% {
+    transform: rotate(15deg);
+    transform-origin: bottom center;
+  }
+  100% {
+    transform: rotate(-15deg);
+    transform-origin: bottom center;
+  }
+}
+
+.avatar__wrapper .avatar__eyes {
+  position: absolute;
+  top: 65%;
+  left: 35%;
+  width: 30%;
+  animation-name: eyesAnimation;
+  animation-duration: 3s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.avatar__wrapper .avatar__eyes img {
+  width: 100%;
+}
+
+@keyframes eyesAnimation {
+  0% {
+    transform: rotate(-15deg);
+    transform-origin: center 130%;
+  }
+  50% {
+    transform: rotate(15deg);
+    transform-origin: center 130%;
+  }
+  100% {
+    transform: rotate(-15deg);
+    transform-origin: center 130%;
+  }
+}
+
+h1 {
+    font-family:'Courier New', Courier, monospace;
+    font-weight: 900;
+}

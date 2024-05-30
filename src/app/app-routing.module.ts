@@ -1,0 +1,347 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { LoginComponent } from './presentation/pages/login/login.component';
+import { DashboardComponent } from './presentation/pages/dashboard/dashboard.component';
+import { MainComponent } from './presentation/pages/main/main.component';
+import { AdministratorDashboardComponent } from './presentation/pages/dashboard/administrator-dashboard/administrator-dashboard.component';
+import { ProductComponent } from './presentation/pages/product/product.component';
+import { ProductTypeComponent } from './presentation/pages/product-type/product-type.component';
+import { ProductBrandComponent } from './presentation/pages/product-brand/product-brand.component';
+import { AdministratorComponent } from './presentation/pages/entries/administrator/administrator.component';
+import { PackageComponent } from './presentation/pages/package/package.component';
+import { CustomerComponent } from './presentation/pages/customer/customer.component';
+import { SupplierComponent } from './presentation/pages/supplier/supplier.component';
+import { CompanyComponent } from './presentation/pages/company/company.component';
+import { ExpenseTypeComponent } from './presentation/pages/expense-type/expense-type.component';
+import { UserComponent } from './presentation/pages/user/user.component';
+import { PaymentMethodComponent } from './presentation/pages/payment-method/payment-method.component';
+import { PurchasingComponent } from './presentation/pages/entries/purchasing/purchasing.component';
+import { PurchasingDashboardComponent } from './presentation/pages/dashboard/purchasing-dashboard/purchasing-dashboard.component';
+import { SalesComponent } from './presentation/pages/entries/sales/sales.component';
+import { SalesDashboardComponent } from './presentation/pages/dashboard/sales-dashboard/sales-dashboard.component';
+import { ProfileComponent } from './presentation/pages/entries/profile/profile.component';
+import { SetAvatarComponent } from './presentation/pages/set-avatar/set-avatar.component';
+import { ProfileOverviewComponent } from './presentation/pages/profile-overview/profile-overview.component';
+import { StockListComponent } from './presentation/pages/stock-list/stock-list.component';
+import { GeneralComponent } from './presentation/pages/entries/general/general.component';
+import { GeneralDashboardComponent } from './presentation/pages/dashboard/general-dashboard/general-dashboard.component';
+import { ExpenseComponent } from './presentation/pages/expense/expense.component';
+import { SalesInvoiceComponent } from './presentation/pages/sales-invoice/sales-invoice.component';
+import { SalesInvoiceCreateComponent } from './presentation/pages/sales-invoice/sales-invoice-create/sales-invoice-create.component';
+import { SalesInvoiceArchiveComponent } from './presentation/pages/sales-invoice/sales-invoice-archive/sales-invoice-archive.component';
+import { SalesInvoiceSearchComponent } from './presentation/pages/sales-invoice/sales-invoice-search/sales-invoice-search.component';
+import { AdjustmentCaseComponent } from './presentation/pages/adjustment-case/adjustment-case.component';
+import { AdjustmentCaseCreateComponent } from './presentation/pages/adjustment-case/adjustment-case-create/adjustment-case-create.component';
+import { AdjustmentCaseArchiveComponent } from './presentation/pages/adjustment-case/adjustment-case-archive/adjustment-case-archive.component';
+import { ExpenseCreateComponent } from './presentation/pages/expense/expense-create/expense-create.component';
+import { ExpenseMutationComponent } from './presentation/pages/expense/expense-mutation/expense-mutation.component';
+import { ExpenseReportComponent } from './presentation/pages/expense/expense-report/expense-report.component';
+import { PromotionComponent } from './presentation/pages/promotion/promotion.component';
+import { PurchaseInvoiceComponent } from './presentation/pages/purchase-invoice/purchase-invoice.component';
+import { PurchaseInvoiceCreateComponent } from './presentation/pages/purchase-invoice/purchase-invoice-create/purchase-invoice-create.component';
+import { GoodReceiptComponent } from './presentation/pages/good-receipt/good-receipt.component';
+import { GoodReceiptCreateComponent } from './presentation/pages/good-receipt/good-receipt-create/good-receipt-create.component';
+import { GoodReceiptArchiveComponent } from './presentation/pages/good-receipt/good-receipt-archive/good-receipt-archive.component';
+import { PurchaseInvoiceArchiveComponent } from './presentation/pages/purchase-invoice/purchase-invoice-archive/purchase-invoice-archive.component';
+import { ReceivableComponent } from './presentation/pages/receivable/receivable.component';
+import { DepositComponent } from './presentation/pages/deposit/deposit.component';
+import { DepositListComponent } from './presentation/pages/deposit/deposit-list/deposit-list.component';
+import { DepositArchiveComponent } from './presentation/pages/deposit/deposit-archive/deposit-archive.component';
+import { PurchaseInvoiceConfirmComponent } from './presentation/pages/purchase-invoice/purchase-invoice-confirm/purchase-invoice-confirm.component';
+import { PurchaseInvoiceEditComponent } from './presentation/pages/purchase-invoice/purchase-invoice-edit/purchase-invoice-edit.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: MainComponent,
+    children: [
+      {
+        path: '',
+        component: DashboardComponent,
+      },
+      {
+        path: 'Profile',
+        component: ProfileComponent,
+        children: [
+          {
+            path: '',
+            component: ProfileOverviewComponent,
+          },
+        ],
+      },
+      {
+        path: 'Administrator',
+        component: AdministratorComponent,
+        children: [
+          {
+            path: '',
+            component: AdministratorDashboardComponent,
+          },
+          {
+            path: 'Product',
+            component: ProductComponent,
+          },
+          {
+            path: 'Product-type',
+            component: ProductTypeComponent,
+          },
+          {
+            path: 'Product-brand',
+            component: ProductBrandComponent,
+          },
+          {
+            path: 'Package',
+            component: PackageComponent,
+          },
+          {
+            path: 'Customer',
+            component: CustomerComponent,
+          },
+          {
+            path: 'Supplier',
+            component: SupplierComponent,
+          },
+          {
+            path: 'Company',
+            component: CompanyComponent,
+          },
+          {
+            path: 'User',
+            component: UserComponent,
+          },
+          {
+            path: 'Payment-method',
+            component: PaymentMethodComponent,
+          },
+          {
+            path: 'Expense-type',
+            component: ExpenseTypeComponent,
+          },
+          {
+            path: 'Stock',
+            component: StockListComponent,
+          },
+          {
+            path: 'Promotion',
+            component: PromotionComponent,
+          },
+          {
+            path: 'Receivable',
+            component: ReceivableComponent,
+          },
+          {
+            path: 'Deposit',
+            component: DepositComponent,
+            children: [
+              {
+                path: '',
+                component: DepositListComponent,
+              },
+              {
+                path: 'Archive',
+                component: DepositArchiveComponent,
+              },
+            ],
+          },
+          {
+            path: 'Sales-invoice',
+            component: SalesInvoiceComponent,
+            children: [
+              {
+                path: '',
+                component: SalesInvoiceCreateComponent,
+              },
+              {
+                path: 'Archive',
+                component: SalesInvoiceArchiveComponent,
+              },
+              {
+                path: 'Search',
+                component: SalesInvoiceSearchComponent,
+              },
+            ],
+          },
+          {
+            path: 'Purchase-invoice',
+            component: PurchaseInvoiceComponent,
+            children: [
+              {
+                path: '',
+                component: PurchaseInvoiceCreateComponent,
+              },
+              {
+                path: 'Archive',
+                component: PurchaseInvoiceArchiveComponent,
+              },
+              {
+                path: 'Confirm',
+                component: PurchaseInvoiceConfirmComponent,
+              },
+              {
+                path: 'Edit/:id',
+                component: PurchaseInvoiceEditComponent,
+              },
+            ],
+          },
+          {
+            path: 'Adjustment-case',
+            component: AdjustmentCaseComponent,
+            children: [
+              {
+                path: '',
+                component: AdjustmentCaseCreateComponent,
+              },
+              {
+                path: 'Archive',
+                component: AdjustmentCaseArchiveComponent,
+              },
+            ],
+          },
+          {
+            path: 'Expense',
+            component: ExpenseComponent,
+            children: [
+              {
+                path: '',
+                component: ExpenseCreateComponent,
+              },
+              {
+                path: 'Mutation',
+                component: ExpenseMutationComponent,
+              },
+              {
+                path: 'Report',
+                component: ExpenseReportComponent,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: 'Purchasing',
+        component: PurchasingComponent,
+        children: [
+          {
+            path: '',
+            component: PurchasingDashboardComponent,
+          },
+          {
+            path: 'Product',
+            component: ProductComponent,
+          },
+          {
+            path: 'Product-type',
+            component: ProductTypeComponent,
+          },
+          {
+            path: 'Product-brand',
+            component: ProductBrandComponent,
+          },
+          {
+            path: 'Package',
+            component: PackageComponent,
+          },
+          {
+            path: 'Supplier',
+            component: SupplierComponent,
+          },
+          {
+            path: 'Stock',
+            component: StockListComponent,
+          },
+          {
+            path: 'Good-receipt',
+            component: GoodReceiptComponent,
+            children: [
+              {
+                path: '',
+                component: GoodReceiptCreateComponent,
+              },
+              {
+                path: 'Archive',
+                component: GoodReceiptArchiveComponent,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: 'Sales',
+        component: SalesComponent,
+        children: [
+          {
+            path: '',
+            component: SalesDashboardComponent,
+          },
+          {
+            path: 'Customer',
+            component: CustomerComponent,
+          },
+          {
+            path: 'Package',
+            component: PackageComponent,
+          },
+          {
+            path: 'Stock',
+            component: StockListComponent,
+          },
+          {
+            path: 'Sales-invoice',
+            component: SalesInvoiceComponent,
+            children: [
+              {
+                path: '',
+                component: SalesInvoiceCreateComponent,
+              },
+              {
+                path: 'Archive',
+                component: SalesInvoiceArchiveComponent,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: 'General',
+        component: GeneralComponent,
+        children: [
+          {
+            path: '',
+            component: GeneralDashboardComponent,
+          },
+          {
+            path: 'Expense',
+            component: ExpenseComponent,
+          },
+          {
+            path: 'Company',
+            component: CompanyComponent,
+          },
+          {
+            path: 'Payment-method',
+            component: PaymentMethodComponent,
+          },
+          {
+            path: 'Expense',
+            component: ExpenseComponent,
+          },
+          {
+            path: 'Stock',
+            component: StockListComponent,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: 'Login',
+    component: LoginComponent,
+    pathMatch: 'full',
+  },
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}

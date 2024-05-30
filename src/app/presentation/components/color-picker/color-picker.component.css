@@ -1,0 +1,49 @@
+.color-picker__container {
+  width: 100%;
+  height: 30px;
+  background-color: transparent;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 30px;
+  border-radius: 5px;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+  background: linear-gradient(
+    to right,
+    /* Add 18 h points for each 5% */ hsl(0, 100%, 50%) 0%,
+    hsl(18, 100%, 50%) 5%,
+    hsl(36, 100%, 50%) 10%,
+    hsl(54, 100%, 50%) 15%,
+    hsl(72, 100%, 50%) 20%,
+    hsl(90, 100%, 50%) 25%,
+    hsl(108, 100%, 50%) 30%,
+    hsl(126, 100%, 50%) 35%,
+    hsl(144, 100%, 50%) 40%,
+    hsl(162, 100%, 50%) 45%,
+    hsl(180, 100%, 50%) 50%,
+    hsl(198, 100%, 50%) 55%,
+    hsl(216, 100%, 50%) 60%,
+    hsl(234, 100%, 50%) 65%,
+    hsl(252, 100%, 50%) 70%,
+    hsl(270, 100%, 50%) 75%,
+    hsl(288, 100%, 50%) 80%,
+    hsl(306, 100%, 50%) 85%,
+    hsl(324, 100%, 50%) 90%,
+    hsl(342, 100%, 50%) 95%,
+    hsl(360, 100%, 50%) 100%
+  );
+}
+
+.slider:disabled {
+  background: lightgray !important;
+  cursor: not-allowed;
+}
+
+.slider:hover {
+  opacity: 1;
+}

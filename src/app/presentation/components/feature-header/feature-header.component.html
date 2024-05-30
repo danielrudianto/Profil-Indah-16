@@ -1,0 +1,11 @@
+<h1>
+  <button mat-icon-button (click)="clickBackButton()" *ngIf="isBackAvailable">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  {{ title }}
+  <span *ngIf="help != null">
+    <button mat-icon-button [matTooltip]="help">
+      <mat-icon>info</mat-icon>
+    </button>
+  </span>
+</h1>

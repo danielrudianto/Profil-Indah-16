@@ -1,0 +1,18 @@
+#action-button-wrapper {
+  flex-grow: 0;
+  padding-bottom: 1.34375em;
+  position: relative;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+#action-button {
+  border: 0;
+  background-color: transparent;
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.25em 0;
+  height: calc(100% - 0.5em);
+}

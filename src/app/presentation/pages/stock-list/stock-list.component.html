@@ -1,0 +1,89 @@
+<app-feature-background />
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <app-feature-header
+        title="Stock Level"
+        help=""
+        [isBackAvailable]="true"
+      ></app-feature-header>
+      <div class="dashboard-card">
+        <app-feature-search
+          [addButton]="true"
+          route="product-stock"
+          [page]="page"
+          [enable]="true"
+          (onChange)="onUpdateData($event)"
+          (onLoadingChange)="onUpdateLoadingStatus($event)"
+          (updatePage)="onUpdatePage()"
+          (onNewQuery)="page = 1"
+        ></app-feature-search>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="text-center">Reference</th>
+                <th class="text-center">Description</th>
+                <th class="text-center">Brand</th>
+                <th class="text-center">Stock</th>
+                <th class="text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="isLoading">
+              <tr>
+                <td colspan="5">
+                  <div class="py-4">
+                    <mat-spinner id="spinner"></mat-spinner>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length == 0">
+              <tr>
+                <td colspan="5">
+                  <empty-table />
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length > 0">
+              <tr *ngFor="let item of dataSource">
+                <td>{{ item.reference }}</td>
+                <td>
+                  <div class="text-clamp-2">
+                    {{ item.description }}
+                  </div>
+                </td>
+                <td>{{ item.item_brand_name }}</td>
+                <td>
+                  {{ item.stock | number : "0.0-2" }}&nbsp;{{ item.unit }}
+                </td>
+                <td class="text-nowrap">
+                  <button mat-icon-button (click)="openDialog('card', item.id)">
+                    <mat-icon>view_list</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    (click)="openDialog('mutation', item.id)"
+                  >
+                    <mat-icon>swap_horiz</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <mat-paginator
+          class="paginator"
+          [pageIndex]="page - 1"
+          [length]="dataCount"
+          [pageSize]="10"
+          (page)="changePage($event)"
+          aria-label="Select page"
+          hidePageSize="true"
+          *ngIf="!isLoading"
+        >
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

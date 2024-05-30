@@ -1,0 +1,287 @@
+<div class="view-panel-wrapper">
+  <div class="view-panel-backdrop" (click)="close()"></div>
+  <div class="view-panel" [@panelAnimation]="panelState">
+    <div class="row-action">
+      <h2 mat-dialog-title>View Deposit</h2>
+      <div class="d-flex">
+        <button mat-icon-button (click)="enlarge()">
+          <mat-icon *ngIf="panelState != 'enlarged'">open_in_full</mat-icon>
+          <mat-icon *ngIf="panelState == 'enlarged'">close_fullscreen</mat-icon>
+        </button>
+        <button mat-icon-button (click)="close()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="view-panel-content" id="content">
+      <mat-spinner id="spinner" *ngIf="isLoading" />
+
+      <div *ngIf="!isLoading">
+        <h5 class="mt-2">General</h5>
+        <mat-divider />
+        <mat-form-field appearance="outline" class="w-100 mt-3">
+          <mat-label>Date</mat-label>
+          <input
+            matInput
+            [value]="dataSource.date | date : 'MM/dd/yyyy'"
+            [readonly]="true"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Name</mat-label>
+          <input matInput [value]="dataSource.name" [readonly]="true" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Sales</mat-label>
+          <input
+            matInput
+            [value]="dataSource.sales == null ? 'INTERNAL' : dataSource.sales"
+            [readonly]="true"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Amount</mat-label>
+          <input
+            matInput
+            [value]="
+              dataSource.subTotal -
+                dataSource.discount +
+                dataSource.delivery +
+                dataSource.service | mask : 'separator.2'
+            "
+            [readonly]="true"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Payments</mat-label>
+          <input
+            matInput
+            [value]="payment | mask : 'separator.2'"
+            [readonly]="true"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Customer</mat-label>
+          <input
+            matInput
+            [value]="
+              dataSource.customer == null
+                ? 'Retail customer'
+                : dataSource.customer.name
+            "
+            [readonly]="true"
+          />
+        </mat-form-field>
+
+        <h5>Details</h5>
+        <mat-divider />
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 250px" rowspan="2">Item</th>
+                <th style="width: 150px" rowspan="2" class="text-center">
+                  Quantity
+                </th>
+                <th style="width: 250px" rowspan="2" class="text-center">
+                  Price
+                </th>
+                <th colspan="2" class="text-center">Discount</th>
+                <th style="width: 250px" rowspan="2" class="text-center">
+                  Total price
+                </th>
+              </tr>
+              <tr>
+                <th style="width: 150px" class="text-center">R</th>
+                <th style="width: 100px" class="text-center">%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of dataSource.deposit">
+                <ng-container [ngSwitch]="item.package_code == null ? 1 : 2">
+                  <ng-container *ngSwitchCase="1">
+                    <td>
+                      <p>{{ item.item.reference }}</p>
+                      <p class="text-clamp-1">{{ item.item.description }}</p>
+                    </td>
+                    <td class="text-center">
+                      {{ item.quantity | number : "0.0-2" }}
+                      {{
+                        item.item_unit == null
+                          ? item.item.unit
+                          : item.item_unit.unit
+                      }}
+                    </td>
+                    <td class="text-center">
+                      {{ item.price | number : "0.2-2" }}
+                    </td>
+                    <td class="text-center">
+                      {{ item.discount | number : "0.2-2" }}
+                    </td>
+                    <td class="text-center">
+                      {{
+                        item.price == 0
+                          ? 0
+                          : ((item.discount * 100) / item.price
+                            | number : "0.0-2")
+                      }}&nbsp;%
+                    </td>
+                    <td class="text-center">
+                      {{ item.price * item.quantity | number : "0.2-2" }}
+                    </td>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="2">
+                    <td>
+                      <p>{{ item.package_code.name }}</p>
+                      <p class="text-clamp-1">
+                        {{ item.package_code.description }}
+                      </p>
+                      <ul>
+                        <li
+                          *ngFor="let item of item.package_code.package_content"
+                        >
+                          <p>
+                            {{ item.item.reference }} ({{ item.quantity }}
+                            {{
+                              item.item_unit == null
+                                ? item.item.unit
+                                : item.item_unit.unit
+                            }})
+                          </p>
+                          <p class="text-clamp-2">
+                            {{ item.item.description }}
+                          </p>
+                        </li>
+                      </ul>
+                    </td>
+                    <td class="text-center">
+                      {{ item.quantity | number : "0.0-2" }}
+                    </td>
+                    <td class="text-center">
+                      {{ item.price | number : "0.2-2" }}
+                    </td>
+                    <td class="text-center">
+                      {{ item.discount | number : "0.2-2" }}
+                    </td>
+                    <td class="text-center">
+                      {{
+                        item.price == 0
+                          ? 0
+                          : ((item.discount * 100) / item.price
+                            | number : "0.0-2")
+                      }}&nbsp;%
+                    </td>
+                    <td class="text-center">
+                      {{ item.price * item.quantity | number : "0.2-2" }}
+                    </td>
+                  </ng-container>
+                </ng-container>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3"></td>
+                <td class="text-center">Subtotal</td>
+                <td class="text-center" colspan="2">
+                  {{ dataSource.subTotal | number : "0.2-2" }}
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3"></td>
+                <td class="text-center">Discount</td>
+                <td class="text-center" colspan="2">
+                  {{ dataSource.discount | number : "0.2-2" }}
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3"></td>
+                <td class="text-center">Service</td>
+                <td class="text-center" colspan="2">
+                  {{ dataSource.service | number : "0.2-2" }}
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3"></td>
+                <td class="text-center">Delivery</td>
+                <td class="text-center" colspan="2">
+                  {{ dataSource.delivery | number : "0.2-2" }}
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3"></td>
+                <td class="text-center">Total</td>
+                <td class="text-center" colspan="2">
+                  {{
+                    dataSource.subTotal -
+                      dataSource.discount +
+                      dataSource.delivery +
+                      dataSource.service | number : "0.2-2"
+                  }}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <h5 class="mt-4">Payments</h5>
+        <mat-divider />
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Payment method</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="dataSource.deposit_payment.length > 0">
+              <tr *ngFor="let payment of dataSource.deposit_payment">
+                <td>{{ payment.date | date : "dd MMMM YYYY" }}</td>
+                <td>
+                  {{
+                    payment.payment_method == null
+                      ? "Cash"
+                      : payment.payment_method.name
+                  }}
+                </td>
+                <td>{{ payment.value | number : "0.2-2" }}</td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="dataSource.deposit_payment.length == 0">
+              <tr>
+                <td colspan="3" class="text-center">No payment</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="shortcuts">
+      <div class="shortcut-key">
+        <span class="shortcut-key-label">ESC</span>
+        <span class="shortcut-key-function">Back</span>
+      </div>
+      <div class="shortcut-key">
+        <span class="shortcut-key-label">F</span>
+        <span class="shortcut-key-function">Toggle full screen</span>
+      </div>
+      <div class="shortcut-key">
+        <span class="shortcut-key-label">P</span>
+        <span class="shortcut-key-function">Print</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="action-button mx-1" (click)="confirmDeposit()">
+        Confirm
+      </button>
+      <button class="action-button mx-1" (click)="deleteDeposit()">
+        Delete
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,115 @@
+<div class="d-flex mt-4">
+  <div class="d-flex position-relative">
+    <app-vertical-divider></app-vertical-divider>
+    <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <h5>General data</h5>
+    <form [formGroup]="metaFormGroup">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Date</mat-label>
+        <input
+          formControlName="date"
+          matInput
+          [matDatepicker]="picker"
+          placeholder="Ex. 30/12/2023"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Adjusment type</mat-label>
+        <mat-select formControlName="type" placeholder="Ex. Lost">
+          <mat-option
+            *ngFor="let item of ['Found', 'Lost']; index as i"
+            [value]="i"
+          >
+            {{ item }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <app-autocomplete-search
+        label="Company"
+        routeName="company"
+        placeholder="Ex. Toko Profil Indah"
+        (onSelectData)="onSelectCompany($event)"
+        (onUnselectData)="onUnselectCompany()"
+        [selected]="metaFormGroup.controls['company_id'].valid"
+        [disabled]="metaFormGroup.controls['type'].value == 1"
+      ></app-autocomplete-search>
+    </form>
+  </div>
+</div>
+<div class="d-flex">
+  <div class="d-flex position-relative">
+    <app-box-stepper
+      step="2"
+      [valid]="adjustmentEventFormGroup.valid"
+    ></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <button class="add-button" (click)="openItemSelector()">Add item</button>
+    <form [formGroup]="adjustmentEventFormGroup">
+      <table class="table w-100 mb-2">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="t.controls.length > 0">
+          <tr
+            *ngFor="let itemForm of t.controls; index as i"
+            [formGroup]="getFormGroupAt(i)"
+          >
+            <td>
+              <p>{{ itemForm.get("reference")?.value }}</p>
+              <div class="text-clamp-2">
+                {{ itemForm.get("description")?.value }}
+              </div>
+            </td>
+            <td>
+              <mat-form-field appearance="outline">
+                <mat-label>Quantity</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  class="text-center"
+                  mask="separator"
+                  thousandSeparator=" "
+                  formControlName="quantity"
+                  autocomplete="off"
+                  placeholder="Ex. 20"
+                />
+                <mat-hint>{{ itemForm.get("unit")?.value }}</mat-hint>
+              </mat-form-field>
+            </td>
+            <td>
+              <button mat-icon-button (click)="removeItem(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="t.controls.length == 0">
+          <tr>
+            <td [attr.colspan]="3">
+              <empty-table />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+
+    <button
+      [disabled]="!metaFormGroup.valid || !adjustmentEventFormGroup.valid"
+      class="action-button"
+      (click)="submitForm()"
+    >
+      Submit
+    </button>
+  </div>
+</div>

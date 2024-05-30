@@ -1,0 +1,20 @@
+<form [formGroup]="searchFormGroup">
+  <div class="d-flex">
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>Search bar</mat-label>
+      <input
+        [disabled]="!enable"
+        matInput
+        #searchBar
+        placeholder="Search item by its reference or description"
+        formControlName="searchBar"
+      />
+    </mat-form-field>
+    <div id="action-button-wrapper" *ngIf="addButton">
+      <button id="action-button" type="button" (click)="openDialog()">
+        <mat-icon>add</mat-icon>
+        {{ buttonLabel }}
+      </button>
+    </div>
+  </div>
+</form>

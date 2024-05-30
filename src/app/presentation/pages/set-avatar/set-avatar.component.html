@@ -1,0 +1,153 @@
+<div class="view-panel-wrapper">
+  <div class="view-panel-backdrop" (click)="close()"></div>
+  <div class="view-panel" [@panelAnimation]="panelState">
+    <div class="row-action">
+      <h2 mat-dialog-title>Customize your avatar!</h2>
+      <div class="d-flex">
+        <button mat-icon-button (click)="close()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="view-panel-content" id="content">
+      <div class="text-center">
+        <app-avatar
+          [top]="avatarFormGroup.value.top"
+          [accessories]="avatarFormGroup.value.accessories"
+          [clothes]="avatarFormGroup.value.clothes"
+          [eyes]="avatarFormGroup.value.eyes"
+          [mouth]="avatarFormGroup.value.mouth"
+          [eyebrows]="avatarFormGroup.value.eyebrows"
+          [color]="avatarFormGroup.value.color"
+          [circle]="avatarFormGroup.value.circle"
+        />
+      </div>
+
+      <form [formGroup]="avatarFormGroup" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Top</mat-label>
+          <mat-select formControlName="top">
+            <mat-option [value]="0">No hair</mat-option>
+            <mat-option [value]="1">Hijab</mat-option>
+            <mat-option [value]="2">Long hair big hair</mat-option>
+            <mat-option [value]="3">Long hair bob</mat-option>
+            <mat-option [value]="4">Long hair curly</mat-option>
+            <mat-option [value]="5">Long hair dreads</mat-option>
+            <mat-option [value]="6">Long hair straight</mat-option>
+            <mat-option [value]="7">Medium hair</mat-option>
+            <mat-option [value]="8">Short hair 1</mat-option>
+            <mat-option [value]="9">Short hair 2</mat-option>
+            <mat-option [value]="10">Short hair frizzle</mat-option>
+            <mat-option [value]="11">Shaggy</mat-option>
+            <mat-option [value]="12">Short round</mat-option>
+            <mat-option [value]="13">Short side</mat-option>
+            <mat-option [value]="14">Caesar</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Accessories</mat-label>
+          <mat-select formControlName="accessories">
+            <mat-option [value]="0">None</mat-option>
+            <mat-option [value]="1">Kurt</mat-option>
+            <mat-option [value]="2">Perscription</mat-option>
+            <mat-option [value]="3">Round</mat-option>
+            <mat-option [value]="4">Sunglasses</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Clothes</mat-label>
+          <mat-select formControlName="clothes">
+            <mat-option [value]="0">Blazer shirt</mat-option>
+            <mat-option [value]="1">Blazer sweater</mat-option>
+            <mat-option [value]="2">Collar sweater</mat-option>
+            <mat-option [value]="3">Hoodie</mat-option>
+            <mat-option [value]="4">Overall</mat-option>
+            <mat-option [value]="5">Shirt crew neck</mat-option>
+            <mat-option [value]="6">Shirt scoop neck</mat-option>
+            <mat-option [value]="7">Shirt v neck</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Eyes</mat-label>
+          <mat-select formControlName="eyes">
+            <mat-option [value]="0">Close</mat-option>
+            <mat-option [value]="1">Cry</mat-option>
+            <mat-option [value]="2">Default</mat-option>
+            <mat-option [value]="3">Dizzy</mat-option>
+            <mat-option [value]="4">Eye roll</mat-option>
+            <mat-option [value]="5">Happy</mat-option>
+            <mat-option [value]="6">Hearts</mat-option>
+            <mat-option [value]="7">Side</mat-option>
+            <mat-option [value]="8">Squint</mat-option>
+            <mat-option [value]="9">Surprised</mat-option>
+            <mat-option [value]="10">Wink</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Eyebrows</mat-label>
+          <mat-select formControlName="eyebrows">
+            <mat-option [value]="0">Angry</mat-option>
+            <mat-option [value]="1">Default</mat-option>
+            <mat-option [value]="2">Flat</mat-option>
+            <mat-option [value]="3">Raised</mat-option>
+            <mat-option [value]="4">Sad</mat-option>
+            <mat-option [value]="5">Unibrow</mat-option>
+            <mat-option [value]="6">Up</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Mouth</mat-label>
+          <mat-select formControlName="mouth">
+            <mat-option [value]="0">Concerned</mat-option>
+            <mat-option [value]="1">Default</mat-option>
+            <mat-option [value]="2">Disbelief</mat-option>
+            <mat-option [value]="3">Eating</mat-option>
+            <mat-option [value]="4">Grimace</mat-option>
+            <mat-option [value]="5">Sad</mat-option>
+            <mat-option [value]="6">Scream</mat-option>
+            <mat-option [value]="7">Serious</mat-option>
+            <mat-option [value]="8">Smile</mat-option>
+            <mat-option [value]="9">Tongue</mat-option>
+            <mat-option [value]="10">Twinkle</mat-option>
+            <mat-option [value]="11">Vomit</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <app-color-picker
+          [disabled]="!avatarFormGroup.value.circle"
+          [selectedColor]="avatarFormGroup.value.color"
+          (onColorSelected)="onColorSelected($event)"
+        />
+
+        <mat-slide-toggle formControlName="circle"
+          >Circled style</mat-slide-toggle
+        >
+      </form>
+    </div>
+    <div class="shortcuts">
+      <div class="shortcut-key">
+        <span class="shortcut-key-label">ESC</span>
+        <span class="shortcut-key-function">Back</span>
+      </div>
+      <div class="shortcut-key">
+        <span class="shortcut-key-label">F</span>
+        <span class="shortcut-key-function">Toggle full screen</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button
+        class="action-button"
+        type="button"
+        (click)="onSubmit()"
+        [disabled]="isSubmitting"
+      >
+        Save avatar
+      </button>
+    </div>
+  </div>
+</div>

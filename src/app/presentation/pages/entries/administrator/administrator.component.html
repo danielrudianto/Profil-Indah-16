@@ -1,0 +1,155 @@
+<mat-drawer-container class="h-100">
+  <mat-drawer [mode]="drawerMode" [opened]="isDrawerOpened" class="sidenav">
+    <mat-nav-list class="sidenav__menu-wrapper">
+      <div mat-subheader>Frequently Used</div>
+      <mat-list-item
+        [routerLink]="['/Administrator/Stock']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Stock Level</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Sales-invoice']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Sales</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Purchase-invoice']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Purchase</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Adjustment-case']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Adjustment Case</div>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      <div mat-subheader>Master Data</div>
+      <mat-list-item
+        [routerLink]="['/Administrator/Product']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Products</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Product-brand']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Brands</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Product-type']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Types</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Package']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Package</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Supplier']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Supplier</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Customer']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Customer</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Company']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Company</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/User']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Users</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Payment-method']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Payment Method</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Expense-type']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Expense Type</div>
+      </mat-list-item>
+
+      <mat-divider></mat-divider>
+      <div mat-subheader>Implementations</div>
+      <mat-list-item>
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Sales return</div>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Prices</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Deposit']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Deposits</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Receivable']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Receivable</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Expense']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Expense</div>
+      </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Promotion']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>Promotion</div>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-drawer>
+  <mat-drawer-content>
+    <app-topbar
+      [hidden]="isHidden"
+      [name]="name"
+      [menuButtonAvailable]="isMenuButtonAvailable"
+      (onMenuButtonClicked)="clickMenuButton()"
+    />
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

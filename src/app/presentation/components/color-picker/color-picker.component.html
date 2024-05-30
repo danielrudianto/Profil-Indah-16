@@ -1,0 +1,19 @@
+<form [formGroup]="colorFormGroup">
+  <div
+    class="color-picker__container mb-3"
+    [matTooltip]="
+      !disabled ? '' : 'Custom color picker for avatar background circle.'
+    "
+  >
+    <input
+      formControlName="h"
+      [disabled]="disabled"
+      type="range"
+      min="0"
+      max="359"
+      class="slider"
+      step="1"
+    />
+  </div>
+</form>
+<p>{{ disabled }}</p>

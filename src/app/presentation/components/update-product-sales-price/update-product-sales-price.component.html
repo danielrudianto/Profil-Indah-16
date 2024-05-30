@@ -1,0 +1,58 @@
+<form [formGroup]="priceFormGroup" class="mt-3">
+  <h1>Update product sales price</h1>
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Price</mat-label>
+    <input
+      type="text"
+      matInput
+      type="text"
+      mask="separator.2"
+      thousandSeparator=" "
+      formControlName="price"
+      placeholder="Ex. 8 000"
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Discount</mat-label>
+    <input
+      type="text"
+      matInput
+      type="text"
+      mask="separator.2"
+      thousandSeparator=" "
+      formControlName="discount"
+      placeholder="Ex. 800"
+    />
+  </mat-form-field>
+
+  <!-- Slide toggle, disabled if initialPrice is same with price -->
+  <mat-slide-toggle
+    class="w-100"
+    formControlName="save_price"
+    [disabled]="
+      (priceFormGroup.controls['initial_price'].value ===
+        priceFormGroup.controls['price'].value &&
+        this.priceFormGroup.controls['initial_discount'].value ===
+          this.priceFormGroup.controls['discount'].value) ||
+      priceFormGroup.invalid
+    "
+  >
+    Save price
+  </mat-slide-toggle>
+
+  <!-- Button to save -->
+  <div class="update-price__button-wrapper">
+    <button
+      [disabled]="
+        priceFormGroup.invalid ||
+        priceFormGroup.controls['discount'].value >
+          priceFormGroup.controls['price'].value
+      "
+      class="button-default"
+      (click)="updatePrice()"
+    >
+      Save
+    </button>
+  </div>
+</form>

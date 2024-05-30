@@ -1,0 +1,57 @@
+<div class="dashboard-card">
+  <app-feature-search
+    [addButton]="false"
+    route="deposit/v2"
+    [page]="page"
+    [enable]="true"
+    (onNewQuery)="page = 1"
+    (onChange)="onUpdateData($event)"
+    (onLoadingChange)="onUpdateLoadingStatus($event)"
+    (updatePage)="onUpdatePage()"
+  ></app-feature-search>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Sales</th>
+          <th>Document</th>
+          <th>Customer</th>
+          <th>Amount</th>
+          <th>Payment</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="!isLoading && dataSource.length > 0">
+        <tr *ngFor="let data of dataSource" (click)="viewDeposit(data.id)">
+          <td>{{ data.date | date : "dd MMMM YY" }}</td>
+          <td>{{ data.sales }}</td>
+          <td>{{ data.name }}</td>
+          <td>{{ data.customer_name }}</td>
+          <td>{{ data.value | number : "0.2-2" }}</td>
+          <td>{{ data.payment | number : "0.2-2" }}</td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="!isLoading && dataSource.length == 0">
+        <tr [attr.colspan]="6" empty-table></tr>
+      </tbody>
+      <tbody *ngIf="isLoading">
+        <tr>
+          <td colspan="6" class="text-center">
+            <mat-spinner id="spinner"></mat-spinner>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <mat-paginator
+    class="paginator"
+    [pageIndex]="page - 1"
+    [length]="dataCount"
+    [pageSize]="20"
+    (page)="changePage($event)"
+    aria-label="Select page"
+    hidePageSize="true"
+    *ngIf="!isLoading"
+  >
+  </mat-paginator>
+</div>

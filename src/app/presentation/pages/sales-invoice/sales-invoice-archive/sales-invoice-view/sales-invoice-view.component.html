@@ -1,0 +1,214 @@
+<label>Date</label>
+<p>{{ data.date | date : "dd/MM/yyyy" }}</p>
+
+<label>Name</label>
+<p>{{ data.name }}</p>
+
+<label>Customer</label>
+<p>{{ data.customer == null ? "Retail customer" : data.customer.name }}</p>
+
+<label>Sales</label>
+<p>{{ data.sales == null || data.sales == "" ? "N/A" : data.sales }}</p>
+
+<label>Status</label>
+<p>
+  {{ data.is_delete ? "Deleted" : data.is_confirm ? "Confirmed" : "Pending" }}
+</p>
+
+<label>Created by</label>
+<div class="created-by__wrapper">
+  <p>{{ data.user_bill_code_created_byTouser.name }}</p>
+  <app-avatar
+    *ngIf="data.user_bill_code_created_byTouser.user_avatar != null"
+    [top]="data.user_bill_code_created_byTouser.user_avatar.top"
+    [accessories]="data.user_bill_code_created_byTouser.user_avatar.accessories"
+    [eyes]="data.user_bill_code_created_byTouser.user_avatar.eyes"
+    [mouth]="data.user_bill_code_created_byTouser.user_avatar.mouth"
+    [clothes]="data.user_bill_code_created_byTouser.user_avatar.clothes"
+    [eyebrows]="data.user_bill_code_created_byTouser.user_avatar.eyebrows"
+    [circle]="data.user_bill_code_created_byTouser.user_avatar.circle"
+    [color]="data.user_bill_code_created_byTouser.user_avatar.color"
+    [width]="25"
+  />
+</div>
+
+<label>Created at</label>
+<p>{{ data.created_at | date : "dd MMMM YY H:m:s" }}</p>
+
+<label>Payments</label>
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width: 150px">Date</th>
+        <th style="width: 200px">Method</th>
+        <th style="width: 200px">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data.bill_payment">
+        <td>{{ item.date | date : "dd/MM/yyyy" }}</td>
+        <td>
+          {{ item.payment_method == null ? "Cash" : item.payment_method.name }}
+        </td>
+        <td>{{ item.value | number : "0.2-2" }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<label>Items</label>
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="text-center" style="width: 200px" rowspan="2">Product</th>
+        <th class="text-center" style="width: 200px" rowspan="2">Quantity</th>
+        <th class="text-center" style="width: 200px" rowspan="2">Price</th>
+        <th class="text-center" style="width: 300px" colspan="2">Discount</th>
+        <th class="text-center" style="width: 200px" rowspan="2">Total</th>
+      </tr>
+      <tr>
+        <th class="text-center" style="width: 200px">Rp.</th>
+        <th class="text-center" style="width: 100px">%</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data.bill">
+        <ng-container [ngSwitch]="item.package_code == null ? 1 : 2">
+          <ng-container *ngSwitchCase="1">
+            <td>
+              <p class="mb-0">{{ item.item.reference }}</p>
+              <p class="text-clamp-1">{{ item.item.description }}</p>
+            </td>
+            <td class="text-center">
+              {{ item.quantity | number : "0.0-2" }}
+              {{
+                item.item_unit == null ? item.item.unit : item.item_unit.unit
+              }}
+            </td>
+            <td class="text-center">
+              Rp.&nbsp;{{ item.price | number : "0.2-2" }}
+            </td>
+            <td class="text-center">
+              Rp.&nbsp;{{ item.discount | number : "0.2-2" }}
+            </td>
+            <td class="text-center">
+              {{
+                item.price == 0
+                  ? 0
+                  : ((item.discount * 100) / item.price | number : "0.0-2")
+              }}&nbsp;%
+            </td>
+            <td class="text-center">
+              Rp.&nbsp;{{ item.price * item.quantity | number : "0.2-2" }}
+            </td>
+          </ng-container>
+          <ng-container *ngSwitchCase="2">
+            <td>
+              <p class="mb-0">{{ item.package_code.name }}</p>
+              <p class="text-clamp-1 mb-0">
+                {{ item.package_code.description }}
+              </p>
+              <ul>
+                <li *ngFor="let item of item.package_code.package_content">
+                  <p>
+                    {{ item.item.reference }} ({{ item.quantity }}
+                    {{
+                      item.item_unit == null
+                        ? item.item.unit
+                        : item.item_unit.unit
+                    }})
+                  </p>
+                  <p class="text-clamp-2">
+                    {{ item.item.description }}
+                  </p>
+                </li>
+              </ul>
+            </td>
+            <td class="text-center">
+              {{ item.quantity | number : "0.0-2" }}
+            </td>
+            <td class="text-center">
+              Rp.&nbsp;{{ item.price | number : "0.2-2" }}
+            </td>
+            <td class="text-center">
+              Rp.&nbsp;{{ item.discount | number : "0.2-2" }}
+            </td>
+            <td class="text-center">
+              {{
+                item.price == 0
+                  ? 0
+                  : ((item.discount * 100) / item.price | number : "0.0-2")
+              }}&nbsp;%
+            </td>
+            <td class="text-center">
+              Rp.&nbsp;{{ item.price * item.quantity | number : "0.2-2" }}
+            </td>
+          </ng-container>
+        </ng-container>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="3"></td>
+        <td class="text-center">Subtotal</td>
+        <td class="text-center" colspan="2">
+          Rp.&nbsp;{{ data.subTotal | number : "0.2-2" }}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3"></td>
+        <td class="text-center">Discount</td>
+        <td class="text-center" colspan="2">
+          Rp.&nbsp;{{ data.discount | number : "0.2-2" }}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3"></td>
+        <td class="text-center">Service</td>
+        <td class="text-center" colspan="2">
+          Rp.&nbsp;{{ data.service | number : "0.2-2" }}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3"></td>
+        <td class="text-center">Delivery</td>
+        <td class="text-center" colspan="2">
+          Rp.&nbsp;{{ data.delivery | number : "0.2-2" }}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3"></td>
+        <td class="text-center">Total</td>
+        <td class="text-center" colspan="2">
+          Rp.&nbsp;{{
+            data.subTotal - data.discount + data.delivery + data.service
+              | number : "0.2-2"
+          }}
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<label>Actions</label>
+<div *ngIf="!isAdministrator">There is no other action available.</div>
+<div class="sales-invoice__action-wrapper" *ngIf="isAdministrator">
+  <button
+    class="sales-invoice__action"
+    (click)="openDeleteConfirmation()"
+    [disabled]="data.is_delete"
+  >
+    <mat-icon>delete</mat-icon>
+    Delete
+  </button>
+  <button
+    class="sales-invoice__action"
+    (click)="openPaymentModal()"
+    [disabled]="data.is_delete"
+  >
+    <mat-icon>wallet</mat-icon>
+    Payments
+  </button>
+</div>

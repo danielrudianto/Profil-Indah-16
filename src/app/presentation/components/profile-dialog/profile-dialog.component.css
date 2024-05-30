@@ -1,0 +1,92 @@
+.profile-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  z-index: 20;
+}
+
+.profile-dialog__background {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0;
+}
+
+.profile-dialog__wrapper {
+  padding: 1rem;
+  text-align: center;
+  width: 412px;
+  max-height: 80%;
+  overflow-y: auto;
+  position: absolute;
+  background-color: white;
+  top: 1rem;
+  right: 1rem;
+  transform: translateX(200%);
+  border-radius: 20px;
+}
+
+.profile-dialog__wrapper h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.profile-dialog__wrapper p {
+  font-size: 0.7rem;
+}
+
+.name__p {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+}
+
+.profile-dialog__avatar-wrapper {
+  position: relative;
+  margin-left: 50%;
+  transform: translateX(-25%);
+}
+
+.profile-dialog__action-wrapper {
+  width: 100%;
+  padding: 0.75rem 2rem;
+  display: flex;
+  justify-content: flex-start;
+  font-size: 0.8rem;
+  font-weight: 400;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  margin-top: 1rem;
+  cursor: pointer;
+  border-radius: 30px;
+  background-color: #005cbb26;
+  transition: 0.3s all ease;
+  color: #005cbb;
+}
+
+.profile-dialog__action-wrapper:hover {
+  background-color: #6dadec;
+  color: white;
+}
+
+.profile-dialog__button-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+.profile-dialog__button-wrapper button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}

@@ -1,0 +1,12 @@
+<div class="stepper__wrapper">
+  <div
+    class="stepper__item-wrapper"
+    *ngFor="let step of steps; index as i"
+    (click)="onStepSelected(i)"
+    [ngClass]="{ 'stepper__item--selected': i === selectedStep }"
+    [ngClass]="{ 'stepper__item--disabled': step.disabled }"
+  >
+    <div class="stepper__item__indicator">{{ i + 1 }}</div>
+    <div class="stepper__item__label">{{ step.label }}</div>
+  </div>
+</div>

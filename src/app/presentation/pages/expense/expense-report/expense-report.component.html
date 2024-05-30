@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="col-12"></div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <div class="dashboard-card mt-0">
+      <div class="row">
+        <div class="col-12">
+          <div class="expense-report__header">
+            <mat-form-field appearance="outline" style="min-width: 170px">
+              <mat-label>Month and Year</mat-label>
+              <input matInput [matDatepicker]="dp" [formControl]="date" />
+              <mat-hint>MM/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="dp"
+              ></mat-datepicker-toggle>
+              <mat-datepicker
+                #dp
+                startView="multi-year"
+                (monthSelected)="setMonthAndYear($event, dp)"
+                panelClass="example-month-picker"
+              >
+              </mat-datepicker>
+            </mat-form-field>
+            <mat-slide-toggle
+              color="primary"
+              [checked]="selectedIndex == 1"
+              (change)="toggleSelectedIndex()"
+              >View by
+              {{ selectedIndex == 0 ? "company" : "type" }}</mat-slide-toggle
+            >
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table" *ngIf="selectedIndex == 0">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Expense</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let company of companies">
+                <td>{{ company.name }}</td>
+                <td>{{ company.value | number : "0.2-2" }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="table" *ngIf="selectedIndex == 1">
+            <thead>
+              <tr>
+                <th>Expense type</th>
+                <th>Expense</th>
+              </tr>
+            </thead>
+            <tbody *ngFor="let type of types">
+              <tr>
+                <td>{{ type.name }}</td>
+                <td>
+                  <b>{{ type.value | number : "0.2-2" }}</b>
+                </td>
+              </tr>
+              <tr *ngFor="let child of type.children">
+                <td class="ps-5">{{ child.name }}</td>
+                <td>{{ child.value | number : "0.2-2" }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

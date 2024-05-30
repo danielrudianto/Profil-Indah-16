@@ -1,0 +1,113 @@
+.card {
+  width: 100%;
+  padding: 1rem;
+  background-color: white;
+  aspect-ratio: 4/3;
+  margin-top: 1rem;
+  cursor: pointer;
+  /* Box shadows */
+
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  transition: 0.3s all ease;
+  display: flex;
+  flex-direction: column;
+}
+
+h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-family: "Poppins", sans-serif;
+}
+
+.button {
+  align-self: flex-end;
+  padding: 0.25rem 0.75rem;
+  outline: none;
+  border: none;
+  color: white;
+  font-weight: 400;
+  background-color: #005cbb;
+  cursor: pointer;
+  margin-top: auto;
+  border-radius: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.3s;
+  color: white;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+}
+
+.button span:after {
+  content: "\00bb";
+  position: absolute;
+  opacity: 0;
+  font-size: 1rem;
+  top: 0;
+  right: -20px;
+  transition: 0.3s;
+  color: white;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+.button:hover span {
+  padding-right: 25px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.dashboard__description-wrapper {
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  display: flex;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.75rem;
+  color: #354f7d38;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.dashboard__description-text-box {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hiden;
+  text-overflow: ellipsis;
+  padding: 0.25rem 0;
+  top: 0;
+  left: 0;
+  z-index: 5;
+}
+
+.dashboard__description-text-fade {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+  /* bottom black 100% top transparent */
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    #ffffff 80%,
+    #ffffff 100%
+  );
+  z-index: 10;
+}

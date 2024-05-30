@@ -1,0 +1,30 @@
+.expense-type__parent-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.expense-type__parent-wrapper h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #354f7d;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.expense-type__parent-wrapper p {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #7084a7;
+  margin-bottom: 0;
+}
+
+.expense-type__parent-wrapper h5 {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #949494;
+  margin-top: 0;
+  margin-bottom: 0;
+}

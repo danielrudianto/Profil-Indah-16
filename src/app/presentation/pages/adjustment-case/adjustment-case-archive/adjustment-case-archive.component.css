@@ -1,0 +1,10 @@
+.paginator__wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.action-button {
+  position: relative;
+  float: none;
+}

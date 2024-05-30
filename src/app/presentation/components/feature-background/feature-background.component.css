@@ -1,0 +1,26 @@
+.background__wrapper {
+  position: absolute;
+  height: 500px;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: -2;
+}
+
+.background__undercut {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 500px;
+  background-color: #d3e3fd;
+  clip-path: polygon(0px 0px, 100% 0px, 100% 100%, 0px 85%);
+}
+
+.background__overcut {
+  background-color: rgba(124, 172, 248, 0.7);
+  clip-path: polygon(0px 0px, 100% 0px, 100% 75%, 0% 100%);
+  height: 500px;
+  position: absolute;
+  width: 100%;
+}

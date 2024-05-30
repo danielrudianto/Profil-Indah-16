@@ -1,0 +1,9 @@
+<div class="create-dialog__header">
+  <div class="create-dialog__title-wrapper">
+    <h1>{{ title }}</h1>
+    <button mat-icon-button (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <ng-content select="[header]"></ng-content>
+</div>

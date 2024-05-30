@@ -1,0 +1,80 @@
+<label>Date</label>
+<p>{{ data.date | date : "dd MMMM YYYY" }}</p>
+
+<label>Name</label>
+<p>{{ data.name }}</p>
+
+<label>Type</label>
+<p>{{ data.type == 0 ? "Found" : "Lost" }}</p>
+
+<label>Company</label>
+<p>{{ data.company_name == null ? "N/A" : data.company_name }}</p>
+
+<label>Status</label>
+<p>
+  {{ data.is_delete ? "Deleted" : data.is_confirm ? "Confirmed" : "Pending" }}
+</p>
+
+<label>Created by</label>
+<div class="created-by__wrapper">
+  <p>{{ data.user_adjustment_case_code_created_byTouser.name }}</p>
+  <app-avatar
+    *ngIf="data.user_adjustment_case_code_created_byTouser.user_avatar != null"
+    [top]="data.user_adjustment_case_code_created_byTouser.user_avatar.top"
+    [accessories]="
+      data.user_adjustment_case_code_created_byTouser.user_avatar.accessories
+    "
+    [eyes]="data.user_adjustment_case_code_created_byTouser.user_avatar.eyes"
+    [mouth]="data.user_adjustment_case_code_created_byTouser.user_avatar.mouth"
+    [clothes]="
+      data.user_adjustment_case_code_created_byTouser.user_avatar.clothes
+    "
+    [eyebrows]="
+      data.user_adjustment_case_code_created_byTouser.user_avatar.eyebrows
+    "
+    [circle]="
+      data.user_adjustment_case_code_created_byTouser.user_avatar.circle
+    "
+    [color]="data.user_adjustment_case_code_created_byTouser.user_avatar.color"
+    [width]="25"
+  />
+</div>
+
+<label>Created at</label>
+<p>{{ data.created_at | date : "dd MMMM YY H:m:s" }}</p>
+
+<div class="table-responsive">
+  <table class="table" id="my-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th class="text-center">Quantity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data.adjustment_case">
+        <td>
+          <p>{{ item.item.reference }}</p>
+          <p class="text-clamp-1">{{ item.item.description }}</p>
+        </td>
+        <td class="text-center">
+          {{ item.quantity | number : "0.0-2" }}
+          {{ item.item_unit == null ? item.item.unit : item.item_unit.unit }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<label>Actions</label>
+<div *ngIf="!isAdministrator">There is no other action available.</div>
+<div class="adjustment-case__action-wrapper" *ngIf="isAdministrator">
+  <button
+    class="adjustment-case__action"
+    (click)="openDeleteConfirmation()"
+    [disabled]="data.is_delete"
+  >
+    <mat-icon>delete</mat-icon>
+    Delete
+  </button>
+</div>

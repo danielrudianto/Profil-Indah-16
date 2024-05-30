@@ -1,0 +1,6 @@
+<div class="dynamic__wrapper" [@fadeInOutAnimation]="isOpened ? 'in' : 'out'">
+  <div class="dynamic__background" (click)="onBackgroundClick()"></div>
+  <div class="dynamic__content">
+    <ng-content></ng-content>
+  </div>
+</div>

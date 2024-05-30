@@ -1,0 +1,69 @@
+import { Component, Input } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+
+@Component({
+  selector: 'app-transaction-header',
+  templateUrl: './transaction-header.component.html',
+  styleUrls: ['./transaction-header.component.css'],
+})
+export class TransactionHeaderComponent {
+  constructor(
+    private activatedRouter: ActivatedRoute,
+    private router: Router
+  ) {}
+
+  @Input('title') title!: string;
+  @Input('availbleMenus') availbleMenus: any[] = [];
+  @Input('route') route!: string;
+
+  menus: any[] = [];
+
+  ngOnInit(): void {
+    if (this.availbleMenus.length > 0) {
+      const currentURL = this.router.url;
+      const segments = currentURL.split('/');
+
+      let baseRoute = '';
+      if (segments.length > 2) {
+        baseRoute = `/${segments[1]}/${segments[2]}`;
+      }
+
+      this.menus = this.availbleMenus.map((x) => {
+        return {
+          ...x,
+          link: `${baseRoute}/${x.link}`,
+        };
+      });
+    }
+  }
+
+  clickBackButton() {
+    const currentUrl = this.router.url;
+    const segments = currentUrl.split('/');
+
+    // Determine the base route
+    let baseRoute = '';
+    if (segments.length > 2) {
+      baseRoute = `/${segments[1]}/${segments[2]}`;
+    }
+
+    // Check if the current route is the base route
+    if (currentUrl === baseRoute) {
+      // If at base route, navigate one level up
+      baseRoute = `/${segments[1]}`;
+    }
+
+    this.router.navigate([baseRoute]);
+  }
+
+  get baseRoute(): string {
+    const currentURL = this.router.url;
+    const segments = currentURL.split('/');
+    return segments.length > 2 ? `/${segments[1]}/${segments[2]}` : '';
+  }
+
+  isCurrentRoute(link: string): boolean {
+    const currentURL = this.router.url.split('?')[0];
+    return currentURL === link || currentURL + '/' === link;
+  }
+}

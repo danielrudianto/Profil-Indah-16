@@ -1,0 +1,53 @@
+<div class="view-panel-wrapper">
+  <div class="view-panel-backdrop" (click)="close()"></div>
+  <div class="view-panel" [@panelAnimation]="panelState">
+    <div class="row-action">
+      <h2 mat-dialog-title>View Archive</h2>
+      <div class="d-flex">
+        <button mat-icon-button (click)="enlarge()">
+          <mat-icon *ngIf="panelState != 'enlarged'">open_in_full</mat-icon>
+          <mat-icon *ngIf="panelState == 'enlarged'">close_fullscreen</mat-icon>
+        </button>
+        <button mat-icon-button (click)="close()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="view-panel-content" id="content">
+      <mat-spinner id="spinner" *ngIf="isLoading" />
+
+      <div *ngIf="!isLoading" [ngSwitch]="data.route">
+        <app-sales-invoice-view
+          *ngSwitchCase="'sales-invoice'"
+          [data]="dataSource"
+          (close)="close()"
+        ></app-sales-invoice-view>
+        <app-purchase-invoice-view
+          *ngSwitchCase="'purchase-invoice'"
+          [data]="dataSource"
+          (close)="close()"
+        />
+        <app-adjustment-case-view
+          *ngSwitchCase="'adjustment-event'"
+          [data]="dataSource"
+          (close)="close()"
+        />
+      </div>
+    </div>
+    <div class="shortcuts">
+      <div class="shortcut-key">
+        <span class="shortcut-key-label">ESC</span>
+        <span class="shortcut-key-function">Back</span>
+      </div>
+      <div class="shortcut-key">
+        <span class="shortcut-key-label">F</span>
+        <span class="shortcut-key-function">Toggle full screen</span>
+      </div>
+      <div class="shortcut-key">
+        <span class="shortcut-key-label">P</span>
+        <span class="shortcut-key-function">Print</span>
+      </div>
+    </div>
+    <div class="actions"></div>
+  </div>
+</div>

@@ -1,0 +1,158 @@
+<div class="dashboard__wrapper">
+  <div class="dashboard__wrapper-background">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12" id="get-started">
+          <img src="/assets/images/get-started.png" class="dashboard__hero" />
+          <div class="get-started__text-box px-3">
+            <h1>Purchasing Dashboard</h1>
+            <p>Empowering your business with the best procurement practices.</p>
+            <div class="get-started__text-box__button-wrapper">
+              <button class="download-button" matTooltip="Stock application">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="30px"
+                  viewBox="0 -960 960 960"
+                  width="30px"
+                  fill="#e8eaed"
+                >
+                  <path
+                    d="M200-80q-33 0-56.5-23.5T120-160v-451q-18-11-29-28.5T80-680v-120q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v120q0 23-11 40.5T840-611v451q0 33-23.5 56.5T760-80H200Zm0-520v440h560v-440H200Zm-40-80h640v-120H160v120Zm200 280h240v-80H360v80Zm120 20Z"
+                  />
+                </svg>
+              </button>
+              <div class="vertical-divider mx-2"></div>
+              <button
+                class="download-button white"
+                matTooltip="Back to dashboard"
+                [routerLink]="'/'"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24px"
+                  viewBox="0 -960 960 960"
+                  width="24px"
+                  fill="#041e49"
+                >
+                  <path
+                    d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <small>Other application features</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <mat-grid-list
+        [cols]="columnNumber"
+        [rowHeight]="aspectRatio"
+        class="w-100"
+        gutterSize="20"
+        class="grid-list"
+      >
+        <mat-grid-tile *ngFor="let stat of stats">
+          <app-stat-card
+            class="w-100 h-100"
+            [previousValue]="stat.previousValue"
+            [title]="stat.title"
+            [value]="stat.value"
+            [againstText]="stat.againstText"
+          />
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-12 mt-5 mb-3">
+      <mat-accordion [hideToggle]="true">
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <h3>Quick Picks</h3>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="quick-picks__wrapper">
+            <button
+              class="quick-picks__wrapper__button"
+              matTooltip="Purchase report"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    opacity="0.4"
+                    d="M19.24 5.58006H18.84L15.46 2.20006C15.19 1.93006 14.75 1.93006 14.47 2.20006C14.2 2.47006 14.2 2.91006 14.47 3.19006L16.86 5.58006H7.14L9.53 3.19006C9.8 2.92006 9.8 2.48006 9.53 2.20006C9.26 1.93006 8.82 1.93006 8.54 2.20006L5.17 5.58006H4.77C3.87 5.58006 2 5.58006 2 8.14006C2 9.11006 2.2 9.75006 2.62 10.1701C2.86 10.4201 3.15 10.5501 3.46 10.6201C3.75 10.6901 4.06 10.7001 4.36 10.7001H19.64C19.95 10.7001 20.24 10.6801 20.52 10.6201C21.36 10.4201 22 9.82006 22 8.14006C22 5.58006 20.13 5.58006 19.24 5.58006Z"
+                    fill="#5985e1"
+                  ></path>
+                  <path
+                    d="M19.6509 10.7001H4.36094C4.06094 10.7001 3.75094 10.6901 3.46094 10.6201L4.72094 18.3001C5.00094 20.0201 5.75094 22.0001 9.08094 22.0001H14.6909C18.0609 22.0001 18.6609 20.3101 19.0209 18.4201L20.5309 10.6201C20.2509 10.6801 19.9509 10.7001 19.6509 10.7001ZM10.6109 17.1601C10.6109 17.5501 10.3009 17.8601 9.91094 17.8601C9.52094 17.8601 9.21094 17.5501 9.21094 17.1601V13.8601C9.21094 13.4701 9.52094 13.1601 9.91094 13.1601C10.3009 13.1601 10.6109 13.4701 10.6109 13.8601V17.1601ZM14.8909 17.1601C14.8909 17.5501 14.5809 17.8601 14.1909 17.8601C13.8009 17.8601 13.4909 17.5501 13.4909 17.1601V13.8601C13.4909 13.4701 13.8009 13.1601 14.1909 13.1601C14.5809 13.1601 14.8909 13.4701 14.8909 13.8601V17.1601Z"
+                    fill="#5985e1"
+                  ></path>
+                </g>
+              </svg>
+              <p>Purchase Report</p>
+            </button>
+
+            <button
+              class="quick-picks__wrapper__button"
+              matTooltip="Inadequate items"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    opacity="0.4"
+                    d="M16.1894 8.8599C15.7994 8.8599 15.4894 8.5499 15.4894 8.1599V6.8799C15.4894 5.8999 15.0694 4.9599 14.3494 4.2999C13.6094 3.6299 12.6594 3.3199 11.6594 3.4099C9.97937 3.5699 8.50938 5.2799 8.50938 7.0599V7.9599C8.50938 8.3499 8.19937 8.6599 7.80937 8.6599C7.41937 8.6599 7.10938 8.3499 7.10938 7.9599V7.0599C7.10938 4.5599 9.12938 2.2499 11.5194 2.0199C12.9094 1.8899 14.2494 2.3299 15.2794 3.2699C16.2994 4.1899 16.8794 5.5099 16.8794 6.8799V8.1599C16.8794 8.5499 16.5694 8.8599 16.1894 8.8599Z"
+                    fill="#5985e1"
+                  ></path>
+                  <path
+                    d="M19.9597 8.96008C19.1197 8.03008 17.7397 7.58008 15.7197 7.58008H8.27975C6.25975 7.58008 4.87975 8.03008 4.03975 8.96008C3.06975 10.0401 3.09975 11.4801 3.20975 12.4801L3.90975 18.0501C4.11975 20.0001 4.90975 22.0001 9.20975 22.0001H14.7897C19.0897 22.0001 19.8797 20.0001 20.0897 18.0601L20.7897 12.4701C20.8997 11.4801 20.9297 10.0401 19.9597 8.96008ZM11.9997 18.5801C9.90975 18.5801 8.20975 16.8801 8.20975 14.7901C8.20975 12.7001 9.90975 11.0001 11.9997 11.0001C14.0897 11.0001 15.7897 12.7001 15.7897 14.7901C15.7897 16.8801 14.0897 18.5801 11.9997 18.5801Z"
+                    fill="#5985e1"
+                  ></path>
+                  <path
+                    opacity="0.4"
+                    d="M12.0009 18.58C14.0941 18.58 15.7909 16.8832 15.7909 14.79C15.7909 12.6968 14.0941 11 12.0009 11C9.90778 11 8.21094 12.6968 8.21094 14.79C8.21094 16.8832 9.90778 18.58 12.0009 18.58Z"
+                    fill="#5985e1"
+                  ></path>
+                  <path
+                    d="M13.5991 15.3099L13.0691 14.7799L13.5691 14.2799C13.8591 13.9899 13.8591 13.5099 13.5691 13.2199C13.2791 12.9299 12.7991 12.9299 12.5091 13.2199L12.0091 13.7199L11.4791 13.1899C11.1891 12.8999 10.7091 12.8999 10.4191 13.1899C10.1291 13.4799 10.1291 13.9599 10.4191 14.2499L10.9491 14.7799L10.3991 15.3299C10.1091 15.6199 10.1091 16.0999 10.3991 16.3899C10.5491 16.5399 10.7391 16.6099 10.9291 16.6099C11.1191 16.6099 11.3091 16.5399 11.4591 16.3899L12.0091 15.8399L12.5391 16.3699C12.6891 16.5199 12.8791 16.5899 13.0691 16.5899C13.2591 16.5899 13.4491 16.5199 13.5991 16.3699C13.8891 16.0799 13.8891 15.6099 13.5991 15.3099Z"
+                    fill="#5985e1"
+                  ></path>
+                </g>
+              </svg>
+              <p>Inadequate items</p>
+            </button>
+          </div>
+          <app-gcp-info />
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+</div>

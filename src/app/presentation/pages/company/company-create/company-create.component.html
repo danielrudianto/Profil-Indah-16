@@ -1,0 +1,52 @@
+<app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
+  <div class="create-dialog">
+    <app-dialog-header title="Add new company" (onDialogClose)="closeDialog()">
+    </app-dialog-header>
+    <div class="create-dialog__content">
+      <form [formGroup]="companyFormGroup">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Name</mat-label>
+          <input
+            [disabled]="isSubmitting"
+            matInput
+            placeholder="Ex. PT. ABC"
+            type="text"
+            formControlName="name"
+          />
+        </mat-form-field>
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Address</mat-label>
+          <textarea
+            [disabled]="isSubmitting"
+            matInput
+            placeholder="Ex. Jalan Raya ABC no. XX"
+            type="text"
+            formControlName="address"
+          ></textarea>
+        </mat-form-field>
+
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>NPWP</mat-label>
+          <input
+            [disabled]="isSubmitting"
+            matInput
+            mask="00.000.000.0-000.000"
+            placeholder="Ex. XX.XXX.XXX.X-XXX.XXX"
+            type="text"
+            formControlName="npwp"
+          />
+        </mat-form-field>
+      </form>
+    </div>
+    <div class="create-dialog__footer">
+      <button
+        type="button"
+        class="next-button"
+        (click)="submitForm()"
+        [disabled]="isSubmitting || !companyFormGroup.valid"
+      >
+        Submit
+      </button>
+    </div>
+  </div>
+</app-dynamic-dialog>

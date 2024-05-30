@@ -1,0 +1,74 @@
+.stepper__wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow-x: auto;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.stepper__item-wrapper {
+  width: 200px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.stepper__item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.stepper__item__indicator {
+  width: 30px;
+  height: 30px;
+  color: #0b57d0;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+  transition: 0.3s all ease;
+}
+.stepper__item__label {
+  flex-grow: 1;
+  text-align: left;
+  font-size: 0.9rem;
+  color: white;
+  line-clamp: 1;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: 0.3s all ease;
+}
+
+.stepper__item-wrapper:not(:last-of-type):after {
+  /* Horizontal line white */
+  content: "";
+  height: 1px;
+  width: 50px;
+  background-color: white;
+  margin: 0 0.5rem;
+}
+
+.stepper__item--selected .stepper__item__indicator {
+  border: 1px solid white;
+  background-color: transparent;
+  color: white;
+}
+
+.stepper__item--disabled .stepper__item__indicator {
+  border: 1px solid #ccc;
+  background-color: #ccc;
+  color: white;
+  cursor: not-allowed;
+}

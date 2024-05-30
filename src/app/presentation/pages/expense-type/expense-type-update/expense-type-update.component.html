@@ -1,0 +1,40 @@
+<h1 mat-dialog-title>Update expense type</h1>
+<mat-dialog-content>
+  <div *ngIf="isLoading">
+    <mat-spinner id="spinner"></mat-spinner>
+  </div>
+  <div *ngIf="!isLoading">
+    <form [formGroup]="expenseTypeFormGroup" (ngSubmit)="save()">
+      <mat-form-field appearance="outline" class="w-100 mt-2">
+        <mat-label>Name</mat-label>
+        <input
+          formControlName="name"
+          matInput
+          placeholder="Ex. Food"
+          type="text"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Description</mat-label>
+        <textarea
+          formControlName="description"
+          matInput
+          placeholder="Ex. Food"
+          type="text"
+        ></textarea>
+      </mat-form-field>
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button
+    (click)="save()"
+    color="primary"
+    mat-button
+    type="button"
+    [disabled]="!expenseTypeFormGroup.valid"
+  >
+    Update
+  </button>
+</mat-dialog-actions>

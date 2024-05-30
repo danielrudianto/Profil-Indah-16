@@ -1,0 +1,78 @@
+<div class="d-flex mt-4">
+  <div class="d-flex position-relative">
+    <app-vertical-divider></app-vertical-divider>
+    <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <h5>General data</h5>
+    <form [formGroup]="metaFormGroup">
+      <app-autocomplete-search
+        label="Company"
+        placeholder="Ex. Toko Profil Indah"
+        routeName="company"
+        [selected]="metaFormGroup.controls['company_id'].valid"
+        (onSelectData)="onSelectCompany($event)"
+        (onUnselectData)="onUnselectCompany()"
+      ></app-autocomplete-search>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Date</mat-label>
+        <input
+          matInput
+          placeholder="Ex. 12/30/2023"
+          [matDatepicker]="picker"
+          formControlName="date"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </form>
+  </div>
+</div>
+<div class="d-flex">
+  <div class="d-flex position-relative">
+    <app-box-stepper
+      step="2"
+      [valid]="expenseFormGroup.valid"
+    ></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <h5>Detail data</h5>
+    <form [formGroup]="expenseFormGroup">
+      <app-autocomplete-search
+        label="Expense type"
+        placeholder="Ex. Transportasi"
+        routeName="expense-type"
+        [selected]="expenseFormGroup.controls['expense_type_id'].valid"
+        (onSelectData)="onSelectExpenseType($event)"
+        (onUnselectData)="onUnselectExpenseType()"
+      ></app-autocomplete-search>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Value</mat-label>
+        <input
+          matInput
+          type="text"
+          mask="separator"
+          thousandSeparator=" "
+          formControlName="value"
+          autocomplete="off"
+          placeholder="Ex. 80 000"
+          focusedInput
+        />
+      </mat-form-field>
+    </form>
+
+    <button
+      [disabled]="!metaFormGroup.valid || !expenseFormGroup.valid"
+      class="action-button"
+      (click)="submitForm()"
+    >
+      Submit
+    </button>
+  </div>
+</div>

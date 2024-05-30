@@ -1,0 +1,34 @@
+<form [formGroup]="searchFormGroup">
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>{{ label }}</mat-label>
+    <input
+      matInput
+      type="text"
+      [readonly]="isLoading || selected"
+      [matAutocomplete]="autocomplete"
+      formControlName="searchBar"
+      [placeholder]="placeholder"
+    />
+    <mat-autocomplete
+      (optionSelected)="selectData($event)"
+      #autocomplete="matAutocomplete"
+    >
+      <mat-option *ngIf="defaultValue != null" value="0">{{
+        defaultValue
+      }}</mat-option>
+      <mat-option *ngFor="let option of items" [value]="option.id">
+        {{ option.name }}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-icon matPrefix *ngIf="selected">check_box</mat-icon>
+    <mat-icon matPrefix *ngIf="!selected">check_box_outline_blank</mat-icon>
+    <button
+      mat-icon-button
+      matSuffix
+      [disabled]="!selected || disabled"
+      (click)="clearData()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</form>

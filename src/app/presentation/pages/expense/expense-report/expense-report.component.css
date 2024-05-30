@@ -1,0 +1,11 @@
+.expense-report__header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.expense-report__header {
+  width: auto;
+}

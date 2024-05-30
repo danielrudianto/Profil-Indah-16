@@ -1,0 +1,66 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.css";
+
+/* Import font family Nunito and Poppins from asset folder */
+@font-face {
+  font-family: "Nunito";
+  src: url("./assets/fonts/Nunito/NunitoSans-Regular.ttf");
+}
+
+/* Also include the bold, italic, and bold italic fonts */
+@font-face {
+  font-family: "Nunito";
+  src: url("./assets/fonts/Nunito/NunitoSans-Bold.ttf");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("./assets/fonts/Nunito/NunitoSans-Black.ttf");
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("./assets/fonts/Nunito/NunitoSans-BlackItalic.ttf");
+  font-weight: 900;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("./assets/fonts/Nunito/NunitoSans-BoldItalic.ttf");
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("./assets/fonts/Nunito/NunitoSans-ExtraLight.ttf");
+  font-weight: 200;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("./assets/fonts/Nunito/NunitoSans-ExtraLightItalic.ttf");
+  font-weight: 200;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("./assets/fonts/Nunito/NunitoSans-Light.ttf");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("./assets/fonts/Nunito/NunitoSans-LightItalic.ttf");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("./assets/fonts/Poppins/Poppins-Regular.ttf");
+}

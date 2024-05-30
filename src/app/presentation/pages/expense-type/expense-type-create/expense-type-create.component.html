@@ -1,0 +1,44 @@
+<h1 mat-dialog-title>Add Expense Type</h1>
+<mat-dialog-content>
+  <div class="expense-type__parent-wrapper" *ngIf="data.parentName != null">
+    <h5>Parent data</h5>
+    <mat-divider class="mt-1 mb-2" />
+    <h2>{{ data.parentName }}</h2>
+    <p>{{ data.parentDescription }}</p>
+
+    <mat-divider class="mt-2" />
+  </div>
+
+  <form [formGroup]="expenseTypeFormGroup" (ngSubmit)="save()">
+    <mat-form-field appearance="outline" class="w-100 mt-2">
+      <mat-label>Name</mat-label>
+      <input
+        formControlName="name"
+        matInput
+        placeholder="Ex. Food"
+        type="text"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Description</mat-label>
+      <textarea
+        formControlName="description"
+        matInput
+        placeholder="Ex. Food"
+        type="text"
+      ></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button
+    mat-button
+    type="button"
+    color="primary"
+    [disabled]="isSubmitting || !expenseTypeFormGroup.valid"
+    (click)="save()"
+  >
+    Save
+  </button>
+</mat-dialog-actions>

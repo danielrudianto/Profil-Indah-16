@@ -1,0 +1,30 @@
+.create-dialog__header {
+  width: 100%;
+  background-color: #0b57d0;
+  padding: 1rem;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  color: white;
+  font-weight: 500;
+}
+
+.create-dialog__title-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.create-dialog__title-wrapper h1 {
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  line-height: 28px;
+  text-align: left;
+  flex-grow: 1;
+  line-clamp: 1;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

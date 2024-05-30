@@ -1,0 +1,26 @@
+<div class="profile-dialog">
+  <div
+    class="profile-dialog__background"
+    (click)="closeDialog()"
+    [@fadeInOut]="isOpened ? 'shown' : 'hidden'"
+  ></div>
+  <div
+    class="profile-dialog__wrapper"
+    [@slideFromLeft]="isOpened ? 'open' : 'closed'"
+  >
+    <div class="profile-dialog__button-wrapper">
+      <button (click)="closeDialog()"><mat-icon>close</mat-icon></button>
+    </div>
+    <p class="mb-0 name__p">{{ name }}</p>
+    <p>Exclusively managed by profilindah.id</p>
+    <div class="profile-dialog__avatar-wrapper">
+      <app-circle-avatar [size]="50" [name]="name" />
+    </div>
+    <h3 class="mt-3">Hi {{ name }}!</h3>
+
+    <div class="profile-dialog__action-wrapper" (click)="navigateToProfile()">
+      Profile
+    </div>
+    <div class="profile-dialog__action-wrapper" (click)="logout()">Logout</div>
+  </div>
+</div>

@@ -1,0 +1,150 @@
+<div class="view-panel-wrapper">
+  <div class="view-panel-backdrop" (click)="close()"></div>
+  <div class="view-panel" [@panelAnimation]="panelState">
+    <div class="row-action">
+      <h2 mat-dialog-title>Create promotion</h2>
+      <div class="d-flex">
+        <button mat-icon-button (click)="enlarge()">
+          <mat-icon *ngIf="panelState != 'enlarged'">open_in_full</mat-icon>
+          <mat-icon *ngIf="panelState == 'enlarged'">close_fullscreen</mat-icon>
+        </button>
+        <button mat-icon-button (click)="close()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="view-panel-content" id="content">
+      <form [formGroup]="promotionFormGroup">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+
+        <!-- Start date -->
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Start date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="startDatePicker"
+            formControlName="startDate"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="startDatePicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #startDatePicker></mat-datepicker>
+        </mat-form-field>
+
+        <!-- End date optional can clear input -->
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>End date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="endDatePicker"
+            formControlName="endDate"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="endDatePicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #endDatePicker></mat-datepicker>
+          <mat-hint>Optional</mat-hint>
+        </mat-form-field>
+
+        <!-- Target -->
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Target</mat-label>
+          <input
+            matInput
+            formControlName="target"
+            type="text"
+            mask="separator"
+            thousandSeparator=" "
+            placeholder="Ex. 2 500 000 000"
+          />
+        </mat-form-field>
+
+        <app-autocomplete-search
+          label="Product brand"
+          routeName="product-brand"
+          placeholder="Ex. Garuda"
+          [defaultValue]="promotionFormGroup.get('brand_name')?.value"
+          [selected]="promotionFormGroup.controls['brand'].valid"
+          (onSelectData)="onSelectBrand($event)"
+          (onUnselectData)="onUnselectBrand()"
+        ></app-autocomplete-search>
+
+        <app-autocomplete-search
+          label="Supplier"
+          routeName="supplier"
+          placeholder="Ex. PT. ABC"
+          [defaultValue]="promotionFormGroup.get('supplier_name')?.value"
+          [selected]="promotionFormGroup.controls['supplier'].valid"
+          (onSelectData)="onSelectSupplier($event)"
+          (onUnselectData)="onUnselectSupplier()"
+        ></app-autocomplete-search>
+
+        <button mat-raised-button type="button" (click)="addRuleDialog()">
+          Add new rule
+        </button>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Property</th>
+                <th>Value</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="t.controls.length == 0">
+              <tr>
+                <td colspan="4">No data</td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="t.controls.length > 0">
+              <tr *ngFor="let control of t.controls; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ control.value.rule }}</td>
+                <td>{{ control.value.value }}</td>
+                <td>
+                  <button mat-icon-button (click)="removeRule(i)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </form>
+    </div>
+    <div class="shortcuts">
+      <div class="shortcut-key">
+        <span class="shortcut-key-label">ESC</span>
+        <span class="shortcut-key-function">Back</span>
+      </div>
+      <div class="shortcut-key">
+        <span class="shortcut-key-label">F</span>
+        <span class="shortcut-key-function">Toggle full screen</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="action-button mx-1" (click)="viewPromotionResult()">
+        Result
+      </button>
+      <button
+        class="action-button mx-1"
+        (click)="save()"
+        [disabled]="!promotionFormGroup.valid || isSubmitting"
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</div>

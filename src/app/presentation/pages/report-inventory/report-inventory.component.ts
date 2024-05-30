@@ -1,0 +1,93 @@
+import { Component } from '@angular/core';
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
+import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+
+@Component({
+  selector: 'app-report-inventory',
+  templateUrl: './report-inventory.component.html',
+  styleUrls: ['./report-inventory.component.css'],
+})
+export class ReportInventoryComponent {
+  isOpened: boolean = false;
+  isLoading: boolean = true;
+  value: number = 0;
+  company: any[] = [];
+  isDownloading: boolean = false;
+  constructor(
+    private apiService: ApiService,
+    private dynamicComponentService: DynamicComponentService,
+    private alertService: AlertService
+  ) {}
+
+  ngOnInit(): void {
+    this.isOpened = true;
+
+    this.apiService
+      .get('report/inventory')
+      .subscribe({
+        next: (data: any) => {
+          this.value = data.value;
+          this.company = data.company;
+        },
+        error: (error) => {},
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
+  }
+
+  download() {
+    this.isDownloading = true;
+    this.apiService
+      .get('report/inventory/download')
+      .subscribe({
+        next: (data: any) => {
+          // Create an excel file
+          const replacer = (key: string, value: any) =>
+            value === null ? '' : value;
+
+          const header = [
+            'reference',
+            'description',
+            'brand',
+            'type',
+            'quantity',
+            'unit',
+            'value',
+          ];
+
+          const csv = data.map((row: any) =>
+            header
+              .map((fieldName) => JSON.stringify(row[fieldName], replacer))
+              .join(',')
+          );
+
+          csv.unshift(header.join(','));
+          const csvArray = csv.join('\r\n');
+          const a = document.createElement('a');
+          const blob = new Blob([csvArray], { type: 'text/csv' });
+          const url = window.URL.createObjectURL(blob);
+
+          a.href = url;
+          a.download = `Inventory report ${new Date().toLocaleDateString()}.csv`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove();
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isDownloading = false;
+      });
+  }
+
+  closeDialog() {
+    this.isOpened = false;
+    setTimeout(() => {
+      this.dynamicComponentService.closeDynamicComponent();
+    }, 300);
+  }
+}
