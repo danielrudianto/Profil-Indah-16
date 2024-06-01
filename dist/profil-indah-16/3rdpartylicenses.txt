@@ -35,6 +35,9 @@ MIT
 @angular/forms
 MIT
 
+@angular/localize
+MIT
+
 @angular/material
 MIT
 The MIT License
@@ -90,6 +93,9 @@ MIT
 
 @angular/router
 MIT
+
+@ngx-translate/core
+SEE LICENSE IN LICENSE
 
 angular2-hotkeys
 MIT

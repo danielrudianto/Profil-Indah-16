@@ -1,1 +1,334 @@
-<p>purchase-invoice-edit works!</p>
+<div class="d-flex mt-4">
+  <div class="d-flex position-relative">
+    <app-vertical-divider></app-vertical-divider>
+    <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <h5>General data</h5>
+    <app-autocomplete-search
+      *ngIf="dataSource != null"
+      routeName="supplier"
+      label="Supplier"
+      placeholder="Ex. Bing Jaya"
+      [selected]="metaFormGroup.controls['supplier_id'].valid"
+      [defaultValue]="metaFormGroup.controls['supplier_name'].value"
+      (onSelectData)="onSelectSupplier($event)"
+      (onUnselectData)="onUnselectSupplier()"
+    ></app-autocomplete-search>
+
+    <app-autocomplete-search
+      routeName="company"
+      label="Company"
+      placeholder="Ex. Toko Profil Indah"
+      [selected]="metaFormGroup.controls['company_id'].valid"
+      [defaultValue]="metaFormGroup.value.company_name"
+      (onSelectData)="onSelectCompany($event)"
+      (onUnselectData)="onUnselectCompany()"
+    ></app-autocomplete-search>
+  </div>
+</div>
+
+<div class="d-flex">
+  <div class="d-flex position-relative">
+    <app-vertical-divider></app-vertical-divider>
+    <app-box-stepper
+      step="2"
+      [valid]="documentFormGroup.valid"
+    ></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <form [formGroup]="documentFormGroup">
+      <h5>Document data</h5>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Delivery order date</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Ex. 30/12/2023"
+          [matDatepicker]="picker"
+          formControlName="date"
+          autocomplete="off"
+          (click)="picker.open()"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Delivery order name</mat-label>
+        <input
+          type="text"
+          matInput
+          placeholder="Ex. 123456"
+          formControlName="name"
+          autocomplete="off"
+        />
+      </mat-form-field>
+
+      <mat-divider></mat-divider>
+      <h5 class="mt-3">Purchase invoice data</h5>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Purchase invoice name</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Ex. 123456"
+          formControlName="invoice_name"
+          autocomplete="off"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Tax invoice</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Ex. XXX.XXX-XX.XXXXXXXX"
+          formControlName="faktur"
+          mask="000.000-00.00000000"
+          autocomplete="off"
+        />
+      </mat-form-field>
+    </form>
+  </div>
+</div>
+<div class="d-flex">
+  <div class="d-flex position-relative">
+    <app-vertical-divider></app-vertical-divider>
+    <app-box-stepper step="3" [valid]="itemFormGroup.valid"></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <button class="add-button" (click)="openItemSelector()">Add item</button>
+    <form [formGroup]="itemFormGroup">
+      <table class="table w-100 mb-2">
+        <thead>
+          <tr>
+            <th style="width: 300px" rowspan="2">Item</th>
+            <th style="width: 150px" rowspan="2" class="text-center">Price</th>
+            <th style="width: 250px" colspan="2" class="text-center">
+              Discount
+            </th>
+            <th style="width: 200px" rowspan="2" class="text-center">
+              Quantity
+            </th>
+            <th style="width: 200px" rowspan="2" class="text-center">Total</th>
+            <th style="width: 150px" rowspan="2" class="text-center">Action</th>
+          </tr>
+          <tr>
+            <td style="width: 150px" class="text-center">Rp.</td>
+            <td style="width: 100px" class="text-center">%</td>
+          </tr>
+        </thead>
+        <tbody *ngIf="t.controls.length > 0">
+          <tr
+            *ngFor="let itemForm of t.controls; index as i"
+            [formGroup]="getFormGroupAt(i)"
+          >
+            <td>
+              <p>{{ itemForm.get("reference")?.value }}</p>
+              <div class="text-clamp-2">
+                {{ itemForm.get("description")?.value }}
+              </div>
+            </td>
+            <td class="text-center" (click)="openEditData(i)">
+              Rp.&nbsp;{{ itemForm.get("price")?.value | number : "0.0-2" }}
+            </td>
+            <td class="text-center" (click)="openEditData(i)">
+              Rp.&nbsp;{{ itemForm.get("discount")?.value | number : "0.2-2" }}
+            </td>
+            <td class="text-center" (click)="openEditData(i)">
+              {{
+                itemForm.get("price")?.value == 0
+                  ? 0
+                  : ((itemForm.get("discount")?.value * 100) /
+                      itemForm.get("price")?.value | number : "0.0-2")
+              }}%
+            </td>
+            <td>
+              <mat-form-field appearance="outline">
+                <mat-label>Quantity</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  class="text-center"
+                  mask="separator"
+                  thousandSeparator=" "
+                  formControlName="quantity"
+                  autocomplete="off"
+                  placeholder="Ex. 20"
+                />
+                <mat-hint *ngIf="itemForm.get('conversion')?.value == 1">{{
+                  itemForm.get("unit")?.value
+                }}</mat-hint>
+                <mat-hint *ngIf="itemForm.get('conversion')?.value != 1"
+                  >{{ itemForm.get("unit")?.value }} -
+                  {{
+                    itemForm.get("quantity")?.value *
+                      itemForm.get("conversion")?.value | number : "0.0-2"
+                  }}
+                  {{ itemForm.get("default_unit")?.value }}</mat-hint
+                >
+              </mat-form-field>
+            </td>
+            <td>
+              Rp.&nbsp;{{
+                itemForm.get("quantity")?.value *
+                  (itemForm.get("price")?.value -
+                    (itemForm.get("discountType")?.value == "absolute"
+                      ? itemForm.get("discount")?.value
+                      : (itemForm.get("discountPercentage")?.value *
+                          itemForm.get("price")?.value) /
+                        100)) | number : "0.2-2"
+              }}
+            </td>
+            <td class="text-nowrap text-center">
+              <div class="purchase-invoice__action-wrapper">
+                <button mat-icon-button (click)="deleteItem(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+                <button
+                  class="purchase-invoice__save-indicator"
+                  [matTooltip]="
+                    itemForm.get('save_price')?.value
+                      ? 'New price and discount will be saved.'
+                      : 'New price and discount will be discarded.'
+                  "
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    *ngIf="itemForm.get('save_price')?.value"
+                  >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g>
+                    <g id="SVGRepo_iconCarrier">
+                      <path
+                        opacity="0.4"
+                        d="M12.89 5.87988H5.10999C3.39999 5.87988 2 7.27987 2 8.98987V20.3499C2 21.7999 3.04 22.4199 4.31 21.7099L8.23999 19.5199C8.65999 19.2899 9.34 19.2899 9.75 19.5199L13.68 21.7099C14.95 22.4199 15.99 21.7999 15.99 20.3499V8.98987C16 7.27987 14.6 5.87988 12.89 5.87988Z"
+                        fill="#5985e1"
+                      ></path>
+                      <path
+                        d="M22 5.10999V16.47C22 17.92 20.96 18.53 19.69 17.83L16 15.77V8.98999C16 7.27999 14.6 5.88 12.89 5.88H8V5.10999C8 3.39999 9.39999 2 11.11 2H18.89C20.6 2 22 3.39999 22 5.10999Z"
+                        fill="#5985e1"
+                      ></path>
+                    </g>
+                  </svg>
+                  <svg
+                    *ngIf="!itemForm.get('save_price')?.value"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                  >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g>
+                    <g id="SVGRepo_iconCarrier">
+                      <path
+                        opacity="0.4"
+                        d="M12.89 5.87988H5.10999C3.39999 5.87988 2 7.27987 2 8.98987V20.3499C2 21.7999 3.04 22.4199 4.31 21.7099L8.23999 19.5199C8.65999 19.2899 9.34 19.2899 9.75 19.5199L13.68 21.7099C14.95 22.4199 15.99 21.7999 15.99 20.3499V8.98987C16 7.27987 14.6 5.87988 12.89 5.87988Z"
+                        fill="#c7c7c7"
+                      ></path>
+                      <path
+                        d="M22 5.10999V16.47C22 17.92 20.96 18.53 19.69 17.83L16 15.77V8.98999C16 7.27999 14.6 5.88 12.89 5.88H8V5.10999C8 3.39999 9.39999 2 11.11 2H18.89C20.6 2 22 3.39999 22 5.10999Z"
+                        fill="#c7c7c7"
+                      ></path>
+                    </g>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="t.controls.length == 0">
+          <tr>
+            <td colspan="7">
+              <empty-table />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+</div>
+
+<div class="d-flex">
+  <div class="d-flex">
+    <app-box-stepper step="4" [valid]="valueFormGroup.valid"></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <form [formGroup]="valueFormGroup">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Subtotal</mat-label>
+        <input
+          [readonly]="true"
+          matInput
+          type="text"
+          placeholder="Ex. 1 000 000"
+          formControlName="total"
+          mask="separator"
+          thousandSeparator=" "
+          autocomplete="off"
+        />
+        <div matTextPrefix>Rp.&nbsp;</div>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Discount</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Ex. 80 000"
+          formControlName="discount"
+          mask="separator"
+          thousandSeparator=" "
+          autocomplete="off"
+        />
+        <div matTextPrefix>Rp.&nbsp;</div>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Total</mat-label>
+        <input
+          [readonly]="true"
+          matInput
+          type="text"
+          placeholder="Ex. 920 000"
+          [value]="
+            valueFormGroup.get('total')?.value -
+              valueFormGroup.get('discount')?.value | number : '0.0-2'
+          "
+          mask="separator"
+          thousandSeparator=" "
+          autocomplete="off"
+        />
+        <div matTextPrefix>Rp.&nbsp;</div>
+      </mat-form-field>
+
+      <button
+        type="button"
+        class="action-button"
+        (click)="submitForm()"
+        [disabled]="
+          !metaFormGroup.valid ||
+          !documentFormGroup.valid ||
+          !itemFormGroup.valid ||
+          !valueFormGroup.valid ||
+          valueFormGroup.get('discount')?.value >
+            valueFormGroup.get('total')?.value
+        "
+      >
+        Submit
+      </button>
+    </form>
+  </div>
+</div>

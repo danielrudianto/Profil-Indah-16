@@ -1,1 +1,85 @@
-<p>price-sales works!</p>
+<app-transaction-header title="Sales price" [backRoute]="backRoute" />
+
+<div class="dashboard-card">
+  <app-feature-search
+    [addButton]="false"
+    route="product-price-sales"
+    [page]="page"
+    [enable]="true"
+    (onChange)="onUpdateData($event)"
+    (onLoadingChange)="onUpdateLoadingStatus($event)"
+    (updatePage)="onUpdatePage()"
+    (onNewQuery)="page = 1"
+  ></app-feature-search>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width: 150px">Reference</th>
+          <th style="width: 250px">Description</th>
+          <th style="width: 150px" class="text-center">Effective date</th>
+          <th style="width: 150px" class="text-center">Price</th>
+          <th style="width: 150px" class="text-center">Discount</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="isLoading">
+        <tr>
+          <td colspan="5">
+            <empty-table />
+          </td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="!isLoading && dataSource.length > 0">
+        <tr
+          *ngFor="let item of dataSource"
+          (click)="openUpdatePriceDialog(item.id)"
+        >
+          <td>{{ item.reference }}</td>
+          <td>
+            <span class="text-clamp-1">
+              {{ item.description }}
+            </span>
+          </td>
+          <td class="text-center">
+            {{ item.effective_date | date : "dd/MM/yyyy" }}
+          </td>
+          <td class="text-center">
+            <span
+              *ngIf="item.count > 0"
+              [matBadge]="item.count"
+              matBadgeOverlap="false"
+              matBadgeSize="small"
+            >
+              {{ item.price | number : "0.2-2" }}
+            </span>
+
+            <span *ngIf="item.count == 0">
+              {{ item.price | number : "0.2-2" }}
+            </span>
+          </td>
+          <td class="text-center">{{ item.discount | number : "0.2-2" }}</td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="!isLoading && dataSource.length == 0">
+        <tr>
+          <td colspan="5">
+            <empty-table />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <mat-paginator
+    class="paginator"
+    [pageIndex]="page - 1"
+    [length]="dataCount"
+    [pageSize]="20"
+    (page)="changePage($event)"
+    aria-label="Select page"
+    hidePageSize="true"
+    *ngIf="!isLoading"
+  >
+  </mat-paginator>
+</div>

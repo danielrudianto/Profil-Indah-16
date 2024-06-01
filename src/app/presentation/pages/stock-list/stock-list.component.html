@@ -3,13 +3,13 @@
   <div class="row">
     <div class="col-12">
       <app-feature-header
-        title="Stock Level"
-        help=""
+        [title]="'stock-list__title' | translate"
+        [help]="null"
         [isBackAvailable]="true"
       ></app-feature-header>
       <div class="dashboard-card">
         <app-feature-search
-          [addButton]="true"
+          [addButton]="false"
           route="product-stock"
           [page]="page"
           [enable]="true"
@@ -22,11 +22,15 @@
           <table class="table">
             <thead>
               <tr>
-                <th class="text-center">Reference</th>
-                <th class="text-center">Description</th>
-                <th class="text-center">Brand</th>
-                <th class="text-center">Stock</th>
-                <th class="text-center">Action</th>
+                <th class="text-center">
+                  {{ "product__reference" | translate }}
+                </th>
+                <th class="text-center">
+                  {{ "product__description" | translate }}
+                </th>
+                <th class="text-center">{{ "product__brand" | translate }}</th>
+                <th class="text-center">{{ "product__stock" | translate }}</th>
+                <th class="text-center">{{ "product__action" | translate }}</th>
               </tr>
             </thead>
             <tbody *ngIf="isLoading">

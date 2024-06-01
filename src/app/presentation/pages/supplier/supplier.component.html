@@ -3,8 +3,8 @@
   <div class="row">
     <div class="col-12">
       <app-feature-header
-        title="Supplier"
-        help="Here you can manage your suppliers data."
+        [title]="'supplier__title' | translate"
+        [help]="'supplier__help' | translate"
         [isBackAvailable]="true"
       ></app-feature-header>
       <div class="dashboard-card">
@@ -22,10 +22,14 @@
           <table class="table">
             <thead>
               <tr>
-                <th class="text-center">Name</th>
-                <th class="text-center">Address</th>
-                <th class="text-center">NPWP</th>
-                <th class="text-center">Action</th>
+                <th class="text-center">{{ "supplier__name" | translate }}</th>
+                <th class="text-center">
+                  {{ "supplier__address" | translate }}
+                </th>
+                <th class="text-center">{{ "supplier__npwp" | translate }}</th>
+                <th class="text-center">
+                  {{ "supplier__action" | translate }}
+                </th>
               </tr>
             </thead>
             <tbody *ngIf="!isLoading && dataSource.length > 0">
@@ -47,7 +51,7 @@
                   <mat-menu #menu="matMenu">
                     <button (click)="openDialog('edit', item.id)" mat-menu-item>
                       <mat-icon>edit</mat-icon>
-                      <span>Edit</span>
+                      <span>{{ "supplier__update" | translate }}</span>
                     </button>
                     <button
                       [class.delete-button]="item.can_delete"
@@ -56,7 +60,7 @@
                       mat-menu-item
                     >
                       <mat-icon>delete</mat-icon>
-                      <span>Delete</span>
+                      <span>{{ "supplier__delete" | translate }}</span>
                     </button>
                   </mat-menu>
                 </td>

@@ -3,8 +3,8 @@
   <div class="row">
     <div class="col-12">
       <app-feature-header
-        title="Product Type"
-        help="Here you can manage your products types, enabling you to categorize your products."
+        [title]="'product__type__title' | translate"
+        [help]="'product__type__help' | translate"
         [isBackAvailable]="true"
       ></app-feature-header>
       <div class="dashboard-card">
@@ -22,10 +22,18 @@
           <table class="table">
             <thead>
               <tr>
-                <th class="text-center">Name</th>
-                <th class="text-center">Created by</th>
-                <th class="text-center">Created at</th>
-                <th class="text-center">Action</th>
+                <th class="text-center">
+                  {{ "product__type__name" | translate }}
+                </th>
+                <th class="text-center">
+                  {{ "product__type__created-by" | translate }}
+                </th>
+                <th class="text-center">
+                  {{ "product__type__created-at" | translate }}
+                </th>
+                <th class="text-center">
+                  {{ "product__type__action" | translate }}
+                </th>
               </tr>
             </thead>
             <tbody *ngIf="!isLoading && dataSource.length > 0">
@@ -44,7 +52,7 @@
                   <mat-menu #menu="matMenu">
                     <button (click)="openDialog('edit', item.id)" mat-menu-item>
                       <mat-icon>edit</mat-icon>
-                      <span>Edit</span>
+                      <span>{{ "product__type__update" | translate }}</span>
                     </button>
                     <button
                       [class.delete-button]="item.can_delete"
@@ -53,7 +61,7 @@
                       [disabled]="!item.can_delete"
                     >
                       <mat-icon>delete</mat-icon>
-                      <span>Delete</span>
+                      <span>{{ "product__type__delete" | translate }}</span>
                     </button>
                   </mat-menu>
                 </td>

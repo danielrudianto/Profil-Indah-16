@@ -63,7 +63,11 @@
               </tr>
             </tbody>
             <tbody *ngIf="!isLoading && dataSource.length == 0">
-              <tr colspan="4" empty-table></tr>
+              <tr>
+                <td colspan="4">
+                  <empty-table />
+                </td>
+              </tr>
             </tbody>
             <tbody *ngIf="isLoading">
               <tr>

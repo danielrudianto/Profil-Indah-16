@@ -1,16 +1,20 @@
-<h1 mat-dialog-title>Delete confirmation</h1>
+<h1 mat-dialog-title>
+  {{ "general__delete-confirmation__title" | translate }}
+</h1>
 <mat-dialog-content>
   <p>{{ data.title }}</p>
   <p>{{ data.document }}</p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button mat-dialog-close>
+    {{ "general__delete-confirmation__close" | translate }}
+  </button>
   <button
     mat-raised-button
     color="primary"
     mat-dialog-close
     (click)="deleteDocument()"
   >
-    Delete
+    {{ "general__delete-confirmation__submit" | translate }}
   </button>
 </mat-dialog-actions>

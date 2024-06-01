@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Router } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
+import { DynamicComponentService } from './dynamic-component.service';
 
 export interface AuthLogin {
   username: string;
@@ -21,7 +22,11 @@ export interface AuthUser {
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(
+    private apiService: ApiService,
+    private router: Router,
+    private dynamicComponentService: DynamicComponentService
+  ) {}
 
   /**
    * Logs in the user with the provided login data.
@@ -34,7 +39,14 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.clear();
+    // If there is any dynamicComponentService opened, please close all of them
+    this.dynamicComponentService.closeDynamicComponent();
+
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user_avatar');
+
     this.router.navigate(['/Login']);
     return;
   }
@@ -44,9 +56,13 @@ export class AuthService {
    * @return {Observable<any>} An observable that emits the response from the API call.
    */
   refreshToken() {
-    return this.apiService.post('auth/refresh-token', {
-      'x-access-token': `Bearer ${localStorage.getItem('token')}`,
-    });
+    return this.apiService.post(
+      'auth/refresh-token',
+      {},
+      {
+        'x-access-token': `Bearer ${localStorage.getItem('refreshToken')}`,
+      }
+    );
   }
 
   /**
@@ -107,6 +123,25 @@ export class AuthService {
     const token = localStorage.getItem('token');
     if (token == null) {
       return false;
+    }
+
+    // If not null, check the expiration date
+    const expiry = JSON.parse(atob(token.split('.')[1])).exp * 1000;
+    const now = new Date().getTime();
+    if (now > expiry) {
+      // Check for the refresh token
+      const refreshToken = localStorage.getItem('refreshToken');
+      const refreshTokenExpiry =
+        JSON.parse(atob(refreshToken!.split('.')[1])).exp * 1000;
+
+      // If refresh token is already expired logout
+      if (now > refreshTokenExpiry) {
+        this.logout();
+        return false;
+      } else {
+        // Refresh token is not expired
+        return true;
+      }
     } else {
       return true;
     }
@@ -125,10 +160,12 @@ export class AuthService {
       ).toString()
     );
 
-    if (loginData.user.user_avatar != null) {
+    console.log(loginData);
+
+    if (loginData.user_avatar != null) {
       localStorage.setItem(
         'user_avatar',
-        JSON.stringify(loginData.user.user_avatar)
+        JSON.stringify(loginData.user_avatar)
       );
     }
 

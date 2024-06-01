@@ -1,0 +1,13 @@
+.language__menu-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 8px;
+  cursor: pointer;
+  flex-direction: row;
+}
+
+.language__menu-item svg {
+  width: 24px;
+  height: 24px;
+}

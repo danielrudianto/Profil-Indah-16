@@ -1,7 +1,7 @@
 <form [formGroup]="searchFormGroup">
   <div class="d-flex">
     <mat-form-field class="w-100" appearance="outline">
-      <mat-label>Search bar</mat-label>
+      <mat-label>{{ "general__search-bar" | translate }}</mat-label>
       <input
         [disabled]="!enable"
         matInput

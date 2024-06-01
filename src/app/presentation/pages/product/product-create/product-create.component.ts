@@ -6,7 +6,9 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
+import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { ValueValidator } from 'src/app/validators/value.validator';
@@ -21,7 +23,9 @@ export class ProductCreateComponent {
   constructor(
     private formBuilder: FormBuilder,
     private apiService: ApiService,
-    private dynamicComponentService: DynamicComponentService
+    private dynamicComponentService: DynamicComponentService,
+    private alertService: AlertService,
+    private translateService: TranslateService
   ) {}
 
   isSubmitting: boolean = false;
@@ -190,10 +194,17 @@ export class ProductCreateComponent {
     this.apiService
       .post('product', item)
       .subscribe({
-        next: () => {
-          this.closeDialog();
+        next: (data: any) => {
+          this.translateService
+            .get('general__created-successfully')
+            .subscribe((translation) => {
+              this.alertService.showSuccess(`${data.reference} ${translation}`);
+              this.closeDialog();
+            });
         },
-        error: (error) => {},
+        error: (error) => {
+          this.alertService.showError(error);
+        },
       })
       .add(() => {
         this.isSubmitting = false;

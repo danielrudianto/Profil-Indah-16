@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-transaction-header',
@@ -7,14 +7,12 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./transaction-header.component.css'],
 })
 export class TransactionHeaderComponent {
-  constructor(
-    private activatedRouter: ActivatedRoute,
-    private router: Router
-  ) {}
+  constructor(private router: Router) {}
 
   @Input('title') title!: string;
   @Input('availbleMenus') availbleMenus: any[] = [];
   @Input('route') route!: string;
+  @Input('backRoute') backRoute: string | undefined;
 
   menus: any[] = [];
 
@@ -37,23 +35,31 @@ export class TransactionHeaderComponent {
     }
   }
 
-  clickBackButton() {
-    const currentUrl = this.router.url;
-    const segments = currentUrl.split('/');
+  /**
+   * Navigates back to the previous page by determining the base route and navigating to it.
+   * @return {void} This function does not return anything.
+   */
+  clickBackButton(): void {
+    if (this.backRoute == undefined) {
+      const currentUrl = this.router.url;
+      const segments = currentUrl.split('/');
 
-    // Determine the base route
-    let baseRoute = '';
-    if (segments.length > 2) {
-      baseRoute = `/${segments[1]}/${segments[2]}`;
+      // Determine the base route
+      let baseRoute = '';
+      if (segments.length > 2) {
+        baseRoute = `/${segments[1]}/${segments[2]}`;
+      }
+
+      // Check if the current route is the base route
+      if (currentUrl === baseRoute) {
+        // If at base route, navigate one level up
+        baseRoute = `/${segments[1]}`;
+      }
+
+      this.router.navigate([baseRoute]);
+    } else {
+      this.router.navigate([this.backRoute]);
     }
-
-    // Check if the current route is the base route
-    if (currentUrl === baseRoute) {
-      // If at base route, navigate one level up
-      baseRoute = `/${segments[1]}`;
-    }
-
-    this.router.navigate([baseRoute]);
   }
 
   get baseRoute(): string {

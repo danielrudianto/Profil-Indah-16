@@ -32,7 +32,11 @@
         </tr>
       </tbody>
       <tbody *ngIf="!isLoading && dataSource.length == 0">
-        <tr [attr.colspan]="6" empty-table></tr>
+        <tr>
+          <td colspan="6">
+            <empty-table />
+          </td>
+        </tr>
       </tbody>
       <tbody *ngIf="isLoading">
         <tr>

@@ -13,3 +13,9 @@
 .active {
   background-color: #f0f0f0;
 }
+
+.mat-mdc-menu-trigger {
+  position: absolute;
+  top: 0;
+  right: -0.5rem;
+}

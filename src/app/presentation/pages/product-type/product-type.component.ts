@@ -29,12 +29,23 @@ export class ProductTypeComponent {
 
   openDialog(dialogType: string, id: number) {
     if (dialogType == 'edit') {
-      this.dynamicComponentService.createDynamicComponent(
+      const dialog = this.dynamicComponentService.createDynamicComponent(
         ProductTypeUpdateComponent,
         {
           id: id,
         }
       );
+
+      dialog.subscribe({
+        next: (data) => {
+          if (data != undefined && data != null) {
+            const index = this.dataSource.findIndex((x) => x.id == data.id);
+            if (index != -1) {
+              this.dataSource[index].name = data.name;
+            }
+          }
+        },
+      });
     }
   }
 

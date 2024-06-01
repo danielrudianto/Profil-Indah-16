@@ -26,5 +26,4 @@ export class AvatarComponent {
   @Input('circle') circle!: boolean;
 
   @Input('width') width: number = 280;
-  height: number = (33 * this.width) / 35;
 }

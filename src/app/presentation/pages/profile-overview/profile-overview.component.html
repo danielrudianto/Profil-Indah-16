@@ -16,6 +16,13 @@
         matTooltip="Customize your own avatar"
         (click)="openAvatarCustomization()"
       />
+      <div
+        class="text-center"
+        *ngIf="avatar == null"
+        (click)="openAvatarCustomization()"
+      >
+        <p>Avatar not set.</p>
+      </div>
     </div>
     <div
       class="col-xl-9 col-lg-8 col-md-6 col-sm-12 col-12 profile__right-wrapper"

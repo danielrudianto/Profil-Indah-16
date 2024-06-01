@@ -53,17 +53,17 @@ export class ProductTypeUpdateComponent {
     this.apiService.put('product-type', this.typeFormGroup.value).subscribe({
       next: (data: any) => {
         this.alertService.showSuccess(`${data.name} created successfully`);
-        this.closeDialog();
+        this.closeDialog(data);
       },
       error: (error) => {
         this.alertService.showError(error);
       },
     });
   }
-  closeDialog(): void {
+  closeDialog(data: any = undefined): void {
     this.isOpened = false;
     setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
+      this.dynamicComponentService.closeDynamicComponent(data);
     }, 300);
   }
 }

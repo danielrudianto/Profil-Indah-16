@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ItemStock } from 'src/app/models/item.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { StockListReportComponent } from './stock-list-report/stock-list-report.component';
 
 @Component({
   selector: 'app-stock-list',
@@ -9,7 +11,10 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./stock-list.component.css'],
 })
 export class StockListComponent {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private dynamicComponentService: DynamicComponentService
+  ) {}
 
   isLoading: boolean = true;
   dataSource: ItemStock[] = [];
@@ -22,7 +27,16 @@ export class StockListComponent {
     this.isAdministrator = this.authService.isAdministrator();
   }
 
-  openDialog(dialogType: string, id: number) {}
+  openDialog(dialogType: string, id: number) {
+    if (dialogType == 'mutation') {
+      this.dynamicComponentService.createDynamicComponent(
+        StockListReportComponent,
+        {
+          id: id,
+        }
+      );
+    }
+  }
 
   changePage(event: PageEvent) {
     this.page = event.pageIndex + 1;

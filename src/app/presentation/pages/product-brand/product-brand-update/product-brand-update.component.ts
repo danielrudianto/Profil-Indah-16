@@ -52,7 +52,7 @@ export class ProductBrandUpdateComponent {
     this.apiService.put('product-brand', this.brandFormGroup.value).subscribe({
       next: (data: any) => {
         this.alertService.showSuccess(`${data.name} created successfully`);
-        this.closeDialog();
+        this.closeDialog(data);
       },
       error: (error) => {
         this.alertService.showError(error);
@@ -60,10 +60,10 @@ export class ProductBrandUpdateComponent {
     });
   }
 
-  closeDialog(): void {
+  closeDialog(data: any = undefined): void {
     this.isOpened = false;
     setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
+      this.dynamicComponentService.closeDynamicComponent(data);
     }, 300);
   }
 }

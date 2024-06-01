@@ -27,7 +27,14 @@
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody *ngIf="isLoading">
+              <tr>
+                <td colspan="3">
+                  <mat-spinner id="spinner"></mat-spinner>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length > 0">
               <tr *ngFor="let item of dataSource">
                 <td (click)="openDialog('children', item.id)">
                   {{ item.name }}
@@ -41,13 +48,15 @@
                   </button>
                   <mat-menu #menu="matMenu">
                     <button
+                      [disabled]="isSubmitting"
                       mat-menu-item
-                      (click)="openDialog('update', item.id)"
+                      (click)="openDialog('edit', item.id)"
                     >
                       <mat-icon>edit</mat-icon>
                       <span>Edit</span>
                     </button>
                     <button
+                      [disabled]="isSubmitting || !item.can_delete"
                       mat-menu-item
                       (click)="openDialog('delete', item.id)"
                     >
@@ -55,6 +64,13 @@
                       <span>Delete</span>
                     </button>
                   </mat-menu>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length == 0">
+              <tr>
+                <td colspan="3">
+                  <empty-table />
                 </td>
               </tr>
             </tbody>

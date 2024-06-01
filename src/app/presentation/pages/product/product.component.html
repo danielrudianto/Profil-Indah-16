@@ -3,8 +3,8 @@
   <div class="row">
     <div class="col-12">
       <app-feature-header
-        title="Product"
-        help="Here you can manage your products."
+        [title]="'product__title' | translate"
+        [help]="'product__help' | translate"
         [isBackAvailable]="true"
       ></app-feature-header>
       <div class="dashboard-card">
@@ -22,12 +22,16 @@
           <table class="table">
             <thead>
               <tr>
-                <th class="text-center">Reference</th>
-                <th class="text-center">Description</th>
-                <th class="text-center">Brand</th>
-                <th class="text-center">Type</th>
-                <th class="text-center">Status</th>
-                <th class="text-center">Action</th>
+                <th class="text-center">
+                  {{ "product__reference" | translate }}
+                </th>
+                <th class="text-center">
+                  {{ "product__description" | translate }}
+                </th>
+                <th class="text-center">{{ "product__brand" | translate }}</th>
+                <th class="text-center">{{ "product__type" | translate }}</th>
+                <th class="text-center">{{ "product__status" | translate }}</th>
+                <th class="text-center">{{ "product__action" | translate }}</th>
               </tr>
             </thead>
             <tbody *ngIf="!isLoading && dataSource.length > 0">
@@ -41,24 +45,32 @@
                 <td class="text-center">{{ item.item_brand_name }}</td>
                 <td class="text-center">{{ item.item_type_name }}</td>
                 <td class="text-center">
-                  <span *ngIf="item.is_active">Active</span>
-                  <span *ngIf="!item.is_active">Inactive</span>
+                  <span *ngIf="item.is_active">{{
+                    "product__active" | translate
+                  }}</span>
+                  <span *ngIf="!item.is_active">{{
+                    "product__inactive" | translate
+                  }}</span>
                 </td>
                 <td class="text-center">
-                  <button mat-icon-button [matMenuTriggerFor]="menu">
+                  <button
+                    mat-icon-button
+                    [matMenuTriggerFor]="menu"
+                    [disabled]="isSubmitting"
+                  >
                     <mat-icon>more_vert</mat-icon>
                   </button>
                   <mat-menu #menu="matMenu">
                     <button (click)="openDialog('edit', item.id)" mat-menu-item>
                       <mat-icon>edit</mat-icon>
-                      <span>Edit</span>
+                      <span>{{ "product__update" | translate }}</span>
                     </button>
                     <button
                       (click)="openDialog('edit-unit', item.id)"
                       mat-menu-item
                     >
                       <mat-icon>dataset</mat-icon>
-                      <span>Edit unit</span>
+                      <span>{{ "product__update-unit" | translate }}</span>
                     </button>
                     <button
                       mat-menu-item
@@ -66,11 +78,13 @@
                     >
                       <mat-icon *ngIf="item.is_active">toggle_on</mat-icon>
                       <mat-icon *ngIf="!item.is_active">toggle_off</mat-icon>
+                      <span *ngIf="item.is_active">{{
+                        "product__set-inactive" | translate
+                      }}</span>
 
-                      <span
-                        >Set product as
-                        <span *ngIf="item.is_active">in</span>active</span
-                      >
+                      <span *ngIf="!item.is_active">{{
+                        "product__set-active" | translate
+                      }}</span>
                     </button>
                     <button
                       [class.delete-button]="item.can_delete"
@@ -79,13 +93,19 @@
                       [disabled]="!(item.can_delete && isAdministrator)"
                     >
                       <mat-icon>delete</mat-icon>
-                      <span>Delete</span>
+                      <span>{{ "product__delete" | translate }}</span>
                     </button>
                   </mat-menu>
                 </td>
               </tr>
             </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length == 0"></tbody>
+            <tbody *ngIf="!isLoading && dataSource.length == 0">
+              <tr>
+                <td colspan="6">
+                  <empty-table />
+                </td>
+              </tr>
+            </tbody>
             <tbody *ngIf="isLoading">
               <tr>
                 <td colspan="6" class="text-center">

@@ -13,7 +13,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  HttpClientModule,
+} from '@angular/common/http';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { CircleAvatarComponent } from './presentation/components/circle-avatar/circle-avatar.component';
@@ -82,12 +86,8 @@ import { PaymentSelectorComponent } from './presentation/components/payment-sele
 import { ProductSelectorComponent } from './presentation/components/product-selector/product-selector.component';
 import { PackageSelectorComponent } from './presentation/components/package-selector/package-selector.component';
 import { SalesmanSelectorComponent } from './presentation/components/salesman-selector/salesman-selector.component';
-import {
-  DateAdapter,
-  MAT_DATE_LOCALE,
-  MatNativeDateModule,
-  MAT_DATE_FORMATS,
-} from '@angular/material/core';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -167,6 +167,16 @@ import { PurchaseInvoiceConfirmComponent } from './presentation/pages/purchase-i
 import { PurchaseInvoiceEditComponent } from './presentation/pages/purchase-invoice/purchase-invoice-edit/purchase-invoice-edit.component';
 import { AdjustmentCaseArchiveFilterComponent } from './presentation/pages/adjustment-case/adjustment-case-archive/adjustment-case-archive-filter/adjustment-case-archive-filter.component';
 import { AdjustmentCaseViewComponent } from './presentation/pages/adjustment-case/adjustment-case-archive/adjustment-case-view/adjustment-case-view.component';
+import { PriceSalesUpdateComponent } from './presentation/pages/price/price-sales/price-sales-update/price-sales-update.component';
+import {
+  TranslateModule,
+  TranslateLoader,
+  TranslateService,
+} from '@ngx-translate/core';
+import { CustomLoader } from './loader/translate.loader';
+import { LanguageSelectorComponent } from './presentation/components/topbar/language-selector/language-selector.component';
+import { StockListReportComponent } from './presentation/pages/stock-list/stock-list-report/stock-list-report.component';
+import { ErrorInterceptor } from './interceptors/error.interceptor';
 
 @NgModule({
   declarations: [
@@ -290,6 +300,9 @@ import { AdjustmentCaseViewComponent } from './presentation/pages/adjustment-cas
     PurchaseInvoiceEditComponent,
     AdjustmentCaseArchiveFilterComponent,
     AdjustmentCaseViewComponent,
+    PriceSalesUpdateComponent,
+    LanguageSelectorComponent,
+    StockListReportComponent,
   ],
   imports: [
     BrowserModule,
@@ -324,12 +337,25 @@ import { AdjustmentCaseViewComponent } from './presentation/pages/adjustment-cas
     MatBottomSheetModule,
     MatSlideToggleModule,
     MatChipsModule,
+    MatBadgeModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useClass: CustomLoader,
+        deps: [HttpClient],
+      },
+    }),
     HotkeyModule.forRoot(),
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
       multi: true,
     },
     provideNgxMask(),

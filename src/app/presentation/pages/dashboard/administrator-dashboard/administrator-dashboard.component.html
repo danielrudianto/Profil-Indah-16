@@ -5,12 +5,15 @@
         <div class="col-12" id="get-started">
           <img src="/assets/images/get-started.png" class="dashboard__hero" />
           <div class="get-started__text-box px-3">
-            <h1>Administrator Dashboard</h1>
-            <p>Achieving greatness through teamwork and leadership.</p>
+            <h1>{{ "dashboard-administrator__hero" | translate }}</h1>
+            <p>{{ "dashboard-administrator__description" | translate }}</p>
             <div class="get-started__text-box__button-wrapper">
               <button
                 class="download-button"
-                matTooltip="Download mobile application"
+                [matTooltip]="
+                  'dashboard-administrator__download-mobile-application'
+                    | translate
+                "
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -24,7 +27,13 @@
                   />
                 </svg>
               </button>
-              <button class="download-button" matTooltip="Stock application">
+              <button
+                class="download-button"
+                [matTooltip]="
+                  'dashboard-administrator__navigate-stock-application'
+                    | translate
+                "
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="30px"
@@ -40,7 +49,9 @@
               <div class="vertical-divider mx-2"></div>
               <button
                 class="download-button white"
-                matTooltip="Back to dashboard"
+                [matTooltip]="
+                  'dashboard-administrator__back-to-home' | translate
+                "
                 [routerLink]="'/'"
               >
                 <svg
@@ -56,7 +67,9 @@
                 </svg>
               </button>
             </div>
-            <small>Other application features</small>
+            <small>{{
+              "dashboard-administrator__other-application" | translate
+            }}</small>
           </div>
         </div>
       </div>
@@ -93,13 +106,16 @@
         <mat-expansion-panel [expanded]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>
-              <h3>Quick Picks</h3>
+              <h3>{{ "dashboard-administrator__quick-picks" | translate }}</h3>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div class="quick-picks__wrapper">
             <button
               class="quick-picks__wrapper__button"
-              matTooltip="Inventory report"
+              [matTooltip]="
+                'dashboard-administrator__inventory-report'
+                  | translate
+              "
               (click)="openReport('inventory')"
             >
               <svg
@@ -131,12 +147,16 @@
                   ></path>
                 </g>
               </svg>
-              <p>Inventory Report</p>
+              <p>
+                {{ "dashboard-administrator__inventory-report" | translate }}
+              </p>
             </button>
 
             <button
               class="quick-picks__wrapper__button"
-              matTooltip="Sales report"
+              [matTooltip]="
+                'dashboard-administrator__sales-report' | translate
+              "
             >
               <svg
                 viewBox="0 0 24 24"
@@ -161,12 +181,14 @@
                   ></path>
                 </g>
               </svg>
-              <p>Sales Report</p>
+              <p>{{ "dashboard-administrator__sales-report" | translate }}</p>
             </button>
 
             <button
               class="quick-picks__wrapper__button"
-              matTooltip="Finance report"
+              [matTooltip]="
+                'dashboard-administrator__finance-report' | translate
+              "
             >
               <svg
                 viewBox="0 0 24 24"
@@ -195,12 +217,14 @@
                   ></path>
                 </g>
               </svg>
-              <p>Finance Report</p>
+              <p>{{ "dashboard-administrator__finance-report" | translate }}</p>
             </button>
 
             <button
               class="quick-picks__wrapper__button"
-              matTooltip="Purchase report"
+              [matTooltip]="
+                'dashboard-administrator__purchase-report' | translate
+              "
             >
               <svg
                 viewBox="0 0 24 24"
@@ -225,12 +249,17 @@
                   ></path>
                 </g>
               </svg>
-              <p>Purchase Report</p>
+              <p>
+                {{ "dashboard-administrator__purchase-report" | translate }}
+              </p>
             </button>
 
             <button
               class="quick-picks__wrapper__button"
-              matTooltip="Money receipt report"
+              [matTooltip]="
+                'dashboard-administrator__money-receipt-report'
+                  | translate
+              "
             >
               <svg
                 viewBox="0 0 24 24"
@@ -263,12 +292,19 @@
                   ></path>
                 </g>
               </svg>
-              <p>Money Receipt Report</p>
+              <p>
+                {{
+                  "dashboard-administrator__money-receipt-report" | translate
+                }}
+              </p>
             </button>
 
             <button
               class="quick-picks__wrapper__button"
-              matTooltip="Problematic items"
+              [matTooltip]="
+                'dashboard-administrator__problematic-items'
+                  | translate
+              "
             >
               <svg
                 viewBox="0 0 24 24"
@@ -297,12 +333,16 @@
                   ></path>
                 </g>
               </svg>
-              <p>Problematic items</p>
+              <p>
+                {{ "dashboard-administrator__problematic-items" | translate }}
+              </p>
             </button>
 
             <button
               class="quick-picks__wrapper__button"
-              matTooltip="Inadequate items"
+              [matTooltip]="
+                'dashboard-administrator__inadequate-items' | translate
+              "
             >
               <svg
                 viewBox="0 0 24 24"
@@ -336,7 +376,9 @@
                   ></path>
                 </g>
               </svg>
-              <p>Inadequate items</p>
+              <p>
+                {{ "dashboard-administrator__inadequate-items" | translate }}
+              </p>
             </button>
           </div>
           <app-gcp-info />

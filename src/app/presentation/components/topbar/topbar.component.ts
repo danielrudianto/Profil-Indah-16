@@ -9,7 +9,6 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class TopbarComponent {
   constructor(private router: Router, private authService: AuthService) {}
-  @Input('name') name!: string;
   @Input('hidden') isHidden!: boolean;
   @Input('menuButtonAvailable') menuButtonAvailable: boolean = false;
 
@@ -17,6 +16,20 @@ export class TopbarComponent {
     new EventEmitter<void>();
 
   isProfileOpened: boolean = false;
+  isAvatarAvailable: boolean = false;
+  avatar: any = null;
+  name: string = '';
+
+  ngOnInit(): void {
+    const avatar = this.authService.getSelfAvatar();
+    if (avatar != null) {
+      this.isAvatarAvailable = true;
+      this.avatar = avatar;
+    }
+
+    const userInfo = this.authService.getUserInfo();
+    this.name = userInfo == null ? '' : userInfo?.name;
+  }
 
   logout() {
     setTimeout(() => {

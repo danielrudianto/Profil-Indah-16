@@ -19,9 +19,25 @@
     <p (click)="navigate()">Profil Indah</p>
   </div>
   <div class="top-navigation__utility">
+    <app-language-selector />
     <app-circle-avatar
+      *ngIf="!isAvatarAvailable"
       [name]="name"
       [size]="40"
+      [matTooltip]="'Logged in as ' + name"
+      (click)="isProfileOpened = true"
+    />
+    <app-avatar
+      *ngIf="isAvatarAvailable"
+      [width]="40"
+      [top]="avatar.top"
+      [accessories]="avatar.accessories"
+      [circle]="avatar.circle"
+      [color]="avatar.color"
+      [eyebrows]="avatar.eyebrows"
+      [eyes]="avatar.eyes"
+      [mouth]="avatar.mouth"
+      [clothes]="avatar.clothes"
       [matTooltip]="'Logged in as ' + name"
       (click)="isProfileOpened = true"
     />

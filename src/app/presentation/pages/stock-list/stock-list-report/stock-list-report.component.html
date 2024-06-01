@@ -1,0 +1,211 @@
+<div class="view-panel-wrapper">
+  <div class="view-panel-backdrop" (click)="close()"></div>
+  <div class="view-panel" [@panelAnimation]="panelState">
+    <div class="row-action">
+      <h2 mat-dialog-title>{{ "stock-report__title" | translate }}</h2>
+      <div class="d-flex">
+        <button mat-icon-button (click)="enlarge()">
+          <mat-icon *ngIf="panelState != 'enlarged'">open_in_full</mat-icon>
+          <mat-icon *ngIf="panelState == 'enlarged'">close_fullscreen</mat-icon>
+        </button>
+        <button mat-icon-button (click)="close()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="view-panel-content" id="content">
+      <form [formGroup]="formGroup" class="py-1">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{ "stock-report__date" | translate }}</mat-label>
+          <input formControlName="date" matInput [matDatepicker]="picker" />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-slide-toggle
+          color="primary"
+          class="mb-3"
+          formControlName="view_by"
+        >
+          {{
+            (!formGroup.get("view_by")?.value
+              ? "stock-report__document"
+              : "stock-report__input"
+            ) | translate
+          }}
+        </mat-slide-toggle>
+      </form>
+      <mat-spinner id="spinner" *ngIf="isLoading" />
+      <div *ngIf="!isLoading">
+        <mat-divider class="mb-3" />
+        <div class="table-responsive">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td style="width: 100px">
+                  {{ "stock-report__initial-stock" | translate }}
+                </td>
+                <td style="width: 150px">
+                  {{
+                    (!formGroup.get("view_by")?.value
+                      ? dataSource.document.initialStock
+                      : dataSource.input.initialStock
+                    ) | number : "1.0-2"
+                  }}
+                </td>
+                <td style="width: 100px">
+                  {{ "stock-report__final-stock" | translate }}
+                </td>
+                <td style="width: 150px">
+                  {{
+                    (!formGroup.get("view_by")?.value
+                      ? dataSource.document.initialStock +
+                        dataSource.document.totalInput -
+                        dataSource.document.totalOutput
+                      : dataSource.input.initialStock +
+                        dataSource.input.totalInput -
+                        dataSource.document.totalOutput
+                    ) | number : "1.0-2"
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td style="width: 100px">
+                  {{ "stock-report__output-mutation" | translate }}
+                </td>
+                <td style="width: 150px">
+                  {{
+                    (!formGroup.get("view_by")?.value
+                      ? dataSource.document.totalOutput
+                      : dataSource.input.totalOutput
+                    ) | number : "1.0-2"
+                  }}
+                </td>
+                <td style="width: 100px">
+                  {{ "stock-report__input-mutation" | translate }}
+                </td>
+                <td style="width: 150px">
+                  {{
+                    (!formGroup.get("view_by")?.value
+                      ? dataSource.document.totalInput
+                      : dataSource.input.totalInput
+                    ) | number : "1.0-2"
+                  }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 100px">
+                  {{ "stock-report__table__date" | translate }}
+                </th>
+                <th style="width: 150px">
+                  {{ "stock-report__table__created-at" | translate }}
+                </th>
+                <th style="width: 150px">
+                  {{ "stock-report__table__document" | translate }}
+                </th>
+                <th style="width: 200px">
+                  {{ "stock-report__table__opponent" | translate }}
+                </th>
+                <th style="width: 100px">
+                  {{ "stock-report__table__quantity" | translate }}
+                </th>
+                <th style="width: 100px">
+                  {{ "stock-report__table__stock" | translate }}
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              *ngIf="
+                !formGroup.get('view_by')?.value &&
+                dataSource.document.mutation.length > 0
+              "
+            >
+              <tr *ngFor="let data of dataSource.document.mutation">
+                <td>{{ data.date | date : "dd/MM/YYYY" }}</td>
+                <td>
+                  {{ data.createdAt | date : "dd/MM/YYYY HH:mm" }}
+                </td>
+                <td>{{ data.name }}</td>
+                <td>
+                  <span class="text-clamp-1">
+                    {{ data.opponent }}
+                  </span>
+                </td>
+                <td>
+                  {{ data.displayQuantity | number : "1.0-2" }} {{ data.unit }}
+                </td>
+                <td>
+                  {{ data.stock | number : "1.0-2" }} {{ data.defaultUnit }}
+                </td>
+              </tr>
+            </tbody>
+            <tbody
+              *ngIf="
+                formGroup.get('view_by')?.value &&
+                dataSource.input.mutation.length > 0
+              "
+            >
+              <tr *ngFor="let data of dataSource.input.mutation">
+                <td>{{ data.date | date : "dd/MM/YYYY" }}</td>
+                <td>
+                  {{ data.createdAt | date : "dd/MM/YYYY HH:mm" }}
+                </td>
+                <td>{{ data.name }}</td>
+                <td>{{ data.opponent }}</td>
+                <td>
+                  {{ data.displayQuantity | number : "1.0-2" }} {{ data.unit }}
+                </td>
+                <td>
+                  {{ data.stock | number : "1.0-2" }} {{ data.defaultUnit }}
+                </td>
+              </tr>
+            </tbody>
+            <tbody
+              *ngIf="
+                (index == 0 && dataSource.document.mutation.length == 0) ||
+                (index == 1 && dataSource.input.mutation.length == 0)
+              "
+            >
+              <tr>
+                <td colspan="6">
+                  <empty-table />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="shortcuts">
+      <div class="shortcut-key">
+        <span class="shortcut-key-label">ESC</span>
+        <span class="shortcut-key-function">{{
+          "general__back" | translate
+        }}</span>
+      </div>
+      <div class="shortcut-key">
+        <span class="shortcut-key-label">F</span>
+        <span class="shortcut-key-function">
+          {{ "general__toggle-full-screen" | translate }}
+        </span>
+      </div>
+      <div class="shortcut-key">
+        <span class="shortcut-key-label">R</span>
+        <span class="shortcut-key-function">{{
+          "general__reload" | translate
+        }}</span>
+      </div>
+    </div>
+    <div class="actions"></div>
+  </div>
+</div>

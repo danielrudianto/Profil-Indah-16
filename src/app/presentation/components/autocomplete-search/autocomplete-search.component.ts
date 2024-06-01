@@ -15,6 +15,8 @@ import { ApiService } from 'src/app/services/api.service';
   styleUrls: ['./autocomplete-search.component.css'],
 })
 export class AutocompleteSearchComponent {
+  constructor(private apiService: ApiService) {}
+
   @Input('routeName') routeName!: string;
   @Input('placeholder') placeholder!: string;
   @Input('label') label!: string;
@@ -36,8 +38,6 @@ export class AutocompleteSearchComponent {
   items: any[] = [];
 
   isLoading: boolean = false;
-
-  constructor(private apiService: ApiService) {}
 
   selectData(data: any) {
     const id = data.option.value;
@@ -96,6 +96,14 @@ export class AutocompleteSearchComponent {
         this.searchFormGroup.controls['searchBar'].disable();
       } else {
         this.searchFormGroup.controls['searchBar'].enable();
+      }
+    }
+
+    if (changes.hasOwnProperty('defaultValue')) {
+      if (changes['defaultValue'].currentValue != null) {
+        this.searchFormGroup.patchValue({
+          searchBar: changes['defaultValue'].currentValue,
+        });
       }
     }
   }

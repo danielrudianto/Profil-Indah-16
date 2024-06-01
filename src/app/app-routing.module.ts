@@ -49,10 +49,16 @@ import { DepositListComponent } from './presentation/pages/deposit/deposit-list/
 import { DepositArchiveComponent } from './presentation/pages/deposit/deposit-archive/deposit-archive.component';
 import { PurchaseInvoiceConfirmComponent } from './presentation/pages/purchase-invoice/purchase-invoice-confirm/purchase-invoice-confirm.component';
 import { PurchaseInvoiceEditComponent } from './presentation/pages/purchase-invoice/purchase-invoice-edit/purchase-invoice-edit.component';
+import { PriceComponent } from './presentation/pages/price/price.component';
+import { PriceSalesComponent } from './presentation/pages/price/price-sales/price-sales.component';
+import { PricePurchaseComponent } from './presentation/pages/price/price-purchase/price-purchase.component';
+import { AuthGuard } from './guards/auth.guard';
+import { AdministratorGuard } from './guards/administrator.guard';
 
 const routes: Routes = [
   {
     path: '',
+    canActivate: [AuthGuard],
     component: MainComponent,
     children: [
       {
@@ -72,6 +78,7 @@ const routes: Routes = [
       {
         path: 'Administrator',
         component: AdministratorComponent,
+        canActivate: [AdministratorGuard],
         children: [
           {
             path: '',
@@ -212,6 +219,24 @@ const routes: Routes = [
               {
                 path: 'Report',
                 component: ExpenseReportComponent,
+              },
+            ],
+          },
+          {
+            path: 'Price',
+            component: PriceComponent,
+            children: [
+              {
+                path: 'Sales',
+                component: PriceSalesComponent,
+              },
+              {
+                path: 'Purchase',
+                component: PricePurchaseComponent,
+              },
+              {
+                path: '**',
+                redirectTo: 'Sales',
               },
             ],
           },
