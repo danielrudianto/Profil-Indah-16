@@ -9,7 +9,6 @@ import { Router } from '@angular/router';
 export class DashboardCardComponent {
   constructor(private router: Router) {}
   @Input('title') title!: string;
-  @Input('description') description!: string;
   @Input('route') route!: string;
 
   navigate() {

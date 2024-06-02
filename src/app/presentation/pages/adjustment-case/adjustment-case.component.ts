@@ -13,6 +13,11 @@ export class AdjustmentCaseComponent {
       icon: 'folder',
     },
     {
+      label: 'Confirm',
+      link: 'Confirm',
+      icon: 'check',
+    },
+    {
       label: 'Create',
       link: '',
       icon: 'add',

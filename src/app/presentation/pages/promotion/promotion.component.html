@@ -3,8 +3,8 @@
   <div class="row">
     <div class="col-12">
       <app-feature-header
-        title="Promotion"
-        help="Here you can manage your current and past promotion."
+        [title]="'promotion__title' | translate"
+        [help]="'promotion__help' | translate"
         [isBackAvailable]="true"
       ></app-feature-header>
       <div class="dashboard-card">
@@ -22,14 +22,26 @@
           <table class="table">
             <thead>
               <tr>
-                <th style="width: 150px">Name</th>
-                <th style="width: 300px">Description</th>
-                <th style="width: 200px">Supplier</th>
-                <th style="width: 150px">Start date</th>
-                <th style="width: 150px">End date</th>
-                <th style="width: 150px">Brand</th>
-                <th>Target</th>
-                <th>Status</th>
+                <th style="width: 150px">
+                  {{ "promotion__name" | translate }}
+                </th>
+                <th style="width: 300px">
+                  {{ "promotion__description" | translate }}
+                </th>
+                <th style="width: 200px">
+                  {{ "promotion__supplier" | translate }}
+                </th>
+                <th style="width: 150px">
+                  {{ "promotion__start-date" | translate }}
+                </th>
+                <th style="width: 150px">
+                  {{ "promotion__end-date" | translate }}
+                </th>
+                <th style="width: 150px">
+                  {{ "promotion__brand" | translate }}
+                </th>
+                <th>{{ "promotion__target" | translate }}</th>
+                <th>{{ "promotion__status" | translate }}</th>
               </tr>
             </thead>
             <tbody *ngIf="isLoading">
@@ -41,7 +53,9 @@
             </tbody>
             <tbody *ngIf="!isLoading && dataSource.length == 0">
               <tr>
-                <td colspan="8">No data</td>
+                <td colspan="8">
+                  <empty-table />
+                </td>
               </tr>
             </tbody>
             <tbody *ngIf="!isLoading && dataSource.length > 0">

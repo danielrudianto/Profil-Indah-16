@@ -5,7 +5,6 @@
 .dashboard__wrapper-background {
   height: 308px;
   width: 100%;
-  background-color: rgba(124, 172, 248, 0.8);
   z-index: 1;
   position: absolute;
   top: 0;

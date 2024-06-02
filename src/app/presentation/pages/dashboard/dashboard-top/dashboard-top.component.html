@@ -13,11 +13,7 @@
         class="col-xl-3 col-lg-4 col-md-6 col-sm-10 col-12"
         *ngFor="let d of dashboard"
       >
-        <app-dashboard-card
-          [title]="d.title"
-          [description]="d.description"
-          [route]="d.route"
-        />
+        <app-dashboard-card [title]="d.title" [route]="d.route" />
       </div>
     </div>
   </div>

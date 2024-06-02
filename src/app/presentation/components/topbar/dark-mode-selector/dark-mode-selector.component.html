@@ -1,0 +1,6 @@
+<mat-slide-toggle
+  [checked]="darkMode$ | async"
+  (change)="toggleDarkMode()"
+  [disabled]="true"
+  [matTooltip]="'dark-mode-selector__tooltip' | translate"
+></mat-slide-toggle>

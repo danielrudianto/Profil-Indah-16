@@ -177,6 +177,11 @@ import { CustomLoader } from './loader/translate.loader';
 import { LanguageSelectorComponent } from './presentation/components/topbar/language-selector/language-selector.component';
 import { StockListReportComponent } from './presentation/pages/stock-list/stock-list-report/stock-list-report.component';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { DarkModeSelectorComponent } from './presentation/components/topbar/dark-mode-selector/dark-mode-selector.component';
+import { AdjustmentCaseConfirmComponent } from './presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm.component';
+import { DARK_MODE_OPTIONS } from 'angular-dark-mode';
+import { PaymentMethodCreateComponent } from './presentation/pages/payment-method/payment-method-create/payment-method-create.component';
+import { PaymentMethodUpdateComponent } from './presentation/pages/payment-method/payment-method-update/payment-method-update.component';
 
 @NgModule({
   declarations: [
@@ -303,6 +308,10 @@ import { ErrorInterceptor } from './interceptors/error.interceptor';
     PriceSalesUpdateComponent,
     LanguageSelectorComponent,
     StockListReportComponent,
+    DarkModeSelectorComponent,
+    AdjustmentCaseConfirmComponent,
+    PaymentMethodCreateComponent,
+    PaymentMethodUpdateComponent,
   ],
   imports: [
     BrowserModule,
@@ -357,6 +366,13 @@ import { ErrorInterceptor } from './interceptors/error.interceptor';
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
       multi: true,
+    },
+    {
+      provide: DARK_MODE_OPTIONS,
+      useValue: {
+        darkModeClass: 'dark-mode',
+        lightModeClass: 'light-mode',
+      },
     },
     provideNgxMask(),
     DatePipe,

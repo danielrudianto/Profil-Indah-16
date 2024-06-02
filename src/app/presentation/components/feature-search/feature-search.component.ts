@@ -18,6 +18,8 @@ import { ProductTypeCreateComponent } from '../../pages/product-type/product-typ
 import { SupplierCreateComponent } from '../../pages/supplier/supplier-create/supplier-create.component';
 import { CustomerCreateComponent } from '../../pages/customer/customer-create/customer-create.component';
 import { CompanyCreateComponent } from '../../pages/company/company-create/company-create.component';
+import { PaymentMethodCreateComponent } from '../../pages/payment-method/payment-method-create/payment-method-create.component';
+import { PromotionCreateComponent } from '../../pages/promotion/promotion-create/promotion-create.component';
 
 @Component({
   selector: 'app-feature-search',
@@ -103,6 +105,19 @@ export class FeatureSearchComponent {
           CompanyCreateComponent,
           {}
         );
+        break;
+      case 'payment-method':
+        this.dynamicComponentService.createDynamicComponent(
+          PaymentMethodCreateComponent,
+          {}
+        );
+        break;
+      case 'promotion':
+        this.dynamicComponentService.createDynamicComponent(
+          PromotionCreateComponent,
+          {}
+        );
+        break;
       //   case 'product-type':
       //     this.dialog.open(AddItemTypeFormComponent, config);
       //     break;

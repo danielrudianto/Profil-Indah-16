@@ -1,1 +1,39 @@
-<p>promotion-create-rule works!</p>
+<form [formGroup]="promotionRuleFormGroup">
+  <h1>{{ "promotion__add__add-rule" | translate }}</h1>
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>{{ "promotion__add__rule" | translate }}</mat-label>
+    <mat-select formControlName="rule">
+      <mat-option value="Starts with">{{
+        "promotion__add__rule-starts-with" | translate
+      }}</mat-option>
+      <mat-option value="Ends with">{{
+        "promotion__add__rule-ends-with" | translate
+      }}</mat-option>
+      <mat-option value="Contains">{{
+        "promotion__add__rule-contains" | translate
+      }}</mat-option>
+      <mat-option value="Does not start with">{{
+        "promotion__add__rule-not-starts-with" | translate
+      }}</mat-option>
+      <mat-option value="Does not end with">{{
+        "promotion__add__rule-not-ends-with" | translate
+      }}</mat-option>
+      <mat-option value="Does not contain">{{
+        "promotion__add__rule-not-contains" | translate
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>{{ "promotion__add__rule-value" | translate }}</mat-label>
+    <input formControlName="value" matInput required />
+  </mat-form-field>
+
+  <button
+    class="action-button"
+    [disabled]="!promotionRuleFormGroup.valid"
+    (click)="addPromotionRule()"
+  >
+    {{ "promotion__add__add-rule" | translate }}
+  </button>
+</form>

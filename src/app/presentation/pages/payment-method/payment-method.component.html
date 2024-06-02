@@ -3,8 +3,8 @@
   <div class="row">
     <div class="col-12">
       <app-feature-header
-        title="Payment method"
-        help="Here you can manage your payment methods, available for sales."
+        [title]="'payment-method__title' | translate"
+        [help]="'payment-method__help' | translate"
         [isBackAvailable]="true"
       ></app-feature-header>
       <div class="dashboard-card">
@@ -22,9 +22,15 @@
           <table class="table">
             <thead>
               <tr>
-                <th class="text-center">Name</th>
-                <th class="text-center">Description</th>
-                <th class="text-center">Action</th>
+                <th class="text-center">
+                  {{ "payment-method__name" | translate }}
+                </th>
+                <th class="text-center">
+                  {{ "payment-method__description" | translate }}
+                </th>
+                <th class="text-center">
+                  {{ "payment-method__action" | translate }}
+                </th>
               </tr>
             </thead>
             <tbody *ngIf="!isLoading && dataSource.length > 0">
@@ -40,7 +46,7 @@
                   <mat-menu #menu="matMenu">
                     <button (click)="openDialog('edit', item.id)" mat-menu-item>
                       <mat-icon>edit</mat-icon>
-                      <span>Edit</span>
+                      <span>{{ "payment-method__update" | translate }}</span>
                     </button>
                     <button
                       [class.delete-button]="item.can_delete"
@@ -49,7 +55,7 @@
                       [disabled]="!item.can_delete"
                     >
                       <mat-icon>delete</mat-icon>
-                      <span>Delete</span>
+                      <span>{{ "payment-method__delete" | translate }}</span>
                     </button>
                   </mat-menu>
                 </td>

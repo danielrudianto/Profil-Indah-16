@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { PaymentMethod } from 'src/app/models/payment-method.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { PaymentMethodUpdateComponent } from './payment-method-update/payment-method-update.component';
 
 @Component({
   selector: 'app-payment-method',
@@ -9,7 +12,11 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./payment-method.component.css'],
 })
 export class PaymentMethodComponent {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private dynamicComponentService: DynamicComponentService,
+    private dialog: MatDialog
+  ) {}
 
   isLoading: boolean = true;
   dataSource: PaymentMethod[] = [];
@@ -22,7 +29,26 @@ export class PaymentMethodComponent {
     this.isAdministrator = this.authService.isAdministrator();
   }
 
-  openDialog(dialogType: string, id: number) {}
+  openDialog(dialogType: string, id: number) {
+    if (dialogType == 'edit') {
+      const dialog = this.dynamicComponentService.createDynamicComponent(
+        PaymentMethodUpdateComponent,
+        {
+          id: id,
+        }
+      );
+
+      dialog.subscribe((data) => {
+        if (data != undefined && data != null) {
+          const index = this.dataSource.findIndex((x) => x.id == id);
+          if (index != -1) {
+            this.dataSource[index].name = data.name;
+            this.dataSource[index].description = data.description;
+          }
+        }
+      });
+    }
+  }
 
   changePage(event: PageEvent) {
     this.page = event.pageIndex + 1;

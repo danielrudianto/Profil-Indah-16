@@ -2,11 +2,18 @@ h1 {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   font-size: 1.5rem;
-  color: #041e49;
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
-  display:flex;
+  display: flex;
   flex-direction: row;
   align-items: center;
   gap: 10px;
+}
+
+.light-mode h1 {
+  color: #041e49;
+}
+
+.dark-mode h1 {
+  color: rgb(211, 227, 253);
 }

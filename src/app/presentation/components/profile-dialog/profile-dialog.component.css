@@ -50,9 +50,9 @@
 }
 
 .profile-dialog__avatar-wrapper {
-  position: relative;
-  margin-left: 50%;
-  transform: translateX(-25%);
+  width:100%;
+  display:flex;
+  justify-content: center;
 }
 
 .profile-dialog__action-wrapper {

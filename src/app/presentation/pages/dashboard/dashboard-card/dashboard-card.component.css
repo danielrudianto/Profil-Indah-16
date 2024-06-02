@@ -1,12 +1,10 @@
 .card {
   width: 100%;
   padding: 1rem;
-  background-color: white;
   aspect-ratio: 4/3;
   margin-top: 1rem;
   cursor: pointer;
   /* Box shadows */
-
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   transition: 0.3s all ease;
   display: flex;
@@ -103,11 +101,5 @@ h4 {
   left: 0;
   opacity: 0.5;
   /* bottom black 100% top transparent */
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0) 0%,
-    #ffffff 80%,
-    #ffffff 100%
-  );
   z-index: 10;
 }

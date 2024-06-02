@@ -6,6 +6,7 @@ body {
   height: 100%;
   width: 100%;
   min-width: 400px;
+  transition: 0.3s all ease;
 }
 body {
   margin: 0;
@@ -16,6 +17,47 @@ body {
   border-right: 1px solid gray;
   width: 1px;
   height: 60px;
+}
+
+.dashboard__wrapper-background {
+  background-color: rgba(124, 172, 248, 0.8);
+}
+
+.card {
+  background-color: white;
+}
+
+.card h4 {
+  color: black;
+}
+
+.dashboard__description-text-fade {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    #ffffff 80%,
+    #ffffff 100%
+  );
+}
+
+.top-navigation__wrapper {
+  background-color: rgba(124, 172, 248, 0.8);
+}
+
+.top-navigation__wrapper.white {
+  background-color: white;
+}
+
+mat-divider {
+  border-top-color: rgba(4, 30, 73, 0.3);
+}
+
+.background__undercut {
+  background-color: rgb(211, 227, 253);
+}
+
+.background__overcut {
+  background-color: rgba(124, 172, 248, 0.7);
 }
 
 /**
@@ -52,6 +94,10 @@ Buttons styling
   transition: 0.3s all ease;
 }
 
+.download-button svg {
+  fill: #e8eaed;
+}
+
 .download-button:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -59,6 +105,10 @@ Buttons styling
 .download-button.white {
   background-color: white;
   color: rgb(20, 55, 112);
+}
+
+.download-button.white svg {
+  fill: rgb(20, 55, 112);
 }
 
 .action-button {

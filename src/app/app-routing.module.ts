@@ -20,7 +20,6 @@ import { PurchasingDashboardComponent } from './presentation/pages/dashboard/pur
 import { SalesComponent } from './presentation/pages/entries/sales/sales.component';
 import { SalesDashboardComponent } from './presentation/pages/dashboard/sales-dashboard/sales-dashboard.component';
 import { ProfileComponent } from './presentation/pages/entries/profile/profile.component';
-import { SetAvatarComponent } from './presentation/pages/set-avatar/set-avatar.component';
 import { ProfileOverviewComponent } from './presentation/pages/profile-overview/profile-overview.component';
 import { StockListComponent } from './presentation/pages/stock-list/stock-list.component';
 import { GeneralComponent } from './presentation/pages/entries/general/general.component';
@@ -54,6 +53,7 @@ import { PriceSalesComponent } from './presentation/pages/price/price-sales/pric
 import { PricePurchaseComponent } from './presentation/pages/price/price-purchase/price-purchase.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AdministratorGuard } from './guards/administrator.guard';
+import { AdjustmentCaseConfirmComponent } from './presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm.component';
 
 const routes: Routes = [
   {
@@ -201,6 +201,10 @@ const routes: Routes = [
               {
                 path: 'Archive',
                 component: AdjustmentCaseArchiveComponent,
+              },
+              {
+                path: 'Confirm',
+                component: AdjustmentCaseConfirmComponent,
               },
             ],
           },

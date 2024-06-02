@@ -1,0 +1,47 @@
+<app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
+  <div class="create-dialog">
+    <app-dialog-header
+      [title]="'payment-method__update__title' | translate"
+      (onDialogClose)="closeDialog()"
+    >
+    </app-dialog-header>
+    <div class="create-dialog__content">
+      <div *ngIf="isLoading">
+        <mat-spinner id="spinner"></mat-spinner>
+      </div>
+      <form [formGroup]="paymentMethodFormGroup" *ngIf="!isLoading">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>{{ "payment-method__add__name" | translate }}</mat-label>
+          <input
+            [disabled]="isSubmitting"
+            matInput
+            placeholder="Ex. PT. ABC"
+            type="text"
+            formControlName="name"
+          />
+        </mat-form-field>
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>{{
+            "payment-method__add__description" | translate
+          }}</mat-label>
+          <input
+            matInput
+            placeholder="Ex. Rekening BCA a/n Toko Profil Indah"
+            type="text"
+            formControlName="description"
+          />
+        </mat-form-field>
+      </form>
+    </div>
+    <div class="create-dialog__footer">
+      <button
+        type="button"
+        class="next-button"
+        (click)="submitForm()"
+        [disabled]="isSubmitting || !paymentMethodFormGroup.valid"
+      >
+        {{ "payment-method__add__submit" | translate }}
+      </button>
+    </div>
+  </div>
+</app-dynamic-dialog>

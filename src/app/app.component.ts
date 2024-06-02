@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +6,15 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  constructor(public translate: TranslateService) {}
+  constructor() {}
 
   title = 'Profil Indah Management System V16';
+
+  ngOnInit(): void {
+    const lang = localStorage.getItem('lang');
+
+    if (!lang) {
+      localStorage.setItem('lang', 'id');
+    }
+  }
 }
