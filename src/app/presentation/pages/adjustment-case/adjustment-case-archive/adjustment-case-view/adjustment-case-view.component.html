@@ -70,6 +70,7 @@
 <div *ngIf="!isAdministrator">There is no other action available.</div>
 <div class="adjustment-case__action-wrapper" *ngIf="isAdministrator">
   <button
+    type="button"
     class="adjustment-case__action"
     (click)="openDeleteConfirmation()"
     [disabled]="data.is_delete"

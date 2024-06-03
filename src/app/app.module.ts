@@ -182,6 +182,7 @@ import { AdjustmentCaseConfirmComponent } from './presentation/pages/adjustment-
 import { DARK_MODE_OPTIONS } from 'angular-dark-mode';
 import { PaymentMethodCreateComponent } from './presentation/pages/payment-method/payment-method-create/payment-method-create.component';
 import { PaymentMethodUpdateComponent } from './presentation/pages/payment-method/payment-method-update/payment-method-update.component';
+import { PurchaseInvoiceConfirmViewComponent } from './presentation/pages/purchase-invoice/purchase-invoice-confirm-view/purchase-invoice-confirm-view.component';
 
 @NgModule({
   declarations: [
@@ -312,6 +313,7 @@ import { PaymentMethodUpdateComponent } from './presentation/pages/payment-metho
     AdjustmentCaseConfirmComponent,
     PaymentMethodCreateComponent,
     PaymentMethodUpdateComponent,
+    PurchaseInvoiceConfirmViewComponent,
   ],
   imports: [
     BrowserModule,

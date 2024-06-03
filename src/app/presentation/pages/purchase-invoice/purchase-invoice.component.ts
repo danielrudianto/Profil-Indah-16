@@ -8,17 +8,17 @@ import { Component } from '@angular/core';
 export class PurchaseInvoiceComponent {
   availbleMenus = [
     {
-      label: 'Archive',
+      label: 'purchase-invoice__archive',
       link: 'Archive',
       icon: 'folder',
     },
     {
-      label: 'Confirm',
+      label: 'purchase-invoice__confirm',
       link: 'Confirm',
       icon: 'check',
     },
     {
-      label: 'Create',
+      label: 'purchase-invoice__create',
       link: '',
       icon: 'add',
     },

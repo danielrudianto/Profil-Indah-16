@@ -35,8 +35,8 @@ export class AdjustmentCaseViewComponent {
       },
     });
 
-    dialog.afterClosed().subscribe({
-      next: (data) => {
+    dialog.afterClosed().subscribe((data) => {
+      if (data == true) {
         this.isSubmitting = true;
         this.apiService
           .delete(`adjustment-event/${this.data.id}`)
@@ -54,8 +54,7 @@ export class AdjustmentCaseViewComponent {
           .add(() => {
             this.isSubmitting = false;
           });
-      },
-      error: (error) => {},
+      }
     });
   }
 }

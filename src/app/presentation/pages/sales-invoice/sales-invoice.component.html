@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-12">
       <app-transaction-header
-        title="Sales Invoice"
+        [title]="'sales-invoice__title' | translate"
         [availbleMenus]="availbleMenus"
         route="Sales-invoice"
       />

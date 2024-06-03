@@ -1,0 +1,263 @@
+<div *ngIf="!isLoading">
+  <div class="d-flex mt-4">
+    <div class="d-flex position-relative">
+      <app-vertical-divider></app-vertical-divider>
+      <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
+    </div>
+    <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+      <h5>{{ "purchase-invoice__confirm__general-data" | translate }}</h5>
+      <form [formGroup]="metaFormGroup">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{
+            "purchase-invoice__confirm__good-receipt-document" | translate
+          }}</mat-label>
+          <input
+            readonly
+            placeholder="Ex. 123456"
+            type="text"
+            matInput
+            formControlName="good_receipt_name"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{
+            "purchase-invoice__confirm__supplier" | translate
+          }}</mat-label>
+          <input
+            readonly
+            placeholder="Ex. Bing Jaya"
+            type="text"
+            matInput
+            formControlName="supplier_name"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{
+            "purchase-invoice__confirm__company" | translate
+          }}</mat-label>
+          <input
+            readonly
+            placeholder="Ex. Bing Jaya"
+            type="text"
+            matInput
+            formControlName="company_name"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{
+            "purchase-invoice__confirm__date" | translate
+          }}</mat-label>
+          <input
+            type="text"
+            placeholder="Ex. 30/12/2023"
+            formControlName="date"
+            matInput
+            [matDatepicker]="picker"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{
+            "purchase-invoice__confirm__purchase-invoice-name" | translate
+          }}</mat-label>
+          <input
+            placeholder="Ex. 123456"
+            type="text"
+            matInput
+            formControlName="name"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{
+            "purchase-invoice__confirm__tax-invoice" | translate
+          }}</mat-label>
+          <input
+            placeholder="Ex. XXX.XXX-XX.XXXXXXXX"
+            formControlName="faktur"
+            matInput
+            type="text"
+            mask="000.000-00.00000000"
+          />
+          <mat-hint>{{ "general__optional" | translate }}</mat-hint>
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+  <div class="d-flex">
+    <div class="d-flex position-relative">
+      <app-vertical-divider></app-vertical-divider>
+      <app-box-stepper
+        step="2"
+        [valid]="purchaseDocumentFormGroup.valid"
+      ></app-box-stepper>
+    </div>
+    <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+      <h5>{{ "purchase-invoice__confirm__purchase-data" | translate }}</h5>
+
+      <form [formGroup]="purchaseDocumentFormGroup">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 30%" rowspan="2">
+                {{ "purchase-invoice__confirm__table__item" | translate }}
+              </th>
+              <th class="text-center" rowspan="2">
+                {{ "purchase-invoice__confirm__table__unit-price" | translate }}
+              </th>
+              <th class="text-center" colspan="2">
+                {{ "purchase-invoice__confirm__table__discount" | translate }}
+              </th>
+              <th class="text-center" rowspan="2">
+                {{ "purchase-invoice__confirm__table__quantity" | translate }}
+              </th>
+              <th class="text-center" rowspan="2">
+                {{
+                  "purchase-invoice__confirm__table__total-price" | translate
+                }}
+              </th>
+              <th class="text-center" rowspan="2">
+                {{ "purchase-invoice__confirm__table__action" | translate }}
+              </th>
+            </tr>
+            <tr>
+              <td class="text-center">Rp.</td>
+              <td class="text-center">%</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let data of t.controls; index as i"
+              [formGroup]="getFormGroupAt(i)"
+            >
+              <td>
+                <p>{{ data.get("reference")?.value }}</p>
+                <div class="text-clamp-2">
+                  {{ data.get("description")?.value }}
+                </div>
+              </td>
+              <td class="text-center" (click)="openEditDiscount(i)">
+                {{ data.get("price")?.value | number : "0.0-2" }}
+              </td>
+              <td class="text-center" (click)="openEditDiscount(i)">
+                {{ data.get("discount")?.value | number : "0.0-2" }}
+              </td>
+              <td class="text-center" (click)="openEditDiscount(i)">
+                {{
+                  data.get("discountPercentage")?.value | number : "0.0-2"
+                }}&nbsp;%
+              </td>
+              <td class="text-center">
+                {{ data.get("quantity")?.value | number : "0.0-2" }}
+                {{ data.get("unit")?.value }}
+              </td>
+              <td class="text-center">
+                {{
+                  data.get("quantity")?.value *
+                    (data.get("price")?.value - data.get("discount")?.value)
+                    | number : "0.2-2"
+                }}
+              </td>
+              <td class="text-center">
+                <mat-slide-toggle
+                  color="primary"
+                  formControlName="save"
+                  [disabled]="
+                    data.get('price')?.value ==
+                      data.get('initialPrice')?.value &&
+                    data.get('discount')?.value ==
+                      data.get('initialDiscount')?.value
+                  "
+                ></mat-slide-toggle>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3"></td>
+              <td>
+                {{ "purchase-invoice__confirm__table__subtotal" | translate }}
+              </td>
+              <td class="text-center" colspan="2">
+                <p>
+                  Rp.&nbsp;{{ purchaseDocumentFormGroup.get("total")?.value }}
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3"></td>
+              <td>
+                {{ "purchase-invoice__confirm__table__discount" | translate }}
+              </td>
+              <td class="text-center" colspan="2">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>{{
+                    "purchase-invoice__confirm__table__discount" | translate
+                  }}</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    mask="separator.2"
+                    thousandSeparator=" "
+                    type="text"
+                    formControlName="discount"
+                  />
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3"></td>
+              <td>
+                {{ "purchase-invoice__confirm__table__total" | translate }}
+              </td>
+              <td class="text-center" colspan="2">
+                Rp.&nbsp;{{
+                  purchaseDocumentFormGroup.get("total")?.value -
+                    purchaseDocumentFormGroup.get("discount")?.value
+                    | number : "0.2-2"
+                }}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </form>
+    </div>
+  </div>
+  <div class="d-flex">
+    <div class="d-flex position-relative">
+      <app-box-stepper
+        step="3"
+        [valid]="purchaseDocumentFormGroup.valid"
+      ></app-box-stepper>
+    </div>
+    <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+      <h5>{{ "purchase-invoice__confirm__table__action" | translate }}</h5>
+      <div class="purchase-invoice__action-list">
+        <div
+          class="purchase-invoice__action-list__item"
+          (click)="submitForm('submit')"
+        >
+          <h6>{{ "purchase-invoice__confirm__confirm" | translate }}</h6>
+          <p>{{ "purchase-invoice__confirm__confirm-text" | translate }}</p>
+        </div>
+        <div
+          class="purchase-invoice__action-list__item"
+          (click)="submitForm('delete')"
+        >
+          <h6>{{ "purchase-invoice__confirm__delete" | translate }}</h6>
+          <p>{{ "purchase-invoice__confirm__delete-text" | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="isLoading">
+  <mat-progress-spinner id="spinner"></mat-progress-spinner>
+</div>

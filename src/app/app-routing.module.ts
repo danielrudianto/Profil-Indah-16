@@ -54,6 +54,7 @@ import { PricePurchaseComponent } from './presentation/pages/price/price-purchas
 import { AuthGuard } from './guards/auth.guard';
 import { AdministratorGuard } from './guards/administrator.guard';
 import { AdjustmentCaseConfirmComponent } from './presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm.component';
+import { PurchaseInvoiceConfirmViewComponent } from './presentation/pages/purchase-invoice/purchase-invoice-confirm-view/purchase-invoice-confirm-view.component';
 
 const routes: Routes = [
   {
@@ -185,8 +186,16 @@ const routes: Routes = [
                 component: PurchaseInvoiceConfirmComponent,
               },
               {
+                path: 'Confirm/:id',
+                component: PurchaseInvoiceConfirmViewComponent,
+              },
+              {
                 path: 'Edit/:id',
                 component: PurchaseInvoiceEditComponent,
+              },
+              {
+                path: '**',
+                redirectTo: '',
               },
             ],
           },

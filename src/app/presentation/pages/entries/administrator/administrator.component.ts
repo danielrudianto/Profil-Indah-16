@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { MatDrawerMode } from '@angular/material/sidenav';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
+import { slideUpAnimation } from 'src/app/animations/slide-up.animation';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-administrator',
   templateUrl: './administrator.component.html',
   styleUrls: ['./administrator.component.css'],
+  animations: [slideUpAnimation],
 })
 export class AdministratorComponent {
   constructor(private router: Router, private authService: AuthService) {}
@@ -41,6 +43,10 @@ export class AdministratorComponent {
     } else {
       return 'side';
     }
+  }
+
+  prepareRoute(outlet: RouterOutlet) {
+    return outlet?.activatedRouteData?.['animation'];
   }
 
   clickMenuButton() {

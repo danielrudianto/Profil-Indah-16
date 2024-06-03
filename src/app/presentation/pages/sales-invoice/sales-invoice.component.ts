@@ -10,12 +10,12 @@ export class SalesInvoiceComponent {
 
   availbleMenus = [
     {
-      label: 'Archive',
+      label: 'sales-invoice__archive',
       link: 'Archive',
       icon: 'folder',
     },
     {
-      label: 'Create',
+      label: 'sales-invoice__create',
       link: '',
       icon: 'add',
     },

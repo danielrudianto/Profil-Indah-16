@@ -8,17 +8,17 @@ import { Component } from '@angular/core';
 export class AdjustmentCaseComponent {
   availbleMenus = [
     {
-      label: 'Archive',
+      label: 'adjustment-case__archive',
       link: 'Archive',
       icon: 'folder',
     },
     {
-      label: 'Confirm',
+      label: 'adjustment-case__confirm',
       link: 'Confirm',
       icon: 'check',
     },
     {
-      label: 'Create',
+      label: 'adjustment-case__create',
       link: '',
       icon: 'add',
     },

@@ -270,7 +270,7 @@ export class SalesInvoiceCreateComponent {
         this.paymentsFormGroup.patchValue({
           immediate_payment: true,
         });
-        this.paymentsFormGroup.controls['immediate_payment'].disable();
+        this.paymentsFormGroup.controls['immediate_payment'].enable();
       } else if (data == 'deposit-internal') {
         this.paymentsFormGroup.patchValue({
           immediate_payment: true,
