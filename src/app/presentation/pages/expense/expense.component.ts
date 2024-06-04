@@ -8,17 +8,17 @@ import { Component } from '@angular/core';
 export class ExpenseComponent {
   availbleMenus = [
     {
-      label: 'Report',
+      label: 'expense__report',
       link: 'Report',
       icon: 'report',
     },
     {
-      label: 'Mutation',
+      label: 'expense__mutation',
       link: 'Mutation',
       icon: 'list',
     },
     {
-      label: 'Create',
+      label: 'expense__create',
       link: '',
       icon: 'add',
     },

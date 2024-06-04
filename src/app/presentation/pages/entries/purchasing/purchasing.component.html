@@ -1,57 +1,57 @@
 <mat-drawer-container class="h-100">
   <mat-drawer [mode]="drawerMode" [opened]="isDrawerOpened" class="sidenav">
     <mat-nav-list class="sidenav__menu-wrapper">
-      <div mat-subheader>Frequently Used</div>
+      <div mat-subheader>{{ "side-nav__frequently-used" | translate }}</div>
       <mat-list-item
         [routerLink]="['/Purchasing/Stock']"
         [routerLinkActive]="'active'"
       >
         <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Stock Level</div>
+        <div matListItemTitle>{{ "side-nav__stock" | translate }}</div>
       </mat-list-item>
       <mat-list-item
         [routerLink]="['/Purchasing/Good-receipt']"
         [routerLinkActive]="'active'"
       >
         <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Goods Receipt</div>
+        <div matListItemTitle>{{ "side-nav__good-receipt" | translate }}</div>
       </mat-list-item>
       <mat-divider></mat-divider>
-      <div mat-subheader>Master Data</div>
+      <div mat-subheader>{{ "side-nav__master-data" | translate }}</div>
       <mat-list-item
         [routerLink]="['/Purchasing/Product']"
         [routerLinkActive]="'active'"
       >
         <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Products</div>
+        <div matListItemTitle>{{ "side-nav__products" | translate }}</div>
       </mat-list-item>
       <mat-list-item
         [routerLink]="['/Purchasing/Product-brand']"
         [routerLinkActive]="'active'"
       >
         <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Brands</div>
+        <div matListItemTitle>{{ "side-nav__brands" | translate }}</div>
       </mat-list-item>
       <mat-list-item
         [routerLink]="['/Purchasing/Product-type']"
         [routerLinkActive]="'active'"
       >
         <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Types</div>
+        <div matListItemTitle>{{ "side-nav__types" | translate }}</div>
       </mat-list-item>
       <mat-list-item
         [routerLink]="['/Purchasing/Package']"
         [routerLinkActive]="'active'"
       >
         <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Package</div>
+        <div matListItemTitle>{{ "side-nav__package" | translate }}</div>
       </mat-list-item>
       <mat-list-item
         [routerLink]="['/Purchasing/Supplier']"
         [routerLinkActive]="'active'"
       >
         <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Supplier</div>
+        <div matListItemTitle>{{ "side-nav__supplier" | translate }}</div>
       </mat-list-item>
     </mat-nav-list>
   </mat-drawer>

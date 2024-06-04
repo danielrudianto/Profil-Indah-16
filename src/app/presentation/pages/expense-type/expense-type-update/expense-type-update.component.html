@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Update expense type</h1>
+<h1 mat-dialog-title>{{ "expense-type__update__title" | translate }}</h1>
 <mat-dialog-content>
   <div *ngIf="isLoading">
     <mat-spinner id="spinner"></mat-spinner>
@@ -6,7 +6,7 @@
   <div *ngIf="!isLoading">
     <form [formGroup]="expenseTypeFormGroup" (ngSubmit)="save()">
       <mat-form-field appearance="outline" class="w-100 mt-2">
-        <mat-label>Name</mat-label>
+        <mat-label>{{ "expense-type__name" | translate }}</mat-label>
         <input
           formControlName="name"
           matInput
@@ -16,7 +16,7 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Description</mat-label>
+        <mat-label>{{ "expense-type__description" | translate }}</mat-label>
         <textarea
           formControlName="description"
           matInput
@@ -27,7 +27,7 @@
     </form>
   </div>
 </mat-dialog-content>
-<mat-dialog-actions>
+<mat-dialog-actions align="end">
   <button
     (click)="save()"
     color="primary"
@@ -35,6 +35,6 @@
     type="button"
     [disabled]="!expenseTypeFormGroup.valid"
   >
-    Update
+    {{ "expense-type__update" | translate }}
   </button>
 </mat-dialog-actions>

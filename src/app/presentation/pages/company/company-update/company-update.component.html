@@ -1,11 +1,14 @@
 <app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
   <div class="create-dialog">
-    <app-dialog-header title="Update company" (onDialogClose)="closeDialog()">
+    <app-dialog-header
+      [title]="'company__update__title' | translate"
+      (onDialogClose)="closeDialog()"
+    >
     </app-dialog-header>
     <div class="create-dialog__content">
       <form [formGroup]="companyFormGroup">
         <mat-form-field class="w-100" appearance="outline">
-          <mat-label>Name</mat-label>
+          <mat-label>{{ "company__update__name" | translate }}</mat-label>
           <input
             [disabled]="isSubmitting"
             matInput
@@ -15,7 +18,7 @@
           />
         </mat-form-field>
         <mat-form-field class="w-100" appearance="outline">
-          <mat-label>Address</mat-label>
+          <mat-label>{{ "company__update__address" | translate }}</mat-label>
           <textarea
             [disabled]="isSubmitting"
             matInput
@@ -26,7 +29,7 @@
         </mat-form-field>
 
         <mat-form-field class="w-100" appearance="outline">
-          <mat-label>NPWP</mat-label>
+          <mat-label>{{ "company__update__npwp" | translate }}</mat-label>
           <input
             [disabled]="isSubmitting"
             matInput

@@ -1,0 +1,80 @@
+<app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
+  <div class="create-dialog">
+    <app-dialog-header
+      [title]="'expense__update__title' | translate"
+      (onDialogClose)="closeDialog()"
+    >
+    </app-dialog-header>
+    <div class="create-dialog__content">
+      <form [formGroup]="expenseFormGroup">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{ "expense__update__date" | translate }}</mat-label>
+          <input matInput formControlName="date" [matDatepicker]="date" />
+          <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+          <mat-datepicker #date></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{ "expense__update__value" | translate }}</mat-label>
+          <input
+            matInput
+            formControlName="value"
+            type="text"
+            mask="separator"
+            thousandSeparator=" "
+          />
+          <div matTextPrefix>Rp.&nbsp;</div>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{
+            "expense__update__description" | translate
+          }}</mat-label>
+          <textarea
+            matInput
+            formControlName="description"
+            type="text"
+          ></textarea>
+        </mat-form-field>
+
+        <app-autocomplete-search
+          routeName="company"
+          [selected]="expenseFormGroup.controls['company'].valid"
+          [defaultValue]="expenseFormGroup.controls['company_name'].value"
+          [label]="'expense__update__company' | translate"
+          placeholder="Ex. Toko Profil Indah"
+          (onSelectData)="onSelectCompany($event)"
+          (onUnselectData)="onUnselectCompany()"
+        ></app-autocomplete-search>
+
+        <app-autocomplete-search
+          routeName="expense-type"
+          [selected]="expenseFormGroup.controls['expense_type'].valid"
+          [defaultValue]="expenseFormGroup.controls['expense_type_name'].value"
+          [label]="'expense__update__type' | translate"
+          placeholder="Ex. Toko Profil Indah"
+          (onSelectData)="onSelectExpenseType($event)"
+          (onUnselectData)="onUnselectExpenseType()"
+        ></app-autocomplete-search>
+      </form>
+    </div>
+    <div class="create-dialog__footer">
+      <button
+        mat-button
+        type="button"
+        (click)="deleteForm()"
+        [disabled]="isSubmitting"
+      >
+        {{ "expense__delete__button" | translate }}
+      </button>
+      <button
+        type="button"
+        class="next-button"
+        (click)="submitForm()"
+        [disabled]="isSubmitting || !expenseFormGroup.valid"
+      >
+        {{ "expense__update__submit" | translate }}
+      </button>
+    </div>
+  </div>
+</app-dynamic-dialog>

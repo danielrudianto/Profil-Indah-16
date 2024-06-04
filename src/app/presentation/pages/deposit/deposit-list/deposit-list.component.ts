@@ -20,8 +20,19 @@ export class DepositListComponent {
   }
 
   viewDeposit(id: number) {
-    this.dynamicComponentService.createDynamicComponent(DepositViewComponent, {
-      id: id,
+    const dialog = this.dynamicComponentService.createDynamicComponent(
+      DepositViewComponent,
+      {
+        id: id,
+      }
+    );
+
+    dialog.subscribe((data) => {
+      if (data == 'deleted') {
+        this.dataCount = this.dataCount - 1;
+        const index = this.dataSource.findIndex((x) => x.id == id);
+        this.dataSource.splice(index, 1);
+      }
     });
   }
 

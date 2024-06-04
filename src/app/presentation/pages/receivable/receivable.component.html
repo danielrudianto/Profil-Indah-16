@@ -1,1 +1,38 @@
-<p>receivable works!</p>
+<app-feature-background />
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-12">
+      <div class="dashboard-card">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 250px">Name</th>
+                <th style="width: 200px">Amount</th>
+                <th>Receivable</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of dataSource">
+                <td>
+                  <p class="mb-0 text-clamp-1">
+                    {{ data.customer_name }}
+                  </p>
+                </td>
+                <td>{{ data.value | number : "0.2-2" }}</td>
+                <td>
+                  <div class="receivable-bar__wrapper">
+                    <div
+                      class="receivable-bar"
+                      [style.width]="(data.value * 100) / max + '%'"
+                    ></div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

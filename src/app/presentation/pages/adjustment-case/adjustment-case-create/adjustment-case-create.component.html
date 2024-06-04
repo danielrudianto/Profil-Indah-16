@@ -4,10 +4,10 @@
     <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <h5>General data</h5>
+    <h5>{{ "adjustment-case__general-data" | translate }}</h5>
     <form [formGroup]="metaFormGroup">
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Date</mat-label>
+        <mat-label>{{ "adjustment-case__date" | translate }}</mat-label>
         <input
           formControlName="date"
           matInput
@@ -19,19 +19,19 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Adjusment type</mat-label>
+        <mat-label>{{ "adjustment-case__type" | translate }}</mat-label>
         <mat-select formControlName="type" placeholder="Ex. Lost">
-          <mat-option
-            *ngFor="let item of ['Found', 'Lost']; index as i"
-            [value]="i"
-          >
-            {{ item }}
-          </mat-option>
+          <mat-option [value]="0">{{
+            "adjustment-case__type__found" | translate
+          }}</mat-option>
+          <mat-option [value]="1">{{
+            "adjustment-case__type__lost" | translate
+          }}</mat-option>
         </mat-select>
       </mat-form-field>
 
       <app-autocomplete-search
-        label="Company"
+        [label]="'adjustment-case__company' | translate"
         routeName="company"
         placeholder="Ex. Toko Profil Indah"
         (onSelectData)="onSelectCompany($event)"
@@ -50,14 +50,16 @@
     ></app-box-stepper>
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <button class="add-button" (click)="openItemSelector()">Add item</button>
+    <button class="add-button" (click)="openItemSelector()">
+      {{ "adjustment-case__add-item" | translate }}
+    </button>
     <form [formGroup]="adjustmentEventFormGroup">
       <table class="table w-100 mb-2">
         <thead>
           <tr>
-            <th>Item</th>
-            <th>Quantity</th>
-            <th>Action</th>
+            <th>{{ "adjustment-case__table__item" | translate }}</th>
+            <th>{{ "adjustment-case__table__quantity" | translate }}</th>
+            <th>{{ "adjustment-case__table__action" | translate }}</th>
           </tr>
         </thead>
         <tbody *ngIf="t.controls.length > 0">
@@ -73,7 +75,9 @@
             </td>
             <td>
               <mat-form-field appearance="outline">
-                <mat-label>Quantity</mat-label>
+                <mat-label>{{
+                  "adjustment-case__table__quantity" | translate
+                }}</mat-label>
                 <input
                   matInput
                   type="text"
@@ -109,7 +113,7 @@
       class="action-button"
       (click)="submitForm()"
     >
-      Submit
+      {{ "adjustment-case__submit" | translate }}
     </button>
   </div>
 </div>

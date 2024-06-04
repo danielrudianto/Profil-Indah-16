@@ -81,7 +81,9 @@
     <app-box-stepper step="2" [valid]="billFormGroup.valid"></app-box-stepper>
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4 flex-grow-1">
-    <button class="add-button" [matMenuTriggerFor]="menu">Add item</button>
+    <button class="add-button" [matMenuTriggerFor]="menu">
+      {{ "sales-invoice__create__add-item" | translate }}
+    </button>
     <mat-menu #menu="matMenu">
       <button mat-menu-item (click)="openItemSelector()">
         <mat-icon>list</mat-icon>

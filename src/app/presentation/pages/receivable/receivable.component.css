@@ -1,0 +1,22 @@
+.receivable-bar__wrapper {
+  width: 100%;
+  background-color: transparent;
+  height: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.receivable-bar__item-wrapper {
+  flex-grow: 1;
+}
+
+.receivable-bar {
+  height: 20px;
+  background-color: rgba(154, 177, 255, 0.692);
+}
+
+.receivable-bar__wrapper p {
+  flex-shrink: 0;
+}

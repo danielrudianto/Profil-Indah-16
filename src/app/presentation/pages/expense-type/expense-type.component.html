@@ -22,9 +22,9 @@
           <table class="table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Action</th>
+                <th>{{ "expense-type__table__name" | translate }}</th>
+                <th>{{ "expense-type__table__description" | translate }}</th>
+                <th>{{ "expense-type__table__action" | translate }}</th>
               </tr>
             </thead>
             <tbody *ngIf="isLoading">
@@ -53,7 +53,9 @@
                       (click)="openDialog('edit', item.id)"
                     >
                       <mat-icon>edit</mat-icon>
-                      <span>Edit</span>
+                      <span>{{
+                        "expense-type__table__update" | translate
+                      }}</span>
                     </button>
                     <button
                       [disabled]="isSubmitting || !item.can_delete"
@@ -61,7 +63,9 @@
                       (click)="openDialog('delete', item.id)"
                     >
                       <mat-icon>delete</mat-icon>
-                      <span>Delete</span>
+                      <span>{{
+                        "expense-type__table__delete" | translate
+                      }}</span>
                     </button>
                   </mat-menu>
                 </td>

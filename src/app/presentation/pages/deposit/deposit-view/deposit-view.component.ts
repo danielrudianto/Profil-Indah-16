@@ -10,6 +10,9 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { Margins, PageOrientation, PageSize } from 'pdfmake/interfaces';
+import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
+import { TranslateService } from '@ngx-translate/core';
+import { ActivatedRoute, Router } from '@angular/router';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -26,7 +29,10 @@ export class DepositViewComponent {
     private _hotKeysService: HotkeysService,
     private alertService: AlertService,
     private datePipe: DatePipe,
-    private decimalPipe: DecimalPipe
+    private decimalPipe: DecimalPipe,
+    private translateService: TranslateService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {
     this._hotKeysService.add([
       new Hotkey('esc', (event: KeyboardEvent): boolean => {
@@ -65,11 +71,44 @@ export class DepositViewComponent {
   }
 
   confirmDeposit(): void {
-    throw Error('Not implemented');
+    this.close();
+    const url = this.router.url.split('/');
+    url.pop();
+
+    setTimeout(() => {
+      this.router.navigate(
+        [url.join('/'), 'Deposit', 'Confirm', this.data.id],
+        {
+          relativeTo: this.activatedRoute,
+        }
+      );
+    }, 300);
   }
 
   deleteDeposit(): void {
-    throw Error('Not implemented');
+    this.dialog
+      .open(DeleteConfirmationComponent, {
+        data: {
+          title: this.translateService.instant('deposit__delete__title'),
+          document: `${this.dataSource.name}`,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data == true) {
+          this.apiService.delete(`deposit/${this.data.id}`).subscribe({
+            next: () => {
+              this.alertService.showSuccess(
+                this.translateService.instant('deposit__delete__success')
+              );
+              this.close();
+            },
+            error: (error) => {
+              this.alertService.showError(Error(error));
+            },
+          });
+        }
+      });
   }
 
   fetchByID(): void {
@@ -96,10 +135,10 @@ export class DepositViewComponent {
     }
   }
 
-  close() {
+  close(data: any = undefined) {
     this.panelState = 'closed';
     setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
+      this.dynamicComponentService.closeDynamicComponent('deleted');
     }, 300);
   }
 

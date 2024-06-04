@@ -9,9 +9,14 @@ export class DepositComponent {
   constructor() {}
   availableMenus = [
     {
-      label: 'Archive',
+      label: 'deposit__archive',
       link: 'Archive',
       icon: 'folder',
+    },
+    {
+      label: 'deposit__list',
+      link: '',
+      icon: 'list',
     },
   ];
 }

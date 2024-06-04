@@ -1,7 +1,7 @@
-<h1 mat-dialog-title>Add Expense Type</h1>
+<h1 mat-dialog-title>{{ "expense-type__create__title" | translate }}</h1>
 <mat-dialog-content>
   <div class="expense-type__parent-wrapper" *ngIf="data.parentName != null">
-    <h5>Parent data</h5>
+    <h5>{{ "expense-type__create__parent-data" | translate }}</h5>
     <mat-divider class="mt-1 mb-2" />
     <h2>{{ data.parentName }}</h2>
     <p>{{ data.parentDescription }}</p>
@@ -11,7 +11,7 @@
 
   <form [formGroup]="expenseTypeFormGroup" (ngSubmit)="save()">
     <mat-form-field appearance="outline" class="w-100 mt-2">
-      <mat-label>Name</mat-label>
+      <mat-label>{{ "expense-type__create__name" | translate }}</mat-label>
       <input
         formControlName="name"
         matInput
@@ -21,7 +21,9 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>Description</mat-label>
+      <mat-label>{{
+        "expense-type__create__description" | translate
+      }}</mat-label>
       <textarea
         formControlName="description"
         matInput
@@ -31,7 +33,7 @@
     </mat-form-field>
   </form>
 </mat-dialog-content>
-<mat-dialog-actions>
+<mat-dialog-actions align="end">
   <button
     mat-button
     type="button"
@@ -39,6 +41,6 @@
     [disabled]="isSubmitting || !expenseTypeFormGroup.valid"
     (click)="save()"
   >
-    Save
+    {{ "expense-type__create__submit" | translate }}
   </button>
 </mat-dialog-actions>

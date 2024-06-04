@@ -60,7 +60,7 @@ export class AdjustmentCaseCreateComponent {
     this.t.valueChanges.subscribe(() => {
       let totalItems = 0;
       this.t.controls.forEach((x) => {
-        totalItems += parseFloat(x.get('quantity')?.value);
+        totalItems += Number(x.get('quantity')?.value);
       });
 
       this.adjustmentEventFormGroup.patchValue({

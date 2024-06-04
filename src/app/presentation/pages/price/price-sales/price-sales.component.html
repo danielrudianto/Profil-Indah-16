@@ -1,4 +1,7 @@
-<app-transaction-header title="Sales price" [backRoute]="backRoute" />
+<app-transaction-header
+  [title]="'sales-price__title' | translate"
+  [backRoute]="backRoute"
+/>
 
 <div class="dashboard-card">
   <app-feature-search
@@ -16,11 +19,21 @@
     <table class="table">
       <thead>
         <tr>
-          <th style="width: 150px">Reference</th>
-          <th style="width: 250px">Description</th>
-          <th style="width: 150px" class="text-center">Effective date</th>
-          <th style="width: 150px" class="text-center">Price</th>
-          <th style="width: 150px" class="text-center">Discount</th>
+          <th style="width: 150px">
+            {{ "sales-price__reference" | translate }}
+          </th>
+          <th style="width: 250px">
+            {{ "sales-price__description" | translate }}
+          </th>
+          <th style="width: 150px" class="text-center">
+            {{ "sales-price__effective-date" | translate }}
+          </th>
+          <th style="width: 150px" class="text-center">
+            {{ "sales-price__price" | translate }}
+          </th>
+          <th style="width: 150px" class="text-center">
+            {{ "sales-price__discount" | translate }}
+          </th>
         </tr>
       </thead>
       <tbody *ngIf="isLoading">

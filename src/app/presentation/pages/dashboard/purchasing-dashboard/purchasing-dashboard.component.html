@@ -5,8 +5,8 @@
         <div class="col-12" id="get-started">
           <img src="/assets/images/get-started.png" class="dashboard__hero" />
           <div class="get-started__text-box px-3">
-            <h1>Purchasing Dashboard</h1>
-            <p>Empowering your business with the best procurement practices.</p>
+            <h1>{{ "dashboard-purchasing__hero" | translate }}</h1>
+            <p>{{ "dashboard-purchasing__description" | translate }}</p>
             <div class="get-started__text-box__button-wrapper">
               <button class="download-button" matTooltip="Stock application">
                 <svg
@@ -24,7 +24,7 @@
               <div class="vertical-divider mx-2"></div>
               <button
                 class="download-button white"
-                matTooltip="Back to dashboard"
+                [matTooltip]="'dashboard-purchasing__back-to-home' | translate"
                 [routerLink]="'/'"
               >
                 <svg
@@ -40,7 +40,9 @@
                 </svg>
               </button>
             </div>
-            <small>Other application features</small>
+            <small>{{
+              "dashboard-purchasing__other-application" | translate
+            }}</small>
           </div>
         </div>
       </div>
@@ -77,13 +79,13 @@
         <mat-expansion-panel [expanded]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>
-              <h3>Quick Picks</h3>
+              <h3>{{ "dashboard-purchasing__quick-picks" | translate }}</h3>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div class="quick-picks__wrapper">
             <button
               class="quick-picks__wrapper__button"
-              matTooltip="Purchase report"
+              [matTooltip]="'dashboard-purchasing__purchase-report' | translate"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -108,12 +110,14 @@
                   ></path>
                 </g>
               </svg>
-              <p>Purchase Report</p>
+              <p>{{ "dashboard-purchasing__purchase-report" | translate }}</p>
             </button>
 
             <button
               class="quick-picks__wrapper__button"
-              matTooltip="Inadequate items"
+              [matTooltip]="
+                'dashboard-purchasing__inadequate-items' | translate
+              "
             >
               <svg
                 viewBox="0 0 24 24"
@@ -147,7 +151,7 @@
                   ></path>
                 </g>
               </svg>
-              <p>Inadequate items</p>
+              <p>{{ "dashboard-purchasing__inadequate-items" | translate }}</p>
             </button>
           </div>
           <app-gcp-info />

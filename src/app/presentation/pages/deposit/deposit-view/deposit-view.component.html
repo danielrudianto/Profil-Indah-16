@@ -2,7 +2,7 @@
   <div class="view-panel-backdrop" (click)="close()"></div>
   <div class="view-panel" [@panelAnimation]="panelState">
     <div class="row-action">
-      <h2 mat-dialog-title>View Deposit</h2>
+      <h2 mat-dialog-title>{{ "deposit__view__title" | translate }}</h2>
       <div class="d-flex">
         <button mat-icon-button (click)="enlarge()">
           <mat-icon *ngIf="panelState != 'enlarged'">open_in_full</mat-icon>
@@ -17,87 +17,62 @@
       <mat-spinner id="spinner" *ngIf="isLoading" />
 
       <div *ngIf="!isLoading">
-        <h5 class="mt-2">General</h5>
-        <mat-divider />
-        <mat-form-field appearance="outline" class="w-100 mt-3">
-          <mat-label>Date</mat-label>
-          <input
-            matInput
-            [value]="dataSource.date | date : 'MM/dd/yyyy'"
-            [readonly]="true"
-          />
-        </mat-form-field>
+        <h5 class="mt-2">{{ "deposit__view__general-data" | translate }}</h5>
+        <mat-divider class="mb-3" />
+        <label>{{ "deposit__view__date" | translate }}</label>
+        <p>{{ dataSource.date | date : "MM/dd/yyyy" }}</p>
 
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Name</mat-label>
-          <input matInput [value]="dataSource.name" [readonly]="true" />
-        </mat-form-field>
+        <label>{{ "deposit__view__name" | translate }}</label>
+        <p>{{ dataSource.name }}</p>
 
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Sales</mat-label>
-          <input
-            matInput
-            [value]="dataSource.sales == null ? 'INTERNAL' : dataSource.sales"
-            [readonly]="true"
-          />
-        </mat-form-field>
+        <label>{{ "deposit__view__sales" | translate }}</label>
+        <p>
+          {{ dataSource.sales == null ? "INTERNAL" : dataSource.sales }}
+        </p>
 
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Amount</mat-label>
-          <input
-            matInput
-            [value]="
-              dataSource.subTotal -
-                dataSource.discount +
-                dataSource.delivery +
-                dataSource.service | mask : 'separator.2'
-            "
-            [readonly]="true"
-          />
-        </mat-form-field>
+        <label>{{ "deposit__view__amount" | translate }}</label>
+        <p>
+          {{
+            dataSource.subTotal -
+              dataSource.discount +
+              dataSource.delivery +
+              dataSource.service | mask : "separator.2"
+          }}
+        </p>
 
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Payments</mat-label>
-          <input
-            matInput
-            [value]="payment | mask : 'separator.2'"
-            [readonly]="true"
-          />
-        </mat-form-field>
+        <label>{{ "deposit__view__customer" | translate }}</label>
+        <p>
+          {{
+            dataSource.customer == null
+              ? "Retail customer"
+              : dataSource.customer.name
+          }}
+        </p>
 
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Customer</mat-label>
-          <input
-            matInput
-            [value]="
-              dataSource.customer == null
-                ? 'Retail customer'
-                : dataSource.customer.name
-            "
-            [readonly]="true"
-          />
-        </mat-form-field>
-
-        <h5>Details</h5>
-        <mat-divider />
+        <h5>{{ "deposit__view__deposit-data" | translate }}</h5>
+        <mat-divider class="mb-2" />
         <div class="table-responsive">
           <table class="table">
             <thead>
               <tr>
-                <th style="width: 250px" rowspan="2">Item</th>
+                <th style="width: 250px" rowspan="2">
+                  {{ "deposit__view__table__item" | translate }}
+                </th>
                 <th style="width: 150px" rowspan="2" class="text-center">
-                  Quantity
+                  {{ "deposit__view__table__quantity" | translate }}
                 </th>
                 <th style="width: 250px" rowspan="2" class="text-center">
-                  Price
+                  {{ "deposit__view__table__price" | translate }}
                 </th>
-                <th colspan="2" class="text-center">Discount</th>
+                <th colspan="2" class="text-center">
+                  {{ "deposit__view__table__discount" | translate }}
+                </th>
                 <th style="width: 250px" rowspan="2" class="text-center">
-                  Total price
+                  {{ "deposit__view__table__total" | translate }}
                 </th>
               </tr>
               <tr>
-                <th style="width: 150px" class="text-center">R</th>
+                <th style="width: 150px" class="text-center">Rp.</th>
                 <th style="width: 100px" class="text-center">%</th>
               </tr>
             </thead>
@@ -185,36 +160,46 @@
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="3"></td>
-                <td class="text-center">Subtotal</td>
+                <td colspan="4"></td>
+                <td class="text-center">
+                  {{ "deposit__view__table__subtotal" | translate }}
+                </td>
                 <td class="text-center" colspan="2">
                   {{ dataSource.subTotal | number : "0.2-2" }}
                 </td>
               </tr>
               <tr>
-                <td colspan="3"></td>
-                <td class="text-center">Discount</td>
+                <td colspan="4"></td>
+                <td class="text-center">
+                  {{ "deposit__view__table__discount" | translate }}
+                </td>
                 <td class="text-center" colspan="2">
                   {{ dataSource.discount | number : "0.2-2" }}
                 </td>
               </tr>
               <tr>
-                <td colspan="3"></td>
-                <td class="text-center">Service</td>
+                <td colspan="4"></td>
+                <td class="text-center">
+                  {{ "deposit__view__table__service" | translate }}
+                </td>
                 <td class="text-center" colspan="2">
                   {{ dataSource.service | number : "0.2-2" }}
                 </td>
               </tr>
               <tr>
-                <td colspan="3"></td>
-                <td class="text-center">Delivery</td>
+                <td colspan="4"></td>
+                <td class="text-center">
+                  {{ "deposit__view__table__delivery" | translate }}
+                </td>
                 <td class="text-center" colspan="2">
                   {{ dataSource.delivery | number : "0.2-2" }}
                 </td>
               </tr>
               <tr>
-                <td colspan="3"></td>
-                <td class="text-center">Total</td>
+                <td colspan="4"></td>
+                <td class="text-center">
+                  {{ "deposit__view__table__total" | translate }}
+                </td>
                 <td class="text-center" colspan="2">
                   {{
                     dataSource.subTotal -
@@ -228,15 +213,21 @@
           </table>
         </div>
 
-        <h5 class="mt-4">Payments</h5>
+        <h5 class="mt-4">
+          {{ "deposit__view__payment-data" | translate }}
+        </h5>
         <mat-divider />
         <div class="table-responsive">
           <table class="table">
             <thead>
               <tr>
-                <th>Date</th>
-                <th>Payment method</th>
-                <th>Amount</th>
+                <th>{{ "deposit__view__table__payment-date" | translate }}</th>
+                <th>
+                  {{ "deposit__view__table__payment-method" | translate }}
+                </th>
+                <th>
+                  {{ "deposit__view__table__payment-amount" | translate }}
+                </th>
               </tr>
             </thead>
             <tbody *ngIf="dataSource.deposit_payment.length > 0">
@@ -270,19 +261,23 @@
       </div>
       <div class="shortcut-key">
         <span class="shortcut-key-label">F</span>
-        <span class="shortcut-key-function">Toggle full screen</span>
+        <span class="shortcut-key-function">{{
+          "general__toggle-full-screen" | translate
+        }}</span>
       </div>
       <div class="shortcut-key">
         <span class="shortcut-key-label">P</span>
-        <span class="shortcut-key-function">Print</span>
+        <span class="shortcut-key-function">{{
+          "general__print" | translate
+        }}</span>
       </div>
     </div>
     <div class="actions">
       <button class="action-button mx-1" (click)="confirmDeposit()">
-        Confirm
+        {{ "deposit__view__confirm-button" | translate }}
       </button>
       <button class="action-button mx-1" (click)="deleteDeposit()">
-        Delete
+        {{ "deposit__view__delete-button" | translate }}
       </button>
     </div>
   </div>

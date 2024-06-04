@@ -55,6 +55,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { AdministratorGuard } from './guards/administrator.guard';
 import { AdjustmentCaseConfirmComponent } from './presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm.component';
 import { PurchaseInvoiceConfirmViewComponent } from './presentation/pages/purchase-invoice/purchase-invoice-confirm-view/purchase-invoice-confirm-view.component';
+import { DepositConfirmComponent } from './presentation/pages/deposit/deposit-confirm/deposit-confirm.component';
 
 const routes: Routes = [
   {
@@ -149,6 +150,14 @@ const routes: Routes = [
                 path: 'Archive',
                 component: DepositArchiveComponent,
               },
+              {
+                path: 'Confirm/:id',
+                component: DepositConfirmComponent,
+              },
+              {
+                path: '**',
+                redirectTo: '',
+              },
             ],
           },
           {
@@ -232,6 +241,10 @@ const routes: Routes = [
               {
                 path: 'Report',
                 component: ExpenseReportComponent,
+              },
+              {
+                path: '**',
+                redirectTo: '',
               },
             ],
           },
@@ -322,6 +335,10 @@ const routes: Routes = [
           {
             path: 'Stock',
             component: StockListComponent,
+          },
+          {
+            path: 'Receivable',
+            component: ReceivableComponent,
           },
           {
             path: 'Sales-invoice',

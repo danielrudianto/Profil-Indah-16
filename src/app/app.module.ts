@@ -183,6 +183,10 @@ import { DARK_MODE_OPTIONS } from 'angular-dark-mode';
 import { PaymentMethodCreateComponent } from './presentation/pages/payment-method/payment-method-create/payment-method-create.component';
 import { PaymentMethodUpdateComponent } from './presentation/pages/payment-method/payment-method-update/payment-method-update.component';
 import { PurchaseInvoiceConfirmViewComponent } from './presentation/pages/purchase-invoice/purchase-invoice-confirm-view/purchase-invoice-confirm-view.component';
+import { PricePurchaseUpdateComponent } from './presentation/pages/price/price-purchase/price-purchase-update/price-purchase-update.component';
+import { ExpenseUpdateComponent } from './presentation/pages/expense/expense-update/expense-update.component';
+import { ProductUnitComponent } from './presentation/pages/product/product-unit/product-unit.component';
+import { DepositConfirmComponent } from './presentation/pages/deposit/deposit-confirm/deposit-confirm.component';
 
 @NgModule({
   declarations: [
@@ -314,6 +318,10 @@ import { PurchaseInvoiceConfirmViewComponent } from './presentation/pages/purcha
     PaymentMethodCreateComponent,
     PaymentMethodUpdateComponent,
     PurchaseInvoiceConfirmViewComponent,
+    PricePurchaseUpdateComponent,
+    ExpenseUpdateComponent,
+    ProductUnitComponent,
+    DepositConfirmComponent,
   ],
   imports: [
     BrowserModule,
