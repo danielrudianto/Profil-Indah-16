@@ -1,120 +1,141 @@
-<div class="view-panel-wrapper">
-  <div class="view-panel-backdrop" (click)="close()"></div>
-  <div class="view-panel" [@panelAnimation]="panelState">
-    <div class="row-action">
-      <h2 mat-dialog-title>Create promotion</h2>
-      <div class="d-flex">
-        <button mat-icon-button (click)="enlarge()">
-          <mat-icon *ngIf="panelState != 'enlarged'">open_in_full</mat-icon>
-          <mat-icon *ngIf="panelState == 'enlarged'">close_fullscreen</mat-icon>
-        </button>
-        <button mat-icon-button (click)="close()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-    </div>
-    <div class="view-panel-content" id="content">
+<app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
+  <div class="create-dialog">
+    <app-dialog-header
+      [title]="'promotion__view__title' | translate"
+      (onDialogClose)="closeDialog()"
+    >
+    </app-dialog-header>
+    <div class="create-dialog__content">
       <form [formGroup]="promotionFormGroup">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description"></textarea>
-        </mat-form-field>
-
-        <!-- Start date -->
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Start date</mat-label>
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>{{ "promotion__add__name" | translate }}</mat-label>
           <input
+            [disabled]="isSubmitting"
             matInput
-            [matDatepicker]="startDatePicker"
-            formControlName="startDate"
-          />
-          <mat-datepicker-toggle
-            matSuffix
-            [for]="startDatePicker"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #startDatePicker></mat-datepicker>
-        </mat-form-field>
-
-        <!-- End date optional can clear input -->
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>End date</mat-label>
-          <input
-            matInput
-            [matDatepicker]="endDatePicker"
-            formControlName="endDate"
-          />
-          <mat-datepicker-toggle
-            matSuffix
-            [for]="endDatePicker"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #endDatePicker></mat-datepicker>
-          <mat-hint>Optional</mat-hint>
-        </mat-form-field>
-
-        <!-- Target -->
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Target</mat-label>
-          <input
-            matInput
-            formControlName="target"
             type="text"
-            mask="separator"
+            formControlName="name"
+          />
+        </mat-form-field>
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>{{ "promotion__add__description" | translate }}</mat-label>
+          <textarea
+            [disabled]="isSubmitting"
+            matInput
+            type="text"
+            formControlName="description"
+          ></textarea>
+        </mat-form-field>
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>{{ "promotion__add__start-date" | translate }}</mat-label>
+          <input
+            [disabled]="isSubmitting"
+            matInput
+            formControlName="start"
+            [matDatepicker]="startpicker"
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="startpicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #startpicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>{{ "promotion__add__end-date" | translate }}</mat-label>
+          <input
+            [disabled]="isSubmitting"
+            matInput
+            formControlName="end"
+            [matDatepicker]="picker"
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>{{ "promotion__add__target" | translate }}</mat-label>
+          <input
+            [disabled]="isSubmitting"
+            matInput
+            type="text"
+            formControlName="target"
+            mask="separator.2"
             thousandSeparator=" "
-            placeholder="Ex. 2 500 000 000"
+            placeholder="Ex. 800"
           />
         </mat-form-field>
 
         <app-autocomplete-search
-          label="Product brand"
+          [label]="'promotion__add__brand' | translate"
           routeName="product-brand"
-          placeholder="Ex. Garuda"
-          [defaultValue]="promotionFormGroup.get('brand_name')?.value"
-          [selected]="promotionFormGroup.controls['brand'].valid"
           (onSelectData)="onSelectBrand($event)"
           (onUnselectData)="onUnselectBrand()"
+          [selected]="promotionFormGroup.controls['brand'].valid"
+          [defaultValue]="promotionFormGroup.controls['brand_name'].value"
         ></app-autocomplete-search>
 
         <app-autocomplete-search
-          label="Supplier"
+          [label]="'promotion__add__supplier' | translate"
           routeName="supplier"
-          placeholder="Ex. PT. ABC"
-          [defaultValue]="promotionFormGroup.get('supplier_name')?.value"
-          [selected]="promotionFormGroup.controls['supplier'].valid"
           (onSelectData)="onSelectSupplier($event)"
           (onUnselectData)="onUnselectSupplier()"
+          [selected]="promotionFormGroup.controls['supplier'].valid"
+          [defaultValue]="promotionFormGroup.controls['supplier_name'].value"
         ></app-autocomplete-search>
 
-        <button mat-raised-button type="button" (click)="addRuleDialog()">
-          Add new rule
+        <button class="button" type="button" (click)="addRuleDialog()">
+          {{ "promotion__add__add-rule" | translate }}
         </button>
-
         <div class="table-responsive">
           <table class="table">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Property</th>
-                <th>Value</th>
-                <th>Action</th>
+                <th>{{ "promotion__add__rule" | translate }}</th>
+                <th>{{ "promotion__add__rule-type" | translate }}</th>
+                <th>{{ "promotion__add__rule-value" | translate }}</th>
+                <th>{{ "promotion__add__action" | translate }}</th>
               </tr>
             </thead>
             <tbody *ngIf="t.controls.length == 0">
               <tr>
-                <td colspan="4">No data</td>
+                <td colspan="4">
+                  <empty-table />
+                </td>
               </tr>
             </tbody>
             <tbody *ngIf="t.controls.length > 0">
               <tr *ngFor="let control of t.controls; let i = index">
                 <td>{{ i + 1 }}</td>
-                <td>{{ control.value.rule }}</td>
+                <td>
+                  <span [ngSwitch]="control.value.rule">
+                    <span *ngSwitchCase="'Starts with'">{{
+                      "promotion__add__rule-starts-with" | translate
+                    }}</span>
+                    <span *ngSwitchCase="'Ends with'">
+                      {{ "promotion__add__rule-ends-with" | translate }}
+                    </span>
+                    <span *ngSwitchCase="'Contains'">
+                      {{ "promotion__add__rule-contains" | translate }}
+                    </span>
+                    <span *ngSwitchCase="'Does not start with'">{{
+                      "promotion__add__rule-not-starts-with" | translate
+                    }}</span>
+                    <span *ngSwitchCase="'Does not end with'">{{
+                      "promotion__add__rule-not-ends-with" | translate
+                    }}</span>
+                    <span *ngSwitchCase="'Does not contain'">
+                      {{ "promotion__add__rule-not-contains" | translate }}
+                    </span>
+                  </span>
+                </td>
                 <td>{{ control.value.value }}</td>
                 <td>
-                  <button mat-icon-button (click)="removeRule(i)">
+                  <button
+                    mat-icon-button
+                    (click)="removeRule(i)"
+                    [disabled]="isSubmitting"
+                  >
                     <mat-icon>delete</mat-icon>
                   </button>
                 </td>
@@ -124,29 +145,18 @@
         </div>
       </form>
     </div>
-    <div class="shortcuts">
-      <div class="shortcut-key">
-        <span class="shortcut-key-label">ESC</span>
-        <span class="shortcut-key-function">{{
-          "general__back" | translate
-        }}</span>
-      </div>
-      <div class="shortcut-key">
-        <span class="shortcut-key-label">F</span>
-        <span class="shortcut-key-function">Toggle full screen</span>
-      </div>
-    </div>
-    <div class="actions">
-      <button class="action-button mx-1" (click)="viewPromotionResult()">
-        Result
+    <div class="create-dialog__footer">
+      <button mat-button (click)="viewPromotionResult()">
+        {{ "promotion__view__view-result" | translate }}
       </button>
       <button
-        class="action-button mx-1"
-        (click)="save()"
-        [disabled]="!promotionFormGroup.valid || isSubmitting"
+        (click)="submitForm()"
+        type="button"
+        class="next-button"
+        [disabled]="isSubmitting || !promotionFormGroup.valid"
       >
-        Save
+        {{ "promotion__add__submit" | translate }}
       </button>
     </div>
   </div>
-</div>
+</app-dynamic-dialog>

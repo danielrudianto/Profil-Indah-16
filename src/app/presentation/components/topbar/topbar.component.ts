@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { DarkModeService } from 'angular-dark-mode';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -10,11 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./topbar.component.css'],
 })
 export class TopbarComponent {
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-    private darkModeService: DarkModeService
-  ) {}
+  constructor(private router: Router, private authService: AuthService) {}
   @Input('hidden') isHidden!: boolean;
   @Input('menuButtonAvailable') menuButtonAvailable: boolean = false;
 

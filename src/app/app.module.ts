@@ -179,7 +179,6 @@ import { StockListReportComponent } from './presentation/pages/stock-list/stock-
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { DarkModeSelectorComponent } from './presentation/components/topbar/dark-mode-selector/dark-mode-selector.component';
 import { AdjustmentCaseConfirmComponent } from './presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm.component';
-import { DARK_MODE_OPTIONS } from 'angular-dark-mode';
 import { PaymentMethodCreateComponent } from './presentation/pages/payment-method/payment-method-create/payment-method-create.component';
 import { PaymentMethodUpdateComponent } from './presentation/pages/payment-method/payment-method-update/payment-method-update.component';
 import { PurchaseInvoiceConfirmViewComponent } from './presentation/pages/purchase-invoice/purchase-invoice-confirm-view/purchase-invoice-confirm-view.component';
@@ -187,6 +186,10 @@ import { PricePurchaseUpdateComponent } from './presentation/pages/price/price-p
 import { ExpenseUpdateComponent } from './presentation/pages/expense/expense-update/expense-update.component';
 import { ProductUnitComponent } from './presentation/pages/product/product-unit/product-unit.component';
 import { DepositConfirmComponent } from './presentation/pages/deposit/deposit-confirm/deposit-confirm.component';
+import { PackageCreateComponent } from './presentation/pages/package/package-create/package-create.component';
+import { PackageListComponent } from './presentation/pages/package/package-list/package-list.component';
+import { PackageUpdateComponent } from './presentation/pages/package/package-update/package-update.component';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -322,6 +325,9 @@ import { DepositConfirmComponent } from './presentation/pages/deposit/deposit-co
     ExpenseUpdateComponent,
     ProductUnitComponent,
     DepositConfirmComponent,
+    PackageCreateComponent,
+    PackageListComponent,
+    PackageUpdateComponent,
   ],
   imports: [
     BrowserModule,
@@ -357,6 +363,7 @@ import { DepositConfirmComponent } from './presentation/pages/deposit/deposit-co
     MatSlideToggleModule,
     MatChipsModule,
     MatBadgeModule,
+    MatTabsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -376,13 +383,6 @@ import { DepositConfirmComponent } from './presentation/pages/deposit/deposit-co
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
       multi: true,
-    },
-    {
-      provide: DARK_MODE_OPTIONS,
-      useValue: {
-        darkModeClass: 'dark-mode',
-        lightModeClass: 'light-mode',
-      },
     },
     provideNgxMask(),
     DatePipe,

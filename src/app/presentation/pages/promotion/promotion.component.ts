@@ -7,6 +7,7 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { PromotionCreateComponent } from './promotion-create/promotion-create.component';
 import { PromotionViewComponent } from './promotion-view/promotion-view.component';
 import { PromotionViewActionComponent } from './promotion-view-action/promotion-view-action.component';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-promotion',
@@ -17,7 +18,8 @@ export class PromotionComponent {
   constructor(
     private router: Router,
     private dynamicComponentService: DynamicComponentService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private alertService: AlertService
   ) {}
 
   page: number = 1;
@@ -84,7 +86,9 @@ export class PromotionComponent {
 
           this.isLoading = false;
         },
-        error: (error) => {},
+        error: (error) => {
+          this.alertService.showError(error);
+        },
       });
   }
 

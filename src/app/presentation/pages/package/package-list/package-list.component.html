@@ -1,0 +1,90 @@
+<div class="dashboard-card">
+  <app-feature-search
+    [addButton]="true"
+    route="product-package"
+    [page]="page"
+    [enable]="true"
+    (onChange)="onUpdateData($event)"
+    (onLoadingChange)="onUpdateLoadingStatus($event)"
+    (updatePage)="onUpdatePage()"
+    (onNewQuery)="page = 1"
+  ></app-feature-search>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="text-center">
+            {{ "package__table__name" | translate }}
+          </th>
+          <th class="text-center">
+            {{ "package__table__description" | translate }}
+          </th>
+          <th class="text-center">
+            {{ "package__table__status" | translate }}
+          </th>
+          <th class="text-center">
+            {{ "package__table__action" | translate }}
+          </th>
+        </tr>
+      </thead>
+      <tbody *ngIf="!isLoading && dataSource.length > 0">
+        <tr *ngFor="let item of dataSource">
+          <td class="text-center">{{ item.name }}</td>
+          <td>
+            <span class="text-clamp-2 text-center">
+              {{ item.description }}
+            </span>
+          </td>
+          <td class="text-center">
+            {{ item.price | number : "0.2-2" }}
+          </td>
+          <td class="text-center">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button (click)="openDialog('edit', item.id)" mat-menu-item>
+                <mat-icon>edit</mat-icon>
+                <span>{{ "package__table__update" | translate }}</span>
+              </button>
+              <button
+                [class.delete-button]="item.can_delete"
+                mat-menu-item
+                (click)="openDialog('delete', item.id)"
+                [disabled]="!isAdministrator"
+              >
+                <mat-icon>delete</mat-icon>
+                <span>{{ "package__table__delete" | translate }}</span>
+              </button>
+            </mat-menu>
+          </td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="!isLoading && dataSource.length == 0">
+        <tr>
+          <td colspan="6">
+            <empty-table />
+          </td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="isLoading">
+        <tr>
+          <td colspan="6" class="text-center">
+            <mat-spinner id="spinner"></mat-spinner>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <mat-paginator
+    class="paginator"
+    [pageIndex]="page - 1"
+    [length]="dataCount"
+    [pageSize]="10"
+    (page)="changePage($event)"
+    aria-label="Select page"
+    hidePageSize="true"
+    *ngIf="!isLoading"
+  >
+  </mat-paginator>
+</div>

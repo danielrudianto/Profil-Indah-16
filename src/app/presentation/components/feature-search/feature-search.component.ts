@@ -20,6 +20,7 @@ import { CustomerCreateComponent } from '../../pages/customer/customer-create/cu
 import { CompanyCreateComponent } from '../../pages/company/company-create/company-create.component';
 import { PaymentMethodCreateComponent } from '../../pages/payment-method/payment-method-create/payment-method-create.component';
 import { PromotionCreateComponent } from '../../pages/promotion/promotion-create/promotion-create.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-feature-search',
@@ -30,7 +31,9 @@ export class FeatureSearchComponent {
   constructor(
     private apiService: ApiService,
     private dialog: MatDialog,
-    private dynamicComponentService: DynamicComponentService
+    private dynamicComponentService: DynamicComponentService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   @Input('buttonLabel') buttonLabel!: string;
@@ -117,6 +120,11 @@ export class FeatureSearchComponent {
           PromotionCreateComponent,
           {}
         );
+        break;
+      case 'product-package':
+        this.router.navigate(['Create'], {
+          relativeTo: this.activatedRoute,
+        });
         break;
       //   case 'product-type':
       //     this.dialog.open(AddItemTypeFormComponent, config);

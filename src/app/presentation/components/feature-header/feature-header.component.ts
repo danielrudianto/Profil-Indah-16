@@ -15,7 +15,11 @@ export class FeatureHeaderComponent {
 
   clickBackButton() {
     const url = this.router.url.split('/');
-    url.pop();
+    if (url.length > 2) {
+      for (let i = 0; i < url.length - 1; i++) {
+        url.pop();
+      }
+    }
 
     this.router.navigate(url);
   }

@@ -1,0 +1,13 @@
+.button {
+  align-self: flex-end;
+  padding: 0.25rem 0.75rem;
+  outline: none;
+  border: none;
+  color: white;
+  font-weight: 400;
+  background-color: #005cbb;
+  cursor: pointer;
+  margin-top: auto;
+  border-radius: 0.75rem;
+  margin-top: 0.5rem;
+}

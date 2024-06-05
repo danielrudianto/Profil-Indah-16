@@ -10,6 +10,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { panelAnimation } from 'src/app/animations/panel.animation';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-promotion-view-action',
@@ -18,18 +19,37 @@ import { panelAnimation } from 'src/app/animations/panel.animation';
   animations: [panelAnimation],
 })
 export class PromotionViewActionComponent {
+  constructor(
+    private dynamicComponentService: DynamicComponentService,
+    private _hotKeysService: HotkeysService,
+    private apiService: ApiService,
+    private alertService: AlertService,
+    private sheet: MatBottomSheet,
+    private datePipe: DatePipe,
+    private dialog: MatDialog,
+    private translateService: TranslateService
+  ) {
+    this._hotKeysService.add([
+      new Hotkey('esc', () => {
+        this.closeDialog();
+        return false;
+      }),
+    ]);
+  }
+
   @Input() data!: any;
 
   panelState: string = 'closed';
   isLoading: boolean = true;
   dataSource: any = null;
   isSubmitting: boolean = false;
+  isOpened: boolean = false;
 
   promotionFormGroup: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
-    startDate: new FormControl('', [Validators.required]),
-    endDate: new FormControl(''),
+    start: new FormControl('', [Validators.required]),
+    end: new FormControl(''),
     target: new FormControl(0, [Validators.required, Validators.min(0)]),
     brand: new FormControl('', [Validators.required]),
     brand_name: new FormControl(''),
@@ -38,29 +58,8 @@ export class PromotionViewActionComponent {
     rules: new FormArray([]),
   });
 
-  constructor(
-    private dynamicComponentService: DynamicComponentService,
-    private _hotKeysService: HotkeysService,
-    private apiService: ApiService,
-    private alertService: AlertService,
-    private sheet: MatBottomSheet,
-    private datePipe: DatePipe,
-    private dialog: MatDialog
-  ) {}
-
   ngOnInit(): void {
-    this.panelState = 'opened';
-    this._hotKeysService.add([
-      new Hotkey('esc', (event: KeyboardEvent): boolean => {
-        this.close();
-        return false;
-      }),
-      new Hotkey('f', (event: KeyboardEvent): boolean => {
-        this.enlarge();
-        return false;
-      }),
-    ]);
-
+    this.isOpened = true;
     this.fetchByID(this.data.id);
 
     this.promotionFormGroup.patchValue({
@@ -69,16 +68,8 @@ export class PromotionViewActionComponent {
     });
   }
 
-  enlarge() {
-    if (this.panelState == 'opened') {
-      this.panelState = 'enlarged';
-    } else if (this.panelState == 'enlarged') {
-      this.panelState = 'opened';
-    }
-  }
-
-  close() {
-    this.panelState = 'closed';
+  closeDialog() {
+    this.isOpened = false;
     setTimeout(() => {
       this.dynamicComponentService.closeDynamicComponent();
     }, 300);
@@ -93,8 +84,8 @@ export class PromotionViewActionComponent {
           this.promotionFormGroup.patchValue({
             name: data.name,
             description: data.description,
-            startDate: data.start,
-            endDate: data.end,
+            start: new Date(data.start),
+            end: data.end == null ? null : new Date(data.end),
             target: data.target,
             brand_name: data.brand.name,
             brand: data.brand_id,
@@ -113,7 +104,7 @@ export class PromotionViewActionComponent {
         },
         error: (error) => {
           this.alertService.showError(error);
-          this.close();
+          this.closeDialog();
         },
       })
       .add(() => {
@@ -149,9 +140,11 @@ export class PromotionViewActionComponent {
         rules: this.t.value,
       })
       .subscribe({
-        next: (data) => {
-          this.alertService.showSuccess('Promotion updated successfully');
-          this.close();
+        next: (_) => {
+          this.alertService.showSuccess(
+            this.translateService.instant('promotion__update__success')
+          );
+          this.closeDialog();
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -164,7 +157,9 @@ export class PromotionViewActionComponent {
 
   viewPromotionResult() {
     this.dialog.open(PromotionViewComponent, {
-      data: this.data.id,
+      data: {
+        id: this.data.id,
+      },
     });
   }
 
@@ -208,5 +203,36 @@ export class PromotionViewActionComponent {
     this.promotionFormGroup.patchValue({
       brand: '',
     });
+  }
+
+  submitForm(): void {
+    this.isSubmitting = true;
+    this.apiService
+      .put('promotion', {
+        id: this.data.id,
+        name: this.f['name'].value,
+        description: this.f['description'].value,
+        startDate: this.datePipe.transform(this.f['start'].value, 'yyyy-MM-dd'),
+        endDate:
+          this.f['end'].value == ''
+            ? null
+            : this.datePipe.transform(this.f['end'].value, 'yyyy-MM-dd'),
+        target: this.f['target'].value,
+        brand_id: this.f['brand'].value,
+        rules: this.t.value,
+      })
+      .subscribe({
+        next: (_) => {
+          this.alertService.showSuccess(
+            this.translateService.instant('promotion__update__success')
+          );
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isSubmitting = false;
+      });
   }
 }

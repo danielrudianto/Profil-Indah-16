@@ -56,6 +56,9 @@ import { AdministratorGuard } from './guards/administrator.guard';
 import { AdjustmentCaseConfirmComponent } from './presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm.component';
 import { PurchaseInvoiceConfirmViewComponent } from './presentation/pages/purchase-invoice/purchase-invoice-confirm-view/purchase-invoice-confirm-view.component';
 import { DepositConfirmComponent } from './presentation/pages/deposit/deposit-confirm/deposit-confirm.component';
+import { PackageListComponent } from './presentation/pages/package/package-list/package-list.component';
+import { PackageCreateComponent } from './presentation/pages/package/package-create/package-create.component';
+import { PackageUpdateComponent } from './presentation/pages/package/package-update/package-update.component';
 
 const routes: Routes = [
   {
@@ -101,6 +104,20 @@ const routes: Routes = [
           {
             path: 'Package',
             component: PackageComponent,
+            children: [
+              {
+                path: '',
+                component: PackageListComponent,
+              },
+              {
+                path: 'Create',
+                component: PackageCreateComponent,
+              },
+              {
+                path: 'Edit/:id',
+                component: PackageUpdateComponent,
+              },
+            ],
           },
           {
             path: 'Customer',

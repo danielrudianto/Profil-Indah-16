@@ -26,13 +26,14 @@ export interface ItemType {
 
 export interface Package {
   id: number;
-  reference: string;
+  name: string;
   description: string;
   created_at: string;
   item_brand_name: string;
   item_type_name: string;
   can_delete: boolean;
   is_active: boolean;
+  price: number;
 }
 
 export interface DataUser {

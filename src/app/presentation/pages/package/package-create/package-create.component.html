@@ -1,0 +1,186 @@
+<div class="d-flex mt-4">
+  <div class="d-flex position-relative">
+    <app-vertical-divider></app-vertical-divider>
+    <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <h5>{{ "package__create__general-data" | translate }}</h5>
+    <form [formGroup]="metaFormGroup">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{ "package__create__package-name" | translate }}</mat-label>
+        <input matInput formControlName="name" placeholder="Name" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{
+          "package__create__package-description" | translate
+        }}</mat-label>
+        <input
+          matInput
+          formControlName="description"
+          placeholder="Description"
+        /> </mat-form-field
+      ><mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{ "package__create__price" | translate }}</mat-label>
+        <input
+          matInput
+          formControlName="price"
+          placeholder="Ex. 200 000"
+          type="text"
+          mask="separator.2"
+          thousandSeparator=" "
+        />
+      </mat-form-field>
+    </form>
+  </div>
+</div>
+<div class="d-flex">
+  <div class="d-flex position-relative">
+    <app-box-stepper step="2" [valid]="itemsFormGroup.valid"></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <button class="add-button" (click)="openItemSelector()">
+      {{ "package__create__add-item" | translate }}
+    </button>
+    <form [formGroup]="itemsFormGroup">
+      <table class="table w-100 mb-2">
+        <thead>
+          <tr>
+            <th>{{ "package__create__table__item" | translate }}</th>
+            <th>{{ "package__create__table__unit-price" | translate }}</th>
+            <th>{{ "package__create__table__quantity" | translate }}</th>
+            <th>{{ "package__create__table__total" | translate }}</th>
+            <th>{{ "package__create__table__action" | translate }}</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="t.controls.length > 0">
+          <tr
+            *ngFor="let itemForm of t.controls; index as i"
+            [formGroup]="getFormGroupAt(i)"
+          >
+            <td>
+              <p>{{ itemForm.get("reference")?.value }}</p>
+              <div class="text-clamp-2">
+                {{ itemForm.get("description")?.value }}
+              </div>
+            </td>
+            <td>
+              <mat-form-field appearance="outline">
+                <mat-label>{{
+                  "package__create__table__unit-price" | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  class="text-center"
+                  mask="separator"
+                  thousandSeparator=" "
+                  formControlName="price"
+                  autocomplete="off"
+                  placeholder="Ex. 8 000"
+                  [readonly]="true"
+                />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>{{
+                  "package__create__table__discount" | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  class="text-center"
+                  mask="separator"
+                  thousandSeparator=" "
+                  formControlName="discount"
+                  autocomplete="off"
+                  placeholder="Ex. 800"
+                  [readonly]="true"
+                />
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field appearance="outline">
+                <mat-label>{{
+                  "package__create__table__quantity" | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  class="text-center"
+                  mask="separator"
+                  thousandSeparator=" "
+                  formControlName="quantity"
+                  autocomplete="off"
+                  placeholder="Ex. 20"
+                  focusedInput
+                />
+                <mat-hint *ngIf="itemForm.get('conversion')?.value == 1">{{
+                  itemForm.get("unit")?.value
+                }}</mat-hint>
+                <mat-hint *ngIf="itemForm.get('conversion')?.value != 1"
+                  >{{ itemForm.get("unit")?.value }} -
+                  {{
+                    itemForm.get("quantity")?.value *
+                      itemForm.get("conversion")?.value | number : "0.0-2"
+                  }}
+                  {{ itemForm.get("default_unit")?.value }}</mat-hint
+                >
+              </mat-form-field>
+            </td>
+            <td>
+              Rp.&nbsp;{{
+                itemForm.get("quantity")?.value *
+                  (itemForm.get("price")?.value -
+                    itemForm.get("discount")?.value) | number : "0.2-2"
+              }}
+            </td>
+            <td>
+              <button mat-icon-button (click)="removeItem(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="t.controls.length == 0">
+          <tr>
+            <td colspan="5">
+              <empty-table />
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3"></td>
+            <td>
+              {{ "package__create__table__value-before-discount" | translate }}
+            </td>
+            <td>
+              {{
+                itemsFormGroup.controls["valueWODiscount"].value
+                  | number : "0.2-2"
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3"></td>
+            <td>
+              {{ "package__create__table__value-after-discount" | translate }}
+            </td>
+            <td>
+              {{ itemsFormGroup.controls["value"].value | number : "0.2-2" }}
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </form>
+
+    <button
+      [disabled]="
+        !metaFormGroup.valid || !itemsFormGroup.valid || t.controls.length == 0
+      "
+      class="action-button"
+      (click)="submitForm()"
+    >
+      {{ "package__create__submit" | translate }}
+    </button>
+  </div>
+</div>

@@ -1,1 +1,343 @@
-<p>deposit-confirm works!</p>
+<div class="d-flex mt-4">
+  <div class="d-flex position-relative">
+    <app-vertical-divider></app-vertical-divider>
+    <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <h5>{{ "deposit__confirm__general-data" | translate }}</h5>
+    <form [formGroup]="metaFormGroup">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{ "deposit__confirm__date" | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="Ex. 12/30/2023"
+          [matDatepicker]="picker"
+          formControlName="date"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{ "deposit__confirm__name" | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="Ex. DPS-2024-XXXXXX"
+          formControlName="name"
+          readonly
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{ "deposit__confirm__customer" | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="Ex. John Doe"
+          formControlName="customer"
+          readonly
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{ "deposit__confirm__salesman" | translate }}</mat-label>
+
+        <input
+          matInput
+          placeholder="Ex. John Doe"
+          formControlName="sales"
+          readonly
+        />
+      </mat-form-field>
+    </form>
+  </div>
+</div>
+<div class="d-flex">
+  <div class="d-flex position-relative">
+    <app-vertical-divider></app-vertical-divider>
+    <app-box-stepper step="2" [valid]="billFormGroup.valid"></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4 flex-grow-1">
+    <div class="table-responsive">
+      <form [formGroup]="billFormGroup">
+        <table class="table mb-2">
+          <thead>
+            <tr>
+              <th style="width: 300px">
+                {{ "deposit__confirm__table__item" | translate }}
+              </th>
+              <th style="width: 150px">
+                {{ "deposit__confirm__table__price" | translate }}
+              </th>
+              <th style="width: 150px">
+                {{ "deposit__confirm__table__discount" | translate }}
+              </th>
+              <th style="width: 200px">
+                {{ "deposit__confirm__table__quantity" | translate }}
+              </th>
+              <th style="width: 200px">
+                {{ "deposit__confirm__table__total" | translate }}
+              </th>
+              <th style="width: 150px">
+                {{ "deposit__confirm__table__action" | translate }}
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="t.controls.length > 0">
+            <tr
+              *ngFor="let itemForm of t.controls; index as i"
+              [formGroup]="getFormGroupAt(i)"
+            >
+              <td>
+                <ng-container
+                  *ngIf="!itemForm.get('package_code_id')!.value; else itemTD"
+                >
+                  <p>{{ itemForm.get("reference")?.value }}</p>
+                  <p class="text-clamp-2">
+                    {{ itemForm.get("description")?.value }}
+                  </p>
+                </ng-container>
+              </td>
+              <ng-template #itemTD>
+                <p>{{ itemForm.get("reference")?.value }}</p>
+                <p class="text-clamp-2">
+                  {{ itemForm.get("description")?.value }}
+                </p>
+              </ng-template>
+            </tr>
+          </tbody>
+          <tbody *ngIf="t.controls.length == 0">
+            <tr>
+              <td colspan="5">
+                <empty-table />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="d-flex">
+  <div class="d-flex position-relative">
+    <app-vertical-divider></app-vertical-divider>
+    <app-box-stepper step="3" [valid]="billFormGroup.valid"></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <h5>{{ "sales-invoice__create__bill-data" | translate }}</h5>
+    <form [formGroup]="valueFormGroup">
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>{{ "sales-invoice__create__total" | translate }}</mat-label>
+        <input
+          readonly
+          matInput
+          mask="separator"
+          thousandSeparator=" "
+          formControlName="before"
+          placeholder="Ex. 8 000 000"
+        />
+        <div matTextPrefix>Rp.&nbsp;</div>
+      </mat-form-field>
+
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>{{
+          "sales-invoice__create__discount" | translate
+        }}</mat-label>
+        <input
+          matInput
+          type="text"
+          mask="separator"
+          thousandSeparator=" "
+          formControlName="discount"
+          autocomplete="off"
+          placeholder="Ex. 800"
+        />
+        <div matTextPrefix>Rp.&nbsp;</div>
+      </mat-form-field>
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>{{
+          "sales-invoice__create__service" | translate
+        }}</mat-label>
+        <input
+          matInput
+          type="text"
+          mask="separator"
+          thousandSeparator=" "
+          formControlName="service"
+          autocomplete="off"
+          placeholder="Ex. 80 000"
+        />
+        <div matTextPrefix>Rp.&nbsp;</div>
+      </mat-form-field>
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>{{
+          "sales-invoice__create__delivery" | translate
+        }}</mat-label>
+        <input
+          matInput
+          type="text"
+          mask="separator"
+          thousandSeparator=" "
+          formControlName="delivery"
+          autocomplete="off"
+          placeholder="Ex. 50 000"
+        />
+        <div matTextPrefix>Rp.&nbsp;</div>
+      </mat-form-field>
+
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>{{
+          "sales-invoice__create__subtotal" | translate
+        }}</mat-label>
+        <input
+          readonly
+          matInput
+          type="text"
+          mask="separator"
+          thousandSeparator=" "
+          formControlName="total"
+          autocomplete="off"
+          placeholder="Ex. 800"
+        />
+        <div matTextPrefix>Rp.&nbsp;</div>
+      </mat-form-field>
+
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>{{ "sales-invoice__create__total" | translate }}</mat-label>
+        <input
+          readonly
+          matInput
+          type="text"
+          mask="separator"
+          thousandSeparator=" "
+          [value]="
+            valueFormGroup.controls['total'].value -
+              valueFormGroup.controls['discount'].value +
+              valueFormGroup.controls['delivery'].value +
+              valueFormGroup.controls['service'].value | number : '0.0-2'
+          "
+          autocomplete="off"
+          placeholder="Ex. 800"
+        />
+        <div matTextPrefix>Rp.&nbsp;</div>
+      </mat-form-field>
+    </form>
+  </div>
+</div>
+<div class="d-flex">
+  <div class="d-flex position-relative">
+    <app-box-stepper
+      step="4"
+      [valid]="totalPayment == valueFormGroup.controls['total'].value"
+    ></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <h5>{{ "sales-invoice__create__payment-data" | translate }}</h5>
+    <form [formGroup]="paymentsFormGroup">
+      <div class="row">
+        <div class="col-6">
+          <mat-slide-toggle
+            formControlName="immediate_payment"
+            [class.d-none]="
+              metaFormGroup.get('type')?.value == 'deposit-internal'
+            "
+          >
+            {{
+              (paymentsFormGroup.controls["immediate_payment"].value == true
+                ? "sales-invoice__create__immediate-payment"
+                : "sales-invoice__create__due-payment"
+              ) | translate
+            }}
+          </mat-slide-toggle>
+          <br />
+          <mat-form-field
+            appearance="outline"
+            class="w-100 mt-3"
+            [class.d-none]="
+              metaFormGroup.get('type')?.value == 'deposit-internal'
+            "
+          >
+            <mat-label>{{
+              "sales-invoice__create__due-time" | translate
+            }}</mat-label>
+            <input
+              matInput
+              placeholder="Ex. 30"
+              formControlName="due_time"
+              type="number"
+            />
+            <span matTextSuffix>{{
+              "sales-invoice__create__day" | translate
+            }}</span>
+          </mat-form-field>
+
+          <button
+            type="button"
+            (click)="openPaymentSelector()"
+            class="action-button"
+            [class.d-none]="
+              paymentsFormGroup.controls['immediate_payment'].value == false ||
+              metaFormGroup.get('type')?.value == 'deposit-internal'
+            "
+          >
+            {{ "sales-invoice__create__add-payment-method" | translate }}
+          </button>
+        </div>
+        <div
+          class="col-6"
+          [class.d-none]="
+            paymentsFormGroup.controls['immediate_payment'].value == false
+          "
+        >
+          <div
+            class="payment-card"
+            *ngFor="let payment of p.controls; index as i"
+          >
+            <form [formGroup]="getFormGroupAtPayment(i)">
+              <h3 class="mb-0">{{ payment.get("payment_name")?.value }}</h3>
+              <p>{{ payment.get("payment_description")?.value }}</p>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>{{
+                  "sales-invoice__create__payment-value" | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  mask="separator.2"
+                  thousandSeparator=" "
+                  formControlName="payment_value"
+                />
+                <!-- Add button on suffix to delete -->
+                <div matSuffix>
+                  <button mat-icon-button (click)="deletePayment(i)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </mat-form-field>
+            </form>
+          </div>
+        </div>
+      </div>
+    </form>
+    <button
+      [disabled]="
+        !metaFormGroup.valid ||
+        !valueFormGroup.valid ||
+        !billFormGroup.valid ||
+        (metaFormGroup.get('type')?.value == 'sales' &&
+          totalPayment == 0 &&
+          paymentsFormGroup.controls['immediate_payment'].value) ||
+        totalPayment >
+          valueFormGroup.controls['total'].value +
+            valueFormGroup.controls['delivery'].value +
+            valueFormGroup.controls['service'].value -
+            valueFormGroup.controls['discount'].value ||
+        !paymentsFormGroup.valid ||
+        isSubmitting
+      "
+      class="action-button"
+      (click)="submitForm()"
+    >
+      Submit
+    </button>
+  </div>
+</div>
