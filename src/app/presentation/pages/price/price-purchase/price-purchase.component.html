@@ -26,9 +26,6 @@
             {{ "purchase-price__description" | translate }}
           </th>
           <th style="width: 150px" class="text-center">
-            {{ "purchase-price__effective-date" | translate }}
-          </th>
-          <th style="width: 150px" class="text-center">
             {{ "purchase-price__price" | translate }}
           </th>
           <th style="width: 150px" class="text-center">
@@ -38,7 +35,7 @@
       </thead>
       <tbody *ngIf="isLoading">
         <tr>
-          <td colspan="5">
+          <td colspan="3">
             <empty-table />
           </td>
         </tr>
@@ -53,9 +50,6 @@
             <span class="text-clamp-1">
               {{ item.description }}
             </span>
-          </td>
-          <td class="text-center">
-            {{ item.effective_date | date : "dd/MM/yyyy" }}
           </td>
           <td class="text-center">
             <span
@@ -76,7 +70,7 @@
       </tbody>
       <tbody *ngIf="!isLoading && dataSource.length == 0">
         <tr>
-          <td colspan="5">
+          <td colspan="3">
             <empty-table />
           </td>
         </tr>

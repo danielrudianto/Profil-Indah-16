@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { StatCard } from '../dashboard.component';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { ReportInventoryComponent } from '../../report-inventory/report-inventory.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-administrator-dashboard',
@@ -9,7 +10,10 @@ import { ReportInventoryComponent } from '../../report-inventory/report-inventor
   styleUrls: ['./administrator-dashboard.component.css'],
 })
 export class AdministratorDashboardComponent {
-  constructor(private dynamicComponentService: DynamicComponentService) {}
+  constructor(
+    private dynamicComponentService: DynamicComponentService,
+    private router: Router
+  ) {}
 
   stats: StatCard[] = [
     {
@@ -57,6 +61,7 @@ export class AdministratorDashboardComponent {
   openReport(type: string) {
     switch (type) {
       case 'sales':
+        this.router.navigate(['/Administrator/Report/Sales']);
         break;
       case 'purchase':
         break;

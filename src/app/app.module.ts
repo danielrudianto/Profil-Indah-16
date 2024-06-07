@@ -190,6 +190,11 @@ import { PackageCreateComponent } from './presentation/pages/package/package-cre
 import { PackageListComponent } from './presentation/pages/package/package-list/package-list.component';
 import { PackageUpdateComponent } from './presentation/pages/package/package-update/package-update.component';
 import { MatTabsModule } from '@angular/material/tabs';
+import { UpdatePackageSalesPriceComponent } from './presentation/components/update-package-sales-price/update-package-sales-price.component';
+import { SalesInvoiceSuccessComponent } from './presentation/pages/sales-invoice/sales-invoice-success/sales-invoice-success.component';
+import { ReportSalesComponent } from './presentation/pages/report-sales/report-sales.component';
+import { NgChartjsModule } from 'ng-chartjs';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -328,6 +333,9 @@ import { MatTabsModule } from '@angular/material/tabs';
     PackageCreateComponent,
     PackageListComponent,
     PackageUpdateComponent,
+    UpdatePackageSalesPriceComponent,
+    SalesInvoiceSuccessComponent,
+    ReportSalesComponent,
   ],
   imports: [
     BrowserModule,
@@ -364,6 +372,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatChipsModule,
     MatBadgeModule,
     MatTabsModule,
+    NgChartjsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -372,6 +381,7 @@ import { MatTabsModule } from '@angular/material/tabs';
       },
     }),
     HotkeyModule.forRoot(),
+    NgChartsModule,
   ],
   providers: [
     {

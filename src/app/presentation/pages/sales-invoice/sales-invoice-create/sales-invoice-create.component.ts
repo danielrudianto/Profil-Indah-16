@@ -14,6 +14,7 @@ import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { Subject } from 'rxjs';
 import { Customer } from 'src/app/models/customer.model';
@@ -24,11 +25,13 @@ import {
   ProductSelectorType,
 } from 'src/app/presentation/components/product-selector/product-selector.component';
 import { SalesmanSelectorComponent } from 'src/app/presentation/components/salesman-selector/salesman-selector.component';
+import { UpdatePackageSalesPriceComponent } from 'src/app/presentation/components/update-package-sales-price/update-package-sales-price.component';
 import { UpdateProductSalesPriceComponent } from 'src/app/presentation/components/update-product-sales-price/update-product-sales-price.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { v4 } from 'uuid';
+import { SalesInvoiceSuccessComponent } from '../sales-invoice-success/sales-invoice-success.component';
 
 @Component({
   selector: 'app-sales-invoice-create',
@@ -45,7 +48,8 @@ export class SalesInvoiceCreateComponent {
     private router: Router,
     private datePipe: DatePipe,
     private sheet: MatBottomSheet,
-    private dynamicComponentService: DynamicComponentService
+    private dynamicComponentService: DynamicComponentService,
+    private translateService: TranslateService
   ) {
     this._hotkeysService.add([
       new Hotkey('alt+a', (event: KeyboardEvent): boolean => {
@@ -89,6 +93,12 @@ export class SalesInvoiceCreateComponent {
     let total = parseFloat(group.get('total')?.value ?? 0);
     let discount = parseFloat(group.get('discount')?.value ?? 0);
     return discount <= total ? null : { error: true };
+  };
+
+  NotZero: ValidatorFn = (
+    control: AbstractControl
+  ): ValidationErrors | null => {
+    return Number(control.value) != 0 ? null : { error: true };
   };
 
   onSelectCustomer(data: any) {
@@ -413,7 +423,9 @@ export class SalesInvoiceCreateComponent {
                 payment_description: new FormControl(data.description),
                 payment_value: new FormControl(requiredPayment, [
                   Validators.required,
-                  Validators.min(0),
+                  Validators.minLength(1),
+                  Validators.nullValidator,
+                  this.NotZero,
                 ]),
               })
             );
@@ -425,7 +437,9 @@ export class SalesInvoiceCreateComponent {
                 payment_description: new FormControl(data.description),
                 payment_value: new FormControl(0, [
                   Validators.required,
-                  Validators.min(0),
+                  Validators.minLength(1),
+                  Validators.nullValidator,
+                  this.NotZero,
                 ]),
               })
             );
@@ -436,54 +450,58 @@ export class SalesInvoiceCreateComponent {
   }
 
   openPackageSelector() {
-    const dialog = this.dialog.open(PackageSelectorComponent, {
-      minWidth: 640,
-    });
-    let validation = true;
-
-    dialog.afterClosed().subscribe((data) => {
-      if (data != null && data != undefined) {
-        this.t.controls.forEach((x) => {
-          if (
-            x.get('package_code_id') != undefined &&
-            parseInt(x.get('package_code_id')?.value) == data.id
-          ) {
-            validation = false;
-          }
-        });
-
-        if (validation) {
-          this.t.push(
-            this.formBuilder.group({
-              package_code_id: [data.id, Validators.required],
-              name: [data.name, Validators.required],
-              description: [data.description, Validators.required],
-              quantity: [0, [Validators.required, Validators.min(1)]],
-              initial_price: [data.price],
-              package_content: [data.package_content],
-              price: [data.price, [Validators.min(0), Validators.required]],
-              save_price: [false],
-            })
-          );
-
-          this.billFormGroup.patchValue({
-            number_of_items: this.t.length,
+    this.dynamicComponentService
+      .createDynamicComponent(PackageSelectorComponent, {})
+      .subscribe((data) => {
+        let validation = true;
+        if (data != null && data != undefined) {
+          this.t.controls.forEach((x) => {
+            if (
+              x.get('package_code_id') != undefined &&
+              parseInt(x.get('package_code_id')?.value) == data.id
+            ) {
+              validation = false;
+            }
           });
 
-          setTimeout(() => {
-            const autofocusLength =
-              document.querySelectorAll('[focusedInput]').length;
-            const input =
-              document.querySelectorAll('[focusedInput]')[autofocusLength - 1];
-            (input as HTMLElement).focus();
-          }, 100);
-        } else {
-          this.alertService.showSuccess(
-            'Item already exists! Please select different item.'
-          );
+          if (validation) {
+            console.log(data);
+            this.t.push(
+              this.formBuilder.group({
+                package_code_id: [data.item.id, Validators.required],
+                name: [data.item.name, Validators.required],
+                description: [data.item.description, Validators.required],
+                quantity: [0, [Validators.required, Validators.min(1)]],
+                initial_price: [data.item.price],
+                package_content: [data.package_content],
+                price: [
+                  data.item.price,
+                  [Validators.min(0), Validators.required],
+                ],
+                save_price: [false],
+              })
+            );
+
+            this.billFormGroup.patchValue({
+              number_of_items: this.t.length,
+            });
+
+            setTimeout(() => {
+              const autofocusLength =
+                document.querySelectorAll('[focusedInput]').length;
+              const input =
+                document.querySelectorAll('[focusedInput]')[
+                  autofocusLength - 1
+                ];
+              (input as HTMLElement).focus();
+            }, 100);
+          } else {
+            this.alertService.showSuccess(
+              this.translateService.instant('general__item__exists')
+            );
+          }
         }
-      }
-    });
+      });
   }
 
   updatePrice(i: number) {
@@ -504,6 +522,26 @@ export class SalesInvoiceCreateComponent {
           initial_discount: data.initial_discount,
           price: data.price,
           discount: data.discount,
+          save_price: data.save_price,
+        });
+      }
+    });
+  }
+
+  updatePackagePrice(i: number) {
+    const sheet = this.sheet.open(UpdatePackageSalesPriceComponent, {
+      data: {
+        initial_price: this.getFormGroupAt(i).get('initial_price')?.value,
+        price: this.getFormGroupAt(i).get('price')?.value,
+        save_price: this.getFormGroupAt(i).get('save_price')?.value,
+      },
+    });
+
+    sheet.afterDismissed().subscribe((data) => {
+      if (data) {
+        this.getFormGroupAt(i).patchValue({
+          initial_price: data.initial_price,
+          price: data.price,
           save_price: data.save_price,
         });
       }
@@ -651,10 +689,13 @@ export class SalesInvoiceCreateComponent {
     this.apiService
       .post('sales-invoice', bill_code)
       .subscribe({
-        next: () => {
+        next: (result: any) => {
           const type = this.metaFormGroup.controls['type'].value;
           if (type == 'sales') {
-            this.alertService.showSuccess('Bill successfully created.');
+            this.dynamicComponentService.createDynamicComponent(
+              SalesInvoiceSuccessComponent,
+              result
+            );
           } else {
             this.alertService.showSuccess('Deposit successfully created.');
           }

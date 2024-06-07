@@ -12,17 +12,11 @@ import {
 } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { Subject } from 'rxjs';
 import { Customer } from 'src/app/models/customer.model';
-import { PackageSelectorComponent } from 'src/app/presentation/components/package-selector/package-selector.component';
 import { PaymentSelectorComponent } from 'src/app/presentation/components/payment-selector/payment-selector.component';
-import {
-  ProductSelectorComponent,
-  ProductSelectorType,
-} from 'src/app/presentation/components/product-selector/product-selector.component';
 import { SalesmanSelectorComponent } from 'src/app/presentation/components/salesman-selector/salesman-selector.component';
 import { UpdateProductSalesPriceComponent } from 'src/app/presentation/components/update-product-sales-price/update-product-sales-price.component';
 import { AlertService } from 'src/app/services/alert.service';
@@ -37,7 +31,6 @@ import { v4 } from 'uuid';
 })
 export class DepositConfirmComponent {
   constructor(
-    private dialog: MatDialog,
     private formBuilder: FormBuilder,
     private alertService: AlertService,
     private apiService: ApiService,
@@ -83,6 +76,12 @@ export class DepositConfirmComponent {
     let total = parseFloat(group.get('total')?.value ?? 0);
     let discount = parseFloat(group.get('discount')?.value ?? 0);
     return discount <= total ? null : { error: true };
+  };
+
+  NotZero: ValidatorFn = (
+    control: AbstractControl
+  ): ValidationErrors | null => {
+    return Number(control.value) != 0 ? null : { error: true };
   };
 
   /**
@@ -138,7 +137,7 @@ export class DepositConfirmComponent {
       .get(`deposit/${this.activatedRoute.snapshot.params['id']}`)
       .subscribe({
         next: (result: any) => {
-          // Set up the meta form group with deposit data
+          // Set up the meta data from deposit
           this.metaFormGroup.patchValue({
             customer:
               result.customer == null
@@ -149,6 +148,7 @@ export class DepositConfirmComponent {
             sales: result.sales,
           });
 
+          // Insert the items to the form Array
           (result.deposit as any[]).forEach((x) => {
             this.t.push(
               this.formBuilder.group({
@@ -198,36 +198,55 @@ export class DepositConfirmComponent {
               })
             );
           });
+
+          // Insert the payments to the form Array
+          result.deposit_payment.forEach((item: any) => {
+            this.p.push(
+              this.formBuilder.group({
+                id: [item.id, Validators.required],
+                payment_method_id: [item.payment_method_id],
+                date: new FormControl(item.date, Validators.required),
+                payment_method_name: [
+                  item.payment_method == null
+                    ? 'Cash'
+                    : item.payment_method.name,
+                  Validators.required,
+                ],
+                payment_method_description: [
+                  item.payment_method == null
+                    ? ''
+                    : item.payment_method.description,
+                ],
+                amount: [
+                  item.value,
+                  [Validators.required, Validators.min(0.01)],
+                ],
+                usedAmount: [
+                  item.value,
+                  [
+                    Validators.required,
+                    Validators.min(0.01),
+                    Validators.max(item.value),
+                  ],
+                ],
+              })
+            );
+          });
+
+          this.paymentsFormGroup.controls[
+            'immediate_payment'
+          ].valueChanges.subscribe({
+            next: (value) => {
+              if (value) {
+                this.paymentsFormGroup.controls['due_time'].setValue(30);
+              } else {
+                this.paymentsFormGroup.controls['due_time'].setValue(30);
+                this.pb.clear();
+              }
+            },
+          });
         },
       });
-
-    this.t.valueChanges.subscribe(() => {
-      let totalPrice = 0;
-      let netPrice = 0;
-      if (this.t.controls.length > 0) {
-        this.t.controls.forEach((x) => {
-          if (x.get('package_code_id')) {
-            const price = Number(x.get('price')?.value ?? '0');
-            const quantity = Number(x.get('quantity')?.value ?? '0');
-
-            totalPrice += quantity * price;
-            netPrice += quantity * price;
-          } else {
-            const discount = Number(x.get('discount')?.value ?? '0');
-            const price = Number(x.get('price')?.value ?? '0');
-            const quantity = Number(x.get('quantity')?.value ?? '0');
-
-            totalPrice += quantity * (price - discount);
-            netPrice += quantity * price;
-          }
-        });
-
-        this.valueFormGroup.patchValue({
-          total: totalPrice,
-          before: netPrice,
-        });
-      }
-    });
 
     this.apiService
       .get('payment-method/all', {
@@ -274,6 +293,10 @@ export class DepositConfirmComponent {
 
   get p() {
     return this.g['payments'] as FormArray;
+  }
+
+  get pb() {
+    return this.g['billPayments'] as FormArray;
   }
 
   get totalPayment() {
@@ -344,24 +367,20 @@ export class DepositConfirmComponent {
             this.p.push(
               new FormGroup({
                 payment_type_id: new FormControl(data.id, Validators.required),
-                payment_name: new FormControl(data.name),
-                payment_description: new FormControl(data.description),
-                payment_value: new FormControl(requiredPayment, [
-                  Validators.required,
-                  Validators.min(0),
-                ]),
+                payment_method_name: new FormControl(data.name),
+                payment_method_description: new FormControl(data.description),
+                amount: new FormControl(requiredPayment, [Validators.required]),
+                usedAmount: new FormControl(0, Validators.required),
               })
             );
           } else {
             this.p.push(
               new FormGroup({
                 payment_type_id: new FormControl(data.id, Validators.required),
-                payment_name: new FormControl(data.name),
-                payment_description: new FormControl(data.description),
-                payment_value: new FormControl(0, [
-                  Validators.required,
-                  Validators.min(0),
-                ]),
+                payment_method_name: new FormControl(data.name),
+                payment_method_description: new FormControl(data.description),
+                amount: new FormControl(0, [Validators.required]),
+                usedAmount: new FormControl(0, Validators.required),
               })
             );
           }
@@ -370,6 +389,11 @@ export class DepositConfirmComponent {
     });
   }
 
+  /**
+   * Opens a sheet to update the price of a product in the sales price list.
+   * @param {number} i - The index of the product in the sales price list.
+   * @return {void} This function does not return anything.
+   */
   updatePrice(i: number) {
     const sheet = this.sheet.open(UpdateProductSalesPriceComponent, {
       data: {

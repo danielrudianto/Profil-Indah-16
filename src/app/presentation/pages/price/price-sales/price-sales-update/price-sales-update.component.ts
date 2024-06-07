@@ -6,6 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -22,7 +23,8 @@ export class PriceSalesUpdateComponent {
     private _hotKeysService: HotkeysService,
     private apiService: ApiService,
     private alertService: AlertService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private translateService: TranslateService
   ) {
     this._hotKeysService.add([
       new Hotkey('esc', (event: KeyboardEvent): boolean => {
@@ -72,6 +74,7 @@ export class PriceSalesUpdateComponent {
 
           this.t.push(
             this.formBuilder.group({
+              item_id: [data.id],
               item_unit_id: [null],
               unit: [data.unit, [Validators.required]],
               price: [
@@ -89,6 +92,7 @@ export class PriceSalesUpdateComponent {
             .filter((x: any) => x.item_unit_id != null)
             .forEach((item: any) => {
               const item_price = this.formBuilder.group({
+                item_id: [data.id],
                 item_unit_id: [item.item_unit_id],
                 unit: [item.item_unit.unit],
                 price: [item.price, [Validators.required, Validators.min(0)]],
@@ -111,10 +115,10 @@ export class PriceSalesUpdateComponent {
       });
   }
 
-  closeDialog() {
+  closeDialog(data: any = undefined) {
     this.isOpened = false;
     setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
+      this.dynamicComponentService.closeDynamicComponent(data);
     }, 300);
   }
 
@@ -129,12 +133,18 @@ export class PriceSalesUpdateComponent {
         data: this.t.value,
       })
       .subscribe({
-        next: (data: any) => {
-          this.closeDialog();
+        next: (_) => {
+          this.alertService.showSuccess(
+            this.translateService.instant('sales-price__update__success')
+          );
+          this.closeDialog(this.t.value);
         },
         error: (error) => {
           this.alertService.showError(error);
         },
+      })
+      .add(() => {
+        this.isSubmitting = false;
       });
   }
 }

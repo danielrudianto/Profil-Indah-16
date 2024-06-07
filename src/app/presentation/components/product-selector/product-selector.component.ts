@@ -38,7 +38,6 @@ export class ProductSelectorComponent {
   });
 
   ngOnInit(): void {
-    console.log(this.data);
     this.fetchItems();
     this.searchItemFormGroup.controls['searchBar'].valueChanges
       .pipe(debounceTime(1000))

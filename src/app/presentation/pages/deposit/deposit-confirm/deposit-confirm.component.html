@@ -97,6 +97,35 @@
                   </p>
                 </ng-container>
               </td>
+              <td>{{ itemForm.get("price")?.value | number : "0.2-2" }}</td>
+              <td>{{ itemForm.get("discount")?.value | number : "0.2-2" }}</td>
+              <td>
+                {{ itemForm.get("quantity")?.value | number : "0.0-2" }}
+                <span *ngIf="!itemForm.get('package_code_id')!.value">{{
+                  itemForm.get("unit")?.value
+                }}</span>
+              </td>
+              <td>
+                {{
+                  itemForm.get("quantity")?.value *
+                    (itemForm.get("price")?.value -
+                      (itemForm.get("discountType")?.value == "absolute"
+                        ? itemForm.get("discount")?.value
+                        : (itemForm.get("discountPercentage")?.value *
+                            itemForm.get("price")?.value) /
+                          100)) | number : "0.2-2"
+                }}
+              </td>
+              <td>
+                <mat-slide-toggle color="primary" formControlName="checked">
+                  {{
+                    (itemForm.get("checked")?.value
+                      ? "deposit__confirm__table__included"
+                      : "deposit__confirm__table__excluded"
+                    ) | translate
+                  }}
+                </mat-slide-toggle>
+              </td>
               <ng-template #itemTD>
                 <p>{{ itemForm.get("reference")?.value }}</p>
                 <p class="text-clamp-2">
@@ -113,6 +142,8 @@
             </tr>
           </tbody>
         </table>
+
+        <p>{{ "deposit__confirm__information" | translate }}</p>
       </form>
     </div>
   </div>
@@ -293,8 +324,10 @@
             *ngFor="let payment of p.controls; index as i"
           >
             <form [formGroup]="getFormGroupAtPayment(i)">
-              <h3 class="mb-0">{{ payment.get("payment_name")?.value }}</h3>
-              <p>{{ payment.get("payment_description")?.value }}</p>
+              <h3 class="mb-0">
+                {{ payment.get("payment_method_name")?.value }}
+              </h3>
+              <p>{{ payment.get("payment_method_description")?.value }}</p>
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>{{
                   "sales-invoice__create__payment-value" | translate
@@ -304,12 +337,13 @@
                   type="text"
                   mask="separator.2"
                   thousandSeparator=" "
-                  formControlName="payment_value"
+                  formControlName="usedAmount"
+                  [allowNegativeNumbers]="true"
                 />
                 <!-- Add button on suffix to delete -->
                 <div matSuffix>
                   <button mat-icon-button (click)="deletePayment(i)">
-                    <mat-icon>delete</mat-icon>
+                    <mat-icon>close</mat-icon>
                   </button>
                 </div>
               </mat-form-field>

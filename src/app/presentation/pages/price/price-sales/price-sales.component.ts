@@ -49,11 +49,22 @@ export class PriceSalesComponent {
   }
 
   openUpdatePriceDialog(id: number): void {
-    this.dynamicComponentService.createDynamicComponent(
-      PriceSalesUpdateComponent,
-      {
+    this.dynamicComponentService
+      .createDynamicComponent(PriceSalesUpdateComponent, {
         id: id,
-      }
-    );
+      })
+      .subscribe((data) => {
+        if (data != undefined && data != null) {
+          const index = (data as any[]).findIndex(
+            (x) => x.item_unit_id == null
+          );
+          if (index != -1) {
+            const dataIndex = this.dataSource.findIndex((x) => x.id == id);
+            this.dataSource[dataIndex].price = data[index].price;
+            this.dataSource[dataIndex].discount = data[index].discount;
+            this.dataSource[dataIndex].effective_date = new Date();
+          }
+        }
+      });
   }
 }

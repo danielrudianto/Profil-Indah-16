@@ -8,7 +8,9 @@
         <div class="col-12">
           <div class="expense-report__header">
             <mat-form-field appearance="outline" style="min-width: 170px">
-              <mat-label>Month and Year</mat-label>
+              <mat-label>{{
+                "expense__report__month-year" | translate
+              }}</mat-label>
               <input matInput [matDatepicker]="dp" [formControl]="date" />
               <mat-hint>MM/YYYY</mat-hint>
               <mat-datepicker-toggle
@@ -27,8 +29,13 @@
               color="primary"
               [checked]="selectedIndex == 1"
               (change)="toggleSelectedIndex()"
-              >View by
-              {{ selectedIndex == 0 ? "company" : "type" }}</mat-slide-toggle
+              >{{ "expense__report__view-by" | translate }}
+              {{
+                (selectedIndex == 0
+                  ? "expense__report__view-by__company"
+                  : "expense__report__view-by__type"
+                ) | translate
+              }}</mat-slide-toggle
             >
           </div>
         </div>
@@ -36,8 +43,8 @@
           <table class="table" *ngIf="selectedIndex == 0">
             <thead>
               <tr>
-                <th>Company</th>
-                <th>Expense</th>
+                <th>{{ "expense__report__company" | translate }}</th>
+                <th>{{ "expense__report__value" | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -50,8 +57,8 @@
           <table class="table" *ngIf="selectedIndex == 1">
             <thead>
               <tr>
-                <th>Expense type</th>
-                <th>Expense</th>
+                <th>{{ "expense__report__type" | translate }}</th>
+                <th>{{ "expense__report__value" | translate }}</th>
               </tr>
             </thead>
             <tbody *ngFor="let type of types">

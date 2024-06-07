@@ -4,10 +4,10 @@
     <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <h5>General data</h5>
+    <h5>{{ "expense__create__general-data" | translate }}</h5>
     <form [formGroup]="metaFormGroup">
       <app-autocomplete-search
-        label="Company"
+        [label]="'expense__create__company' | translate"
         placeholder="Ex. Toko Profil Indah"
         routeName="company"
         [selected]="metaFormGroup.controls['company_id'].valid"
@@ -16,7 +16,7 @@
       ></app-autocomplete-search>
 
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Date</mat-label>
+        <mat-label>{{ "expense__create__date" | translate }}</mat-label>
         <input
           matInput
           placeholder="Ex. 12/30/2023"
@@ -37,7 +37,7 @@
     ></app-box-stepper>
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <h5>Detail data</h5>
+    <h5>{{ "expense__create__expense-data" | translate }}</h5>
     <form [formGroup]="expenseFormGroup">
       <app-autocomplete-search
         label="Expense type"
@@ -49,11 +49,11 @@
       ></app-autocomplete-search>
 
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Description</mat-label>
+        <mat-label>{{ "expense__create__description" | translate }}</mat-label>
         <textarea matInput formControlName="description"></textarea>
       </mat-form-field>
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Value</mat-label>
+        <mat-label>{{ "expense__create__value" | translate }}</mat-label>
         <input
           matInput
           type="text"
@@ -72,7 +72,7 @@
       class="action-button"
       (click)="submitForm()"
     >
-      Submit
+      {{ "expense__create__submit" | translate }}
     </button>
   </div>
 </div>

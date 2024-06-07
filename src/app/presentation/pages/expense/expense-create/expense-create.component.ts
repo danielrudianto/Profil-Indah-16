@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 
@@ -10,6 +11,13 @@ import { ApiService } from 'src/app/services/api.service';
   styleUrls: ['./expense-create.component.css'],
 })
 export class ExpenseCreateComponent {
+  constructor(
+    private apiService: ApiService,
+    private alertService: AlertService,
+    private datePipe: DatePipe,
+    private translateService: TranslateService
+  ) {}
+
   isSubmitting: boolean = false;
   metaFormGroup: FormGroup = new FormGroup({
     date: new FormControl(new Date(), Validators.required),
@@ -45,11 +53,6 @@ export class ExpenseCreateComponent {
       expense_type_id: null,
     });
   }
-  constructor(
-    private apiService: ApiService,
-    private alertService: AlertService,
-    private datePipe: DatePipe
-  ) {}
 
   ngOnInit(): void {}
 
@@ -70,7 +73,7 @@ export class ExpenseCreateComponent {
       .subscribe({
         next: () => {
           this.alertService.showSuccess(
-            'Expense data is successfully created.'
+            this.translateService.instant('expense__create__success')
           );
           this.expenseFormGroup.reset();
           this.expenseFormGroup.patchValue({

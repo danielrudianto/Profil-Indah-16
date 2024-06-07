@@ -1,6 +1,6 @@
 <form [formGroup]="priceFormGroup" class="mt-3">
   <h1>
-    {{ "update-product-sales-price__title" | translate }}
+    {{ "update-package-sales-price__title" | translate }}
   </h1>
   <mat-form-field appearance="outline" class="w-100">
     <mat-label>
@@ -17,31 +17,13 @@
     />
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="w-100">
-    <mat-label>
-      {{ "update-product-sales-price__discount" | translate }}</mat-label
-    >
-    <input
-      type="text"
-      matInput
-      type="text"
-      mask="separator.2"
-      thousandSeparator=" "
-      formControlName="discount"
-      placeholder="Ex. 800"
-    />
-  </mat-form-field>
-
   <!-- Slide toggle, disabled if initialPrice is same with price -->
   <mat-slide-toggle
     class="w-100"
     formControlName="save_price"
     [disabled]="
-      (priceFormGroup.controls['initial_price'].value ===
-        priceFormGroup.controls['price'].value &&
-        this.priceFormGroup.controls['initial_discount'].value ===
-          this.priceFormGroup.controls['discount'].value) ||
-      priceFormGroup.invalid
+      priceFormGroup.controls['initial_price'].value ===
+        priceFormGroup.controls['price'].value || priceFormGroup.invalid
     "
   >
     {{ "update-product-sales-price__save-price" | translate }}
@@ -50,11 +32,7 @@
   <!-- Button to save -->
   <div class="update-price__button-wrapper">
     <button
-      [disabled]="
-        priceFormGroup.invalid ||
-        priceFormGroup.controls['discount'].value >
-          priceFormGroup.controls['price'].value
-      "
+      [disabled]="priceFormGroup.invalid"
       class="button-default"
       (click)="updatePrice()"
     >

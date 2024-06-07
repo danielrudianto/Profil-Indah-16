@@ -59,6 +59,7 @@ import { DepositConfirmComponent } from './presentation/pages/deposit/deposit-co
 import { PackageListComponent } from './presentation/pages/package/package-list/package-list.component';
 import { PackageCreateComponent } from './presentation/pages/package/package-create/package-create.component';
 import { PackageUpdateComponent } from './presentation/pages/package/package-update/package-update.component';
+import { ReportSalesComponent } from './presentation/pages/report-sales/report-sales.component';
 
 const routes: Routes = [
   {
@@ -283,6 +284,10 @@ const routes: Routes = [
               },
             ],
           },
+          {
+            path: 'Report/Sales',
+            component: ReportSalesComponent,
+          },
         ],
       },
       {
@@ -308,6 +313,20 @@ const routes: Routes = [
           {
             path: 'Package',
             component: PackageComponent,
+            children: [
+              {
+                path: '',
+                component: PackageListComponent,
+              },
+              {
+                path: 'Create',
+                component: PackageCreateComponent,
+              },
+              {
+                path: 'Edit/:id',
+                component: PackageUpdateComponent,
+              },
+            ],
           },
           {
             path: 'Supplier',

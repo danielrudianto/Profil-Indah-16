@@ -1,0 +1,53 @@
+<app-feature-background />
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <app-feature-header
+        [title]="'report-sales__title' | translate"
+        [isBackAvailable]="true"
+      ></app-feature-header>
+      <div class="dashboard-card">
+        <div class="line-chart__wrapper">
+          <canvas
+            height="100"
+            ngChartjs
+            [datasets]="lineChartData"
+            [labels]="lineChartLabels"
+            [options]="lineChartOptions"
+            [legend]="lineChartLegend"
+            [chartType]="lineChartType"
+          >
+          </canvas>
+        </div>
+
+        <div class="row" [@slideInOutAnimation]="index == 0 ? 'in' : 'out'">
+          <div class="col-xl-2 col-lg-3 col-md-4">
+            <canvas
+              baseChart
+              *ngIf="!isLoading && brandChartData[0].data.length > 0"
+              id="brand"
+              [datasets]="brandChartData"
+              [labels]="brandChartLabels"
+              [options]="brandChartOptions"
+              [legend]="brandChartLegend"
+              [type]="brandChartType"
+            ></canvas>
+          </div>
+        </div>
+        <div class="row" [@slideInOutAnimation]="index == 1 ? 'in' : 'out'">
+          <div class="col-xl-2 col-lg-3 col-md-4">
+            <canvas
+              *ngIf="!isLoading && typeChartData[0].data.length > 0"
+              ngChartjs
+              [datasets]="typeChartData"
+              [labels]="typeChartLabels"
+              [options]="typeChartOptions"
+              [legend]="typeChartLegend"
+              [chartType]="typeChartType"
+            ></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

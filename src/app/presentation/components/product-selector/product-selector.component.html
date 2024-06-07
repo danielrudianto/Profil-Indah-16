@@ -1,14 +1,17 @@
 <app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
   <div class="create-dialog">
-    <app-dialog-header title="Select product" (onDialogClose)="closeDialog()" />
+    <app-dialog-header
+      [title]="'product-selector__title' | translate"
+      (onDialogClose)="closeDialog()"
+    />
     <div class="create-dialog__content">
       <form [formGroup]="searchItemFormGroup">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Search bar</mat-label>
+          <mat-label>{{ "product-selector__search" | translate }}</mat-label>
           <input
             matInput
             type="text"
-            placeholder="Search item by reference or description"
+            placeholder="Ex. TH-001AA"
             [readOnly]="isLoading"
             formControlName="searchBar"
           />

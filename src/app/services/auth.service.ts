@@ -101,6 +101,21 @@ export class AuthService {
     }
   }
 
+  isSuperAdministrator(): boolean {
+    const user = localStorage.getItem('user');
+    if (user == null || user == '') {
+      return false;
+    } else {
+      const parsedUser = JSON.parse(
+        CryptoJS.AES.decrypt(user.toString(), environment.key).toString(
+          CryptoJS.enc.Utf8
+        )
+      ) as AuthUser;
+
+      return parsedUser.role == 7;
+    }
+  }
+
   /**
    * Retrieves the expiry time of the token from the local storage.
    * @return {number | null} The expiry time of the token in milliseconds, or null if the token does not exist.

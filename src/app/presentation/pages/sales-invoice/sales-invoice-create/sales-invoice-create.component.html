@@ -100,22 +100,22 @@
         <table class="table mb-2">
           <thead>
             <tr>
-              <th style="width: 300px">
+              <th class="text-center" style="width: 300px">
                 {{ "sales-invoice__create__item" | translate }}
               </th>
-              <th style="width: 150px">
+              <th class="text-center" style="width: 150px">
                 {{ "sales-invoice__create__price" | translate }}
               </th>
-              <th style="width: 150px">
+              <th class="text-center" style="width: 150px">
                 {{ "sales-invoice__create__discount" | translate }}
               </th>
-              <th style="width: 200px">
+              <th class="text-center" style="width: 200px">
                 {{ "sales-invoice__create__quantity" | translate }}
               </th>
-              <th style="width: 200px">
+              <th class="text-center" style="width: 200px">
                 {{ "sales-invoice__create__total" | translate }}
               </th>
-              <th style="width: 150px">
+              <th class="text-center" style="width: 150px">
                 {{ "sales-invoice__create__action" | translate }}
               </th>
             </tr>
@@ -281,22 +281,11 @@
                       </li>
                     </ul>
                   </td>
-                  <td>
-                    <mat-form-field appearance="outline">
-                      <mat-label>{{
-                        "sales-invoice__create__price" | translate
-                      }}</mat-label>
-                      <input
-                        matInput
-                        type="text"
-                        class="text-center"
-                        mask="separator"
-                        thousandSeparator=" "
-                        formControlName="price"
-                        autocomplete="off"
-                        placeholder="Ex. 8 000"
-                      />
-                    </mat-form-field>
+                  <td class="text-center" (click)="updatePackagePrice(i)">
+                    {{ itemForm.get("price")?.value | number : "0.2-2" }}
+                  </td>
+                  <td class="text-center" (click)="updatePackagePrice(i)">
+                    0.00
                   </td>
                   <td>
                     <mat-form-field appearance="outline">
@@ -316,24 +305,80 @@
                       />
                     </mat-form-field>
                   </td>
-                  <td>
-                    Rp.&nbsp;{{
+                  <td class="text-center">
+                    {{
                       itemForm.get("quantity")?.value *
                         itemForm.get("price")?.value | number : "0.2-2"
                     }}
                   </td>
                   <td>
-                    <button mat-icon-button (click)="deleteItem(i)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                    <mat-slide-toggle
-                      [disabled]="
-                        itemForm.get('initial_price')?.value ==
-                        itemForm.get('price')?.value
-                      "
-                      color="primary"
-                      formControlName="save_price"
-                    ></mat-slide-toggle>
+                    <div class="sales-invoice__action-wrapper">
+                      <button mat-icon-button (click)="deleteItem(i)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                      <button
+                        class="sales-invoice__save-indicator"
+                        [matTooltip]="
+                          (itemForm.get('save_price')?.value
+                            ? 'sales-invoice__price__saved'
+                            : 'sales-invoice__price__discarded'
+                          ) | translate
+                        "
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          *ngIf="itemForm.get('save_price')?.value"
+                        >
+                          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                          <g
+                            id="SVGRepo_tracerCarrier"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></g>
+                          <g id="SVGRepo_iconCarrier">
+                            <path
+                              opacity="0.4"
+                              d="M12.89 5.87988H5.10999C3.39999 5.87988 2 7.27987 2 8.98987V20.3499C2 21.7999 3.04 22.4199 4.31 21.7099L8.23999 19.5199C8.65999 19.2899 9.34 19.2899 9.75 19.5199L13.68 21.7099C14.95 22.4199 15.99 21.7999 15.99 20.3499V8.98987C16 7.27987 14.6 5.87988 12.89 5.87988Z"
+                              fill="#5985e1"
+                            ></path>
+                            <path
+                              d="M22 5.10999V16.47C22 17.92 20.96 18.53 19.69 17.83L16 15.77V8.98999C16 7.27999 14.6 5.88 12.89 5.88H8V5.10999C8 3.39999 9.39999 2 11.11 2H18.89C20.6 2 22 3.39999 22 5.10999Z"
+                              fill="#5985e1"
+                            ></path>
+                          </g>
+                        </svg>
+                        <svg
+                          *ngIf="!itemForm.get('save_price')?.value"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                        >
+                          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                          <g
+                            id="SVGRepo_tracerCarrier"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></g>
+                          <g id="SVGRepo_iconCarrier">
+                            <path
+                              opacity="0.4"
+                              d="M12.89 5.87988H5.10999C3.39999 5.87988 2 7.27987 2 8.98987V20.3499C2 21.7999 3.04 22.4199 4.31 21.7099L8.23999 19.5199C8.65999 19.2899 9.34 19.2899 9.75 19.5199L13.68 21.7099C14.95 22.4199 15.99 21.7999 15.99 20.3499V8.98987C16 7.27987 14.6 5.87988 12.89 5.87988Z"
+                              fill="#c7c7c7"
+                            ></path>
+                            <path
+                              d="M22 5.10999V16.47C22 17.92 20.96 18.53 19.69 17.83L16 15.77V8.98999C16 7.27999 14.6 5.88 12.89 5.88H8V5.10999C8 3.39999 9.39999 2 11.11 2H18.89C20.6 2 22 3.39999 22 5.10999Z"
+                              fill="#c7c7c7"
+                            ></path>
+                          </g>
+                        </svg>
+                      </button>
+                    </div>
                   </td>
                 </ng-container>
               </ng-container>
@@ -341,7 +386,7 @@
           </tbody>
           <tbody *ngIf="t.controls.length == 0">
             <tr>
-              <td colspan="5">
+              <td colspan="6">
                 <empty-table />
               </td>
             </tr>
@@ -539,11 +584,11 @@
                   mask="separator.2"
                   thousandSeparator=" "
                   formControlName="payment_value"
+                  [allowNegativeNumbers]="true"
                 />
-                <!-- Add button on suffix to delete -->
                 <div matSuffix>
                   <button mat-icon-button (click)="deletePayment(i)">
-                    <mat-icon>delete</mat-icon>
+                    <mat-icon>close</mat-icon>
                   </button>
                 </div>
               </mat-form-field>
