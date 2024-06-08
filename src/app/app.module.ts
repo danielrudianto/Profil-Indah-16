@@ -195,6 +195,7 @@ import { SalesInvoiceSuccessComponent } from './presentation/pages/sales-invoice
 import { ReportSalesComponent } from './presentation/pages/report-sales/report-sales.component';
 import { NgChartjsModule } from 'ng-chartjs';
 import { NgChartsModule } from 'ng2-charts';
+import { GoodReceiptArchiveFilterComponent } from './presentation/pages/deposit/deposit-archive/good-receipt-archive-filter/good-receipt-archive-filter.component';
 
 @NgModule({
   declarations: [
@@ -336,6 +337,7 @@ import { NgChartsModule } from 'ng2-charts';
     UpdatePackageSalesPriceComponent,
     SalesInvoiceSuccessComponent,
     ReportSalesComponent,
+    GoodReceiptArchiveFilterComponent,
   ],
   imports: [
     BrowserModule,

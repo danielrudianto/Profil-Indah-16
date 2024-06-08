@@ -279,6 +279,7 @@
   "purchase-invoice__create__purchase-data": "Purchase data",
   "purchase-invoice__create__purchase-invoice-name": "Purchase invoice",
   "purchase-invoice__create__table__action": "Action",
+  "purchase-invoice__create__table__total": "Total",
   "purchase-invoice__create__table__item": "Item",
   "purchase-invoice__create__table__discount": "Discount",
   "purchase-invoice__create__table__price": "Price",
@@ -286,6 +287,7 @@
   "purchase-invoice__create__table__current-stock": "Current stock",
   "deposit__view__general-data": "General data",
   "deposit__view__deposit-data": "Deposit data",
+  "deposit__view__submit": "Submit",
   "deposit__view__date": "Date",
   "deposit__view__name": "Document name",
   "deposit__view__sales": "Sales",
@@ -511,5 +513,8 @@
   "purchase-price__update__submit": "Submit",
   "purchase-price__update__success": "Purchase price data updated successfully.",
   "report-sales__title": "Sales report",
-  "report-sales__chart__title": "Sales report"
+  "report-sales__chart__title": "Sales report",
+  "good-receipt__create__name": "Good receipt name",
+  "good-receipt__create__date": "Date",
+  "good-receipt__create__success": "Good receipt data added successfully."
 }

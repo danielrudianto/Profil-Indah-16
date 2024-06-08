@@ -1,1 +1,156 @@
-<p>good-receipt-create works!</p>
+<div class="d-flex mt-4">
+  <div class="d-flex position-relative">
+    <app-vertical-divider></app-vertical-divider>
+    <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <h5>{{ "purchase-invoice__create__general-data" | translate }}</h5>
+    <form [formGroup]="metaFormGroup">
+      <app-autocomplete-search
+        routeName="supplier"
+        [label]="'purchase-invoice__create__supplier' | translate"
+        placeholder="Ex. Bing Jaya"
+        [selected]="metaFormGroup.controls['supplier_id'].valid"
+        (onSelectData)="onSelectSupplier($event)"
+        (onUnselectData)="onUnselectSupplier()"
+      ></app-autocomplete-search>
+
+      <app-autocomplete-search
+        routeName="company"
+        [label]="'purchase-invoice__create__company' | translate"
+        placeholder="Ex. Toko Profil Indah"
+        [selected]="metaFormGroup.controls['company_id'].valid"
+        (onSelectData)="onSelectCompany($event)"
+        (onUnselectData)="onUnselectCompany()"
+      ></app-autocomplete-search>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{
+          "purchase-invoice__create__delivery-order-date" | translate
+        }}</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Ex. 30/12/2023"
+          [matDatepicker]="picker"
+          formControlName="date"
+          autocomplete="off"
+          (click)="picker.open()"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{ "good-receipt__create__name" | translate }}</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Ex. 123456"
+          formControlName="delivery_order"
+          autocomplete="off"
+        />
+      </mat-form-field>
+    </form>
+  </div>
+</div>
+
+<div class="d-flex">
+  <div class="d-flex position-relative">
+    <app-box-stepper step="2" [valid]="itemFormGroup.valid"></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <button class="add-button" (click)="openItemSelector()">
+      {{ "purchase-invoice__create__add-item" | translate }}
+    </button>
+
+    <form [formGroup]="itemFormGroup">
+      <table class="table w-100 mb-2">
+        <thead>
+          <tr>
+            <th style="width: 300px" class="text-center">
+              {{ "purchase-invoice__create__table__item" | translate }}
+            </th>
+            <th style="width: 200px" class="text-center">
+              {{ "purchase-invoice__create__table__quantity" | translate }}
+            </th>
+            <th style="width: 150px" class="text-center">
+              {{ "purchase-invoice__create__table__action" | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody *ngIf="t.controls.length > 0">
+          <tr
+            *ngFor="let itemForm of t.controls; index as i"
+            [formGroup]="getFormGroupAt(i)"
+          >
+            <td>
+              <p>{{ itemForm.get("reference")?.value }}</p>
+              <div class="text-clamp-2">
+                {{ itemForm.get("description")?.value }}
+              </div>
+              <p class="mt-2">
+                {{
+                  "purchase-invoice__create__table__current-stock" | translate
+                }}:
+                {{ itemForm.get("stock")?.value | number : "0.0-2" }}
+                {{ itemForm.get("default_unit")?.value }}
+              </p>
+            </td>
+            <td class="text-center">
+              <mat-form-field appearance="outline">
+                <mat-label>{{
+                  "purchase-invoice__create__table__quantity" | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  class="text-center"
+                  mask="separator"
+                  thousandSeparator=" "
+                  formControlName="quantity"
+                  autocomplete="off"
+                  placeholder="Ex. 20"
+                />
+                <mat-hint *ngIf="itemForm.get('conversion')?.value == 1">{{
+                  itemForm.get("unit")?.value
+                }}</mat-hint>
+                <mat-hint *ngIf="itemForm.get('conversion')?.value != 1"
+                  >{{ itemForm.get("unit")?.value }} -
+                  {{
+                    itemForm.get("quantity")?.value *
+                      itemForm.get("conversion")?.value | number : "0.0-2"
+                  }}
+                  {{ itemForm.get("default_unit")?.value }}</mat-hint
+                >
+              </mat-form-field>
+            </td>
+            <td class="text-nowrap text-center">
+              <button mat-icon-button (click)="deleteItem(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="t.controls.length == 0">
+          <tr>
+            <td colspan="7">
+              <empty-table />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button
+        type="button"
+        class="action-button"
+        (click)="submitForm()"
+        [disabled]="
+          !metaFormGroup.valid || !itemFormGroup.valid || isSubmitting
+        "
+      >
+        {{ "purchase-invoice__create__submit" | translate }}
+      </button>
+    </form>
+  </div>
+</div>

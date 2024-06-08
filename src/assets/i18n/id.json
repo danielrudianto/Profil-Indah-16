@@ -285,6 +285,7 @@
   "purchase-invoice__create__table__current-stock": "Stok sekarang",
   "deposit__view__general-data": "Data umum",
   "deposit__view__deposit-data": "Data deposit",
+  "deposit__view__submit": "Kirim",
   "deposit__view__date": "Tanggal",
   "deposit__view__name": "Dokumen",
   "deposit__view__sales": "Sales",
@@ -509,5 +510,8 @@
   "purchase-price__update__submit": "Kirim",
   "purchase-price__update__success": "Harga pembelian berhasil diperbaharui.",
   "report-sales__title": "Laporan penjualan",
-  "report-sales__chart__title": "Laporan penjualan"
+  "report-sales__chart__title": "Laporan penjualan",
+  "good-receipt__create__name": "Nama surat jalan",
+  "good-receipt__create__date": "Tanggal",
+  "good-receipt__create__success": "Data surat jalan berhasil ditambahkan"
 }

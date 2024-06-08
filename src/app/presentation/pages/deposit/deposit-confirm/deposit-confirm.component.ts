@@ -264,6 +264,34 @@ export class DepositConfirmComponent {
         },
       });
 
+    this.t.valueChanges.subscribe((data) => {
+      this.billFormGroup.patchValue({
+        number_of_items: this.t.controls.filter((x) => x.get('checked')!.value)
+          .length,
+      });
+
+      const totalBeforeDiscount = this.t.controls
+        .filter((x) => x.get('checked')!.value)
+        .reduce((a: any, b: any) => {
+          return a + b.get('price')!.value * b.get('quantity')!.value;
+        }, 0);
+
+      const totalAfterDiscount = this.t.controls
+        .filter((x) => x.get('checked')!.value)
+        .reduce((a: any, b: any) => {
+          return (
+            a +
+            (b.get('price')!.value - b.get('discount')!.value) *
+              b.get('quantity')!.value
+          );
+        }, 0);
+
+      this.valueFormGroup.patchValue({
+        total: totalAfterDiscount,
+        before: totalBeforeDiscount,
+      });
+    });
+
     this.paymentsFormGroup.controls['immediate_payment'].valueChanges.subscribe(
       (data) => {
         if (data) {
@@ -310,7 +338,8 @@ export class DepositConfirmComponent {
     else {
       let total = 0;
       this.p.controls.forEach((x) => {
-        total += Number(x.get('payment_value')?.value ?? 0);
+        console.log(x);
+        total += Number(x.get('usedAmount')?.value ?? 0);
       });
 
       return total;
