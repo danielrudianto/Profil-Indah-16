@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
+import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { ReceivableViewComponent } from './receivable-view/receivable-view.component';
 
 @Component({
   selector: 'app-receivable',
@@ -7,7 +9,10 @@ import { ApiService } from 'src/app/services/api.service';
   styleUrls: ['./receivable.component.css'],
 })
 export class ReceivableComponent {
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private dynamicComponentService: DynamicComponentService
+  ) {}
 
   dataSource: any[] = [];
 
@@ -26,5 +31,14 @@ export class ReceivableComponent {
   get max() {
     // get maximum value of datasource.value
     return Math.max(...this.dataSource.map((item) => item.value));
+  }
+
+  viewReceivable(id: number) {
+    this.dynamicComponentService.createDynamicComponent(
+      ReceivableViewComponent,
+      {
+        id: id,
+      }
+    );
   }
 }

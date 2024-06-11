@@ -5,10 +5,14 @@
         <div class="col-12" id="get-started">
           <img src="/assets/images/get-started.png" class="dashboard__hero" />
           <div class="get-started__text-box px-3">
-            <h1>Sales Dashboard</h1>
-            <p>Innovative sales strategies for modern businesses.</p>
+            <h1>{{ "dashboard-general__hero" | translate }}</h1>
+            <p>{{ "dashboard-general__description" | translate }}</p>
             <div class="get-started__text-box__button-wrapper">
-              <button class="download-button" matTooltip="Stock application">
+              <button
+                class="download-button"
+                matTooltip="Stock application"
+                (click)="goToStockApplication()"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="30px"

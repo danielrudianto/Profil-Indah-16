@@ -32,13 +32,7 @@ export class UpdateProductPurchasePriceComponent {
       this.data.price == 0 ? 0 : (this.data.discount * 100) / this.data.price,
       [Validators.required, Validators.min(0), Validators.max(100)]
     ),
-    initial_price: new FormControl(this.data.initial_price, [
-      Validators.required,
-    ]),
-    initial_discount: new FormControl(this.data.initial_discount, [
-      Validators.required,
-    ]),
-    save_price: new FormControl(this.data.save_price, [Validators.required]),
+    save_price: new FormControl(this.data.save_price),
   });
 
   setFocus(fieldName: string) {

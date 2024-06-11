@@ -9,7 +9,9 @@ import {
 } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { UpdateProductPurchasePriceComponent } from 'src/app/presentation/components/update-product-purchase-price/update-product-purchase-price.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -28,7 +30,9 @@ export class PurchaseInvoiceConfirmViewComponent {
     private sheet: MatBottomSheet,
     private datePipe: DatePipe,
     private dialog: MatDialog,
-    private location: Location
+    private location: Location,
+    private translateService: TranslateService,
+    private router: Router
   ) {}
 
   isSubmitting: boolean = false;
@@ -84,28 +88,34 @@ export class PurchaseInvoiceConfirmViewComponent {
   }
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.apiService
       .get(`purchase-invoice/${this.route.snapshot.params['id']}`)
       .subscribe({
         next: (data: any) => {
           if (!data) {
-            this.alertService.showSuccess('Data not found.');
+            this.alertService.showSuccess(
+              this.translateService.instant('general__not-found')
+            );
             this.location.back();
           }
 
           if (data.is_confirm) {
-            this.alertService.showSuccess('Data already confirmed.');
+            this.alertService.showSuccess(
+              this.translateService.instant('general__allready-confirmed')
+            );
             this.location.back();
           }
 
           if (data.is_delete) {
-            this.alertService.showSuccess('Data already deleted.');
+            this.alertService.showSuccess(
+              this.translateService.instant('general__allready-deleted')
+            );
             this.location.back();
           }
 
           let sub_total = 0;
           (data.good_receipt_code.good_receipt as any[]).forEach((x) => {
-            console.log(x);
             this.t.push(
               this.formBuilder.group({
                 id: [x.id, Validators.required],
@@ -121,7 +131,7 @@ export class PurchaseInvoiceConfirmViewComponent {
                 ],
                 initialPrice: [x.price],
                 initialDiscount: [x.discount],
-                save: [false],
+                save_price: [false],
               })
             );
 
@@ -177,6 +187,7 @@ export class PurchaseInvoiceConfirmViewComponent {
         discount: this.t.controls[i].get('discount')?.value,
         price: this.t.controls[i].get('price')?.value,
         discountPercentage: this.t.controls[i].get('discountPercentage')?.value,
+        save_price: this.t.controls[i].get('save_price')?.value,
       },
     });
     sheet.afterDismissed().subscribe((data: any) => {
@@ -186,11 +197,139 @@ export class PurchaseInvoiceConfirmViewComponent {
           .get('discountPercentage')!
           .setValue(data.discountPercentage);
         this.t.controls[i].get('price')?.setValue(data.price);
+        this.t.controls[i].get('save_price')?.setValue(data.save_price);
       }
     });
   }
 
-  submitForm(type: string) {}
+  submitForm(type: string) {
+    if (
+      this.purchaseDocumentFormGroup.invalid ||
+      this.isSubmitting ||
+      this.purchaseDocumentFormGroup.get('discount')?.value >
+        this.purchaseDocumentFormGroup.get('total')?.value
+    ) {
+      return;
+    } else {
+      if (type == 'confirm') {
+        this.dialog
+          .open(DeleteConfirmationComponent, {
+            data: {
+              header: this.translateService.instant(
+                'purchase-invoice__confirm__header'
+              ),
+              title: this.translateService.instant(
+                'purchase-invoice__confirm__confirm__title'
+              ),
+              document: `[${this.metaFormGroup.value.good_receipt_name}]`,
+            },
+          })
+          .afterClosed()
+          .subscribe((data) => {
+            if (data == true) {
+              this.isSubmitting = true;
+              this.apiService
+                .put(`purchase-invoice/confirm`, {
+                  id: this.route.snapshot.params['id'],
+                  discount: this.purchaseDocumentFormGroup.value.discount,
+                  good_receipt: this.t.controls.map((x) => {
+                    return {
+                      id: x.get('id')?.value,
+                      price: x.get('price')?.value,
+                      discount: x.get('discount')?.value,
+                    };
+                  }),
+                  good_receipt_name: this.metaFormGroup.value.good_receipt_name,
+                  purchase_invoice_name: this.metaFormGroup.value.name,
+                  date: this.datePipe.transform(
+                    this.metaFormGroup.value.date,
+                    'yyyy-MM-dd'
+                  ),
+                })
+                .subscribe({
+                  next: (_) => {
+                    this.alertService.showSuccess(
+                      this.translateService.instant(
+                        'purchase-invoice__confirm__confirm__success'
+                      )
+                    );
+                    // navigate to before
+                    const url = this.router.url;
+                    const urlSegments = url.split('/');
+                    urlSegments.pop();
+
+                    this.router.navigate(urlSegments);
+                  },
+                  error: (error) => {
+                    this.alertService.showError(error);
+                  },
+                })
+                .add(() => {
+                  this.isSubmitting = false;
+                });
+            }
+          });
+      } else if (type == 'delete') {
+        this.dialog
+          .open(DeleteConfirmationComponent, {
+            data: {
+              header: this.translateService.instant(
+                'purchase-invoice__confirm__header'
+              ),
+              title: this.translateService.instant(
+                'purchase-invoice__confirm__delete__title'
+              ),
+              document: `[${this.metaFormGroup.value.good_receipt_name}]`,
+            },
+          })
+          .afterClosed()
+          .subscribe((data) => {
+            if (data == true) {
+              this.isSubmitting = true;
+              this.apiService
+                .put(`purchase-invoice/delete`, {
+                  id: this.route.snapshot.params['id'],
+                  discount: this.purchaseDocumentFormGroup.value.discount,
+                  good_receipt: this.t.controls.map((x) => {
+                    return {
+                      id: x.get('id')?.value,
+                      price: x.get('price')?.value,
+                      discount: x.get('discount')?.value,
+                    };
+                  }),
+                  good_receipt_name: this.metaFormGroup.value.good_receipt_name,
+                  purchase_invoice_name: this.metaFormGroup.value.name,
+                  date: this.datePipe.transform(
+                    this.metaFormGroup.value.date,
+                    'yyyy-MM-dd'
+                  ),
+                })
+                .subscribe({
+                  next: (_) => {
+                    this.alertService.showSuccess(
+                      this.translateService.instant(
+                        'purchase-invoice__confirm__delete__success'
+                      )
+                    );
+                    // navigate to before
+                    const url = this.router.url;
+                    const urlSegments = url.split('/');
+                    urlSegments.pop();
+
+                    this.router.navigate(urlSegments);
+                  },
+                  error: (error) => {
+                    this.alertService.showError(error);
+                  },
+                })
+                .add(() => {
+                  this.isSubmitting = false;
+                });
+            }
+          });
+      }
+    }
+  }
 
   getFormGroupAt(i: number) {
     return this.t.at(i) as FormGroup;

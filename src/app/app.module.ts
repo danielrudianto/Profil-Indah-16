@@ -196,6 +196,11 @@ import { ReportSalesComponent } from './presentation/pages/report-sales/report-s
 import { NgChartjsModule } from 'ng-chartjs';
 import { NgChartsModule } from 'ng2-charts';
 import { GoodReceiptArchiveFilterComponent } from './presentation/pages/deposit/deposit-archive/good-receipt-archive-filter/good-receipt-archive-filter.component';
+import { StockCardComponent } from './presentation/pages/stock-list/stock-card/stock-card.component';
+import { AdjustmentCaseConfirmViewComponent } from './presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm-view/adjustment-case-confirm-view.component';
+import { SalesReturnComponent } from './presentation/pages/sales-return/sales-return.component';
+import { SalesReturnCreateComponent } from './presentation/pages/sales-return/sales-return-create/sales-return-create.component';
+import { ReceivableViewComponent } from './presentation/pages/receivable/receivable-view/receivable-view.component';
 
 @NgModule({
   declarations: [
@@ -338,6 +343,11 @@ import { GoodReceiptArchiveFilterComponent } from './presentation/pages/deposit/
     SalesInvoiceSuccessComponent,
     ReportSalesComponent,
     GoodReceiptArchiveFilterComponent,
+    StockCardComponent,
+    AdjustmentCaseConfirmViewComponent,
+    SalesReturnComponent,
+    SalesReturnCreateComponent,
+    ReceivableViewComponent,
   ],
   imports: [
     BrowserModule,

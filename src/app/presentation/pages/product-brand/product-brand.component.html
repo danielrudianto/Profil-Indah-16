@@ -31,56 +31,44 @@
                 <th class="text-center">
                   {{ "product__brand__created-at" | translate }}
                 </th>
-                <th class="text-center">
-                  {{ "product__brand__action" | translate }}
-                </th>
               </tr>
             </thead>
             <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr *ngFor="let item of dataSource">
+              <tr *ngFor="let item of dataSource" [matMenuTriggerFor]="menu">
                 <td class="text-center">{{ item.name }}</td>
                 <td class="text-center">
                   {{ item.user.name }}
                 </td>
                 <td class="text-center">
-                  {{ item.created_at | date : "dd MMMM YYYY" }}
+                  {{ item.created_at | date : "dd/MM/yyyy" }}
                 </td>
-                <td class="text-center">
-                  <button
-                    mat-icon-button
-                    [matMenuTriggerFor]="menu"
-                    [disabled]="isSubmitting"
-                  >
-                    <mat-icon>more_vert</mat-icon>
+                <mat-menu #menu="matMenu">
+                  <button (click)="openDialog('edit', item.id)" mat-menu-item>
+                    <mat-icon>edit</mat-icon>
+                    <span>{{ "product__brand__update" | translate }}</span>
                   </button>
-                  <mat-menu #menu="matMenu">
-                    <button (click)="openDialog('edit', item.id)" mat-menu-item>
-                      <mat-icon>edit</mat-icon>
-                      <span>{{ "product__brand__update" | translate }}</span>
-                    </button>
-                    <button
-                      [class.delete-button]="item.can_delete"
-                      mat-menu-item
-                      (click)="openDialog('delete', item.id)"
-                      [disabled]="!item.can_delete"
-                    >
-                      <mat-icon>delete</mat-icon>
-                      <span>{{ "product__brand__delete" | translate }}</span>
-                    </button>
-                  </mat-menu>
-                </td>
+                  <button
+                    [class.delete-button]="item.can_delete"
+                    mat-menu-item
+                    (click)="openDialog('delete', item.id)"
+                    [disabled]="!item.can_delete"
+                  >
+                    <mat-icon>delete</mat-icon>
+                    <span>{{ "product__brand__delete" | translate }}</span>
+                  </button>
+                </mat-menu>
               </tr>
             </tbody>
             <tbody *ngIf="!isLoading && dataSource.length == 0">
               <tr>
-                <td colspan="4">
+                <td colspan="3">
                   <empty-table />
                 </td>
               </tr>
             </tbody>
             <tbody *ngIf="isLoading">
               <tr>
-                <td colspan="6" class="text-center">
+                <td colspan="3" class="text-center">
                   <mat-spinner id="spinner"></mat-spinner>
                 </td>
               </tr>

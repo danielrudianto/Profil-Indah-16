@@ -1,5 +1,9 @@
 <h1 mat-dialog-title>
-  {{ "general__delete-confirmation__title" | translate }}
+  <span *ngIf="data.header == undefined">{{
+    "general__delete-confirmation__title" | translate
+  }}</span>
+
+  <span *ngIf="data.header != undefined">{{ data.header | translate }}</span>
 </h1>
 <mat-dialog-content>
   <p>{{ data.title }}</p>

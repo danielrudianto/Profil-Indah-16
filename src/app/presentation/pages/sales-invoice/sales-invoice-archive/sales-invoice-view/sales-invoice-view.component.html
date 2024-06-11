@@ -17,19 +17,22 @@
 
 <label>Created by</label>
 <div class="created-by__wrapper">
-  <p>{{ data.user_bill_code_created_byTouser.name }}</p>
-  <app-avatar
-    *ngIf="data.user_bill_code_created_byTouser.user_avatar != null"
-    [top]="data.user_bill_code_created_byTouser.user_avatar.top"
-    [accessories]="data.user_bill_code_created_byTouser.user_avatar.accessories"
-    [eyes]="data.user_bill_code_created_byTouser.user_avatar.eyes"
-    [mouth]="data.user_bill_code_created_byTouser.user_avatar.mouth"
-    [clothes]="data.user_bill_code_created_byTouser.user_avatar.clothes"
-    [eyebrows]="data.user_bill_code_created_byTouser.user_avatar.eyebrows"
-    [circle]="data.user_bill_code_created_byTouser.user_avatar.circle"
-    [color]="data.user_bill_code_created_byTouser.user_avatar.color"
-    [width]="25"
-  />
+  <p>
+    {{ data.user_bill_code_created_byTouser.name }}&nbsp;<app-avatar
+      *ngIf="data.user_bill_code_created_byTouser.user_avatar != null"
+      [top]="data.user_bill_code_created_byTouser.user_avatar.top"
+      [accessories]="
+        data.user_bill_code_created_byTouser.user_avatar.accessories
+      "
+      [eyes]="data.user_bill_code_created_byTouser.user_avatar.eyes"
+      [mouth]="data.user_bill_code_created_byTouser.user_avatar.mouth"
+      [clothes]="data.user_bill_code_created_byTouser.user_avatar.clothes"
+      [eyebrows]="data.user_bill_code_created_byTouser.user_avatar.eyebrows"
+      [circle]="data.user_bill_code_created_byTouser.user_avatar.circle"
+      [color]="data.user_bill_code_created_byTouser.user_avatar.color"
+      [width]="25"
+    />
+  </p>
 </div>
 
 <label>Created at</label>

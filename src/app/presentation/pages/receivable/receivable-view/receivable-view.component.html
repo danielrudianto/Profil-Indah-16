@@ -1,0 +1,186 @@
+<div
+  class="receivable-view__wrapper"
+  [@panelAnimation]="isOpened ? 'enlarged' : 'closed'"
+>
+  <app-feature-background />
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <app-feature-header
+          [title]="'receivable__view__title' | translate"
+          [isBackAvailable]="true"
+          [onClickBackButton]="closeDialog.bind(this)"
+        />
+
+        <div class="dashboard-card mt-5">
+          <div class="meta-data__wrapper">
+            <div class="meta-data__items">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    d="M12.0691 8.95005C12.0291 8.95005 11.9691 8.95005 11.9191 8.95005C10.8691 8.91005 10.0391 8.06005 10.0391 7.00005C10.0391 5.92005 10.9091 5.05005 11.9891 5.05005C13.0691 5.05005 13.9391 5.93005 13.9391 7.00005C13.9491 8.06005 13.1191 8.92005 12.0691 8.95005Z"
+                    fill="#5985e1"
+                  ></path>
+                  <path
+                    d="M9.24945 11.96C7.91945 12.85 7.91945 14.3 9.24945 15.19C10.7595 16.2 13.2395 16.2 14.7495 15.19C16.0795 14.3 16.0795 12.85 14.7495 11.96C13.2395 10.96 10.7695 10.96 9.24945 11.96Z"
+                    fill="#5985e1"
+                  ></path>
+                  <path
+                    opacity="0.4"
+                    d="M18 2H6C4.34 2 3 3.33 3 4.97V15.88C3 17.52 4.34 18.85 6 18.85H6.76C7.56 18.85 8.32 19.16 8.88 19.72L10.59 21.41C11.37 22.18 12.64 22.18 13.42 21.41L15.13 19.72C15.69 19.16 16.46 18.85 17.25 18.85H18C19.66 18.85 21 17.52 21 15.88V4.97C21 3.33 19.66 2 18 2ZM12 5.05C13.08 5.05 13.95 5.93 13.95 7C13.95 8.06 13.11 8.91 12.07 8.95C12.03 8.95 11.97 8.95 11.92 8.95C10.87 8.91 10.04 8.06 10.04 7C10.05 5.93 10.92 5.05 12 5.05ZM14.75 15.19C13.24 16.2 10.76 16.2 9.25 15.19C7.92 14.31 7.92 12.85 9.25 11.96C10.77 10.95 13.25 10.95 14.75 11.96C16.08 12.85 16.08 14.3 14.75 15.19Z"
+                    fill="#5985e1"
+                  ></path>
+                </g>
+              </svg>
+              <div class="meta-data__items__text">
+                <h2>{{ "receivable__view__customer-name" | translate }}</h2>
+                <p
+                  *ngIf="!isLoadingData"
+                  (click)="copyData(customerDataSource.name)"
+                >
+                  {{ customerDataSource.name }}
+                </p>
+                <div class="shimmer-full" *ngIf="isLoadingData"></div>
+              </div>
+            </div>
+
+            <div class="meta-data__items">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    opacity="0.4"
+                    d="M20.6191 8.45C19.5691 3.83 15.5391 1.75 11.9991 1.75C11.9991 1.75 11.9991 1.75 11.9891 1.75C8.45912 1.75 4.41912 3.82 3.36912 8.44C2.19912 13.6 5.35912 17.97 8.21912 20.72C9.27912 21.74 10.6391 22.25 11.9991 22.25C13.3591 22.25 14.7191 21.74 15.7691 20.72C18.6291 17.97 21.7891 13.61 20.6191 8.45Z"
+                    fill="#5985e1"
+                  ></path>
+                  <path
+                    d="M11.9996 13.4602C13.7393 13.4602 15.1496 12.0499 15.1496 10.3102C15.1496 8.57046 13.7393 7.16016 11.9996 7.16016C10.2599 7.16016 8.84961 8.57046 8.84961 10.3102C8.84961 12.0499 10.2599 13.4602 11.9996 13.4602Z"
+                    fill="#5985e1"
+                  ></path>
+                </g>
+              </svg>
+              <div class="meta-data__items__text">
+                <h2>{{ "receivable__view__customer-address" | translate }}</h2>
+                <p
+                  *ngIf="!isLoadingData"
+                  (click)="copyData(customerDataSource.address)"
+                >
+                  {{ customerDataSource.address || "-" }}
+                </p>
+                <div class="shimmer-full" *ngIf="isLoadingData"></div>
+                <div class="shimmer-full w-50" *ngIf="isLoadingData"></div>
+              </div>
+            </div>
+
+            <div class="meta-data__items">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    d="M19.3697 4.89012L13.5097 2.28012C12.6497 1.90012 11.3497 1.90012 10.4897 2.28012L4.62969 4.89012C3.14969 5.55012 2.92969 6.45012 2.92969 6.93012C2.92969 7.41012 3.14969 8.31012 4.62969 8.97012L10.4897 11.5801C10.9197 11.7701 11.4597 11.8701 11.9997 11.8701C12.5397 11.8701 13.0797 11.7701 13.5097 11.5801L19.3697 8.97012C20.8497 8.31012 21.0697 7.41012 21.0697 6.93012C21.0697 6.45012 20.8597 5.55012 19.3697 4.89012Z"
+                    fill="#5985e1"
+                  ></path>
+                  <path
+                    opacity="0.4"
+                    d="M12.0003 17.04C11.6203 17.04 11.2403 16.96 10.8903 16.81L4.15031 13.81C3.12031 13.35 2.32031 12.12 2.32031 10.99C2.32031 10.58 2.65031 10.25 3.06031 10.25C3.47031 10.25 3.80031 10.58 3.80031 10.99C3.80031 11.53 4.25031 12.23 4.75031 12.45L11.4903 15.45C11.8103 15.59 12.1803 15.59 12.5003 15.45L19.2403 12.45C19.7403 12.23 20.1903 11.54 20.1903 10.99C20.1903 10.58 20.5203 10.25 20.9303 10.25C21.3403 10.25 21.6703 10.58 21.6703 10.99C21.6703 12.11 20.8703 13.35 19.8403 13.81L13.1003 16.81C12.7603 16.96 12.3803 17.04 12.0003 17.04Z"
+                    fill="#5985e1"
+                  ></path>
+                  <path
+                    opacity="0.4"
+                    d="M12.0003 22C11.6203 22 11.2403 21.92 10.8903 21.77L4.15031 18.77C3.04031 18.28 2.32031 17.17 2.32031 15.95C2.32031 15.54 2.65031 15.21 3.06031 15.21C3.47031 15.21 3.80031 15.54 3.80031 15.95C3.80031 16.58 4.17031 17.15 4.75031 17.41L11.4903 20.41C11.8103 20.55 12.1803 20.55 12.5003 20.41L19.2403 17.41C19.8103 17.16 20.1903 16.58 20.1903 15.95C20.1903 15.54 20.5203 15.21 20.9303 15.21C21.3403 15.21 21.6703 15.54 21.6703 15.95C21.6703 17.17 20.9503 18.27 19.8403 18.77L13.1003 21.77C12.7603 21.92 12.3803 22 12.0003 22Z"
+                    fill="#5985e1"
+                  ></path>
+                </g>
+              </svg>
+              <div class="meta-data__items__text">
+                <h2>{{ "receivable__view__total-receivable" | translate }}</h2>
+                <p *ngIf="!isLoadingCard">
+                  {{ totalReceivable | number : "0.2-2" }}
+                </p>
+                <div class="shimmer-full" *ngIf="isLoadingCard"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card mt-3">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ "receivable__view__date" | translate }}</th>
+                  <th>{{ "receivable__view__name" | translate }}</th>
+                  <th>{{ "receivable__view__value" | translate }}</th>
+                  <th>{{ "receivable__view__payment" | translate }}</th>
+                  <th>{{ "receivable__view__balance" | translate }}</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="isLoadingCard">
+                <tr>
+                  <td colspan="5">
+                    <mat-spinner id="spinner"></mat-spinner>
+                  </td>
+                </tr>
+              </tbody>
+              <tbody *ngIf="!isLoadingCard && dataSource.length == 0">
+                <tr>
+                  <td colspan="5">
+                    <empty-table />
+                  </td>
+                </tr>
+              </tbody>
+              <tbody *ngIf="!isLoadingCard && dataSource.length > 0">
+                <tr
+                  *ngFor="let data of dataSource; let i = index"
+                  (click)="viewReceivable(data.id)"
+                >
+                  <td>{{ data.date | date : "dd/MM/yyyy" }}</td>
+                  <td>{{ data.name }}</td>
+                  <td>{{ data.value | number : "0.2-2" }}</td>
+                  <td>{{ data.payment | number : "0.2-2" }}</td>
+                  <td>{{ data.value - data.payment | number : "0.2-2" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <mat-paginator
+            [disabled]="isLoadingCard"
+            [length]="dataCount"
+            [pageSize]="10"
+            [pageIndex]="page - 1"
+            (page)="changePage($event)"
+          ></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

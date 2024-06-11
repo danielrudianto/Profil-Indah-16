@@ -1,0 +1,126 @@
+<div
+  class="adjustment-case-confirm-view__wrapper"
+  [@panelAnimation]="isOpened ? 'enlarged' : 'closed'"
+>
+  <app-feature-background />
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <app-feature-header
+          [title]="'adjustment-case__confirm__title' | translate"
+          [isBackAvailable]="true"
+          [onClickBackButton]="closeDialog.bind(this)"
+        />
+
+        <div *ngIf="isLoading; else source">
+          <mat-spinner id="spinner"></mat-spinner>
+        </div>
+
+        <ng-template #source>
+          <div class="dashboard-card">
+            <label>{{ "adjustment-case__confirm__date" | translate }}</label>
+            <p>{{ dataSource.date | date : "dd/MM/YYYY" }}</p>
+
+            <label>{{ "adjustment-case__confirm__name" | translate }}</label>
+            <p>{{ dataSource.name }}</p>
+
+            <label>{{
+              "adjustment-case__confirm__created-by" | translate
+            }}</label>
+            <p>
+              {{ dataSource.user_adjustment_case_code_created_byTouser.name }}
+              <app-avatar
+                *ngIf="
+                  dataSource.user_adjustment_case_code_created_byTouser
+                    .user_avatar
+                "
+                [width]="25"
+                [top]="
+                  dataSource.user_adjustment_case_code_created_byTouser
+                    .user_avatar.top
+                "
+                [accessories]="
+                  dataSource.user_adjustment_case_code_created_byTouser
+                    .user_avatar.accessories
+                "
+                [clothes]="
+                  dataSource.user_adjustment_case_code_created_byTouser
+                    .user_avatar.clothes
+                "
+                [circle]="
+                  dataSource.user_adjustment_case_code_created_byTouser
+                    .user_avatar.circle
+                "
+                [eyes]="
+                  dataSource.user_adjustment_case_code_created_byTouser
+                    .user_avatar.eyes
+                "
+                [mouth]="
+                  dataSource.user_adjustment_case_code_created_byTouser
+                    .user_avatar.mouth
+                "
+                [eyebrows]="
+                  dataSource.user_adjustment_case_code_created_byTouser
+                    .user_avatar.eyebrows
+                "
+                [color]="
+                  dataSource.user_adjustment_case_code_created_byTouser
+                    .user_avatar.color
+                "
+              />
+            </p>
+
+            <label>{{ "adjustment-case__confirm__company" | translate }}</label>
+            <p *ngIf="dataSource.company != null; else naCompany">
+              {{ dataSource.company.name }}
+            </p>
+
+            <ng-template #naCompany>
+              <p>N/A</p>
+            </ng-template>
+
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>
+                      {{ "adjustment-case__confirm__reference" | translate }}
+                    </th>
+                    <th>
+                      {{ "adjustment-case__confirm__description" | translate }}
+                    </th>
+                    <th>
+                      {{ "adjustment-case__confirm__quantity" | translate }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of dataSource.adjustment_case">
+                    <td>{{ data.item.reference }}</td>
+                    <td class="text-clamp-2">{{ data.item.description }}</td>
+                    <td>
+                      {{ data.quantity | number : "0.0-2" }}
+                      {{
+                        data.item_unit == null
+                          ? data.item.unit
+                          : data.item_unit.unit
+                      }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="adjustment-case__action-wrapper">
+              <button mat-button (click)="deleteAdjustmentCase()">
+                {{ "adjustment-case__confirm__delete" | translate }}
+              </button>
+              <button class="action-button" (click)="confirmAdjustmentCase()">
+                {{ "adjustment-case__confirm__submit" | translate }}
+              </button>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

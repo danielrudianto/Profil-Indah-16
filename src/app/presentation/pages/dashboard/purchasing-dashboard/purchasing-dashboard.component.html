@@ -8,7 +8,11 @@
             <h1>{{ "dashboard-purchasing__hero" | translate }}</h1>
             <p>{{ "dashboard-purchasing__description" | translate }}</p>
             <div class="get-started__text-box__button-wrapper">
-              <button class="download-button" matTooltip="Stock application">
+              <button
+                class="download-button"
+                matTooltip="Stock application"
+                (click)="goToStockApplication()"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="30px"

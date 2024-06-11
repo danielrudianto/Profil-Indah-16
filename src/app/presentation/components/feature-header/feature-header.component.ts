@@ -12,14 +12,22 @@ export class FeatureHeaderComponent {
   @Input('title') title!: string;
   @Input('help') help: string | null = null;
   @Input('isBackAvailable') isBackAvailable!: boolean;
+  @Input('onClickBackButton') onClickBackButton: Function | null = null;
 
   clickBackButton() {
+    if (this.onClickBackButton) {
+      this.onClickBackButton();
+      return;
+    }
+
     const url = this.router.url.split('/');
     if (url.length > 2) {
-      for (let i = 0; i < url.length - 1; i++) {
+      for (let i = 0; i < url.length - 2; i++) {
         url.pop();
       }
     }
+
+    console.log(url);
 
     this.router.navigate(url);
   }

@@ -31,11 +31,10 @@
                 <th class="text-center">{{ "product__brand" | translate }}</th>
                 <th class="text-center">{{ "product__type" | translate }}</th>
                 <th class="text-center">{{ "product__status" | translate }}</th>
-                <th class="text-center">{{ "product__action" | translate }}</th>
               </tr>
             </thead>
             <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr *ngFor="let item of dataSource">
+              <tr *ngFor="let item of dataSource" [matMenuTriggerFor]="menu">
                 <td>{{ item.reference }}</td>
                 <td>
                   <span class="text-clamp-2">
@@ -52,63 +51,51 @@
                     "product__inactive" | translate
                   }}</span>
                 </td>
-                <td class="text-center">
-                  <button
-                    mat-icon-button
-                    [matMenuTriggerFor]="menu"
-                    [disabled]="isSubmitting"
-                  >
-                    <mat-icon>more_vert</mat-icon>
+                <mat-menu #menu="matMenu">
+                  <button (click)="openDialog('edit', item.id)" mat-menu-item>
+                    <mat-icon>edit</mat-icon>
+                    <span>{{ "product__update" | translate }}</span>
                   </button>
-                  <mat-menu #menu="matMenu">
-                    <button (click)="openDialog('edit', item.id)" mat-menu-item>
-                      <mat-icon>edit</mat-icon>
-                      <span>{{ "product__update" | translate }}</span>
-                    </button>
-                    <button
-                      (click)="openDialog('edit-unit', item.id)"
-                      mat-menu-item
-                    >
-                      <mat-icon>dataset</mat-icon>
-                      <span>{{ "product__update-unit" | translate }}</span>
-                    </button>
-                    <button
-                      mat-menu-item
-                      (click)="openDialog('active', item.id)"
-                    >
-                      <mat-icon *ngIf="item.is_active">toggle_on</mat-icon>
-                      <mat-icon *ngIf="!item.is_active">toggle_off</mat-icon>
-                      <span *ngIf="item.is_active">{{
-                        "product__set-inactive" | translate
-                      }}</span>
+                  <button
+                    (click)="openDialog('edit-unit', item.id)"
+                    mat-menu-item
+                  >
+                    <mat-icon>dataset</mat-icon>
+                    <span>{{ "product__update-unit" | translate }}</span>
+                  </button>
+                  <button mat-menu-item (click)="openDialog('active', item.id)">
+                    <mat-icon *ngIf="item.is_active">toggle_on</mat-icon>
+                    <mat-icon *ngIf="!item.is_active">toggle_off</mat-icon>
+                    <span *ngIf="item.is_active">{{
+                      "product__set-inactive" | translate
+                    }}</span>
 
-                      <span *ngIf="!item.is_active">{{
-                        "product__set-active" | translate
-                      }}</span>
-                    </button>
-                    <button
-                      [class.delete-button]="item.can_delete"
-                      mat-menu-item
-                      (click)="openDialog('delete', item.id)"
-                      [disabled]="!(item.can_delete && isAdministrator)"
-                    >
-                      <mat-icon>delete</mat-icon>
-                      <span>{{ "product__delete" | translate }}</span>
-                    </button>
-                  </mat-menu>
-                </td>
+                    <span *ngIf="!item.is_active">{{
+                      "product__set-active" | translate
+                    }}</span>
+                  </button>
+                  <button
+                    [class.delete-button]="item.can_delete"
+                    mat-menu-item
+                    (click)="openDialog('delete', item.id)"
+                    [disabled]="!(item.can_delete && isAdministrator)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                    <span>{{ "product__delete" | translate }}</span>
+                  </button>
+                </mat-menu>
               </tr>
             </tbody>
             <tbody *ngIf="!isLoading && dataSource.length == 0">
               <tr>
-                <td colspan="6">
+                <td colspan="5">
                   <empty-table />
                 </td>
               </tr>
             </tbody>
             <tbody *ngIf="isLoading">
               <tr>
-                <td colspan="6" class="text-center">
+                <td colspan="5" class="text-center">
                   <mat-spinner id="spinner"></mat-spinner>
                 </td>
               </tr>
@@ -116,14 +103,13 @@
           </table>
         </div>
         <mat-paginator
-          class="paginator"
+          [disabled]="isLoading"
           [pageIndex]="page - 1"
           [length]="dataCount"
           [pageSize]="10"
           (page)="changePage($event)"
           aria-label="Select page"
           hidePageSize="true"
-          *ngIf="!isLoading"
         >
         </mat-paginator>
       </div>

@@ -4,6 +4,8 @@ import { ItemStock } from 'src/app/models/item.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { StockListReportComponent } from './stock-list-report/stock-list-report.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { StockCardComponent } from './stock-card/stock-card.component';
 
 @Component({
   selector: 'app-stock-list',
@@ -13,7 +15,9 @@ import { StockListReportComponent } from './stock-list-report/stock-list-report.
 export class StockListComponent {
   constructor(
     private authService: AuthService,
-    private dynamicComponentService: DynamicComponentService
+    private dynamicComponentService: DynamicComponentService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   isLoading: boolean = true;
@@ -35,6 +39,12 @@ export class StockListComponent {
           id: id,
         }
       );
+    }
+
+    if (dialogType == 'card') {
+      this.dynamicComponentService.createDynamicComponent(StockCardComponent, {
+        id: id,
+      });
     }
   }
 

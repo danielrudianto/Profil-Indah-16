@@ -7,13 +7,20 @@
           <table class="table">
             <thead>
               <tr>
-                <th style="width: 250px">Name</th>
-                <th style="width: 200px">Amount</th>
-                <th>Receivable</th>
+                <th style="width: 250px">
+                  {{ "receivable__name" | translate }}
+                </th>
+                <th style="width: 200px">
+                  {{ "receivable__amount" | translate }}
+                </th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let data of dataSource">
+              <tr
+                *ngFor="let data of dataSource"
+                (click)="viewReceivable(data.customer_id)"
+              >
                 <td>
                   <p class="mb-0 text-clamp-1">
                     {{ data.customer_name }}

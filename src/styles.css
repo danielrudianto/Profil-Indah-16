@@ -60,6 +60,16 @@ mat-divider {
   background-color: rgba(124, 172, 248, 0.7);
 }
 
+.data-row {
+  background-color: white;
+  transition: 0.3s all ease;
+  cursor: pointer;
+}
+
+.data-row:hover {
+  background-color: rgb(128, 129, 129);
+}
+
 /**
 Buttons styling
 */
@@ -210,6 +220,7 @@ table td:first-of-type {
   border-radius: 12px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.09);
   background-color: white;
+  overflow-x: auto;
 }
 
 .white-snackbar {
@@ -305,7 +316,8 @@ label {
 }
 
 /**
-Custom Dialogs */
+  Custom Dialogs 
+*/
 
 .create-dialog {
   width: 300px;

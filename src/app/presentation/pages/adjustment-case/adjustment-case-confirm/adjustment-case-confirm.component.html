@@ -1,1 +1,93 @@
-<p>adjustment-case-confirm works!</p>
+<div class="dashboard-card">
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{ "adjustment-case__confirm__date" | translate }}</th>
+          <th>{{ "adjustment-case__confirm__name" | translate }}</th>
+          <th>{{ "adjustment-case__confirm__created-by" | translate }}</th>
+          <th>{{ "adjustment-case__confirm__company" | translate }}</th>
+          <th>{{ "adjustment-case__confirm__type" | translate }}</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="isLoading">
+        <tr>
+          <td colspan="5">
+            <mat-spinner id="spinner"></mat-spinner>
+          </td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="!isLoading && dataSource.length == 0">
+        <tr>
+          <td colspan="5">
+            <empty-table />
+          </td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="!isLoading && dataSource.length > 0">
+        <tr
+          class="data-row"
+          *ngFor="let item of dataSource"
+          (click)="viewAdjustmentCase(item.id)"
+        >
+          <td>{{ item.date | date : "dd/MM/YYYY" }}</td>
+          <td>{{ item.name }}</td>
+          <td>
+            <app-avatar
+              [width]="25"
+              *ngIf="
+                item.user_adjustment_case_code_created_byTouser.user_avatar
+              "
+              [top]="
+                item.user_adjustment_case_code_created_byTouser.user_avatar.top
+              "
+              [accessories]="
+                item.user_adjustment_case_code_created_byTouser.user_avatar
+                  .accessories
+              "
+              [clothes]="
+                item.user_adjustment_case_code_created_byTouser.user_avatar
+                  .clothes
+              "
+              [circle]="
+                item.user_adjustment_case_code_created_byTouser.user_avatar
+                  .circle
+              "
+              [eyes]="
+                item.user_adjustment_case_code_created_byTouser.user_avatar.eyes
+              "
+              [mouth]="
+                item.user_adjustment_case_code_created_byTouser.user_avatar
+                  .mouth
+              "
+              [eyebrows]="
+                item.user_adjustment_case_code_created_byTouser.user_avatar
+                  .eyebrows
+              "
+              [color]="
+                item.user_adjustment_case_code_created_byTouser.user_avatar
+                  .color
+              "
+            />
+            {{ item.user_adjustment_case_code_created_byTouser.name }}
+          </td>
+          <td>{{ item.company == null ? "N/A" : item.company.name }}</td>
+          <td>
+            {{
+              (item.type == 0
+                ? "adjustment-case__confirm__type__found"
+                : "adjustment-case__confirm__type__lost"
+              ) | translate
+            }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <mat-paginator
+    [length]="dataCount"
+    [pageSize]="10"
+    [pageIndex]="page - 1"
+    (page)="changePage($event)"
+  ></mat-paginator>
+</div>

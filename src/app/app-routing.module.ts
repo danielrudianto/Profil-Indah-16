@@ -60,6 +60,7 @@ import { PackageListComponent } from './presentation/pages/package/package-list/
 import { PackageCreateComponent } from './presentation/pages/package/package-create/package-create.component';
 import { PackageUpdateComponent } from './presentation/pages/package/package-update/package-update.component';
 import { ReportSalesComponent } from './presentation/pages/report-sales/report-sales.component';
+import { StockCardComponent } from './presentation/pages/stock-list/stock-card/stock-card.component';
 
 const routes: Routes = [
   {
@@ -335,6 +336,10 @@ const routes: Routes = [
           {
             path: 'Stock',
             component: StockListComponent,
+          },
+          {
+            path: 'Stock/:id',
+            component: StockCardComponent,
           },
           {
             path: 'Good-receipt',

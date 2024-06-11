@@ -45,39 +45,43 @@
           <td>{{ item.good_receipt_code.supplier.name }}</td>
           <td>
             <p class="mb-0">
-              {{ item.user_purchase_invoice_created_byTouser.name }}
+              {{
+                item.user_purchase_invoice_created_byTouser.name
+              }}&nbsp;<app-avatar
+                *ngIf="
+                  item.user_purchase_invoice_created_byTouser.user_avatar !=
+                  null
+                "
+                [top]="
+                  item.user_purchase_invoice_created_byTouser.user_avatar.top
+                "
+                [accessories]="
+                  item.user_purchase_invoice_created_byTouser.user_avatar
+                    .accessories
+                "
+                [eyes]="
+                  item.user_purchase_invoice_created_byTouser.user_avatar.eyes
+                "
+                [mouth]="
+                  item.user_purchase_invoice_created_byTouser.user_avatar.mouth
+                "
+                [clothes]="
+                  item.user_purchase_invoice_created_byTouser.user_avatar
+                    .clothes
+                "
+                [eyebrows]="
+                  item.user_purchase_invoice_created_byTouser.user_avatar
+                    .eyebrows
+                "
+                [circle]="
+                  item.user_purchase_invoice_created_byTouser.user_avatar.circle
+                "
+                [color]="
+                  item.user_purchase_invoice_created_byTouser.user_avatar.color
+                "
+                [width]="25"
+              />
             </p>
-            <app-avatar
-              *ngIf="
-                item.user_purchase_invoice_created_byTouser.user_avatar != null
-              "
-              [top]="
-                item.user_purchase_invoice_created_byTouser.user_avatar.top
-              "
-              [accessories]="
-                item.user_purchase_invoice_created_byTouser.user_avatar
-                  .accessories
-              "
-              [eyes]="
-                item.user_purchase_invoice_created_byTouser.user_avatar.eyes
-              "
-              [mouth]="
-                item.user_purchase_invoice_created_byTouser.user_avatar.mouth
-              "
-              [clothes]="
-                item.user_purchase_invoice_created_byTouser.user_avatar.clothes
-              "
-              [eyebrows]="
-                item.user_purchase_invoice_created_byTouser.user_avatar.eyebrows
-              "
-              [circle]="
-                item.user_purchase_invoice_created_byTouser.user_avatar.circle
-              "
-              [color]="
-                item.user_purchase_invoice_created_byTouser.user_avatar.color
-              "
-              [width]="25"
-            />
           </td>
         </tr>
       </tbody>

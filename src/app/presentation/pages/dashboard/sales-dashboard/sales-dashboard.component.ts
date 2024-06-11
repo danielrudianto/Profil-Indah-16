@@ -49,6 +49,11 @@ export class SalesDashboardComponent {
     });
   }
 
+  goToStockApplication() {
+    // Open new tab opens stock.profilindah.id
+    window.open('https://stock.profilindah.id', '_blank');
+  }
+
   get col(): number {
     if (window.innerWidth > 1440) {
       return 4;
