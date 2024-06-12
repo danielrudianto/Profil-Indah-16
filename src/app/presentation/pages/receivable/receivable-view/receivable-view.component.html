@@ -160,13 +160,24 @@
               <tbody *ngIf="!isLoadingCard && dataSource.length > 0">
                 <tr
                   *ngFor="let data of dataSource; let i = index"
-                  (click)="viewReceivable(data.id)"
+                  [matMenuTriggerFor]="menu"
                 >
                   <td>{{ data.date | date : "dd/MM/yyyy" }}</td>
                   <td>{{ data.name }}</td>
                   <td>{{ data.value | number : "0.2-2" }}</td>
                   <td>{{ data.payment | number : "0.2-2" }}</td>
                   <td>{{ data.value - data.payment | number : "0.2-2" }}</td>
+                  <mat-menu #menu="matMenu">
+                    <button mat-menu-item>
+                      {{ "receivable-view__view" | translate }}
+                    </button>
+                    <button mat-menu-item (click)="openPaymentHistory(data.id)">
+                      {{ "receivable-view__payment-history" | translate }}
+                    </button>
+                    <button mat-menu-item (click)="createPayment(data.id)">
+                      {{ "receivable-view__add-payment" | translate }}
+                    </button>
+                  </mat-menu>
                 </tr>
               </tbody>
             </table>

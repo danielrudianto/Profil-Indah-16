@@ -395,6 +395,28 @@ const routes: Routes = [
               },
             ],
           },
+          {
+            path: 'Deposit',
+            component: DepositComponent,
+            children: [
+              {
+                path: '',
+                component: DepositListComponent,
+              },
+              {
+                path: 'Archive',
+                component: DepositArchiveComponent,
+              },
+              {
+                path: 'Confirm/:id',
+                component: DepositConfirmComponent,
+              },
+              {
+                path: '**',
+                redirectTo: '',
+              },
+            ],
+          },
         ],
       },
       {

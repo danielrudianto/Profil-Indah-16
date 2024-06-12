@@ -1,0 +1,110 @@
+<app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
+  <div class="create-dialog">
+    <app-dialog-header
+      [title]="'stock-card__document__title' | translate"
+      (onDialogClose)="closeDialog()"
+    >
+    </app-dialog-header>
+    <div class="create-dialog__content" *ngIf="isLoading">
+      <mat-spinner id="spinner"></mat-spinner>
+    </div>
+
+    <div class="create-dialog__content" *ngIf="!isLoading">
+      <label>{{ "stock-card__document__name" | translate }}</label>
+      <p>{{ dataSource.name }}</p>
+
+      <label>{{ "stock-card__document__date" | translate }}</label>
+      <p>{{ dataSource.date | date : "dd/MM/YYYY" }}</p>
+
+      <label>{{ "stock-card__document__type" | translate }}</label>
+      <p>
+        {{
+          (data.route == "sales-invoice"
+            ? "stock-card__document__type__sales-invoice"
+            : data.route == "sales-return"
+            ? "stock-card__document__type__sales-return"
+            : data.route == "adjustment-event"
+            ? "stock-card__document__type__adjustment-event"
+            : "stock-card__document__type__good-receipt"
+          ) | translate
+        }}
+      </p>
+
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{{ "stock-card__document__reference" | translate }}</th>
+              <th>{{ "stock-card__document__description" | translate }}</th>
+              <th>{{ "stock-card__document__quantity" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="data.route == 'sales-invoice'">
+            <tr *ngFor="let data of dataSource.bill">
+              <td>{{ data.item.reference }}</td>
+              <td>
+                <p class="text-clamp-2">
+                  {{ data.item.description }}
+                </p>
+              </td>
+              <td>
+                {{ data.quantity | number : "0.0-2" }}
+                {{
+                  data.item_unit == null ? data.item.unit : data.item_unit.unit
+                }}
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="data.route == 'good-receipt'">
+            <tr *ngFor="let data of dataSource.good_receipt">
+              <td>{{ data.item.reference }}</td>
+              <td>
+                <p class="text-clamp-2">
+                  {{ data.item.description }}
+                </p>
+              </td>
+              <td>
+                {{ data.quantity | number : "0.0-2" }}
+                {{
+                  data.item_unit == null ? data.item.unit : data.item_unit.unit
+                }}
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="data.route == 'adjustment-event'">
+            <tr *ngFor="let data of dataSource.adjustment_case">
+              <td>{{ data.item.reference }}</td>
+              <td>
+                <p class="text-clamp-2">
+                  {{ data.item.description }}
+                </p>
+              </td>
+              <td>
+                {{ data.quantity | number : "0.0-2" }}
+                {{
+                  data.item_unit == null ? data.item.unit : data.item_unit.unit
+                }}
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="data.route == 'sales-return'">
+            <tr *ngFor="let data of dataSource.sales_return">
+              <td>{{ data.item.reference }}</td>
+              <td>
+                <p class="text-clamp-2">
+                  {{ data.item.description }}
+                </p>
+              </td>
+              <td>
+                {{ data.quantity | number : "0.0-2" }}
+                {{
+                  data.item_unit == null ? data.item.unit : data.item_unit.unit
+                }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</app-dynamic-dialog>

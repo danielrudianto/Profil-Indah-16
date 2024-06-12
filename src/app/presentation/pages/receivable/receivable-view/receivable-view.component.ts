@@ -5,6 +5,8 @@ import { panelAnimation } from 'src/app/animations/panel.animation';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { ReceivablePaymentHistoryComponent } from './receivable-payment-history/receivable-payment-history.component';
+import { ReceivablePaymentCreateComponent } from './receivable-payment-create/receivable-payment-create.component';
 
 @Component({
   selector: 'app-receivable-view',
@@ -110,13 +112,42 @@ export class ReceivableViewComponent {
     this.fetchReceivableData();
   }
 
-  viewReceivable(id: number) {
-    this.dynamicComponentService.createDynamicComponent(
-      ReceivableViewComponent,
-      {
+  openPaymentHistory(id: number) {
+    this.dynamicComponentService
+      .createDynamicComponent(ReceivablePaymentHistoryComponent, {
         id: id,
-      }
-    );
+      })
+      .subscribe({
+        next: (data) => {
+          if (data != undefined && data != null) {
+            const index = this.dataSource.findIndex((x) => x.id == id);
+            if (index != -1) {
+              this.dataSource[index].payment = data;
+            }
+          }
+        },
+      });
+  }
+
+  createPayment(id: number) {
+    const index = this.dataSource.findIndex((x) => x.id == id);
+    const value = this.dataSource[index].value - this.dataSource[index].payment;
+
+    this.dynamicComponentService
+      .createDynamicComponent(ReceivablePaymentCreateComponent, {
+        id: id,
+        max: value,
+      })
+      .subscribe((data) => {
+        if (data != undefined && data != null) {
+          this.dataSource[index].payment =
+            Number(this.dataSource[index].payment) + Number(data);
+          if (this.dataSource[index].value == this.dataSource[index].payment) {
+            this.dataSource.splice(index, 1);
+            this.dataCount = this.dataCount - 1;
+          }
+        }
+      });
   }
 
   get totalReceivable(): number {

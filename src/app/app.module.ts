@@ -200,7 +200,10 @@ import { AdjustmentCaseConfirmViewComponent } from './presentation/pages/adjustm
 import { SalesReturnComponent } from './presentation/pages/sales-return/sales-return.component';
 import { SalesReturnCreateComponent } from './presentation/pages/sales-return/sales-return-create/sales-return-create.component';
 import { ReceivableViewComponent } from './presentation/pages/receivable/receivable-view/receivable-view.component';
-
+import { ReceivablePaymentHistoryComponent } from './presentation/pages/receivable/receivable-view/receivable-payment-history/receivable-payment-history.component';
+import { ReceivablePaymentCreateComponent } from './presentation/pages/receivable/receivable-view/receivable-payment-create/receivable-payment-create.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { StockCardViewComponent } from './presentation/pages/stock-list/stock-card/stock-card-view/stock-card-view.component';
 @NgModule({
   declarations: [
     ShortNumberPipe,
@@ -346,6 +349,9 @@ import { ReceivableViewComponent } from './presentation/pages/receivable/receiva
     SalesReturnComponent,
     SalesReturnCreateComponent,
     ReceivableViewComponent,
+    ReceivablePaymentHistoryComponent,
+    ReceivablePaymentCreateComponent,
+    StockCardViewComponent,
   ],
   imports: [
     BrowserModule,
@@ -383,6 +389,7 @@ import { ReceivableViewComponent } from './presentation/pages/receivable/receiva
     MatBadgeModule,
     MatTabsModule,
     NgChartjsModule,
+    MatCheckboxModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

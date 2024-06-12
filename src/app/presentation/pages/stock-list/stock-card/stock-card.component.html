@@ -252,7 +252,10 @@
                 </tr>
               </tbody>
               <tbody *ngIf="!isLoadingCard && dataSource.length > 0">
-                <tr *ngFor="let item of dataSource">
+                <tr
+                  *ngFor="let item of dataSource"
+                  (click)="viewDocument(item)"
+                >
                   <td>{{ item.date | date : "dd/MM/YYYY" }}</td>
                   <td>{{ item.name }}</td>
                   <td>

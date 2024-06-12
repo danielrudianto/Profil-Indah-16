@@ -1,0 +1,75 @@
+<app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
+  <div class="create-dialog">
+    <app-dialog-header
+      [title]="'payment-history__add-payment__title' | translate"
+      (onDialogClose)="closeDialog()"
+    >
+    </app-dialog-header>
+    <div class="create-dialog__content">
+      <form [formGroup]="paymentFormGroup">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{
+            "payment-history__add-payment__date" | translate
+          }}</mat-label>
+          <input matInput formControlName="date" [matDatepicker]="picker" />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="outline"
+          class="w-100"
+          [ngClass]="{
+            'd-none': paymentFormGroup.controls['full_payment'].value
+          }"
+        >
+          <mat-label>{{
+            "payment-history__add-payment__amount" | translate
+          }}</mat-label>
+          <input
+            matInput
+            formControlName="value"
+            type="text"
+            mask="separator.2"
+            thousandSeparator=" "
+            [readonly]="paymentFormGroup.controls['full_payment'].value"
+          />
+        </mat-form-field>
+
+        <app-autocomplete-search
+          [label]="'payment-history__add-payment__payment-method' | translate"
+          placeholder="Ex. Cash"
+          [routeName]="'payment-method'"
+          [selected]="paymentFormGroup.controls['payment_method'].valid"
+          [defaultValue]="'Cash'"
+          (onSelectData)="onSelectPaymentMethod($event)"
+          (onUnselectData)="onUnselectPaymentMethod()"
+        />
+
+        <p>
+          <mat-checkbox
+            formControlName="full_payment"
+            color="primary"
+            class="w-100"
+          >
+            <span class="checkbox-label">{{
+              "payment-history__add-payment__full-payment" | translate
+            }}</span>
+          </mat-checkbox>
+        </p>
+      </form>
+    </div>
+    <div class="create-dialog__footer">
+      <button
+        class="next-button"
+        [disabled]="!paymentFormGroup.valid || isSubmitting"
+        (click)="submitPayment()"
+      >
+        {{ "payment-history__add-payment__submit" | translate }}
+      </button>
+    </div>
+  </div>
+</app-dynamic-dialog>
