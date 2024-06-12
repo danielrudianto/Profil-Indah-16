@@ -204,6 +204,7 @@ import { ReceivablePaymentHistoryComponent } from './presentation/pages/receivab
 import { ReceivablePaymentCreateComponent } from './presentation/pages/receivable/receivable-view/receivable-payment-create/receivable-payment-create.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { StockCardViewComponent } from './presentation/pages/stock-list/stock-card/stock-card-view/stock-card-view.component';
+import { SalesChartComponent } from './presentation/components/charts/sales-chart/sales-chart.component';
 @NgModule({
   declarations: [
     ShortNumberPipe,
@@ -352,6 +353,7 @@ import { StockCardViewComponent } from './presentation/pages/stock-list/stock-ca
     ReceivablePaymentHistoryComponent,
     ReceivablePaymentCreateComponent,
     StockCardViewComponent,
+    SalesChartComponent,
   ],
   imports: [
     BrowserModule,

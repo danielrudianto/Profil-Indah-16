@@ -6,48 +6,196 @@
         [title]="'report-sales__title' | translate"
         [isBackAvailable]="true"
       ></app-feature-header>
-      <div class="dashboard-card">
-        <div class="line-chart__wrapper">
-          <canvas
-            height="100"
-            ngChartjs
-            [datasets]="lineChartData"
-            [labels]="lineChartLabels"
-            [options]="lineChartOptions"
-            [legend]="lineChartLegend"
-            [chartType]="lineChartType"
-          >
-          </canvas>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-xl-8 col-lg-8 col-md-10 col-12">
+      <div class="dashboard-card" id="sales-chart">
+        <h2>{{ "sales-report__sales-chart__title" | translate }}</h2>
+        <p>
+          {{ transactions | number : "0.0-0" }}
+          {{ "sales-report__transactions" | translate }}
+        </p>
+        <div class="sales-chart__wrapper">
+          <app-sales-chart [maxDate]="31" [data]="chartDataSource" />
         </div>
+        <div class="sales-chart__meta-wrapper">
+          <div class="sales-chart__meta__data-wrapper">
+            <div class="sales-chart__meta__item-wrapper">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    opacity="0.4"
+                    d="M18 18.86H17.24C16.44 18.86 15.68 19.17 15.12 19.73L13.41 21.42C12.63 22.19 11.36 22.19 10.58 21.42L8.87 19.73C8.31 19.17 7.54 18.86 6.75 18.86H6C4.34 18.86 3 17.53 3 15.89V4.97998C3 3.33998 4.34 2.01001 6 2.01001H18C19.66 2.01001 21 3.33998 21 4.97998V15.89C21 17.52 19.66 18.86 18 18.86Z"
+                    fill="#c7c7c7"
+                  ></path>
+                  <path
+                    d="M11.9999 10.41C13.2868 10.41 14.33 9.36684 14.33 8.08002C14.33 6.79319 13.2868 5.75 11.9999 5.75C10.7131 5.75 9.66992 6.79319 9.66992 8.08002C9.66992 9.36684 10.7131 10.41 11.9999 10.41Z"
+                    fill="#c7c7c7"
+                  ></path>
+                  <path
+                    d="M14.6792 15.0601C15.4892 15.0601 15.9592 14.1601 15.5092 13.4901C14.8292 12.4801 13.5092 11.8 11.9992 11.8C10.4892 11.8 9.16918 12.4801 8.48918 13.4901C8.03918 14.1601 8.5092 15.0601 9.3192 15.0601H14.6792Z"
+                    fill="#c7c7c7"
+                  ></path>
+                </g>
+              </svg>
+              <div class="sales-chart__meta__item-wrapper__text-wrapper">
+                <p class="sales-chart__meta__item-wrapper__label">
+                  {{ "sales-report__customer" | translate }}
+                </p>
+                <p class="sales-chart__meta__item-wrapper__value">
+                  {{ customerCount | number : "0.0-0" }}
+                </p>
+              </div>
+              <div class="sales-chart__meta__item-wrapper__divider"></div>
+            </div>
 
-        <div class="row" [@slideInOutAnimation]="index == 0 ? 'in' : 'out'">
-          <div class="col-xl-2 col-lg-3 col-md-4">
-            <canvas
-              baseChart
-              *ngIf="!isLoading && brandChartData[0].data.length > 0"
-              id="brand"
-              [datasets]="brandChartData"
-              [labels]="brandChartLabels"
-              [options]="brandChartOptions"
-              [legend]="brandChartLegend"
-              [type]="brandChartType"
-            ></canvas>
+            <div class="sales-chart__meta__item-wrapper">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    opacity="0.4"
+                    d="M19 9C19 10.45 18.57 11.78 17.83 12.89C16.75 14.49 15.04 15.62 13.05 15.91C12.71 15.97 12.36 16 12 16C11.64 16 11.29 15.97 10.95 15.91C8.96 15.62 7.25 14.49 6.17 12.89C5.43 11.78 5 10.45 5 9C5 5.13 8.13 2 12 2C15.87 2 19 5.13 19 9Z"
+                    fill="#c7c7c7"
+                  ></path>
+                  <path
+                    d="M21.2491 18.4699L19.5991 18.8599C19.2291 18.9499 18.9391 19.2299 18.8591 19.5999L18.5091 21.0699C18.3191 21.8699 17.2991 22.1099 16.7691 21.4799L11.9991 15.9999L7.2291 21.4899C6.6991 22.1199 5.6791 21.8799 5.4891 21.0799L5.1391 19.6099C5.0491 19.2399 4.7591 18.9499 4.3991 18.8699L2.7491 18.4799C1.9891 18.2999 1.7191 17.3499 2.2691 16.7999L6.1691 12.8999C7.2491 14.4999 8.9591 15.6299 10.9491 15.9199C11.2891 15.9799 11.6391 16.0099 11.9991 16.0099C12.3591 16.0099 12.7091 15.9799 13.0491 15.9199C15.0391 15.6299 16.7491 14.4999 17.8291 12.8999L21.7291 16.7999C22.2791 17.3399 22.0091 18.2899 21.2491 18.4699Z"
+                    fill="#c7c7c7"
+                  ></path>
+                  <path
+                    d="M12.58 5.98L13.17 7.15999C13.25 7.31999 13.46 7.48 13.65 7.51L14.72 7.68999C15.4 7.79999 15.56 8.3 15.07 8.79L14.24 9.61998C14.1 9.75998 14.02 10.03 14.07 10.23L14.31 11.26C14.5 12.07 14.07 12.39 13.35 11.96L12.35 11.37C12.17 11.26 11.87 11.26 11.69 11.37L10.69 11.96C9.96997 12.38 9.53997 12.07 9.72997 11.26L9.96997 10.23C10.01 10.04 9.93997 9.75998 9.79997 9.61998L8.96997 8.79C8.47997 8.3 8.63997 7.80999 9.31997 7.68999L10.39 7.51C10.57 7.48 10.78 7.31999 10.86 7.15999L11.45 5.98C11.74 5.34 12.26 5.34 12.58 5.98Z"
+                    fill="#c7c7c7"
+                  ></path>
+                </g>
+              </svg>
+              <div class="sales-chart__meta__item-wrapper__text-wrapper">
+                <p class="sales-chart__meta__item-wrapper__label">
+                  {{ "sales-report__best-sales" | translate }}
+                </p>
+                <p class="sales-chart__meta__item-wrapper__value">
+                  {{ bestSales }}
+                </p>
+              </div>
+              <div class="sales-chart__meta__item-wrapper__divider"></div>
+            </div>
+
+            <div class="sales-chart__meta__item-wrapper">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    opacity="0.4"
+                    d="M19 9C19 10.45 18.57 11.78 17.83 12.89C16.75 14.49 15.04 15.62 13.05 15.91C12.71 15.97 12.36 16 12 16C11.64 16 11.29 15.97 10.95 15.91C8.96 15.62 7.25 14.49 6.17 12.89C5.43 11.78 5 10.45 5 9C5 5.13 8.13 2 12 2C15.87 2 19 5.13 19 9Z"
+                    fill="#c7c7c7"
+                  ></path>
+                  <path
+                    d="M21.2491 18.4699L19.5991 18.8599C19.2291 18.9499 18.9391 19.2299 18.8591 19.5999L18.5091 21.0699C18.3191 21.8699 17.2991 22.1099 16.7691 21.4799L11.9991 15.9999L7.2291 21.4899C6.6991 22.1199 5.6791 21.8799 5.4891 21.0799L5.1391 19.6099C5.0491 19.2399 4.7591 18.9499 4.3991 18.8699L2.7491 18.4799C1.9891 18.2999 1.7191 17.3499 2.2691 16.7999L6.1691 12.8999C7.2491 14.4999 8.9591 15.6299 10.9491 15.9199C11.2891 15.9799 11.6391 16.0099 11.9991 16.0099C12.3591 16.0099 12.7091 15.9799 13.0491 15.9199C15.0391 15.6299 16.7491 14.4999 17.8291 12.8999L21.7291 16.7999C22.2791 17.3399 22.0091 18.2899 21.2491 18.4699Z"
+                    fill="#c7c7c7"
+                  ></path>
+                  <path
+                    d="M12.58 5.98L13.17 7.15999C13.25 7.31999 13.46 7.48 13.65 7.51L14.72 7.68999C15.4 7.79999 15.56 8.3 15.07 8.79L14.24 9.61998C14.1 9.75998 14.02 10.03 14.07 10.23L14.31 11.26C14.5 12.07 14.07 12.39 13.35 11.96L12.35 11.37C12.17 11.26 11.87 11.26 11.69 11.37L10.69 11.96C9.96997 12.38 9.53997 12.07 9.72997 11.26L9.96997 10.23C10.01 10.04 9.93997 9.75998 9.79997 9.61998L8.96997 8.79C8.47997 8.3 8.63997 7.80999 9.31997 7.68999L10.39 7.51C10.57 7.48 10.78 7.31999 10.86 7.15999L11.45 5.98C11.74 5.34 12.26 5.34 12.58 5.98Z"
+                    fill="#c7c7c7"
+                  ></path>
+                </g>
+              </svg>
+              <div class="sales-chart__meta__item-wrapper__text-wrapper">
+                <p class="sales-chart__meta__item-wrapper__label">
+                  {{ "sales-report__best-brand" | translate }}
+                </p>
+                <p class="sales-chart__meta__item-wrapper__value">
+                  {{ bestBrand }}
+                </p>
+              </div>
+              <div class="sales-chart__meta__item-wrapper__divider"></div>
+            </div>
+
+            <div class="sales-chart__meta__item-wrapper">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    opacity="0.4"
+                    d="M19 9C19 10.45 18.57 11.78 17.83 12.89C16.75 14.49 15.04 15.62 13.05 15.91C12.71 15.97 12.36 16 12 16C11.64 16 11.29 15.97 10.95 15.91C8.96 15.62 7.25 14.49 6.17 12.89C5.43 11.78 5 10.45 5 9C5 5.13 8.13 2 12 2C15.87 2 19 5.13 19 9Z"
+                    fill="#c7c7c7"
+                  ></path>
+                  <path
+                    d="M21.2491 18.4699L19.5991 18.8599C19.2291 18.9499 18.9391 19.2299 18.8591 19.5999L18.5091 21.0699C18.3191 21.8699 17.2991 22.1099 16.7691 21.4799L11.9991 15.9999L7.2291 21.4899C6.6991 22.1199 5.6791 21.8799 5.4891 21.0799L5.1391 19.6099C5.0491 19.2399 4.7591 18.9499 4.3991 18.8699L2.7491 18.4799C1.9891 18.2999 1.7191 17.3499 2.2691 16.7999L6.1691 12.8999C7.2491 14.4999 8.9591 15.6299 10.9491 15.9199C11.2891 15.9799 11.6391 16.0099 11.9991 16.0099C12.3591 16.0099 12.7091 15.9799 13.0491 15.9199C15.0391 15.6299 16.7491 14.4999 17.8291 12.8999L21.7291 16.7999C22.2791 17.3399 22.0091 18.2899 21.2491 18.4699Z"
+                    fill="#c7c7c7"
+                  ></path>
+                  <path
+                    d="M12.58 5.98L13.17 7.15999C13.25 7.31999 13.46 7.48 13.65 7.51L14.72 7.68999C15.4 7.79999 15.56 8.3 15.07 8.79L14.24 9.61998C14.1 9.75998 14.02 10.03 14.07 10.23L14.31 11.26C14.5 12.07 14.07 12.39 13.35 11.96L12.35 11.37C12.17 11.26 11.87 11.26 11.69 11.37L10.69 11.96C9.96997 12.38 9.53997 12.07 9.72997 11.26L9.96997 10.23C10.01 10.04 9.93997 9.75998 9.79997 9.61998L8.96997 8.79C8.47997 8.3 8.63997 7.80999 9.31997 7.68999L10.39 7.51C10.57 7.48 10.78 7.31999 10.86 7.15999L11.45 5.98C11.74 5.34 12.26 5.34 12.58 5.98Z"
+                    fill="#c7c7c7"
+                  ></path>
+                </g>
+              </svg>
+              <div class="sales-chart__meta__item-wrapper__text-wrapper">
+                <p class="sales-chart__meta__item-wrapper__label">
+                  {{ "sales-report__best-type" | translate }}
+                </p>
+                <p class="sales-chart__meta__item-wrapper__value">
+                  {{ bestType }}
+                </p>
+              </div>
+              <div class="sales-chart__meta__item-wrapper__divider"></div>
+            </div>
           </div>
-        </div>
-        <div class="row" [@slideInOutAnimation]="index == 1 ? 'in' : 'out'">
-          <div class="col-xl-2 col-lg-3 col-md-4">
-            <canvas
-              *ngIf="!isLoading && typeChartData[0].data.length > 0"
-              ngChartjs
-              [datasets]="typeChartData"
-              [labels]="typeChartLabels"
-              [options]="typeChartOptions"
-              [legend]="typeChartLegend"
-              [chartType]="typeChartType"
-            ></canvas>
+          <div class="sales-chart__meta__legend">
+            <div class="legend__wrapper">
+              <div class="legend value"></div>
+              <span class="legend__label">
+                {{ "sales-report__value" | translate }}
+              </span>
+            </div>
+            <div class="legend__wrapper">
+              <div class="legend transaction"></div>
+              <span class="legend__label">
+                {{ "sales-report__transaction" | translate }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="col-xl-4 col-lg-4 col-md-10 col-12">
+      <div class="dashboard-card"></div>
     </div>
   </div>
 </div>

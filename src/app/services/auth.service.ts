@@ -198,7 +198,6 @@ export class AuthService {
 
   getSelfAvatar(): any | null {
     const storedAvatar = localStorage.getItem('user_avatar');
-    console.log(storedAvatar);
     if (storedAvatar == null || storedAvatar == undefined) {
       return null;
     } else {

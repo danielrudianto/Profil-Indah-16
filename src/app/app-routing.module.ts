@@ -52,7 +52,12 @@ import { PriceComponent } from './presentation/pages/price/price.component';
 import { PriceSalesComponent } from './presentation/pages/price/price-sales/price-sales.component';
 import { PricePurchaseComponent } from './presentation/pages/price/price-purchase/price-purchase.component';
 import { AuthGuard } from './guards/auth.guard';
-import { AdministratorGuard } from './guards/administrator.guard';
+import {
+  AdministratorGuard,
+  GeneralGuard,
+  PurchasingGuard,
+  SalesGuard,
+} from './guards/administrator.guard';
 import { AdjustmentCaseConfirmComponent } from './presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm.component';
 import { PurchaseInvoiceConfirmViewComponent } from './presentation/pages/purchase-invoice/purchase-invoice-confirm-view/purchase-invoice-confirm-view.component';
 import { DepositConfirmComponent } from './presentation/pages/deposit/deposit-confirm/deposit-confirm.component';
@@ -294,6 +299,7 @@ const routes: Routes = [
       {
         path: 'Purchasing',
         component: PurchasingComponent,
+        canActivate: [PurchasingGuard],
         children: [
           {
             path: '',
@@ -360,6 +366,7 @@ const routes: Routes = [
       {
         path: 'Sales',
         component: SalesComponent,
+        canActivate: [SalesGuard],
         children: [
           {
             path: '',
@@ -422,6 +429,7 @@ const routes: Routes = [
       {
         path: 'General',
         component: GeneralComponent,
+        canActivate: [GeneralGuard],
         children: [
           {
             path: '',
@@ -430,6 +438,24 @@ const routes: Routes = [
           {
             path: 'Expense',
             component: ExpenseComponent,
+            children: [
+              {
+                path: '',
+                component: ExpenseCreateComponent,
+              },
+              {
+                path: 'Mutation',
+                component: ExpenseMutationComponent,
+              },
+              {
+                path: 'Report',
+                component: ExpenseReportComponent,
+              },
+              {
+                path: '**',
+                redirectTo: '',
+              },
+            ],
           },
           {
             path: 'Company',
@@ -440,12 +466,12 @@ const routes: Routes = [
             component: PaymentMethodComponent,
           },
           {
-            path: 'Expense',
-            component: ExpenseComponent,
-          },
-          {
             path: 'Stock',
             component: StockListComponent,
+          },
+          {
+            path: 'Expense-type',
+            component: ExpenseTypeComponent,
           },
         ],
       },

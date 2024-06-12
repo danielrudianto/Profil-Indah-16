@@ -50,10 +50,39 @@ export class DashboardComponent implements OnInit {
         'The General Dashboard is accessible only by specific staff and includes features for managing companies, payment methods, expense types, expenses, inadequate stock, stock levels, money receipts, and problematic items. It offers a comprehensive overview to streamline operations and ensure efficient handling of key business processes.',
     },
   ];
+
+  enabledDashboards: DashboardCard[] = [];
   ngOnInit(): void {
     this.name =
       this.authService.getUserInfo() == null
         ? ''
         : this.authService.getUserInfo()!.name;
+
+    switch (this.authService.getUserInfo()?.role) {
+      case 1:
+        this.enabledDashboards = this.availableDashboards.filter(
+          (x) => x.title == 'Purchasing'
+        );
+        break;
+      case 2:
+        this.enabledDashboards = this.availableDashboards.filter(
+          (x) => x.title == 'Sales'
+        );
+        break;
+      case 3:
+        this.enabledDashboards = this.availableDashboards.filter(
+          (x) =>
+            x.title == 'Sales' ||
+            x.title == 'General' ||
+            x.title == 'Purchasing'
+        );
+        break;
+      case 5:
+        this.enabledDashboards = this.availableDashboards;
+        break;
+      case 6:
+        this.enabledDashboards = [];
+        break;
+    }
   }
 }

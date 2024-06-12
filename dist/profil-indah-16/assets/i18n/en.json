@@ -602,5 +602,13 @@
   "stock-card__document__type__good-receipt": "Good receipt",
   "stock-card__document__reference": "Reference",
   "stock-card__document__description": "Description",
-  "stock-card__document__quantity": "Quantity"
+  "stock-card__document__quantity": "Quantity",
+  "sales-report__sales-chart__title": "Monthly sales",
+  "sales-report__transactions": "transactions",
+  "sales-report__value": "Value",
+  "sales-report__customer": "Customer",
+  "sales-report__best-sales": "Best seller",
+  "sales-report__best-brand": "Best-seller brand",
+  "sales-report__best-type": "Best-seller type",
+  "sales-report__transaction": "Trans. count"
 }

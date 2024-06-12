@@ -602,5 +602,13 @@
   "stock-card__document__type__good-receipt": "Penerimaan barang",
   "stock-card__document__reference": "Referensi",
   "stock-card__document__description": "Deskripsi",
-  "stock-card__document__quantity": "Jumlah"
+  "stock-card__document__quantity": "Jumlah",
+  "sales-report__sales-chart__title": "Penjualan per bulan",
+  "sales-report__transactions": "transaksi",
+  "sales-report__value": "Nominal",
+  "sales-report__customer": "Konsumen",
+  "sales-report__best-sales": "Sales terlaris",
+  "sales-report__best-brand": "Merek terlaris",
+  "sales-report__best-type": "Tipe terlaris",
+  "sales-report__transaction": "Jml. transaksi"
 }
