@@ -16,7 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
-import { Subject } from 'rxjs';
+import { Subject, debounceTime } from 'rxjs';
 import { Customer } from 'src/app/models/customer.model';
 import { PackageSelectorComponent } from 'src/app/presentation/components/package-selector/package-selector.component';
 import { PaymentSelectorComponent } from 'src/app/presentation/components/payment-selector/payment-selector.component';
@@ -31,7 +31,6 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { v4 } from 'uuid';
-import { SalesInvoiceSuccessComponent } from '../sales-invoice-success/sales-invoice-success.component';
 
 @Component({
   selector: 'app-sales-invoice-create',
@@ -291,14 +290,16 @@ export class SalesInvoiceCreateComponent {
       }
     });
 
-    this.metaFormGroup.controls['sales'].valueChanges.subscribe((_) => {
-      this.fetchSalesmen();
-    });
+    this.metaFormGroup.controls['sales'].valueChanges
+      .pipe(debounceTime(500))
+      .subscribe((_) => {
+        this.fetchSalesmen();
+      });
   }
 
   fetchSalesmen() {
     this.apiService
-      .get('salesman', {
+      .get('sales-invoice/salesman', {
         keyword: this.metaFormGroup.controls['sales'].value,
         page: 1,
       })
@@ -343,7 +344,7 @@ export class SalesInvoiceCreateComponent {
               ],
               reference: [data.item.reference, Validators.required],
               description: [data.item.description, Validators.required],
-              quantity: [0, [Validators.required, Validators.min(0.01)]],
+              quantity: ['', [Validators.required, Validators.min(0.01)]],
               initial_price: [
                 data.price == null ? data.item.price : data.price.price,
               ],
@@ -692,12 +693,21 @@ export class SalesInvoiceCreateComponent {
         next: (result: any) => {
           const type = this.metaFormGroup.controls['type'].value;
           if (type == 'sales') {
-            this.dynamicComponentService.createDynamicComponent(
-              SalesInvoiceSuccessComponent,
-              result
+            this.alertService.showSuccess(
+              `${this.translateService.instant(
+                'sales-invoice__success__prefix'
+              )} ${result.name} ${this.translateService.instant(
+                'sales-invoice__success__suffix'
+              )}`
             );
           } else {
-            this.alertService.showSuccess('Deposit successfully created.');
+            this.alertService.showSuccess(
+              `${this.translateService.instant(
+                'sales-invoice__success__prefix__deposit'
+              )} ${result.name} ${this.translateService.instant(
+                'sales-invoice__success__suffix'
+              )}`
+            );
           }
 
           this.t.clear();

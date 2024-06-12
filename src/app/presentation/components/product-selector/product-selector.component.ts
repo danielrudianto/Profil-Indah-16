@@ -1,5 +1,13 @@
-import { Component, Inject, Input, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  Inject,
+  Input,
+  ViewChild,
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { debounceTime } from 'rxjs';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { AlertService } from 'src/app/services/alert.service';
@@ -22,10 +30,25 @@ export class ProductSelectorComponent {
   constructor(
     private dataService: ApiService,
     private alertService: AlertService,
-    private dynamicComponentService: DynamicComponentService
-  ) {}
+    private dynamicComponentService: DynamicComponentService,
+    private _hotKeysService: HotkeysService
+  ) {
+    this._hotKeysService.add([
+      new Hotkey('esc', (event: KeyboardEvent): boolean => {
+        this.closeDialog();
+        return false; // Prevent bubbling
+      }),
+    ]);
+  }
 
   @Input('data') data: any;
+  @ViewChild('searchBarInput') searchBarInput?: ElementRef;
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      this.closeDialog();
+    }
+  }
 
   dataSource: any[] = [];
   dataCount: number = 0;
@@ -45,6 +68,10 @@ export class ProductSelectorComponent {
         this.page = 1;
         this.fetchItems(1, value);
       });
+  }
+
+  ngAfterViewInit(): void {
+    this.searchBarInput?.nativeElement.focus();
   }
 
   selectItem(data: any) {

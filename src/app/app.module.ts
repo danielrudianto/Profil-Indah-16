@@ -191,7 +191,6 @@ import { PackageListComponent } from './presentation/pages/package/package-list/
 import { PackageUpdateComponent } from './presentation/pages/package/package-update/package-update.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { UpdatePackageSalesPriceComponent } from './presentation/components/update-package-sales-price/update-package-sales-price.component';
-import { SalesInvoiceSuccessComponent } from './presentation/pages/sales-invoice/sales-invoice-success/sales-invoice-success.component';
 import { ReportSalesComponent } from './presentation/pages/report-sales/report-sales.component';
 import { NgChartjsModule } from 'ng-chartjs';
 import { NgChartsModule } from 'ng2-charts';
@@ -340,7 +339,6 @@ import { ReceivableViewComponent } from './presentation/pages/receivable/receiva
     PackageListComponent,
     PackageUpdateComponent,
     UpdatePackageSalesPriceComponent,
-    SalesInvoiceSuccessComponent,
     ReportSalesComponent,
     GoodReceiptArchiveFilterComponent,
     StockCardComponent,

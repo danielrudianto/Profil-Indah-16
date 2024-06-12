@@ -501,6 +501,9 @@
   "sales-invoice__success__name": "Faktur penjualan",
   "sales-invoice__success__copied": "Berhasil di salin",
   "sales-invoice__success__close": "Tutup",
+  "sales-invoice__success__prefix": "Faktur penjualan",
+  "sales-invoice__success__suffix": "berhasil ditambahkan",
+  "sales-invoice__success__prefix__deposit": "Deposit",
   "update-product-sales-price__title": "Perbaharui harga penjualan produk",
   "update-product-sales-price__price": "Harga",
   "update-product-sales-price__discount": "Diskon",
@@ -574,5 +577,7 @@
   "purchase-invoice__delete__header": "Hapus faktur pembelian",
   "purchase-invoice__confirm__delete__title": "Apakah anda yakin untuk menghapus faktur pembelian ini?",
   "purchase-invoice__confirm__confirm__success": "Faktur pembelian dikonfirmasi.",
-  "purchase-invoice__confirm__delete__success": "Faktur pembelian dihapus."
+  "purchase-invoice__confirm__delete__success": "Faktur pembelian dihapus.",
+  "salesman-selector__title": "Pilih sales",
+  "salesman-selector__delete": "Hapus"
 }

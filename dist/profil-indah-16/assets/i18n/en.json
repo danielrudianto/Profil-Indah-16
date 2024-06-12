@@ -501,6 +501,9 @@
   "sales-invoice__success__name": "Sales invoice",
   "sales-invoice__success__copied": "Copied to clipboard",
   "sales-invoice__success__close": "Close",
+  "sales-invoice__success__prefix": "Sales invoice",
+  "sales-invoice__success__suffix": "successfully created",
+  "sales-invoice__success__prefix__deposit": "Deposit",
   "update-product-sales-price__title": "Update product sales price",
   "update-product-sales-price__price": "Price",
   "update-product-sales-price__discount": "Discount",
@@ -574,5 +577,7 @@
   "purchase-invoice__delete__header": "Delete purchase invoice",
   "purchase-invoice__confirm__delete__title": "Are you sure to delete this purchase invoice?",
   "purchase-invoice__confirm__confirm__success": "Purchase invoice confirmed successfully.",
-  "purchase-invoice__confirm__delete__success": "Purchase invoice deleted successfully."
+  "purchase-invoice__confirm__delete__success": "Purchase invoice deleted successfully.",
+  "salesman-selector__title": "Salesman list",
+  "salesman-selector__delete": "Delete"
 }
