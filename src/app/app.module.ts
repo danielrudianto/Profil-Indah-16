@@ -205,6 +205,11 @@ import { ReceivablePaymentCreateComponent } from './presentation/pages/receivabl
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { StockCardViewComponent } from './presentation/pages/stock-list/stock-card/stock-card-view/stock-card-view.component';
 import { SalesChartComponent } from './presentation/components/charts/sales-chart/sales-chart.component';
+import { CustomerSalesChartComponent } from './presentation/pages/report-sales/customer-sales-chart/customer-sales-chart.component';
+import { BrandSalesChartComponent } from './presentation/pages/report-sales/brand-sales-chart/brand-sales-chart.component';
+import { TypeSalesChartComponent } from './presentation/pages/report-sales/type-sales-chart/type-sales-chart.component';
+import { SalesSalesChartComponent } from './presentation/pages/report-sales/sales-sales-chart/sales-sales-chart.component';
+import { MatRippleModule } from '@angular/material/core';
 @NgModule({
   declarations: [
     ShortNumberPipe,
@@ -354,6 +359,10 @@ import { SalesChartComponent } from './presentation/components/charts/sales-char
     ReceivablePaymentCreateComponent,
     StockCardViewComponent,
     SalesChartComponent,
+    CustomerSalesChartComponent,
+    BrandSalesChartComponent,
+    TypeSalesChartComponent,
+    SalesSalesChartComponent,
   ],
   imports: [
     BrowserModule,
@@ -401,6 +410,7 @@ import { SalesChartComponent } from './presentation/components/charts/sales-char
     }),
     HotkeyModule.forRoot(),
     NgChartsModule,
+    MatRippleModule,
   ],
   providers: [
     {

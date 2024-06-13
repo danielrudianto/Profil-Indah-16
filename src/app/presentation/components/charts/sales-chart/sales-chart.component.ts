@@ -17,6 +17,7 @@ export class SalesChartComponent {
   @Input('data') data!: any[];
 
   dates: number[] = [];
+  columnNumber: number = 3;
 
   ngOnInit(): void {
     for (let i = 0; i < this.maxDate; i++) {

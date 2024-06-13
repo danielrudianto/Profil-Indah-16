@@ -13,6 +13,7 @@ import {
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { Subject } from 'rxjs';
 import { Customer } from 'src/app/models/customer.model';
@@ -39,7 +40,8 @@ export class DepositConfirmComponent {
     private datePipe: DatePipe,
     private sheet: MatBottomSheet,
     private dynamicComponentService: DynamicComponentService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private translateService: TranslateService
   ) {
     this._hotkeysService.add([
       new Hotkey('alt+s', (event: KeyboardEvent): boolean => {
@@ -52,7 +54,9 @@ export class DepositConfirmComponent {
           this.submitForm();
         } else {
           console.error(`[error]: ${this.metaFormGroup.errors}`);
-          this.alertService.showSuccess('Please check your input.');
+          this.alertService.showSuccess(
+            this.translateService.instant('general__error__input')
+          );
         }
         return false;
       }),
@@ -114,6 +118,7 @@ export class DepositConfirmComponent {
     immediate_payment: new FormControl(true),
     due_time: new FormControl(30, [Validators.required, Validators.min(0)]),
     payments: new FormArray([]),
+    billPayments: new FormArray([]),
   });
 
   valueFormGroup: FormGroup = new FormGroup(
@@ -338,7 +343,6 @@ export class DepositConfirmComponent {
     else {
       let total = 0;
       this.p.controls.forEach((x) => {
-        console.log(x);
         total += Number(x.get('usedAmount')?.value ?? 0);
       });
 
@@ -362,6 +366,21 @@ export class DepositConfirmComponent {
     );
   }
 
+  get subTotalBill(): number {
+    // Calculate the total bill by adding the total value, delivery fee,
+    return this.t.controls.reduce((acc, curr) => {
+      if (curr.get('checked')?.value) {
+        return (
+          acc +
+          Number(curr.get('quantity')?.value) *
+            (curr.get('price')?.value - curr.get('discount')?.value)
+        );
+      } else {
+        return acc;
+      }
+    }, 0);
+  }
+
   viewSalesman() {
     this.dynamicComponentService.createDynamicComponent(
       SalesmanSelectorComponent,
@@ -381,38 +400,26 @@ export class DepositConfirmComponent {
       next: (data) => {
         if (
           this.p.controls.filter(
-            (x) => x.get('payment_type_id')?.value == data.id
+            (x) => x.get('payment_method_id')?.value == data.id
+          ).length > 0 ||
+          this.pb.controls.filter(
+            (x) => x.get('payment_method_id')?.value == data.id
           ).length > 0
         ) {
-          this.alertService.showSuccess('Payment already exists!');
+          this.alertService.showSuccess(
+            this.translateService.instant('general__payment__exists')
+          );
           return;
         } else {
-          if (this.p.length == 0) {
-            const requiredPayment =
-              this.valueFormGroup.controls['total'].value -
-              this.valueFormGroup.controls['discount'].value +
-              this.valueFormGroup.controls['delivery'].value +
-              this.valueFormGroup.controls['service'].value;
-            this.p.push(
-              new FormGroup({
-                payment_type_id: new FormControl(data.id, Validators.required),
-                payment_method_name: new FormControl(data.name),
-                payment_method_description: new FormControl(data.description),
-                amount: new FormControl(requiredPayment, [Validators.required]),
-                usedAmount: new FormControl(0, Validators.required),
-              })
-            );
-          } else {
-            this.p.push(
-              new FormGroup({
-                payment_type_id: new FormControl(data.id, Validators.required),
-                payment_method_name: new FormControl(data.name),
-                payment_method_description: new FormControl(data.description),
-                amount: new FormControl(0, [Validators.required]),
-                usedAmount: new FormControl(0, Validators.required),
-              })
-            );
-          }
+          this.pb.push(
+            this.formBuilder.group({
+              payment_method_id: [data.id, Validators.required],
+              name: [data.name, Validators.required],
+              description: [data.description, Validators.required],
+              date: new FormControl(new Date(), Validators.required),
+              payment_value: [0, Validators.required],
+            })
+          );
         }
       },
     });
@@ -466,168 +473,7 @@ export class DepositConfirmComponent {
     this.p.removeAt(i);
   }
 
-  submitForm() {
-    if (
-      this.metaFormGroup.invalid ||
-      this.billFormGroup.invalid ||
-      this.valueFormGroup.invalid ||
-      this.paymentsFormGroup.invalid ||
-      (this.metaFormGroup.get('type')?.value == 'sales' &&
-        this.totalPayment == 0 &&
-        this.paymentsFormGroup.controls['immediate_payment'].value) ||
-      this.totalPayment >
-        this.valueFormGroup.controls['total'].value +
-          this.valueFormGroup.controls['delivery'].value +
-          this.valueFormGroup.controls['service'].value -
-          this.valueFormGroup.controls['discount'].value
-    ) {
-      console.error(`[errror]: ${this.metaFormGroup.errors}`);
-      this.alertService.showSuccess('Please check your input.');
-      return;
-    }
-
-    this.isSubmitting = true;
-
-    const bill: any[] = [];
-    const date = this.metaFormGroup.controls['date'].value;
-
-    this.t.controls.forEach((x) => {
-      if (!x.get('package_code_id')) {
-        const item_id = Number(x.get('item_id')?.value ?? '0');
-        const item_unit_id =
-          x.get('item_unit_id')?.value == null
-            ? null
-            : Number(x.get('item_unit_id')?.value ?? '0');
-        const price = Number(x.get('price')?.value ?? '0');
-        const discount = Number(x.get('discount')?.value ?? '0');
-        const quantity = Number(x.get('quantity')?.value ?? '0');
-
-        bill.push({
-          price: price,
-          discount: discount,
-          quantity: quantity,
-          package_code_id: null,
-          item_unit_id: item_unit_id,
-          item_id: item_id,
-          save:
-            x.get('initial_price')?.value == x.get('price')?.value &&
-            x.get('initial_discount')?.value == x.get('discount')?.value
-              ? false
-              : x.get('save_price')?.value,
-        });
-      } else {
-        const package_code_id = parseInt(x.get('package_code_id')?.value);
-        const quantity = parseFloat(x.get('quantity')?.value);
-        const price = parseFloat(x.get('price')?.value);
-
-        bill.push({
-          price: price,
-          discount: 0,
-          quantity: quantity,
-          package_code_id: package_code_id,
-          item_unit_id: null,
-          item_id: null,
-          save:
-            x.get('initial_price')?.value == x.get('price')?.value
-              ? false
-              : x.get('save_price')?.value,
-        });
-      }
-    });
-
-    const totalPayment = this.p.controls.reduce((a, b) => {
-      return a + parseFloat(b.get('payment_value')?.value);
-    }, 0);
-
-    const bill_code = {
-      sales:
-        this.metaFormGroup.controls['sales'].value == 'INTERNAL'
-          ? null
-          : this.metaFormGroup.controls['sales'].value,
-      uuid: this.metaFormGroup.controls['uuid'].value,
-      date: this.datePipe.transform(date, 'yyyy-MM-dd'),
-      customer_id:
-        this.metaFormGroup.controls['customer_id'].value == 0
-          ? null
-          : this.metaFormGroup.controls['customer_id'].value,
-      type: this.metaFormGroup.controls['type'].value,
-      discount: this.valueFormGroup.controls['discount'].value,
-      delivery: this.valueFormGroup.controls['delivery'].value,
-      service: this.valueFormGroup.controls['service'].value,
-      bill: bill,
-      payment_term:
-        this.totalBill > this.totalPayment
-          ? null
-          : this.paymentsFormGroup.controls['due_time'].value,
-      payments: !this.paymentsFormGroup.controls['immediate_payment'].value
-        ? []
-        : this.p.controls.map((x) => {
-            return {
-              payment_method_id: Number(x.get('payment_type_id')?.value ?? '0'),
-              value: Number(x.get('payment_value')?.value ?? '0'),
-            };
-          }),
-      is_paid:
-        this.paymentsFormGroup.controls['immediate_payment'].value &&
-        totalPayment ==
-          this.valueFormGroup.controls['total'].value +
-            this.valueFormGroup.controls['delivery'].value +
-            this.valueFormGroup.controls['service'].value -
-            this.valueFormGroup.controls['discount'].value
-          ? true
-          : this.paymentsFormGroup.controls['immediate_payment'].value &&
-            totalPayment <
-              this.valueFormGroup.controls['total'].value +
-                this.valueFormGroup.controls['delivery'].value +
-                this.valueFormGroup.controls['service'].value -
-                this.valueFormGroup.controls['discount'].value
-          ? false
-          : false,
-    };
-
-    this.apiService
-      .post('sales-invoice', bill_code)
-      .subscribe({
-        next: () => {
-          const type = this.metaFormGroup.controls['type'].value;
-          if (type == 'sales') {
-            this.alertService.showSuccess('Bill successfully created.');
-          } else {
-            this.alertService.showSuccess('Deposit successfully created.');
-          }
-
-          this.t.clear();
-          this.valueFormGroup.reset();
-          this.billFormGroup.reset();
-          this.valueFormGroup.patchValue({
-            discount: 0,
-            service: 0,
-            delivery: 0,
-            total: 0,
-            before: 0,
-          });
-          this.metaFormGroup.patchValue({
-            uuid: v4(),
-            sales: '',
-            date: new Date(),
-            type: 'sales',
-          });
-
-          this.paymentsFormGroup.patchValue({
-            immediate_payment: true,
-            due_time: 30,
-          });
-
-          this.p.clear();
-        },
-        error: (error) => {
-          this.alertService.showError(error);
-        },
-      })
-      .add(() => {
-        this.isSubmitting = false;
-      });
-  }
+  submitForm() {}
 
   canExit() {
     if (

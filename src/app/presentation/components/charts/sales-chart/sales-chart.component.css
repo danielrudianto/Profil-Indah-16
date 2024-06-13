@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: row;
   gap: var(--width);
+  position: relative;
 }
 
 .sales-chart__bar__wrapper {

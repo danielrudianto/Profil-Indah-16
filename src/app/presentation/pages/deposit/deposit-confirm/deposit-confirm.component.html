@@ -256,8 +256,65 @@
 </div>
 <div class="d-flex">
   <div class="d-flex position-relative">
+    <app-vertical-divider></app-vertical-divider>
+    <app-box-stepper step="4" [valid]="billFormGroup.valid"></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <form [formGroup]="valueFormGroup">
+      <h5>{{ "deposit__confirm__payment-data" | translate }}</h5>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{{ "deposit__payment__date" | translate }}</th>
+              <th>{{ "deposit__payment__payment-method" | translate }}</th>
+              <th>{{ "deposit__payment__amount" | translate }}</th>
+              <th>{{ "deposit__payment__used-amount" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="p.controls.length == 0">
+            <tr>
+              <td colspan="4">
+                <empty-table />
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="p.controls.length > 0">
+            <tr
+              *ngFor="let item of p.controls; let i = index"
+              [formGroup]="getFormGroupAtPayment(i)"
+            >
+              <td>
+                {{ item.get("date")?.value | date : "dd/MM/yyyy HH:mm" }}
+              </td>
+              <td>{{ item.get("payment_method_name")?.value }}</td>
+              <td>{{ item.get("amount")?.value | number : "0.0-2" }}</td>
+              <td>
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>{{
+                    "deposit__payment__used-amount" | translate
+                  }}</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="usedAmount"
+                    mask="separator"
+                    thousandSeparator=" "
+                  />
+                </mat-form-field>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>{{ "deposit__payment__info" | translate }}</p>
+    </form>
+  </div>
+</div>
+<div class="d-flex">
+  <div class="d-flex position-relative">
     <app-box-stepper
-      step="4"
+      step="5"
       [valid]="totalPayment == valueFormGroup.controls['total'].value"
     ></app-box-stepper>
   </div>
@@ -321,7 +378,7 @@
         >
           <div
             class="payment-card"
-            *ngFor="let payment of p.controls; index as i"
+            *ngFor="let payment of pb.controls; index as i"
           >
             <form [formGroup]="getFormGroupAtPayment(i)">
               <h3 class="mb-0">
@@ -371,7 +428,7 @@
       class="action-button"
       (click)="submitForm()"
     >
-      {{ "depost__view__submit" | translate }}
+      {{ "deposit__view__submit" | translate }}
     </button>
   </div>
 </div>
