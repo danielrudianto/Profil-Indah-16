@@ -1,60 +1,3 @@
-.create-dialog {
-  width: 300px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  max-width: 80vw;
-  max-height: 80vh;
-  background-color: white;
-  border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-}
-
-.create-dialog__content {
-  padding: 1rem;
-  overflow-y: auto;
-  flex-grow: 1;
-}
-
-.create-dialog__footer {
-  padding: 1rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  gap: 1rem;
-}
-
-.create-dialog__footer .previous-button {
-  background-color: transparent;
-  font-family: "Poppins", sans-serif;
-  font-size: 0.85rem;
-  padding: 0.25rem 0.75rem;
-  outline: none;
-  border: none;
-  color: #0b57d0;
-  font-weight: 400;
-}
-
-.create-dialog__footer .next-button {
-  background-color: #0b57d0;
-  font-family: "Poppins", sans-serif;
-  font-size: 0.85rem;
-  padding: 0.25rem 0.75rem;
-  outline: none;
-  border: none;
-  color: white;
-  font-weight: 400;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.create-dialog__footer .next-button:disabled {
-  background-color: #354f7d38;
-  cursor: not-allowed;
-}
-
 .button {
   background-color: #0b57d0;
   font-family: "Poppins", sans-serif;
@@ -115,28 +58,4 @@ h6 {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-@media screen and (max-width: 576px) {
-  .create-dialog {
-    width: 300px;
-  }
-}
-
-@media screen and (min-width: 576px) {
-  .create-dialog {
-    width: 500px;
-  }
-}
-
-@media screen and (min-width: 992px) {
-  .create-dialog {
-    width: 700px;
-  }
-}
-
-@media screen and (min-width: 1200px) {
-  .create-dialog {
-    width: 800px;
-  }
 }

@@ -64,8 +64,15 @@ import { DepositConfirmComponent } from './presentation/pages/deposit/deposit-co
 import { PackageListComponent } from './presentation/pages/package/package-list/package-list.component';
 import { PackageCreateComponent } from './presentation/pages/package/package-create/package-create.component';
 import { PackageUpdateComponent } from './presentation/pages/package/package-update/package-update.component';
-import { ReportSalesComponent } from './presentation/pages/report-sales/report-sales.component';
 import { StockCardComponent } from './presentation/pages/stock-list/stock-card/stock-card.component';
+import { ReportComponent } from './presentation/pages/report/report.component';
+import { ReportSalesComponent } from './presentation/pages/report/report-sales/report-sales.component';
+import { ReportPurchaseComponent } from './presentation/pages/report/report-purchase/report-purchase.component';
+import { ReportFinanceComponent } from './presentation/pages/report/report-finance/report-finance.component';
+import { ReportMoneyComponent } from './presentation/pages/report/report-money/report-money.component';
+import { SalesReturnComponent } from './presentation/pages/sales-return/sales-return.component';
+import { SalesReturnCreateComponent } from './presentation/pages/sales-return/sales-return-create/sales-return-create.component';
+import { SalesReturnArchiveComponent } from './presentation/pages/sales-return/sales-return-archive/sales-return-archive.component';
 
 const routes: Routes = [
   {
@@ -197,8 +204,8 @@ const routes: Routes = [
                 component: SalesInvoiceArchiveComponent,
               },
               {
-                path: 'Search',
-                component: SalesInvoiceSearchComponent,
+                path: '**',
+                redirectTo: '',
               },
             ],
           },
@@ -251,6 +258,24 @@ const routes: Routes = [
             ],
           },
           {
+            path: 'Sales-return',
+            component: SalesReturnComponent,
+            children: [
+              {
+                path: '',
+                component: SalesReturnCreateComponent,
+              },
+              {
+                path: 'Archive',
+                component: SalesReturnArchiveComponent,
+              },
+              {
+                path: '**',
+                redirectTo: '',
+              },
+            ],
+          },
+          {
             path: 'Expense',
             component: ExpenseComponent,
             children: [
@@ -291,8 +316,26 @@ const routes: Routes = [
             ],
           },
           {
-            path: 'Report/Sales',
-            component: ReportSalesComponent,
+            path: 'Report',
+            component: ReportComponent,
+            children: [
+              {
+                path: 'Sales',
+                component: ReportSalesComponent,
+              },
+              {
+                path: 'Purchase',
+                component: ReportPurchaseComponent,
+              },
+              {
+                path: 'Money',
+                component: ReportMoneyComponent,
+              },
+              {
+                path: '**',
+                redirectTo: '/Administrator',
+              },
+            ],
           },
         ],
       },
@@ -379,6 +422,20 @@ const routes: Routes = [
           {
             path: 'Package',
             component: PackageComponent,
+            children: [
+              {
+                path: '',
+                component: PackageListComponent,
+              },
+              {
+                path: 'Create',
+                component: PackageCreateComponent,
+              },
+              {
+                path: 'Edit/:id',
+                component: PackageUpdateComponent,
+              },
+            ],
           },
           {
             path: 'Stock',
@@ -421,6 +478,20 @@ const routes: Routes = [
               {
                 path: '**',
                 redirectTo: '',
+              },
+            ],
+          },
+          {
+            path: 'Price',
+            component: PriceComponent,
+            children: [
+              {
+                path: 'Sales',
+                component: PriceSalesComponent,
+              },
+              {
+                path: '**',
+                redirectTo: 'Sales',
               },
             ],
           },

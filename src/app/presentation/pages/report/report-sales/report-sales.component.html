@@ -17,7 +17,18 @@
           {{ "sales-report__transactions" | translate }}
         </p>
         <div class="sales-chart__wrapper">
-          <app-sales-chart [maxDate]="31" [data]="chartDataSource" />
+          <app-sales-chart
+            [maxDate]="maxDayOnMonth"
+            [data]="chartDataSource"
+            style="height: 100%"
+            [@slideInOutAnimation]="chartType == 0 ? 'in' : 'out'"
+          />
+          <app-sales-value-chart
+            [maxDate]="maxDayOnMonth"
+            [data]="chartDataSource"
+            style="height: 100%"
+            [@slideInOutAnimation]="chartType == 1 ? 'in' : 'out'"
+          />
         </div>
         <div class="sales-chart__meta-wrapper">
           <div class="sales-chart__meta__data-wrapper">
@@ -223,7 +234,12 @@
         <!-- Date picker for month and year -->
         <mat-form-field class="w-100" appearance="outline">
           <mat-label>{{ "sales-report__date" | translate }}</mat-label>
-          <input matInput [matDatepicker]="dp" [formControl]="date" />
+          <input
+            matInput
+            [matDatepicker]="dp"
+            [formControl]="date"
+            [readonly]="isLoading || isSubmitting"
+          />
           <mat-hint>MM/YYYY</mat-hint>
           <mat-datepicker-toggle
             matIconSuffix
@@ -245,6 +261,26 @@
         >
           {{ "sales-report__download" | translate }}
         </button>
+
+        <mat-divider class="mb-4 mt-2" />
+        <h5>{{ "report-sales__chart-configuration" | translate }}</h5>
+
+        <mat-radio-group
+          aria-label="Select an option"
+          [disabled]="isLoading || isSubmitting"
+          (change)="setChartType($event)"
+        >
+          <mat-radio-button value="0" [checked]="chartType == 0"
+            ><label>{{
+              "report-sales__chart__value-transaction" | translate
+            }}</label>
+          </mat-radio-button>
+          <mat-radio-button value="1" [checked]="chartType == 1"
+            ><label>{{
+              "report-sales__chart__value-detail" | translate
+            }}</label>
+          </mat-radio-button>
+        </mat-radio-group>
       </div>
     </div>
   </div>
@@ -277,7 +313,37 @@
               </g>
             </svg>
             <div class="sales-report__grid-text">
-              <h3>{{ "sales-report__sales" | translate }}</h3>
+              <h3>
+                {{ "sales-report__sales" | translate }}
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  [matTooltip]="'report-sales__information' | translate"
+                >
+                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <path
+                      opacity="0.4"
+                      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                      fill="#5985e1"
+                    ></path>
+                    <path
+                      d="M12 13.75C12.41 13.75 12.75 13.41 12.75 13V8C12.75 7.59 12.41 7.25 12 7.25C11.59 7.25 11.25 7.59 11.25 8V13C11.25 13.41 11.59 13.75 12 13.75Z"
+                      fill="#5985e1"
+                    ></path>
+                    <path
+                      d="M12.92 15.6199C12.87 15.4999 12.8 15.3899 12.71 15.2899C12.61 15.1999 12.5 15.1299 12.38 15.0799C12.14 14.9799 11.86 14.9799 11.62 15.0799C11.5 15.1299 11.39 15.1999 11.29 15.2899C11.2 15.3899 11.13 15.4999 11.08 15.6199C11.03 15.7399 11 15.8699 11 15.9999C11 16.1299 11.03 16.2599 11.08 16.3799C11.13 16.5099 11.2 16.6099 11.29 16.7099C11.39 16.7999 11.5 16.8699 11.62 16.9199C11.74 16.9699 11.87 16.9999 12 16.9999C12.13 16.9999 12.26 16.9699 12.38 16.9199C12.5 16.8699 12.61 16.7999 12.71 16.7099C12.8 16.6099 12.87 16.5099 12.92 16.3799C12.97 16.2599 13 16.1299 13 15.9999C13 15.8699 12.97 15.7399 12.92 15.6199Z"
+                      fill="#5985e1"
+                    ></path>
+                  </g>
+                </svg>
+              </h3>
               <p>Rp.&nbsp;{{ totalSales | number : "0.2-2" }}</p>
             </div>
           </div>
@@ -434,6 +500,93 @@
             <div class="sales-report__grid-text">
               <h3>{{ "sales-report__return-count" | translate }}</h3>
               <p>{{ returnCount | number : "0.0-0" }}</p>
+            </div>
+          </div>
+        </mat-grid-tile>
+
+        <mat-grid-tile>
+          <div class="sales-report__grid-tile">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  opacity="0.4"
+                  d="M15 3V12C15 13.1 14.1 14 13 14H2V7.62C2.73 8.49 3.85003 9.03 5.09003 9C6.10003 8.98 7.01 8.59 7.69 7.94C8 7.68 8.26002 7.34999 8.46002 6.98999C8.82002 6.37999 9.02 5.65997 9 4.90997C8.97 3.73997 8.45001 2.71 7.64001 2H14C14.55 2 15 2.45 15 3Z"
+                  fill="#292D32"
+                ></path>
+                <path
+                  d="M22 14V17C22 18.66 20.66 20 19 20H18C18 18.9 17.1 18 16 18C14.9 18 14 18.9 14 20H10C10 18.9 9.1 18 8 18C6.9 18 6 18.9 6 20H5C3.34 20 2 18.66 2 17V14H13C14.1 14 15 13.1 15 12V5H16.84C17.56 5 18.22 5.39001 18.58 6.01001L20.29 9H19C18.45 9 18 9.45 18 10V13C18 13.55 18.45 14 19 14H22Z"
+                  fill="#292D32"
+                ></path>
+                <path
+                  opacity="0.4"
+                  d="M8 22C9.10457 22 10 21.1046 10 20C10 18.8954 9.10457 18 8 18C6.89543 18 6 18.8954 6 20C6 21.1046 6.89543 22 8 22Z"
+                  fill="#292D32"
+                ></path>
+                <path
+                  opacity="0.4"
+                  d="M16 22C17.1046 22 18 21.1046 18 20C18 18.8954 17.1046 18 16 18C14.8954 18 14 18.8954 14 20C14 21.1046 14.8954 22 16 22Z"
+                  fill="#292D32"
+                ></path>
+                <path
+                  opacity="0.4"
+                  d="M22 12.53V14H19C18.45 14 18 13.55 18 13V10C18 9.45 18.45 9 19 9H20.29L21.74 11.54C21.91 11.84 22 12.18 22 12.53Z"
+                  fill="#292D32"
+                ></path>
+                <path
+                  d="M7.63921 2.00002C6.91921 1.36002 5.95917 0.98002 4.90917 1.00002C3.96917 1.02002 3.10919 1.37001 2.42919 1.93001C1.52919 2.68001 0.969195 3.83005 0.999195 5.09005C1.0192 5.84005 1.2392 6.54002 1.6292 7.13002C1.7392 7.30002 1.8592 7.47001 1.9992 7.62001C2.7292 8.49001 3.84922 9.03002 5.08922 9.00002C6.09922 8.98002 7.0092 8.59002 7.6892 7.94002C7.9992 7.68002 8.25922 7.35001 8.45922 6.99001C8.81922 6.38001 9.0192 5.65999 8.9992 4.90999C8.96919 3.73999 8.44921 2.71002 7.63921 2.00002ZM7.05919 4.52004L4.96917 6.54C4.81917 6.68 4.63921 6.75002 4.44921 6.75002C4.25921 6.75002 4.07919 6.68 3.92919 6.54L2.91918 5.58004C2.61918 5.29004 2.60922 4.82004 2.89922 4.52004C3.18922 4.22004 3.65922 4.21002 3.95922 4.50002L4.44921 4.96999L6.01921 3.45003C6.31921 3.16003 6.78921 3.16999 7.07921 3.46999C7.36921 3.75999 7.35919 4.23004 7.05919 4.52004Z"
+                  fill="#292D32"
+                ></path>
+              </g>
+            </svg>
+            <div class="sales-report__grid-text">
+              <h3>{{ "report-sales__delivery" | translate }}</h3>
+              <p>Rp.&nbsp;{{ totalDelivery | number : "0.2-2" }}</p>
+            </div>
+          </div>
+        </mat-grid-tile>
+
+        <mat-grid-tile>
+          <div class="sales-report__grid-tile">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  opacity="0.4"
+                  d="M18 18.86H17.24C16.44 18.86 15.68 19.17 15.12 19.73L13.41 21.42C12.63 22.19 11.36 22.19 10.58 21.42L8.87 19.73C8.31 19.17 7.54 18.86 6.75 18.86H6C4.34 18.86 3 17.53 3 15.89V4.97998C3 3.33998 4.34 2.01001 6 2.01001H18C19.66 2.01001 21 3.33998 21 4.97998V15.89C21 17.52 19.66 18.86 18 18.86Z"
+                  fill="#292D32"
+                ></path>
+                <path
+                  d="M10.3802 14.5099H7.70023C7.26023 14.5099 6.85023 14.2999 6.59023 13.9399C6.34023 13.5999 6.28022 13.18 6.40022 12.78C6.75022 11.71 7.61022 11.1299 8.37022 10.6099C9.17022 10.0699 9.62022 9.72996 9.62022 9.14996C9.62022 8.62996 9.20022 8.20996 8.68022 8.20996C8.16022 8.20996 7.74023 8.62996 7.74023 9.14996C7.74023 9.55996 7.40023 9.89996 6.99023 9.89996C6.58023 9.89996 6.24023 9.55996 6.24023 9.14996C6.24023 7.80996 7.33022 6.70996 8.68022 6.70996C10.0302 6.70996 11.1202 7.79996 11.1202 9.14996C11.1202 10.56 10.0602 11.2799 9.21024 11.8599C8.68024 12.2199 8.18022 12.5599 7.93022 13.0099H10.3702C10.7802 13.0099 11.1202 13.3499 11.1202 13.7599C11.1202 14.1699 10.7902 14.5099 10.3802 14.5099Z"
+                  fill="#292D32"
+                ></path>
+                <path
+                  d="M16.0408 14.5099C15.6308 14.5099 15.2908 14.1699 15.2908 13.7599V13.0699H13.3309C13.3309 13.0699 13.3309 13.0699 13.3209 13.0699C12.8309 13.0699 12.3809 12.81 12.1309 12.39C11.8809 11.96 11.8809 11.4299 12.1309 11.0099C12.8109 9.83995 13.6009 8.50991 14.3209 7.34991C14.6409 6.83991 15.2509 6.60996 15.8209 6.76996C16.3909 6.93996 16.7909 7.45993 16.7809 8.05993V11.58H17.0009C17.4109 11.58 17.7509 11.92 17.7509 12.33C17.7509 12.74 17.4109 13.08 17.0009 13.08H16.7908V13.77C16.7908 14.18 16.4608 14.5099 16.0408 14.5099ZM15.2908 8.63995C14.7008 9.59995 14.0908 10.6299 13.5408 11.5699H15.2908V8.63995Z"
+                  fill="#292D32"
+                ></path>
+              </g>
+            </svg>
+            <div class="sales-report__grid-text">
+              <h3>{{ "report-sales__service" | translate }}</h3>
+              <p>Rp.&nbsp;{{ totalService | number : "0.2-2" }}</p>
             </div>
           </div>
         </mat-grid-tile>

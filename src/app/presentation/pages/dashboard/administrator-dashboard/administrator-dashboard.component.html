@@ -186,6 +186,7 @@
               [matTooltip]="
                 'dashboard-administrator__finance-report' | translate
               "
+              (click)="openReport('finance')"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -222,6 +223,7 @@
               [matTooltip]="
                 'dashboard-administrator__purchase-report' | translate
               "
+              (click)="openReport('purchase')"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -256,6 +258,7 @@
               [matTooltip]="
                 'dashboard-administrator__money-receipt-report' | translate
               "
+              (click)="openReport('money-receipt')"
             >
               <svg
                 viewBox="0 0 24 24"

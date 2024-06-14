@@ -20,12 +20,14 @@ export class SalesChartComponent {
   columnNumber: number = 3;
 
   ngOnInit(): void {
+    this.dates = [];
     for (let i = 0; i < this.maxDate; i++) {
       this.dates.push(i + 1);
     }
   }
 
-  ngOnChange(): void {
+  ngOnChanges(): void {
+    this.dates = [];
     for (let i = 0; i < this.maxDate; i++) {
       this.dates.push(i + 1);
     }
@@ -33,7 +35,12 @@ export class SalesChartComponent {
 
   getValueOnDate(i: number): number {
     const index = this.data.findIndex((x) => x.date == i);
-    return index == -1 ? 0 : this.data[index].value;
+    return index == -1
+      ? 0
+      : this.data[index].value +
+          this.data[index].delivery +
+          this.data[index].service -
+          this.data[index].discount;
   }
 
   getCountOnDate(i: number): number {
@@ -50,7 +57,9 @@ export class SalesChartComponent {
   }
 
   get maxValue(): number {
-    return Math.max(...this.data.map((x) => x.value));
+    return Math.max(
+      ...this.data.map((x) => x.value + x.delivery + x.service - x.discount)
+    );
   }
 
   get maxCount(): number {

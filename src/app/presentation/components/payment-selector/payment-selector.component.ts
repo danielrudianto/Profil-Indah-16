@@ -3,6 +3,8 @@ import {
   MAT_BOTTOM_SHEET_DATA,
   MatBottomSheetRef,
 } from '@angular/material/bottom-sheet';
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-payment-selector',
@@ -11,11 +13,35 @@ import {
 })
 export class PaymentSelectorComponent {
   constructor(
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
-    private sheet: MatBottomSheetRef<PaymentSelectorComponent>
+    private sheet: MatBottomSheetRef<PaymentSelectorComponent>,
+    private apiService: ApiService,
+    private alertService: AlertService
   ) {}
 
-  ngOnInit(): void {}
+  payments: any[] = [];
+  isLoading: boolean = false;
+
+  ngOnInit(): void {
+    this.fetchPaymentMethods();
+  }
+
+  fetchPaymentMethods(): void {
+    this.isLoading = true;
+    this.apiService
+      .get('payment-method/all', {})
+      .subscribe({
+        next: (data: any) => {
+          this.payments = data.data;
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+          this.sheet.dismiss();
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
+  }
 
   selectPayment(payment: any) {
     this.sheet.dismiss(payment);

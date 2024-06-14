@@ -101,10 +101,7 @@ import { AdjustmentCaseCreateComponent } from './presentation/pages/adjustment-c
 import { AdjustmentCaseArchiveComponent } from './presentation/pages/adjustment-case/adjustment-case-archive/adjustment-case-archive.component';
 import { ExpenseCreateComponent } from './presentation/pages/expense/expense-create/expense-create.component';
 import { ExpenseMutationComponent } from './presentation/pages/expense/expense-mutation/expense-mutation.component';
-import {
-  ExpenseReportComponent,
-  MONTH_AND_YEAR_FORMAT,
-} from './presentation/pages/expense/expense-report/expense-report.component';
+import { ExpenseReportComponent } from './presentation/pages/expense/expense-report/expense-report.component';
 
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
@@ -191,7 +188,7 @@ import { PackageListComponent } from './presentation/pages/package/package-list/
 import { PackageUpdateComponent } from './presentation/pages/package/package-update/package-update.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { UpdatePackageSalesPriceComponent } from './presentation/components/update-package-sales-price/update-package-sales-price.component';
-import { ReportSalesComponent } from './presentation/pages/report-sales/report-sales.component';
+import { ReportSalesComponent } from './presentation/pages/report/report-sales/report-sales.component';
 import { NgChartjsModule } from 'ng-chartjs';
 import { NgChartsModule } from 'ng2-charts';
 import { GoodReceiptArchiveFilterComponent } from './presentation/pages/deposit/deposit-archive/good-receipt-archive-filter/good-receipt-archive-filter.component';
@@ -205,11 +202,22 @@ import { ReceivablePaymentCreateComponent } from './presentation/pages/receivabl
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { StockCardViewComponent } from './presentation/pages/stock-list/stock-card/stock-card-view/stock-card-view.component';
 import { SalesChartComponent } from './presentation/components/charts/sales-chart/sales-chart.component';
-import { CustomerSalesChartComponent } from './presentation/pages/report-sales/customer-sales-chart/customer-sales-chart.component';
-import { BrandSalesChartComponent } from './presentation/pages/report-sales/brand-sales-chart/brand-sales-chart.component';
-import { TypeSalesChartComponent } from './presentation/pages/report-sales/type-sales-chart/type-sales-chart.component';
-import { SalesSalesChartComponent } from './presentation/pages/report-sales/sales-sales-chart/sales-sales-chart.component';
+import { CustomerSalesChartComponent } from './presentation/pages/report/report-sales/customer-sales-chart/customer-sales-chart.component';
+import { BrandSalesChartComponent } from './presentation/pages/report/report-sales/brand-sales-chart/brand-sales-chart.component';
+import { TypeSalesChartComponent } from './presentation/pages/report/report-sales/type-sales-chart/type-sales-chart.component';
+import { SalesSalesChartComponent } from './presentation/pages/report/report-sales/sales-sales-chart/sales-sales-chart.component';
 import { MatRippleModule } from '@angular/material/core';
+import { ReportComponent } from './presentation/pages/report/report.component';
+import { ReportPurchaseComponent } from './presentation/pages/report/report-purchase/report-purchase.component';
+import { ReportFinanceComponent } from './presentation/pages/report/report-finance/report-finance.component';
+import { ReportMoneyComponent } from './presentation/pages/report/report-money/report-money.component';
+import { MatRadioModule } from '@angular/material/radio';
+import { SalesValueChartComponent } from './presentation/components/charts/sales-value-chart/sales-value-chart.component';
+import { PurchaseChartComponent } from './presentation/components/charts/purchase-chart/purchase-chart.component';
+import { BrandPurchaseChartComponent } from './presentation/pages/report/report-purchase/brand-purchase-chart/brand-purchase-chart.component';
+import { TypePurchaseChartComponent } from './presentation/pages/report/report-purchase/type-purchase-chart/type-purchase-chart.component';
+import { SupplierPurchaseChartComponent } from './presentation/pages/report/report-purchase/supplier-purchase-chart/supplier-purchase-chart.component';
+import { SalesReturnArchiveComponent } from './presentation/pages/sales-return/sales-return-archive/sales-return-archive.component';
 @NgModule({
   declarations: [
     ShortNumberPipe,
@@ -363,6 +371,16 @@ import { MatRippleModule } from '@angular/material/core';
     BrandSalesChartComponent,
     TypeSalesChartComponent,
     SalesSalesChartComponent,
+    ReportComponent,
+    ReportPurchaseComponent,
+    ReportFinanceComponent,
+    ReportMoneyComponent,
+    SalesValueChartComponent,
+    PurchaseChartComponent,
+    BrandPurchaseChartComponent,
+    TypePurchaseChartComponent,
+    SupplierPurchaseChartComponent,
+    SalesReturnArchiveComponent,
   ],
   imports: [
     BrowserModule,
@@ -401,6 +419,7 @@ import { MatRippleModule } from '@angular/material/core';
     MatTabsModule,
     NgChartjsModule,
     MatCheckboxModule,
+    MatRadioModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

@@ -105,7 +105,10 @@
 
       <mat-divider></mat-divider>
       <div mat-subheader>{{ "side-nav__implementation" | translate }}</div>
-      <mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Administrator/Sales-return']"
+        [routerLinkActive]="'active'"
+      >
         <mat-icon matListItemIcon>folder</mat-icon>
         <div matListItemTitle>{{ "side-nav__sales-return" | translate }}</div>
       </mat-list-item>

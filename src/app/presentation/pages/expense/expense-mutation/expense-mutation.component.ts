@@ -8,7 +8,6 @@ import {
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
-import { MONTH_AND_YEAR_FORMAT } from '../expense-report/expense-report.component';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import { FormControl } from '@angular/forms';
@@ -18,6 +17,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { ExpenseUpdateComponent } from '../expense-update/expense-update.component';
 import { PageEvent } from '@angular/material/paginator';
+import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
 
 const moment = _rollupMoment || _moment;
 

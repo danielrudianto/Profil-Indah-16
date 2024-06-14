@@ -12,23 +12,21 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { ApiService } from 'src/app/services/api.service';
-import { MONTH_AND_YEAR_FORMAT } from '../expense/expense-report/expense-report.component';
 import moment, { Moment } from 'moment';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { SalesSalesChartComponent } from './sales-sales-chart/sales-sales-chart.component';
-import { TypeSalesChartComponent } from './type-sales-chart/type-sales-chart.component';
-import { BrandSalesChartComponent } from './brand-sales-chart/brand-sales-chart.component';
-import { CustomerSalesChartComponent } from './customer-sales-chart/customer-sales-chart.component';
 import { AlertService } from 'src/app/services/alert.service';
 import * as xlsx from 'xlsx';
 import { saveAs } from 'file-saver';
+import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
+import { SupplierPurchaseChartComponent } from './supplier-purchase-chart/supplier-purchase-chart.component';
+import { BrandPurchaseChartComponent } from './brand-purchase-chart/brand-purchase-chart.component';
+import { TypePurchaseChartComponent } from './type-purchase-chart/type-purchase-chart.component';
 
 @Component({
-  selector: 'app-report-sales',
-  templateUrl: './report-sales.component.html',
-  styleUrls: ['./report-sales.component.css'],
-  animations: [slideInOutAnimation],
+  selector: 'app-report-purchase',
+  templateUrl: './report-purchase.component.html',
+  styleUrls: ['./report-purchase.component.css'],
   providers: [
     {
       provide: DateAdapter,
@@ -38,7 +36,7 @@ import { saveAs } from 'file-saver';
     { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
   ],
 })
-export class ReportSalesComponent {
+export class ReportPurchaseComponent {
   constructor(
     private translateService: TranslateService,
     private apiService: ApiService,
@@ -52,9 +50,9 @@ export class ReportSalesComponent {
 
   transactions: number = 0;
   chartDataSource: any[] = [];
-  customerCount: number = 0;
-  totalSales: number = 0;
-  bestSales: string = 'N/A';
+  supplierCount: number = 0;
+  totalPurchase: number = 0;
+  bestSupplier: string = 'N/A';
   bestBrand: string = 'N/A';
   bestType: string = 'N/A';
   returnValue: number = 0;
@@ -63,7 +61,7 @@ export class ReportSalesComponent {
   brandDataSource: any[] = [];
   typeDataSource: any[] = [];
   salesDataSource: any[] = [];
-  customerDataSource: any[] = [];
+  supplierDataSource: any[] = [];
 
   date = new FormControl(moment());
 
@@ -80,7 +78,7 @@ export class ReportSalesComponent {
   fetchSalesReport(): void {
     this.isLoading = true;
     this.apiService
-      .post('report/sales', {
+      .post('report/purchase', {
         month: this.date.value!.month() + 1,
         year: this.date.value!.year(),
         mode: 'V2',
@@ -89,15 +87,8 @@ export class ReportSalesComponent {
         next: (data: any) => {
           this.chartDataSource = data.date;
           this.transactions = data.transactions;
-          this.customerCount = data.customer.length;
-          this.bestSales =
-            data.sales.length == 0
-              ? 'N/A'
-              : data.sales.sort((a: any, b: any) => {
-                  return b.value - a.value;
-                })[0].name ?? 'N/A';
-
-          this.totalSales = data.total;
+          this.supplierCount = data.supplier.length;
+          this.totalPurchase = data.total;
 
           this.bestBrand =
             data.brand.length == 0
@@ -108,13 +99,19 @@ export class ReportSalesComponent {
               ? 'N/A'
               : data.type.sort((a: any, b: any) => b.value - a.value)[0].name;
 
+          this.bestSupplier =
+            data.supplier.length == 0
+              ? 'N/A'
+              : data.supplier.sort((a: any, b: any) => {
+                  return b.value - a.value;
+                })[0].name;
+
           this.returnValue = data.returned_value;
           this.returnCount = data.returns;
 
           this.brandDataSource = data.brand;
           this.typeDataSource = data.type;
-          this.salesDataSource = data.sales;
-          this.customerDataSource = data.customer;
+          this.supplierDataSource = data.supplier;
         },
       })
       .add(() => {
@@ -138,28 +135,22 @@ export class ReportSalesComponent {
   openDetail(detailType: string) {
     if (!this.isLoading) {
       switch (detailType) {
-        case 'sales':
+        case 'supplier':
           this.dynamicComponentService.createDynamicComponent(
-            SalesSalesChartComponent,
-            this.salesDataSource
-          );
-          break;
-        case 'type':
-          this.dynamicComponentService.createDynamicComponent(
-            TypeSalesChartComponent,
-            this.typeDataSource
+            SupplierPurchaseChartComponent,
+            this.supplierDataSource
           );
           break;
         case 'brand':
           this.dynamicComponentService.createDynamicComponent(
-            BrandSalesChartComponent,
+            BrandPurchaseChartComponent,
             this.brandDataSource
           );
           break;
-        case 'customer':
+        case 'type':
           this.dynamicComponentService.createDynamicComponent(
-            CustomerSalesChartComponent,
-            this.customerDataSource
+            TypePurchaseChartComponent,
+            this.typeDataSource
           );
           break;
       }
@@ -266,5 +257,13 @@ export class ReportSalesComponent {
     } else {
       return 1;
     }
+  }
+
+  get maxDayOnMonth(): number {
+    return new Date(
+      this.date.value!.year(),
+      this.date.value!.month() + 1,
+      0
+    ).getDate();
   }
 }

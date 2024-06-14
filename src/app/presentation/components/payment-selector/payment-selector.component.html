@@ -1,7 +1,11 @@
-<div class="payment-list__wrapper">
+<div *ngIf="isLoading">
+  <mat-spinner id="spinner"></mat-spinner>
+</div>
+
+<div class="payment-list__wrapper" *ngIf="!isLoading">
   <div
     class="payment-list__item-wrapper"
-    *ngFor="let payment of data.payments"
+    *ngFor="let payment of payments"
     (click)="selectPayment(payment)"
   >
     <div class="payment-icon">

@@ -174,6 +174,7 @@
           "sales-invoice__create__discount" | translate
         }}</mat-label>
         <input
+          readonly
           matInput
           type="text"
           mask="separator"
@@ -189,6 +190,7 @@
           "sales-invoice__create__service" | translate
         }}</mat-label>
         <input
+          readonly
           matInput
           type="text"
           mask="separator"
@@ -204,6 +206,7 @@
           "sales-invoice__create__delivery" | translate
         }}</mat-label>
         <input
+          readonly
           matInput
           type="text"
           mask="separator"
@@ -300,6 +303,7 @@
                     formControlName="usedAmount"
                     mask="separator"
                     thousandSeparator=" "
+                    [readonly]="isAllChecked"
                   />
                 </mat-form-field>
               </td>
@@ -315,7 +319,7 @@
   <div class="d-flex position-relative">
     <app-box-stepper
       step="5"
-      [valid]="totalPayment == valueFormGroup.controls['total'].value"
+      [valid]="isPaymentFormGroupValid"
     ></app-box-stepper>
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
@@ -363,8 +367,7 @@
             (click)="openPaymentSelector()"
             class="action-button"
             [class.d-none]="
-              paymentsFormGroup.controls['immediate_payment'].value == false ||
-              metaFormGroup.get('type')?.value == 'deposit-internal'
+              paymentsFormGroup.controls['immediate_payment'].value == false
             "
           >
             {{ "sales-invoice__create__add-payment-method" | translate }}
@@ -380,11 +383,11 @@
             class="payment-card"
             *ngFor="let payment of pb.controls; index as i"
           >
-            <form [formGroup]="getFormGroupAtPayment(i)">
+            <form [formGroup]="getFormGroupAtNewPayment(i)">
               <h3 class="mb-0">
-                {{ payment.get("payment_method_name")?.value }}
+                {{ payment.get("name")?.value }}
               </h3>
-              <p>{{ payment.get("payment_method_description")?.value }}</p>
+              <p>{{ payment.get("description")?.value }}</p>
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>{{
                   "sales-invoice__create__payment-value" | translate
@@ -394,7 +397,7 @@
                   type="text"
                   mask="separator.2"
                   thousandSeparator=" "
-                  formControlName="usedAmount"
+                  formControlName="payment_value"
                   [allowNegativeNumbers]="true"
                 />
                 <!-- Add button on suffix to delete -->
@@ -410,21 +413,7 @@
       </div>
     </form>
     <button
-      [disabled]="
-        !metaFormGroup.valid ||
-        !valueFormGroup.valid ||
-        !billFormGroup.valid ||
-        (metaFormGroup.get('type')?.value == 'sales' &&
-          totalPayment == 0 &&
-          paymentsFormGroup.controls['immediate_payment'].value) ||
-        totalPayment >
-          valueFormGroup.controls['total'].value +
-            valueFormGroup.controls['delivery'].value +
-            valueFormGroup.controls['service'].value -
-            valueFormGroup.controls['discount'].value ||
-        !paymentsFormGroup.valid ||
-        isSubmitting
-      "
+      [disabled]="!isFormValid || isSubmitting"
       class="action-button"
       (click)="submitForm()"
     >

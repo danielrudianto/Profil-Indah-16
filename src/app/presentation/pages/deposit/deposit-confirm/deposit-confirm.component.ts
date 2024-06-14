@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import {
   AbstractControl,
@@ -41,23 +41,12 @@ export class DepositConfirmComponent {
     private sheet: MatBottomSheet,
     private dynamicComponentService: DynamicComponentService,
     private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private location: Location
   ) {
     this._hotkeysService.add([
       new Hotkey('alt+s', (event: KeyboardEvent): boolean => {
-        if (
-          this.billFormGroup.valid &&
-          this.valueFormGroup.valid &&
-          this.paymentsFormGroup.valid &&
-          this.metaFormGroup.valid
-        ) {
-          this.submitForm();
-        } else {
-          console.error(`[error]: ${this.metaFormGroup.errors}`);
-          this.alertService.showSuccess(
-            this.translateService.instant('general__error__input')
-          );
-        }
+        this.submitForm();
         return false;
       }),
     ]);
@@ -115,7 +104,7 @@ export class DepositConfirmComponent {
   });
 
   paymentsFormGroup: FormGroup = new FormGroup({
-    immediate_payment: new FormControl(true),
+    immediate_payment: new FormControl(false),
     due_time: new FormControl(30, [Validators.required, Validators.min(0)]),
     payments: new FormArray([]),
     billPayments: new FormArray([]),
@@ -142,6 +131,16 @@ export class DepositConfirmComponent {
       .get(`deposit/${this.activatedRoute.snapshot.params['id']}`)
       .subscribe({
         next: (result: any) => {
+          if (result.is_delete) {
+            this.alertService.showSuccess(
+              this.translateService.instant(
+                'deposit__confirm__already-confirmed'
+              )
+            );
+            this.location.back();
+            return;
+          }
+
           // Set up the meta data from deposit
           this.metaFormGroup.patchValue({
             customer:
@@ -157,6 +156,7 @@ export class DepositConfirmComponent {
           (result.deposit as any[]).forEach((x) => {
             this.t.push(
               this.formBuilder.group({
+                id: [x.id],
                 checked: [true],
                 package_code_id: [x.package_code_id],
                 item_id: [x.item_id],
@@ -238,6 +238,18 @@ export class DepositConfirmComponent {
             );
           });
 
+          // Listen to change in checked items
+          this.t.valueChanges.subscribe((_) => {
+            if (this.isAllChecked) {
+              // Set all deposit payment to value instead of used
+              this.p.controls.forEach((x) => {
+                x.patchValue({
+                  usedAmount: x.get('amount')?.value,
+                });
+              });
+            }
+          });
+
           this.paymentsFormGroup.controls[
             'immediate_payment'
           ].valueChanges.subscribe({
@@ -249,22 +261,6 @@ export class DepositConfirmComponent {
                 this.pb.clear();
               }
             },
-          });
-        },
-      });
-
-    this.apiService
-      .get('payment-method/all', {
-        keyword: '',
-        page: 1,
-      })
-      .subscribe({
-        next: (data: any) => {
-          this.paymentOptions = data.data;
-          this.paymentOptions.unshift({
-            id: 0,
-            name: 'Cash',
-            description: 'Cash payment',
           });
         },
       });
@@ -332,22 +328,21 @@ export class DepositConfirmComponent {
     return this.g['billPayments'] as FormArray;
   }
 
-  get totalPayment() {
-    if (!this.paymentsFormGroup.controls['immediate_payment'].value)
-      return (
-        this.valueFormGroup.controls['total'].value -
-        this.valueFormGroup.controls['discount'].value +
-        this.valueFormGroup.controls['delivery'].value +
-        this.valueFormGroup.controls['service'].value
-      );
-    else {
-      let total = 0;
-      this.p.controls.forEach((x) => {
-        total += Number(x.get('usedAmount')?.value ?? 0);
-      });
+  get totalPayment(): number {
+    let payment = 0;
+    this.p.controls.forEach((x) => {
+      payment += Number(x.get('usedAmount')?.value);
+    });
 
-      return total;
-    }
+    this.pb.controls.forEach((x) => {
+      payment += Number(x.get('payment_value')?.value);
+    });
+
+    return payment;
+  }
+
+  get isAllChecked(): boolean {
+    return this.t.controls.every((item) => item.get('checked')?.value);
   }
 
   /**
@@ -389,68 +384,33 @@ export class DepositConfirmComponent {
   }
 
   openPaymentSelector() {
-    const sheet = this.sheet.open(PaymentSelectorComponent, {
-      data: {
-        payments: this.paymentOptions,
-        selected: this.paymentsFormGroup.controls,
-      },
-    });
+    const sheet = this.sheet.open(PaymentSelectorComponent, {});
 
     sheet.afterDismissed().subscribe({
       next: (data) => {
-        if (
-          this.p.controls.filter(
-            (x) => x.get('payment_method_id')?.value == data.id
-          ).length > 0 ||
-          this.pb.controls.filter(
-            (x) => x.get('payment_method_id')?.value == data.id
-          ).length > 0
-        ) {
-          this.alertService.showSuccess(
-            this.translateService.instant('general__payment__exists')
-          );
-          return;
-        } else {
-          this.pb.push(
-            this.formBuilder.group({
-              payment_method_id: [data.id, Validators.required],
-              name: [data.name, Validators.required],
-              description: [data.description, Validators.required],
-              date: new FormControl(new Date(), Validators.required),
-              payment_value: [0, Validators.required],
-            })
-          );
+        if (data != undefined && data != null) {
+          if (
+            this.pb.controls.filter(
+              (x) => x.get('payment_method_id')?.value == data.id
+            ).length > 0
+          ) {
+            this.alertService.showSuccess(
+              this.translateService.instant('general__payment__exists')
+            );
+            return;
+          } else {
+            this.pb.push(
+              this.formBuilder.group({
+                payment_method_id: [data.id, Validators.required],
+                name: [data.name, Validators.required],
+                description: [data.description, Validators.required],
+                date: new FormControl(new Date(), Validators.required),
+                payment_value: [0, Validators.required],
+              })
+            );
+          }
         }
       },
-    });
-  }
-
-  /**
-   * Opens a sheet to update the price of a product in the sales price list.
-   * @param {number} i - The index of the product in the sales price list.
-   * @return {void} This function does not return anything.
-   */
-  updatePrice(i: number) {
-    const sheet = this.sheet.open(UpdateProductSalesPriceComponent, {
-      data: {
-        initial_price: this.getFormGroupAt(i).get('initial_price')?.value,
-        initial_discount: this.getFormGroupAt(i).get('initial_discount')?.value,
-        price: this.getFormGroupAt(i).get('price')?.value,
-        discount: this.getFormGroupAt(i).get('discount')?.value,
-        save_price: this.getFormGroupAt(i).get('save_price')?.value,
-      },
-    });
-
-    sheet.afterDismissed().subscribe((data) => {
-      if (data) {
-        this.getFormGroupAt(i).patchValue({
-          initial_price: data.initial_price,
-          initial_discount: data.initial_discount,
-          price: data.price,
-          discount: data.discount,
-          save_price: data.save_price,
-        });
-      }
     });
   }
 
@@ -462,6 +422,10 @@ export class DepositConfirmComponent {
     return this.p.at(i) as FormGroup;
   }
 
+  getFormGroupAtNewPayment(i: number) {
+    return this.pb.at(i) as FormGroup;
+  }
+
   deleteItem(i: number) {
     this.t.removeAt(i);
     this.billFormGroup.patchValue({
@@ -470,10 +434,127 @@ export class DepositConfirmComponent {
   }
 
   deletePayment(i: number) {
-    this.p.removeAt(i);
+    this.pb.removeAt(i);
   }
 
-  submitForm() {}
+  get isFormValid(): boolean {
+    let validation = true;
+    if (!this.metaFormGroup.valid) {
+      validation = false;
+    }
+
+    if (!this.valueFormGroup.valid) {
+      validation = false;
+    }
+
+    if (!this.paymentsFormGroup.valid) {
+      validation = false;
+    }
+
+    // First check if the checked items is more than 1
+    if (this.t.controls.filter((x) => x.get('checked')?.value).length < 1) {
+      validation = false;
+    }
+
+    if (
+      this.paymentsFormGroup.value['immediate_payment'] == true &&
+      this.pb.length == 0
+    ) {
+      validation = false;
+    }
+
+    if (this.totalPayment > this.totalBill) {
+      validation = false;
+    }
+
+    return validation;
+  }
+
+  get isPaymentFormGroupValid(): boolean {
+    let validation = true;
+    if (
+      this.paymentsFormGroup.value['immediate_payment'] == true &&
+      this.pb.length == 0
+    ) {
+      validation = false;
+    }
+
+    if (this.totalPayment > this.totalBill) {
+      validation = false;
+    }
+    return validation;
+  }
+
+  submitForm() {
+    this.isSubmitting = true;
+
+    // If there is no item checked then show error
+    if (this.t.controls.filter((x) => x.get('checked')?.value).length < 1) {
+      this.alertService.showError('deposit__confirm__no-item');
+      this.isSubmitting = false;
+      return;
+    }
+
+    // If total payment is greater than total bill then show error
+    if (this.totalPayment > this.totalBill) {
+      this.alertService.showError('deposit__confirm__total-payment');
+      this.isSubmitting = false;
+      return;
+    }
+
+    this.apiService
+      .post('deposit/confirm', {
+        id: Number(this.activatedRoute.snapshot.params['id']),
+        date: this.datePipe.transform(
+          this.metaFormGroup.controls['date'].value,
+          'yyyy-MM-dd'
+        ),
+        deposit: this.t.controls.map((x) => {
+          return {
+            id: Number(x.value.id),
+            checked: x.value.checked,
+          };
+        }),
+        deposit_payment: this.p.controls.map((item) => {
+          return {
+            id: item.value.id,
+            payment_method_id: item.value.payment_method_id,
+            value: Number(item.value.usedAmount),
+            unused_value: Number(item.value.amount - item.value.usedAmount),
+            date: this.datePipe.transform(item.value.date, 'yyyy-MM-dd'),
+          };
+        }),
+        deposit_bill_payment: this.pb.controls.map((item) => {
+          return {
+            payment_method_id: item.value.payment_method_id,
+            value: item.value.payment_value,
+            date: this.datePipe.transform(
+              this.metaFormGroup.controls['date'].value,
+              'yyyy-MM-dd'
+            ),
+          };
+        }),
+        is_paid: this.totalPayment == this.totalBill,
+        payment_term:
+          this.totalPayment == this.totalBill
+            ? null
+            : this.paymentsFormGroup.controls['due_time'].value,
+      })
+      .subscribe({
+        next: (_) => {
+          this.alertService.showSuccess(
+            this.translateService.instant('deposit__confirm__success')
+          );
+          this.location.back();
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isSubmitting = false;
+      });
+  }
 
   canExit() {
     if (

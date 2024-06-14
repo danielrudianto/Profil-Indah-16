@@ -1,9 +1,12 @@
 <app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
   <div class="create-dialog">
-    <app-dialog-header title="Inventory report" (onDialogClose)="closeDialog()">
+    <app-dialog-header
+      [title]="'report-inventory__title' | translate"
+      (onDialogClose)="closeDialog()"
+    >
     </app-dialog-header>
     <div class="create-dialog__content">
-      <h6>Current inventory value</h6>
+      <h6>{{ "report-inventory__current-value" | translate }}</h6>
       <p [countUp]="value" [duration]="300"></p>
       <mat-divider></mat-divider>
       <div class="list-item" *ngFor="let c of company; index as i">
@@ -21,7 +24,7 @@
       [disabled]="isDownloading"
       (click)="download()"
     >
-      Download report
+      {{ "report-inventory__download-report" | translate }}
     </button>
   </div>
 </app-dynamic-dialog>

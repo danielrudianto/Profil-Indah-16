@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AlertService {
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(
+    private snackBar: MatSnackBar,
+    private translateService: TranslateService
+  ) {}
 
   showError(error: any) {
     this.snackBar.open(
@@ -14,7 +18,7 @@ export class AlertService {
           ? error.statusText
           : error.error
       }`,
-      'Close',
+      this.translateService.instant('general__close'),
       {
         duration: 1000,
       }
@@ -22,17 +26,25 @@ export class AlertService {
   }
 
   showSuccess(message: string) {
-    this.snackBar.open(message, 'Close', {
-      duration: 2000,
-    });
+    this.snackBar.open(
+      message,
+      this.translateService.instant('general__close'),
+      {
+        duration: 2000,
+      }
+    );
   }
 
   showInfo(message: string) {
-    return this.snackBar.open(message, 'Close', {
-      duration: 2000,
-      horizontalPosition: 'end',
-      verticalPosition: 'bottom',
-      panelClass: ['white-snackbar'],
-    });
+    return this.snackBar.open(
+      message,
+      this.translateService.instant('general__close'),
+      {
+        duration: 2000,
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom',
+        panelClass: ['white-snackbar'],
+      }
+    );
   }
 }

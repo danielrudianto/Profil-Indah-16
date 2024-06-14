@@ -14,20 +14,9 @@ import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
   MomentDateAdapter,
 } from '@angular/material-moment-adapter';
+import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
 
 const moment = _rollupMoment || _moment;
-
-export const MONTH_AND_YEAR_FORMAT = {
-  parse: {
-    dateInput: 'MM/YYYY',
-  },
-  display: {
-    dateInput: 'MM/YYYY',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
 
 @Component({
   selector: 'app-expense-report',
