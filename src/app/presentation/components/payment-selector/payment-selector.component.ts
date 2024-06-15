@@ -32,6 +32,11 @@ export class PaymentSelectorComponent {
       .subscribe({
         next: (data: any) => {
           this.payments = data.data;
+          this.payments.unshift({
+            id: 0,
+            name: 'Cash',
+            description: 'Cash payment',
+          });
         },
         error: (error) => {
           this.alertService.showError(error);
