@@ -93,7 +93,6 @@ import { DatePipe, DecimalPipe } from '@angular/common';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { UpdateProductSalesPriceComponent } from './presentation/components/update-product-sales-price/update-product-sales-price.component';
 import { SalesInvoiceArchiveComponent } from './presentation/pages/sales-invoice/sales-invoice-archive/sales-invoice-archive.component';
-import { SalesInvoiceSearchComponent } from './presentation/pages/sales-invoice/sales-invoice-search/sales-invoice-search.component';
 import { ArchivesComponent } from './presentation/components/archives/archives.component';
 import { ArchiveCardComponent } from './presentation/components/archives/archive-card/archive-card.component';
 import { AdjustmentCaseComponent } from './presentation/pages/adjustment-case/adjustment-case.component';
@@ -218,6 +217,9 @@ import { BrandPurchaseChartComponent } from './presentation/pages/report/report-
 import { TypePurchaseChartComponent } from './presentation/pages/report/report-purchase/type-purchase-chart/type-purchase-chart.component';
 import { SupplierPurchaseChartComponent } from './presentation/pages/report/report-purchase/supplier-purchase-chart/supplier-purchase-chart.component';
 import { SalesReturnArchiveComponent } from './presentation/pages/sales-return/sales-return-archive/sales-return-archive.component';
+import { SalesReturnArchiveFilterComponent } from './presentation/pages/sales-return/sales-return-archive/sales-return-archive-filter/sales-return-archive-filter.component';
+import { SalesReturnArchiveViewComponent } from './presentation/pages/sales-return/sales-return-archive/sales-return-archive-view/sales-return-archive-view.component';
+import { SalesReturnCreateViewSalesInvoiceComponent } from './presentation/pages/sales-return/sales-return-create/sales-return-create-view-sales-invoice/sales-return-create-view-sales-invoice.component';
 @NgModule({
   declarations: [
     ShortNumberPipe,
@@ -277,7 +279,6 @@ import { SalesReturnArchiveComponent } from './presentation/pages/sales-return/s
     SalesmanSelectorComponent,
     UpdateProductSalesPriceComponent,
     SalesInvoiceArchiveComponent,
-    SalesInvoiceSearchComponent,
     ArchivesComponent,
     ArchiveCardComponent,
     AdjustmentCaseComponent,
@@ -381,6 +382,9 @@ import { SalesReturnArchiveComponent } from './presentation/pages/sales-return/s
     TypePurchaseChartComponent,
     SupplierPurchaseChartComponent,
     SalesReturnArchiveComponent,
+    SalesReturnArchiveFilterComponent,
+    SalesReturnArchiveViewComponent,
+    SalesReturnCreateViewSalesInvoiceComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,21 +1,21 @@
-<label>Date</label>
+<label>{{ "sales-invoice__archive__view__date" | translate }}</label>
 <p>{{ data.date | date : "dd/MM/yyyy" }}</p>
 
-<label>Name</label>
+<label>{{ "sales-invoice__archive__view__name" | translate }}</label>
 <p>{{ data.name }}</p>
 
-<label>Customer</label>
+<label>{{ "sales-invoice__archive__view__customer" | translate }}</label>
 <p>{{ data.customer == null ? "Retail customer" : data.customer.name }}</p>
 
-<label>Sales</label>
+<label>{{ "sales-invoice__archive__view__sales" | translate }}</label>
 <p>{{ data.sales == null || data.sales == "" ? "N/A" : data.sales }}</p>
 
-<label>Status</label>
+<label>{{ "sales-invoice__archive__view__status" | translate }}</label>
 <p>
   {{ data.is_delete ? "Deleted" : data.is_confirm ? "Confirmed" : "Pending" }}
 </p>
 
-<label>Created by</label>
+<label>{{ "sales-invoice__archive__view__created-by" | translate }}</label>
 <div class="created-by__wrapper">
   <p>
     {{ data.user_bill_code_created_byTouser.name }}&nbsp;<app-avatar
@@ -35,17 +35,23 @@
   </p>
 </div>
 
-<label>Created at</label>
-<p>{{ data.created_at | date : "dd MMMM YY H:m:s" }}</p>
+<label>{{ "sales-invoice__archive__view__created-at" | translate }}</label>
+<p>{{ data.created_at | date : "dd/MM/YYYY H:m:s" }}</p>
 
-<label>Payments</label>
+<label>{{ "sales-invoice__archive__view__payment" | translate }}</label>
 <div class="table-responsive">
   <table class="table">
     <thead>
       <tr>
-        <th style="width: 150px">Date</th>
-        <th style="width: 200px">Method</th>
-        <th style="width: 200px">Amount</th>
+        <th style="width: 150px">
+          {{ "sales-invoice__archive__view__payments__date" | translate }}
+        </th>
+        <th style="width: 200px">
+          {{ "sales-invoice__archive__view__payments__method" | translate }}
+        </th>
+        <th style="width: 200px">
+          {{ "sales-invoice__archive__view__payments__amount" | translate }}
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -60,16 +66,26 @@
   </table>
 </div>
 
-<label>Items</label>
+<label>{{ "sales-invoice__archive__view__items" | translate }}</label>
 <div class="table-responsive">
   <table class="table">
     <thead>
       <tr>
-        <th class="text-center" style="width: 200px" rowspan="2">Product</th>
-        <th class="text-center" style="width: 200px" rowspan="2">Quantity</th>
-        <th class="text-center" style="width: 200px" rowspan="2">Price</th>
-        <th class="text-center" style="width: 300px" colspan="2">Discount</th>
-        <th class="text-center" style="width: 200px" rowspan="2">Total</th>
+        <th class="text-center" style="width: 200px" rowspan="2">
+          {{ "sales-invoice__archive__view__items__product" | translate }}
+        </th>
+        <th class="text-center" style="width: 200px" rowspan="2">
+          {{ "sales-invoice__archive__view__items__quantity" | translate }}
+        </th>
+        <th class="text-center" style="width: 200px" rowspan="2">
+          {{ "sales-invoice__archive__view__items__price" | translate }}
+        </th>
+        <th class="text-center" style="width: 300px" colspan="2">
+          {{ "sales-invoice__archive__view__items__discount" | translate }}
+        </th>
+        <th class="text-center" style="width: 200px" rowspan="2">
+          {{ "sales-invoice__archive__view__items__total" | translate }}
+        </th>
       </tr>
       <tr>
         <th class="text-center" style="width: 200px">Rp.</th>
@@ -155,35 +171,45 @@
     <tfoot>
       <tr>
         <td colspan="3"></td>
-        <td class="text-center">Subtotal</td>
+        <td class="text-center">
+          {{ "sales-invoice__archive__view__subtotal" | translate }}
+        </td>
         <td class="text-center" colspan="2">
           Rp.&nbsp;{{ data.subTotal | number : "0.2-2" }}
         </td>
       </tr>
       <tr>
         <td colspan="3"></td>
-        <td class="text-center">Discount</td>
+        <td class="text-center">
+          {{ "sales-invoice__archive__view__discount" | translate }}
+        </td>
         <td class="text-center" colspan="2">
           Rp.&nbsp;{{ data.discount | number : "0.2-2" }}
         </td>
       </tr>
       <tr>
         <td colspan="3"></td>
-        <td class="text-center">Service</td>
+        <td class="text-center">
+          {{ "sales-invoice__archive__view__service" | translate }}
+        </td>
         <td class="text-center" colspan="2">
           Rp.&nbsp;{{ data.service | number : "0.2-2" }}
         </td>
       </tr>
       <tr>
         <td colspan="3"></td>
-        <td class="text-center">Delivery</td>
+        <td class="text-center">
+          {{ "sales-invoice__archive__view__delivery" | translate }}
+        </td>
         <td class="text-center" colspan="2">
           Rp.&nbsp;{{ data.delivery | number : "0.2-2" }}
         </td>
       </tr>
       <tr>
         <td colspan="3"></td>
-        <td class="text-center">Total</td>
+        <td class="text-center">
+          {{ "sales-invoice__archive__view__total" | translate }}
+        </td>
         <td class="text-center" colspan="2">
           Rp.&nbsp;{{
             data.subTotal - data.discount + data.delivery + data.service
@@ -195,8 +221,10 @@
   </table>
 </div>
 
-<label>Actions</label>
-<div *ngIf="!isAdministrator">There is no other action available.</div>
+<label>{{ "sales-invoice__archive__action" | translate }}</label>
+<div *ngIf="!isAdministrator">
+  {{ "sales-invoice__archive__view__action__no-action" | translate }}
+</div>
 <div class="sales-invoice__action-wrapper" *ngIf="isAdministrator">
   <button
     class="sales-invoice__action"
@@ -204,7 +232,7 @@
     [disabled]="data.is_delete"
   >
     <mat-icon>delete</mat-icon>
-    Delete
+    {{ "sales-invoice__archive__view__delete" | translate }}
   </button>
   <button
     class="sales-invoice__action"
@@ -212,6 +240,6 @@
     [disabled]="data.is_delete"
   >
     <mat-icon>wallet</mat-icon>
-    Payments
+    {{ "sales-invoice__archive__view__view-payment" | translate }}
   </button>
 </div>

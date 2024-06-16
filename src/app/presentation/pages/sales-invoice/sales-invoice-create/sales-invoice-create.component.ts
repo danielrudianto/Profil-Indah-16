@@ -386,7 +386,7 @@ export class SalesInvoiceCreateComponent {
           }, 100);
         } else {
           this.alertService.showSuccess(
-            'Item already exists! Please select different item.'
+            this.translateService.instant('general__item__exists')
           );
         }
       }

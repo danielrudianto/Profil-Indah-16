@@ -89,9 +89,13 @@
           <app-stat-card
             class="w-100 h-100"
             [previousValue]="stat.previousValue"
-            [title]="stat.title"
+            [title]="stat.title | translate"
             [value]="stat.value"
-            [againstText]="stat.againstText"
+            [againstText]="
+              stat.againstText == undefined
+                ? undefined
+                : (stat.againstText | translate)
+            "
           />
         </mat-grid-tile>
       </mat-grid-list>

@@ -3,8 +3,8 @@
   <div class="row">
     <div class="col-12">
       <app-feature-header
-        title="Expense types"
-        help="Here you can manage your expense types, helping to keep track of your expenses."
+        [title]="'expense-type__title' | translate"
+        [help]="'expense-type__help' | translate"
         [isBackAvailable]="true"
       ></app-feature-header>
       <div class="dashboard-card">

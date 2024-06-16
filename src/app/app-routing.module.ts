@@ -28,7 +28,6 @@ import { ExpenseComponent } from './presentation/pages/expense/expense.component
 import { SalesInvoiceComponent } from './presentation/pages/sales-invoice/sales-invoice.component';
 import { SalesInvoiceCreateComponent } from './presentation/pages/sales-invoice/sales-invoice-create/sales-invoice-create.component';
 import { SalesInvoiceArchiveComponent } from './presentation/pages/sales-invoice/sales-invoice-archive/sales-invoice-archive.component';
-import { SalesInvoiceSearchComponent } from './presentation/pages/sales-invoice/sales-invoice-search/sales-invoice-search.component';
 import { AdjustmentCaseComponent } from './presentation/pages/adjustment-case/adjustment-case.component';
 import { AdjustmentCaseCreateComponent } from './presentation/pages/adjustment-case/adjustment-case-create/adjustment-case-create.component';
 import { AdjustmentCaseArchiveComponent } from './presentation/pages/adjustment-case/adjustment-case-archive/adjustment-case-archive.component';
@@ -492,6 +491,20 @@ const routes: Routes = [
               {
                 path: '**',
                 redirectTo: 'Sales',
+              },
+            ],
+          },
+          {
+            path: 'Report',
+            component: ReportComponent,
+            children: [
+              {
+                path: 'Sales',
+                component: ReportSalesComponent,
+              },
+              {
+                path: '**',
+                redirectTo: '/Sales',
               },
             ],
           },

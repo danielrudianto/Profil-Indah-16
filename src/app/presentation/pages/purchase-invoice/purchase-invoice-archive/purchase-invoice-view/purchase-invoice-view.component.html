@@ -1,24 +1,24 @@
-<label>Date</label>
+<label>{{ "purchase-invoice__archive__view__date" | translate }}</label>
 <p>{{ data.date | date : "dd MMMM YYYY" }}</p>
 
-<label>Name</label>
+<label>{{ "purchase-invoice__archive__view__name" | translate }}</label>
 <p>{{ data.name }}</p>
 
-<label>Tax invoice</label>
+<label>{{ "purchase-invoice__archive__view__tax-invoice" | translate }}</label>
 <p>{{ data.faktur == null ? "N/A" : data.faktur }}</p>
 
-<label>Supplier</label>
+<label>{{ "purchase-invoice__archive__view__supplier" | translate }}</label>
 <p>{{ data.good_receipt_code.supplier.name }}</p>
 
-<label>Company</label>
+<label>{{ "purchase-invoice__archive__view__company" | translate }}</label>
 <p>{{ data.good_receipt_code.company.name }}</p>
 
-<label>Status</label>
+<label>{{ "purchase-invoice__archive__view__status" | translate }}</label>
 <p>
   {{ data.is_delete ? "Deleted" : data.is_confirm ? "Confirmed" : "Pending" }}
 </p>
 
-<label>Created by</label>
+<label>{{ "purchase-invoice__archive__view__created-by" | translate }}</label>
 <div class="created-by__wrapper">
   <p>
     {{ data.user_purchase_invoice_created_byTouser.name }}&nbsp;<app-avatar
@@ -42,21 +42,31 @@
   </p>
 </div>
 
-<label>Created at</label>
-<p>{{ data.created_at | date : "dd MMMM YY H:m:s" }}</p>
+<label>{{ "purchase-invoice__archive__view__created-at" | translate }}</label>
+<p>{{ data.created_at | date : "dd/MM/YYYY H:m:s" }}</p>
 
 <div class="table-responsive">
-  <table class="table" id="my-table">
+  <table class="table">
     <thead>
       <tr>
-        <th rowspan="2">Item</th>
-        <th rowspan="2" class="text-center">Quantity</th>
-        <th rowspan="2" class="text-center">Price</th>
-        <th colspan="2" class="text-center">Discount</th>
-        <th rowspan="2" class="text-center">Total price</th>
+        <th rowspan="2">
+          {{ "purchase-invoice__archive__view__items_item" | translate }}
+        </th>
+        <th rowspan="2" class="text-center">
+          {{ "purchase-invoice__archive__view__items_quantity" | translate }}
+        </th>
+        <th rowspan="2" class="text-center">
+          {{ "purchase-invoice__archive__view__items_price" | translate }}
+        </th>
+        <th colspan="2" class="text-center">
+          {{ "purchase-invoice__archive__view__items_discount" | translate }}
+        </th>
+        <th rowspan="2" class="text-center">
+          {{ "purchase-invoice__archive__view__items_total" | translate }}
+        </th>
       </tr>
       <tr>
-        <th class="text-center">IDR</th>
+        <th class="text-center">Rp.</th>
         <th class="text-center">%</th>
       </tr>
     </thead>
@@ -88,21 +98,27 @@
     <tfoot>
       <tr>
         <td colspan="3"></td>
-        <td class="text-center">Subtotal</td>
+        <td class="text-center">
+          {{ "purchase-invoice__archive__view__subtotal" | translate }}
+        </td>
         <td class="text-center" colspan="2">
           Rp. {{ data.subTotal | number : "0.2-2" }}
         </td>
       </tr>
       <tr>
         <td colspan="3"></td>
-        <td class="text-center">Discount</td>
+        <td class="text-center">
+          {{ "purchase-invoice__archive__view__discount" | translate }}
+        </td>
         <td class="text-center" colspan="2">
           Rp. {{ data.discount | number : "0.2-2" }}
         </td>
       </tr>
       <tr>
         <td colspan="3"></td>
-        <td class="text-center">Total</td>
+        <td class="text-center">
+          {{ "purchase-invoice__archive__view__total" | translate }}
+        </td>
         <td class="text-center" colspan="2">
           Rp. {{ data.total | number : "0.2-2" }}
         </td>
@@ -120,7 +136,7 @@
     [disabled]="data.is_delete"
   >
     <mat-icon>delete</mat-icon>
-    Delete
+    {{ "purchase-invoice__archive__view__delete" | translate }}
   </button>
   <button
     class="purchase-invoice__action"
@@ -128,6 +144,6 @@
     [disabled]="data.is_delete"
   >
     <mat-icon>edit</mat-icon>
-    Edit
+    {{ "purchase-invoice__archive__view__edit" | translate }}
   </button>
 </div>

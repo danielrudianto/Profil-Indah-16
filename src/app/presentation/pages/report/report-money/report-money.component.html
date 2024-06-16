@@ -1,1 +1,77 @@
-<p>report-money works!</p>
+<app-feature-background />
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <app-feature-header
+        [title]="'report-money__title' | translate"
+        [isBackAvailable]="true"
+      ></app-feature-header>
+    </div>
+    <div class="dashboard-card">
+      <!-- Datepicker -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{ "report-money__date" | translate }}</mat-label>
+        <input
+          matInput
+          [matDatepicker]="dp"
+          [formControl]="date"
+          [readonly]="isLoading"
+        />
+        <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp> </mat-datepicker>
+      </mat-form-field>
+
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{{ "report-money__method" | translate }}</th>
+              <th>{{ "report-money__sales-invoice" | translate }}</th>
+              <th>{{ "report-money__deposit" | translate }}</th>
+              <th>{{ "report-money__sales-return" | translate }}</th>
+              <th>{{ "report-money__total" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="isLoading">
+            <tr>
+              <td colspan="5">
+                <mat-spinner id="spinner"></mat-spinner>
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="!isLoading && dataSource.length == 0">
+            <tr>
+              <td colspan="5">
+                <empty-table />
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="!isLoading && dataSource.length > 0">
+            <tr *ngFor="let item of dataSource">
+              <td>{{ item.name }}</td>
+              <td>{{ item.bill_payment | number : "0.2-2" }}</td>
+              <td>{{ item.deposit_payment | number : "0.2-2" }}</td>
+              <td>{{ item.sales_return_payment | number : "0.2-2" }}</td>
+              <td>
+                {{
+                  item.bill_payment +
+                    item.deposit_payment -
+                    item.sales_return_payment | number : "0.2-2"
+                }}
+              </td>
+            </tr>
+          </tbody>
+          <tfoot *ngIf="!isLoading && dataSource.length > 0">
+            <tr>
+              <td colspan="3"></td>
+              <td>{{ "report-money__total" | translate }}</td>
+              <td>{{ totalPayments | number : "0.2-2" }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <p>{{ "report-money__description" | translate }}</p>
+    </div>
+  </div>
+</div>

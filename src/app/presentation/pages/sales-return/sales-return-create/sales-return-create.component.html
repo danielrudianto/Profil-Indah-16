@@ -1,1 +1,411 @@
-<p>sales-return-create works!</p>
+<div [@slideInOutAnimation]="step == 0 ? 'in' : 'out'">
+  <div class="d-flex mt-4">
+    <div class="d-flex position-relative">
+      <app-vertical-divider></app-vertical-divider>
+      <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
+    </div>
+    <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+      <h5>{{ "sales-invoice__create__general-data" | translate }}</h5>
+      <form [formGroup]="metaFormGroup">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{
+            "sales-return__create__return-date" | translate
+          }}</mat-label>
+          <input
+            matInput
+            placeholder="Ex. 12/30/2023"
+            [matDatepicker]="datePicker"
+            formControlName="date"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="datePicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #datePicker></mat-datepicker>
+        </mat-form-field>
+
+        <app-autocomplete-search
+          [label]="'sales-return__create__payment-method' | translate"
+          placeholder="Ex. Cash"
+          routeName="payment-method"
+          defaultValue="Cash"
+          [selected]="metaFormGroup.controls['payment_method'].valid"
+          (onSelectData)="onSelectPaymentMethod($event)"
+          (onUnselectData)="onUnselectPaymentMethod()"
+        ></app-autocomplete-search>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{
+            "sales-return__create__bill-date" | translate
+          }}</mat-label>
+          <input
+            matInput
+            placeholder="Ex. 12/30/2023"
+            [matDatepicker]="picker"
+            formControlName="bill_date"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+
+  <div class="d-flex">
+    <div class="d-flex position-relative">
+      <app-box-stepper
+        step="2"
+        [valid]="productFormGroup.valid"
+      ></app-box-stepper>
+    </div>
+    <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4 flex-grow-1">
+      <button class="add-button" [matMenuTriggerFor]="menu">
+        {{ "sales-invoice__create__add-item" | translate }}
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="openItemSelector()">
+          <mat-icon>list</mat-icon>
+          <span>{{ "sales-invoice__create__add-product" | translate }}</span>
+        </button>
+        <button mat-menu-item (click)="openPackageSelector()">
+          <mat-icon>inventory_2</mat-icon>
+          <span>{{ "sales-invoice__create__add-package" | translate }}</span>
+        </button>
+      </mat-menu>
+
+      <div class="table-responsive">
+        <form [formGroup]="productFormGroup">
+          <table class="table mb-2">
+            <thead>
+              <tr>
+                <th class="text-center" style="width: 300px">
+                  {{ "sales-invoice__create__item" | translate }}
+                </th>
+                <th class="text-center" style="width: 200px">
+                  {{ "sales-invoice__create__quantity" | translate }}
+                </th>
+                <th class="text-center" style="width: 150px">
+                  {{ "sales-invoice__create__action" | translate }}
+                </th>
+              </tr>
+            </thead>
+            <tbody *ngIf="t.controls.length > 0">
+              <tr
+                *ngFor="let itemForm of t.controls; index as i"
+                [formGroup]="getFormGroupAt(i)"
+              >
+                <ng-container
+                  [ngSwitch]="!itemForm.get('package_code_id') ? 1 : 2"
+                >
+                  <ng-container *ngSwitchCase="1">
+                    <td>
+                      <p>{{ itemForm.get("reference")?.value }}</p>
+                      <div class="text-clamp-2">
+                        {{ itemForm.get("description")?.value }}
+                      </div>
+                      <p>
+                        {{
+                          "sales-invoice__create__current-stock" | translate
+                        }}:&nbsp;
+                        {{ itemForm.get("stock")?.value | number : "0.0-2" }}
+                        {{ itemForm.get("default_unit")?.value }}
+                      </p>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline">
+                        <mat-label>{{
+                          "sales-invoice__create__quantity" | translate
+                        }}</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          class="text-center"
+                          mask="separator"
+                          thousandSeparator=" "
+                          formControlName="quantity"
+                          autocomplete="off"
+                          placeholder="Ex. 20"
+                          focusedInput
+                        />
+                        <mat-hint
+                          *ngIf="itemForm.get('conversion')?.value == 1"
+                          >{{ itemForm.get("unit")?.value }}</mat-hint
+                        >
+                        <mat-hint *ngIf="itemForm.get('conversion')?.value != 1"
+                          >{{ itemForm.get("unit")?.value }} -
+                          {{
+                            itemForm.get("quantity")?.value *
+                              itemForm.get("conversion")?.value
+                              | number : "0.0-2"
+                          }}
+                          {{ itemForm.get("default_unit")?.value }}</mat-hint
+                        >
+                      </mat-form-field>
+                    </td>
+                    <td class="text-center">
+                      <button mat-icon-button (click)="deleteItem(i)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="2">
+                    <td>
+                      <p>{{ itemForm.get("name")?.value }}</p>
+                      <div class="text-clamp-2 mb-2">
+                        {{ itemForm.get("description")?.value }}
+                      </div>
+                      <ul>
+                        <li
+                          *ngFor="
+                            let content of itemForm.get('package_content')
+                              ?.value
+                          "
+                        >
+                          <p>
+                            {{ content.reference }} ({{
+                              content.quantity | number : "0.0-2"
+                            }}
+                            {{
+                              content.item_unit == null
+                                ? content.unit
+                                : content.item_unit.unit
+                            }})
+                          </p>
+                          <p class="text-clamp-2">{{ content.description }}</p>
+                        </li>
+                      </ul>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline">
+                        <mat-label>{{
+                          "sales-invoice__create__quantity" | translate
+                        }}</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          class="text-center"
+                          mask="separator"
+                          thousandSeparator=" "
+                          formControlName="quantity"
+                          autocomplete="off"
+                          placeholder="Ex. 20"
+                          focusedInput
+                        />
+                      </mat-form-field>
+                    </td>
+                    <td class="text-center">
+                      <button mat-icon-button (click)="deleteItem(i)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+                </ng-container>
+              </tr>
+            </tbody>
+            <tbody *ngIf="t.controls.length == 0">
+              <tr>
+                <td colspan="3">
+                  <empty-table />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
+
+      <p>{{ "sales-return__create__description" | translate }}</p>
+
+      <button
+        class="action-button"
+        (click)="fetchSalesInvoice()"
+        [disabled]="
+          isLoading || !metaFormGroup.valid || !productFormGroup.valid
+        "
+      >
+        {{ "sales-return__create__search" | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div [@slideInOutAnimation]="step == 1 ? 'in' : 'out'">
+  <div class="dashboard-card">
+    <h5>{{ "sales-return__create__available-sales-invoice" | translate }}</h5>
+    <p *ngIf="billOptions.length > 0">
+      {{ "sales-return__create__available-sales-invoice__info" | translate }}
+    </p>
+
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>
+              {{ "sales-return__create__sales-invoice__date" | translate }}
+            </th>
+            <th>
+              {{ "sales-return__create__sales-invoice__name" | translate }}
+            </th>
+            <th>
+              {{ "sales-return__create__sales-invoice__customer" | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody *ngIf="billOptions.length == 0">
+          <tr>
+            <td colspan="3">
+              <empty-table />
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="billOptions.length > 0">
+          <tr
+            *ngFor="let bill of billOptions; index as i"
+            (click)="selectSalesInvoice(i)"
+          >
+            <td>{{ bill.date | date : "dd/MM/YYYY" }}</td>
+            <td>{{ bill.name }}</td>
+            <td>{{ bill.customer.name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <button class="action-button" (click)="backToPrevious()">
+      {{ "sales-return__create__back" | translate }}
+    </button>
+  </div>
+
+  <div class="dashboard-card mt-5">
+    <h5>{{ "sales-return__create__return-data" | translate }}</h5>
+
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>
+              {{ "sales-return__create__return-data__item" | translate }}
+            </th>
+            <th>
+              {{ "sales-return__create__return-data__price" | translate }}
+            </th>
+            <th>
+              {{ "sales-return__create__return-data__discount" | translate }}
+            </th>
+            <th>
+              {{ "sales-return__create__return-data__quantity" | translate }}
+            </th>
+            <th>
+              {{ "sales-return__create__return-data__total" | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody *ngIf="t.controls.length == 0">
+          <tr>
+            <td colspan="5">
+              <empty-table />
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="t.controls.length > 0">
+          <tr
+            *ngFor="let itemForm of t.controls; index as i"
+            [formGroup]="getFormGroupAt(i)"
+          >
+            <ng-container [ngSwitch]="!itemForm.get('package_code_id') ? 1 : 2">
+              <ng-container *ngSwitchCase="1">
+                <td>
+                  <p>{{ itemForm.get("reference")?.value }}</p>
+                  <div class="text-clamp-2">
+                    {{ itemForm.get("description")?.value }}
+                  </div>
+                </td>
+                <td>{{ itemForm.get("price")?.value | number : "0.2-2" }}</td>
+                <td>
+                  {{ itemForm.get("discount")?.value | number : "0.2-2" }}
+                </td>
+                <td>
+                  {{ itemForm.get("quantity")?.value | number : "0.0-2" }}
+                  {{ itemForm.get("unit")?.value }}
+                </td>
+                <td>
+                  {{
+                    (itemForm.get("price")?.value -
+                      itemForm.get("discount")?.value) *
+                      itemForm.get("quantity")?.value
+                  }}
+                </td>
+              </ng-container>
+              <ng-container *ngSwitchCase="2">
+                <td>
+                  <p>{{ itemForm.get("name")?.value }}</p>
+                  <div class="text-clamp-2 mb-2">
+                    {{ itemForm.get("description")?.value }}
+                  </div>
+                  <ul>
+                    <li
+                      *ngFor="
+                        let content of itemForm.get('package_content')?.value
+                      "
+                    >
+                      <p>
+                        {{ content.reference }} ({{
+                          content.quantity | number : "0.0-2"
+                        }}
+                        {{
+                          content.item_unit == null
+                            ? content.unit
+                            : content.item_unit.unit
+                        }})
+                      </p>
+                      <p class="text-clamp-2">{{ content.description }}</p>
+                    </li>
+                  </ul>
+                </td>
+                <td>{{ itemForm.get("price")?.value | number : "0.2-2" }}</td>
+                <td>
+                  {{ itemForm.get("discount")?.value | number : "0.2-2" }}
+                </td>
+                <td>
+                  {{ itemForm.get("quantity")?.value | number : "0.0-2" }}
+                </td>
+                <td class="text-center">
+                  {{
+                    itemForm.get("quantity")?.value *
+                      (itemForm.get("price")?.value -
+                        itemForm.get("discount")?.value) | number : "0.2-2"
+                  }}
+                </td>
+              </ng-container>
+            </ng-container>
+          </tr>
+        </tbody>
+        <tfoot *ngIf="t.controls.length > 0">
+          <tr>
+            <td colspan="2"></td>
+            <td>
+              {{ "sales-return__create__return-data__total" | translate }}
+            </td>
+            <td>{{ totalPrice | number : "0.0-2" }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <button
+      class="action-button"
+      [disabled]="
+        isSubmitting ||
+        isLoading ||
+        !metaFormGroup.valid ||
+        !productFormGroup.valid ||
+        selectedBill == null
+      "
+      (click)="submit()"
+    >
+      {{ "sales-return__create__submit" | translate }}
+    </button>
+  </div>
+</div>

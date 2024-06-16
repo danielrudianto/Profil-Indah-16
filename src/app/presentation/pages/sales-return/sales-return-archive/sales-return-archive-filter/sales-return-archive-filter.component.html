@@ -3,7 +3,7 @@
   <div class="view-panel" [@panelAnimation]="panelState">
     <div class="row-action">
       <h2 mat-dialog-title>
-        {{ "adjustment-case__archive__filter__title" | translate }}
+        {{ "sales-return__archive__filter__title" | translate }}
       </h2>
       <div class="d-flex">
         <button mat-icon-button (click)="enlarge()">
@@ -16,9 +16,11 @@
       </div>
     </div>
     <div class="view-panel-content" id="content">
-      <form [formGroup]="adjustmentCaseArchiveFilterFormGroup" class="mt-2">
+      <form [formGroup]="salesInvoiceArchiveFilterFormGroup" class="mt-2">
         <mat-form-field class="w-100" appearance="outline">
-          <mat-label>Enter a date range</mat-label>
+          <mat-label>{{
+            "sales-return__archive__filter__date-range" | translate
+          }}</mat-label>
           <mat-date-range-input
             [rangePicker]="picker"
             [min]="minDate"
@@ -46,49 +48,36 @@
           ></mat-date-range-picker>
         </mat-form-field>
 
-        <h5>Document Status</h5>
+        <h5>
+          {{ "sales-return__archive__filter__document-status" | translate }}
+        </h5>
         <mat-divider />
         <mat-selection-list [multiple]="false">
           <mat-list-option
-            [selected]="adjustmentCaseArchiveFilterFormGroup.value.status == 0"
+            [selected]="salesInvoiceArchiveFilterFormGroup.value.status == 0"
             (selectedChange)="setStatusFilter(0)"
             [value]="0"
-            >All</mat-list-option
+            >{{
+              "sales-return__archive__filter__document-status__all" | translate
+            }}</mat-list-option
           >
           <mat-list-option
-            [selected]="adjustmentCaseArchiveFilterFormGroup.value.status == 1"
+            [selected]="salesInvoiceArchiveFilterFormGroup.value.status == 1"
             (selectedChange)="setStatusFilter(1)"
             [value]="1"
-            >Deleted</mat-list-option
+            >{{
+              "sales-return__archive__filter__document-status__deleted"
+                | translate
+            }}</mat-list-option
           >
           <mat-list-option
-            [selected]="adjustmentCaseArchiveFilterFormGroup.value.status == 2"
+            [selected]="salesInvoiceArchiveFilterFormGroup.value.status == 2"
             (selectedChange)="setStatusFilter(2)"
             [value]="2"
-            >Active</mat-list-option
-          >
-        </mat-selection-list>
-
-        <h5>Adjustment Type</h5>
-        <mat-divider />
-        <mat-selection-list [multiple]="false">
-          <mat-list-option
-            [selected]="adjustmentCaseArchiveFilterFormGroup.value.type == 0"
-            (selectedChange)="setTypeFilter(0)"
-            [value]="0"
-            >All</mat-list-option
-          >
-          <mat-list-option
-            [selected]="adjustmentCaseArchiveFilterFormGroup.value.type == 1"
-            (selectedChange)="setTypeFilter(1)"
-            [value]="1"
-            >Found</mat-list-option
-          >
-          <mat-list-option
-            [selected]="adjustmentCaseArchiveFilterFormGroup.value.type == 2"
-            (selectedChange)="setTypeFilter(2)"
-            [value]="2"
-            >Lost</mat-list-option
+            >{{
+              "sales-return__archive__filter__document-status__active"
+                | translate
+            }}</mat-list-option
           >
         </mat-selection-list>
       </form>
@@ -102,9 +91,7 @@
       </div>
       <div class="shortcut-key">
         <span class="shortcut-key-label">F</span>
-        <span class="shortcut-key-function">{{
-          "general__toggle-full-screen" | translate
-        }}</span>
+        <span class="shortcut-key-function">{{ "general__toggle-full-screen" | translate }}</span>
       </div>
     </div>
     <div class="actions">

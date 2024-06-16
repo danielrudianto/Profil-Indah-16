@@ -1,1 +1,13 @@
-<p>sales-return works!</p>
+<app-feature-background />
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <app-transaction-header
+        [title]="'sales-return__title' | translate"
+        [availbleMenus]="availbleMenus"
+        route="Sales-return"
+      />
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

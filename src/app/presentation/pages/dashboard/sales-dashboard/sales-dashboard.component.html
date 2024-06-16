@@ -44,7 +44,9 @@
                 </svg>
               </button>
             </div>
-            <small>Other application features</small>
+            <small>{{
+              "dashboard-sales__other-application" | translate
+            }}</small>
           </div>
         </div>
       </div>
@@ -65,9 +67,13 @@
           <app-stat-card
             class="w-100 h-100"
             [previousValue]="stat.previousValue"
-            [title]="stat.title"
+            [title]="stat.title | translate"
             [value]="stat.value"
-            [againstText]="stat.againstText"
+            [againstText]="
+              stat.againstText == undefined
+                ? undefined
+                : (stat.againstText | translate)
+            "
           />
         </mat-grid-tile>
       </mat-grid-list>
@@ -81,13 +87,14 @@
         <mat-expansion-panel [expanded]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>
-              <h3>Quick Picks</h3>
+              <h3>{{ "dashboard-sales__quick-picks" | translate }}</h3>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div class="quick-picks__wrapper">
             <button
               class="quick-picks__wrapper__button"
-              matTooltip="Sales report"
+              [matTooltip]="'dashboard-sales__sales-report' | translate"
+              (click)="openReport('sales')"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -112,12 +119,13 @@
                   ></path>
                 </g>
               </svg>
-              <p>Sales Report</p>
+              <p>{{ "dashboard-sales__sales-report" | translate }}</p>
             </button>
 
             <button
               class="quick-picks__wrapper__button"
-              matTooltip="Sales report"
+              [matTooltip]="'dashboard-sales__output-report' | translate"
+              (click)="openReport('output')"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -142,12 +150,13 @@
                   ></path>
                 </g>
               </svg>
-              <p>Output Report</p>
+              <p>{{ "dashboard-sales__output-report" | translate }}</p>
             </button>
 
             <button
               class="quick-picks__wrapper__button"
-              matTooltip="Sales report"
+              [matTooltip]="'dashboard-sales__company-report' | translate"
+              (click)="openReport('company')"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -186,7 +195,7 @@
                   ></path>
                 </g>
               </svg>
-              <p>Company Report</p>
+              <p>{{ "dashboard-sales__company-report" | translate }}</p>
             </button>
           </div>
           <app-gcp-info />

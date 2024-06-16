@@ -1,1 +1,71 @@
-<p>sales-return-archive works!</p>
+<app-archives
+  [@slideInOutAnimation]="mode == 0 ? 'in' : 'out'"
+  route="sales-return"
+  (onMonthSelected)="onMonthSelected($event)"
+/>
+
+<div class="container" [@slideInOutAnimation]="mode == 1 ? 'in' : 'out'">
+  <div class="row">
+    <div class="col-12">
+      <div class="dashboard-card">
+        <app-archive-search
+          [isFilterAvailable]="true"
+          (onQueryChanged)="onQueryChanged($event)"
+          (onFilterButtonClicked)="openFilter()"
+        />
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 250px">
+                  {{ "sales-return__archive__date" | translate }}
+                </th>
+                <th style="width: 250px">
+                  {{ "sales-return__archive__name" | translate }}
+                </th>
+                <th style="width: 150px">
+                  {{ "sales-return__archive__status" | translate }}
+                </th>
+              </tr>
+            </thead>
+            <tbody *ngIf="isLoading">
+              <tr>
+                <td colspan="3">
+                  <mat-spinner id="spinner"></mat-spinner>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length == 0">
+              <tr>
+                <td colspan="3">
+                  <empty-table />
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length > 0">
+              <tr
+                *ngFor="let item of dataSource; index as i"
+                (click)="viewArchive(item.id)"
+              >
+                <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.is_delete ? "Deleted" : "Active" }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="paginator__wrapper">
+          <button class="action-button p-relative" (click)="backToYear()">
+            {{ "general__archive__back-to-previous" | translate }}
+          </button>
+          <mat-paginator
+            [length]="dataCount"
+            [pageSize]="20"
+            [pageIndex]="page - 1"
+            (page)="changePage($event)"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

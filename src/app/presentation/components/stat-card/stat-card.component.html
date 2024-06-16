@@ -2,7 +2,10 @@
   <h3 class="card-label mb-3">{{ title }}</h3>
   <div class="dashboard-card-content">
     <p class="card-value text-center">{{ value | shortNumber }}</p>
-    <div class="dashboard-card-content_against-wrapper">
+    <div
+      class="dashboard-card-content_against-wrapper"
+      *ngIf="previousValue != undefined"
+    >
       <p
         class="card-against-value"
         *ngIf="previousValue != undefined"
@@ -29,12 +32,8 @@
               | number : "0.1-1")
         }}%
       </p>
-      <p
-        *ngIf="previousValue != undefined"
-        class="card-against-label text-center"
-      >
+      <p class="card-against-label text-center">
         <span class="against-text" *ngIf="againstText">{{ againstText }}</span>
-        <span class="against-text" *ngIf="!againstText">against yesterday</span>
       </p>
     </div>
   </div>

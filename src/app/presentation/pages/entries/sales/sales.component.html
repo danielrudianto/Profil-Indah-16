@@ -1,66 +1,66 @@
 <mat-drawer-container class="h-100">
   <mat-drawer [mode]="drawerMode" [opened]="isDrawerOpened" class="sidenav">
     <mat-nav-list class="sidenav__menu-wrapper">
-      <div mat-subheader>Frequently Used</div>
+      <div mat-subheader>{{ "side-nav__frequently-used" | translate }}</div>
       <mat-list-item
         [routerLink]="['/Sales/Stock']"
         [routerLinkActive]="'active'"
       >
         <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Stock Level</div>
+        <div matListItemTitle>{{ "side-nav__stock" | translate }}</div>
       </mat-list-item>
       <mat-list-item
         [routerLink]="['/Sales/Sales-invoice']"
         [routerLinkActive]="'active'"
       >
         <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Sales</div>
+        <div matListItemTitle>{{ "side-nav__sales" | translate }}</div>
       </mat-list-item>
       <mat-list-item
         [routerLink]="['/Sales/Deposit']"
         [routerLinkActive]="'active'"
       >
         <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Deposit</div>
+        <div matListItemTitle>{{ "side-nav__deposit" | translate }}</div>
       </mat-list-item>
       <mat-divider></mat-divider>
-      <div mat-subheader>Master Data</div>
+      <div mat-subheader>{{ "side-nav__master-data" | translate }}</div>
       <mat-list-item
         [routerLink]="['/Sales/Customer']"
         [routerLinkActive]="'active'"
       >
         <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Customer</div>
+        <div matListItemTitle>{{ "side-nav__customer" | translate }}</div>
       </mat-list-item>
       <mat-list-item
         [routerLink]="['/Sales/Package']"
         [routerLinkActive]="'active'"
       >
         <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Package</div>
+        <div matListItemTitle>{{ "side-nav__package" | translate }}</div>
       </mat-list-item>
       <mat-list-item
         [routerLink]="['/Sales/Price/Sales']"
         [routerLinkActive]="'active'"
       >
         <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Price</div>
+        <div matListItemTitle>{{ "side-nav__price" | translate }}</div>
       </mat-list-item>
       <mat-divider></mat-divider>
-      <div mat-subheader>Implementations</div>
+      <div mat-subheader>{{ "side-nav__implementation" | translate }}</div>
       <mat-list-item
         [routerLink]="['/Sales/Sales-return']"
         [routerLinkActive]="'active'"
       >
         <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Sales return</div>
+        <div matListItemTitle>{{ "side-nav__sales-return" | translate }}</div>
       </mat-list-item>
       <mat-list-item
         [routerLink]="['/Sales/Receivable']"
         [routerLinkActive]="'active'"
       >
         <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Receivable</div>
+        <div matListItemTitle>{{ "side-nav__receivable" | translate }}</div>
       </mat-list-item>
     </mat-nav-list>
   </mat-drawer>

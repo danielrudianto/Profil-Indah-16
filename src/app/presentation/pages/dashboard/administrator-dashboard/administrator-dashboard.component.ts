@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { ReportFinanceComponent } from '../../report/report-finance/report-finance.component';
 import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-administrator-dashboard',
@@ -17,34 +18,37 @@ export class AdministratorDashboardComponent {
     private dynamicComponentService: DynamicComponentService,
     private router: Router,
     private apiService: ApiService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private translateService: TranslateService
   ) {}
 
   stats: StatCard[] = [
     {
-      title: "Today's sales",
+      title: 'dashboard-administrator__today-sales',
       value: 0,
       previousValue: 50000,
+      againstText: 'general__against-yesterday',
     },
     {
-      title: "Today's purchase",
+      title: 'dashboard-administrator__today-purchase',
       value: 0,
       previousValue: 50000,
+      againstText: 'general__against-yesterday',
     },
     {
-      title: 'Active promotion',
+      title: 'dashboard-administrator__active-promotion',
       value: 0,
     },
     {
-      title: 'Current receivable',
+      title: 'dashboard-administrator__receivable',
       value: 0,
     },
     {
-      title: 'Active deposits',
+      title: 'dashboard-administrator__active-deposit',
       value: 0,
     },
     {
-      title: 'Adjustments created',
+      title: 'dashboard-administrator__adjustment',
       value: 0,
     },
   ];
@@ -215,34 +219,17 @@ export class AdministratorDashboardComponent {
         ? 0
         : Number(localStorage.getItem('dashboard:administrator:promotion'));
 
-    this.stats = [
-      {
-        title: "Today's sales",
-        value: todaySales,
-        previousValue: yesterdaySales,
-      },
-      {
-        title: "Today's purchase",
-        value: todayPurchase,
-        previousValue: yesterdayPurchase,
-      },
-      {
-        title: 'Active promotion',
-        value: promotion,
-      },
-      {
-        title: 'Current receivable',
-        value: receivable,
-      },
-      {
-        title: 'Active deposits',
-        value: deposit,
-      },
-      {
-        title: 'Adjustments created',
-        value: 0,
-      },
-    ];
+    this.stats[0].value = todaySales;
+    this.stats[0].previousValue = yesterdaySales;
+
+    this.stats[1].value = todayPurchase;
+    this.stats[1].previousValue = yesterdayPurchase;
+
+    this.stats[2].value = promotion;
+
+    this.stats[3].value = receivable;
+
+    this.stats[4].value = deposit;
   }
 
   get col(): number {
