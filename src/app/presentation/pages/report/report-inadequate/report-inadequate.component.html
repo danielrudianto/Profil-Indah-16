@@ -1,0 +1,97 @@
+<app-feature-background />
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <app-feature-header
+        [title]="'report-inadequate__title' | translate"
+        [isBackAvailable]="true"
+      ></app-feature-header>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="dashboard-card">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{ "report-inadequate__search" | translate }}</mat-label>
+          <input matInput [formControl]="search" />
+
+          <button matSuffix mat-icon-button (click)="openFilter()">
+            <mat-icon>filter_list</mat-icon>
+          </button>
+
+          <button
+            matPrefix
+            mat-icon-button
+            (click)="download()"
+            [disabled]="isDownloading"
+          >
+            <mat-icon>file_download</mat-icon>
+          </button>
+        </mat-form-field>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 150px">
+                  {{ "report-inadequate__reference" | translate }}
+                </th>
+                <th style="width: 250px">
+                  {{ "report-inadequate__description" | translate }}
+                </th>
+                <th style="width: 150px">
+                  {{ "report-inadequate__brand" | translate }}
+                </th>
+                <th style="width: 150px">
+                  {{ "report-inadequate__type" | translate }}
+                </th>
+                <th style="width: 200px">
+                  {{ "report-inadequate__stock" | translate }}
+                </th>
+                <th style="width: 200px">
+                  {{ "report-inadequate__minimum-stock" | translate }}
+                </th>
+              </tr>
+            </thead>
+            <tbody *ngIf="isLoading">
+              <tr>
+                <td colspan="6">
+                  <mat-spinner id="spinner"></mat-spinner>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length == 0">
+              <tr>
+                <td colspan="6">
+                  <empty-table />
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length > 0">
+              <tr *ngFor="let data of dataSource; index as i">
+                <td>
+                  <p class="text-clamp-1">{{ data.reference }}</p>
+                </td>
+                <td>
+                  <p class="text-clamp-2">{{ data.description }}</p>
+                </td>
+                <td>{{ data.item_brand_name }}</td>
+                <td>{{ data.item_type_name }}</td>
+                <td>{{ data.stock | number : "0.0-2" }} {{ data.unit }}</td>
+                <td>
+                  {{ data.minimum_stock | number : "0.0-2" }} {{ data.unit }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <mat-paginator
+          [pageSize]="10"
+          [pageIndex]="page - 1"
+          [length]="dataCount"
+          (page)="changePage($event)"
+          [disabled]="isLoading"
+        />
+      </div>
+    </div>
+  </div>
+</div>

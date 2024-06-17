@@ -2,7 +2,9 @@
   <div class="view-panel-backdrop" (click)="close()"></div>
   <div class="view-panel" [@panelAnimation]="panelState">
     <div class="row-action">
-      <h2 mat-dialog-title>Filter Sales Invoice</h2>
+      <h2 mat-dialog-title>
+        {{ "sales-invoice__archive__filter__archive" | translate }}
+      </h2>
       <div class="d-flex">
         <button mat-icon-button (click)="enlarge()">
           <mat-icon *ngIf="panelState != 'enlarged'">open_in_full</mat-icon>
@@ -16,7 +18,9 @@
     <div class="view-panel-content" id="content">
       <form [formGroup]="salesInvoiceArchiveFilterFormGroup" class="mt-2">
         <mat-form-field class="w-100" appearance="outline">
-          <mat-label>Enter a date range</mat-label>
+          <mat-label>{{
+            "sales-invoice__archive__filter__date-range" | translate
+          }}</mat-label>
           <mat-date-range-input
             [rangePicker]="picker"
             [min]="minDate"
@@ -44,30 +48,43 @@
           ></mat-date-range-picker>
         </mat-form-field>
 
-        <h5>Document Status</h5>
+        <h5>
+          {{ "sales-invoice__archive__filter__document-status" | translate }}
+          s
+        </h5>
         <mat-divider />
         <mat-selection-list [multiple]="false">
           <mat-list-option
             [selected]="salesInvoiceArchiveFilterFormGroup.value.status == 0"
             (selectedChange)="setStatusFilter(0)"
             [value]="0"
-            >All</mat-list-option
+            >{{
+              "sales-invoice__archive__filter__document-status__all" | translate
+            }}</mat-list-option
           >
           <mat-list-option
             [selected]="salesInvoiceArchiveFilterFormGroup.value.status == 1"
             (selectedChange)="setStatusFilter(1)"
             [value]="1"
-            >Deleted</mat-list-option
+            >{{
+              "sales-invoice__archive__filter__document-status__deleted"
+                | translate
+            }}</mat-list-option
           >
           <mat-list-option
             [selected]="salesInvoiceArchiveFilterFormGroup.value.status == 2"
             (selectedChange)="setStatusFilter(2)"
             [value]="2"
-            >Active</mat-list-option
+            >{{
+              "sales-invoice__archive__filter__document-status__active"
+                | translate
+            }}</mat-list-option
           >
         </mat-selection-list>
 
-        <h5>Payment Status</h5>
+        <h5>
+          {{ "sales-invoice__archive__filter__payment-status" | translate }}
+        </h5>
         <mat-divider />
         <mat-selection-list [multiple]="false">
           <mat-list-option
@@ -76,7 +93,9 @@
             "
             (selectedChange)="setPaymentStatusFilter(0)"
             [value]="0"
-            >All</mat-list-option
+            >{{
+              "sales-invoice__archive__filter__payment-status__all" | translate
+            }}</mat-list-option
           >
           <mat-list-option
             [selected]="
@@ -84,7 +103,9 @@
             "
             (selectedChange)="setPaymentStatusFilter(1)"
             [value]="1"
-            >Paid</mat-list-option
+            >{{
+              "sales-invoice__archive__filter__payment-status__paid" | translate
+            }}</mat-list-option
           >
           <mat-list-option
             [selected]="
@@ -92,7 +113,10 @@
             "
             (selectedChange)="setPaymentStatusFilter(2)"
             [value]="2"
-            >Unpaid</mat-list-option
+            >{{
+              "sales-invoice__archive__filter__payment-status__unpaid"
+                | translate
+            }}</mat-list-option
           >
         </mat-selection-list>
       </form>
@@ -106,7 +130,9 @@
       </div>
       <div class="shortcut-key">
         <span class="shortcut-key-label">F</span>
-        <span class="shortcut-key-function">{{ "general__toggle-full-screen" | translate }}</span>
+        <span class="shortcut-key-function">{{
+          "general__toggle-full-screen" | translate
+        }}</span>
       </div>
     </div>
     <div class="actions">

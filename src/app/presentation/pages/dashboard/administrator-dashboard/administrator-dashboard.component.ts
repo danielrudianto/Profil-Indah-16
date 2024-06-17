@@ -26,13 +26,13 @@ export class AdministratorDashboardComponent {
     {
       title: 'dashboard-administrator__today-sales',
       value: 0,
-      previousValue: 50000,
+      previousValue: 0,
       againstText: 'general__against-yesterday',
     },
     {
       title: 'dashboard-administrator__today-purchase',
       value: 0,
-      previousValue: 50000,
+      previousValue: 0,
       againstText: 'general__against-yesterday',
     },
     {

@@ -1,1 +1,152 @@
-<p>sales-return-archive-view works!</p>
+<label>{{ "sales-return__archive__view__date" | translate }}</label>
+<p>{{ data.date | date : "dd/MM/YYYY" }}</p>
+
+<label>{{ "sales-return__archive__view__name" | translate }}</label>
+<p>{{ data.name }}</p>
+
+<label>{{ "sales-return__archive__view__status" | translate }}</label>
+<p>
+  {{
+    (data.is_delete
+      ? "sales-return__archive__view__status__deleted"
+      : data.is_confirm
+      ? "sales-return__archive__view__status__confirmed"
+      : "sales-return__archive__view__status__pending"
+    ) | translate
+  }}
+</p>
+
+<label>{{ "sales-return__archive__view__created-by" | translate }}</label>
+<p>
+  {{ data.user_sales_return_code_created_byTouser.name }}&nbsp;<app-avatar
+    *ngIf="data.user_sales_return_code_created_byTouser.user_avatar != null"
+    [top]="data.user_sales_return_code_created_byTouser.user_avatar.top"
+    [accessories]="
+      data.user_sales_return_code_created_byTouser.user_avatar.accessories
+    "
+    [eyes]="data.user_sales_return_code_created_byTouser.user_avatar.eyes"
+    [mouth]="data.user_sales_return_code_created_byTouser.user_avatar.mouth"
+    [clothes]="data.user_sales_return_code_created_byTouser.user_avatar.clothes"
+    [eyebrows]="
+      data.user_sales_return_code_created_byTouser.user_avatar.eyebrows
+    "
+    [circle]="data.user_sales_return_code_created_byTouser.user_avatar.circle"
+    [color]="data.user_sales_return_code_created_byTouser.user_avatar.color"
+    [width]="25"
+  />
+</p>
+
+<label>{{ "sales-return__archive__view__created-at" | translate }}</label>
+<p>{{ data.created_at | date : "dd/MM/YYYY HH:mm:ss" }}</p>
+
+<label>{{ "sales-return__archive__view__payment-method" | translate }}</label>
+<p *ngIf="data.payment_method == null">Cash</p>
+<p *ngIf="data.payment_method != null">{{ data.payment_method.name }}</p>
+<p *ngIf="data.payment_method != null">{{ data.payment_method.description }}</p>
+
+<h5>{{ "sales-return__archive__view__bill-data" | translate }}</h5>
+<mat-divider />
+
+<label>{{ "sales-return__archive__view__bill-date" | translate }}</label>
+<p>{{ data.bill.date | date : "dd/MM/YYYY" }}</p>
+
+<label>{{ "sales-return__archive__view__bill-name" | translate }}</label>
+<p>{{ data.bill.name }}</p>
+
+<label>{{ "sales-return__archive__view__customer" | translate }}</label>
+<p>
+  {{
+    data.customer == null
+      ? "Retail customer"
+      : ("data.customer.name" | translate)
+  }}
+</p>
+
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{{ "sales-return__archive__view__item" | translate }}</th>
+        <th>{{ "sales-return__archive__view__quantity" | translate }}</th>
+        <th>{{ "sales-return__archive__view__price" | translate }}</th>
+        <th>{{ "sales-return__archive__view__total" | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data.sales_return">
+        <ng-container [ngSwitch]="item.bill.package_code == null ? 1 : 2">
+          <ng-container *ngSwitchCase="1">
+            <td>
+              <p class="mb-0">{{ item.bill.item.reference }}</p>
+              <p class="text-clamp-1">{{ item.bill.item.description }}</p>
+            </td>
+            <td class="text-center">
+              {{ item.quantity | number : "0.0-2" }}
+              {{
+                item.item_unit == null
+                  ? item.bill.item.unit
+                  : item.item_unit.unit
+              }}
+            </td>
+            <td class="text-center">
+              Rp.&nbsp;{{
+                item.bill.price - item.bill.discount | number : "0.2-2"
+              }}
+            </td>
+            <td class="text-center">
+              Rp.&nbsp;{{
+                (item.bill.price - item.bill.discount) * item.quantity
+                  | number : "0.2-2"
+              }}
+            </td>
+          </ng-container>
+          <ng-container *ngSwitchCase="2">
+            <td>
+              <p class="mb-0">{{ item.bill.package_code.name }}</p>
+              <p class="text-clamp-1 mb-0">
+                {{ item.bill.package_code.description }}
+              </p>
+              <ul>
+                <li *ngFor="let item of item.bill.package_code.package_content">
+                  <p>
+                    {{ item.item.reference }} ({{ item.quantity }}
+                    {{
+                      item.item_unit == null
+                        ? item.item.unit
+                        : item.item_unit.unit
+                    }})
+                  </p>
+                  <p class="text-clamp-2">
+                    {{ item.item.description }}
+                  </p>
+                </li>
+              </ul>
+            </td>
+            <td class="text-center">
+              {{ item.quantity | number : "0.0-2" }}
+            </td>
+            <td class="text-center">
+              Rp.&nbsp;{{
+                item.bill.price - item.bill.discount | number : "0.2-2"
+              }}
+            </td>
+            <td class="text-center">
+              Rp.&nbsp;{{
+                (item.bill.price - item.bill.discount) * item.quantity
+                  | number : "0.2-2"
+              }}
+            </td>
+          </ng-container>
+        </ng-container>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="3">
+          {{ "sales-return__archive__view__total" | translate }}
+        </td>
+        <td>Rp.&nbsp;{{ data.total | number : "0.2-2" }}</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

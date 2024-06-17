@@ -1,40 +1,35 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { MatDrawerMode } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
+import { slideUpDownAnimation } from 'src/app/animations/slide-up-down.animation';
+import { SideNavService } from 'src/app/services/side-nav.service';
 
 @Component({
   selector: 'app-general',
   templateUrl: './general.component.html',
   styleUrls: ['./general.component.css'],
+  animations: [slideUpDownAnimation],
 })
 export class GeneralComponent {
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private sideNavService: SideNavService) {}
 
-  name: string = '';
+  isSideNavOpen$ = this.sideNavService.isOpen$;
   drawerMode: MatDrawerMode = 'over';
   isDrawerOpened: boolean = false;
   isMenuButtonAvailable: boolean = false;
 
   ngOnInit(): void {
-    this.name = this.authService.getUserInfo()?.name ?? '';
-
     this.drawerMode = this.getDrawerMode;
-    this.isDrawerOpened = window.innerWidth > 768;
-    this.isMenuButtonAvailable = window.innerWidth < 768;
-
-    window.addEventListener('resize', () => {
-      if (window.innerWidth < 768) {
-        this.isDrawerOpened = true;
-        this.isMenuButtonAvailable = true;
-      } else {
-        this.isMenuButtonAvailable = false;
-        this.isDrawerOpened = true;
-      }
-
-      this.drawerMode = this.getDrawerMode;
-    });
+    this.sideNavService.updateSideNavState(window.innerWidth);
   }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    const target = event.target as Window;
+    this.sideNavService.updateSideNavState(target.innerWidth);
+    this.drawerMode = this.getDrawerMode;
+  }
+
   get getDrawerMode(): MatDrawerMode {
     if (window.innerWidth < 768) {
       return 'over';
@@ -43,12 +38,11 @@ export class GeneralComponent {
     }
   }
 
-  clickMenuButton() {
-    this.isDrawerOpened = !this.isDrawerOpened;
+  get isHidden(): boolean {
+    return this.router.url !== '/General';
   }
 
-  get isHidden(): boolean {
-    // If route is /Administrator then false
-    return this.router.url !== '/Administrator';
+  toggleSideNav() {
+    this.sideNavService.toggle();
   }
 }

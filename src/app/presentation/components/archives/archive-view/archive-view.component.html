@@ -32,6 +32,11 @@
           [data]="dataSource"
           (close)="close()"
         />
+        <app-sales-return-archive-view
+          *ngSwitchCase="'sales-return'"
+          [data]="dataSource"
+          (close)="close()"
+        />
       </div>
     </div>
     <div class="shortcuts">
@@ -43,11 +48,15 @@
       </div>
       <div class="shortcut-key">
         <span class="shortcut-key-label">F</span>
-        <span class="shortcut-key-function">{{ "general__toggle-full-screen" | translate }}</span>
+        <span class="shortcut-key-function">{{
+          "general__toggle-full-screen" | translate
+        }}</span>
       </div>
       <div class="shortcut-key">
         <span class="shortcut-key-label">P</span>
-        <span class="shortcut-key-function">{{ "general__print" | translate }}</span>
+        <span class="shortcut-key-function">{{
+          "general__print" | translate
+        }}</span>
       </div>
     </div>
     <div class="actions"></div>

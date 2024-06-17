@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
 import { StatCard } from '../dashboard.component';
+import { Router } from '@angular/router';
+import { ApiService } from 'src/app/services/api.service';
+import { AlertService } from 'src/app/services/alert.service';
+import * as xlsx from 'xlsx';
+import { saveAs } from 'file-saver';
+import { DatePipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-general-dashboard',
@@ -7,7 +14,13 @@ import { StatCard } from '../dashboard.component';
   styleUrls: ['./general-dashboard.component.css'],
 })
 export class GeneralDashboardComponent {
-  constructor() {}
+  constructor(
+    private router: Router,
+    private apiService: ApiService,
+    private alertService: AlertService,
+    private datePipe: DatePipe,
+    private translateService: TranslateService
+  ) {}
 
   stats: StatCard[] = [
     {
@@ -37,6 +50,7 @@ export class GeneralDashboardComponent {
   columnNumber: number = 4;
   aspectRatio: string = '4:3';
   isMenuAvailable: boolean = false;
+  isLoadingDailyReport: boolean = false;
 
   ngOnInit(): void {
     this.columnNumber = this.col;
@@ -51,6 +65,102 @@ export class GeneralDashboardComponent {
   goToStockApplication() {
     // Open new tab opens stock.profilindah.id
     window.open('https://stock.profilindah.id', '_blank');
+  }
+
+  openReport(reportType: string) {
+    if (reportType == 'sales') {
+      this.router.navigate(['/General/Report/Sales']);
+    } else if (reportType == 'daily') {
+      if (!this.isLoadingDailyReport) {
+        this.fetchDailyReport();
+      }
+    } else if (reportType == 'output') {
+    }
+  }
+
+  fetchDailyReport() {
+    this.isLoadingDailyReport = true;
+    this.apiService
+      .post('report/sales-item-daily', {
+        day: new Date().getDate(),
+        month: new Date().getMonth() + 1,
+        year: new Date().getFullYear(),
+        // HPL, Board, Multiplek
+        type: [1, 8, 39, 40],
+        group: 'type',
+      })
+      .subscribe({
+        next: (data: any) => {
+          const workbook: xlsx.WorkBook = xlsx.utils.book_new();
+          // Reference, description, Unit, brand, type, initial stock, adjustment input, adjustment output, good receipt input, bill output, sales return, final stock
+          for (let i = 0; i < data.length; i++) {
+            const worksheetData = [
+              [
+                'Reference',
+                'Description',
+                'Unit',
+                'Brand',
+                'Type',
+                'Initial Stock',
+                'Adjustment Input',
+                'Adjustment Output',
+                'Good Receipt Input',
+                'Bill Output',
+                'Sales Return',
+                'Final Stock',
+              ],
+            ];
+
+            const items = data[i].items;
+
+            for (let j = 0; j < items.length; j++) {
+              const finalStock =
+                Number(items[j].initialStock) +
+                Number(items[j].adjustment_input) +
+                Number(items[j].adjustment_output) +
+                Number(items[j].good_receipt_input) +
+                Number(items[j].bill_output) +
+                Number(items[j].sales_return);
+
+              worksheetData.push([
+                items[j].reference,
+                items[j].description,
+                items[j].unit,
+                items[j].brand,
+                items[j].type,
+                items[j].initialStock,
+                items[j].adjustment_input,
+                items[j].adjustment_output,
+                items[j].good_receipt_input,
+                items[j].bill_output,
+                items[j].sales_return,
+                finalStock,
+              ]);
+            }
+
+            const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);
+            xlsx.utils.book_append_sheet(workbook, worksheet, data[i].name);
+          }
+
+          const excelBuffer = xlsx.write(workbook, {
+            bookType: 'xlsx',
+            type: 'array',
+          });
+          const blob = new Blob([excelBuffer], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          });
+          saveAs(blob, `Daily_report_${new Date().getTime()}.xlsx`);
+          this.alertService.showSuccess(
+            this.translateService.instant('daily-report__export__successful')
+          );
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isLoadingDailyReport = false;
+      });
   }
 
   get col(): number {

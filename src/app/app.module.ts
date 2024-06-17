@@ -220,6 +220,10 @@ import { SalesReturnArchiveComponent } from './presentation/pages/sales-return/s
 import { SalesReturnArchiveFilterComponent } from './presentation/pages/sales-return/sales-return-archive/sales-return-archive-filter/sales-return-archive-filter.component';
 import { SalesReturnArchiveViewComponent } from './presentation/pages/sales-return/sales-return-archive/sales-return-archive-view/sales-return-archive-view.component';
 import { SalesReturnCreateViewSalesInvoiceComponent } from './presentation/pages/sales-return/sales-return-create/sales-return-create-view-sales-invoice/sales-return-create-view-sales-invoice.component';
+import { ReportInadequateComponent } from './presentation/pages/report/report-inadequate/report-inadequate.component';
+import { ReportInadequateFilterComponent } from './presentation/pages/report/report-inadequate/report-inadequate-filter/report-inadequate-filter.component';
+import { ReportOutputComponent } from './presentation/pages/report/report-output/report-output.component';
+import { ReportCompanyComponent } from './presentation/pages/report/report-company/report-company.component';
 @NgModule({
   declarations: [
     ShortNumberPipe,
@@ -385,6 +389,10 @@ import { SalesReturnCreateViewSalesInvoiceComponent } from './presentation/pages
     SalesReturnArchiveFilterComponent,
     SalesReturnArchiveViewComponent,
     SalesReturnCreateViewSalesInvoiceComponent,
+    ReportInadequateComponent,
+    ReportInadequateFilterComponent,
+    ReportOutputComponent,
+    ReportCompanyComponent,
   ],
   imports: [
     BrowserModule,

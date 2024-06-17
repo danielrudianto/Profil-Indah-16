@@ -123,7 +123,6 @@ export class SalesDashboardComponent {
 
         localStorage.setItem('dashboard:sales:deposit', data.deposit);
         localStorage.setItem('dashboard:sales:promotion', data.promotion);
-        localStorage.setItem('dashboard:sales:receivable', data.receivable);
 
         this.syncWithLocalStorage();
       },

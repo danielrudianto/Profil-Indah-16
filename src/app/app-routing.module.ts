@@ -72,6 +72,9 @@ import { ReportMoneyComponent } from './presentation/pages/report/report-money/r
 import { SalesReturnComponent } from './presentation/pages/sales-return/sales-return.component';
 import { SalesReturnCreateComponent } from './presentation/pages/sales-return/sales-return-create/sales-return-create.component';
 import { SalesReturnArchiveComponent } from './presentation/pages/sales-return/sales-return-archive/sales-return-archive.component';
+import { ReportInadequateComponent } from './presentation/pages/report/report-inadequate/report-inadequate.component';
+import { ReportOutputComponent } from './presentation/pages/report/report-output/report-output.component';
+import { ReportCompanyComponent } from './presentation/pages/report/report-company/report-company.component';
 
 const routes: Routes = [
   {
@@ -331,6 +334,10 @@ const routes: Routes = [
                 component: ReportMoneyComponent,
               },
               {
+                path: 'Inadequate',
+                component: ReportInadequateComponent,
+              },
+              {
                 path: '**',
                 redirectTo: '/Administrator',
               },
@@ -400,6 +407,24 @@ const routes: Routes = [
               {
                 path: 'Archive',
                 component: GoodReceiptArchiveComponent,
+              },
+            ],
+          },
+          {
+            path: 'Report',
+            component: ReportComponent,
+            children: [
+              {
+                path: 'Purchase',
+                component: ReportPurchaseComponent,
+              },
+              {
+                path: 'Inadequate',
+                component: ReportInadequateComponent,
+              },
+              {
+                path: '**',
+                redirectTo: '/Purchasing',
               },
             ],
           },
@@ -556,6 +581,28 @@ const routes: Routes = [
           {
             path: 'Expense-type',
             component: ExpenseTypeComponent,
+          },
+          {
+            path: 'Report',
+            component: ReportComponent,
+            children: [
+              {
+                path: 'Sales',
+                component: ReportSalesComponent,
+              },
+              {
+                path: 'Output',
+                component: ReportOutputComponent,
+              },
+              {
+                path: 'Company',
+                component: ReportCompanyComponent,
+              },
+              {
+                path: '**',
+                redirectTo: '/General',
+              },
+            ],
           },
         ],
       },

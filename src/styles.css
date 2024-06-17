@@ -17,6 +17,13 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+app-root,
+app-main,
+app-dashboard {
+  display: block;
+  height: 100%;
+}
+
 .vertical-divider {
   border-right: 1px solid gray;
   width: 1px;

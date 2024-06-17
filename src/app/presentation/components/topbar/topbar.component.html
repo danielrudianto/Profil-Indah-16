@@ -1,13 +1,5 @@
 <div class="top-navigation__wrapper" [ngClass]="{ white: isHidden }">
   <div class="top-navigation__brand">
-    <button
-      mat-icon-button
-      *ngIf="menuButtonAvailable"
-      type="button"
-      (click)="clickMenuButton()"
-    >
-      <mat-icon>menu</mat-icon>
-    </button>
     <img
       (click)="navigate()"
       src="/assets/images/logo.png"

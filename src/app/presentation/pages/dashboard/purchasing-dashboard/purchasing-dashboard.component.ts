@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { StatCard } from '../dashboard.component';
+import { Router } from '@angular/router';
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-purchasing-dashboard',
@@ -7,22 +10,27 @@ import { StatCard } from '../dashboard.component';
   styleUrls: ['./purchasing-dashboard.component.css'],
 })
 export class PurchasingDashboardComponent {
-  constructor() {}
+  constructor(
+    private router: Router,
+    private alertService: AlertService,
+    private apiService: ApiService
+  ) {}
 
   stats: StatCard[] = [
     {
-      title: "Today's purchase",
+      title: 'dashboard-purchasing__today-purchase',
       value: 0,
-      previousValue: 50000,
+      previousValue: 0,
+      againstText: 'general__against-yesterday',
     },
     {
-      title: "This month's purchase",
-      value: 252879444,
-      previousValue: 9785140500,
-      againstText: 'against last month',
+      title: 'dashboard-purchasing__month-purchase',
+      value: 0,
+      previousValue: 0,
+      againstText: 'general__against-last-month',
     },
     {
-      title: 'Active promotion',
+      title: 'dashboard-purchasing__active-promotion',
       value: 0,
     },
   ];
@@ -39,6 +47,112 @@ export class PurchasingDashboardComponent {
       this.columnNumber = this.col;
       this.aspectRatio = this.ar;
     });
+
+    this.checkAndFetchStats();
+  }
+
+  openReport(reportType: string) {
+    if (reportType == 'purchase') {
+      this.router.navigate(['/Purchasing/Report/Purchase']);
+    } else if (reportType == 'inadequate') {
+      this.router.navigate(['/Purchasing/Report/Inadequate']);
+    }
+  }
+
+  checkAndFetchStats(): void {
+    const lastSynced = localStorage.getItem('dashboard:purchasing:last-synced');
+
+    if (lastSynced == null || lastSynced == undefined) {
+      // Fetch stats
+      this.fetchStats();
+      return;
+    } else {
+      const date = new Date();
+      const lastSyncedDate = new Date(lastSynced);
+      // If it's more than 15 minutes ago, then fetch stats
+      if (date.getTime() - lastSyncedDate.getTime() > 15 * 60 * 1000) {
+        // Fetch stats
+        this.fetchStats();
+        return;
+      } else {
+        // If it's less than 15 minutes ago, then don't fetch stats
+        this.syncWithLocalStorage();
+        return;
+      }
+    }
+  }
+
+  fetchStats(): void {
+    this.apiService.post('report/dashboard/purchasing', {}).subscribe({
+      next: (data: any) => {
+        localStorage.setItem(
+          'dashboard:purchasing:last-synced',
+          new Date().toISOString()
+        );
+
+        localStorage.setItem(
+          'dashboard:purchasing:purchase-today',
+          data.purchase.current
+        );
+        localStorage.setItem(
+          'dashboard:purchasing:purchase-yesterday',
+          data.purchase.previous
+        );
+        localStorage.setItem(
+          'dashboard:purchasing:purchase-month',
+          data.purchase_month.current
+        );
+        localStorage.setItem(
+          'dashboard:purchasing:purchase-month-previous',
+          data.purchase_month.previous
+        );
+
+        localStorage.setItem('dashboard:purchasing:promotion', data.promotion);
+
+        this.syncWithLocalStorage();
+      },
+      error: (error) => {
+        this.alertService.showError(error);
+      },
+    });
+  }
+
+  syncWithLocalStorage(): void {
+    const todayPurchase =
+      localStorage.getItem('dashboard:purchasing:purchase-today') == null
+        ? 0
+        : Number(localStorage.getItem('dashboard:purchasing:purchase-today'));
+    const yesterdayPurchase =
+      localStorage.getItem('dashboard:purchasing:purchase-yesterday') == null
+        ? 0
+        : Number(
+            localStorage.getItem('dashboard:purchasing:purchase-yesterday')
+          );
+
+    const monthPurchase =
+      localStorage.getItem('dashboard:purchasing:purchase-month') == null
+        ? 0
+        : Number(localStorage.getItem('dashboard:purchasing:purchase-month'));
+    const monthPreviousPurchase =
+      localStorage.getItem('dashboard:purchasing:purchase-month-previous') ==
+      null
+        ? 0
+        : Number(
+            localStorage.getItem('dashboard:purchasing:purchase-month-previous')
+          );
+
+    const promotion =
+      localStorage.getItem('dashboard:purchasing:promotion') == null
+        ? 0
+        : Number(localStorage.getItem('dashboard:purchasing:promotion'));
+
+    this.stats[0].value = todayPurchase;
+    this.stats[0].previousValue = yesterdayPurchase;
+
+    this.stats[1].value = monthPurchase;
+    this.stats[1].previousValue = monthPreviousPurchase;
+
+    this.stats[2].value = promotion;
   }
 
   goToStockApplication() {
