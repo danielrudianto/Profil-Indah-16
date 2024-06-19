@@ -67,7 +67,6 @@ import { StockCardComponent } from './presentation/pages/stock-list/stock-card/s
 import { ReportComponent } from './presentation/pages/report/report.component';
 import { ReportSalesComponent } from './presentation/pages/report/report-sales/report-sales.component';
 import { ReportPurchaseComponent } from './presentation/pages/report/report-purchase/report-purchase.component';
-import { ReportFinanceComponent } from './presentation/pages/report/report-finance/report-finance.component';
 import { ReportMoneyComponent } from './presentation/pages/report/report-money/report-money.component';
 import { SalesReturnComponent } from './presentation/pages/sales-return/sales-return.component';
 import { SalesReturnCreateComponent } from './presentation/pages/sales-return/sales-return-create/sales-return-create.component';
@@ -530,6 +529,24 @@ const routes: Routes = [
               {
                 path: '**',
                 redirectTo: '/Sales',
+              },
+            ],
+          },
+          {
+            path: 'Sales-return',
+            component: SalesReturnComponent,
+            children: [
+              {
+                path: '',
+                component: SalesReturnCreateComponent,
+              },
+              {
+                path: 'Archive',
+                component: SalesReturnArchiveComponent,
+              },
+              {
+                path: '**',
+                redirectTo: '',
               },
             ],
           },
