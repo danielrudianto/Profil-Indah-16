@@ -27,8 +27,6 @@ export class FeatureHeaderComponent {
       }
     }
 
-    console.log(url);
-
     this.router.navigate(url);
   }
 }

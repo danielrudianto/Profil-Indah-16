@@ -1,1 +1,51 @@
-<p>report-company works!</p>
+<app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
+  <div class="create-dialog">
+    <app-dialog-header
+      [title]="'report-company__title' | translate"
+      (onDialogClose)="closeDialog()"
+    >
+    </app-dialog-header>
+    <div class="create-dialog__content">
+      <form [formGroup]="companyFormGroup">
+        <app-autocomplete-search
+          [routeName]="'company'"
+          (onSelectData)="onSelectCompany($event)"
+          (onUnselectData)="onUnselectCompany()"
+          [label]="'report-company__company' | translate"
+          [selected]="companyFormGroup.controls['company'].valid"
+        />
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{ "report-company__date" | translate }}</mat-label>
+          <input
+            matInput
+            formControlName="date"
+            autocomplete="off"
+            [matDatepicker]="dp"
+            [readonly]="isDownloading"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="dp"
+            [disabled]="isDownloading"
+          ></mat-datepicker-toggle>
+          <mat-datepicker
+            #dp
+            panelClass="example-month-picker"
+            [disabled]="isDownloading"
+          >
+          </mat-datepicker>
+        </mat-form-field>
+      </form>
+    </div>
+    <div class="create-dialog__footer">
+      <button
+        class="next-button"
+        [disabled]="isDownloading || !companyFormGroup.valid"
+        (click)="downloadReport()"
+      >
+        {{ "report-company__download" | translate }}
+      </button>
+    </div>
+  </div>
+</app-dynamic-dialog>

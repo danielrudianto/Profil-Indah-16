@@ -75,6 +75,7 @@ export class GeneralDashboardComponent {
         this.fetchDailyReport();
       }
     } else if (reportType == 'output') {
+      this.router.navigate(['/General/Report/Output']);
     }
   }
 

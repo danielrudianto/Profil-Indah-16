@@ -56,6 +56,7 @@ import {
   GeneralGuard,
   PurchasingGuard,
   SalesGuard,
+  SuperAdministratorGuard,
 } from './guards/administrator.guard';
 import { AdjustmentCaseConfirmComponent } from './presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm.component';
 import { PurchaseInvoiceConfirmViewComponent } from './presentation/pages/purchase-invoice/purchase-invoice-confirm-view/purchase-invoice-confirm-view.component';
@@ -73,7 +74,6 @@ import { SalesReturnCreateComponent } from './presentation/pages/sales-return/sa
 import { SalesReturnArchiveComponent } from './presentation/pages/sales-return/sales-return-archive/sales-return-archive.component';
 import { ReportInadequateComponent } from './presentation/pages/report/report-inadequate/report-inadequate.component';
 import { ReportOutputComponent } from './presentation/pages/report/report-output/report-output.component';
-import { ReportCompanyComponent } from './presentation/pages/report/report-company/report-company.component';
 
 const routes: Routes = [
   {
@@ -254,6 +254,7 @@ const routes: Routes = [
               },
               {
                 path: 'Confirm',
+                canActivate: [SuperAdministratorGuard],
                 component: AdjustmentCaseConfirmComponent,
               },
             ],
@@ -527,6 +528,10 @@ const routes: Routes = [
                 component: ReportSalesComponent,
               },
               {
+                path: 'Output',
+                component: ReportOutputComponent,
+              },
+              {
                 path: '**',
                 redirectTo: '/Sales',
               },
@@ -610,10 +615,6 @@ const routes: Routes = [
               {
                 path: 'Output',
                 component: ReportOutputComponent,
-              },
-              {
-                path: 'Company',
-                component: ReportCompanyComponent,
               },
               {
                 path: '**',

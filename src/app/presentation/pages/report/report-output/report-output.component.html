@@ -1,1 +1,115 @@
-<p>report-output works!</p>
+<app-feature-background />
+
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <app-transaction-header [title]="'report-output__title' | translate" />
+      <div class="dashboard-card">
+        <form [formGroup]="documentFormGroup" (ngSubmit)="submitForm()">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>{{ "report-output__month-year" | translate }}</mat-label>
+            <input
+              matInput
+              [matDatepicker]="dp"
+              formControlName="date"
+              [readonly]="isSubmitting"
+            />
+            <mat-hint>MM/YYYY</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="dp"
+            ></mat-datepicker-toggle>
+            <mat-datepicker
+              #dp
+              startView="multi-year"
+              (monthSelected)="setMonthAndYear($event, dp)"
+              panelClass="example-month-picker"
+            >
+            </mat-datepicker>
+          </mat-form-field>
+
+          <!-- Group by either brand or type -->
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ "report-output__filter" | translate }}</mat-label>
+            <mat-select formControlName="groupBy">
+              <mat-option value="brand">
+                {{ "report-output__filter__brand" | translate }}
+              </mat-option>
+              <mat-option value="type">
+                {{ "report-output__filter__type" | translate }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <app-autocomplete-search
+            [routeName]="'product-brand'"
+            (onSelectData)="onSelectBrand($event)"
+            [reset]="true"
+            [label]="'report-output__filter__brand' | translate"
+          ></app-autocomplete-search>
+
+          <p *ngIf="selectedBrands.length == 0">
+            {{ "report-output__filter__brand__empty" | translate }}
+          </p>
+
+          <mat-chip-listbox class="mb-3">
+            <mat-chip
+              *ngFor="let brand of selectedBrands"
+              color="primary"
+              (click)="onUnselectBrand(brand)"
+            >
+              {{ brand.name }}
+            </mat-chip>
+          </mat-chip-listbox>
+
+          <app-autocomplete-search
+            [routeName]="'product-type'"
+            (onSelectData)="onSelectType($event)"
+            [reset]="true"
+            [label]="'report-output__filter__type' | translate"
+          ></app-autocomplete-search>
+
+          <p *ngIf="selectedTypes.length == 0">
+            {{ "report-output__filter__type__empty" | translate }}
+          </p>
+
+          <!-- I was thinking of having chips -->
+          <mat-chip-listbox class="mb-3">
+            <mat-chip
+              *ngFor="let type of selectedTypes"
+              color="primary"
+              (click)="onUnselectType(type)"
+            >
+              {{ type.name }}
+            </mat-chip>
+          </mat-chip-listbox>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ "report-output__format" | translate }}</mat-label>
+            <mat-select formControlName="format">
+              <mat-option value="PDF">
+                {{ "report-output__format__pdf" | translate }}
+              </mat-option>
+              <mat-option value="Excel">
+                {{ "report-output__format__excel" | translate }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button
+            class="action-button"
+            [disabled]="
+              !documentFormGroup.valid ||
+              isSubmitting ||
+              selectedTypes.length == 0 ||
+              selectedBrands.length == 0
+            "
+            (click)="submitForm()"
+          >
+            {{ "report-output__download" | translate }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -97,7 +97,7 @@ export class AuthService {
         )
       ) as AuthUser;
 
-      return parsedUser.role == 5;
+      return parsedUser.role == 5 || parsedUser.role == 7;
     }
   }
 

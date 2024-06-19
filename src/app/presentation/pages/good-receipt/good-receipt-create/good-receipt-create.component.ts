@@ -92,7 +92,6 @@ export class GoodReceiptCreateComponent {
     );
 
     dialog.subscribe((data) => {
-      console.log(data);
       if (data != null && data != undefined) {
         if (
           this.t.controls.filter(

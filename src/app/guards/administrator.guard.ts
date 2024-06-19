@@ -7,6 +7,11 @@ export const AdministratorGuard: CanActivateFn = (route, state) => {
   return authService.isAdministrator();
 };
 
+export const SuperAdministratorGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  return authService.isSuperAdministrator();
+};
+
 export const SalesGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const userInfo = authService.getUserInfo();

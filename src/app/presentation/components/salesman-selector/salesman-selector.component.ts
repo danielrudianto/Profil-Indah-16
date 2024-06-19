@@ -49,8 +49,8 @@ export class SalesmanSelectorComponent {
           this.dataSource = response.data;
           this.dataCount = response.count;
         },
-        error: (error: any) => {
-          console.log(error);
+        error: (error) => {
+          this.alertService.showError(error);
         },
       })
       .add(() => {

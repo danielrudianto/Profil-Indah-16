@@ -63,13 +63,26 @@ export class ProductComponent {
       if (index != -1) {
         const dialog = this.dialog.open(DeleteConfirmationComponent, {
           data: {
-            title: 'Delete product',
+            title: this.translate.instant('product__delete__title'),
             document: `${this.dataSource[index].reference} - ${this.dataSource[index].description}`,
           },
         });
 
         dialog.afterClosed().subscribe((data) => {
-          console.log(data);
+          if (data == true) {
+            this.apiService.delete(`product/${id}`).subscribe({
+              next: (_) => {
+                this.dataSource.splice(index, 1);
+                this.dataCount = this.dataCount - 1;
+                this.alertService.showSuccess(
+                  this.translate.instant('product__deleted-successfully')
+                );
+              },
+              error: (error) => {
+                this.alertService.showError(error);
+              },
+            });
+          }
         });
       }
     } else if (dialogType == 'active') {

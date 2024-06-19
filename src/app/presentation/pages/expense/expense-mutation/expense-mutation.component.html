@@ -1,6 +1,6 @@
 <div class="dashboard-card">
   <mat-form-field appearance="outline" style="min-width: 170px">
-    <mat-label>Month and Year</mat-label>
+    <mat-label>{{ "expense__mutation__month-year" | translate }}</mat-label>
     <input matInput [matDatepicker]="dp" [formControl]="date" />
     <mat-hint>MM/YYYY</mat-hint>
     <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>

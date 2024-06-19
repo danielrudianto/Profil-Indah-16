@@ -3,9 +3,10 @@
   <div class="row">
     <div class="col-12">
       <app-transaction-header
-        title="Good receipts"
+        [title]="'good-receipt__title' | translate"
         [availbleMenus]="availbleMenus"
         route="Good-receipt"
+        
       />
       <router-outlet></router-outlet>
     </div>
