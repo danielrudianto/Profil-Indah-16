@@ -78,6 +78,7 @@ export class DashboardComponent implements OnInit {
         );
         break;
       case 5:
+      case 7:
         this.enabledDashboards = this.availableDashboards;
         break;
       case 6:
