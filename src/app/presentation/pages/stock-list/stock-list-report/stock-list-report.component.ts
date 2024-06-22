@@ -43,7 +43,7 @@ export class StockListReportComponent {
       this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
       Validators.required
     ),
-    view_by: new FormControl(false, Validators.required),
+    view_by: new FormControl(true, Validators.required),
   });
 
   ngOnInit(): void {
