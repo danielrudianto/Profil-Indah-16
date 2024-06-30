@@ -168,7 +168,7 @@
                   <td>{{ data.payment | number : "0.2-2" }}</td>
                   <td>{{ data.value - data.payment | number : "0.2-2" }}</td>
                   <mat-menu #menu="matMenu">
-                    <button mat-menu-item>
+                    <button mat-menu-item (click)="openView(data.id)">
                       {{ "receivable-view__view" | translate }}
                     </button>
                     <button mat-menu-item (click)="openPaymentHistory(data.id)">

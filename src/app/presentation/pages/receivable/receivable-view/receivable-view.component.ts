@@ -7,6 +7,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { ReceivablePaymentHistoryComponent } from './receivable-payment-history/receivable-payment-history.component';
 import { ReceivablePaymentCreateComponent } from './receivable-payment-create/receivable-payment-create.component';
+import { ArchiveViewComponent } from '../../../components/archives/archive-view/archive-view.component';
 
 @Component({
   selector: 'app-receivable-view',
@@ -148,6 +149,13 @@ export class ReceivableViewComponent {
           }
         }
       });
+  }
+
+  openView(id: number) {
+    this.dynamicComponentService.createDynamicComponent(ArchiveViewComponent, {
+      route: 'sales-invoice',
+      id: id,
+    });
   }
 
   get totalReceivable(): number {

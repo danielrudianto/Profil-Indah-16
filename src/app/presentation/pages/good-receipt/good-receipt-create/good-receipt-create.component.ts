@@ -8,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import {
   ProductSelectorComponent,
   ProductSelectorType,
@@ -29,8 +30,16 @@ export class GoodReceiptCreateComponent {
     private formBuilder: FormBuilder,
     private apiService: ApiService,
     private datePipe: DatePipe,
-    private translateService: TranslateService
-  ) {}
+    private translateService: TranslateService,
+    private _hotKeysService: HotkeysService
+  ) {
+    this._hotKeysService.add([
+      new Hotkey('alt + a', (): boolean => {
+        this.openItemSelector();
+        return false;
+      }),
+    ]);
+  }
 
   metaFormGroup: FormGroup = new FormGroup({
     uuid: new FormControl(v4(), Validators.required),
