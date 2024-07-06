@@ -892,5 +892,7 @@
   "report-company__download": "Ekspor",
   "report-company__download__success": "Laporan perusahaan berhasil diekspor",
   "product__delete__title": "Hapus produk",
-  "product__deleted-successfully": "Produk berhasil di hapus"
+  "product__deleted-successfully": "Produk berhasil di hapus",
+  "report-problematic__title": "Barang bermasalah",
+  "problematic-report__export__successful": "Laporan barang bermasalah berhasil diekspor"
 }

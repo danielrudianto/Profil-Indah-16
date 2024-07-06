@@ -892,5 +892,7 @@
   "report-company__download": "Download",
   "report-company__download__success": "Successfully exported company report",
   "product__delete__title": "Delete product",
-  "product__deleted-successfully": "Successfully deleted product"
+  "product__deleted-successfully": "Successfully deleted product",
+  "report-problematic__title": "Problematic items",
+  "problematic-report__export__successful": "Successfully exported problematic items report"
 }

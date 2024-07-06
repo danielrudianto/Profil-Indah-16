@@ -74,6 +74,7 @@ import { SalesReturnCreateComponent } from './presentation/pages/sales-return/sa
 import { SalesReturnArchiveComponent } from './presentation/pages/sales-return/sales-return-archive/sales-return-archive.component';
 import { ReportInadequateComponent } from './presentation/pages/report/report-inadequate/report-inadequate.component';
 import { ReportOutputComponent } from './presentation/pages/report/report-output/report-output.component';
+import { ReportProblematicComponent } from './presentation/pages/report/report-problematic/report-problematic.component';
 
 const routes: Routes = [
   {
@@ -336,6 +337,10 @@ const routes: Routes = [
               {
                 path: 'Inadequate',
                 component: ReportInadequateComponent,
+              },
+              {
+                path: 'Problematic',
+                component: ReportProblematicComponent,
               },
               {
                 path: '**',
@@ -615,6 +620,14 @@ const routes: Routes = [
               {
                 path: 'Output',
                 component: ReportOutputComponent,
+              },
+              {
+                path: 'Inadequate',
+                component: ReportInadequateComponent,
+              },
+              {
+                path: 'Problematic',
+                component: ReportProblematicComponent,
               },
               {
                 path: '**',

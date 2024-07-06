@@ -224,6 +224,8 @@ import { ReportInadequateComponent } from './presentation/pages/report/report-in
 import { ReportInadequateFilterComponent } from './presentation/pages/report/report-inadequate/report-inadequate-filter/report-inadequate-filter.component';
 import { ReportOutputComponent } from './presentation/pages/report/report-output/report-output.component';
 import { ReportCompanyComponent } from './presentation/pages/report/report-company/report-company.component';
+import { ReportProblematicComponent } from './presentation/pages/report/report-problematic/report-problematic.component';
+import { ReportProblematicFilterComponent } from './presentation/pages/report/report-problematic/report-problematic-filter/report-problematic-filter.component';
 @NgModule({
   declarations: [
     ShortNumberPipe,
@@ -393,6 +395,8 @@ import { ReportCompanyComponent } from './presentation/pages/report/report-compa
     ReportInadequateFilterComponent,
     ReportOutputComponent,
     ReportCompanyComponent,
+    ReportProblematicComponent,
+    ReportProblematicFilterComponent,
   ],
   imports: [
     BrowserModule,
