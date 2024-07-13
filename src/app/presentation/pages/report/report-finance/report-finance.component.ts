@@ -85,7 +85,7 @@ export class ReportFinanceComponent {
               ? `Periode Bulan ${this.datePipe.transform(
                   new Date(
                     this.financeReportFormGroup.controls['year'].value,
-                    this.financeReportFormGroup.controls['month'].value,
+                    this.financeReportFormGroup.controls['month'].value - 1,
                     1
                   ),
                   'MM/YYYY'
@@ -443,7 +443,10 @@ export class ReportFinanceComponent {
               },
               {
                 text: this.decimalPipe.transform(
-                  salesValue - salesDiscount + salesDelivery + salesService,
+                  Number(salesValue) -
+                    Number(salesDiscount) +
+                    Number(salesDelivery) +
+                    Number(salesService),
                   '1.2-2'
                 ),
                 style: 'tableContent',
@@ -537,7 +540,7 @@ export class ReportFinanceComponent {
                     },
                     {
                       text: this.decimalPipe.transform(
-                        purchase.value - purchase.discount,
+                        Number(purchase.value) - Number(purchase.discount),
                         '1.2-2'
                       ),
                       style: 'tableContent',
