@@ -275,17 +275,17 @@
               <th>{{ "deposit__payment__used-amount" | translate }}</th>
             </tr>
           </thead>
-          <tbody *ngIf="p.controls.length == 0">
+          <tbody *ngIf="pb.controls.length == 0">
             <tr>
               <td colspan="4">
                 <empty-table />
               </td>
             </tr>
           </tbody>
-          <tbody *ngIf="p.controls.length > 0">
+          <tbody *ngIf="pb.controls.length > 0">
             <tr
-              *ngFor="let item of p.controls; let i = index"
-              [formGroup]="getFormGroupAtPayment(i)"
+              *ngFor="let item of pb.controls; let i = index"
+              [formGroup]="getFormGroupAtNewPayment(i)"
             >
               <td>
                 {{ item.get("date")?.value | date : "dd/MM/yyyy HH:mm" }}
@@ -381,9 +381,9 @@
         >
           <div
             class="payment-card"
-            *ngFor="let payment of pb.controls; index as i"
+            *ngFor="let payment of p.controls; index as i"
           >
-            <form [formGroup]="getFormGroupAtNewPayment(i)">
+            <form [formGroup]="getFormGroupAtPayment(i)">
               <h3 class="mb-0">
                 {{ payment.get("name")?.value }}
               </h3>

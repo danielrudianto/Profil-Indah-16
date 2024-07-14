@@ -127,6 +127,10 @@ export class DepositConfirmComponent {
   @ViewChild('input') input: any;
 
   ngOnInit(): void {
+    this.p.valueChanges.subscribe(() => {
+      console.log(this.p.controls);
+    });
+
     this.apiService
       .get(`deposit/${this.activatedRoute.snapshot.params['id']}`)
       .subscribe({
@@ -149,7 +153,13 @@ export class DepositConfirmComponent {
                 : result.customer.name,
             customer_id: result.customer_id == null ? 0 : result.customer_id,
             name: result.name,
-            sales: result.sales,
+            sales: result.sales == null ? 'INTERNAL' : result.sales,
+          });
+
+          this.valueFormGroup.patchValue({
+            discount: result.discount,
+            delivery: result.delivery,
+            service: result.service,
           });
 
           // Insert the items to the form Array
@@ -206,7 +216,7 @@ export class DepositConfirmComponent {
 
           // Insert the payments to the form Array
           result.deposit_payment.forEach((item: any) => {
-            this.p.push(
+            this.pb.push(
               this.formBuilder.group({
                 id: [item.id, Validators.required],
                 payment_method_id: [item.payment_method_id],
@@ -258,7 +268,7 @@ export class DepositConfirmComponent {
                 this.paymentsFormGroup.controls['due_time'].setValue(30);
               } else {
                 this.paymentsFormGroup.controls['due_time'].setValue(30);
-                this.pb.clear();
+                this.p.clear();
               }
             },
           });
@@ -330,11 +340,11 @@ export class DepositConfirmComponent {
 
   get totalPayment(): number {
     let payment = 0;
-    this.p.controls.forEach((x) => {
+    this.pb.controls.forEach((x) => {
       payment += Number(x.get('usedAmount')?.value);
     });
 
-    this.pb.controls.forEach((x) => {
+    this.p.controls.forEach((x) => {
       payment += Number(x.get('payment_value')?.value);
     });
 
@@ -399,13 +409,13 @@ export class DepositConfirmComponent {
             );
             return;
           } else {
-            this.pb.push(
+            this.p.push(
               this.formBuilder.group({
                 payment_method_id: [data.id, Validators.required],
                 name: [data.name, Validators.required],
                 description: [data.description, Validators.required],
                 date: new FormControl(new Date(), Validators.required),
-                payment_value: [0, Validators.required],
+                payment_value: [0, [Validators.required]],
               })
             );
           }
@@ -458,7 +468,7 @@ export class DepositConfirmComponent {
 
     if (
       this.paymentsFormGroup.value['immediate_payment'] == true &&
-      this.pb.length == 0
+      this.p.length == 0
     ) {
       validation = false;
     }
@@ -515,7 +525,7 @@ export class DepositConfirmComponent {
             checked: x.value.checked,
           };
         }),
-        deposit_payment: this.p.controls.map((item) => {
+        deposit_payment: this.pb.controls.map((item) => {
           return {
             id: item.value.id,
             payment_method_id: item.value.payment_method_id,
@@ -524,7 +534,7 @@ export class DepositConfirmComponent {
             date: this.datePipe.transform(item.value.date, 'yyyy-MM-dd'),
           };
         }),
-        deposit_bill_payment: this.pb.controls.map((item) => {
+        deposit_bill_payment: this.p.controls.map((item) => {
           return {
             payment_method_id: item.value.payment_method_id,
             value: item.value.payment_value,
