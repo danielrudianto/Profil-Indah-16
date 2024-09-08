@@ -226,6 +226,8 @@ import { ReportOutputComponent } from './presentation/pages/report/report-output
 import { ReportCompanyComponent } from './presentation/pages/report/report-company/report-company.component';
 import { ReportProblematicComponent } from './presentation/pages/report/report-problematic/report-problematic.component';
 import { ReportProblematicFilterComponent } from './presentation/pages/report/report-problematic/report-problematic-filter/report-problematic-filter.component';
+import { UserEditComponent } from './presentation/pages/user/user-edit/user-edit.component';
+import { SubmitConfirmationComponent } from './presentation/components/submit-confirmation/submit-confirmation.component';
 @NgModule({
   declarations: [
     ShortNumberPipe,
@@ -397,6 +399,8 @@ import { ReportProblematicFilterComponent } from './presentation/pages/report/re
     ReportCompanyComponent,
     ReportProblematicComponent,
     ReportProblematicFilterComponent,
+    UserEditComponent,
+    SubmitConfirmationComponent,
   ],
   imports: [
     BrowserModule,

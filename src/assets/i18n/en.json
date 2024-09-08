@@ -564,7 +564,7 @@
   "adjustment-case__confirm__delete": "Delete",
   "adjustment-case__confirm__submit__success": "Adjustment case confirmed.",
   "adjustment-case__confirm__delete__title": "Are you sure to disapprove and delete this adjustment case?",
-  "adjustment-case__confirm__submit__title": "Are you sure to approve and delete this. adjustment case?",
+  "adjustment-case__confirm__submit__title": "Are you sure to approve this adjustment case?",
   "receivable__name": "Customer",
   "receivable__amount": "Amount",
   "receivable__view__title": "Receivable / Customer's payable",
@@ -894,5 +894,9 @@
   "product__delete__title": "Delete product",
   "product__deleted-successfully": "Successfully deleted product",
   "report-problematic__title": "Problematic items",
-  "problematic-report__export__successful": "Successfully exported problematic items report"
+  "problematic-report__export__successful": "Successfully exported problematic items report",
+  "user__update-successfully": "User data updated successfully",
+  "general__confirm-confirmation__submit": "Confirm",
+  "general__confirm-confirmation__title": "Confirmation",
+  "general__confirm-confirmation__body": "We found a document with the same name before. Are you sure to confirm this document?"
 }

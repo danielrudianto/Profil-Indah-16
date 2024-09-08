@@ -112,9 +112,11 @@ export class ReportCompanyComponent {
             bookType: 'xlsx',
             type: 'array',
           });
+
           const blob = new Blob([excelBuffer], {
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           });
+
           saveAs(blob, `Company_report_${new Date().getTime()}.xlsx`);
           this.alertService.showSuccess(
             this.translateService.instant('report-company__download__success')

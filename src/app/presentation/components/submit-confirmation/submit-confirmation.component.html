@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>
+  <span *ngIf="data.header == undefined">{{
+    "general__confirm-confirmation__title" | translate
+  }}</span>
+</h1>
+<mat-dialog-content>
+  <p>{{ data.title }}</p>
+  <p>{{ data.document }}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>
+    {{ "general__delete-confirmation__close" | translate }}
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    mat-dialog-close
+    (click)="deleteDocument()"
+  >
+    {{ "general__confirm-confirmation__submit" | translate }}
+  </button>
+</mat-dialog-actions>

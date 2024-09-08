@@ -564,7 +564,7 @@
   "adjustment-case__confirm__delete": "Hapus",
   "adjustment-case__confirm__submit__success": "Penyesuaian stok dikonfirmasi.",
   "adjustment-case__confirm__delete__title": "Apakah anda yakin untuk membatalkan penyesuaian stok ini?",
-  "adjustment-case__confirm__submit__title": "Apakah anda yakin untuk konfirmasi dan hapus penyesuaian stok ini?",
+  "adjustment-case__confirm__submit__title": "Apakah anda yakin untuk konfirmasi penyesuaian stok ini?",
   "receivable__name": "Konsumen",
   "receivable__amount": "Jumlah",
   "receivable__view__title": "Piutang / Hutang konsumen",
@@ -894,5 +894,9 @@
   "product__delete__title": "Hapus produk",
   "product__deleted-successfully": "Produk berhasil di hapus",
   "report-problematic__title": "Barang bermasalah",
-  "problematic-report__export__successful": "Laporan barang bermasalah berhasil diekspor"
+  "problematic-report__export__successful": "Laporan barang bermasalah berhasil diekspor",
+  "user__update-successfully": "User berhasil diperbaharui",
+  "general__confirm-confirmation__submit": "Konfirmasi",
+  "general__confirm-confirmation__title": "Konfirmasi",
+  "general__confirm-confirmation__body": "Kami menemukan dokumen dengan nama yang sama. Apakah anda yakin untuk melanjutkan?"
 }

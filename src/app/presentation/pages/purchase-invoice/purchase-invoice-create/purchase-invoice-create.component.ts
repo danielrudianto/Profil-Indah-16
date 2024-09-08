@@ -8,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatDialog } from '@angular/material/dialog';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import {
   ProductSelectorComponent,
@@ -18,6 +19,8 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { v4 } from 'uuid';
+import { SubmitConfirmationComponent } from '../../../components/submit-confirmation/submit-confirmation.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-purchase-invoice-create',
@@ -32,7 +35,9 @@ export class PurchaseInvoiceCreateComponent {
     private dynamicComponentService: DynamicComponentService,
     private _hotkeysService: HotkeysService,
     private sheet: MatBottomSheet,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private dialog: MatDialog,
+    private translateService: TranslateService
   ) {
     this._hotkeysService.add([
       new Hotkey('alt+a', (event: KeyboardEvent): boolean => {
@@ -363,26 +368,76 @@ export class PurchaseInvoiceCreateComponent {
       };
 
       this.apiService
-        .post('purchase-invoice', goodReceipt)
-        .subscribe({
-          next: () => {
-            this.metaFormGroup.patchValue({
-              uuid: v4(),
-            });
-
-            this.alertService.showSuccess(
-              'Good receipt is successfully created.'
-            );
-            this.t.clear();
-            this.documentFormGroup.reset();
-            this.itemFormGroup.reset();
-          },
-          error: (error) => {
-            this.alertService.showError(new Error(error));
-          },
+        .post('good-receipt/check', {
+          name: name,
         })
-        .add(() => {
-          this.isSubmitting = false;
+        .subscribe((data: any) => {
+          if (data == null) {
+            this.apiService
+              .post('purchase-invoice', goodReceipt)
+              .subscribe({
+                next: () => {
+                  this.metaFormGroup.patchValue({
+                    uuid: v4(),
+                  });
+
+                  this.alertService.showSuccess(
+                    'Good receipt is successfully created.'
+                  );
+                  this.t.clear();
+                  this.documentFormGroup.reset();
+                  this.itemFormGroup.reset();
+                },
+                error: (error) => {
+                  this.alertService.showError(new Error(error));
+                },
+              })
+              .add(() => {
+                this.isSubmitting = false;
+              });
+          } else {
+            this.dialog
+              .open(SubmitConfirmationComponent, {
+                data: {
+                  title: this.translateService.instant(
+                    'general__confirm-confirmation__body'
+                  ),
+                  document: `${data.name}, Supplier ${
+                    data.supplier.name
+                  }, Date ${this.datePipe.transform(data.date, 'dd/MM/yyyy')}`,
+                },
+              })
+              .afterClosed()
+              .subscribe((validation) => {
+                if (validation == true) {
+                  this.apiService
+                    .post('purchase-invoice', goodReceipt)
+                    .subscribe({
+                      next: () => {
+                        this.metaFormGroup.patchValue({
+                          uuid: v4(),
+                        });
+
+                        this.alertService.showSuccess(
+                          'Good receipt is successfully created.'
+                        );
+                        this.t.clear();
+                        this.documentFormGroup.reset();
+                        this.itemFormGroup.reset();
+                      },
+                      error: (error) => {
+                        this.alertService.showError(new Error(error));
+                      },
+                    })
+                    .add(() => {
+                      this.isSubmitting = false;
+                    });
+                } else {
+                  this.isSubmitting = false;
+                  return;
+                }
+              });
+          }
         });
     }
   }
