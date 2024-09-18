@@ -228,6 +228,7 @@ import { ReportProblematicComponent } from './presentation/pages/report/report-p
 import { ReportProblematicFilterComponent } from './presentation/pages/report/report-problematic/report-problematic-filter/report-problematic-filter.component';
 import { UserEditComponent } from './presentation/pages/user/user-edit/user-edit.component';
 import { SubmitConfirmationComponent } from './presentation/components/submit-confirmation/submit-confirmation.component';
+import { CashierComponent } from './presentation/pages/cashier/cashier.component';
 @NgModule({
   declarations: [
     ShortNumberPipe,
@@ -401,6 +402,7 @@ import { SubmitConfirmationComponent } from './presentation/components/submit-co
     ReportProblematicFilterComponent,
     UserEditComponent,
     SubmitConfirmationComponent,
+    CashierComponent,
   ],
   imports: [
     BrowserModule,

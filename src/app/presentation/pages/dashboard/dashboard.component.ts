@@ -40,6 +40,10 @@ export class DashboardComponent implements OnInit {
       title: 'General',
       route: '/General',
     },
+    {
+      title: 'Cashier',
+      route: '/Cashier',
+    },
   ];
 
   enabledDashboards: DashboardCard[] = [];

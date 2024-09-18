@@ -80,6 +80,15 @@ export class PromotionViewComponent {
             ],
           ]);
 
+          const worksheetItems: xlsx.WorkSheet = xlsx.utils.aoa_to_sheet([]);
+          xlsx.utils.sheet_add_aoa(worksheetItems, [
+            [
+              this.translateService.instant(
+                'promotion__download__sheet-item-name'
+              ),
+            ],
+          ]);
+
           // Add table headers
           xlsx.utils.sheet_add_aoa(
             worksheet,
@@ -90,6 +99,29 @@ export class PromotionViewComponent {
                   'promotion__download__good-receipt-name'
                 ),
                 this.translateService.instant('promotion__download__value'),
+              ],
+            ],
+            { origin: -1 }
+          );
+
+          xlsx.utils.sheet_add_aoa(
+            worksheetItems,
+            [
+              [
+                this.translateService.instant('promotion__download__date'),
+                this.translateService.instant(
+                  'promotion__download__good-receipt-name'
+                ),
+                this.translateService.instant('promotion__download__reference'),
+                this.translateService.instant('promotion__download__quantity'),
+                this.translateService.instant('promotion__download__unit'),
+                this.translateService.instant('promotion__download__price'),
+                this.translateService.instant('promotion__download__discount'),
+                this.translateService.instant(
+                  'promotion__download__total_unit_price'
+                ),
+
+                this.translateService.instant('promotion__download__total'),
               ],
             ],
             { origin: -1 }
@@ -109,6 +141,27 @@ export class PromotionViewComponent {
             );
           });
 
+          data.items.forEach((element: any) => {
+            xlsx.utils.sheet_add_aoa(
+              worksheetItems,
+              [
+                [
+                  this.datePipe.transform(element.date, 'dd MMM YYYY'),
+                  element.good_receipt_code_name,
+                  element.reference,
+                  element.quantity,
+                  element.unit,
+                  element.price,
+                  element.discount,
+                  Number(element.price) - Number(element.discount),
+                  (Number(element.price) - Number(element.discount)) *
+                    element.quantity,
+                ],
+              ],
+              { origin: -1 }
+            );
+          });
+
           // Adjusting column width
           const wscols = [
             { wpx: 150 }, // width in pixels
@@ -116,11 +169,37 @@ export class PromotionViewComponent {
             { wpx: 100 }, // width in pixels
           ];
 
+          const wsItemcols = [
+            { wpx: 150 }, // width in pixels
+            { wpx: 200 }, // width in pixels
+            { wpx: 200 }, // width in pixels
+            { wpx: 100 }, // width in pixels
+            { wpx: 100 }, // width in pixels
+            { wpx: 150 }, // width in pixels
+            { wpx: 150 },
+            { wpx: 200 },
+            { wpx: 200 },
+          ];
+
           worksheet['!cols'] = wscols;
+          worksheetItems['!cols'] = wsItemcols;
 
           const boldRows = [1, 2, 3, 4, 5, 6, 7, 9]; // Rows to be bold (1-based indexing)
           boldRows.forEach((rowNumber) => {
             const row = worksheet[xlsx.utils.encode_row(rowNumber - 1)];
+            if (row) {
+              Object.keys(row).forEach((key) => {
+                if (row[key].s) {
+                  row[key].s.font = { bold: true };
+                } else {
+                  row[key].s = { font: { bold: true } };
+                }
+              });
+            }
+          });
+
+          boldRows.forEach((rowNumber) => {
+            const row = worksheetItems[xlsx.utils.encode_row(rowNumber - 1)];
             if (row) {
               Object.keys(row).forEach((key) => {
                 if (row[key].s) {
@@ -142,7 +221,9 @@ export class PromotionViewComponent {
 
           // Create a workbook and add the worksheet
           const workbook: xlsx.WorkBook = xlsx.utils.book_new();
-          xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+          xlsx.utils.book_append_sheet(workbook, worksheet, 'Result');
+          xlsx.utils.book_append_sheet(workbook, worksheetItems, 'Items');
 
           const excelBuffer: any = xlsx.write(workbook, {
             bookType: 'xlsx',
