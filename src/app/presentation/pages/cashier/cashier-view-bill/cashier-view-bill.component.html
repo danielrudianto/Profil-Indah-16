@@ -1,0 +1,113 @@
+<div class="view-panel-wrapper">
+  <div
+    class="view-panel-backdrop"
+    (click)="onClose()"
+    style="z-index: 500"
+  ></div>
+  <div class="view-panel" [@panelAnimation]="panelState" style="z-index: 1000">
+    <div class="row-action">
+      <h2 mat-dialog-title>View Bill</h2>
+      <div class="d-flex">
+        <button mat-icon-button (click)="enlarge()">
+          <mat-icon *ngIf="panelState != 'enlarged'">open_in_full</mat-icon>
+          <mat-icon *ngIf="panelState == 'enlarged'">close_fullscreen</mat-icon>
+        </button>
+        <button mat-icon-button (click)="onClose()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="view-panel-content" id="content">
+      <label>{{ "cashier__view-bill__date" | translate }}</label>
+      <p>{{ data.created_at | date : "dd MMMM YYYY HH:mm" }}</p>
+
+      <label>{{ "cashier__view-bill__name" | translate }}</label>
+      <p>{{ data.name }}</p>
+
+      <label>{{ "cashier__view-bill__created-by" | translate }}</label>
+      <div class="created-by__wrapper">
+        <p>
+          {{ data.user_draft_bill_code_created_byTouser.name }}
+        </p>
+      </div>
+
+      <label>{{ "cashier__view-bill__created-at" | translate }}</label>
+      <p>{{ data.created_at | date : "dd MMMM YY H:m:s" }}</p>
+
+      <div class="table-responsive">
+        <table class="table" id="my-table">
+          <thead>
+            <tr>
+              <th>
+                {{ "cashier__view-bill__item__item" | translate }}
+              </th>
+              <th class="text-center">
+                {{ "cashier__view-bill__item__quantity" | translate }}
+              </th>
+              <th class="text-center">
+                {{ "cashier__view-bill__item__price" | translate }}
+              </th>
+              <th class="text-center">
+                {{ "cashier__view-bill__item__discount" | translate }}
+              </th>
+              <th class="text-center">
+                {{ "cashier__view-bill__item__unit-price" | translate }}
+              </th>
+              <th class="text-center">
+                {{ "cashier__view-bill__item__total" | translate }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let itemForm of t.controls; index as i"
+              [formGroup]="getFormGroupAt(i)"
+            >
+              <td>
+                <p>{{ itemForm.get("reference")?.value }}</p>
+                <p class="text-clamp-2">
+                  {{ itemForm.get("description")?.value }}
+                </p>
+              </td>
+              <td class="text-center">
+                {{ itemForm.get("quanatity")?.value | number : "0.0-2" }}
+                {{ itemForm.get("reference")?.value }}
+              </td>
+              <td class="text-center">
+                {{ itemForm.get("price")?.value | number : "0.0-2" }}
+              </td>
+              <td>
+                <input
+                  class="form-control"
+                  formControlName="discount"
+                  ngxMask
+                  mask="separator.2"
+                  thousandSeparator=" "
+                />
+              </td>
+              <td>
+                {{ getUnitPrice(i) | number : "0.0-2" }}
+              </td>
+              <td>
+                {{
+                  getUnitPrice(i) * itemForm.get("quantity")?.value
+                    | number : "0.0-2"
+                }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <label>Actions</label>
+      <div class="container">
+        <div class="row">
+          <div
+            class="col-xl-3"
+            *ngFor="let payment of p.controls; index as i"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -898,5 +898,15 @@
   "user__update-successfully": "User berhasil diperbaharui",
   "general__confirm-confirmation__submit": "Konfirmasi",
   "general__confirm-confirmation__title": "Konfirmasi",
-  "general__confirm-confirmation__body": "Kami menemukan dokumen dengan nama yang sama. Apakah anda yakin untuk melanjutkan?"
+  "general__confirm-confirmation__body": "Kami menemukan dokumen dengan nama yang sama. Apakah anda yakin untuk melanjutkan?",
+  "cashier__view-bill__date": "Tanggal",
+  "cashier__view-bill__name": "Invoice",
+  "cashier__view-bill__created-by": "Dibuat oleh",
+  "cashier__view-bill__created-at": "Dibuat pada",
+  "cashier__view-bill__item__item": "Produk",
+  "cashier__view-bill__item__quantity": "Jumlah",
+  "cashier__view-bill__item__price": "Harga",
+  "cashier__view-bill__item__discount": "Diskon",
+  "cashier__view-bill__item__unit-price": "Harga net",
+  "cashier__view-bill__item__total": "Total"
 }

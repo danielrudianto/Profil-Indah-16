@@ -75,6 +75,7 @@ import { SalesReturnArchiveComponent } from './presentation/pages/sales-return/s
 import { ReportInadequateComponent } from './presentation/pages/report/report-inadequate/report-inadequate.component';
 import { ReportOutputComponent } from './presentation/pages/report/report-output/report-output.component';
 import { ReportProblematicComponent } from './presentation/pages/report/report-problematic/report-problematic.component';
+import { CashierComponent } from './presentation/pages/cashier/cashier.component';
 
 const routes: Routes = [
   {
@@ -95,6 +96,11 @@ const routes: Routes = [
             component: ProfileOverviewComponent,
           },
         ],
+      },
+      
+      {
+        path: 'Cashier',
+        component: CashierComponent,
       },
       {
         path: 'Administrator',
