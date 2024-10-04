@@ -898,5 +898,15 @@
   "user__update-successfully": "User data updated successfully",
   "general__confirm-confirmation__submit": "Confirm",
   "general__confirm-confirmation__title": "Confirmation",
-  "general__confirm-confirmation__body": "We found a document with the same name before. Are you sure to confirm this document?"
+  "general__confirm-confirmation__body": "We found a document with the same name before. Are you sure to confirm this document?",
+  "cashier__view-bill__date": "Date",
+  "cashier__view-bill__name": "Invoice",
+  "cashier__view-bill__created-by": "Created by",
+  "cashier__view-bill__created-at": "Created at",
+  "cashier__view-bill__item__item": "Product",
+  "cashier__view-bill__item__quantity": "Quantity",
+  "cashier__view-bill__item__price": "Price",
+  "cashier__view-bill__item__discount": "Discount",
+  "cashier__view-bill__item__unit-price": "Nett price",
+  "cashier__view-bill__item__total": "Total"
 }

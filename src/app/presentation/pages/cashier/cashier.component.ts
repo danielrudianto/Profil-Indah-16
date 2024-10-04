@@ -76,6 +76,7 @@ export class CashierComponent {
       .get(`cashier/bill/${this.formGroup.value.otc}`)
       .subscribe({
         next: (response: any) => {
+          console.log(response);
           this.dynamicComponentService
             .createDynamicComponent(CashierViewBillComponent, {
               data: response,

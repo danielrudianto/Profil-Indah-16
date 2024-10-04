@@ -19,20 +19,19 @@
     </div>
     <div class="view-panel-content" id="content">
       <label>{{ "cashier__view-bill__date" | translate }}</label>
-      <p>{{ data.created_at | date : "dd MMMM YYYY HH:mm" }}</p>
+      <p>
+        {{ formGroup.get("createdAt")?.value | date : "dd MMMM YYYY HH:mm" }}
+      </p>
 
       <label>{{ "cashier__view-bill__name" | translate }}</label>
-      <p>{{ data.name }}</p>
+      <p>{{ formGroup.get("name")?.value }}</p>
 
       <label>{{ "cashier__view-bill__created-by" | translate }}</label>
       <div class="created-by__wrapper">
         <p>
-          {{ data.user_draft_bill_code_created_byTouser.name }}
+          {{ formGroup.get("createdBy")?.value }}
         </p>
       </div>
-
-      <label>{{ "cashier__view-bill__created-at" | translate }}</label>
-      <p>{{ data.created_at | date : "dd MMMM YY H:m:s" }}</p>
 
       <div class="table-responsive">
         <table class="table" id="my-table">
@@ -70,8 +69,8 @@
                 </p>
               </td>
               <td class="text-center">
-                {{ itemForm.get("quanatity")?.value | number : "0.0-2" }}
-                {{ itemForm.get("reference")?.value }}
+                {{ itemForm.get("quantity")?.value | number : "0.0-2" }}
+                {{ itemForm.get("unit")?.value }}
               </td>
               <td class="text-center">
                 {{ itemForm.get("price")?.value | number : "0.0-2" }}
@@ -96,17 +95,147 @@
               </td>
             </tr>
           </tbody>
+          <tfoot [formGroup]="formGroup">
+            <tr>
+              <td colspan="4"></td>
+              <td class="text-center">
+                <strong>{{ "cashier__view-bill__total" | translate }}</strong>
+              </td>
+              <td class="text-center">
+                <strong>{{ totalValue | number : "0.0-2" }}</strong>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="4"></td>
+              <td class="text-center">
+                <strong>{{
+                  "cashier__view-bill__delivery" | translate
+                }}</strong>
+              </td>
+              <td>
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>{{
+                    "cashier__view-bill__delivery" | translate
+                  }}</mat-label>
+                  <input
+                    matInput
+                    formControlName="delivery"
+                    type="text"
+                    thousandSeparator=" "
+                    ngxMask
+                    mask="separator.2"
+                  />
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="4"></td>
+              <td class="text-center">
+                <strong>{{ "cashier__view-bill__service" | translate }}</strong>
+              </td>
+              <td>
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>{{
+                    "cashier__view-bill__service" | translate
+                  }}</mat-label>
+                  <input
+                    matInput
+                    formControlName="service"
+                    type="text"
+                    thousandSeparator=" "
+                    ngxMask
+                    mask="separator.2"
+                  />
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="4"></td>
+              <td class="text-center">
+                <strong>{{
+                  "cashier__view-bill__discount" | translate
+                }}</strong>
+              </td>
+              <td>
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>{{
+                    "cashier__view-bill__service" | translate
+                  }}</mat-label>
+                  <input
+                    matInput
+                    formControlName="discount"
+                    type="text"
+                    thousandSeparator=" "
+                    ngxMask
+                    mask="separator.2"
+                  />
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="4"></td>
+              <td class="text-center">
+                <strong>{{ "cashier__view-bill__total" | translate }}</strong>
+              </td>
+              <td class="text-center">
+                <strong>{{ grandTotalValue | number : "0.0-2" }}</strong>
+              </td>
+            </tr>
+          </tfoot>
         </table>
       </div>
 
       <label>Actions</label>
       <div class="container">
-        <div class="row">
+        <div class="row justify-content-center">
           <div
-            class="col-xl-3"
+            class="col-xl-3 col-lg-4 col-md-6 col-sm-10"
             *ngFor="let payment of p.controls; index as i"
-          ></div>
+            [formGroup]="getPaymentFormGroupAt(i)"
+          >
+            <p>{{ payment.get("name")?.value }}</p>
+            <mat-form-field>
+              <mat-label>Amount</mat-label>
+              <input
+                matInput
+                formControlName="amount"
+                type="text"
+                mask="separator.2"
+                thousandSeparator=" "
+                placeholder="Ex. 800"
+                required
+              />
+
+              <!-- Suffix -->
+              <mat-icon
+                matSuffix
+                (click)="payment.get('amount')?.setValue(totalValue)"
+                *ngIf="payment.get('amount')?.value < totalValue"
+                >arrow_upward</mat-icon
+              >
+              <mat-icon
+                matSuffix
+                (click)="payment.get('amount')?.setValue(0)"
+                *ngIf="payment.get('amount')?.value == totalValue"
+                >close</mat-icon
+              >
+            </mat-form-field>
+          </div>
         </div>
+      </div>
+
+      <div class="button-wrapper">
+        <button
+          class="me-3"
+          mat-button
+          color="primary"
+          [disabled]="totalPayment != totalValue"
+          (click)="onSubmit()"
+        >
+          Submit
+        </button>
+
+        <button mat-button color="warn" (click)="onCancel()">Cancel</button>
       </div>
     </div>
   </div>
