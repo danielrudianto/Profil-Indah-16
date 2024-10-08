@@ -28,6 +28,8 @@ export class CashierViewBillComponent {
   @Input('data') data: any;
   @Output('close') close: EventEmitter<any> = new EventEmitter<any>();
 
+  isLoading: boolean = false;
+
   formGroup: FormGroup = new FormGroup({
     id: new FormControl(''),
     name: new FormControl(''),
@@ -179,6 +181,8 @@ export class CashierViewBillComponent {
       return;
     }
 
+    this.isLoading = true;
+
     this.apiService
       .post('draft-bill/confirm', {
         id: this.f['id'].value,
@@ -227,23 +231,37 @@ export class CashierViewBillComponent {
           };
         }),
       })
-      .subscribe((res: any) => {
-        if (res.success) {
+      .subscribe({
+        next: (data) => {
+          this.alertService.showSuccess('Bill has been confirmed');
           this.onClose();
-        }
+        },
+        error: (error) => {
+          this.alertService.showError(error.error);
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
       });
   }
 
   onCancel() {
+    this.isLoading = true;
     this.apiService
       .post('draft-bill/delete', {
         id: this.f['id'].value,
       })
       .subscribe({
-        next: (data) => {},
+        next: (data) => {
+          this.alertService.showSuccess('Draft bill has been deleted');
+          this.onClose();
+        },
         error: (error) => {
           this.alertService.showError(error.error);
         },
+      })
+      .add(() => {
+        this.isLoading = false;
       });
   }
 }
