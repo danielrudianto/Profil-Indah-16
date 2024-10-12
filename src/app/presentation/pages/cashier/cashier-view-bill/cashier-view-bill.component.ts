@@ -10,6 +10,8 @@ import {
 import { DynamicComponentService } from '../../../../services/dynamic-component.service';
 import { ApiService } from '../../../../services/api.service';
 import { AlertService } from '../../../../services/alert.service';
+import { CashierViewBillPaymentSelectorComponent } from './cashier-view-bill-payment-selector/cashier-view-bill-payment-selector.component';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 
 @Component({
   selector: 'app-cashier-view-bill',
@@ -22,7 +24,8 @@ export class CashierViewBillComponent {
     private formBuilder: FormBuilder,
     private dynamicComponentService: DynamicComponentService,
     private apiService: ApiService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private sheet: MatBottomSheet
   ) {}
 
   @Input('data') data: any;
@@ -45,6 +48,7 @@ export class CashierViewBillComponent {
   });
 
   panelState: string = 'closed';
+  availablePaymentMethods: any[] = [];
 
   ngOnInit(): void {
     this.formGroup.patchValue({
@@ -81,22 +85,18 @@ export class CashierViewBillComponent {
       );
     });
 
-    this.p.push(
-      this.formBuilder.group({
-        id: [null],
-        name: ['Cash'],
-        amount: [0, [Validators.required, Validators.min(0)]],
-      })
-    );
+    this.availablePaymentMethods = [
+      {
+        id: null,
+        name: 'Cash',
+      },
+    ];
 
     this.data.payment_methods.data.forEach((x: any) => {
-      this.p.push(
-        this.formBuilder.group({
-          id: [x.id],
-          name: [x.name],
-          amount: [0, [Validators.required, Validators.min(0)]],
-        })
-      );
+      this.availablePaymentMethods.push({
+        id: x.id,
+        name: x.name,
+      });
     });
 
     this.panelState = 'enlarged';
@@ -110,10 +110,10 @@ export class CashierViewBillComponent {
     }
   }
 
-  onClose() {
+  onClose(data: string | undefined = undefined) {
     this.panelState = 'closed';
     setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
+      this.dynamicComponentService.closeDynamicComponent(data);
     }, 300);
   }
 
@@ -135,6 +135,10 @@ export class CashierViewBillComponent {
 
   getPaymentFormGroupAt(i: number) {
     return this.p.controls[i] as FormGroup;
+  }
+
+  deletePayment(i: number) {
+    this.p.removeAt(i);
   }
 
   getUnitPrice(i: number): number {
@@ -234,7 +238,7 @@ export class CashierViewBillComponent {
       .subscribe({
         next: (data) => {
           this.alertService.showSuccess('Bill has been confirmed');
-          this.onClose();
+          this.onClose('success');
         },
         error: (error) => {
           this.alertService.showError(error.error);
@@ -262,6 +266,35 @@ export class CashierViewBillComponent {
       })
       .add(() => {
         this.isLoading = false;
+      });
+  }
+
+  openPayment() {
+    this.sheet
+      .open(CashierViewBillPaymentSelectorComponent, {
+        data: {
+          paymentMethods: this.availablePaymentMethods,
+        },
+        panelClass: 'cashier-view-bill-payment-selector',
+      })
+      .afterDismissed()
+      .subscribe((data) => {
+        if (data != undefined && data != null) {
+          if (
+            this.p.controls.filter((x) => x.get('id')?.value == data.id)
+              .length > 0
+          ) {
+            return;
+          } else {
+            this.p.push(
+              this.formBuilder.group({
+                id: [data.id],
+                name: [data.name],
+                amount: ['', [Validators.required, Validators.min(0)]],
+              })
+            );
+          }
+        }
       });
   }
 }

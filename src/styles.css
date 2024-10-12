@@ -410,3 +410,7 @@ label {
     width: 800px;
   }
 }
+
+.cdk-overlay-container {
+  z-index: 1500 !important;
+}

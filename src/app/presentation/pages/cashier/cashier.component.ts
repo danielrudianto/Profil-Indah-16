@@ -83,8 +83,9 @@ export class CashierComponent {
               payment_methods: this.paymentMethods,
             })
             .subscribe((data) => {
-              console.log(data);
-              this.dynamicComponentService.closeDynamicComponent();
+              if (data == 'close') {
+                this.formGroup.reset();
+              }
             });
         },
         error: (error) => {

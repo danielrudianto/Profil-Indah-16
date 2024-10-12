@@ -18,224 +18,231 @@
       </div>
     </div>
     <div class="view-panel-content" id="content">
-      <label>{{ "cashier__view-bill__date" | translate }}</label>
-      <p>
-        {{ formGroup.get("createdAt")?.value | date : "dd MMMM YYYY HH:mm" }}
-      </p>
-
-      <label>{{ "cashier__view-bill__name" | translate }}</label>
-      <p>{{ formGroup.get("name")?.value }}</p>
-
-      <label>{{ "cashier__view-bill__created-by" | translate }}</label>
-      <div class="created-by__wrapper">
-        <p>
-          {{ formGroup.get("createdBy")?.value }}
-        </p>
-      </div>
-
-      <div class="table-responsive">
-        <table class="table" id="my-table">
-          <thead>
-            <tr>
-              <th>
-                {{ "cashier__view-bill__item__item" | translate }}
-              </th>
-              <th class="text-center">
-                {{ "cashier__view-bill__item__quantity" | translate }}
-              </th>
-              <th class="text-center">
-                {{ "cashier__view-bill__item__price" | translate }}
-              </th>
-              <th class="text-center">
-                {{ "cashier__view-bill__item__discount" | translate }}
-              </th>
-              <th class="text-center">
-                {{ "cashier__view-bill__item__unit-price" | translate }}
-              </th>
-              <th class="text-center">
-                {{ "cashier__view-bill__item__total" | translate }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="let itemForm of t.controls; index as i"
-              [formGroup]="getFormGroupAt(i)"
-            >
-              <td>
-                <p>{{ itemForm.get("reference")?.value }}</p>
-                <p class="text-clamp-2">
-                  {{ itemForm.get("description")?.value }}
-                </p>
-              </td>
-              <td class="text-center">
-                {{ itemForm.get("quantity")?.value | number : "0.0-2" }}
-                {{ itemForm.get("unit")?.value }}
-              </td>
-              <td class="text-center">
-                {{ itemForm.get("price")?.value | number : "0.0-2" }}
-              </td>
-              <td>
-                <input
-                  class="form-control"
-                  formControlName="discount"
-                  ngxMask
-                  mask="separator.2"
-                  thousandSeparator=" "
-                />
-              </td>
-              <td>
-                {{ getUnitPrice(i) | number : "0.0-2" }}
-              </td>
-              <td>
-                {{
-                  getUnitPrice(i) * itemForm.get("quantity")?.value
-                    | number : "0.0-2"
-                }}
-              </td>
-            </tr>
-          </tbody>
-          <tfoot [formGroup]="formGroup">
-            <tr>
-              <td colspan="4"></td>
-              <td class="text-center">
-                <strong>{{ "cashier__view-bill__total" | translate }}</strong>
-              </td>
-              <td class="text-center">
-                <strong>{{ totalValue | number : "0.0-2" }}</strong>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="4"></td>
-              <td class="text-center">
-                <strong>{{
-                  "cashier__view-bill__delivery" | translate
-                }}</strong>
-              </td>
-              <td>
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>{{
-                    "cashier__view-bill__delivery" | translate
-                  }}</mat-label>
-                  <input
-                    matInput
-                    formControlName="delivery"
-                    type="text"
-                    thousandSeparator=" "
-                    ngxMask
-                    mask="separator.2"
-                  />
-                </mat-form-field>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="4"></td>
-              <td class="text-center">
-                <strong>{{ "cashier__view-bill__service" | translate }}</strong>
-              </td>
-              <td>
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>{{
-                    "cashier__view-bill__service" | translate
-                  }}</mat-label>
-                  <input
-                    matInput
-                    formControlName="service"
-                    type="text"
-                    thousandSeparator=" "
-                    ngxMask
-                    mask="separator.2"
-                  />
-                </mat-form-field>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="4"></td>
-              <td class="text-center">
-                <strong>{{
-                  "cashier__view-bill__discount" | translate
-                }}</strong>
-              </td>
-              <td>
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>{{
-                    "cashier__view-bill__service" | translate
-                  }}</mat-label>
-                  <input
-                    matInput
-                    formControlName="discount"
-                    type="text"
-                    thousandSeparator=" "
-                    ngxMask
-                    mask="separator.2"
-                  />
-                </mat-form-field>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="4"></td>
-              <td class="text-center">
-                <strong>{{ "cashier__view-bill__total" | translate }}</strong>
-              </td>
-              <td class="text-center">
-                <strong>{{ grandTotalValue | number : "0.0-2" }}</strong>
-              </td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-
-      <label>Actions</label>
       <div class="container">
         <div class="row justify-content-center">
-          <div
-            class="col-xl-3 col-lg-4 col-md-6 col-sm-10"
-            *ngFor="let payment of p.controls; index as i"
-            [formGroup]="getPaymentFormGroupAt(i)"
-          >
-            <p>{{ payment.get("name")?.value }}</p>
-            <mat-form-field>
-              <mat-label>Amount</mat-label>
-              <input
-                matInput
-                formControlName="amount"
-                type="text"
-                mask="separator.2"
-                thousandSeparator=" "
-                placeholder="Ex. 800"
-                required
-              />
+          <div class="col-xl-10 col-lg-12 col-md-12 col-12">
+            <label>{{ "cashier__view-bill__date" | translate }}</label>
+            <p>
+              {{
+                formGroup.get("createdAt")?.value | date : "dd MMMM YYYY HH:mm"
+              }}
+            </p>
 
-              <!-- Suffix -->
-              <mat-icon
-                matSuffix
-                (click)="payment.get('amount')?.setValue(totalValue)"
-                *ngIf="payment.get('amount')?.value < totalValue"
-                >arrow_upward</mat-icon
+            <label>{{ "cashier__view-bill__name" | translate }}</label>
+            <p>{{ formGroup.get("name")?.value }}</p>
+
+            <label>{{ "cashier__view-bill__created-by" | translate }}</label>
+            <div class="created-by__wrapper">
+              <p>
+                {{ formGroup.get("createdBy")?.value }}
+              </p>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table" id="my-table">
+                <thead>
+                  <tr>
+                    <th>
+                      {{ "cashier__view-bill__item__item" | translate }}
+                    </th>
+                    <th class="text-center">
+                      {{ "cashier__view-bill__item__quantity" | translate }}
+                    </th>
+                    <th class="text-center">
+                      {{ "cashier__view-bill__item__price" | translate }}
+                    </th>
+                    <th class="text-center">
+                      {{ "cashier__view-bill__item__discount" | translate }}
+                    </th>
+                    <th class="text-center">
+                      {{ "cashier__view-bill__item__unit-price" | translate }}
+                    </th>
+                    <th class="text-center">
+                      {{ "cashier__view-bill__item__total" | translate }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let itemForm of t.controls; index as i"
+                    [formGroup]="getFormGroupAt(i)"
+                  >
+                    <td>
+                      <p>{{ itemForm.get("reference")?.value }}</p>
+                      <p class="text-clamp-2">
+                        {{ itemForm.get("description")?.value }}
+                      </p>
+                    </td>
+                    <td class="text-center">
+                      {{ itemForm.get("quantity")?.value | number : "0.0-2" }}
+                      {{ itemForm.get("unit")?.value }}
+                    </td>
+                    <td class="text-center">
+                      {{ itemForm.get("price")?.value | number : "0.0-2" }}
+                    </td>
+                    <td>
+                      <input
+                        class="form-control"
+                        formControlName="discount"
+                        ngxMask
+                        mask="separator.2"
+                        thousandSeparator=" "
+                      />
+                    </td>
+                    <td>
+                      {{ getUnitPrice(i) | number : "0.0-2" }}
+                    </td>
+                    <td>
+                      {{
+                        getUnitPrice(i) * itemForm.get("quantity")?.value
+                          | number : "0.0-2"
+                      }}
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot [formGroup]="formGroup">
+                  <tr>
+                    <td colspan="4"></td>
+                    <td class="text-center">
+                      <strong>{{
+                        "cashier__view-bill__total" | translate
+                      }}</strong>
+                    </td>
+                    <td class="text-center">
+                      <strong>{{ totalValue | number : "0.0-2" }}</strong>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4"></td>
+                    <td class="text-center">
+                      <strong>{{
+                        "cashier__view-bill__delivery" | translate
+                      }}</strong>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>{{
+                          "cashier__view-bill__delivery" | translate
+                        }}</mat-label>
+                        <input
+                          matInput
+                          formControlName="delivery"
+                          type="text"
+                          thousandSeparator=" "
+                          ngxMask
+                          mask="separator.2"
+                        />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4"></td>
+                    <td class="text-center">
+                      <strong>{{
+                        "cashier__view-bill__service" | translate
+                      }}</strong>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>{{
+                          "cashier__view-bill__service" | translate
+                        }}</mat-label>
+                        <input
+                          matInput
+                          formControlName="service"
+                          type="text"
+                          thousandSeparator=" "
+                          ngxMask
+                          mask="separator.2"
+                        />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4"></td>
+                    <td class="text-center">
+                      <strong>{{
+                        "cashier__view-bill__discount" | translate
+                      }}</strong>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>{{
+                          "cashier__view-bill__service" | translate
+                        }}</mat-label>
+                        <input
+                          matInput
+                          formControlName="discount"
+                          type="text"
+                          thousandSeparator=" "
+                          ngxMask
+                          mask="separator.2"
+                        />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4"></td>
+                    <td class="text-center">
+                      <strong>{{
+                        "cashier__view-bill__total" | translate
+                      }}</strong>
+                    </td>
+                    <td class="text-center">
+                      <strong>{{ grandTotalValue | number : "0.0-2" }}</strong>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+              <label>Actions</label>
+              <button mat-button (click)="openPayment()">Add payment</button>
+            </div>
+            <p *ngIf="p.controls.length == 0">Payment data not set.</p>
+            <mat-list *ngIf="p.controls.length > 0">
+              <div
+                class="d-flex justify-content-between"
+                *ngFor="let data of p.controls; index as i"
+                [formGroup]="getPaymentFormGroupAt(i)"
               >
-              <mat-icon
-                matSuffix
-                (click)="payment.get('amount')?.setValue(0)"
-                *ngIf="payment.get('amount')?.value == totalValue"
-                >close</mat-icon
+                <h3 class="mb-0">{{ data.get("name")?.value }}</h3>
+                <div style="flex-grow: 1"></div>
+                <mat-form-field appearance="outline">
+                  <mat-label>Amount</mat-label>
+                  <input
+                    matInput
+                    formControlName="amount"
+                    type="text"
+                    thousandSeparator=" "
+                    ngxMask
+                    mask="separator.2"
+                  />
+                </mat-form-field>
+                <button mat-icon-button (click)="deletePayment(i)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </mat-list>
+
+            <div class="button-wrapper">
+              <button
+                class="me-3"
+                mat-button
+                color="primary"
+                [disabled]="totalPayment != totalValue"
+                (click)="onSubmit()"
               >
-            </mat-form-field>
+                Submit
+              </button>
+
+              <button mat-button color="warn" (click)="onCancel()">
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="button-wrapper">
-        <button
-          class="me-3"
-          mat-button
-          color="primary"
-          [disabled]="totalPayment != totalValue"
-          (click)="onSubmit()"
-        >
-          Submit
-        </button>
-
-        <button mat-button color="warn" (click)="onCancel()">Cancel</button>
       </div>
     </div>
   </div>

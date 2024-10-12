@@ -1,0 +1,8 @@
+<mat-list>
+  <mat-list-item
+    *ngFor="let d of data.paymentMethods; index as i"
+    (click)="selectPayment(d)"
+  >
+    {{ d.name }}
+  </mat-list-item>
+</mat-list>
