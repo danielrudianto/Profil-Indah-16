@@ -39,10 +39,10 @@ export class PurchaseInvoiceViewComponent {
 
     dialog.afterClosed().subscribe((data) => {
       if (data == true) {
-        this.apiService.delete(`sales-invoice/${this.data.id}`).subscribe({
+        this.apiService.delete(`purchase-invoice/${this.data.id}`).subscribe({
           next: () => {
             this.alertService.showSuccess(
-              `Sales invoice ${this.data.name} deleted successfully`
+              `Purchase invoice ${this.data.name} deleted successfully`
             );
             this.close.emit();
           },

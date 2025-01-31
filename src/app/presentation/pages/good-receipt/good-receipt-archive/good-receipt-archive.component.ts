@@ -8,11 +8,13 @@ import { GoodReceiptArchiveFilterComponent } from 'src/app/presentation/pages/de
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { slideInOutAnimation } from '../../../../animations/slide-in-out.animation';
 
 @Component({
   selector: 'app-good-receipt-archive',
   templateUrl: './good-receipt-archive.component.html',
   styleUrls: ['./good-receipt-archive.component.css'],
+  animations: [slideInOutAnimation],
 })
 export class GoodReceiptArchiveComponent {
   constructor(
