@@ -39,6 +39,7 @@ export class FeatureSearchComponent {
   @Input('buttonLabel') buttonLabel!: string;
   @Input('route') route!: string;
   @Input('page') page: number = 1;
+  @Input('pageSize') pageSize: number = 10;
   @Input('enable') enable!: boolean;
   @Input('addButton') addButton!: boolean;
 
@@ -158,11 +159,13 @@ export class FeatureSearchComponent {
       //     break;
     }
   }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['page'].firstChange) {
+    if (!changes.hasOwnProperty('page') || !changes['page'].firstChange) {
       this.fetchItems();
     }
   }
+
   ngOnInit(): void {
     this.fetchItems();
     if (!this.enable) {
@@ -178,12 +181,14 @@ export class FeatureSearchComponent {
         this.fetchItems();
       });
   }
+
   fetchItems() {
     this.onLoadingChange.emit(true);
     this.apiService
       .get(this.route, {
         keyword: this.keyword,
         page: this.page,
+        pageSize: this.pageSize,
         content: 'false',
         mode: 'default',
       })

@@ -53,7 +53,7 @@ export class DashboardComponent implements OnInit {
         ? ''
         : this.authService.getUserInfo()!.name;
 
-    switch (this.authService.getUserInfo()?.role) {
+    switch (this.authService.getUserInfo()?.roleID) {
       case 1:
         this.enabledDashboards = this.availableDashboards.filter(
           (x) => x.title == 'Purchasing'
