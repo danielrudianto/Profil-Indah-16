@@ -76,6 +76,7 @@ import { ReportInadequateComponent } from './presentation/pages/report/report-in
 import { ReportOutputComponent } from './presentation/pages/report/report-output/report-output.component';
 import { ReportProblematicComponent } from './presentation/pages/report/report-problematic/report-problematic.component';
 import { CashierComponent } from './presentation/pages/cashier/cashier.component';
+import { ProductCreateComponent } from './presentation/pages/product/product-create/product-create.component';
 
 const routes: Routes = [
   {
@@ -97,7 +98,7 @@ const routes: Routes = [
           },
         ],
       },
-      
+
       {
         path: 'Cashier',
         component: CashierComponent,
@@ -114,6 +115,10 @@ const routes: Routes = [
           {
             path: 'Product',
             component: ProductComponent,
+          },
+          {
+            path: 'Product/Create',
+            component: ProductCreateComponent,
           },
           {
             path: 'Product-type',
@@ -368,6 +373,10 @@ const routes: Routes = [
           {
             path: 'Product',
             component: ProductComponent,
+          },
+          {
+            path: 'Product/Create',
+            component: ProductCreateComponent,
           },
           {
             path: 'Product-type',

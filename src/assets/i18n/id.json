@@ -79,6 +79,7 @@
   "product__active": "Aktif",
   "product__inactive": "Tidak aktif",
   "product__title": "Produk",
+  "product__title__create": "Tambah produk baru",
   "product__help": "Di sini Anda dapat mengelola data produk, membuat, memperbarui, dan menghapus.",
   "product__add__title": "Tambah produk baru",
   "product__add__general": "Data produk umum",

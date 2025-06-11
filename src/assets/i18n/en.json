@@ -79,6 +79,7 @@
   "product__active": "Active",
   "product__inactive": "Inactive",
   "product__title": "Product",
+  "product__title__create": "Add new product",
   "product__help": "Here you can manage your products data, create, update, and delete.",
   "product__add__title": "Add new product",
   "product__add__general": "General data",

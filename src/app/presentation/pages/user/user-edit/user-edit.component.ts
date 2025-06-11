@@ -57,10 +57,10 @@ export class UserEditComponent {
           name: data.name,
           nik: data.nik,
           username: data.username,
-          role: data.rawRole,
+          role: data.roleID,
         });
 
-        if (data.rawRole === 6) {
+        if (data.roleID === 6) {
           this.selectedTypes = data.user_sales.map((x: any) => {
             return {
               id: x.item_type.id,

@@ -12,6 +12,7 @@
           [addButton]="true"
           route="product"
           [page]="page"
+          [pageSize]="pageSize"
           [enable]="true"
           (onChange)="onUpdateData($event)"
           (onLoadingChange)="onUpdateLoadingStatus($event)"
@@ -41,8 +42,8 @@
                     {{ item.description }}
                   </span>
                 </td>
-                <td class="text-center">{{ item.item_brand_name }}</td>
-                <td class="text-center">{{ item.item_type_name }}</td>
+                <td class="text-center">{{ item.item_brand?.name }}</td>
+                <td class="text-center">{{ item.item_type?.name }}</td>
                 <td class="text-center">
                   <span *ngIf="item.is_active">{{
                     "product__active" | translate
@@ -106,10 +107,10 @@
           [disabled]="isLoading"
           [pageIndex]="page - 1"
           [length]="dataCount"
-          [pageSize]="10"
+          [pageSize]="pageSize"
           (page)="changePage($event)"
           aria-label="Select page"
-          hidePageSize="true"
+          [pageSizeOptions]="[10, 25, 50]"
         >
         </mat-paginator>
       </div>

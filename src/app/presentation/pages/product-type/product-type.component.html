@@ -38,7 +38,7 @@
               <tr *ngFor="let item of dataSource" [matMenuTriggerFor]="menu">
                 <td class="text-center">{{ item.name }}</td>
                 <td class="text-center">
-                  {{ item.user_item_type_created_byTouser.name }}
+                  {{ item.user_item_type_created_byTouser?.name }}
                 </td>
                 <td class="text-center">
                   {{ item.created_at | date : "dd/MM/YYYY" }}

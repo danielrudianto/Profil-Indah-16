@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -6,6 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 import { TranslateService } from '@ngx-translate/core';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { AlertService } from 'src/app/services/alert.service';
@@ -28,6 +29,7 @@ export class ProductCreateComponent {
     private translateService: TranslateService
   ) {}
 
+  @ViewChild('stepper') stepper!: MatStepper;
   isSubmitting: boolean = false;
   isLoading: boolean = false;
   isLoadingType: boolean = false;
@@ -67,53 +69,13 @@ export class ProductCreateComponent {
     discount: new FormControl(0, [Validators.required, Validators.min(0)]),
   });
 
-  stepIndex: number = 0;
-
-  steps: any[] = [
-    {
-      label: 'General',
-      disabled: false,
-      selected: this.stepIndex == 0,
-    },
-    {
-      label: 'Unit',
-      disabled: !this.itemFormGroup.valid,
-      selected: this.stepIndex == 1,
-    },
-    {
-      label: 'Price',
-      disabled: !this.unitFormGroup.valid,
-      selected: this.stepIndex == 2,
-    },
-  ];
-
-  ngOnInit(): void {
-    this.itemFormGroup.statusChanges.subscribe((status) => {
-      if (status == 'VALID') {
-        this.steps[1].disabled = false;
-      } else {
-        this.steps[1].disabled = true;
-      }
-    });
-
-    this.unitFormGroup.statusChanges.subscribe((status) => {
-      if (status == 'VALID') {
-        this.steps[2].disabled = false;
-      } else {
-        this.steps[2].disabled = true;
-      }
-    });
-  }
+  ngOnInit(): void {}
 
   closeDialog() {
     this.isOpened = false;
     setTimeout(() => {
       this.dynamicComponentService.closeDynamicComponent();
     }, 300);
-  }
-
-  selectStep(event: number) {
-    this.stepIndex = event;
   }
 
   get f() {
@@ -199,7 +161,11 @@ export class ProductCreateComponent {
             .get('general__created-successfully')
             .subscribe((translation) => {
               this.alertService.showSuccess(`${data.reference} ${translation}`);
-              this.closeDialog();
+              this.itemFormGroup.reset();
+              this.unitFormGroup.reset();
+              this.t.clear();
+
+              this.stepper.selectedIndex = 0;
             });
         },
         error: (error) => {

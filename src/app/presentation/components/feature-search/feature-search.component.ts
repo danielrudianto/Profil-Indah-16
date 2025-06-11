@@ -21,6 +21,7 @@ import { CompanyCreateComponent } from '../../pages/company/company-create/compa
 import { PaymentMethodCreateComponent } from '../../pages/payment-method/payment-method-create/payment-method-create.component';
 import { PromotionCreateComponent } from '../../pages/promotion/promotion-create/promotion-create.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-feature-search',
@@ -33,7 +34,8 @@ export class FeatureSearchComponent {
     private dialog: MatDialog,
     private dynamicComponentService: DynamicComponentService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private alertService: AlertService
   ) {}
 
   @Input('buttonLabel') buttonLabel!: string;
@@ -60,10 +62,13 @@ export class FeatureSearchComponent {
     };
     switch (this.route) {
       case 'product':
-        this.dynamicComponentService.createDynamicComponent(
-          ProductCreateComponent,
-          {}
-        );
+        // this.dynamicComponentService.createDynamicComponent(
+        //   ProductCreateComponent,
+        //   {}
+        // );
+        this.router.navigate(['Create'], {
+          relativeTo: this.activatedRoute,
+        });
         break;
       case 'product-brand':
         this.dynamicComponentService.createDynamicComponent(
@@ -196,7 +201,10 @@ export class FeatureSearchComponent {
         next: (data: any) => {
           this.onChange.emit(data);
         },
-        error: (error: any) => {},
+        error: (error: any) => {
+          console.error("Error fetching items:", error);
+          this.alertService.showError("Failed to fetch items. Please try again later.");
+        },
       })
       .add(() => {
         this.onLoadingChange.emit(false);

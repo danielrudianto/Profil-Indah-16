@@ -6,22 +6,26 @@ export interface Item {
   item_type_name: string;
   is_active: boolean;
   can_delete: boolean;
+  item_type?: ItemType;
+  item_brand?: ItemBrand;
 }
 
 export interface ItemBrand {
   id: number;
   name: string;
-  created_at: string;
-  user: DataUser;
-  can_delete: boolean;
+  created_by?: number;
+  created_at?: string;
+  user?: DataUser;
+  can_delete?: boolean;
 }
 
 export interface ItemType {
   id: number;
   name: string;
-  created_at: string;
-  user_item_type_created_byTouser: DataUser;
-  can_delete: boolean;
+  created_by?: number;
+  created_at?: string;
+  user_item_type_created_byTouser?: DataUser;
+  can_delete?: boolean;
 }
 
 export interface Package {
