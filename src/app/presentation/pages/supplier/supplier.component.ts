@@ -20,6 +20,7 @@ export class SupplierComponent {
   dataSource: Supplier[] = [];
   dataCount: number = 0;
   page: number = 1;
+  pageSize: number = 10;
   previousRoute: string = '';
   isAdministrator: boolean = false;
 
@@ -39,7 +40,13 @@ export class SupplierComponent {
   }
 
   changePage(event: PageEvent) {
-    this.page = event.pageIndex + 1;
+    if (this.pageSize != event.pageSize) {
+      this.pageSize = event.pageSize;
+      this.fetchProducts(1);
+    } else {
+      this.page = event.pageIndex + 1;
+      this.fetchProducts(this.page);
+    }
   }
 
   fetchProducts(page: number) {
