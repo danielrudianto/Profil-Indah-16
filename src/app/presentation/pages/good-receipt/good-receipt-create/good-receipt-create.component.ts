@@ -217,82 +217,84 @@ export class GoodReceiptCreateComponent {
               .add(() => {
                 this.isSubmitting = false;
               });
-          } else {
-            this.dialog
-              .open(SubmitConfirmationComponent, {
-                data: {
-                  title: this.translateService.instant(
-                    'general__confirm-confirmation__body'
-                  ),
-                  document: `${data.name}, Supplier ${
-                    data.supplier.name
-                  }, Date ${this.datePipe.transform(data.date, 'dd/MM/yyyy')}`,
-                },
-              })
-              .afterClosed()
-              .subscribe((validation) => {
-                if (validation == true) {
-                  this.apiService
-                    .post('good-receipt', {
-                      uuid: this.metaFormGroup.get('uuid')?.value,
-                      name: this.metaFormGroup.get('delivery_order')?.value,
+
+            return;
+          }
+
+          this.dialog
+            .open(SubmitConfirmationComponent, {
+              data: {
+                title: this.translateService.instant(
+                  'general__confirm-confirmation__body'
+                ),
+                document: `${data.name}, Supplier ${
+                  data.supplier.name
+                }, Date ${this.datePipe.transform(data.date, 'dd/MM/yyyy')}`,
+              },
+            })
+            .afterClosed()
+            .subscribe((validation) => {
+              if (validation == true) {
+                this.apiService
+                  .post('good-receipt', {
+                    uuid: this.metaFormGroup.get('uuid')?.value,
+                    name: this.metaFormGroup.get('delivery_order')?.value,
+                    date: this.datePipe.transform(
+                      this.metaFormGroup.get('date')?.value,
+                      'yyyy-MM-dd'
+                    ),
+                    company_id: this.metaFormGroup.get('company_id')?.value,
+                    supplier_id: this.metaFormGroup.get('supplier_id')?.value,
+                    good_receipt: this.t.controls.map((x) => {
+                      return {
+                        item_id: x.get('item_id')?.value,
+                        item_unit_id: x.get('item_unit_id')?.value,
+                        quantity: x.get('quantity')?.value,
+                        price: x.get('price')?.value,
+                      };
+                    }),
+                    purchase_invoice: {
+                      name: '',
+                      faktur: null,
                       date: this.datePipe.transform(
                         this.metaFormGroup.get('date')?.value,
                         'yyyy-MM-dd'
                       ),
-                      company_id: this.metaFormGroup.get('company_id')?.value,
-                      supplier_id: this.metaFormGroup.get('supplier_id')?.value,
-                      good_receipt: this.t.controls.map((x) => {
-                        return {
-                          item_id: x.get('item_id')?.value,
-                          item_unit_id: x.get('item_unit_id')?.value,
-                          quantity: x.get('quantity')?.value,
-                          price: x.get('price')?.value,
-                        };
-                      }),
-                      purchase_invoice: {
-                        name: '',
-                        faktur: null,
-                        date: this.datePipe.transform(
-                          this.metaFormGroup.get('date')?.value,
-                          'yyyy-MM-dd'
-                        ),
-                        discount: 0,
-                      },
-                    })
-                    .subscribe({
-                      next: (_) => {
-                        this.t.clear();
-                        this.metaFormGroup.reset();
-                        this.onUnselectCompany();
-                        this.onUnselectSupplier();
+                      discount: 0,
+                    },
+                  })
+                  .subscribe({
+                    next: (_) => {
+                      this.t.clear();
+                      this.metaFormGroup.reset();
+                      this.onUnselectCompany();
+                      this.onUnselectSupplier();
 
-                        this.itemFormGroup.patchValue({
-                          number_of_items: 0,
-                        });
+                      this.itemFormGroup.patchValue({
+                        number_of_items: 0,
+                      });
 
-                        this.metaFormGroup.patchValue({
-                          uuid: v4(),
-                        });
+                      this.metaFormGroup.patchValue({
+                        uuid: v4(),
+                      });
 
-                        this.alertService.showSuccess(
-                          this.translateService.instant(
-                            'good-receipt__create__success'
-                          )
-                        );
-                      },
-                      error: (error) => {
-                        this.alertService.showError(error);
-                      },
-                    })
-                    .add(() => {
-                      this.isSubmitting = false;
-                    });
-                } else {
-                  this.isSubmitting = false;
-                }
-              });
-          }
+                      this.alertService.showSuccess(
+                        this.translateService.instant(
+                          'good-receipt__create__success'
+                        )
+                      );
+                    },
+                    error: (error) => {
+                      this.alertService.showError(error);
+                    },
+                  })
+                  .add(() => {
+                    this.isSubmitting = false;
+                  });
+              } else {
+                this.isSubmitting = false;
+              }
+            });
         },
         error: (_) => {
           this.isSubmitting = false;
