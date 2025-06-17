@@ -64,6 +64,12 @@ export class GoodReceiptCreateComponent {
 
   isSubmitting: boolean = false;
 
+  ngOnInit(): void {
+    this.itemFormGroup.valueChanges.subscribe(() => {
+      console.log(this.itemFormGroup.controls);
+    });
+  }
+
   get f() {
     return this.itemFormGroup.controls;
   }
@@ -104,39 +110,64 @@ export class GoodReceiptCreateComponent {
       }
     );
 
-    dialog.subscribe((data) => {
-      if (data != null && data != undefined) {
-        if (
-          this.t.controls.filter(
-            (x) =>
-              x.get('item_id')?.value == data.item.id &&
-              x.get('item_unit_id')?.value ==
-                (data.price == null ? null : data.price.item_unit_id)
-          ).length > 0
-        ) {
-          this.alertService.showSuccess(
-            'Item already exists! Please select different item.'
-          );
-        } else {
-          const productFormGroup = this.formBuilder.group({
-            item_id: [data.item.id, Validators.required],
-            item_unit_id: [data.price == null ? null : data.price.item_unit_id],
-            reference: [data.item.reference, Validators.required],
-            description: [data.item.description, Validators.required],
+    dialog.subscribe((result) => {
+      if (result) {
+        const data = result.data;
+        const sub = result.sub;
+
+        this.t.push(
+          this.formBuilder.group({
+            product_id: [data.id, Validators.required],
+            product_unit_id: [sub == null ? null : sub.id],
+            reference: [data.reference],
+            description: [data.description],
             quantity: [0, [Validators.required, Validators.min(0.01)]],
-            unit: [data.price == null ? data.item.unit : data.price.unit],
-            conversion: [data.price == null ? 1 : data.price.conversion],
-            default_unit: [data.item.unit],
-            stock: [data.item.stock],
-          });
+            unit: [sub == null ? data.unit : sub.unit],
+            conversion: [sub == null ? 1 : sub.conversion],
+            price: [sub == null ? data.purchase_price : sub.purchase_price],
+            discount: [
+              sub == null ? data.purchase_discount : sub.purchase_discount,
+            ],
+            default_unit: [data.unit],
+          })
+        );
 
-          this.t.push(productFormGroup);
-
-          this.itemFormGroup.patchValue({
-            number_of_items: this.t.length,
-          });
-        }
+        this.itemFormGroup.patchValue({
+          number_of_items: this.t.length,
+        });
       }
+      // if (result != null && result != undefined) {
+      //   if (
+      //     this.t.controls.filter(
+      //       (x) =>
+      //         x.get('item_id')?.value == data.item.id &&
+      //         x.get('item_unit_id')?.value ==
+      //           (data.price == null ? null : data.price.item_unit_id)
+      //     ).length > 0
+      //   ) {
+      //     this.alertService.showSuccess(
+      //       'Item already exists! Please select different item.'
+      //     );
+      //   } else {
+      //     const productFormGroup = this.formBuilder.group({
+      //       item_id: [data.item.id, Validators.required],
+      //       item_unit_id: [data.price == null ? null : data.price.item_unit_id],
+      //       reference: [data.item.reference, Validators.required],
+      //       description: [data.item.description, Validators.required],
+      //       quantity: [0, [Validators.required, Validators.min(0.01)]],
+      //       unit: [data.price == null ? data.item.unit : data.price.unit],
+      //       conversion: [data.price == null ? 1 : data.price.conversion],
+      //       default_unit: [data.item.unit],
+      //       stock: [data.item.stock],
+      //     });
+
+      //     this.t.push(productFormGroup);
+
+      //     this.itemFormGroup.patchValue({
+      //       number_of_items: this.t.length,
+      //     });
+      //   }
+      // }
     });
   }
 
@@ -165,6 +196,8 @@ export class GoodReceiptCreateComponent {
               .post('good-receipt', {
                 uuid: this.metaFormGroup.get('uuid')?.value,
                 name: this.metaFormGroup.get('delivery_order')?.value,
+                invoice_name: '',
+                faktur: null,
                 date: this.datePipe.transform(
                   this.metaFormGroup.get('date')?.value,
                   'yyyy-MM-dd'
@@ -173,21 +206,13 @@ export class GoodReceiptCreateComponent {
                 supplier_id: this.metaFormGroup.get('supplier_id')?.value,
                 good_receipt: this.t.controls.map((x) => {
                   return {
-                    item_id: x.get('item_id')?.value,
-                    item_unit_id: x.get('item_unit_id')?.value,
+                    product_id: x.get('product_id')?.value,
+                    product_unit_id: x.get('product_unit_id')?.value,
                     quantity: x.get('quantity')?.value,
                     price: x.get('price')?.value,
+                    discount: x.get('discount')?.value,
                   };
                 }),
-                purchase_invoice: {
-                  name: '',
-                  faktur: null,
-                  date: this.datePipe.transform(
-                    this.metaFormGroup.get('date')?.value,
-                    'yyyy-MM-dd'
-                  ),
-                  discount: 0,
-                },
               })
               .subscribe({
                 next: (_) => {

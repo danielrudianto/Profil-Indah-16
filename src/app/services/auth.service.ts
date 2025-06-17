@@ -13,8 +13,8 @@ export interface AuthLogin {
 export interface AuthUser {
   name: string;
   username: string;
-  roleID: number;
-  role: string;
+  role: number;
+  roleText: string;
   token: string;
   refreshToken: string;
 }
@@ -98,7 +98,7 @@ export class AuthService {
         )
       ) as AuthUser;
 
-      return parsedUser.roleID == 5 || parsedUser.roleID == 7;
+      return parsedUser.role == 5 || parsedUser.role == 7;
     }
   }
 
@@ -113,7 +113,7 @@ export class AuthService {
         )
       ) as AuthUser;
 
-      return parsedUser.roleID == 7;
+      return parsedUser.role == 7;
     }
   }
 

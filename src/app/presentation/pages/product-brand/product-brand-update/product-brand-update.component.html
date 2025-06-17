@@ -5,26 +5,28 @@
       (onDialogClose)="closeDialog()"
     >
     </app-dialog-header>
-    <div class="create-dialog__content">
-      <div *ngIf="isLoading">
-        <mat-spinner id="spinner" />
-      </div>
-      <form [formGroup]="brandFormGroup" *ngIf="!isLoading">
+    <form [formGroup]="brandFormGroup" (ngSubmit)="submitForm()">
+      <div class="create-dialog__content">
+        <div *ngIf="isLoading">
+          <mat-spinner id="spinner" />
+        </div>
+
         <mat-form-field appearance="fill" class="w-100">
           <mat-label>{{ "product__brand__name" | translate }}</mat-label>
           <input matInput type="text" formControlName="name" />
         </mat-form-field>
-      </form>
-    </div>
-    <div class="create-dialog__footer">
-      <button
-        type="button"
-        class="next-button"
-        (click)="submitForm()"
-        [disabled]="isSubmitting || !brandFormGroup.valid"
-      >
-        {{ "product__brand__add__submit" | translate }}
-      </button>
-    </div>
+      </div>
+      <div class="create-dialog__footer">
+        <button
+          type="submit"
+          mat-stroked-button
+          style="letter-spacing: 0"
+          color="primary"
+          [disabled]="isSubmitting || !brandFormGroup.valid"
+        >
+          {{ "product__brand__add__submit" | translate }}
+        </button>
+      </div>
+    </form>
   </div>
 </app-dynamic-dialog>

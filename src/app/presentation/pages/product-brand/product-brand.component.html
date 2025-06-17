@@ -20,16 +20,16 @@
           (onNewQuery)="page = 1"
         ></app-feature-search>
         <div class="table-responsive">
-          <table class="table">
+          <table class="table table-striped table-hover">
             <thead>
               <tr>
-                <th class="text-center">
+                <th scope="col" class="text-center">
                   {{ "product__brand__name" | translate }}
                 </th>
-                <th class="text-center">
+                <th scope="col" class="text-center">
                   {{ "product__brand__created-by" | translate }}
                 </th>
-                <th class="text-center">
+                <th scope="col" class="text-center">
                   {{ "product__brand__created-at" | translate }}
                 </th>
               </tr>

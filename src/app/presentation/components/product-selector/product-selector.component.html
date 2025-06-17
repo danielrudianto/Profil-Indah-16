@@ -35,7 +35,7 @@
           <div class="item-selector__unit-wrapper">
             <div
               class="item-selector__unit"
-              (click)="selectItem({ item: element, price: null })"
+              (click)="selectData({ data: element, sub: null })"
             >
               <div class="item-selector__unit-icon">
                 <svg
@@ -65,9 +65,9 @@
               <div class="item-selector__unit-text">{{ element.unit }}</div>
             </div>
             <div
-              (click)="selectItem({ item: element, price: data })"
+              (click)="selectData({ data: element, sub: data })"
               class="item-selector__unit"
-              *ngFor="let data of element.unit_price"
+              *ngFor="let data of element.product_unit"
             >
               <div class="item-selector__unit-icon">
                 <svg

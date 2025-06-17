@@ -154,7 +154,6 @@ export class PurchaseInvoiceCreateComponent {
       let quantity = 0;
       let totalPrice = 0;
       this.t.controls.forEach((x) => {
-        console.log(x);
         quantity +=
           x.get('quantity') == undefined ||
           x.get('quantity') == null ||
@@ -204,7 +203,6 @@ export class PurchaseInvoiceCreateComponent {
     );
 
     dialog.subscribe((data) => {
-      console.log(data);
       if (data != null && data != undefined) {
         if (
           this.t.controls.filter(

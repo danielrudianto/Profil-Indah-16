@@ -5,23 +5,24 @@
       (onDialogClose)="closeDialog()"
     >
     </app-dialog-header>
-    <div class="create-dialog__content">
-      <form [formGroup]="typeFormGroup">
-        <mat-form-field appearance="fill" class="w-100">
+    <form [formGroup]="typeFormGroup" (ngSubmit)="submitForm()">
+      <div class="create-dialog__content">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>{{ "product__type__name" | translate }}</mat-label>
-          <input matInput type="text" formControlName="name" />
+          <input matInput type="text" formControlName="name" #input />
         </mat-form-field>
-      </form>
-    </div>
-    <div class="create-dialog__footer">
-      <button
-        type="button"
-        class="next-button"
-        (click)="submitForm()"
-        [disabled]="isSubmitting || !typeFormGroup.valid"
-      >
-        {{ "product__type__add__submit" | translate }}
-      </button>
-    </div>
+      </div>
+      <div class="create-dialog__footer">
+        <button
+          type="submit"
+          mat-stroked-button
+          style="letter-spacing: 0"
+          color="primary"
+          [disabled]="isSubmitting || !typeFormGroup.valid"
+        >
+          {{ "product__type__add__submit" | translate }}
+        </button>
+      </div>
+    </form>
   </div>
 </app-dynamic-dialog>

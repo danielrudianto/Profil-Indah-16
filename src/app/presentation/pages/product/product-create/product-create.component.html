@@ -1,355 +1,3 @@
-<!-- <app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
-  <div class="create-dialog">
-    <app-dialog-header
-      [title]="'product__add__title' | translate"
-      (onDialogClose)="closeDialog()"
-    >
-      <div header>
-        <app-custom-stepper
-          [steps]="steps"
-          [selectedStep]="stepIndex"
-          (onSelectStep)="selectStep($event)"
-        />
-      </div>
-    </app-dialog-header>
-    <div class="create-dialog__content">
-      <form
-        [formGroup]="itemFormGroup"
-        [@slideInOutAnimation]="stepIndex == 0 ? 'in' : 'out'"
-      >
-        <mat-form-field class="w-100" appearance="outline">
-          <mat-label>{{ "product__add__reference" | translate }}</mat-label>
-          <input
-            [disabled]="isSubmitting"
-            matInput
-            placeholder="Ex. MLT-9-G"
-            type="text"
-            formControlName="reference"
-          />
-        </mat-form-field>
-        <mat-form-field class="w-100" appearance="outline">
-          <mat-label>{{ "product__add__description" | translate }}</mat-label>
-          <textarea
-            [disabled]="isSubmitting"
-            matInput
-            placeholder="Ex. Multiplek 9mm Garuda"
-            type="text"
-            formControlName="description"
-          ></textarea>
-        </mat-form-field>
-        <app-autocomplete-search
-          [label]="'product__add__brand' | translate"
-          routeName="product-brand"
-          (onSelectData)="onSelectBrand($event)"
-          (onUnselectData)="onUnselectBrand()"
-          [selected]="itemFormGroup.controls['brand'].valid"
-        ></app-autocomplete-search>
-
-        <app-autocomplete-search
-          [label]="'product__add__type' | translate"
-          routeName="product-type"
-          (onSelectData)="onSelectType($event)"
-          (onUnselectData)="onUnselectType()"
-          [selected]="itemFormGroup.controls['type'].valid"
-        ></app-autocomplete-search>
-
-        <mat-form-field class="w-100" appearance="outline">
-          <mat-label>{{ "product__add__minimum-stock" | translate }}</mat-label>
-          <input
-            [disabled]="isSubmitting"
-            matInput
-            placeholder="Ex. 200"
-            type="text"
-            mask="separator.2"
-            thousandSeparator=" "
-            formControlName="minimum_stock"
-          />
-        </mat-form-field>
-      </form>
-      <form
-        [formGroup]="unitFormGroup"
-        [@slideInOutAnimation]="stepIndex == 1 ? 'in' : 'out'"
-      >
-        <button class="mb-2 button" type="button" (click)="addUnit()">
-          Add unit
-        </button>
-        <div class="table-responsive">
-          <table class="table mb-2">
-            <thead>
-              <tr>
-                <th>{{ "product__add__unit-table" | translate }}</th>
-                <th>{{ "product__add__conversion-table" | translate }}</th>
-                <th>{{ "product__add__price-table" | translate }}</th>
-                <th>{{ "product__add__discount-table" | translate }}</th>
-                <th>{{ "product__add__action-table" | translate }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <mat-form-field class="w-100" appearance="outline">
-                    <mat-label>{{
-                      "product__add__unit-table" | translate
-                    }}</mat-label>
-                    <input
-                      [disabled]="isSubmitting"
-                      matInput
-                      placeholder="Ex. Lembar"
-                      type="text"
-                      formControlName="unit"
-                    />
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field class="w-100" appearance="outline">
-                    <mat-label>{{
-                      "product__add__conversion-table" | translate
-                    }}</mat-label>
-                    <input matInput value="1" readonly />
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field class="w-100" appearance="outline">
-                    <mat-label>{{
-                      "product__add__price-table" | translate
-                    }}</mat-label>
-                    <input
-                      [disabled]="isSubmitting"
-                      matInput
-                      type="text"
-                      mask="separator.2"
-                      thousandSeparator=" "
-                      placeholder="Ex. 8 000"
-                      formControlName="price"
-                    />
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field class="w-100" appearance="outline">
-                    <mat-label>{{
-                      "product__add__discount-table" | translate
-                    }}</mat-label>
-                    <input
-                      matInput
-                      type="text"
-                      mask="separator.2"
-                      thousandSeparator=" "
-                      placeholder="Ex. 800"
-                      formControlName="discount"
-                    />
-                  </mat-form-field>
-                </td>
-              </tr>
-              <tr
-                [formGroup]="getFormAt(i)"
-                *ngFor="let item of t.controls; index as i"
-              >
-                <td>
-                  <mat-form-field class="w-100" appearance="outline">
-                    <mat-label>Unit name</mat-label>
-                    <input
-                      [disabled]="isSubmitting"
-                      matInput
-                      placeholder="Ex. Lembar"
-                      type="text"
-                      formControlName="unit"
-                    />
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field class="w-100" appearance="outline">
-                    <mat-label>Conversion</mat-label>
-                    <input
-                      [disabled]="isSubmitting"
-                      matInput
-                      placeholder="Ex. 100"
-                      mask="separator.2"
-                      thousandSeparator=" "
-                      type="text"
-                      formControlName="conversion"
-                    />
-                    <mat-hint
-                      >1 {{ item.get("unit")?.value }} -
-                      {{
-                        item.get("conversion")?.value ?? 1 | number : "0.0-2"
-                      }}
-                      {{ unitFormGroup.controls["unit"].value }} ( Rp.&nbsp;{{
-                        unitFormGroup.controls["price"].value *
-                          (item.get("conversion")?.value ?? 1)
-                          | number : "0.2-2"
-                      }}
-                      )</mat-hint
-                    >
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field class="w-100" appearance="outline">
-                    <mat-label>Price</mat-label>
-                    <input
-                      matInput
-                      type="text"
-                      mask="separator.2"
-                      thousandSeparator=" "
-                      placeholder="Ex. 8 000"
-                      formControlName="price"
-                    />
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field class="w-100" appearance="outline">
-                    <mat-label>Discount</mat-label>
-                    <input
-                      matInput
-                      type="text"
-                      mask="separator.2"
-                      thousandSeparator=" "
-                      placeholder="Ex. 800"
-                      formControlName="discount"
-                    />
-                  </mat-form-field>
-                </td>
-                <td>
-                  <button (click)="removeUnit(i)" mat-icon-button>
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </form>
-      <form
-        [formGroup]="unitFormGroup"
-        [@slideInOutAnimation]="stepIndex == 2 ? 'in' : 'out'"
-      >
-        <table class="table w-100 mb-2">
-          <thead>
-            <tr>
-              <th>Unit</th>
-              <th>Conversion</th>
-              <th>Price</th>
-              <th>Discount</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="align-middle">
-                {{ unitFormGroup.controls["unit"].value }}
-              </td>
-              <td class="align-middle">1</td>
-              <td class="align-middle">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Price</mat-label>
-                  <input
-                    matInput
-                    type="text"
-                    mask="separator.2"
-                    thousandSeparator=" "
-                    placeholder="Ex. 8 000"
-                    formControlName="item_purchase_price"
-                  />
-                </mat-form-field>
-              </td>
-              <td class="align-middle">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Discount</mat-label>
-                  <input
-                    matInput
-                    type="text"
-                    mask="separator.2"
-                    thousandSeparator=" "
-                    placeholder="Ex. 800"
-                    formControlName="item_purchase_discount"
-                  />
-                </mat-form-field>
-              </td>
-            </tr>
-            <tr
-              [formGroup]="getFormAt(i)"
-              *ngFor="let item of t.controls; index as i"
-            >
-              <td class="align-middle">
-                {{ item.get("unit")?.value }}
-              </td>
-              <td class="align-middle">
-                {{ item.get("conversion")?.value ?? 0 | number : "0.0-2" }}
-              </td>
-              <td class="align-middle">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Price</mat-label>
-                  <input
-                    matInput
-                    type="text"
-                    mask="separator.2"
-                    thousandSeparator=" "
-                    placeholder="Ex. 8 000"
-                    formControlName="purchase_price"
-                  />
-                </mat-form-field>
-              </td>
-              <td>
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Discount</mat-label>
-                  <input
-                    matInput
-                    type="text"
-                    mask="separator.2"
-                    thousandSeparator=" "
-                    placeholder="Ex. 800"
-                    formControlName="purchase_discount"
-                  />
-                </mat-form-field>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </form>
-    </div>
-    <div class="create-dialog__footer">
-      <button
-        type="button"
-        class="previous-button"
-        (click)="stepIndex = stepIndex - 1"
-        mat-button
-        [disabled]="isSubmitting || stepIndex == 0"
-      >
-        {{ "product__add__previous" | translate }}
-      </button>
-      <button
-        *ngIf="stepIndex == 0"
-        type="button"
-        class="next-button"
-        (click)="stepIndex = stepIndex + 1"
-        [disabled]="itemFormGroup.invalid || isSubmitting"
-      >
-        {{ "product__add__next" | translate }}
-      </button>
-      <button
-        *ngIf="stepIndex == 1"
-        type="button"
-        class="next-button"
-        (click)="stepIndex = stepIndex + 1"
-        [disabled]="unitFormGroup.invalid || isSubmitting"
-      >
-        {{ "product__add__next" | translate }}
-      </button>
-      <button
-        *ngIf="stepIndex == 2"
-        type="button"
-        class="next-button"
-        (click)="submitForm()"
-        [disabled]="
-          isSubmitting ||
-          !unitFormGroup.valid ||
-          !itemFormGroup.valid ||
-          !itemFormGroup.valid
-        "
-      >
-        {{ "product__add__submit" | translate }}
-      </button>
-    </div>
-  </div>
-</app-dynamic-dialog> -->
 <div class="container-fluid">
   <div class="row">
     <div class="col-12">
@@ -357,11 +5,11 @@
         {{ "product__title" | translate }} /
         {{ "product__title__create" | translate }}
       </h2>
-      <mat-stepper [linear]="true" #stepper>
+      <mat-stepper #stepper>
         <mat-step [stepControl]="itemFormGroup">
           <ng-template matStepLabel>General </ng-template>
 
-          <form [formGroup]="itemFormGroup">
+          <form [formGroup]="itemFormGroup" class="pt-3">
             <mat-form-field class="w-100" appearance="outline">
               <mat-label>{{ "product__add__reference" | translate }}</mat-label>
               <input
@@ -389,7 +37,7 @@
               routeName="product-brand"
               (onSelectData)="onSelectBrand($event)"
               (onUnselectData)="onUnselectBrand()"
-              [selected]="itemFormGroup.controls['brand'].valid"
+              [selected]="itemFormGroup.controls['product_brand_id'].valid"
             ></app-autocomplete-search>
 
             <app-autocomplete-search
@@ -397,7 +45,7 @@
               routeName="product-type"
               (onSelectData)="onSelectType($event)"
               (onUnselectData)="onUnselectType()"
-              [selected]="itemFormGroup.controls['type'].valid"
+              [selected]="itemFormGroup.controls['product_type_id'].valid"
             ></app-autocomplete-search>
 
             <mat-form-field class="w-100" appearance="outline">
@@ -415,9 +63,97 @@
               />
             </mat-form-field>
 
+            <mat-form-field class="w-100" appearance="outline">
+              <mat-label>{{ "product__add__unit" | translate }}</mat-label>
+              <mat-select formControlName="unit">
+                <mat-option value="PCS">PCS</mat-option>
+                <mat-option value="SET">SET</mat-option>
+                <mat-option value="BOX">BOX</mat-option>
+                <mat-option value="LEMBAR">LEMBAR</mat-option>
+                <mat-option value="BATANG">BATANG</mat-option>
+                <mat-option value="KALENG">KALENG</mat-option>
+                <mat-option value="GALON">GALON</mat-option>
+                <mat-option value="BLEK">BLEK</mat-option>
+                <mat-option value="METER">METER</mat-option>
+                <mat-option value="ROLL">ROLL</mat-option>
+                <mat-option value="TUBE">TUBE</mat-option>
+                <mat-option value="PASANG">PASANG</mat-option>
+                <mat-option value="M2"
+                  >M<sup>2</sup> (METER PERSEGI)</mat-option
+                >
+
+                <mat-option value="KG">KG</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <label class="mb-3">{{
+              "product__add__create__unit__sales-price__title" | translate
+            }}</label>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "product__add__create__unit__sales-price" | translate
+              }}</mat-label>
+              <input
+                [disabled]="isSubmitting"
+                matInput
+                type="text"
+                formControlName="sales_price"
+                placeholder="Ex. 200"
+                mask="separator.2"
+                thousandSeparator=" "
+              />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "product__add__create__unit__sales-discount" | translate
+              }}</mat-label>
+              <input
+                [disabled]="isSubmitting"
+                matInput
+                type="text"
+                formControlName="sales_discount"
+                placeholder="Ex. 200"
+                mask="separator.2"
+                thousandSeparator=" "
+              />
+            </mat-form-field>
+
+            <label class="mb-3">{{
+              "product__add__create__unit__purchase-price__title" | translate
+            }}</label>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "product__add__create__unit__purchase-price" | translate
+              }}</mat-label>
+              <input
+                [disabled]="isSubmitting"
+                matInput
+                type="text"
+                formControlName="purchase_price"
+                placeholder="Ex. 200"
+                mask="separator.2"
+                thousandSeparator=" "
+              />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "product__add__create__unit__purchase-discount" | translate
+              }}</mat-label>
+              <input
+                [disabled]="isSubmitting"
+                matInput
+                type="text"
+                formControlName="purchase_discount"
+                placeholder="Ex. 200"
+                mask="separator.2"
+                thousandSeparator=" "
+              />
+            </mat-form-field>
+
             <button
-              mat-button
-              type="button"
+              mat-stroked-button
+              color="primary"
+              style="letter-spacing: 0"
               matStepperNext
               [disabled]="itemFormGroup.invalid || isSubmitting"
             >
@@ -425,224 +161,83 @@
             </button>
           </form>
         </mat-step>
-        <mat-step [stepControl]="unitFormGroup">
-          <ng-template matStepLabel>Unit </ng-template>
-
-          <form [formGroup]="unitFormGroup">
-            <button
-              mat-stroked-button
-              color="primary"
-              class="mb-2"
-              type="button"
-              style="letter-spacing: 0"
-              (click)="addUnit()"
-            >
-              Add unit
-            </button>
-            <div class="table-responsive">
-              <table class="table mb-2">
-                <thead>
-                  <tr>
-                    <th>{{ "product__add__unit-table" | translate }}</th>
-                    <th>{{ "product__add__conversion-table" | translate }}</th>
-                    <th>{{ "product__add__price-table" | translate }}</th>
-                    <th>{{ "product__add__discount-table" | translate }}</th>
-                    <th>{{ "product__add__action-table" | translate }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <mat-form-field class="w-100" appearance="outline">
-                        <mat-label>{{
-                          "product__add__unit-table" | translate
-                        }}</mat-label>
-                        <input
-                          [disabled]="isSubmitting"
-                          matInput
-                          placeholder="Ex. Lembar"
-                          type="text"
-                          formControlName="unit"
-                        />
-                      </mat-form-field>
-                    </td>
-                    <td>
-                      <mat-form-field class="w-100" appearance="outline">
-                        <mat-label>{{
-                          "product__add__conversion-table" | translate
-                        }}</mat-label>
-                        <input matInput value="1" readonly />
-                      </mat-form-field>
-                    </td>
-                    <td>
-                      <mat-form-field class="w-100" appearance="outline">
-                        <mat-label>{{
-                          "product__add__price-table" | translate
-                        }}</mat-label>
-                        <input
-                          [disabled]="isSubmitting"
-                          matInput
-                          type="text"
-                          mask="separator.2"
-                          thousandSeparator=" "
-                          placeholder="Ex. 8 000"
-                          formControlName="price"
-                        />
-                      </mat-form-field>
-                    </td>
-                    <td>
-                      <mat-form-field class="w-100" appearance="outline">
-                        <mat-label>{{
-                          "product__add__discount-table" | translate
-                        }}</mat-label>
-                        <input
-                          matInput
-                          type="text"
-                          mask="separator.2"
-                          thousandSeparator=" "
-                          placeholder="Ex. 800"
-                          formControlName="discount"
-                        />
-                      </mat-form-field>
-                    </td>
-                    <td></td>
-                  </tr>
-                  <tr
-                    [formGroup]="getFormAt(i)"
-                    *ngFor="let item of t.controls; index as i"
-                  >
-                    <td>
-                      <mat-form-field class="w-100" appearance="outline">
-                        <mat-label>Unit name</mat-label>
-                        <input
-                          [disabled]="isSubmitting"
-                          matInput
-                          placeholder="Ex. Lembar"
-                          type="text"
-                          formControlName="unit"
-                        />
-                      </mat-form-field>
-                    </td>
-                    <td>
-                      <mat-form-field class="w-100" appearance="outline">
-                        <mat-label>Conversion</mat-label>
-                        <input
-                          [disabled]="isSubmitting"
-                          matInput
-                          placeholder="Ex. 100"
-                          mask="separator.2"
-                          thousandSeparator=" "
-                          type="text"
-                          formControlName="conversion"
-                        />
-                        <mat-hint
-                          >1 {{ item.get("unit")?.value }} -
-                          {{
-                            item.get("conversion")?.value ?? 1
-                              | number : "0.0-2"
-                          }}
-                          {{ unitFormGroup.controls["unit"].value }} (
-                          Rp.&nbsp;{{
-                            unitFormGroup.controls["price"].value *
-                              (item.get("conversion")?.value ?? 1)
-                              | number : "0.2-2"
-                          }}
-                          )</mat-hint
-                        >
-                      </mat-form-field>
-                    </td>
-                    <td>
-                      <mat-form-field class="w-100" appearance="outline">
-                        <mat-label>Price</mat-label>
-                        <input
-                          matInput
-                          type="text"
-                          mask="separator.2"
-                          thousandSeparator=" "
-                          placeholder="Ex. 8 000"
-                          formControlName="price"
-                        />
-                      </mat-form-field>
-                    </td>
-                    <td>
-                      <mat-form-field class="w-100" appearance="outline">
-                        <mat-label>Discount</mat-label>
-                        <input
-                          matInput
-                          type="text"
-                          mask="separator.2"
-                          thousandSeparator=" "
-                          placeholder="Ex. 800"
-                          formControlName="discount"
-                        />
-                      </mat-form-field>
-                    </td>
-                    <td>
-                      <button (click)="removeUnit(i)" mat-icon-button>
-                        <mat-icon>delete</mat-icon>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="d-flex">
-              <button
-                mat-button
-                type="button"
-                matStepperNext
-                [disabled]="unitFormGroup.invalid || isSubmitting"
-              >
-                {{ "product__add__next" | translate }}
-              </button>
-            </div>
-          </form>
-        </mat-step>
 
         <mat-step [stepControl]="unitFormGroup">
           <ng-template matStepLabel>Purchase </ng-template>
 
-          <form [formGroup]="unitFormGroup">
+          <button
+            mat-stroked-button
+            color="primary"
+            class="mb-2"
+            type="button"
+            style="letter-spacing: 0"
+            (click)="addUnit()"
+          >
+            Add unit
+          </button>
+
+          <form [formGroup]="unitFormGroup" (ngSubmit)="submitForm()">
             <table class="table w-100 mb-2">
               <thead>
                 <tr>
-                  <th>Unit</th>
-                  <th>Conversion</th>
-                  <th>Price</th>
-                  <th>Discount</th>
+                  <th>{{ "product__add__unit" | translate }}</th>
+                  <th>{{ "product__add__unit__conversion" | translate }}</th>
+                  <th>{{ "product__add__unit__sales-price" | translate }}</th>
+                  <th>
+                    {{ "product__add__unit__sales-discount" | translate }}
+                  </th>
+                  <th>
+                    {{ "product__add__unit__purchase-price" | translate }}
+                  </th>
+                  <th>
+                    {{ "product__add__unit__purchase-discount" | translate }}
+                  </th>
+                  <th>
+                    {{ "product__create__estimated-margin" | translate }}
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td class="align-middle">
-                    {{ unitFormGroup.controls["unit"].value }}
+                  <td>{{ itemFormGroup.get("unit")?.value }}</td>
+                  <td>1</td>
+                  <td>
+                    Rp.
+                    {{
+                      itemFormGroup.get("sales_price")?.value | number : "1.0-2"
+                    }}
                   </td>
-                  <td class="align-middle">1</td>
-                  <td class="align-middle">
-                    <mat-form-field appearance="outline" class="w-100">
-                      <mat-label>Price</mat-label>
-                      <input
-                        matInput
-                        type="text"
-                        mask="separator.2"
-                        thousandSeparator=" "
-                        placeholder="Ex. 8 000"
-                        formControlName="item_purchase_price"
-                      />
-                    </mat-form-field>
+                  <td>
+                    Rp.
+                    {{
+                      itemFormGroup.get("sales_discount")?.value
+                        | number : "1.0-2"
+                    }}
                   </td>
-                  <td class="align-middle">
-                    <mat-form-field appearance="outline" class="w-100">
-                      <mat-label>Discount</mat-label>
-                      <input
-                        matInput
-                        type="text"
-                        mask="separator.2"
-                        thousandSeparator=" "
-                        placeholder="Ex. 800"
-                        formControlName="item_purchase_discount"
-                      />
-                    </mat-form-field>
+                  <td>
+                    Rp.
+                    {{
+                      itemFormGroup.get("purchase_price")?.value
+                        | number : "1.0-2"
+                    }}
+                  </td>
+                  <td>
+                    Rp.
+                    {{
+                      itemFormGroup.get("purchase_discount")?.value
+                        | number : "1.0-2"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      ((itemFormGroup.get("sales_price")?.value -
+                        itemFormGroup.get("sales_discount")?.value -
+                        itemFormGroup.get("purchase_price")?.value +
+                        itemFormGroup.get("purchase_discount")?.value) /
+                        (itemFormGroup.get("sales_price")?.value -
+                          itemFormGroup.get("sales_discount")?.value)) *
+                        100 | number : "1.0-2"
+                    }}%
                   </td>
                 </tr>
                 <tr
@@ -656,44 +251,42 @@
                     {{ item.get("conversion")?.value ?? 0 | number : "0.0-2" }}
                   </td>
                   <td class="align-middle">
-                    <mat-form-field appearance="outline" class="w-100">
-                      <mat-label>Price</mat-label>
-                      <input
-                        matInput
-                        type="text"
-                        mask="separator.2"
-                        thousandSeparator=" "
-                        placeholder="Ex. 8 000"
-                        formControlName="purchase_price"
-                      />
-                    </mat-form-field>
+                    Rp. {{ item.get("sales_price")?.value | number : "1.0-2" }}
                   </td>
                   <td>
-                    <mat-form-field appearance="outline" class="w-100">
-                      <mat-label>Discount</mat-label>
-                      <input
-                        matInput
-                        type="text"
-                        mask="separator.2"
-                        thousandSeparator=" "
-                        placeholder="Ex. 800"
-                        formControlName="purchase_discount"
-                      />
-                    </mat-form-field>
+                    Rp.
+                    {{ item.get("sales_discount")?.value | number : "1.0-2" }}
+                  </td>
+                  <td class="align-middle">
+                    Rp.
+                    {{ item.get("purchase_price")?.value | number : "1.0-2" }}
+                  </td>
+                  <td class="align-middle">
+                    Rp.
+                    {{
+                      item.get("purchase_discount")?.value | number : "1.0-2"
+                    }}
+                  </td>
+                  <td class="align-middle">
+                    {{
+                      ((item.get("sales_price")?.value -
+                        item.get("sales_discount")?.value -
+                        item.get("purchase_price")?.value +
+                        item.get("purchase_discount")?.value) /
+                        (item.get("sales_price")?.value -
+                          item.get("sales_discount")?.value)) *
+                        100 | number : "1.0-2"
+                    }}%
                   </td>
                 </tr>
               </tbody>
             </table>
             <button
-              mat-raised-button
+              mat-stroked-button
               color="primary"
-              type="button"
-              (click)="submitForm()"
+              type="submit"
               [disabled]="
-                isSubmitting ||
-                !unitFormGroup.valid ||
-                !itemFormGroup.valid ||
-                !itemFormGroup.valid
+                isSubmitting || !unitFormGroup.valid || !itemFormGroup.valid
               "
             >
               {{ "product__add__submit" | translate }}

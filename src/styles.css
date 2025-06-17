@@ -171,7 +171,6 @@ Buttons styling
 
 /** Table */
 .table {
-  padding: 0.5rem;
   background-color: transparent;
 }
 
@@ -183,15 +182,11 @@ Buttons styling
   background-color: transparent;
 }
 
-.table td {
-  padding: 0.25rem;
-  padding-left: 0.5rem;
-  padding-top: 0.5rem;
+.table td,
+.table th {
+  padding: 1rem;
   vertical-align: middle;
-}
-
-table td:first-of-type {
-  padding-left: 1rem;
+  font-family: "Poppins", sans-serif;
 }
 
 .paginator {

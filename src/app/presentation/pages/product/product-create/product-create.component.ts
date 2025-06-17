@@ -6,13 +6,14 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { TranslateService } from '@ngx-translate/core';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { ValueValidator } from 'src/app/validators/value.validator';
+import { ProductCreateUnitComponent } from './product-create-unit/product-create-unit.component';
 
 @Component({
   selector: 'app-product-create',
@@ -24,9 +25,9 @@ export class ProductCreateComponent {
   constructor(
     private formBuilder: FormBuilder,
     private apiService: ApiService,
-    private dynamicComponentService: DynamicComponentService,
     private alertService: AlertService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private dialog: MatDialog
   ) {}
 
   @ViewChild('stepper') stepper!: MatStepper;
@@ -49,40 +50,36 @@ export class ProductCreateComponent {
       Validators.minLength(1),
       Validators.maxLength(500),
     ]),
-    brand: new FormControl('', Validators.required),
-    type: new FormControl('', Validators.required),
+    product_brand_id: new FormControl('', Validators.required),
+    product_type_id: new FormControl('', Validators.required),
+    unit: new FormControl('', Validators.required),
     minimum_stock: new FormControl(0, [Validators.required, Validators.min(0)]),
+    sales_price: new FormControl(0, [Validators.required, Validators.min(0)]),
+    sales_discount: new FormControl(0, [
+      Validators.required,
+      Validators.min(0),
+    ]),
+    purchase_price: new FormControl(0, [
+      Validators.required,
+      Validators.min(0),
+    ]),
+    purchase_discount: new FormControl(0, [
+      Validators.required,
+      Validators.min(0),
+    ]),
   });
 
   unitFormGroup: FormGroup = new FormGroup({
-    other: new FormArray([]),
-    item_purchase_price: new FormControl(0, [
-      Validators.required,
-      Validators.min(0),
-    ]),
-    item_purchase_discount: new FormControl(0, [
-      Validators.required,
-      Validators.min(0),
-    ]),
-    unit: new FormControl('', Validators.required),
-    price: new FormControl(0, [Validators.required, Validators.min(0)]),
-    discount: new FormControl(0, [Validators.required, Validators.min(0)]),
+    item_units: new FormArray([]),
   });
 
   ngOnInit(): void {}
-
-  closeDialog() {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
-    }, 300);
-  }
 
   get f() {
     return this.unitFormGroup.controls;
   }
   get t() {
-    return this.f['other'] as FormArray;
+    return this.f['item_units'] as FormArray;
   }
 
   getFormAt(i: number) {
@@ -91,70 +88,45 @@ export class ProductCreateComponent {
 
   onSelectBrand(data: any) {
     this.itemFormGroup.patchValue({
-      brand: data.id,
+      product_brand_id: data.id,
     });
   }
 
   onUnselectBrand() {
     this.itemFormGroup.patchValue({
-      brand: '',
+      product_brand_id: '',
     });
   }
 
   onSelectType(data: any) {
     this.itemFormGroup.patchValue({
-      type: data.id,
+      product_type_id: data.id,
     });
   }
 
   onUnselectType() {
     this.itemFormGroup.patchValue({
-      type: '',
+      product_type_id: '',
     });
   }
 
   submitForm() {
     this.isSubmitting = true;
-    const item: any = {
-      reference: this.itemFormGroup.controls['reference'].value,
-      description: this.itemFormGroup.controls['description'].value,
-      brand: this.itemFormGroup.controls['brand'].value,
-      type: this.itemFormGroup.controls['type'].value,
-      price: Number(this.unitFormGroup.controls['price'].value),
-      discount: Number(this.unitFormGroup.controls['discount'].value),
-      minimum_stock: Number(this.itemFormGroup.controls['minimum_stock'].value),
-      purchase_price: Number(
-        this.unitFormGroup.controls['item_purchase_price'].value
-      ),
-      purchase_discount: Number(
-        this.unitFormGroup.controls['item_purchase_discount'].value
-      ),
-      unit: this.unitFormGroup.controls['unit'].value,
-      units: [],
-    };
-
-    this.t.controls.forEach((x) => {
-      const conversion = Number(x.get('conversion')?.value ?? '0');
-      const unit = x.get('unit')?.value;
-      const price = Number(x.get('price')?.value ?? '0');
-      const discount = Number(x.get('discount')?.value ?? '0');
-      const price_purchase = Number(x.get('purchase_price')?.value ?? '0');
-      const discount_purchase = Number(
-        x.get('purchase_discount')?.value ?? '0'
-      );
-
-      item.units.push({
-        conversion: conversion,
-        unit: unit,
-        price: price,
-        discount: discount,
-        price_purchase: price_purchase,
-        discount_purchase: discount_purchase,
-      });
-    });
 
     this.apiService
-      .post('product', item)
+      .post('product', {
+        ...this.itemFormGroup.value,
+        units: this.t.controls.map((x) => {
+          return {
+            conversion: Number(x.get('conversion')?.value ?? '0'),
+            unit: x.get('unit')?.value,
+            sales_price: Number(x.get('sales_price')?.value ?? '0'),
+            sales_discount: Number(x.get('sales_discount')?.value ?? '0'),
+            purchase_price: Number(x.get('purchase_price')?.value ?? '0'),
+            purchase_discount: Number(x.get('purchase_discount')?.value ?? '0'),
+          };
+        }),
+      })
       .subscribe({
         next: (data: any) => {
           this.translateService
@@ -234,16 +206,38 @@ export class ProductCreateComponent {
   }
 
   addUnit() {
-    this.t.push(
-      this.formBuilder.group({
-        conversion: [0, [Validators.required, Validators.min(1)]],
-        unit: ['', [Validators.required, ValueValidator(1)]],
-        price: [0, [Validators.required, Validators.min(0)]],
-        discount: [0, [Validators.required, Validators.min(0)]],
-        purchase_price: [0, [Validators.required, Validators.min(0)]],
-        purchase_discount: [0, [Validators.required, Validators.min(0)]],
-      })
-    );
+    this.dialog
+      .open(ProductCreateUnitComponent, {})
+      .afterClosed()
+      .subscribe((data) => {
+        if (data) {
+          this.t.push(
+            this.formBuilder.group({
+              unit: [data.unit, [Validators.required, ValueValidator(1)]],
+              conversion: [
+                data.conversion,
+                [Validators.required, Validators.min(1)],
+              ],
+              sales_price: [
+                data.sales_price,
+                [Validators.required, Validators.min(0)],
+              ],
+              sales_discount: [
+                data.sales_discount,
+                [Validators.required, Validators.min(0)],
+              ],
+              purchase_price: [
+                data.purchase_price,
+                [Validators.required, Validators.min(0)],
+              ],
+              purchase_discount: [
+                data.purchase_discount,
+                [Validators.required, Validators.min(0)],
+              ],
+            })
+          );
+        }
+      });
   }
 
   removeUnit(i: number) {
