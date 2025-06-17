@@ -1,9 +1,68 @@
-export interface Customer {
-  id: number;
+import { UserViewModel } from './user-view.model';
+
+export interface ICustomer {
+  id?: number;
   name: string;
   address: string;
-  phone: string;
-  email: string;
-  can_delete: boolean;
   npwp: string | null;
+  pic: string;
+  phone_number: string;
+  created_by?: number;
+  created_at?: Date;
+  updated_by?: number | null;
+  updated_at?: Date | null;
+  deleted_by?: number | null;
+  deleted_at?: Date | null;
+
+  user?: UserViewModel;
+
+  is_delete?: boolean | string;
+  can_delete?: boolean | string;
+}
+
+class CustomerModel {
+  id?: number;
+  name: string;
+  address: string;
+  npwp: string | null;
+  pic: string;
+  phone_number: string;
+  created_by?: number;
+  is_delete?: boolean = false;
+  can_delete?: boolean;
+  created_at?: Date;
+  updated_by?: number | null;
+  updated_at?: Date | null;
+  deleted_by?: number | null;
+  deleted_at?: Date | null;
+  user?: UserViewModel;
+
+  constructor(data: ICustomer) {
+    this.id = data.id;
+    this.name = data.name;
+    this.address = data.address;
+    this.npwp = data.npwp;
+    this.pic = data.pic;
+    this.phone_number = data.phone_number;
+    this.created_by = data.created_by;
+    this.created_at = data.created_at;
+    this.updated_by = data.updated_by;
+    this.updated_at = data.updated_at;
+    this.deleted_by = data.deleted_by;
+    this.deleted_at = data.deleted_at;
+    this.user = data.user;
+
+    // if can_delete is boolean, use it directly
+    if (typeof data.can_delete === 'boolean') {
+      this.can_delete = data.can_delete;
+    } else if (typeof data.can_delete === 'string') {
+      this.can_delete = data.can_delete === '1';
+    }
+
+    if (typeof data.is_delete === 'boolean') {
+      this.is_delete = data.is_delete;
+    } else if (typeof data.is_delete === 'string') {
+      this.is_delete = data.is_delete === '1';
+    }
+  }
 }
