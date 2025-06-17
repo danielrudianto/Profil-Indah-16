@@ -74,7 +74,7 @@ export class ProductSelectorComponent {
     this.searchBarInput?.nativeElement.focus();
   }
 
-  selectItem(data: any) {
+  selectData(data: any) {
     this.closeDialog(data);
   }
 
@@ -99,14 +99,6 @@ export class ProductSelectorComponent {
       .get(`product`, {
         keyword: keyword,
         page: page,
-        mode:
-          this.data.type == ProductSelectorType.purchase
-            ? 'purchase'
-            : this.data.type == ProductSelectorType.sales
-            ? 'sales'
-            : this.data.type == ProductSelectorType.return
-            ? 'return'
-            : 'plain',
       })
       .subscribe({
         next: (data: any) => {

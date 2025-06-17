@@ -53,8 +53,8 @@ export class ProductComponent {
           if (index != -1) {
             this.dataSource[index].reference = data.reference;
             this.dataSource[index].description = data.description;
-            this.dataSource[index].item_brand_name = data.item_brand.name;
-            this.dataSource[index].item_type_name = data.item_type.name;
+            this.dataSource[index].product_brand = data.product_brand;
+            this.dataSource[index].product_type = data.product_type;
             this.dataSource[index].is_active = data.is_active;
           }
         }

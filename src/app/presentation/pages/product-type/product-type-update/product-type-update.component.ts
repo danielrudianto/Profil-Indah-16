@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -17,7 +17,7 @@ export class ProductTypeUpdateComponent {
   ) {}
 
   @Input('data') data: any;
-
+  @ViewChild('input') input!: ElementRef;
   isOpened: boolean = false;
   isLoading: boolean = true;
   isSubmitting: boolean = false;
@@ -29,6 +29,10 @@ export class ProductTypeUpdateComponent {
   ngOnInit(): void {
     this.fetchByID();
     this.isOpened = true;
+  }
+
+  ngAfterViewInit(): void {
+    this.input.nativeElement.focus();
   }
 
   fetchByID(): void {

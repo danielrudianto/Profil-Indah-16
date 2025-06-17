@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -16,6 +16,7 @@ export class ProductTypeCreateComponent {
     private dynamicComponentService: DynamicComponentService
   ) {}
 
+  @ViewChild('input') input!: ElementRef;
   isOpened: boolean = false;
   isSubmitting: boolean = false;
   typeFormGroup: FormGroup = new FormGroup({
@@ -24,6 +25,10 @@ export class ProductTypeCreateComponent {
 
   ngOnInit(): void {
     this.isOpened = true;
+  }
+
+  ngAfterViewInit(): void {
+    this.input.nativeElement.focus();
   }
 
   submitForm(): void {

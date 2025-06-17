@@ -2,12 +2,12 @@ export interface Item {
   id: number;
   reference: string;
   description: string;
-  item_brand_name: string;
-  item_type_name: string;
   is_active: boolean;
   can_delete: boolean;
-  item_type?: ItemType;
-  item_brand?: ItemBrand;
+  product_type: ItemType;
+  product_brand: ItemBrand;
+  product_type_id: number;
+  product_brand_id: number;
 }
 
 export interface ItemBrand {

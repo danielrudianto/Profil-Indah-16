@@ -22,6 +22,7 @@ import { PaymentMethodCreateComponent } from '../../pages/payment-method/payment
 import { PromotionCreateComponent } from '../../pages/promotion/promotion-create/promotion-create.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from 'src/app/services/alert.service';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 @Component({
   selector: 'app-feature-search',
@@ -35,7 +36,8 @@ export class FeatureSearchComponent {
     private dynamicComponentService: DynamicComponentService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private hotKeysService: HotkeysService
   ) {}
 
   @Input('buttonLabel') buttonLabel!: string;
@@ -185,6 +187,14 @@ export class FeatureSearchComponent {
         this.onNewQuery.emit();
         this.fetchItems();
       });
+
+    this.hotKeysService.add([
+      new Hotkey('alt+a', (event: KeyboardEvent): boolean => {
+        this.onAddButtonPressed.emit(true);
+        this.openDialog();
+        return false; // Prevent bubbling
+      }),
+    ]);
   }
 
   fetchItems() {
@@ -202,8 +212,10 @@ export class FeatureSearchComponent {
           this.onChange.emit(data);
         },
         error: (error: any) => {
-          console.error("Error fetching items:", error);
-          this.alertService.showError("Failed to fetch items. Please try again later.");
+          console.error('Error fetching items:', error);
+          this.alertService.showError(
+            'Failed to fetch items. Please try again later.'
+          );
         },
       })
       .add(() => {
