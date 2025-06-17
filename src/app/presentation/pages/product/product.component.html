@@ -42,8 +42,8 @@
                     {{ item.description }}
                   </span>
                 </td>
-                <td class="text-center">{{ item.product_brand?.name }}</td>
-                <td class="text-center">{{ item.product_type?.name }}</td>
+                <td class="text-center">{{ item.product_brand.name }}</td>
+                <td class="text-center">{{ item.product_type.name }}</td>
                 <td class="text-center">
                   <span *ngIf="item.is_active">{{
                     "product__active" | translate
