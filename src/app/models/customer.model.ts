@@ -20,7 +20,7 @@ export interface ICustomer {
   can_delete?: boolean | string;
 }
 
-class CustomerModel {
+export class CustomerModel {
   id?: number;
   name: string;
   address: string;

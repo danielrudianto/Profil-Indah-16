@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { Customer } from 'src/app/models/customer.model';
+import { CustomerModel } from 'src/app/models/customer.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { CustomerUpdateComponent } from './customer-update/customer-update.component';
@@ -17,7 +17,7 @@ export class CustomerComponent {
   ) {}
 
   isLoading: boolean = true;
-  dataSource: Customer[] = [];
+  dataSource: CustomerModel[] = [];
   dataCount: number = 0;
   page: number = 1;
   pageSize: number = 10;

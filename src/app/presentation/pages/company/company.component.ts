@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { Company } from 'src/app/models/company.model';
+import { CompanyModel } from 'src/app/models/company.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { CompanyUpdateComponent } from './company-update/company-update.component';
@@ -17,7 +17,7 @@ export class CompanyComponent {
   ) {}
 
   isLoading: boolean = true;
-  dataSource: Company[] = [];
+  dataSource: CompanyModel[] = [];
   dataCount: number = 0;
   page: number = 1;
   previousRoute: string = '';

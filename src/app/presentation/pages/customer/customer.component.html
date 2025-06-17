@@ -50,14 +50,17 @@
                     <mat-icon>more_vert</mat-icon>
                   </button>
                   <mat-menu #menu="matMenu">
-                    <button (click)="openDialog('edit', item.id)" mat-menu-item>
+                    <button
+                      (click)="openDialog('edit', item.id!)"
+                      mat-menu-item
+                    >
                       <mat-icon>edit</mat-icon>
                       <span>{{ "customer__edit" | translate }}</span>
                     </button>
                     <button
                       [class.delete-button]="item.can_delete"
                       [disabled]="!item.can_delete"
-                      (click)="openDialog('delete', item.id)"
+                      (click)="openDialog('delete', item.id!)"
                       mat-menu-item
                     >
                       <mat-icon>delete</mat-icon>

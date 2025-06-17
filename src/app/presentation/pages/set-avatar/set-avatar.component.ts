@@ -72,7 +72,7 @@ export class SetAvatarComponent {
    */
   onSubmit(): void {
     this.isSubmitting = true;
-    this.apiService.post('user/avatar', this.avatarFormGroup.value).subscribe({
+    this.apiService.post('user-avatar', this.avatarFormGroup.value).subscribe({
       next: (data) => {
         this.authService.setSelfAvatar(data);
         this.alertService.showSuccess('Avatar updated successfully');

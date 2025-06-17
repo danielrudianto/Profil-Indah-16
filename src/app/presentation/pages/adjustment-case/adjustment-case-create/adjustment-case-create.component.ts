@@ -53,7 +53,6 @@ export class AdjustmentCaseCreateComponent {
       Validators.required,
       Validators.min(0.01),
     ]),
-    company_search_bar: new FormControl(''),
   });
 
   ngOnInit(): void {
@@ -119,38 +118,37 @@ export class AdjustmentCaseCreateComponent {
         }
       );
 
-    this.productSelectorSubject.subscribe((data: any) => {
-      if (data != null && data != undefined) {
-        if (
-          this.t.controls.filter(
-            (x) =>
-              x.get('item_unit_id')?.value == data.item_unit_id &&
-              x.get('item_id')?.value == data.id
-          ).length > 0
-        ) {
-          this.alertService.showSuccess(
-            'Item already exists! Please select different item.'
+    this.productSelectorSubject.subscribe((result: any) => {
+      if (result) {
+        const data = result.data;
+        const sub = result.sub;
+
+        if (sub) {
+          this.t.push(
+            this.formBuilder.group({
+              product_id: [data.id, Validators.required],
+              product_unit_id: [sub.id],
+              reference: [data.reference, Validators.required],
+              description: [data.description, Validators.required],
+              quantity: [0, [Validators.required]],
+              unit: [sub.unit],
+              conversion: [sub.conversion],
+              default_unit: [data.unit],
+            })
           );
         } else {
           this.t.push(
             this.formBuilder.group({
-              item_id: [data.item.id, Validators.required],
-              item_unit_id: [
-                data.price == null ? null : data.price.item_unit_id,
-              ],
-              reference: [data.item.reference, Validators.required],
-              description: [data.item.description, Validators.required],
-              quantity: [0, [Validators.required, Validators.min(0.01)]],
-              unit: [
-                data.price == null ? data.item.unit : data.price.unit,
-                Validators.required,
-              ],
+              product_id: [data.id, Validators.required],
+              product_unit_id: [null],
+              reference: [data.reference, Validators.required],
+              description: [data.description, Validators.required],
+              quantity: [0, [Validators.required]],
+              unit: [data.unit, Validators.required],
+              conversion: [1],
+              default_unit: [data.unit],
             })
           );
-
-          this.adjustmentEventFormGroup.patchValue({
-            number_of_items: this.t.length,
-          });
         }
       }
     });
@@ -176,7 +174,13 @@ export class AdjustmentCaseCreateComponent {
         this.metaFormGroup.controls['company_id'].value == null
           ? null
           : parseInt(this.metaFormGroup.controls['company_id'].value),
-      adjustment_case: items,
+      adjustment_case: this.t.controls.map((x) => {
+        return {
+          product_id: x.get('product_id')?.value,
+          product_unit_id: x.get('product_unit_id')?.value,
+          quantity: parseFloat(x.get('quantity')?.value),
+        };
+      }),
     };
     this.apiService
       .post('adjustment-event', adjusment_case)

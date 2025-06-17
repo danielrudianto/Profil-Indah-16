@@ -17,7 +17,6 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { Subject, debounceTime } from 'rxjs';
-import { Customer } from 'src/app/models/customer.model';
 import { PackageSelectorComponent } from 'src/app/presentation/components/package-selector/package-selector.component';
 import { PaymentSelectorComponent } from 'src/app/presentation/components/payment-selector/payment-selector.component';
 import {
@@ -78,7 +77,7 @@ export class SalesInvoiceCreateComponent {
   salesmen: string[] = [];
   isSubmitting: boolean = false;
   isAdministrator: boolean = false;
-  customerOptions: Customer[] = [];
+  customerOptions: any[] = [];
   paymentOptions: any[] = [];
   unit_selection: any[] = [];
   productSelectorSubject: Subject<any> = new Subject();

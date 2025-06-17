@@ -50,7 +50,13 @@
     ></app-box-stepper>
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <button class="add-button" (click)="openItemSelector()">
+    <button
+      mat-stroked-button
+      color="primary"
+      style="letter-spacing: 0"
+      type="button"
+      (click)="openItemSelector()"
+    >
       {{ "adjustment-case__add-item" | translate }}
     </button>
     <form [formGroup]="adjustmentEventFormGroup">
