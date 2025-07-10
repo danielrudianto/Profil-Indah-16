@@ -13,40 +13,14 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class PaymentSelectorComponent {
   constructor(
-    private sheet: MatBottomSheetRef<PaymentSelectorComponent>,
-    private apiService: ApiService,
-    private alertService: AlertService
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
+    private sheet: MatBottomSheetRef<PaymentSelectorComponent>
   ) {}
 
   payments: any[] = [];
   isLoading: boolean = false;
 
-  ngOnInit(): void {
-    this.fetchPaymentMethods();
-  }
-
-  fetchPaymentMethods(): void {
-    this.isLoading = true;
-    this.apiService
-      .get('payment-method/all', {})
-      .subscribe({
-        next: (data: any) => {
-          this.payments = data.data;
-          this.payments.unshift({
-            id: 0,
-            name: 'Cash',
-            description: 'Cash payment',
-          });
-        },
-        error: (error) => {
-          this.alertService.showError(error);
-          this.sheet.dismiss();
-        },
-      })
-      .add(() => {
-        this.isLoading = false;
-      });
-  }
+  ngOnInit(): void {}
 
   selectPayment(payment: any) {
     this.sheet.dismiss(payment);

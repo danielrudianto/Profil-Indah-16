@@ -16,17 +16,14 @@
     <div class="view-panel-content" id="content">
       <mat-spinner id="spinner" *ngIf="isLoading" />
 
-      <div *ngIf="!isLoading && dataSource.length == 0">
+      <div *ngIf="!isLoading && dataSource.children.length == 0">
         <p>{{ "general__not-found" | translate }}</p>
       </div>
 
-      <div
-        class="expense-type__wrapper"
-        *ngIf="!isLoading && dataSource.length > 0"
-      >
+      <div class="expense-type__wrapper" *ngIf="!isLoading">
         <div
           class="expense-type__item"
-          *ngFor="let item of dataSource"
+          *ngFor="let item of dataSource.children"
           (click)="openUpdateDialog(item.id)"
         >
           <svg

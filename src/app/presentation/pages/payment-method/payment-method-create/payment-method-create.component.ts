@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { panelAnimation } from 'src/app/animations/panel.animation';
 import { AlertService } from 'src/app/services/alert.service';
@@ -15,7 +16,7 @@ export class PaymentMethodCreateComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dynamicComponentService: DynamicComponentService,
+    private dialog: MatDialogRef<PaymentMethodCreateComponent>,
     private translateService: TranslateService
   ) {}
 
@@ -31,10 +32,7 @@ export class PaymentMethodCreateComponent {
   }
 
   closeDialog() {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
-    }, 300);
+    this.dialog.close();
   }
 
   submitForm(): void {

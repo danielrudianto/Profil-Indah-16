@@ -25,18 +25,22 @@
               >
               </mat-datepicker>
             </mat-form-field>
-            <mat-slide-toggle
-              color="primary"
-              [checked]="selectedIndex == 1"
-              (change)="toggleSelectedIndex()"
-              >{{ "expense__report__view-by" | translate }}
-              {{
-                (selectedIndex == 0
-                  ? "expense__report__view-by__company"
-                  : "expense__report__view-by__type"
-                ) | translate
-              }}</mat-slide-toggle
-            >
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                "expense__report__view-by" | translate
+              }}</mat-label>
+              <mat-select
+                (selectionChange)="onViewByChange($event)"
+                [value]="'company'"
+              >
+                <mat-option [value]="'company'">{{
+                  "expense__report__view-by__company" | translate
+                }}</mat-option>
+                <mat-option [value]="'type'">{{
+                  "expense__report__view-by__type" | translate
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
         </div>
         <div class="table-responsive">

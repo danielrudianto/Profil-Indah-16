@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
   selector: 'app-company-update',
@@ -11,12 +12,13 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 })
 export class CompanyUpdateComponent {
   constructor(
-    private dynamicComponentService: DynamicComponentService,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private apiService: ApiService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialog: MatDialogRef<CompanyUpdateComponent>,
+    private translateService: TranslateService
   ) {}
 
-  @Input('data') data: any;
   isOpened: boolean = false;
   isSubmitting: boolean = false;
   companyFormGroup: FormGroup = new FormGroup({
@@ -39,21 +41,20 @@ export class CompanyUpdateComponent {
     });
   }
 
-  closeDialog() {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
-    }, 300);
+  closeDialog(data: any = undefined) {
+    this.dialog.close(data);
   }
 
   submitForm() {
     this.isSubmitting = true;
     this.apiService.put('company', this.companyFormGroup.value).subscribe({
       next: (data: any) => {
-        this.alertService.showSuccess(
-          `Company ${data.name} updated successfully`
-        );
-        this.closeDialog();
+        this.translateService
+          .get('company__update__success')
+          .subscribe((message: string) => {
+            this.alertService.showSuccess(`${data.name} ${message}`);
+            this.closeDialog(data);
+          });
       },
       error: (error) => {
         this.alertService.showError(error);

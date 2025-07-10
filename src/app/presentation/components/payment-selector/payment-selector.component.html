@@ -5,7 +5,7 @@
 <div class="payment-list__wrapper" *ngIf="!isLoading">
   <div
     class="payment-list__item-wrapper"
-    *ngFor="let payment of payments"
+    *ngFor="let payment of data"
     (click)="selectPayment(payment)"
   >
     <div class="payment-icon">

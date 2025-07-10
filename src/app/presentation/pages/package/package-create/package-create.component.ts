@@ -72,6 +72,14 @@ export class PackageCreateComponent {
           valueWODiscount: valueWODiscount,
         });
       }
+
+      this.itemsFormGroup.patchValue({
+        number_of_items: this.t.length,
+      });
+    });
+
+    this.itemsFormGroup.valueChanges.subscribe(() => {
+      console.log(this.itemsFormGroup.controls);
     });
   }
 
@@ -104,71 +112,20 @@ export class PackageCreateComponent {
       this.t.push(
         this.formBuilder.group({
           product_id: [data.id, Validators.required],
-          product_unit_id: [data.sub == null ? null : data.sub.id],
-          reference: [data.item.reference, Validators.required],
-          description: [data.item.description, Validators.required],
+          product_unit_id: [sub == null ? null : sub.id],
+          reference: [data.reference, Validators.required],
+          description: [data.description, Validators.required],
+          price: [
+            sub == null ? data.sales_price : sub.sales_price,
+            [Validators.required, Validators.min(0.01)],
+          ],
+          discount: [
+            sub == null ? data.sales_discount : sub.sales_discount,
+            [Validators.required, Validators.min(0)],
+          ],
           quantity: [0, [Validators.required, Validators.min(0.01)]],
         })
       );
-      // if (data != null && data != undefined) {
-      //   // if there is another existing data with the same product_id and product_unit_id, do not add it
-      //   this.t.controls.forEach((x) => {
-      //     if (
-      //       parseInt(x.get('product_id')?.value) == data.product_id &&
-      //       x.get('product_unit_id')?.value ==
-      //         (data.price == null ? null : data.price.item_unit_id)
-      //     ) {
-      //       validation = false;
-      //     }
-      //   });
-
-      //   if (validation) {
-      //     this.t.push(
-      //       this.formBuilder.group({
-      //         product_id: [data.id, Validators.required],
-      //         product_unit_id: [],
-      //         reference: [data.item.reference, Validators.required],
-      //         description: [data.item.description, Validators.required],
-      //         quantity: [0, [Validators.required, Validators.min(0.01)]],
-      //         price: [
-      //           data.price == null ? data.item.price : data.price.price,
-      //           [Validators.min(0), Validators.required],
-      //         ],
-      //         discount: [
-      //           data.price == null ? data.item.discount : data.price.discount,
-      //           [Validators.required, Validators.min(0)],
-      //         ],
-      //         unit: [
-      //           data.price == null ? data.item.unit : data.price.unit,
-      //           Validators.required,
-      //         ],
-      //         conversion: [
-      //           data.price == null ? 1 : data.price.conversion,
-      //           Validators.required,
-      //         ],
-      //         default_unit: [
-      //           data.price == null ? data.item.unit : data.price.unit,
-      //         ],
-      //       })
-      //     );
-
-      //     this.itemsFormGroup.patchValue({
-      //       number_of_items: this.t.length,
-      //     });
-
-      //     setTimeout(() => {
-      //       const autofocusLength =
-      //         document.querySelectorAll('[focusedInput]').length;
-      //       const input =
-      //         document.querySelectorAll('[focusedInput]')[autofocusLength - 1];
-      //       (input as HTMLElement).focus();
-      //     }, 100);
-      //   } else {
-      //     this.alertService.showSuccess(
-      //       this.translateService.instant('general__item__exists')
-      //     );
-      //   }
-      // }
     });
   }
 
@@ -180,8 +137,8 @@ export class PackageCreateComponent {
         price: this.metaFormGroup.get('price')?.value,
         package_content: this.t.value.map((x: any) => {
           return {
-            item_id: x.item_id,
-            item_unit_id: x.item_unit_id,
+            product_id: x.product_id,
+            product_unit_id: x.product_unit_id,
             quantity: x.quantity,
             price: x.price,
             discount: x.discount,

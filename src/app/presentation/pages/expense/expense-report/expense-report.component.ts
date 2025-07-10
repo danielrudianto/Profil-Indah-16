@@ -65,28 +65,57 @@ export class ExpenseReportComponent {
   fetchReport() {
     const month = this.date.value?.format('MM');
     const year = this.date.value?.format('YYYY');
-    this.apiService.get(`report/expense/${month}/${year}`).subscribe({
-      next: (data: any) => {
-        this.isLoading = false;
-        this.companies = data.companies;
-        this.types = data.types;
+    this.apiService
+      .get(`expense`, {
+        month: Number(month),
+        year: Number(year),
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.isLoading = false;
+          this.companies = data.company;
+          this.types = data.expenseTypes;
 
-        for (let i = 0; i < this.types.length; i++) {
-          if (this.types[i].children.length != 0) {
+          // insert to corresponding company and expense type
+
+          for (let i = 0; i < this.companies.length; i++) {
+            const value = data.result.filter(
+              (x: any) => x.company_id === this.companies[i].id
+            );
+            this.companies[i].value = value.reduce(
+              (a: number, b: any) => a + b.value,
+              0
+            );
+          }
+
+          for (let i = 0; i < this.types.length; i++) {
+            for (let j = 0; j < this.types[i].children.length; j++) {
+              const value = data.result.filter(
+                (x: any) => x.expense_type_id === this.types[i].children[j].id
+              );
+              this.types[i].children[j].value = value.reduce(
+                (a: number, b: any) => a + b.value,
+                0
+              );
+            }
+
             this.types[i].value = this.types[i].children.reduce(
               (a: number, b: any) => a + b.value,
               0
             );
           }
-        }
-      },
-      error: (error) => {
-        this.alertService.showError(error);
-      },
-    });
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      });
   }
 
-  toggleSelectedIndex() {
-    this.selectedIndex = this.selectedIndex === 0 ? 1 : 0;
+  onViewByChange(event: any) {
+    if (event.value === 'company') {
+      this.selectedIndex = 0;
+    } else {
+      this.selectedIndex = 1;
+    }
   }
 }

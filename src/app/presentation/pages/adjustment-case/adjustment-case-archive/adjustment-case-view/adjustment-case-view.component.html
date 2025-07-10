@@ -61,12 +61,16 @@
     <tbody>
       <tr *ngFor="let item of data.adjustment_case">
         <td>
-          <p>{{ item.item.reference }}</p>
-          <p class="text-clamp-1">{{ item.item.description }}</p>
+          <p>{{ item.product.reference }}</p>
+          <p class="text-clamp-1">{{ item.product.description }}</p>
         </td>
         <td class="text-center">
           {{ item.quantity | number : "0.0-2" }}
-          {{ item.item_unit == null ? item.item.unit : item.item_unit.unit }}
+          {{
+            item.product_unit == null
+              ? item.product.unit
+              : item.product_unit.unit
+          }}
         </td>
       </tr>
     </tbody>

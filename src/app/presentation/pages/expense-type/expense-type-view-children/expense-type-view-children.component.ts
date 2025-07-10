@@ -61,7 +61,7 @@ export class ExpenseTypeViewChildrenComponent {
 
   fetchExpenseChildren(): void {
     this.apiService
-      .get('expense-type/children/' + this.data.id)
+      .get('expense-type/' + this.data.id)
       .subscribe((data: any) => {
         this.dataSource = data;
       })

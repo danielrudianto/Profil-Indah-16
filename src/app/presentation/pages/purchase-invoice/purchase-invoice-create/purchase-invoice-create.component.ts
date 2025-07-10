@@ -21,6 +21,7 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { v4 } from 'uuid';
 import { SubmitConfirmationComponent } from '../../../components/submit-confirmation/submit-confirmation.component';
 import { TranslateService } from '@ngx-translate/core';
+import { of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-purchase-invoice-create',
@@ -202,71 +203,108 @@ export class PurchaseInvoiceCreateComponent {
       }
     );
 
-    dialog.subscribe((data) => {
-      if (data != null && data != undefined) {
-        if (
-          this.t.controls.filter(
-            (x) =>
-              x.get('item_id')?.value == data.item.id &&
-              x.get('item_unit_id')?.value ==
-                (data.price == null ? null : data.price.item_unit_id)
-          ).length > 0
-        ) {
-          this.alertService.showSuccess(
-            'Item already exists! Please select different item.'
-          );
-        } else {
-          const productFormGroup = this.formBuilder.group({
-            item_id: [data.item.id, Validators.required],
-            item_unit_id: [data.price == null ? null : data.price.item_unit_id],
-            reference: [data.item.reference, Validators.required],
-            description: [data.item.description, Validators.required],
+    dialog.subscribe((result) => {
+      if (result) {
+        console.log(result);
+        const data = result.data;
+        const sub = result.sub;
+
+        this.t.push(
+          this.formBuilder.group({
+            product_id: [data.id, Validators.required],
+            product_unit_id: [sub == null ? null : sub.id],
+            reference: [data.reference],
+            description: [data.description],
             quantity: [0, [Validators.required, Validators.min(0.01)]],
-            price: [
-              data.price == null ? data.item.price : data.price.price,
-              [Validators.min(0), Validators.required],
+            unit: [sub == null ? data.unit : sub.unit],
+            conversion: [sub == null ? 1 : sub.conversion],
+            init_price: [
+              sub == null ? data.purchase_price : sub.purchase_price,
+            ],
+            price: [sub == null ? data.purchase_price : sub.purchase_price],
+            init_discount: [
+              sub == null ? data.purchase_discount : sub.purchase_discount,
             ],
             discount: [
-              data.price == null ? data.item.discount : data.price.discount,
-              [Validators.min(0), Validators.required],
+              sub == null ? data.purchase_discount : sub.purchase_discount,
             ],
-            discountPercentage: [
-              data.price == null
-                ? data.item.price == 0
-                  ? 0
-                  : (data.item.discount * 100) / data.item.price
-                : data.price.price == 0
-                ? 0
-                : (data.price.discount * 100) / data.price.price,
-              [Validators.min(0), Validators.required, Validators.max(100)],
-            ],
-            discountType: [
-              'absolute',
-              [Validators.required, Validators.pattern('absolute|percentage')],
-            ],
-            initial_price: [
-              data.price == null ? data.item.price : data.price.price,
-              Validators.required,
-            ],
-            initial_discount: [
-              data.discount == null ? data.item.discount : data.price.discount,
-              Validators.required,
-            ],
-            unit: [data.price == null ? data.item.unit : data.price.unit],
-            conversion: [data.price == null ? 1 : data.price.conversion],
-            default_unit: [data.item.unit],
+            default_unit: [data.unit],
             save_price: [false],
-            stock: [data.item.stock],
-          });
+          })
+        );
 
-          this.t.push(productFormGroup);
-
-          this.itemFormGroup.patchValue({
-            number_of_items: this.t.length,
-          });
-        }
+        this.itemFormGroup.patchValue({
+          number_of_items: this.t.length,
+        });
       }
     });
+
+    // dialog.subscribe((data) => {
+    //   console.log(data);
+    //   if (data != null && data != undefined) {
+    //     if (
+    //       this.t.controls.filter(
+    //         (x) =>
+    //           x.get('item_id')?.value == data.item.id &&
+    //           x.get('item_unit_id')?.value ==
+    //             (data.price == null ? null : data.price.item_unit_id)
+    //       ).length > 0
+    //     ) {
+    //       this.alertService.showSuccess(
+    //         'Item already exists! Please select different item.'
+    //       );
+    //     } else {
+    //       const productFormGroup = this.formBuilder.group({
+    //         item_id: [data.item.id, Validators.required],
+    //         item_unit_id: [data.price == null ? null : data.price.item_unit_id],
+    //         reference: [data.item.reference, Validators.required],
+    //         description: [data.item.description, Validators.required],
+    //         quantity: [0, [Validators.required, Validators.min(0.01)]],
+    //         price: [
+    //           data.price == null ? data.item.price : data.price.price,
+    //           [Validators.min(0), Validators.required],
+    //         ],
+    //         discount: [
+    //           data.price == null ? data.item.discount : data.price.discount,
+    //           [Validators.min(0), Validators.required],
+    //         ],
+    //         discountPercentage: [
+    //           data.price == null
+    //             ? data.item.price == 0
+    //               ? 0
+    //               : (data.item.discount * 100) / data.item.price
+    //             : data.price.price == 0
+    //             ? 0
+    //             : (data.price.discount * 100) / data.price.price,
+    //           [Validators.min(0), Validators.required, Validators.max(100)],
+    //         ],
+    //         discountType: [
+    //           'absolute',
+    //           [Validators.required, Validators.pattern('absolute|percentage')],
+    //         ],
+    //         initial_price: [
+    //           data.price == null ? data.item.price : data.price.price,
+    //           Validators.required,
+    //         ],
+    //         initial_discount: [
+    //           data.discount == null ? data.item.discount : data.price.discount,
+    //           Validators.required,
+    //         ],
+    //         unit: [data.price == null ? data.item.unit : data.price.unit],
+    //         conversion: [data.price == null ? 1 : data.price.conversion],
+    //         default_unit: [data.item.unit],
+    //         save_price: [false],
+    //         stock: [data.item.stock],
+    //       });
+
+    //       this.t.push(productFormGroup);
+
+    //       this.itemFormGroup.patchValue({
+    //         number_of_items: this.t.length,
+    //       });
+    //     }
+    //   }
+    // });
   }
 
   deleteItem(i: number) {
@@ -295,106 +333,77 @@ export class PurchaseInvoiceCreateComponent {
       );
       this.isSubmitting = false;
       return;
-    } else if (
+    }
+
+    if (
       this.valueFormGroup.get('discount')?.value >
       this.valueFormGroup.get('total')?.value
     ) {
       this.alertService.showSuccess('Discount cannot be greater than total.');
       this.isSubmitting = false;
       return;
-    } else {
-      const supplierId = this.metaFormGroup.controls['supplier_id'].value;
-      const companyId = this.metaFormGroup.controls['company_id'].value;
-      const date = this.documentFormGroup.controls['date'].value as Date;
-      const name = this.documentFormGroup.controls['name'].value;
-      const invoice_name =
-        this.documentFormGroup.controls['invoice_name'].value;
-      const discount = parseFloat(
-        this.valueFormGroup.controls['discount'].value
-      );
-      const faktur =
-        this.documentFormGroup.controls['faktur'].value == ''
-          ? null
-          : this.documentFormGroup.controls['faktur'].value;
+    }
 
-      const items: any[] = [];
-      this.t.controls.forEach((x) => {
-        const item_id = parseInt(x.get('item_id')?.value);
-        const quantity = parseInt(x.get('quantity')?.value);
-        const price = parseFloat(x.get('price')?.value);
-        let discount = 0;
-        const initial_price = parseFloat(x.get('initial_price')?.value);
-        const save_price =
-          price == initial_price ? false : x.get('save_price')?.value;
-        const item_unit_id = parseInt(x.get('item_unit_id')?.value);
-        const discountType = x.get('discountType')?.value;
-        if (discountType == 'percentage') {
-          discount = parseFloat(
-            parseFloat(((price * discount) / 100).toString()).toFixed(2)
-          );
-        } else {
-          discount = parseFloat(
-            parseFloat(x.get('discount')?.value).toFixed(2)
-          );
-        }
+    const supplierId = this.metaFormGroup.controls['supplier_id'].value;
+    const companyId = this.metaFormGroup.controls['company_id'].value;
+    const date = this.documentFormGroup.controls['date'].value as Date;
+    const name = this.documentFormGroup.controls['name'].value;
+    const invoice_name = this.documentFormGroup.controls['invoice_name'].value;
+    const discount = parseFloat(this.valueFormGroup.controls['discount'].value);
+    const faktur =
+      this.documentFormGroup.controls['faktur'].value == ''
+        ? null
+        : this.documentFormGroup.controls['faktur'].value;
 
-        items.push({
-          item_id: item_id,
-          quantity: quantity,
-          price: price,
-          discount: discount,
-          save: save_price,
-          item_unit_id: item_unit_id == 0 ? null : item_unit_id,
-        });
+    const items: any[] = [];
+    this.t.controls.forEach((x) => {
+      const product_id = x.get('product_id')?.value;
+      const quantity = x.get('quantity')?.value;
+      const price = x.get('price')?.value;
+      let discount = 0;
+      const initial_price = parseFloat(x.get('initial_price')?.value);
+      const save_price =
+        price == initial_price ? false : x.get('save_price')?.value;
+      const product_unit_id = x.get('product_unit_id')?.value;
+      const discountType = x.get('discountType')?.value;
+      if (discountType == 'percentage') {
+        discount = parseFloat(
+          parseFloat(((price * discount) / 100).toString()).toFixed(2)
+        );
+      } else {
+        discount = parseFloat(parseFloat(x.get('discount')?.value).toFixed(2));
+      }
+
+      items.push({
+        product_id: product_id,
+        quantity: quantity,
+        price: price,
+        discount: discount,
+        save: save_price,
+        product_unit_id: product_unit_id,
       });
+    });
 
-      const goodReceipt = {
-        uuid: this.metaFormGroup.controls['uuid'].value,
+    const goodReceipt = {
+      uuid: this.metaFormGroup.controls['uuid'].value,
+      name: name,
+      date: this.datePipe.transform(date, 'yyyy-MM-dd'),
+      good_receipt: items,
+      company_id: companyId,
+      supplier_id: supplierId,
+      invoice_name: invoice_name,
+      faktur: faktur,
+      is_confirm: true,
+    };
+
+    this.apiService
+      .post('good-receipt/check', {
         name: name,
-        date: this.datePipe.transform(date, 'yyyy-MM-dd'),
-        good_receipt: items,
-        company_id: companyId,
-        supplier_id: supplierId,
-        purchase_invoice: {
-          name: invoice_name,
-          date: this.datePipe.transform(date, 'yyyy-MM-dd'),
-          discount: discount,
-          is_confirm: true,
-          confirmed_at: new Date(),
-          faktur: faktur,
-        },
-      };
-
-      this.apiService
-        .post('good-receipt/check', {
-          name: name,
-        })
-        .subscribe((data: any) => {
-          if (data == null) {
-            this.apiService
-              .post('purchase-invoice', goodReceipt)
-              .subscribe({
-                next: () => {
-                  this.metaFormGroup.patchValue({
-                    uuid: v4(),
-                  });
-
-                  this.alertService.showSuccess(
-                    'Good receipt is successfully created.'
-                  );
-                  this.t.clear();
-                  this.documentFormGroup.reset();
-                  this.itemFormGroup.reset();
-                },
-                error: (error) => {
-                  this.alertService.showError(new Error(error));
-                },
-              })
-              .add(() => {
-                this.isSubmitting = false;
-              });
-          } else {
-            this.dialog
+      })
+      .pipe(
+        switchMap((data: any) => {
+          if (data) {
+            return this.dialog
               .open(SubmitConfirmationComponent, {
                 data: {
                   title: this.translateService.instant(
@@ -405,39 +414,60 @@ export class PurchaseInvoiceCreateComponent {
                   }, Date ${this.datePipe.transform(data.date, 'dd/MM/yyyy')}`,
                 },
               })
-              .afterClosed()
-              .subscribe((validation) => {
-                if (validation == true) {
-                  this.apiService
-                    .post('purchase-invoice', goodReceipt)
-                    .subscribe({
-                      next: () => {
-                        this.metaFormGroup.patchValue({
-                          uuid: v4(),
-                        });
-
-                        this.alertService.showSuccess(
-                          'Good receipt is successfully created.'
-                        );
-                        this.t.clear();
-                        this.documentFormGroup.reset();
-                        this.itemFormGroup.reset();
-                      },
-                      error: (error) => {
-                        this.alertService.showError(new Error(error));
-                      },
-                    })
-                    .add(() => {
-                      this.isSubmitting = false;
-                    });
-                } else {
-                  this.isSubmitting = false;
-                  return;
-                }
-              });
+              .afterClosed();
+          } else {
+            return of(true);
           }
-        });
-    }
+        }),
+        switchMap((confirmed: boolean) => {
+          if (confirmed) {
+            return this.apiService.post('good-receipt', goodReceipt);
+          } else {
+            this.isSubmitting = false;
+            return of(null);
+          }
+        }),
+        switchMap((result) => {
+          if (!result) return of(null);
+
+          const itemsToSave = this.t.controls
+            .filter((x) => x.get('save_price')?.value)
+            .map((x) => ({
+              product_id: x.get('product_id')?.value,
+              product_unit_id: x.get('product_unit_id')?.value,
+              price: x.get('price')?.value,
+              discount: x.get('discount')?.value,
+            }));
+
+          if (itemsToSave.length > 0) {
+            // Post to purchase-price
+            return this.apiService.put('product/price-purchase', {
+              items: itemsToSave,
+            });
+          }
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.metaFormGroup.patchValue({
+            uuid: v4(),
+          });
+
+          this.alertService.showSuccess(
+            'Good receipt is successfully created.'
+          );
+          this.t.clear();
+          this.documentFormGroup.reset();
+          this.itemFormGroup.reset();
+        },
+        error: (error) => {
+          this.alertService.showError(new Error(error));
+        },
+      })
+      .add(() => {
+        this.isSubmitting = false;
+      });
   }
 
   openEditData(i: number) {

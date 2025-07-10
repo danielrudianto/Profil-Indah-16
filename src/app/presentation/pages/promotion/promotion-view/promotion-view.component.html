@@ -1,33 +1,9 @@
 <h2 mat-dialog-title>{{ "promotion__view__view-result" | translate }}</h2>
-<div *ngIf="isLoading">
+<mat-dialog-content> </mat-dialog-content>
+<!-- <div *ngIf="isLoading">
   <mat-spinner id="spinner"></mat-spinner>
 </div>
 <div *ngIf="!isLoading" mat-dialog-content>
-  <mat-tab-group>
-    <mat-tab [label]="'promotion__view__information' | translate">
-      <div class="mt-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>{{ "promotion__view__sales" | translate }}</mat-label>
-          <input
-            matInput
-            readonly
-            [value]="
-              dataSource.progress.sales + dataSource.progress.overflow
-                | number : '0.2-2'
-            "
-          />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>{{ "promotion__view__purchase" | translate }}</mat-label>
-          <input
-            matInput
-            readonly
-            [value]="dataSource.progress.purchase | number : '0.2-2'"
-          />
-        </mat-form-field>
-      </div>
-    </mat-tab>
     <mat-tab [label]="'promotion__view__items' | translate">
       <div class="items__wrapper">
         <div class="item-list" *ngFor="let item of dataSource.items">
@@ -86,4 +62,4 @@
   >
     {{ "promotion__view__download-button" | translate }}
   </button>
-</mat-dialog-actions>
+</mat-dialog-actions> -->

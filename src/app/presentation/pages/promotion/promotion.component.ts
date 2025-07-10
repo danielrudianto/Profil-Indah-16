@@ -8,6 +8,7 @@ import { PromotionCreateComponent } from './promotion-create/promotion-create.co
 import { PromotionViewComponent } from './promotion-view/promotion-view.component';
 import { PromotionViewActionComponent } from './promotion-view-action/promotion-view-action.component';
 import { AlertService } from 'src/app/services/alert.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-promotion',
@@ -19,7 +20,8 @@ export class PromotionComponent {
     private router: Router,
     private dynamicComponentService: DynamicComponentService,
     private apiService: ApiService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialog: MatDialog
   ) {}
 
   page: number = 1;
@@ -99,11 +101,29 @@ export class PromotionComponent {
 
   viewPromotion(index: number) {
     const id = this.dataSource[index].id;
-    const brand = this.dataSource[index].brand;
-    const supplier = this.dataSource[index].supplier;
-    this.dynamicComponentService.createDynamicComponent(
-      PromotionViewActionComponent,
-      { id: id, brand: brand, supplier: supplier }
-    );
+    this.dialog.open(PromotionViewComponent, {
+      data: {
+        id: id,
+      },
+    });
+  }
+
+  status(data: any) {
+    if (data.is_delete) {
+      return 'Deleted';
+    }
+
+    if (data.endDate == null) {
+      return 'Active';
+    }
+
+    if (
+      data.endDate != null &&
+      new Date(data.endDate).getTime() < new Date().getTime()
+    ) {
+      return 'Expired';
+    }
+
+    return 'Active';
   }
 }

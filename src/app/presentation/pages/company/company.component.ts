@@ -4,6 +4,7 @@ import { CompanyModel } from 'src/app/models/company.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { CompanyUpdateComponent } from './company-update/company-update.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-company',
@@ -11,10 +12,7 @@ import { CompanyUpdateComponent } from './company-update/company-update.componen
   styleUrls: ['./company.component.css'],
 })
 export class CompanyComponent {
-  constructor(
-    private authService: AuthService,
-    private dynamicComponentService: DynamicComponentService
-  ) {}
+  constructor(private authService: AuthService, private dialog: MatDialog) {}
 
   isLoading: boolean = true;
   dataSource: CompanyModel[] = [];
@@ -29,12 +27,14 @@ export class CompanyComponent {
 
   openDialog(dialogType: string, id: number) {
     if (dialogType == 'edit') {
-      this.dynamicComponentService.createDynamicComponent(
-        CompanyUpdateComponent,
-        {
+      this.dialog.open(CompanyUpdateComponent, {
+        data: {
           id: id,
-        }
-      );
+        },
+      });
+    }
+
+    if (dialogType == 'delete') {
     }
   }
 

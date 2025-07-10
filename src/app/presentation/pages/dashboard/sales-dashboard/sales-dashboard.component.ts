@@ -106,7 +106,7 @@ export class SalesDashboardComponent {
   }
 
   fetchStats(): void {
-    this.apiService.post('report/dashboard/sales', {}).subscribe({
+    this.apiService.post('dashboard/sales', {}).subscribe({
       next: (data: any) => {
         localStorage.setItem(
           'dashboard:sales:last-synced',

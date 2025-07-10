@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
   selector: 'app-customer-create',
@@ -11,12 +12,12 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 })
 export class CustomerCreateComponent {
   constructor(
-    private dynamicComponentService: DynamicComponentService,
     private apiService: ApiService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialog: MatDialogRef<CustomerCreateComponent>,
+    private translateService: TranslateService
   ) {}
 
-  isOpened: boolean = false;
   isSubmitting: boolean = false;
   customerFormGroup: FormGroup = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -26,29 +27,29 @@ export class CustomerCreateComponent {
     phone_number: new FormControl(''),
   });
 
-  ngOnInit(): void {
-    this.isOpened = true;
-  }
-
   closeDialog() {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
-    }, 300);
+    this.dialog.close();
   }
 
   submitForm() {
     this.isSubmitting = true;
-    this.apiService.post('customer', this.customerFormGroup.value).subscribe({
-      next: (data: any) => {
-        this.alertService.showSuccess(
-          `Customer ${data.name} created successfully`
-        );
-        this.closeDialog();
-      },
-      error: (error) => {
-        this.alertService.showError(error);
-      },
-    });
+    this.apiService
+      .post('customer', this.customerFormGroup.value)
+      .subscribe({
+        next: (data: any) => {
+          this.translateService
+            .get('customer__create__success')
+            .subscribe((message: string) => {
+              this.alertService.showSuccess(`Customer ${data.name} ${message}`);
+              this.closeDialog();
+            });
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isSubmitting = false;
+      });
   }
 }

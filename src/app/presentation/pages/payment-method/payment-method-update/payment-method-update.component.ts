@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -12,13 +13,12 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 })
 export class PaymentMethodUpdateComponent {
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private apiService: ApiService,
-    private dynamicComponentService: DynamicComponentService,
+    private dialog: MatDialogRef<PaymentMethodUpdateComponent>,
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}
-
-  @Input('data') data: any;
   isSubmitting: boolean = false;
   isLoading: boolean = false;
   isOpened: boolean = false;
@@ -29,15 +29,11 @@ export class PaymentMethodUpdateComponent {
   });
 
   ngOnInit(): void {
-    this.isOpened = true;
     this.fetchByID();
   }
 
   closeDialog(data: any = undefined) {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent(data);
-    }, 300);
+    this.dialog.close(data);
   }
 
   submitForm(): void {

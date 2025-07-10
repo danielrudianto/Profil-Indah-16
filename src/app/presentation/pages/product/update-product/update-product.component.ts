@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -17,14 +18,14 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 })
 export class UpdateProductComponent {
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { id: number },
     private formBuilder: FormBuilder,
     private apiService: ApiService,
-    private dynamicComponentService: DynamicComponentService,
     private alertService: AlertService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private dialog: MatDialogRef<UpdateProductComponent>
   ) {}
 
-  @Input('data') data: any;
   isSubmitting: boolean = false;
   isLoading: boolean = false;
   isLoadingType: boolean = false;
@@ -44,10 +45,10 @@ export class UpdateProductComponent {
       Validators.minLength(1),
       Validators.maxLength(500),
     ]),
-    brand: new FormControl('', Validators.required),
-    type: new FormControl('', Validators.required),
-    brand_name: new FormControl('', Validators.required),
-    type_name: new FormControl('', Validators.required),
+    product_brand_id: new FormControl('', Validators.required),
+    product_type_id: new FormControl('', Validators.required),
+    product_brand_name: new FormControl('', Validators.required),
+    product_type_name: new FormControl('', Validators.required),
     unit: new FormControl('', Validators.required),
     minimum_stock: new FormControl(0, [Validators.required, Validators.min(0)]),
   });
@@ -58,25 +59,25 @@ export class UpdateProductComponent {
 
   onSelectBrand(data: any) {
     this.itemFormGroup.patchValue({
-      brand: data.id,
+      product_brand_id: data.id,
     });
   }
 
   onUnselectBrand() {
     this.itemFormGroup.patchValue({
-      brand: '',
+      product_brand_id: '',
     });
   }
 
   onSelectType(data: any) {
     this.itemFormGroup.patchValue({
-      type: data.id,
+      product_type_id: data.id,
     });
   }
 
   onUnselectType() {
     this.itemFormGroup.patchValue({
-      type: '',
+      product_type_id: '',
     });
   }
 
@@ -86,8 +87,8 @@ export class UpdateProductComponent {
       id: this.data.id,
       reference: this.itemFormGroup.controls['reference'].value,
       description: this.itemFormGroup.controls['description'].value,
-      brand: this.itemFormGroup.controls['brand'].value,
-      type: this.itemFormGroup.controls['type'].value,
+      product_brand_id: this.itemFormGroup.controls['product_brand_id'].value,
+      product_type_id: this.itemFormGroup.controls['product_type_id'].value,
       unit: this.itemFormGroup.controls['unit'].value,
       minimum_stock: Number(this.itemFormGroup.controls['minimum_stock'].value),
     };
@@ -119,10 +120,10 @@ export class UpdateProductComponent {
         this.itemFormGroup.patchValue({
           reference: data.reference,
           description: data.description,
-          brand: data.item_brand_id,
-          type: data.item_type_id,
-          brand_name: data.item_brand.name,
-          type_name: data.item_type.name,
+          product_brand_id: data.product_brand_id,
+          product_type_id: data.product_type_id,
+          product_brand_name: data.product_brand.name,
+          product_type_name: data.product_type.name,
           minimum_stock: data.minimum_stock,
           unit: data.unit,
         });
@@ -136,22 +137,19 @@ export class UpdateProductComponent {
 
   selectBrand(event: any) {
     this.itemFormGroup.patchValue({
-      brand: event.option.value.id,
-      brand_search_bar: event.option.value.name,
+      product_brand_id: event.option.value.id,
+      product_brand_name: event.option.value.name,
     });
   }
 
   selectType(event: any) {
     this.itemFormGroup.patchValue({
-      type: event.option.value.id,
-      type_search_bar: event.option.value.name,
+      product_type_id: event.option.value.id,
+      product_type_name: event.option.value.name,
     });
   }
 
   closeDialog(data: any = undefined) {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent(data);
-    }, 300);
+    this.dialog.close(data);
   }
 }

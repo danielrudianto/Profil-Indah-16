@@ -81,7 +81,13 @@
     <app-box-stepper step="2" [valid]="billFormGroup.valid"></app-box-stepper>
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4 flex-grow-1">
-    <button class="add-button" [matMenuTriggerFor]="menu">
+    <button
+      type="button"
+      mat-stroked-button
+      color="primary"
+      style="letter-spacing: 0"
+      [matMenuTriggerFor]="menu"
+    >
       {{ "sales-invoice__create__add-item" | translate }}
     </button>
     <mat-menu #menu="matMenu">
@@ -134,13 +140,6 @@
                     <div class="text-clamp-2">
                       {{ itemForm.get("description")?.value }}
                     </div>
-                    <p>
-                      {{
-                        "sales-invoice__create__current-stock" | translate
-                      }}:&nbsp;
-                      {{ itemForm.get("stock")?.value | number : "0.0-2" }}
-                      {{ itemForm.get("default_unit")?.value }}
-                    </p>
                   </td>
                   <td class="text-center" (click)="updatePrice(i)">
                     {{ itemForm.get("price")?.value | number : "0.2-2" }}

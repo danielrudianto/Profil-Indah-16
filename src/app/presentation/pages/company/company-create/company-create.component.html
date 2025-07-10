@@ -1,55 +1,50 @@
-<app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
-  <div class="create-dialog">
-    <app-dialog-header
-      [title]="'company__create__title' | translate"
-      (onDialogClose)="closeDialog()"
-    >
-    </app-dialog-header>
-    <div class="create-dialog__content">
-      <form [formGroup]="companyFormGroup">
-        <mat-form-field class="w-100" appearance="outline">
-          <mat-label>{{ "company__create__name" | translate }}</mat-label>
-          <input
-            [disabled]="isSubmitting"
-            matInput
-            placeholder="Ex. PT. ABC"
-            type="text"
-            formControlName="name"
-          />
-        </mat-form-field>
-        <mat-form-field class="w-100" appearance="outline">
-          <mat-label>{{ "company__create__address" | translate }}</mat-label>
-          <textarea
-            [disabled]="isSubmitting"
-            matInput
-            placeholder="Ex. Jalan Raya ABC no. XX"
-            type="text"
-            formControlName="address"
-          ></textarea>
-        </mat-form-field>
+<h2 mat-dialog-title>{{ "company__create__title" | translate }}</h2>
+<form [formGroup]="companyFormGroup" (ngSubmit)="submitForm()">
+  <mat-dialog-content>
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>{{ "company__create__name" | translate }}</mat-label>
+      <input
+        [disabled]="isSubmitting"
+        matInput
+        placeholder="Ex. PT. ABC"
+        type="text"
+        formControlName="name"
+      />
+    </mat-form-field>
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>{{ "company__create__address" | translate }}</mat-label>
+      <textarea
+        [disabled]="isSubmitting"
+        matInput
+        placeholder="Ex. Jalan Raya ABC no. XX"
+        type="text"
+        formControlName="address"
+      ></textarea>
+    </mat-form-field>
 
-        <mat-form-field class="w-100" appearance="outline">
-          <mat-label>{{ "company__create__npwp" | translate }}</mat-label>
-          <input
-            [disabled]="isSubmitting"
-            matInput
-            mask="00.000.000.0-000.000"
-            placeholder="Ex. XX.XXX.XXX.X-XXX.XXX"
-            type="text"
-            formControlName="npwp"
-          />
-        </mat-form-field>
-      </form>
-    </div>
-    <div class="create-dialog__footer">
-      <button
-        type="button"
-        class="next-button"
-        (click)="submitForm()"
-        [disabled]="isSubmitting || !companyFormGroup.valid"
-      >
-        {{ "company__create__submit" | translate }}
-      </button>
-    </div>
-  </div>
-</app-dynamic-dialog>
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>{{ "company__create__npwp" | translate }}</mat-label>
+      <input
+        [disabled]="isSubmitting"
+        matInput
+        mask="00.000.000.0-000.000"
+        placeholder="Ex. XX.XXX.XXX.X-XXX.XXX"
+        type="text"
+        formControlName="npwp"
+      />
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      type="submit"
+      mat-stroked-button
+      color="primary"
+      style="letter-spacing: 0"
+      (click)="submitForm()"
+      [disabled]="isSubmitting || !companyFormGroup.valid"
+    >
+      {{ "company__create__submit" | translate }}
+    </button>
+  </mat-dialog-actions>
+</form>

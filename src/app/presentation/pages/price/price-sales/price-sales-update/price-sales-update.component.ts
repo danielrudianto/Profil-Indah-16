@@ -59,7 +59,7 @@ export class PriceSalesUpdateComponent {
 
   fetchByID(): void {
     this.apiService
-      .get(`product-price-sales/v2/${this.data.id}`)
+      .get(`product-price-sales/${this.data.id}`)
       .subscribe({
         next: (data: any) => {
           this.priceFormGroup.patchValue({

@@ -1,5 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
@@ -11,13 +13,13 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 })
 export class ProductBrandUpdateComponent {
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { id: number },
     private apiService: ApiService,
     private alertService: AlertService,
-    private dynamicComponentService: DynamicComponentService
+    private dialog: MatDialogRef<ProductBrandUpdateComponent>,
+    private translateService: TranslateService
   ) {}
 
-  @Input('data') data: any;
-  isOpened: boolean = false;
   isLoading: boolean = true;
   isSubmitting: boolean = false;
   brandFormGroup: FormGroup = new FormGroup({
@@ -27,7 +29,6 @@ export class ProductBrandUpdateComponent {
 
   ngOnInit(): void {
     this.fetchByID();
-    this.isOpened = true;
   }
 
   fetchByID(): void {
@@ -51,8 +52,12 @@ export class ProductBrandUpdateComponent {
     this.isSubmitting = true;
     this.apiService.put('product-brand', this.brandFormGroup.value).subscribe({
       next: (data: any) => {
-        this.alertService.showSuccess(`${data.name} created successfully`);
-        this.closeDialog(data);
+        this.translateService
+          .get('product__brand__update__success')
+          .subscribe((translation) => {
+            this.alertService.showSuccess(`${data.name} ${translation}`);
+            this.closeDialog(data);
+          });
       },
       error: (error) => {
         this.alertService.showError(error);
@@ -61,9 +66,6 @@ export class ProductBrandUpdateComponent {
   }
 
   closeDialog(data: any = undefined): void {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent(data);
-    }, 300);
+    this.dialog.close(data);
   }
 }

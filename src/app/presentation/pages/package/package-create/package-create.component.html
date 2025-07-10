@@ -38,7 +38,13 @@
     <app-box-stepper step="2" [valid]="itemsFormGroup.valid"></app-box-stepper>
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <button class="add-button" (click)="openItemSelector()">
+    <button
+      type="button"
+      mat-stroked-button
+      color="primary"
+      style="letter-spacing: 0"
+      (click)="openItemSelector()"
+    >
       {{ "package__create__add-item" | translate }}
     </button>
     <form [formGroup]="itemsFormGroup">

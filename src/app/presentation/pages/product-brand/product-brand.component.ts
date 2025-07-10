@@ -40,21 +40,22 @@ export class ProductBrandComponent {
 
   openDialog(dialogType: string, id: number) {
     if (dialogType == 'edit') {
-      const dialog = this.dynamicComponentService.createDynamicComponent(
-        ProductBrandUpdateComponent,
-        {
-          id: id,
-        }
-      );
-
-      dialog.subscribe((data) => {
-        if (data != undefined && data != null) {
-          const index = this.dataSource.findIndex((x) => x.id == data.id);
-          if (index != -1) {
-            this.dataSource[index].name = data.name;
+      this.dialog
+        .open(ProductBrandUpdateComponent, {
+          data: {
+            id: id,
+          },
+        })
+        .afterClosed()
+        .subscribe((data) => {
+          console.log(data);
+          if (data) {
+            const index = this.dataSource.findIndex((x) => x.id == data.id);
+            if (index != -1) {
+              this.dataSource[index].name = data.name;
+            }
           }
-        }
-      });
+        });
     }
 
     if (dialogType == 'delete') {

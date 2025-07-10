@@ -104,7 +104,12 @@
     <app-box-stepper step="3" [valid]="itemFormGroup.valid"></app-box-stepper>
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <button class="add-button" (click)="openItemSelector()">
+    <button
+      mat-stroked-button
+      color="primary"
+      style="letter-spacing: 0"
+      (click)="openItemSelector()"
+    >
       {{ "purchase-invoice__create__add-item" | translate }}
     </button>
     <form [formGroup]="itemFormGroup">
@@ -145,13 +150,6 @@
               <div class="text-clamp-2">
                 {{ itemForm.get("description")?.value }}
               </div>
-              <p class="mt-2">
-                {{
-                  "purchase-invoice__create__table__current-stock" | translate
-                }}:
-                {{ itemForm.get("stock")?.value | number : "0.0-2" }}
-                {{ itemForm.get("default_unit")?.value }}
-              </p>
             </td>
             <td class="text-center" (click)="openEditData(i)">
               Rp.&nbsp;{{ itemForm.get("price")?.value | number : "0.0-2" }}
@@ -199,11 +197,7 @@
               Rp.&nbsp;{{
                 itemForm.get("quantity")?.value *
                   (itemForm.get("price")?.value -
-                    (itemForm.get("discountType")?.value == "absolute"
-                      ? itemForm.get("discount")?.value
-                      : (itemForm.get("discountPercentage")?.value *
-                          itemForm.get("price")?.value) /
-                        100)) | number : "0.2-2"
+                    itemForm.get("discount")?.value) | number : "0.2-2"
               }}
             </td>
             <td class="text-nowrap text-center">

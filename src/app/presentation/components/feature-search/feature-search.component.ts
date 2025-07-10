@@ -64,19 +64,12 @@ export class FeatureSearchComponent {
     };
     switch (this.route) {
       case 'product':
-        // this.dynamicComponentService.createDynamicComponent(
-        //   ProductCreateComponent,
-        //   {}
-        // );
         this.router.navigate(['Create'], {
           relativeTo: this.activatedRoute,
         });
         break;
       case 'product-brand':
-        this.dynamicComponentService.createDynamicComponent(
-          ProductBrandCreateComponent,
-          {}
-        );
+        this.dialog.open(ProductBrandCreateComponent, {});
         break;
       case 'product-type':
         this.dynamicComponentService.createDynamicComponent(
@@ -85,16 +78,10 @@ export class FeatureSearchComponent {
         );
         break;
       case 'customer':
-        this.dynamicComponentService.createDynamicComponent(
-          CustomerCreateComponent,
-          {}
-        );
+        this.dialog.open(CustomerCreateComponent, {});
         break;
       case 'supplier':
-        this.dynamicComponentService.createDynamicComponent(
-          SupplierCreateComponent,
-          {}
-        );
+        this.dialog.open(SupplierCreateComponent, {});
         break;
       case 'user':
         this.dynamicComponentService.createDynamicComponent(
@@ -112,22 +99,15 @@ export class FeatureSearchComponent {
         });
         break;
       case 'company':
-        this.dynamicComponentService.createDynamicComponent(
-          CompanyCreateComponent,
-          {}
-        );
+        this.dialog.open(CompanyCreateComponent, {});
         break;
       case 'payment-method':
-        this.dynamicComponentService.createDynamicComponent(
-          PaymentMethodCreateComponent,
-          {}
-        );
+        this.dialog.open(PaymentMethodCreateComponent, {});
         break;
       case 'promotion':
-        this.dynamicComponentService.createDynamicComponent(
-          PromotionCreateComponent,
-          {}
-        );
+        this.router.navigate(['Create'], {
+          relativeTo: this.activatedRoute,
+        });
         break;
       case 'product-package':
         this.router.navigate(['Create'], {

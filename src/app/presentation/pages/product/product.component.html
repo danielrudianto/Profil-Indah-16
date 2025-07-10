@@ -57,13 +57,6 @@
                     <mat-icon>edit</mat-icon>
                     <span>{{ "product__update" | translate }}</span>
                   </button>
-                  <button
-                    (click)="openDialog('edit-unit', item.id)"
-                    mat-menu-item
-                  >
-                    <mat-icon>dataset</mat-icon>
-                    <span>{{ "product__update-unit" | translate }}</span>
-                  </button>
                   <button mat-menu-item (click)="openDialog('active', item.id)">
                     <mat-icon *ngIf="item.is_active">toggle_on</mat-icon>
                     <mat-icon *ngIf="!item.is_active">toggle_off</mat-icon>

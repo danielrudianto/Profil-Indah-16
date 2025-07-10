@@ -247,12 +247,7 @@ export class SalesInvoiceCreateComponent {
       })
       .subscribe({
         next: (data: any) => {
-          this.paymentOptions = data.data;
-          this.paymentOptions.unshift({
-            id: 0,
-            name: 'Cash',
-            description: 'Cash payment',
-          });
+          this.paymentOptions = data;
         },
       });
 
@@ -318,86 +313,120 @@ export class SalesInvoiceCreateComponent {
         }
       );
 
-    this.productSelectorSubject.subscribe((data: any) => {
-      if (data != null && data != undefined) {
+    this.productSelectorSubject.subscribe((result: any) => {
+      if (result) {
         let validation = true;
+        const data = result.data;
+        const sub = result.sub;
+        const check = this.checkExistingProduct(
+          data.id,
+          sub == null ? null : sub.id
+        );
 
-        this.t.controls.forEach((x) => {
-          if (data.price != null) {
-            if (x.get('item_unit_id')?.value == data.price.item_unit_id) {
-              validation = false;
-            }
-          } else {
-            if (x.get('item_id')?.value == data.item.id) {
-              validation = false;
-            }
-          }
-        });
+        if (check) {
+          return;
+        }
 
-        if (validation) {
+        if (sub == null) {
           this.t.push(
             this.formBuilder.group({
-              item_id: [data.item.id, Validators.required],
-              item_unit_id: [
-                data.price == null ? null : data.price.item_unit_id,
-              ],
-              reference: [data.item.reference, Validators.required],
-              description: [data.item.description, Validators.required],
-              quantity: ['', [Validators.required, Validators.min(0.01)]],
+              product_id: [data.id, Validators.required],
+              product_unit_id: [null],
+              reference: [data.reference],
+              description: [data.description],
+              quantity: [0, [Validators.required, Validators.min(0.01)]],
               initial_price: [
-                data.price == null ? data.item.price : data.price.price,
+                data.sales_price,
+                [Validators.required, Validators.min(0)],
               ],
               price: [
-                data.price == null ? data.item.price : data.price.price,
-                [Validators.min(0), Validators.required],
-              ],
-              discount: [
-                data.price == null ? data.item.discount : data.price.discount,
+                data.sales_price,
                 [Validators.required, Validators.min(0)],
               ],
               initial_discount: [
-                data.price == null ? data.item.discount : data.price.discount,
+                data.sales_discount,
+                [Validators.required, Validators.min(0)],
               ],
-              unit: [
-                data.price == null ? data.item.unit : data.price.unit,
-                Validators.required,
+              discount: [
+                data.sales_discount,
+                [Validators.required, Validators.min(0)],
               ],
-              conversion: [
-                data.price == null ? 1 : data.price.conversion,
-                Validators.required,
-              ],
-              default_unit: [data.item.unit],
-              stock: [data.item.stock],
+              unit: [data.unit],
+              conversion: [1],
+              default_unit: [data.unit],
               save_price: [false],
             })
           );
-
-          this.billFormGroup.patchValue({
-            number_of_items: this.t.length,
-          });
-
-          setTimeout(() => {
-            const autofocusLength =
-              document.querySelectorAll('[focusedInput]').length;
-            const input =
-              document.querySelectorAll('[focusedInput]')[autofocusLength - 1];
-            (input as HTMLElement).focus();
-          }, 100);
         } else {
-          this.alertService.showSuccess(
-            this.translateService.instant('general__item__exists')
+          this.t.push(
+            this.formBuilder.group({
+              product_id: [data.id, Validators.required],
+              product_unit_id: [sub.id],
+              reference: [data.reference],
+              description: [data.description],
+              quantity: [0, [Validators.required, Validators.min(0.01)]],
+              initial_price: [
+                sub.sales_price,
+                [Validators.required, Validators.min(0)],
+              ],
+              price: [
+                sub.sales_price,
+                [Validators.required, Validators.min(0)],
+              ],
+              initial_discount: [
+                sub.sales_discount,
+                [Validators.required, Validators.min(0)],
+              ],
+              discount: [
+                sub.sales_discount,
+                [Validators.required, Validators.min(0)],
+              ],
+              unit: [sub.unit],
+              conversion: [sub.conversion],
+              default_unit: [data.unit],
+              save_price: [false],
+            })
           );
         }
+
+        this.billFormGroup.patchValue({
+          number_of_items: this.t.length,
+        });
+
+        setTimeout(() => {
+          const autofocusLength =
+            document.querySelectorAll('[focusedInput]').length;
+          const input =
+            document.querySelectorAll('[focusedInput]')[autofocusLength - 1];
+          (input as HTMLElement).focus();
+        }, 100);
+      } else {
+        this.alertService.showSuccess(
+          this.translateService.instant('general__item__exists')
+        );
       }
     });
   }
 
+  private checkExistingProduct(
+    productID: number,
+    productUnitID: number | null
+  ) {
+    const result = this.t.controls.findIndex((x) => {
+      x.get('product_id')?.value == productID &&
+        x.get('product_unit_id')?.value == productUnitID;
+    });
+
+    if (result == -1) {
+      return false;
+    }
+
+    return true;
+  }
+
   openPaymentSelector() {
     const sheet = this.sheet.open(PaymentSelectorComponent, {
-      data: {
-        payments: this.paymentOptions,
-        selected: this.paymentsFormGroup.controls,
-      },
+      data: this.paymentOptions,
     });
 
     sheet.afterDismissed().subscribe({
@@ -589,27 +618,27 @@ export class SalesInvoiceCreateComponent {
 
     this.isSubmitting = true;
 
-    const bill: any[] = [];
+    const sales_invoice: any[] = [];
     const date = this.metaFormGroup.controls['date'].value;
 
     this.t.controls.forEach((x) => {
       if (!x.get('package_code_id')) {
-        const item_id = Number(x.get('item_id')?.value ?? '0');
-        const item_unit_id =
-          x.get('item_unit_id')?.value == null
+        const product_id = Number(x.get('product_id')?.value ?? '0');
+        const product_unit_id =
+          x.get('product_unit_id')?.value == null
             ? null
             : Number(x.get('item_unit_id')?.value ?? '0');
         const price = Number(x.get('price')?.value ?? '0');
         const discount = Number(x.get('discount')?.value ?? '0');
         const quantity = Number(x.get('quantity')?.value ?? '0');
 
-        bill.push({
+        sales_invoice.push({
           price: price,
           discount: discount,
           quantity: quantity,
           package_code_id: null,
-          item_unit_id: item_unit_id,
-          item_id: item_id,
+          item_unit_id: product_unit_id,
+          item_id: product_id,
           save:
             x.get('initial_price')?.value == x.get('price')?.value &&
             x.get('initial_discount')?.value == x.get('discount')?.value
@@ -621,7 +650,7 @@ export class SalesInvoiceCreateComponent {
         const quantity = parseFloat(x.get('quantity')?.value);
         const price = parseFloat(x.get('price')?.value);
 
-        bill.push({
+        sales_invoice.push({
           price: price,
           discount: 0,
           quantity: quantity,
@@ -655,12 +684,12 @@ export class SalesInvoiceCreateComponent {
       discount: this.valueFormGroup.controls['discount'].value,
       delivery: this.valueFormGroup.controls['delivery'].value,
       service: this.valueFormGroup.controls['service'].value,
-      bill: bill,
+      sales_invoice: sales_invoice,
       payment_term:
         this.totalBill > this.totalPayment
           ? null
           : this.paymentsFormGroup.controls['due_time'].value,
-      payments: !this.paymentsFormGroup.controls['immediate_payment'].value
+      sales_invoice_payment: !this.paymentsFormGroup.controls['immediate_payment'].value
         ? []
         : this.p.controls.map((x) => {
             return {

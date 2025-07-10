@@ -14,7 +14,6 @@ import { PromotionCreateRuleComponent } from '../promotion-create-rule/promotion
 })
 export class PromotionCreateComponent {
   constructor(
-    private dynamicComponentService: DynamicComponentService,
     private apiService: ApiService,
     private alertService: AlertService,
     private datePipe: DatePipe,
@@ -22,7 +21,6 @@ export class PromotionCreateComponent {
   ) {}
 
   isSubmitting: boolean = false;
-  isOpened: boolean = false;
 
   promotionFormGroup: FormGroup = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -30,26 +28,22 @@ export class PromotionCreateComponent {
     start_date: new FormControl(new Date(), [Validators.required]),
     end_date: new FormControl(''),
     target: new FormControl(0, [Validators.required, Validators.min(0)]),
-    brand: new FormControl('', Validators.required),
     supplier: new FormControl('', Validators.required),
     rules: new FormArray([]),
   });
 
-  ngOnInit(): void {
-    this.isOpened = true;
-  }
+  brands: any[] = [];
 
-  closeDialog() {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
-    }, 300);
-  }
+  ngOnInit(): void {}
 
   onSelectBrand(event: any) {
-    this.promotionFormGroup.patchValue({
-      brand: event.id,
+    const index = this.brands.findIndex((x) => {
+      x.id == event.id;
     });
+
+    if (index == -1) {
+      this.brands.push(event);
+    }
   }
 
   onSelectSupplier(event: any) {
@@ -58,10 +52,8 @@ export class PromotionCreateComponent {
     });
   }
 
-  onUnselectBrand() {
-    this.promotionFormGroup.patchValue({
-      brand: '',
-    });
+  onRemoveBrand(index: number) {
+    this.brands.splice(index);
   }
 
   onUnselectSupplier() {
@@ -100,11 +92,10 @@ export class PromotionCreateComponent {
     this.isSubmitting = true;
     this.apiService
       .post('promotion', {
-        brand: this.promotionFormGroup.value.brand,
-        supplier: this.promotionFormGroup.value.supplier,
+        supplier_id: this.promotionFormGroup.value.supplier,
         name: this.promotionFormGroup.value.name,
         description: this.promotionFormGroup.value.description,
-        endDate:
+        end_date:
           this.promotionFormGroup.value.end_date == ''
             ? null
             : this.datePipe.transform(
@@ -112,18 +103,26 @@ export class PromotionCreateComponent {
                 'dd-MM-YYYY'
               ),
         target: Number(this.promotionFormGroup.value.target),
-        startDate: this.datePipe.transform(
+        start_date: this.datePipe.transform(
           this.promotionFormGroup.value.start_date,
           'dd-MM-YYYY'
         ),
-        rules: this.promotionFormGroup.value.rules,
+        promotion_rules: this.promotionFormGroup.value.rules,
+        promotion_brand: this.brands.map((x) => {
+          return {
+            product_brand_id: x.id,
+          };
+        }),
       })
       .subscribe({
         next: (data: any) => {
           this.alertService.showSuccess(
             `Promotion ${data.name} created successfully`
           );
-          this.closeDialog();
+
+          this.promotionFormGroup.reset();
+          this.brands = [];
+          this.t.clear();
         },
         error: (error) => {
           this.alertService.showError(error);

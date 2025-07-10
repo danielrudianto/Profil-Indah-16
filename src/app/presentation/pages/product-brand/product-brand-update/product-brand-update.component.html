@@ -1,32 +1,20 @@
-<app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
-  <div class="create-dialog">
-    <app-dialog-header
-      [title]="'product__brand__update__title' | translate"
-      (onDialogClose)="closeDialog()"
+<h2 mat-dialog-title>{{ "product__brand__update__title" | translate }}</h2>
+<form [formGroup]="brandFormGroup" (ngSubmit)="submitForm()">
+  <mat-dialog-content>
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>{{ "product__brand__name" | translate }}</mat-label>
+      <input matInput type="text" formControlName="name" />
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button
+      type="submit"
+      mat-stroked-button
+      style="letter-spacing: 0"
+      color="primary"
+      [disabled]="isSubmitting || !brandFormGroup.valid"
     >
-    </app-dialog-header>
-    <form [formGroup]="brandFormGroup" (ngSubmit)="submitForm()">
-      <div class="create-dialog__content">
-        <div *ngIf="isLoading">
-          <mat-spinner id="spinner" />
-        </div>
-
-        <mat-form-field appearance="fill" class="w-100">
-          <mat-label>{{ "product__brand__name" | translate }}</mat-label>
-          <input matInput type="text" formControlName="name" />
-        </mat-form-field>
-      </div>
-      <div class="create-dialog__footer">
-        <button
-          type="submit"
-          mat-stroked-button
-          style="letter-spacing: 0"
-          color="primary"
-          [disabled]="isSubmitting || !brandFormGroup.valid"
-        >
-          {{ "product__brand__add__submit" | translate }}
-        </button>
-      </div>
-    </form>
-  </div>
-</app-dynamic-dialog>
+      {{ "product__brand__update__submit" | translate }}
+    </button>
+  </mat-dialog-actions>
+</form>

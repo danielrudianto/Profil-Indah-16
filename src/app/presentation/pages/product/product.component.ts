@@ -40,25 +40,25 @@ export class ProductComponent {
 
   openDialog(dialogType: string, id: number) {
     if (dialogType == 'edit') {
-      const dialog = this.dynamicComponentService.createDynamicComponent(
-        UpdateProductComponent,
-        {
-          id: id,
-        }
-      );
-
-      dialog.subscribe((data) => {
-        if (data) {
-          const index = this.dataSource.findIndex((x) => x.id == id);
-          if (index != -1) {
-            this.dataSource[index].reference = data.reference;
-            this.dataSource[index].description = data.description;
-            this.dataSource[index].product_brand = data.product_brand;
-            this.dataSource[index].product_type = data.product_type;
-            this.dataSource[index].is_active = data.is_active;
+      this.dialog
+        .open(UpdateProductComponent, {
+          data: {
+            id: id,
+          },
+        })
+        .afterClosed()
+        .subscribe((data) => {
+          if (data) {
+            const index = this.dataSource.findIndex((x) => x.id == id);
+            if (index != -1) {
+              this.dataSource[index].reference = data.reference;
+              this.dataSource[index].description = data.description;
+              this.dataSource[index].product_brand = data.product_brand;
+              this.dataSource[index].product_type = data.product_type;
+              this.dataSource[index].is_active = data.is_active;
+            }
           }
-        }
-      });
+        });
     } else if (dialogType == 'delete') {
       const index = this.dataSource.findIndex((x) => x.id == id);
       if (index != -1) {

@@ -4,6 +4,7 @@ import { Supplier } from 'src/app/models/supplier.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { SupplierUpdateComponent } from './supplier-update/supplier-update.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-supplier',
@@ -13,7 +14,8 @@ import { SupplierUpdateComponent } from './supplier-update/supplier-update.compo
 export class SupplierComponent {
   constructor(
     private authService: AuthService,
-    private dynamicComponentService: DynamicComponentService
+    private dynamicComponentService: DynamicComponentService,
+    private dialog: MatDialog
   ) {}
 
   isLoading: boolean = true;
@@ -30,12 +32,23 @@ export class SupplierComponent {
 
   openDialog(dialogType: string, id: number) {
     if (dialogType == 'edit') {
-      this.dynamicComponentService.createDynamicComponent(
-        SupplierUpdateComponent,
-        {
-          id: id,
-        }
-      );
+      this.dialog
+        .open(SupplierUpdateComponent, {
+          data: {
+            id: id,
+          },
+        })
+        .afterClosed()
+        .subscribe((result) => {
+          if (result) {
+            const index = this.dataSource.findIndex(
+              (item) => item.id === result.id
+            );
+            this.dataSource[index].name = result.name;
+            this.dataSource[index].address = result.address;
+            this.dataSource[index].npwp = result.npwp;
+          }
+        });
     }
   }
 

@@ -31,22 +31,22 @@ export class PaymentMethodComponent {
 
   openDialog(dialogType: string, id: number) {
     if (dialogType == 'edit') {
-      const dialog = this.dynamicComponentService.createDynamicComponent(
-        PaymentMethodUpdateComponent,
-        {
-          id: id,
-        }
-      );
-
-      dialog.subscribe((data) => {
-        if (data != undefined && data != null) {
-          const index = this.dataSource.findIndex((x) => x.id == id);
-          if (index != -1) {
-            this.dataSource[index].name = data.name;
-            this.dataSource[index].description = data.description;
+      this.dialog
+        .open(PaymentMethodUpdateComponent, {
+          data: {
+            id: id,
+          },
+        })
+        .afterClosed()
+        .subscribe((data) => {
+          if (data) {
+            const index = this.dataSource.findIndex((x) => x.id == id);
+            if (index != -1) {
+              this.dataSource[index].name = data.name;
+              this.dataSource[index].description = data.description;
+            }
           }
-        }
-      });
+        });
     }
   }
 

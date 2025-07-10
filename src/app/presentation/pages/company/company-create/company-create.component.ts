@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
@@ -11,9 +12,9 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 })
 export class CompanyCreateComponent {
   constructor(
-    private dynamicComponentService: DynamicComponentService,
     private apiService: ApiService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialog: MatDialogRef<CompanyCreateComponent>
   ) {}
 
   isOpened: boolean = false;
@@ -29,10 +30,7 @@ export class CompanyCreateComponent {
   }
 
   closeDialog() {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
-    }, 300);
+    this.dialog.close();
   }
 
   submitForm() {
