@@ -9,6 +9,7 @@ import { SalesInvoiceArchiveFilterComponent } from './sales-invoice-archive-filt
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import moment from 'moment';
 import { ArchiveViewComponent } from 'src/app/presentation/components/archives/archive-view/archive-view.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-sales-invoice-archive',
@@ -20,7 +21,8 @@ export class SalesInvoiceArchiveComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dynamicComponentService: DynamicComponentService
+    private dynamicComponentService: DynamicComponentService,
+    private dialog: MatDialog
   ) {}
 
   mode: ArchiveMode = ArchiveMode.year;
@@ -34,9 +36,14 @@ export class SalesInvoiceArchiveComponent {
   filterFormGroup: FormGroup = new FormGroup({
     startDate: new FormControl(''),
     endDate: new FormControl(''),
-    status: new FormControl('', Validators.required),
-    paymentStatus: new FormControl('', Validators.required),
+    isPaid: new FormControl(''),
+    isUnpaid: new FormControl(''),
+    isActive: new FormControl(''),
+    isDelete: new FormControl(''),
   });
+
+  sortBy: string = 'date';
+  sortDirection: 'asc' | 'desc' = 'desc';
 
   ngOnInit(): void {}
 
@@ -51,8 +58,10 @@ export class SalesInvoiceArchiveComponent {
       // Fetch all payment status and document status
       startDate: new Date(this.year!, this.month! - 1, 1),
       endDate: new Date(this.year!, this.month!, 0),
-      status: 0,
-      paymentStatus: 0,
+      isPaid: true,
+      isUnpaid: true,
+      isActive: true,
+      isDelete: true,
     });
 
     this.fetchSelectedMonth(1);
@@ -68,7 +77,7 @@ export class SalesInvoiceArchiveComponent {
     this.isLoading = true;
 
     this.apiService
-      .post('sales-invoice/archives/v2', {
+      .post('sales-invoice/archives', {
         month: this.month,
         year: this.year,
         page: this.page,
@@ -80,8 +89,12 @@ export class SalesInvoiceArchiveComponent {
         endDate: moment(
           new Date(this.filterFormGroup.get('endDate')?.value)
         ).format('YYYY-MM-DD'),
-        status: this.filterFormGroup.get('status')?.value,
-        paymentStatus: this.filterFormGroup.get('paymentStatus')?.value,
+        isPaid: this.filterFormGroup.get('isPaid')?.value,
+        isUnpaid: this.filterFormGroup.get('isUnpaid')?.value,
+        isActive: this.filterFormGroup.get('isActive')?.value,
+        isDelete: this.filterFormGroup.get('isDelete')?.value,
+        sortBy: this.sortBy,
+        sortDirection: this.sortDirection,
       })
       .subscribe({
         next: (data: any) => {
@@ -118,22 +131,88 @@ export class SalesInvoiceArchiveComponent {
    * @return {void} This function does not return anything.
    */
   openFilter() {
-    const filterComponent = this.dynamicComponentService.createDynamicComponent(
-      SalesInvoiceArchiveFilterComponent,
-      {
-        month: this.month,
-        year: this.year,
-        startDate: this.filterFormGroup.get('startDate')?.value,
-        endDate: this.filterFormGroup.get('endDate')?.value,
-        status: this.filterFormGroup.get('status')?.value,
-        paymentStatus: this.filterFormGroup.get('paymentStatus')?.value,
-      }
-    );
+    this.dialog
+      .open(SalesInvoiceArchiveFilterComponent, {
+        data: {
+          month: this.month,
+          year: this.year,
+          ...this.filterFormGroup.value,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        // Check if it is the same
+        const change = this.checkChanges(data);
+        if (change) {
+          this.filterFormGroup.patchValue(data);
+          this.fetchSelectedMonth(1);
+        }
+      });
+  }
 
-    filterComponent.subscribe((data) => {
-      this.filterFormGroup.patchValue(data);
-      this.fetchSelectedMonth(1);
-    });
+  private checkChanges(data: any) {
+    const isPaid = data.isPaid;
+    const isUnpaid = data.isUnpaid;
+    const isActive = data.isActive;
+    const isDelete = data.isDelete;
+
+    const maxDate = data.endDate;
+    const minDate = data.startDate;
+
+    const existingIsPaid = this.filterFormGroup.value.isPaid;
+    const existingIsUnpaid = this.filterFormGroup.value.isUnpaid;
+    const existingIsActive = this.filterFormGroup.value.isActive;
+    const existingIsDelete = this.filterFormGroup.value.isDelete;
+
+    const existingMinDate = this.filterFormGroup.value.startDate;
+    const existingMaxDate = this.filterFormGroup.value.endDate;
+
+    let response = false;
+
+    if (isPaid != existingIsPaid) {
+      response = true;
+    }
+
+    if (isUnpaid != existingIsUnpaid) {
+      response = true;
+    }
+
+    if (isActive != existingIsActive) {
+      response = true;
+    }
+
+    if (isDelete != existingIsDelete) {
+      response = true;
+    }
+
+    if (existingMinDate.getTime() != minDate.getTime()) {
+      response = true;
+    }
+
+    if (existingMaxDate.getTime() != maxDate.getTime()) {
+      response = true;
+    }
+
+    return response;
+  }
+
+  changeSortBy(field: string) {
+    if (this.isLoading) {
+      return;
+    }
+
+    if (this.sortBy == field) {
+      if (this.sortDirection == 'asc') {
+        this.sortDirection = 'desc';
+      } else {
+        this.sortDirection = 'asc';
+      }
+    } else {
+      this.sortBy = field;
+      this.sortDirection = 'asc';
+    }
+
+    this.fetchSelectedMonth(1);
   }
 
   viewArchive(id: number) {

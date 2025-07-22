@@ -1,7 +1,7 @@
 <div class="dashboard-card">
   <app-feature-search
     [addButton]="false"
-    route="deposit/v2"
+    route="sales-deposit"
     [page]="page"
     [enable]="true"
     (onNewQuery)="page = 1"
@@ -13,12 +13,12 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Date</th>
-          <th>Sales</th>
-          <th>Document</th>
-          <th>Customer</th>
-          <th>Amount</th>
-          <th>Payment</th>
+          <th>{{ "sales-deposit__archive__date" | translate }}</th>
+          <th>{{ "sales-deposit__archive__sales" | translate }}</th>
+          <th>{{ "sales-deposit__archive__document" | translate }}</th>
+          <th>{{ "sales-deposit__archive__customer" | translate }}</th>
+          <th>{{ "sales-deposit__archive__amount" | translate }}</th>
+          <th>{{ "sales-deposit__archive__payment" | translate }}</th>
         </tr>
       </thead>
       <tbody *ngIf="!isLoading && dataSource.length > 0">

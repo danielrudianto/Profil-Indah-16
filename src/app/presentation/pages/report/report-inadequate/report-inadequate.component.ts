@@ -57,8 +57,7 @@ export class ReportInadequateComponent {
   fetchData(page: number = this.page) {
     this.page = page;
     this.apiService
-      .post('product-stock', {
-        mode: 'inadequate-pagination',
+      .post('product-stock/inadequate', {
         page: this.page,
         brands: this.selectedBrands.map((x) => x.id),
         types: this.selectedTypes.map((x) => x.id),

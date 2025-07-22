@@ -94,28 +94,22 @@ export class ReportSalesComponent {
       })
       .subscribe({
         next: (data: any) => {
-          this.chartDataSource = data.date;
-          this.transactions = data.transactions;
-          this.customerCount = data.customer.length;
-          this.bestSales =
-            data.sales.length == 0
-              ? 'N/A'
-              : data.sales.sort((a: any, b: any) => {
-                  return b.value - a.value;
-                })[0].name ?? 'N/A';
+          this.chartDataSource = data.chart;
+          this.transactions = data.salesInvoiceCount;
+          // this.customerCount = data.customer.length;
+          // this.bestSales =
+          //   data.sales.length == 0
+          //     ? 'N/A'
+          //     : data.sales.sort((a: any, b: any) => {
+          //         return b.value - a.value;
+          //       })[0].name ?? 'N/A';
 
           this.totalSales = data.total - data.discount;
           this.totalDelivery = data.delivery;
           this.totalService = data.service;
 
-          this.bestBrand =
-            data.brand.length == 0
-              ? 'N/A'
-              : data.brand.sort((a: any, b: any) => b.value - a.value)[0].name;
-          this.bestType =
-            data.type.length == 0
-              ? 'N/A'
-              : data.type.sort((a: any, b: any) => b.value - a.value)[0].name;
+          this.bestBrand = data.brand == null ? '?N/A' : data.brand;
+          this.bestType = data.type == null ? '?N/A' : data.type;
 
           this.returnValue = data.returned_value;
           this.returnCount = data.returns;

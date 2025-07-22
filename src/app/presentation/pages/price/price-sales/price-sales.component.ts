@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { PriceSalesUpdateComponent } from './price-sales-update/price-sales-update.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-price-sales',
@@ -11,10 +12,7 @@ import { PriceSalesUpdateComponent } from './price-sales-update/price-sales-upda
   styleUrls: ['./price-sales.component.css'],
 })
 export class PriceSalesComponent {
-  constructor(
-    private router: Router,
-    private dynamicComponentService: DynamicComponentService
-  ) {}
+  constructor(private router: Router, private dialog: MatDialog) {}
 
   isLoading: boolean = false;
   backRoute: string = this.router.url;
@@ -49,20 +47,20 @@ export class PriceSalesComponent {
   }
 
   openUpdatePriceDialog(id: number): void {
-    this.dynamicComponentService
-      .createDynamicComponent(PriceSalesUpdateComponent, {
-        id: id,
+    this.dialog
+      .open(PriceSalesUpdateComponent, {
+        data: {
+          id: id,
+        },
       })
-      .subscribe((data) => {
-        if (data != undefined && data != null) {
-          const index = (data as any[]).findIndex(
-            (x) => x.item_unit_id == null
-          );
-          if (index != -1) {
-            const dataIndex = this.dataSource.findIndex((x) => x.id == id);
-            this.dataSource[dataIndex].price = data[index].price;
-            this.dataSource[dataIndex].discount = data[index].discount;
-            this.dataSource[dataIndex].effective_date = new Date();
+      .afterClosed()
+      .subscribe((data: any) => {
+        console.log(data);
+        if (data) {
+          const dataIndex = this.dataSource.findIndex((x) => x.id == id);
+          if (dataIndex != -1) {
+            this.dataSource[dataIndex].sales_price = data.sales_price;
+            this.dataSource[dataIndex].sales_discount = data.sales_discount;
           }
         }
       });

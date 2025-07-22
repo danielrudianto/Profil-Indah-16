@@ -40,7 +40,7 @@ export class PurchaseChartComponent {
 
   getCountOnDate(i: number): number {
     const index = this.data.findIndex((x) => x.date == i);
-    return index == -1 ? 0 : this.data[index].count;
+    return index == -1 ? 0 : this.data[index].goodReceiptCount;
   }
 
   getValueTooltipOnDate(date: number): string {
@@ -56,6 +56,6 @@ export class PurchaseChartComponent {
   }
 
   get maxCount(): number {
-    return Math.max(...this.data.map((x) => x.count));
+    return Math.max(...this.data.map((x) => x.goodReceiptCount));
   }
 }

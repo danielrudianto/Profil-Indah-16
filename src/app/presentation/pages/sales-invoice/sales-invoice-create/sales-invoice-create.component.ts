@@ -12,11 +12,10 @@ import {
 } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
-import { Subject, debounceTime } from 'rxjs';
+import { Subject, debounceTime, of, switchMap, tap } from 'rxjs';
 import { PackageSelectorComponent } from 'src/app/presentation/components/package-selector/package-selector.component';
 import { PaymentSelectorComponent } from 'src/app/presentation/components/payment-selector/payment-selector.component';
 import {
@@ -38,7 +37,6 @@ import { v4 } from 'uuid';
 })
 export class SalesInvoiceCreateComponent {
   constructor(
-    private dialog: MatDialog,
     private formBuilder: FormBuilder,
     private alertService: AlertService,
     private apiService: ApiService,
@@ -85,18 +83,49 @@ export class SalesInvoiceCreateComponent {
   @ViewChild('trigger') trigger: MatAutocompleteTrigger | undefined;
   @ViewChild('input') input: any;
 
-  checkDiscount: ValidatorFn = (
-    group: AbstractControl
-  ): ValidationErrors | null => {
-    let total = parseFloat(group.get('total')?.value ?? 0);
-    let discount = parseFloat(group.get('discount')?.value ?? 0);
-    return discount <= total ? null : { error: true };
-  };
-
   NotZero: ValidatorFn = (
     control: AbstractControl
   ): ValidationErrors | null => {
     return Number(control.value) != 0 ? null : { error: true };
+  };
+
+  paymentValidator: ValidatorFn = (
+    group: AbstractControl
+  ): ValidationErrors | null => {
+    const payments = (group.get('payments') as FormArray)?.value || [];
+    const sales = this.metaFormGroup?.get('sales')?.value;
+    const hasInvalidPayment = payments.some(
+      (p: any) => p.payment_method_id === 0
+    );
+    const total = this.totalBill ?? 0;
+    const paymentValue = payments.reduce(
+      (a: any, b: any) => a + Number(b.value),
+      0
+    );
+
+    const status = this.paymentsFormGroup?.get('method')?.value;
+
+    let invalidInternalPayment =
+      (sales === 'INTERNAL' || sales === '' || sales === null) &&
+      hasInvalidPayment
+        ? this.translateService.instant('sales-invoice__create__payment__dor')
+        : null;
+
+    let invalidPaymentStatus =
+      status === 'paid' && total > paymentValue
+        ? this.translateService.instant(
+            'sales-invoice__create__payment__paid-unpaid'
+          )
+        : null;
+
+    if (invalidInternalPayment == null && invalidPaymentStatus == null) {
+      return null;
+    }
+
+    return {
+      invalidInternalPayment: invalidInternalPayment,
+      invalidPaymentStatus: invalidPaymentStatus,
+    };
   };
 
   onSelectCustomer(data: any) {
@@ -105,13 +134,7 @@ export class SalesInvoiceCreateComponent {
     });
   }
 
-  /**
-   * Clears the selected customer
-   * When the customer is unselected, we want to clear the selected customer
-   * from the form control.
-   */
   onUnselectCustomer() {
-    // Clear the selected customer from the form control
     this.metaFormGroup.patchValue({
       customer_id: null,
     });
@@ -136,24 +159,23 @@ export class SalesInvoiceCreateComponent {
     ]),
   });
 
-  paymentsFormGroup: FormGroup = new FormGroup({
-    immediate_payment: new FormControl(true),
-    due_time: new FormControl(30, [Validators.required, Validators.min(0)]),
-    payments: new FormArray([]),
-  });
-
-  valueFormGroup: FormGroup = new FormGroup(
+  paymentsFormGroup: FormGroup = new FormGroup(
     {
-      discount: new FormControl(0, [Validators.required, Validators.min(0)]),
-      delivery: new FormControl(0, [Validators.required, Validators.min(0)]),
-      service: new FormControl(0, [Validators.required, Validators.min(0)]),
-      before: new FormControl(0, [Validators.required, Validators.min(0)]),
-      total: new FormControl(0, [Validators.required, Validators.min(0)]),
+      method: new FormControl('', Validators.required),
+      due_time: new FormControl(30, [Validators.required, Validators.min(0)]),
+      payments: new FormArray([]),
     },
-    {
-      validators: this.checkDiscount,
-    }
+    [this.paymentValidator]
   );
+
+  valueFormGroup: FormGroup = new FormGroup({
+    discount: new FormControl(0, [Validators.required, Validators.min(0)]),
+    delivery: new FormControl(0, [Validators.required, Validators.min(0)]),
+    service: new FormControl(0, [Validators.required, Validators.min(0)]),
+    before: new FormControl(0, [Validators.required, Validators.min(0)]),
+    total: new FormControl(0, [Validators.required, Validators.min(0)]),
+    grand_total: new FormControl(0, [Validators.required, Validators.min(0)]),
+  });
 
   get f() {
     return this.billFormGroup.controls;
@@ -171,31 +193,23 @@ export class SalesInvoiceCreateComponent {
   }
 
   get totalPayment() {
-    if (!this.paymentsFormGroup.controls['immediate_payment'].value)
-      return (
-        this.valueFormGroup.controls['total'].value -
-        this.valueFormGroup.controls['discount'].value +
-        this.valueFormGroup.controls['delivery'].value +
-        this.valueFormGroup.controls['service'].value
-      );
-    else {
-      let total = 0;
-      this.p.controls.forEach((x) => {
-        total += Number(x.get('payment_value')?.value ?? 0);
-      });
+    const result = this.p.value.reduce((a: any, b: any) => {
+      return a + b['value'];
+    }, 0);
 
-      return total;
-    }
+    return result;
   }
 
-  /**
-   * Calculates the total bill based on the inputted value.
-   * @returns The total bill, including delivery and service fee, but
-   *          excluding discount.
-   */
   get totalBill() {
-    // Calculate the total bill by adding the total value, delivery fee,
-    // and service fee. Then, subtract the discount from the result.
+    if (
+      !this.valueFormGroup ||
+      !this.valueFormGroup.controls['total'] ||
+      !this.valueFormGroup.controls['delivery'] ||
+      !this.valueFormGroup.controls['service'] ||
+      !this.valueFormGroup.controls['discount']
+    ) {
+      return 0;
+    }
     return (
       this.valueFormGroup.controls['total'].value +
       this.valueFormGroup.controls['delivery'].value +
@@ -213,30 +227,33 @@ export class SalesInvoiceCreateComponent {
 
   ngOnInit(): void {
     this.t.valueChanges.subscribe(() => {
-      let totalPrice = 0;
-      let netPrice = 0;
-      if (this.t.controls.length > 0) {
-        this.t.controls.forEach((x) => {
-          if (x.get('package_code_id')) {
-            const price = Number(x.get('price')?.value ?? '0');
-            const quantity = Number(x.get('quantity')?.value ?? '0');
+      this.valueFormGroup.patchValue({
+        total: this.t.value.reduce((a: any, b: any) => {
+          return a + b.quantity * (b.price - b.discount);
+        }, 0),
+        before: this.t.value.reduce((a: any, b: any) => {
+          return a + b.quantity * b.price;
+        }, 0),
+      });
+    });
 
-            totalPrice += quantity * price;
-            netPrice += quantity * price;
-          } else {
-            const discount = Number(x.get('discount')?.value ?? '0');
-            const price = Number(x.get('price')?.value ?? '0');
-            const quantity = Number(x.get('quantity')?.value ?? '0');
+    this.valueFormGroup.valueChanges.subscribe((values) => {
+      const subtotal = Number(this.valueFormGroup.value.total);
+      const discount = Number(this.valueFormGroup.value.discount);
+      const delivery = Number(this.valueFormGroup.value.delivery);
+      const service = Number(this.valueFormGroup.value.service);
 
-            totalPrice += quantity * (price - discount);
-            netPrice += quantity * price;
-          }
-        });
+      this.valueFormGroup.patchValue(
+        {
+          grand_total: subtotal + delivery + service - discount,
+        },
+        { emitEvent: false }
+      );
+    });
 
-        this.valueFormGroup.patchValue({
-          total: totalPrice,
-          before: netPrice,
-        });
+    this.paymentsFormGroup.controls['method'].valueChanges.subscribe((data) => {
+      if (data === 'unpaid') {
+        this.p.clear();
       }
     });
 
@@ -251,39 +268,6 @@ export class SalesInvoiceCreateComponent {
         },
       });
 
-    this.paymentsFormGroup.controls['immediate_payment'].valueChanges.subscribe(
-      (data) => {
-        if (data) {
-          this.paymentsFormGroup.patchValue({
-            due_time: 30,
-          });
-          this.p.clear();
-        } else {
-          this.paymentsFormGroup.patchValue({
-            due_time: 30,
-          });
-        }
-      }
-    );
-
-    this.metaFormGroup.controls['type'].valueChanges.subscribe((data) => {
-      if (data == 'deposit') {
-        // Set immediate payment to true
-        // And then disable it
-        this.paymentsFormGroup.patchValue({
-          immediate_payment: true,
-        });
-        this.paymentsFormGroup.controls['immediate_payment'].enable();
-      } else if (data == 'deposit-internal') {
-        this.paymentsFormGroup.patchValue({
-          immediate_payment: true,
-        });
-        this.p.clear();
-      } else {
-        this.paymentsFormGroup.controls['immediate_payment'].enable();
-      }
-    });
-
     this.metaFormGroup.controls['sales'].valueChanges
       .pipe(debounceTime(500))
       .subscribe((_) => {
@@ -293,7 +277,7 @@ export class SalesInvoiceCreateComponent {
 
   fetchSalesmen() {
     this.apiService
-      .get('sales-invoice/salesman', {
+      .get('salesman', {
         keyword: this.metaFormGroup.controls['sales'].value,
         page: 1,
       })
@@ -315,7 +299,6 @@ export class SalesInvoiceCreateComponent {
 
     this.productSelectorSubject.subscribe((result: any) => {
       if (result) {
-        let validation = true;
         const data = result.data;
         const sub = result.sub;
         const check = this.checkExistingProduct(
@@ -324,6 +307,9 @@ export class SalesInvoiceCreateComponent {
         );
 
         if (check) {
+          this.alertService.showSuccess(
+            this.translateService.instant('general__item__exists')
+          );
           return;
         }
 
@@ -412,125 +398,110 @@ export class SalesInvoiceCreateComponent {
     productID: number,
     productUnitID: number | null
   ) {
-    const result = this.t.controls.findIndex((x) => {
-      x.get('product_id')?.value == productID &&
-        x.get('product_unit_id')?.value == productUnitID;
+    const result = this.t.value.findIndex((x: any) => {
+      return x.product_id == productID && x.product_unit_id == productUnitID;
     });
 
-    if (result == -1) {
-      return false;
-    }
-
-    return true;
-  }
-
-  openPaymentSelector() {
-    const sheet = this.sheet.open(PaymentSelectorComponent, {
-      data: this.paymentOptions,
-    });
-
-    sheet.afterDismissed().subscribe({
-      next: (data) => {
-        if (
-          this.p.controls.filter(
-            (x) => x.get('payment_type_id')?.value == data.id
-          ).length > 0
-        ) {
-          this.alertService.showSuccess('Payment already exists!');
-          return;
-        } else {
-          if (this.p.length == 0) {
-            const requiredPayment =
-              this.valueFormGroup.controls['total'].value -
-              this.valueFormGroup.controls['discount'].value +
-              this.valueFormGroup.controls['delivery'].value +
-              this.valueFormGroup.controls['service'].value;
-            this.p.push(
-              new FormGroup({
-                payment_type_id: new FormControl(data.id, Validators.required),
-                payment_name: new FormControl(data.name),
-                payment_description: new FormControl(data.description),
-                payment_value: new FormControl(requiredPayment, [
-                  Validators.required,
-                  Validators.minLength(1),
-                  Validators.nullValidator,
-                  this.NotZero,
-                ]),
-              })
-            );
-          } else {
-            this.p.push(
-              new FormGroup({
-                payment_type_id: new FormControl(data.id, Validators.required),
-                payment_name: new FormControl(data.name),
-                payment_description: new FormControl(data.description),
-                payment_value: new FormControl(0, [
-                  Validators.required,
-                  Validators.minLength(1),
-                  Validators.nullValidator,
-                  this.NotZero,
-                ]),
-              })
-            );
-          }
-        }
-      },
-    });
+    return result == -1 ? false : true;
   }
 
   openPackageSelector() {
     this.dynamicComponentService
       .createDynamicComponent(PackageSelectorComponent, {})
       .subscribe((data) => {
-        let validation = true;
-        if (data != null && data != undefined) {
-          this.t.controls.forEach((x) => {
-            if (
-              x.get('package_code_id') != undefined &&
-              parseInt(x.get('package_code_id')?.value) == data.id
-            ) {
-              validation = false;
-            }
-          });
-
-          if (validation) {
-            console.log(data);
-            this.t.push(
-              this.formBuilder.group({
-                package_code_id: [data.item.id, Validators.required],
-                name: [data.item.name, Validators.required],
-                description: [data.item.description, Validators.required],
-                quantity: [0, [Validators.required, Validators.min(1)]],
-                initial_price: [data.item.price],
-                package_content: [data.package_content],
-                price: [
-                  data.item.price,
-                  [Validators.min(0), Validators.required],
-                ],
-                save_price: [false],
-              })
-            );
-
-            this.billFormGroup.patchValue({
-              number_of_items: this.t.length,
-            });
-
-            setTimeout(() => {
-              const autofocusLength =
-                document.querySelectorAll('[focusedInput]').length;
-              const input =
-                document.querySelectorAll('[focusedInput]')[
-                  autofocusLength - 1
-                ];
-              (input as HTMLElement).focus();
-            }, 100);
-          } else {
+        if (data) {
+          const result = this.checkExistingPackage(data.item.id);
+          if (result) {
             this.alertService.showSuccess(
               this.translateService.instant('general__item__exists')
             );
+            return;
           }
+
+          this.t.push(
+            this.formBuilder.group({
+              package_code_id: [data.item.id, Validators.required],
+              name: [data.item.name, Validators.required],
+              description: [data.item.description, Validators.required],
+              quantity: [0, [Validators.required, Validators.min(1)]],
+              initial_price: [data.item.price],
+              package_content: [data.item.package_content],
+              price: [
+                data.item.price,
+                [Validators.min(0), Validators.required],
+              ],
+              discount: [0],
+              save_price: [false],
+            })
+          );
+
+          this.billFormGroup.patchValue({
+            number_of_items: this.t.length,
+          });
+
+          setTimeout(() => {
+            const autofocusLength =
+              document.querySelectorAll('[focusedInput]').length;
+            const input =
+              document.querySelectorAll('[focusedInput]')[autofocusLength - 1];
+            (input as HTMLElement).focus();
+          }, 100);
         }
       });
+  }
+
+  private checkExistingPackage(productPackageID: number) {
+    const result = this.t.value.findIndex((x: any) => {
+      return x.package_code_id == productPackageID;
+    });
+
+    return result == -1 ? false : true;
+  }
+
+  openPaymentSelector() {
+    const sheet = this.sheet
+      .open(PaymentSelectorComponent, {
+        data: this.paymentOptions,
+      })
+      .afterDismissed()
+      .subscribe((data: any) => {
+        if (data) {
+          const result = this.checkExistingPaymentMethod(data.id);
+          if (result) {
+            this.alertService.showSuccess(
+              this.translateService.instant(
+                'sales-invoice__create__payment-method__exists'
+              )
+            );
+            return;
+          }
+
+          const requiredPayments = this.totalBill - this.totalPayment;
+
+          this.p.push(
+            this.formBuilder.group({
+              payment_method_id: new FormControl(data.id),
+              payment_name: new FormControl(data.name, Validators.required),
+              payment_description: new FormControl(data.description),
+              value: new FormControl(requiredPayments, [
+                Validators.required,
+                Validators.minLength(1),
+                Validators.nullValidator,
+                this.NotZero,
+              ]),
+            })
+          );
+        }
+      });
+  }
+
+  private checkExistingPaymentMethod(paymentMethodID: number | null) {
+    const payments = this.p.value;
+    const result = payments.findIndex((x: any) => {
+      return x.id == paymentMethodID;
+    });
+
+    return result == -1 ? false : true;
   }
 
   updatePrice(i: number) {
@@ -597,22 +568,49 @@ export class SalesInvoiceCreateComponent {
   }
 
   submitForm() {
-    if (
-      this.metaFormGroup.invalid ||
-      this.billFormGroup.invalid ||
-      this.valueFormGroup.invalid ||
-      this.paymentsFormGroup.invalid ||
-      (this.metaFormGroup.get('type')?.value == 'sales' &&
-        this.totalPayment == 0 &&
-        this.paymentsFormGroup.controls['immediate_payment'].value) ||
-      this.totalPayment >
-        this.valueFormGroup.controls['total'].value +
-          this.valueFormGroup.controls['delivery'].value +
-          this.valueFormGroup.controls['service'].value -
-          this.valueFormGroup.controls['discount'].value
-    ) {
+    if (!this.isValid) {
       console.error(`[errror]: ${this.metaFormGroup.errors}`);
       this.alertService.showSuccess('Please check your input.');
+      return;
+    }
+
+    if (this.totalPayment > this.totalBill) {
+      console.error(`[error]: Payment is greater than the sales invoice`);
+      this.alertService.showSuccess(
+        this.translateService.instant(
+          'sales-invoice__create__payment__greater-error'
+        )
+      );
+    }
+
+    const paymentMethod = this.paymentsFormGroup.get('method')?.value;
+    if (paymentMethod === 'paid' && this.totalPayment < this.totalBill) {
+      console.error(`[error]: Payment is not sufficient`);
+      this.alertService.showSuccess(
+        this.translateService.instant(
+          'sales-invoice__create__payment__insufficient-error'
+        )
+      );
+      return;
+    }
+
+    if (paymentMethod === 'underpaid' && this.totalPayment >= this.totalBill) {
+      console.error(`[error]: Payment is not sufficient`);
+      this.alertService.showSuccess(
+        this.translateService.instant(
+          'sales-invoice__create__payment__greater-error'
+        )
+      );
+      return;
+    }
+
+    if (paymentMethod === 'unpaid' && this.totalPayment > 0) {
+      console.error(`[error]: Payment is not sufficient`);
+      this.alertService.showSuccess(
+        this.translateService.instant(
+          'sales-invoice__create__payment__parameter'
+        )
+      );
       return;
     }
 
@@ -620,56 +618,48 @@ export class SalesInvoiceCreateComponent {
 
     const sales_invoice: any[] = [];
     const date = this.metaFormGroup.controls['date'].value;
+    for (let i = 0; i < this.t.controls.length; i++) {
+      const item = this.t.controls[i];
+      const packageCodeID = item.get('package_code_id')?.value;
+      if (packageCodeID) {
+        const packageQuantity = Number(item.get('quantity')?.value);
+        const packagePrice = Number(item.get('price')?.value);
+        const package_content = item.get('package_content')?.value;
+        const realValue = package_content.reduce((a: any, b: any) => {
+          return a + b.price * b.quantity;
+        }, 0);
 
-    this.t.controls.forEach((x) => {
-      if (!x.get('package_code_id')) {
-        const product_id = Number(x.get('product_id')?.value ?? '0');
-        const product_unit_id =
-          x.get('product_unit_id')?.value == null
-            ? null
-            : Number(x.get('item_unit_id')?.value ?? '0');
-        const price = Number(x.get('price')?.value ?? '0');
-        const discount = Number(x.get('discount')?.value ?? '0');
-        const quantity = Number(x.get('quantity')?.value ?? '0');
+        for (let j = 0; j < package_content.length; j++) {
+          const price = package_content[j].price;
+          const correctedPrice = ((price * packagePrice) / realValue).toFixed(
+            2
+          );
+          sales_invoice.push({
+            price: correctedPrice,
+            product_id: package_content[j].product_id,
+            product_unit_id: package_content[j].product_unit_id,
+            quantity: package_content[j].quantity * packageQuantity,
+            discount: 0,
+          });
+        }
+      } else {
+        const product_id = item.get('product_id')?.value;
+        const product_unit_id = item.get('product_unit_id')?.value;
+        const price = Number(item.get('price')?.value);
+        const discount = Number(item.get('discount')?.value);
+        const quantity = Number(item.get('quantity')?.value);
 
         sales_invoice.push({
           price: price,
           discount: discount,
           quantity: quantity,
-          package_code_id: null,
-          item_unit_id: product_unit_id,
-          item_id: product_id,
-          save:
-            x.get('initial_price')?.value == x.get('price')?.value &&
-            x.get('initial_discount')?.value == x.get('discount')?.value
-              ? false
-              : x.get('save_price')?.value,
-        });
-      } else {
-        const package_code_id = parseInt(x.get('package_code_id')?.value);
-        const quantity = parseFloat(x.get('quantity')?.value);
-        const price = parseFloat(x.get('price')?.value);
-
-        sales_invoice.push({
-          price: price,
-          discount: 0,
-          quantity: quantity,
-          package_code_id: package_code_id,
-          item_unit_id: null,
-          item_id: null,
-          save:
-            x.get('initial_price')?.value == x.get('price')?.value
-              ? false
-              : x.get('save_price')?.value,
+          product_unit_id: product_unit_id,
+          product_id: product_id,
         });
       }
-    });
+    }
 
-    const totalPayment = this.p.controls.reduce((a, b) => {
-      return a + parseFloat(b.get('payment_value')?.value);
-    }, 0);
-
-    const bill_code = {
+    const sales_invoice_code = {
       sales:
         this.metaFormGroup.controls['sales'].value == 'INTERNAL'
           ? null
@@ -685,56 +675,96 @@ export class SalesInvoiceCreateComponent {
       delivery: this.valueFormGroup.controls['delivery'].value,
       service: this.valueFormGroup.controls['service'].value,
       sales_invoice: sales_invoice,
-      payment_term:
-        this.totalBill > this.totalPayment
-          ? null
-          : this.paymentsFormGroup.controls['due_time'].value,
-      sales_invoice_payment: !this.paymentsFormGroup.controls['immediate_payment'].value
-        ? []
-        : this.p.controls.map((x) => {
-            return {
-              payment_method_id: Number(x.get('payment_type_id')?.value ?? '0'),
-              value: Number(x.get('payment_value')?.value ?? '0'),
-            };
-          }),
+      sales_invoice_payment: this.p.controls.map((x) => {
+        return {
+          date: this.datePipe.transform(date, 'yyyy-MM-dd'),
+          payment_method_id: x.get('payment_method_id')?.value,
+          value: x.get('value')?.value,
+        };
+      }),
       is_paid:
-        this.paymentsFormGroup.controls['immediate_payment'].value &&
-        totalPayment ==
-          this.valueFormGroup.controls['total'].value +
-            this.valueFormGroup.controls['delivery'].value +
-            this.valueFormGroup.controls['service'].value -
-            this.valueFormGroup.controls['discount'].value
+        this.paymentsFormGroup.controls['method'].value === 'paid'
           ? true
-          : this.paymentsFormGroup.controls['immediate_payment'].value &&
-            totalPayment <
-              this.valueFormGroup.controls['total'].value +
-                this.valueFormGroup.controls['delivery'].value +
-                this.valueFormGroup.controls['service'].value -
-                this.valueFormGroup.controls['discount'].value
-          ? false
           : false,
     };
 
-    this.apiService
-      .post('sales-invoice', bill_code)
+    let submitFunction = null;
+    const type = this.metaFormGroup.controls['type'].value;
+
+    if (type == 'sales') {
+      submitFunction = this.apiService.post(
+        'sales-invoice',
+        sales_invoice_code
+      );
+    } else if (type == 'deposit') {
+      submitFunction = this.apiService.post('sales-deposit', {
+        ...sales_invoice_code,
+        type: 'INTERNAL',
+      });
+    } else {
+      submitFunction = this.apiService.post('sales-deposit', {
+        ...sales_invoice_code,
+        type: 'INTERNAL',
+      });
+    }
+
+    submitFunction
+      .pipe(
+        switchMap((result) => {
+          const itemsToSave = this.t.controls
+            .filter(
+              (x) =>
+                x.get('package_code_id')?.value == null &&
+                x.get('save_price')?.value
+            )
+            .map((x) => ({
+              product_id: x.get('product_id')?.value,
+              product_unit_id: x.get('product_unit_id')?.value,
+              price: x.get('price')?.value,
+              discount: x.get('discount')?.value,
+            }));
+
+          if (itemsToSave.length > 0) {
+            // Post to purchase-price
+            return this.apiService.put('product/price-sales', {
+              items: itemsToSave,
+            });
+          }
+
+          return of(null);
+        }),
+        switchMap((productPriceResult) => {
+          const itemsToSave = this.t.controls
+            .filter(
+              (x) =>
+                x.get('package_code_id')?.value != null &&
+                x.get('save_price')?.value
+            )
+            .map((x) => ({
+              package_code_id: x.get('package_code_id')?.value,
+              price: x.get('price')?.value,
+            }));
+
+          if (itemsToSave.length > 0) {
+            // Post to purchase-price
+            return this.apiService.put('product-package/price-sales', {
+              items: itemsToSave,
+            });
+          }
+
+          return of(null);
+        })
+      )
       .subscribe({
         next: (result: any) => {
           const type = this.metaFormGroup.controls['type'].value;
           if (type == 'sales') {
             this.alertService.showSuccess(
-              `${this.translateService.instant(
-                'sales-invoice__success__prefix'
-              )} ${result.name} ${this.translateService.instant(
-                'sales-invoice__success__suffix'
-              )}`
+              this.translateService.instant('sales-invoice__create__success')
             );
           } else {
             this.alertService.showSuccess(
-              `${this.translateService.instant(
-                'sales-invoice__success__prefix__deposit'
-              )} ${result.name} ${this.translateService.instant(
-                'sales-invoice__success__suffix'
-              )}`
+              this.translateService.instant('sales-deposit__create__success')
             );
           }
 
@@ -756,7 +786,7 @@ export class SalesInvoiceCreateComponent {
           });
 
           this.paymentsFormGroup.patchValue({
-            immediate_payment: true,
+            method: 'paid',
             due_time: 30,
           });
 
@@ -769,6 +799,79 @@ export class SalesInvoiceCreateComponent {
       .add(() => {
         this.isSubmitting = false;
       });
+  }
+
+  get errorMessage(): string {
+    if (this.metaFormGroup.controls['type']?.value != 'sales') {
+      return 'tipe';
+    }
+
+    if (this.paymentsFormGroup.controls['method']?.value != 'paid') {
+      return 'belum lunas';
+    }
+
+    if (this.metaFormGroup.controls['customer_id']?.value == 0) {
+      return 'customer id kosong';
+    }
+
+    return '';
+  }
+
+  get overPaymentAvailable(): boolean {
+    if (this.metaFormGroup.controls['type']?.value != 'sales') {
+      return false;
+    }
+
+    if (this.paymentsFormGroup.controls['method']?.value != 'paid') {
+      return false;
+    }
+
+    if (this.metaFormGroup.controls['customer_id']?.value == 0) {
+      return false;
+    }
+
+    return true;
+  }
+
+  get isValid(): boolean {
+    if (
+      !this.metaFormGroup.valid ||
+      !this.billFormGroup.valid ||
+      !this.valueFormGroup.valid ||
+      !this.paymentsFormGroup.valid
+    ) {
+      return false;
+    }
+
+    const paymentMethod = this.paymentsFormGroup.get('method')?.value;
+
+    if (this.totalPayment > this.totalBill) {
+      return false;
+    }
+
+    if (paymentMethod === 'paid' && this.totalPayment < this.totalBill) {
+      return false;
+    }
+
+    if (paymentMethod === 'underpaid' && this.totalPayment >= this.totalBill) {
+      return false;
+    }
+
+    if (paymentMethod === 'underpaid' && this.totalPayment == 0) {
+      return false;
+    }
+
+    if (paymentMethod === 'unpaid' && this.totalPayment > 0) {
+      return false;
+    }
+
+    const type = this.metaFormGroup.get('type')?.value;
+
+    if (type == 'deposit-internal' && paymentMethod != 'unpaid') {
+      return false;
+    }
+
+    return true;
   }
 
   canExit() {

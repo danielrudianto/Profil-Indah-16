@@ -3,6 +3,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { PricePurchaseUpdateComponent } from './price-purchase-update/price-purchase-update.component';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-price-purchase',
@@ -10,10 +11,7 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
   styleUrls: ['./price-purchase.component.css'],
 })
 export class PricePurchaseComponent {
-  constructor(
-    private router: Router,
-    private dynamicComponentService: DynamicComponentService
-  ) {}
+  constructor(private router: Router, private dialog: MatDialog) {}
 
   isLoading: boolean = false;
   backRoute: string = this.router.url;
@@ -48,21 +46,32 @@ export class PricePurchaseComponent {
   }
 
   openUpdatePriceDialog(id: number): void {
-    this.dynamicComponentService
-      .createDynamicComponent(PricePurchaseUpdateComponent, {
-        id: id,
+    this.dialog
+      .open(PricePurchaseUpdateComponent, {
+        data: {
+          id: id,
+        },
       })
+      .afterClosed()
       .subscribe((data) => {
-        if (data != undefined && data != null) {
-          const index = (data as any[]).findIndex(
-            (x) => x.item_unit_id == null
-          );
-          if (index != -1) {
-            const dataIndex = this.dataSource.findIndex((x) => x.id == id);
-            this.dataSource[dataIndex].price = data[index].price;
-            this.dataSource[dataIndex].discount = data[index].discount;
-          }
+        if (data) {
         }
       });
+    // this.dynamicComponentService
+    //   .createDynamicComponent(PricePurchaseUpdateComponent, {
+    //     id: id,
+    //   })
+    //   .subscribe((data) => {
+    //     if (data != undefined && data != null) {
+    //       const index = (data as any[]).findIndex(
+    //         (x) => x.item_unit_id == null
+    //       );
+    //       if (index != -1) {
+    //         const dataIndex = this.dataSource.findIndex((x) => x.id == id);
+    //         this.dataSource[dataIndex].price = data[index].price;
+    //         this.dataSource[dataIndex].discount = data[index].discount;
+    //       }
+    //     }
+    //   });
   }
 }

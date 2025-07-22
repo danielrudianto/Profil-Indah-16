@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -6,6 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { AlertService } from 'src/app/services/alert.service';
@@ -19,12 +20,13 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 })
 export class PricePurchaseUpdateComponent {
   constructor(
-    private dynamicComponentService: DynamicComponentService,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private _hotKeysService: HotkeysService,
     private apiService: ApiService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private dialog: MatDialogRef<PricePurchaseUpdateComponent>
   ) {
     this._hotKeysService.add([
       new Hotkey('esc', (event: KeyboardEvent): boolean => {
@@ -34,7 +36,6 @@ export class PricePurchaseUpdateComponent {
     ]);
   }
 
-  @Input('data') data: any;
   isOpened: boolean = true;
   isSubmitting: boolean = false;
   isLoading: boolean = true;
@@ -116,10 +117,7 @@ export class PricePurchaseUpdateComponent {
   }
 
   closeDialog(data: any = undefined) {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent(data);
-    }, 300);
+    this.dialog.close(data);
   }
 
   getFormGroupAt(i: number) {

@@ -23,11 +23,11 @@
             <tbody>
               <tr
                 *ngFor="let data of dataSource"
-                (click)="viewReceivable(data.customer_id)"
+                (click)="viewReceivable(data.id)"
               >
                 <td>
                   <p class="mb-0 text-clamp-1">
-                    {{ data.customer_name }}
+                    {{ data.name }}
                   </p>
                 </td>
                 <td>{{ data.value | number : "0.2-2" }}</td>

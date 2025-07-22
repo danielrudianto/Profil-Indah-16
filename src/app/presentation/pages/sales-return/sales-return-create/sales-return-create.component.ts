@@ -67,9 +67,11 @@ export class SalesReturnCreateComponent {
     items: new FormArray([]),
   });
 
-  billFormGroup: FormGroup = new FormGroup({
-    bill_code_id: new FormControl('', Validators.required),
-  });
+  ngOnInit(): void {
+    this.metaFormGroup.controls['bill_date'].valueChanges.subscribe(() => {
+      this.refreshSubscription();
+    });
+  }
 
   get f() {
     return this.productFormGroup.controls;
@@ -100,117 +102,102 @@ export class SalesReturnCreateComponent {
         }
       );
 
-    this.productSelectorSubject.subscribe((data: any) => {
-      if (data != null && data != undefined) {
-        let validation = true;
+    this.productSelectorSubject.subscribe((result: any) => {
+      if (result) {
+        const data = result.data;
+        const sub = result.sub;
+        const check = this.checkExistingProduct(
+          data.id,
+          sub == null ? null : sub.id
+        );
 
-        this.t.controls.forEach((x) => {
-          if (data.price != null) {
-            if (x.get('item_unit_id')?.value == data.price.item_unit_id) {
-              validation = false;
-            }
-          } else {
-            if (x.get('item_id')?.value == data.item.id) {
-              validation = false;
-            }
-          }
-        });
-
-        if (validation) {
-          this.t.push(
-            this.formBuilder.group({
-              item_id: [data.item.id, Validators.required],
-              item_unit_id: [
-                data.price == null ? null : data.price.item_unit_id,
-              ],
-              reference: [data.item.reference, Validators.required],
-              description: [data.item.description, Validators.required],
-              quantity: ['', [Validators.required, Validators.min(0.01)]],
-              unit: [
-                data.price == null ? data.item.unit : data.price.unit,
-                Validators.required,
-              ],
-              conversion: [
-                data.price == null ? 1 : data.price.conversion,
-                Validators.required,
-              ],
-              default_unit: [data.item.unit],
-              price: [0, Validators.required],
-              discount: [0, Validators.required],
-              bill_id: [''],
-            })
-          );
-
-          this.productFormGroup.patchValue({
-            number_of_items: this.t.length,
-          });
-
-          setTimeout(() => {
-            const autofocusLength =
-              document.querySelectorAll('[focusedInput]').length;
-            const input =
-              document.querySelectorAll('[focusedInput]')[autofocusLength - 1];
-            (input as HTMLElement).focus();
-          }, 100);
-        } else {
+        if (check) {
           this.alertService.showSuccess(
             this.translateService.instant('general__item__exists')
           );
+          return;
         }
+
+        if (sub == null) {
+          this.t.push(
+            this.formBuilder.group({
+              product_id: [data.id, Validators.required],
+              product_unit_id: [null],
+              reference: [data.reference],
+              description: [data.description],
+              quantity: [0, [Validators.required, Validators.min(0.01)]],
+              price: [0, [Validators.required, Validators.min(0)]],
+              discount: [0, [Validators.required, Validators.min(0)]],
+              unit: [data.unit],
+              conversion: [1],
+              default_unit: [data.unit],
+              priceOptions: [[]],
+              sales_invoice_id: [null],
+            })
+          );
+
+          this.refreshSubscription();
+        } else {
+          this.t.push(
+            this.formBuilder.group({
+              product_id: [data.id, Validators.required],
+              product_unit_id: [sub.id],
+              reference: [data.reference],
+              description: [data.description],
+              quantity: [0, [Validators.required, Validators.min(0.01)]],
+              price: [0, [Validators.required, Validators.min(0)]],
+              discount: [0, [Validators.required, Validators.min(0)]],
+              unit: [sub.unit],
+              conversion: [sub.conversion],
+              default_unit: [data.unit],
+              priceOptions: [[]],
+              sales_invoice_id: [null],
+            })
+          );
+
+          this.refreshSubscription();
+        }
+
+        this.productFormGroup.patchValue({
+          number_of_items: this.t.length,
+        });
       }
     });
   }
 
-  openPackageSelector() {
-    this.dynamicComponentService
-      .createDynamicComponent(PackageSelectorComponent, {})
-      .subscribe((data) => {
-        let validation = true;
-        if (data != null && data != undefined) {
-          this.t.controls.forEach((x) => {
-            if (
-              x.get('package_code_id') != undefined &&
-              parseInt(x.get('package_code_id')?.value) == data.id
-            ) {
-              validation = false;
-            }
-          });
-
-          if (validation) {
-            console.log(data);
-            this.t.push(
-              this.formBuilder.group({
-                package_code_id: [data.item.id, Validators.required],
-                name: [data.item.name, Validators.required],
-                description: [data.item.description, Validators.required],
-                quantity: [0, [Validators.required, Validators.min(1)]],
-                package_content: [data.package_content],
-                price: [0, [Validators.min(0), Validators.required]],
-                discount: [0, [Validators.min(0), Validators.required]],
-                bill_id: [''],
-              })
-            );
-
-            this.productFormGroup.patchValue({
-              number_of_items: this.t.length,
-            });
-
-            setTimeout(() => {
-              const autofocusLength =
-                document.querySelectorAll('[focusedInput]').length;
-              const input =
-                document.querySelectorAll('[focusedInput]')[
-                  autofocusLength - 1
-                ];
-              (input as HTMLElement).focus();
-            }, 100);
-          } else {
-            this.alertService.showSuccess(
-              this.translateService.instant('general__item__exists')
-            );
-          }
-        }
+  private refreshSubscription() {
+    this.resetSalesInvoice(null);
+    this.t.controls.forEach((ctrl, idx) => {
+      ctrl.get('quantity')?.valueChanges.subscribe(() => {
+        this.resetSalesInvoice(null);
+        this.resetSalesInvoice(idx);
       });
+    });
+  }
+
+  private resetSalesInvoice(index: number | null) {
+    if (index == null) {
+      this.selectedBill = null;
+      this.billOptions = [];
+    } else {
+      this.t.controls.at(index)?.patchValue({
+        price: 0,
+        discount: 0,
+        sales_invoice_id: null,
+        priceOptions: [],
+      });
+    }
+  }
+
+  private checkExistingProduct(
+    productID: number,
+    productUnitID: number | null
+  ) {
+    const result = this.t.value.findIndex((x: any) => {
+      return x.product_id == productID && x.product_unit_id == productUnitID;
+    });
+
+    return result == -1 ? false : true;
   }
 
   deleteItem(i: number) {
@@ -218,43 +205,31 @@ export class SalesReturnCreateComponent {
     this.productFormGroup.patchValue({
       number_of_items: this.t.length,
     });
+
+    this.refreshSubscription();
   }
 
-  /**
-   * Fetches sales invoices based on metaFormGroup and productFormGroup validity.
-   */
   fetchSalesInvoice() {
     this.isLoading = true;
     if (this.metaFormGroup.valid && this.productFormGroup.valid) {
       this.apiService
-        .post('sales-return/search', {
+        .post('sales-invoice/sales-return', {
           date: this.datePipe.transform(
             this.metaFormGroup.value.bill_date,
             'yyyy-MM-dd'
           ),
-          items: this.t.controls
-            .filter((x) => x.get('item_id')?.value != null)
-            .map((x) => {
-              return {
-                item_id: x.get('item_id')?.value,
-                quantity: x.get('quantity')?.value,
-                item_unit_id: x.get('item_unit_id')?.value,
-              };
-            }),
-          packages: this.t.controls
-            .filter((x) => x.get('package_code_id')?.value != null)
-            .map((x) => {
-              return {
-                package_code_id: x.get('package_code_id')?.value,
-                quantity: x.get('quantity')?.value,
-              };
-            }),
+          sales_invoice: this.t.controls.map((x) => {
+            return {
+              product_id: x.get('product_id')?.value,
+              product_unit_id: x.get('product_unit_id')?.value,
+              quantity: x.get('quantity')?.value,
+            };
+          }),
         })
         .subscribe({
           next: (data: any) => {
             this.billOptions = data;
             this.selectedBill = null;
-            this.step = 1;
           },
           error: (error) => {
             this.alertService.showError(error);
@@ -272,45 +247,85 @@ export class SalesReturnCreateComponent {
         id: this.billOptions[i].id,
       })
       .subscribe((data) => {
-        if (data != undefined && data != null) {
+        if (data) {
           this.selectedBill = data;
-          this.returnValue = 0;
-          const billItems = data.bill as any[];
-          for (let i = 0; i < this.t.controls.length; i++) {
-            if (this.t.controls[i].get('item_id')?.value != null) {
-              const index = billItems.findIndex(
-                (x) =>
-                  x.item_id == this.t.controls[i].get('item_id')?.value &&
-                  x.item_unit_id ==
-                    this.t.controls[i].get('item_unit_id')?.value
-              );
+          this.t.controls.forEach((x) => {
+            const product_id = x.get('product_id')?.value;
+            const product_unit_id = x.get('product_unit_id')?.value;
+            const quantity = x.get('quantity')?.value;
 
-              if (index > -1) {
-                this.t.controls[i].patchValue({
-                  bill_id: billItems[index].id,
-                  price: billItems[index].price,
-                  discount: billItems[index].discount,
-                });
-              }
-            } else if (
-              this.t.controls[i].get('package_code_id')?.value != null
-            ) {
-              const index = billItems.findIndex(
-                (x) =>
-                  x.package_code_id ==
-                  this.t.controls[i].get('package_code_id')?.value
-              );
-              if (index > -1) {
-                this.t.controls[i].patchValue({
-                  bill_id: billItems[index].id,
-                  price: billItems[index].price,
-                  discount: billItems[index].discount,
-                });
-              }
-            }
-          }
+            const priceOptions = data.sales_invoice.filter(
+              (y: any) =>
+                y.product_id == product_id &&
+                y.product_unit_id == product_unit_id &&
+                y.quantity >= quantity
+            );
+
+            x.patchValue({
+              priceOptions: priceOptions.map((z: any) => {
+                return {
+                  sales_invoice_id: z.id,
+                  price: z.price,
+                  discount: z.discount,
+                };
+              }),
+            });
+          });
         }
       });
+  }
+
+  selectSalesInvoiceItem(event: any, index: number) {
+    const value = event.value;
+    this.t.controls.at(index)?.patchValue({
+      sales_invoice_id: value.sales_invoice_id,
+      price: value.price,
+      discount: value.discount,
+    });
+  }
+
+  get errorMessage(): string | null {
+    if (!this.metaFormGroup.valid) {
+      return 'meta lu salah';
+    }
+
+    if (!this.productFormGroup.valid) {
+      return 'product lu salah';
+    }
+
+    if (this.selectedBill == null) {
+      return 'kosong atuh bos';
+    }
+
+    if (
+      this.t.controls.some((x: any) => x.get('sales_invoice_id')?.value == null)
+    ) {
+      return 'ada yang kosong';
+    }
+
+    return null;
+  }
+
+  get isValid(): boolean {
+    if (!this.metaFormGroup.valid) {
+      return false;
+    }
+
+    if (!this.productFormGroup.valid) {
+      return false;
+    }
+
+    if (this.selectedBill == null) {
+      return false;
+    }
+
+    if (
+      this.t.controls.some((x: any) => x.get('sales_invoice_id')?.value == null)
+    ) {
+      return false;
+    }
+
+    return true;
   }
 
   backToPrevious() {
@@ -347,7 +362,7 @@ export class SalesReturnCreateComponent {
           payment_method_id: this.metaFormGroup.value.payment_method,
           sales_return: this.t.controls.map((x) => {
             return {
-              bill_id: x.get('bill_id')?.value,
+              sales_invoice_id: x.get('sales_invoice_id')?.value,
               quantity: x.get('quantity')?.value,
             };
           }),
@@ -359,7 +374,6 @@ export class SalesReturnCreateComponent {
             );
 
             this.metaFormGroup.reset();
-            this.billFormGroup.reset();
             this.productFormGroup.reset();
             this.t.clear();
             this.selectedBill = null;

@@ -60,7 +60,13 @@
     <app-box-stepper step="2" [valid]="itemFormGroup.valid"></app-box-stepper>
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <button class="add-button" (click)="openItemSelector()">
+    <button
+      mat-stroked-button
+      color="primary"
+      type="button"
+      style="letter-spacing: 0"
+      (click)="openItemSelector()"
+    >
       {{ "purchase-invoice__create__add-item" | translate }}
     </button>
 

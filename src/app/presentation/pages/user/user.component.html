@@ -22,38 +22,38 @@
           <table class="table">
             <thead>
               <tr>
-                <th class="text-center">Name</th>
-                <th class="text-center">Username</th>
-                <th class="text-center">NIK</th>
-                <th class="text-center">Role</th>
-                <th class="text-center">Action</th>
+                <th class="text-center">
+                  {{ "user__list__name" | translate }}
+                </th>
+                <th class="text-center">
+                  {{ "user__list__username" | translate }}
+                </th>
+                <th class="text-center">{{ "user__list__NIK" | translate }}</th>
+                <th class="text-center">
+                  {{ "user__list__role" | translate }}
+                </th>
               </tr>
             </thead>
             <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr *ngFor="let item of dataSource">
+              <tr *ngFor="let item of dataSource" [matMenuTriggerFor]="menu">
                 <td class="text-center">{{ item.name }}</td>
                 <td class="text-center">{{ item.username }}</td>
                 <td class="text-center">{{ item.nik }}</td>
-                <td class="text-center">{{ item.role }}</td>
-                <td class="text-center">
-                  <button mat-icon-button [matMenuTriggerFor]="menu">
-                    <mat-icon>more_vert</mat-icon>
+                <td class="text-center">{{ item.roleText }}</td>
+                <mat-menu #menu="matMenu">
+                  <button (click)="openDialog('edit', item.id)" mat-menu-item>
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit</span>
                   </button>
-                  <mat-menu #menu="matMenu">
-                    <button (click)="openDialog('edit', item.id)" mat-menu-item>
-                      <mat-icon>edit</mat-icon>
-                      <span>Edit</span>
-                    </button>
-                    <button
-                      class="delete-button"
-                      (click)="openDialog('delete', item.id)"
-                      mat-menu-item
-                    >
-                      <mat-icon>delete</mat-icon>
-                      <span>Delete</span>
-                    </button>
-                  </mat-menu>
-                </td>
+                  <button
+                    class="delete-button"
+                    (click)="openDialog('delete', item.id)"
+                    mat-menu-item
+                  >
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete</span>
+                  </button>
+                </mat-menu>
               </tr>
             </tbody>
             <tbody *ngIf="!isLoading && dataSource.length == 0">

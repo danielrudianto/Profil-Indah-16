@@ -17,12 +17,80 @@
           <table class="table">
             <thead>
               <tr>
-                <th style="width: 250px">Date</th>
-                <th style="width: 250px">Name</th>
-                <th style="width: 250px">Customer</th>
-                <th style="width: 200px">Sales</th>
-                <th style="width: 150px">Status</th>
-                <th style="width: 150px">Payment Status</th>
+                <th style="width: 250px" (click)="changeSortBy('date')">
+                  <div class="d-flex align-items-center">
+                    <span>{{
+                      "sales-invoice__archive__date" | translate
+                    }}</span>
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc: sortBy === 'date' && sortDirection === 'asc',
+                        desc: sortBy === 'date' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
+                </th>
+                <th style="width: 250px" (click)="changeSortBy('name')">
+                  <div class="d-flex align-items-center">
+                    <span>
+                      {{ "sales-invoice__archive__name" | translate }}</span
+                    >
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc: sortBy === 'name' && sortDirection === 'asc',
+                        desc: sortBy === 'name' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
+                </th>
+                <th style="width: 250px" (click)="changeSortBy('customer')">
+                  <div class="d-flex align-items-center">
+                    <span>
+                      {{ "sales-invoice__archive__customer" | translate }}</span
+                    >
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc: sortBy === 'customer' && sortDirection === 'asc',
+                        desc: sortBy === 'customer' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
+                </th>
+                <th style="width: 200px" (click)="changeSortBy('sales')">
+                  <div class="d-flex align-items-center">
+                    <span>
+                      {{ "sales-invoice__archive__sales" | translate }}</span
+                    >
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc: sortBy === 'sales' && sortDirection === 'asc',
+                        desc: sortBy === 'sales' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
+                </th>
+                <th style="width: 150px">
+                  <div class="d-flex align-items-center">
+                    <span>
+                      {{ "sales-invoice__archive__status" | translate }}</span
+                    >
+                  </div>
+                </th>
+                <th style="width: 150px">
+                  <div class="d-flex align-items-center">
+                    <span>{{
+                      "sales-invoice__archive__status" | translate
+                    }}</span>
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody *ngIf="isLoading">
@@ -46,10 +114,12 @@
               >
                 <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
                 <td>{{ item.name }}</td>
-                <td>{{ item.customer_name }}</td>
+                <td>
+                  {{ item.customer == null ? "Retail" : item.customer.name }}
+                </td>
                 <td>{{ item.sales == null ? "N/A" : item.sales }}</td>
-                <td>{{ item.is_delete ? "Deleted" : "Active" }}</td>
-                <td>{{ item.is_paid ? "Paid" : "Unpaid" }}</td>
+                <td>{{ item.isDelete ? "Deleted" : "Active" }}</td>
+                <td>{{ item.isPaid ? "Paid" : "Unpaid" }}</td>
               </tr>
             </tbody>
           </table>
@@ -60,7 +130,7 @@
           </button>
           <mat-paginator
             [length]="dataCount"
-            [pageSize]="20"
+            [pageSize]="10"
             [pageIndex]="page - 1"
             (page)="changePage($event)"
           />

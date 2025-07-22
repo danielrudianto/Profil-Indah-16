@@ -1,11 +1,11 @@
 <h2 mat-dialog-title>
-  {{ "sales-invoice__archive__filter__title" | translate }}
+  {{ "good-receipt__archive__filter__title" | translate }}
 </h2>
 <form [formGroup]="salesInvoiceArchiveFilterFormGroup">
   <mat-dialog-content>
     <mat-form-field class="w-100" appearance="outline">
       <mat-label>{{
-        "sales-invoice__archive__filter__date-range" | translate
+        "good-receipt__archive__filter__date-range" | translate
       }}</mat-label>
       <mat-date-range-input
         [rangePicker]="picker"
@@ -32,7 +32,7 @@
 
     <mat-divider />
     <h6>
-      {{ "sales-invoice__archive__filter__document-status" | translate }}
+      {{ "good-receipt__archive__filter__document-status" | translate }}
     </h6>
     <mat-chip-listbox class="mb-3" selectable multiple>
       <mat-chip-option
@@ -40,38 +40,24 @@
         [selected]="filterObject.isDelete"
         (selectionChange)="selectionChange($event)"
         >{{
-          "sales-invoice__archive__filter__document-status__deleted" | translate
+          "good-receipt__archive__filter__document-status__deleted" | translate
         }}</mat-chip-option
       >
+      <mat-chip-option
+        [value]="'isPending'"
+        [selected]="filterObject.isPending"
+        (selectionChange)="selectionChange($event)"
+        >{{
+          "good-receipt__archive__filter__document-status__pending" | translate
+        }}</mat-chip-option
+      >
+
       <mat-chip-option
         [value]="'isActive'"
         [selected]="filterObject.isActive"
         (selectionChange)="selectionChange($event)"
         >{{
-          "sales-invoice__archive__filter__document-status__active" | translate
-        }}</mat-chip-option
-      >
-    </mat-chip-listbox>
-
-    <mat-divider />
-    <h6>
-      {{ "sales-invoice__archive__filter__payment-status" | translate }}
-    </h6>
-    <mat-chip-listbox selectable multiple>
-      <mat-chip-option
-        [value]="'isPaid'"
-        [selected]="filterObject.isPaid"
-        (selectionChange)="selectionChange($event)"
-        >{{
-          "sales-invoice__archive__filter__payment-status__paid" | translate
-        }}</mat-chip-option
-      >
-      <mat-chip-option
-        [value]="'isUnpaid'"
-        [selected]="filterObject.isUnpaid"
-        (selectionChange)="selectionChange($event)"
-        >{{
-          "sales-invoice__archive__filter__payment-status__unpaid" | translate
+          "good-receipt__archive__filter__document-status__active" | translate
         }}</mat-chip-option
       >
     </mat-chip-listbox>

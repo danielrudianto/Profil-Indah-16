@@ -4,11 +4,12 @@ import { PageEvent } from '@angular/material/paginator';
 import moment from 'moment';
 import { ArchiveViewComponent } from 'src/app/presentation/components/archives/archive-view/archive-view.component';
 import { ArchiveMode } from 'src/app/presentation/components/archives/archives.component';
-import { GoodReceiptArchiveFilterComponent } from 'src/app/presentation/pages/deposit/deposit-archive/good-receipt-archive-filter/good-receipt-archive-filter.component';
+import { GoodReceiptArchiveFilterComponent } from 'src/app/presentation/pages/good-receipt/good-receipt-archive/good-receipt-archive-filter/good-receipt-archive-filter.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { slideInOutAnimation } from '../../../../animations/slide-in-out.animation';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-good-receipt-archive',
@@ -20,7 +21,8 @@ export class GoodReceiptArchiveComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dynamicComponentService: DynamicComponentService
+    private dynamicComponentService: DynamicComponentService,
+    private dialog: MatDialog
   ) {}
 
   mode: ArchiveMode = ArchiveMode.year;
@@ -34,9 +36,13 @@ export class GoodReceiptArchiveComponent {
   filterFormGroup: FormGroup = new FormGroup({
     startDate: new FormControl(''),
     endDate: new FormControl(''),
-    status: new FormControl('', Validators.required),
-    paymentStatus: new FormControl('', Validators.required),
+    isActive: new FormControl(''),
+    isDelete: new FormControl(''),
+    isPending: new FormControl(''),
   });
+
+  sortBy: string = 'date';
+  sortDirection: 'asc' | 'desc' = 'desc';
 
   ngOnInit(): void {}
 
@@ -47,11 +53,11 @@ export class GoodReceiptArchiveComponent {
     this.keyword = '';
 
     this.filterFormGroup.patchValue({
-      // Start date from first day of the month till the end of month
-      // Fetch all payment status and document status
       startDate: new Date(this.year!, this.month! - 1, 1),
       endDate: new Date(this.year!, this.month!, 0),
-      status: 0,
+      isActive: true,
+      isDelete: true,
+      isPending: true,
     });
 
     this.fetchSelectedMonth(1);
@@ -67,7 +73,7 @@ export class GoodReceiptArchiveComponent {
     this.isLoading = true;
 
     this.apiService
-      .post('purchase-invoice/archives/v2', {
+      .post('good-receipt/archives', {
         month: this.month,
         year: this.year,
         page: this.page,
@@ -79,7 +85,11 @@ export class GoodReceiptArchiveComponent {
         endDate: moment(
           new Date(this.filterFormGroup.get('endDate')?.value)
         ).format('YYYY-MM-DD'),
-        status: this.filterFormGroup.get('status')?.value,
+        isActive: this.filterFormGroup.get('isActive')?.value,
+        isDelete: this.filterFormGroup.get('isDelete')?.value,
+        isPending: this.filterFormGroup.get('isPending')?.value,
+        sortBy: this.sortBy,
+        sortDirection: this.sortDirection,
       })
       .subscribe({
         next: (data: any) => {
@@ -116,23 +126,82 @@ export class GoodReceiptArchiveComponent {
    * @return {void} This function does not return anything.
    */
   openFilter() {
-    const filterComponent = this.dynamicComponentService.createDynamicComponent(
-      GoodReceiptArchiveFilterComponent,
-      {
-        month: this.month,
-        year: this.year,
-        startDate: this.filterFormGroup.get('startDate')?.value,
-        endDate: this.filterFormGroup.get('endDate')?.value,
-        status: this.filterFormGroup.get('status')?.value,
-      }
-    );
-
-    filterComponent.subscribe((data) => {
-      this.filterFormGroup.patchValue(data);
-      this.fetchSelectedMonth(1);
-    });
+    this.dialog
+      .open(GoodReceiptArchiveFilterComponent, {
+        data: {
+          month: this.month,
+          year: this.year,
+          ...this.filterFormGroup.value,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        // Check if it is the same
+        const change = this.checkChanges(data);
+        if (change) {
+          this.filterFormGroup.patchValue(data);
+          this.fetchSelectedMonth(1);
+        }
+      });
   }
 
+  private checkChanges(data: any) {
+    const isActive = data.isActive;
+    const isDelete = data.isDelete;
+    const isPending = data.isPending;
+
+    const maxDate = data.endDate;
+    const minDate = data.startDate;
+    const existingIsActive = this.filterFormGroup.value.isActive;
+    const existingIsDelete = this.filterFormGroup.value.isDelete;
+    const existingIsPending = this.filterFormGroup.value.isPending;
+
+    const existingMinDate = this.filterFormGroup.value.startDate;
+    const existingMaxDate = this.filterFormGroup.value.endDate;
+
+    let response = false;
+
+    if (isPending != existingIsPending) {
+      response = true;
+    }
+
+    if (isActive != existingIsActive) {
+      response = true;
+    }
+
+    if (isDelete != existingIsDelete) {
+      response = true;
+    }
+
+    if (existingMinDate.getTime() != minDate.getTime()) {
+      response = true;
+    }
+
+    if (existingMaxDate.getTime() != maxDate.getTime()) {
+      response = true;
+    }
+
+    return response;
+  }
+
+  changeSortBy(field: string) {
+    if (this.isLoading) {
+      return;
+    }
+
+    if (this.sortBy == field) {
+      if (this.sortDirection == 'asc') {
+        this.sortDirection = 'desc';
+      } else {
+        this.sortDirection = 'asc';
+      }
+    } else {
+      this.sortBy = field;
+      this.sortDirection = 'asc';
+    }
+
+    this.fetchSelectedMonth(1);
+  }
   viewArchive(id: number) {
     this.dynamicComponentService.createDynamicComponent(ArchiveViewComponent, {
       route: 'purchase-invoice',

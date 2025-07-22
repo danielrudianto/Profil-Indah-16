@@ -9,10 +9,10 @@
       <h6>{{ "report-inventory__current-value" | translate }}</h6>
       <p [countUp]="value" [duration]="300"></p>
       <mat-divider></mat-divider>
-      <div class="list-item" *ngFor="let c of company; index as i">
-        <app-circle-avatar [name]="c.name[0] | uppercase" />
+      <div class="list-item" *ngFor="let c of data; index as i">
+        <app-circle-avatar [name]="c.company[0] | uppercase" />
         <div class="list-item__text-wrapper">
-          <h5>{{ c.name }}</h5>
+          <h5>{{ c.company }}</h5>
           <p class="text-clamp-1">Rp.&nbsp;{{ c.value | number : "0.2-2" }}</p>
         </div>
       </div>

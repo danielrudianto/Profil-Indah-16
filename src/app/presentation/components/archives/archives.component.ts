@@ -48,10 +48,7 @@ export class ArchivesComponent {
    */
   fetchAnnualItems() {
     this.apiService
-      .post(`${this.route}/archives/v2`, {
-        year: null,
-        month: null,
-      })
+      .get(`${this.route}/archives`)
       .subscribe({
         next: (data: any) => {
           this.data = data;

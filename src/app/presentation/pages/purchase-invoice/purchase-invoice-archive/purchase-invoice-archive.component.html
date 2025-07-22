@@ -1,6 +1,6 @@
 <app-archives
   [@slideInOutAnimation]="mode == 0 ? 'in' : 'out'"
-  route="purchase-invoice"
+  route="good-receipt"
   (onMonthSelected)="onMonthSelected($event)"
 />
 
@@ -17,12 +17,86 @@
           <table class="table">
             <thead>
               <tr>
-                <th style="width: 250px">Date</th>
-                <th style="width: 250px">Name</th>
-                <th style="width: 250px">Company</th>
-                <th style="width: 250px">Good Receipt Name</th>
-                <th style="width: 250px">Tax Invoice</th>
-                <th style="width: 250px">Supplier</th>
+                <th style="width: 250px" (click)="changeSortBy('date')">
+                  <div class="d-flex align-items-center">
+                    <span>{{ "good-receipt__archive__date" | translate }}</span>
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc: sortBy === 'date' && sortDirection === 'asc',
+                        desc: sortBy === 'date' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
+                </th>
+                <th style="width: 250px" (click)="changeSortBy('invoice-name')">
+                  <div class="d-flex align-items-center">
+                    <span>
+                      {{
+                        "good-receipt__archive__invoice-name" | translate
+                      }}</span
+                    >
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc:
+                          sortBy === 'invoice-name' && sortDirection === 'asc',
+                        desc:
+                          sortBy === 'invoice-name' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
+                </th>
+                <th style="width: 250px" (click)="changeSortBy('company')">
+                  <div class="d-flex align-items-center">
+                    <span>
+                      {{ "good-receipt__archive__company" | translate }}</span
+                    >
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc: sortBy === 'company' && sortDirection === 'asc',
+                        desc: sortBy === 'company' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
+                </th>
+                <th style="width: 250px" (click)="changeSortBy('name')">
+                  <div class="d-flex align-items-center">
+                    <span>
+                      {{ "good-receipt__archive__name" | translate }}</span
+                    >
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc: sortBy === 'name' && sortDirection === 'asc',
+                        desc: sortBy === 'name' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
+                </th>
+                <th style="width: 250px">
+                  {{ "good-receipt__archive__tax-invoice-name" | translate }}
+                </th>
+                <th style="width: 250px" (click)="changeSortBy('supplier')">
+                  <div class="d-flex align-items-center">
+                    <span>
+                      {{ "good-receipt__archive__supplier" | translate }}</span
+                    >
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc: sortBy === 'supplier' && sortDirection === 'asc',
+                        desc: sortBy === 'supplier' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
+                </th>
                 <th style="width: 100px">Status</th>
               </tr>
             </thead>
@@ -46,12 +120,21 @@
                 (click)="viewArchive(item.id)"
               >
                 <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
+                <td>{{ item.invoice_name ?? "N/A" }}</td>
+                <td>{{ item.company.name }}</td>
                 <td>{{ item.name }}</td>
-                <td>{{ item.company_name }}</td>
-                <td>{{ item.good_receipt_name }}</td>
                 <td>{{ item.faktur == null ? "N/A" : item.faktur }}</td>
-                <td>{{ item.supplier_name }}</td>
-                <td>{{ item.is_delete ? "Deleted" : "Active" }}</td>
+                <td>{{ item.supplier.name }}</td>
+                <td>
+                  {{
+                    (item.is_delete
+                      ? "good-receipt__archive__status__deleted"
+                      : !item.is_confirm
+                      ? "good-receipt__archive__status__pending"
+                      : "good-receipt__archive__status__active"
+                    ) | translate
+                  }}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -62,7 +145,7 @@
           </button>
           <mat-paginator
             [length]="dataCount"
-            [pageSize]="20"
+            [pageSize]="10"
             [pageIndex]="page - 1"
             (page)="changePage($event)"
           />

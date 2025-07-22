@@ -186,7 +186,7 @@ import { UpdatePackageSalesPriceComponent } from './presentation/components/upda
 import { ReportSalesComponent } from './presentation/pages/report/report-sales/report-sales.component';
 import { NgChartjsModule } from 'ng-chartjs';
 import { NgChartsModule } from 'ng2-charts';
-import { GoodReceiptArchiveFilterComponent } from './presentation/pages/deposit/deposit-archive/good-receipt-archive-filter/good-receipt-archive-filter.component';
+import { GoodReceiptArchiveFilterComponent } from './presentation/pages/good-receipt/good-receipt-archive/good-receipt-archive-filter/good-receipt-archive-filter.component';
 import { StockCardComponent } from './presentation/pages/stock-list/stock-card/stock-card.component';
 import { AdjustmentCaseConfirmViewComponent } from './presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm-view/adjustment-case-confirm-view.component';
 import { SalesReturnComponent } from './presentation/pages/sales-return/sales-return.component';

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { PaymentListComponent } from 'src/app/presentation/components/payment-list/payment-list.component';
 import { AlertService } from 'src/app/services/alert.service';
@@ -19,7 +20,8 @@ export class SalesInvoiceViewComponent {
     private dialog: MatDialog,
     private sheet: MatBottomSheet,
     private apiService: ApiService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private translateService: TranslateService
   ) {}
 
   @Input('data') data: any;
@@ -33,7 +35,9 @@ export class SalesInvoiceViewComponent {
   openDeleteConfirmation() {
     const dialog = this.dialog.open(DeleteConfirmationComponent, {
       data: {
-        title: 'Are you sure to delete this sales invoice?',
+        title: this.translateService.instant(
+          'sales-invoice__delete__confirmation'
+        ),
         document: this.data.name,
       },
     });
@@ -43,7 +47,7 @@ export class SalesInvoiceViewComponent {
         this.apiService.delete(`sales-invoice/${this.data.id}`).subscribe({
           next: () => {
             this.alertService.showSuccess(
-              `Sales invoice ${this.data.name} deleted successfully`
+              this.translateService.instant('sales-invoice__delete__success')
             );
             this.close.emit();
           },

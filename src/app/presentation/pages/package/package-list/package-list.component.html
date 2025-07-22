@@ -22,13 +22,10 @@
           <th class="text-center">
             {{ "package__table__status" | translate }}
           </th>
-          <th class="text-center">
-            {{ "package__table__action" | translate }}
-          </th>
         </tr>
       </thead>
       <tbody *ngIf="!isLoading && dataSource.length > 0">
-        <tr *ngFor="let item of dataSource">
+        <tr *ngFor="let item of dataSource" [matMenuTriggerFor]="menu">
           <td class="text-center">{{ item.name }}</td>
           <td>
             <span class="text-clamp-2 text-center">
@@ -38,38 +35,33 @@
           <td class="text-center">
             {{ item.price | number : "0.2-2" }}
           </td>
-          <td class="text-center">
-            <button mat-icon-button [matMenuTriggerFor]="menu">
-              <mat-icon>more_vert</mat-icon>
+          <mat-menu #menu="matMenu">
+            <button (click)="openDialog('edit', item.id)" mat-menu-item>
+              <mat-icon>edit</mat-icon>
+              <span>{{ "package__table__update" | translate }}</span>
             </button>
-            <mat-menu #menu="matMenu">
-              <button (click)="openDialog('edit', item.id)" mat-menu-item>
-                <mat-icon>edit</mat-icon>
-                <span>{{ "package__table__update" | translate }}</span>
-              </button>
-              <button
-                [class.delete-button]="item.can_delete"
-                mat-menu-item
-                (click)="openDialog('delete', item.id)"
-                [disabled]="!isAdministrator"
-              >
-                <mat-icon>delete</mat-icon>
-                <span>{{ "package__table__delete" | translate }}</span>
-              </button>
-            </mat-menu>
-          </td>
+            <button
+              [class.delete-button]="item.can_delete"
+              mat-menu-item
+              (click)="openDialog('delete', item.id)"
+              [disabled]="!isAdministrator"
+            >
+              <mat-icon>delete</mat-icon>
+              <span>{{ "package__table__delete" | translate }}</span>
+            </button>
+          </mat-menu>
         </tr>
       </tbody>
       <tbody *ngIf="!isLoading && dataSource.length == 0">
         <tr>
-          <td colspan="6">
+          <td colspan="3">
             <empty-table />
           </td>
         </tr>
       </tbody>
       <tbody *ngIf="isLoading">
         <tr>
-          <td colspan="6" class="text-center">
+          <td colspan="3" class="text-center">
             <mat-spinner id="spinner"></mat-spinner>
           </td>
         </tr>

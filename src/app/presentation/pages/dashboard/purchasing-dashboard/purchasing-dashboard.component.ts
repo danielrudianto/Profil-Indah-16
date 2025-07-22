@@ -83,7 +83,7 @@ export class PurchasingDashboardComponent {
   }
 
   fetchStats(): void {
-    this.apiService.post('report/dashboard/purchasing', {}).subscribe({
+    this.apiService.post('dashboard/purchasing', {}).subscribe({
       next: (data: any) => {
         localStorage.setItem(
           'dashboard:purchasing:last-synced',

@@ -58,4 +58,14 @@ export class SalesReturnCreateViewSalesInvoiceComponent {
   selectDocument() {
     this.close(this.dataSource);
   }
+
+  get subtotal(): number {
+    if (this.dataSource == null) {
+      return 0;
+    }
+
+    return this.dataSource.sales_invoice.reduce((a: any, b: any) => {
+      return a + b.quantity * (b.price - b.discount);
+    }, 0);
+  }
 }

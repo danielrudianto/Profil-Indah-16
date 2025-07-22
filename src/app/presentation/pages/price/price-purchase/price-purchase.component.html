@@ -1,7 +1,6 @@
 <app-transaction-header
   [title]="'purchase-price__title' | translate"
   [backRoute]="backRoute"
-  
 />
 
 <div class="dashboard-card">
@@ -34,13 +33,6 @@
           </th>
         </tr>
       </thead>
-      <tbody *ngIf="isLoading">
-        <tr>
-          <td colspan="3">
-            <empty-table />
-          </td>
-        </tr>
-      </tbody>
       <tbody *ngIf="!isLoading && dataSource.length > 0">
         <tr
           *ngFor="let item of dataSource"
@@ -53,25 +45,16 @@
             </span>
           </td>
           <td class="text-center">
-            <span
-              *ngIf="item.count > 0"
-              [matBadge]="item.count"
-              matBadgeOverlap="false"
-              matBadgeSize="small"
-            >
-              {{ item.price | number : "0.2-2" }}
-            </span>
-
-            <span *ngIf="item.count == 0">
-              {{ item.price | number : "0.2-2" }}
-            </span>
+            {{ item.purchase_price | number : "0.2-2" }}
           </td>
-          <td class="text-center">{{ item.discount | number : "0.2-2" }}</td>
+          <td class="text-center">
+            {{ item.purchase_discount | number : "0.2-2" }}
+          </td>
         </tr>
       </tbody>
       <tbody *ngIf="!isLoading && dataSource.length == 0">
         <tr>
-          <td colspan="3">
+          <td colspan="4">
             <empty-table />
           </td>
         </tr>

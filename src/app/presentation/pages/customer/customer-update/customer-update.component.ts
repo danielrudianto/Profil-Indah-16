@@ -63,7 +63,7 @@ export class CustomerUpdateComponent {
           .get('customer__update__success')
           .subscribe((message: string) => {
             this.alertService.showSuccess(`${data.name} ${message}`);
-            this.closeDialog();
+            this.closeDialog(data);
           });
       },
       error: (error) => {

@@ -455,7 +455,7 @@ export class PurchaseInvoiceCreateComponent {
           });
 
           this.alertService.showSuccess(
-            'Good receipt is successfully created.'
+            this.translateService.instant('good-receipt__create__success')
           );
           this.t.clear();
           this.documentFormGroup.reset();

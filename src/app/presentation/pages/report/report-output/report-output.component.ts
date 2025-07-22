@@ -75,7 +75,7 @@ export class ReportOutputComponent {
     } else {
       console.log(this.documentFormGroup.value.format);
       this.apiService
-        .post('report/sales-item', {
+        .post('report/output', {
           month: this.documentFormGroup.value.date.getMonth() + 1,
           year: this.documentFormGroup.value.date.getFullYear(),
           format: this.documentFormGroup.value.format,

@@ -1,18 +1,17 @@
-import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatChipSelectionChange } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { panelAnimation } from 'src/app/animations/panel.animation';
+
 @Component({
-  selector: 'app-sales-invoice-archive-filter',
-  templateUrl: './sales-invoice-archive-filter.component.html',
-  styleUrls: ['./sales-invoice-archive-filter.component.css'],
-  animations: [panelAnimation],
+  selector: 'app-good-receipt-archive-filter',
+  templateUrl: './good-receipt-archive-filter.component.html',
+  styleUrls: ['./good-receipt-archive-filter.component.css'],
 })
-export class SalesInvoiceArchiveFilterComponent {
+export class GoodReceiptArchiveFilterComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialog: MatDialogRef<SalesInvoiceArchiveFilterComponent>,
+    private dialog: MatDialogRef<GoodReceiptArchiveFilterComponent>,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -24,8 +23,7 @@ export class SalesInvoiceArchiveFilterComponent {
   });
 
   filterObject = {
-    isPaid: false,
-    isUnpaid: false,
+    isPending: false,
     isDelete: false,
     isActive: false,
   };
@@ -40,8 +38,7 @@ export class SalesInvoiceArchiveFilterComponent {
 
     this.filterObject.isActive = this.data.isActive;
     this.filterObject.isDelete = this.data.isDelete;
-    this.filterObject.isPaid = this.data.isPaid;
-    this.filterObject.isUnpaid = this.data.isUnpaid;
+    this.filterObject.isPending = this.data.isPending;
 
     this.cdr.detectChanges();
   }
@@ -62,17 +59,14 @@ export class SalesInvoiceArchiveFilterComponent {
     const field = event.source.value;
 
     switch (field) {
-      case 'isPaid':
-        this.filterObject.isPaid = checked;
-        break;
-      case 'isUnpaid':
-        this.filterObject.isUnpaid = checked;
-        break;
       case 'isActive':
         this.filterObject.isActive = checked;
         break;
       case 'isDelete':
         this.filterObject.isDelete = checked;
+        break;
+      case 'isPending':
+        this.filterObject.isPending = checked;
         break;
       default:
         break;

@@ -16,7 +16,7 @@
             placeholder="Ex. 123456"
             type="text"
             matInput
-            formControlName="good_receipt_name"
+            formControlName="name"
           />
         </mat-form-field>
 
@@ -71,7 +71,7 @@
             placeholder="Ex. 123456"
             type="text"
             matInput
-            formControlName="name"
+            formControlName="invoice_name"
           />
         </mat-form-field>
 
@@ -303,11 +303,7 @@
         <div
           class="purchase-invoice__action-list__item"
           [ngClass]="{
-            disabled:
-              !purchaseDocumentFormGroup.valid ||
-              isSubmitting ||
-              purchaseDocumentFormGroup.get('discount')?.value >
-                purchaseDocumentFormGroup.get('total')?.value
+            disabled: isSubmitting || !isValid
           }"
           (click)="submitForm('confirm')"
         >
@@ -317,11 +313,7 @@
         <div
           class="purchase-invoice__action-list__item"
           [ngClass]="{
-            disabled:
-              !purchaseDocumentFormGroup.valid ||
-              isSubmitting ||
-              purchaseDocumentFormGroup.get('discount')?.value >
-                purchaseDocumentFormGroup.get('total')?.value
+            disabled: isSubmitting
           }"
           (click)="submitForm('delete')"
         >

@@ -32,19 +32,17 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>{{ "sales-invoice__create__type" | translate }}</mat-label>
         <mat-select formControlName="type">
-          <mat-option value="sales">{{
+          <mat-option [value]="'sales'">{{
             "sales-invoice__create__type__sales" | translate
           }}</mat-option>
-          <mat-option value="deposit">{{
+          <mat-option [value]="'deposit'">{{
             "sales-invoice__create__type__deposit" | translate
           }}</mat-option>
-          <mat-option value="deposit-internal">{{
+          <mat-option [value]="'deposit-internal'">{{
             "sales-invoice__create__type__internal-deposit" | translate
           }}</mat-option>
         </mat-select>
       </mat-form-field>
-
-      <!-- Select salesman -->
 
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>{{
@@ -132,9 +130,9 @@
               [formGroup]="getFormGroupAt(i)"
             >
               <ng-container
-                [ngSwitch]="!itemForm.get('package_code_id') ? 1 : 2"
+                [ngSwitch]="itemForm.get('package_code_id') ? 1 : 2"
               >
-                <ng-container *ngSwitchCase="1">
+                <ng-container *ngSwitchCase="2">
                   <td>
                     <p>{{ itemForm.get("reference")?.value }}</p>
                     <div class="text-clamp-2">
@@ -254,7 +252,7 @@
                     </div>
                   </td>
                 </ng-container>
-                <ng-container *ngSwitchCase="2">
+                <ng-container *ngSwitchCase="1">
                   <td>
                     <p>{{ itemForm.get("name")?.value }}</p>
                     <div class="text-clamp-2 mb-2">
@@ -266,17 +264,19 @@
                           let content of itemForm.get('package_content')?.value
                         "
                       >
-                        <p>
-                          {{ content.reference }} ({{
+                        <p class="mb-0">
+                          <b>{{ content.product.reference }}</b> ({{
                             content.quantity | number : "0.0-2"
                           }}
                           {{
-                            content.item_unit == null
-                              ? content.unit
-                              : content.item_unit.unit
+                            content.product_unit == null
+                              ? content.product.unit
+                              : content.product_unit.unit
                           }})
                         </p>
-                        <p class="text-clamp-2">{{ content.description }}</p>
+                        <p class="text-clamp-2">
+                          {{ content.product.description }}
+                        </p>
                       </li>
                     </ul>
                   </td>
@@ -398,7 +398,7 @@
 <div class="d-flex">
   <div class="d-flex position-relative">
     <app-vertical-divider></app-vertical-divider>
-    <app-box-stepper step="3" [valid]="billFormGroup.valid"></app-box-stepper>
+    <app-box-stepper step="3" [valid]="valueFormGroup.valid"></app-box-stepper>
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
     <h5>{{ "sales-invoice__create__bill-data" | translate }}</h5>
@@ -487,15 +487,13 @@
           type="text"
           mask="separator"
           thousandSeparator=" "
-          [value]="
-            valueFormGroup.controls['total'].value -
-              valueFormGroup.controls['discount'].value +
-              valueFormGroup.controls['delivery'].value +
-              valueFormGroup.controls['service'].value | number : '0.0-2'
-          "
+          formControlName="grand_total"
           autocomplete="off"
           placeholder="Ex. 800"
         />
+        <mat-icon matSuffix *ngIf="!valueFormGroup.get('grand_total')?.valid">
+          dangerous
+        </mat-icon>
         <div matTextPrefix>Rp.&nbsp;</div>
       </mat-form-field>
     </form>
@@ -505,117 +503,153 @@
   <div class="d-flex position-relative">
     <app-box-stepper
       step="4"
-      [valid]="totalPayment == valueFormGroup.controls['total'].value"
+      [valid]="paymentsFormGroup.valid"
     ></app-box-stepper>
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
     <h5>{{ "sales-invoice__create__payment-data" | translate }}</h5>
     <form [formGroup]="paymentsFormGroup">
       <div class="row">
-        <div class="col-6">
-          <mat-slide-toggle
-            formControlName="immediate_payment"
-            [class.d-none]="
-              metaFormGroup.get('type')?.value == 'deposit-internal'
-            "
+        <div class="col-12">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-select formControlName="method">
+              <mat-option
+                [value]="'paid'"
+                [disabled]="
+                  metaFormGroup.get('type')?.value === 'deposit-internal'
+                "
+                >{{
+                  "sales-invoice__create__paid-payment" | translate
+                }}</mat-option
+              >
+              <mat-option
+                [value]="'underpaid'"
+                [disabled]="
+                  metaFormGroup.get('type')?.value === 'deposit-internal'
+                "
+                >{{
+                  "sales-invoice__create__underpaid-payment" | translate
+                }}</mat-option
+              >
+              <mat-option [value]="'unpaid'">{{
+                "sales-invoice__create__unpaid-payment" | translate
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div
+            *ngIf="paymentsFormGroup.errors?.['invalidPaymentStatus']"
+            class="mb-2"
           >
-            {{
-              (paymentsFormGroup.controls["immediate_payment"].value == true
-                ? "sales-invoice__create__immediate-payment"
-                : "sales-invoice__create__due-payment"
-              ) | translate
-            }}
-          </mat-slide-toggle>
-          <br />
-          <mat-form-field
-            appearance="outline"
-            class="w-100 mt-3"
-            [class.d-none]="
-              metaFormGroup.get('type')?.value == 'deposit-internal'
-            "
-          >
+            {{ paymentsFormGroup.errors?.['invalidPaymentStatus'] }}
+          </div>
+
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>{{
               "sales-invoice__create__due-time" | translate
             }}</mat-label>
             <input
               matInput
-              placeholder="Ex. 30"
+              class="w-100"
               formControlName="due_time"
               type="number"
+              [disabled]="paymentsFormGroup.get('method')?.value === 'paid'"
             />
-            <span matTextSuffix>{{
-              "sales-invoice__create__day" | translate
-            }}</span>
           </mat-form-field>
 
           <button
+            mat-stroked-button
+            color="primary"
+            style="letter-spacing: 0"
             type="button"
             (click)="openPaymentSelector()"
-            class="action-button"
-            [class.d-none]="
-              paymentsFormGroup.controls['immediate_payment'].value == false ||
-              metaFormGroup.get('type')?.value == 'deposit-internal'
-            "
+            [disabled]="paymentsFormGroup.get('method')?.value == 'unpaid'"
           >
-            {{ "sales-invoice__create__add-payment-method" | translate }}
+            {{ "sales-invoice__create__item__payment-method__add" | translate }}
           </button>
-        </div>
-        <div
-          class="col-6"
-          [class.d-none]="
-            paymentsFormGroup.controls['immediate_payment'].value == false
-          "
-        >
-          <div
-            class="payment-card"
-            *ngFor="let payment of p.controls; index as i"
-          >
-            <form [formGroup]="getFormGroupAtPayment(i)">
-              <h3 class="mb-0">{{ payment.get("payment_name")?.value }}</h3>
-              <p>{{ payment.get("payment_description")?.value }}</p>
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>{{
-                  "sales-invoice__create__payment-value" | translate
-                }}</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  mask="separator.2"
-                  thousandSeparator=" "
-                  formControlName="payment_value"
-                  [allowNegativeNumbers]="true"
-                />
-                <div matSuffix>
-                  <button mat-icon-button (click)="deletePayment(i)">
+
+          <table class="table mb-2">
+            <thead>
+              <tr>
+                <th class="text-center" style="width: 300px">
+                  {{
+                    "sales-invoice__create__item__payment-method" | translate
+                  }}
+                </th>
+                <th class="text-center" style="width: 150px">
+                  {{
+                    "sales-invoice__create__item__payment-method__amount"
+                      | translate
+                  }}
+                </th>
+                <th class="text-center" style="width: 150px">
+                  {{
+                    "sales-invoice__create__item__payment-method__action"
+                      | translate
+                  }}
+                </th>
+              </tr>
+            </thead>
+            <tbody *ngIf="p.controls.length > 0">
+              <tr
+                *ngFor="let itemForm of p.controls; index as i"
+                [formGroup]="getFormGroupAtPayment(i)"
+              >
+                <td>
+                  <p>
+                    <b>{{ itemForm.get("payment_name")?.value }}</b>
+                  </p>
+                  <p>{{ itemForm.get("payment_description")?.value }}</p>
+                </td>
+                <td>
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>{{
+                      "sales-invoice__create__item__payment-method__amount"
+                        | translate
+                    }}</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      class="text-center"
+                      mask="separator"
+                      thousandSeparator=" "
+                      formControlName="value"
+                      autocomplete="off"
+                      placeholder="Ex. 800"
+                    />
+                  </mat-form-field>
+                </td>
+                <td class="text-center">
+                  <button
+                    mat-icon-button
+                    type="button"
+                    (click)="deletePayment(i)"
+                  >
                     <mat-icon>close</mat-icon>
                   </button>
-                </div>
-              </mat-form-field>
-            </form>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="p.controls.length == 0">
+              <tr>
+                <td colspan="4">
+                  <empty-table />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="paymentsFormGroup.errors?.['invalidInternalPayment']">
+            {{ paymentsFormGroup.errors?.['invalidInternalPayment'] }}
           </div>
+
+          <button
+            [disabled]="!isValid || isSubmitting"
+            class="action-button"
+            (click)="submitForm()"
+          >
+            Submit
+          </button>
         </div>
       </div>
     </form>
-    <button
-      [disabled]="
-        !metaFormGroup.valid ||
-        !valueFormGroup.valid ||
-        !billFormGroup.valid ||
-        (metaFormGroup.get('type')?.value == 'sales' &&
-          totalPayment == 0 &&
-          paymentsFormGroup.controls['immediate_payment'].value) ||
-        totalPayment >
-          valueFormGroup.controls['total'].value +
-            valueFormGroup.controls['delivery'].value +
-            valueFormGroup.controls['service'].value -
-            valueFormGroup.controls['discount'].value ||
-        !paymentsFormGroup.valid ||
-        isSubmitting
-      "
-      class="action-button"
-      (click)="submitForm()"
-    >
-      Submit
-    </button>
   </div>
 </div>

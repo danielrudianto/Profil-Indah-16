@@ -85,33 +85,14 @@ export class ReportPurchaseComponent {
       })
       .subscribe({
         next: (data: any) => {
-          this.chartDataSource = data.date;
-          this.transactions = data.transactions;
-          this.supplierCount = data.supplier.length;
+          this.chartDataSource = data.chart;
+          this.transactions = data.goodReceiptCount;
+          this.supplierCount = data.supplier;
           this.totalPurchase = data.total;
 
-          this.bestBrand =
-            data.brand.length == 0
-              ? 'N/A'
-              : data.brand.sort((a: any, b: any) => b.value - a.value)[0].name;
-          this.bestType =
-            data.type.length == 0
-              ? 'N/A'
-              : data.type.sort((a: any, b: any) => b.value - a.value)[0].name;
-
-          this.bestSupplier =
-            data.supplier.length == 0
-              ? 'N/A'
-              : data.supplier.sort((a: any, b: any) => {
-                  return b.value - a.value;
-                })[0].name;
-
-          this.returnValue = data.returned_value;
-          this.returnCount = data.returns;
-
-          this.brandDataSource = data.brand;
-          this.typeDataSource = data.type;
-          this.supplierDataSource = data.supplier;
+          this.bestBrand = data.brand == null ? 'N/A' : data.brand;
+          this.bestType = data.type == null ? 'N/A' : data.type;
+          this.bestSupplier = data.supplier == null ? 'N/A' : data.supplier;
         },
       })
       .add(() => {

@@ -4,6 +4,7 @@ import { CustomerModel } from 'src/app/models/customer.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { CustomerUpdateComponent } from './customer-update/customer-update.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-customer',
@@ -13,7 +14,8 @@ import { CustomerUpdateComponent } from './customer-update/customer-update.compo
 export class CustomerComponent {
   constructor(
     private authService: AuthService,
-    private dynamicComponentService: DynamicComponentService
+    private dynamicComponentService: DynamicComponentService,
+    private dialog: MatDialog
   ) {}
 
   isLoading: boolean = true;
@@ -30,12 +32,23 @@ export class CustomerComponent {
 
   openDialog(dialogType: string, id: number) {
     if (dialogType == 'edit') {
-      this.dynamicComponentService.createDynamicComponent(
-        CustomerUpdateComponent,
-        {
-          id: id,
-        }
-      );
+      this.dialog
+        .open(CustomerUpdateComponent, {
+          data: {
+            id: id,
+          },
+        })
+        .afterClosed()
+        .subscribe((data) => {
+          if (data) {
+            const index = this.dataSource.findIndex((x) => x.id == id);
+            if (index != -1) {
+              this.dataSource[index].name = data.name;
+              this.dataSource[index].address = data.address;
+              this.dataSource[index].npwp = data.npwp;
+            }
+          }
+        });
     }
   }
 

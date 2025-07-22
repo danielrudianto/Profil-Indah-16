@@ -136,38 +136,6 @@ export class GoodReceiptCreateComponent {
           number_of_items: this.t.length,
         });
       }
-      // if (result != null && result != undefined) {
-      //   if (
-      //     this.t.controls.filter(
-      //       (x) =>
-      //         x.get('item_id')?.value == data.item.id &&
-      //         x.get('item_unit_id')?.value ==
-      //           (data.price == null ? null : data.price.item_unit_id)
-      //     ).length > 0
-      //   ) {
-      //     this.alertService.showSuccess(
-      //       'Item already exists! Please select different item.'
-      //     );
-      //   } else {
-      //     const productFormGroup = this.formBuilder.group({
-      //       item_id: [data.item.id, Validators.required],
-      //       item_unit_id: [data.price == null ? null : data.price.item_unit_id],
-      //       reference: [data.item.reference, Validators.required],
-      //       description: [data.item.description, Validators.required],
-      //       quantity: [0, [Validators.required, Validators.min(0.01)]],
-      //       unit: [data.price == null ? data.item.unit : data.price.unit],
-      //       conversion: [data.price == null ? 1 : data.price.conversion],
-      //       default_unit: [data.item.unit],
-      //       stock: [data.item.stock],
-      //     });
-
-      //     this.t.push(productFormGroup);
-
-      //     this.itemFormGroup.patchValue({
-      //       number_of_items: this.t.length,
-      //     });
-      //   }
-      // }
     });
   }
 
@@ -272,21 +240,16 @@ export class GoodReceiptCreateComponent {
                     supplier_id: this.metaFormGroup.get('supplier_id')?.value,
                     good_receipt: this.t.controls.map((x) => {
                       return {
-                        item_id: x.get('item_id')?.value,
-                        item_unit_id: x.get('item_unit_id')?.value,
-                        quantity: x.get('quantity')?.value,
-                        price: x.get('price')?.value,
+                        product_id: x.get('product_id')?.value,
+                        product_unit_id: x.get('product_unit_id')?.value,
+                        quantity: Number(x.get('quantity')?.value),
+                        price: Number(x.get('price')?.value),
+                        discount: Number(x.get('discount')?.value),
                       };
                     }),
-                    purchase_invoice: {
-                      name: '',
-                      faktur: null,
-                      date: this.datePipe.transform(
-                        this.metaFormGroup.get('date')?.value,
-                        'yyyy-MM-dd'
-                      ),
-                      discount: 0,
-                    },
+                    invoice_name: '',
+                    faktur: null,
+                    discount: 0,
                   })
                   .subscribe({
                     next: (_) => {

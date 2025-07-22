@@ -43,7 +43,7 @@
           *ngFor="let item of dataSource; index as i"
           (click)="openUpdateExpenseDialog(i)"
         >
-          <td>{{ item.date | date : "dd/MM/yyyy" }}</td>
+          <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
           <td>{{ item.description }}</td>
           <td>{{ item.expense_type.name }}</td>
           <td>{{ item.company.name }}</td>

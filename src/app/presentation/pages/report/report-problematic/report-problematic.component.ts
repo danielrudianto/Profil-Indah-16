@@ -57,8 +57,7 @@ export class ReportProblematicComponent {
   fetchData(page: number = this.page) {
     this.page = page;
     this.apiService
-      .post('product-stock', {
-        mode: 'problematic-pagination',
+      .post('product-stock/problematic', {
         page: this.page,
         brands: this.selectedBrands.map((x) => x.id),
         types: this.selectedTypes.map((x) => x.id),

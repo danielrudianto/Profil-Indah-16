@@ -11,9 +11,10 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 export class ReportInventoryComponent {
   isOpened: boolean = false;
   isLoading: boolean = true;
+  data: any[] = [];
   value: number = 0;
-  company: any[] = [];
   isDownloading: boolean = false;
+
   constructor(
     private apiService: ApiService,
     private dynamicComponentService: DynamicComponentService,
@@ -27,10 +28,15 @@ export class ReportInventoryComponent {
       .get('report/inventory')
       .subscribe({
         next: (data: any) => {
-          this.value = data.value;
-          this.company = data.company;
+          this.data = data;
+          this.value = data.reduce((a: any, b: any) => {
+            return a + b.value;
+          }, 0);
         },
-        error: (error) => {},
+        error: (error) => {
+          this.alertService.showError(error);
+          this.closeDialog();
+        },
       })
       .add(() => {
         this.isLoading = false;

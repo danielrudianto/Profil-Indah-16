@@ -48,20 +48,16 @@ export class PackageUpdateComponent {
     this.fetchByID();
     this.t.valueChanges.subscribe(() => {
       let totalPrice = 0;
-      let valueWODiscount = 0;
       if (this.t.controls.length > 0) {
         this.t.controls.forEach((x) => {
-          const discount = Number(x.get('discount')?.value);
           const price = Number(x.get('price')?.value);
           const quantity = Number(x.get('quantity')?.value);
 
-          totalPrice += quantity * (price - discount);
-          valueWODiscount += quantity * price;
+          totalPrice += quantity * price;
         });
 
         this.itemsFormGroup.patchValue({
           value: totalPrice,
-          valueWODiscount: valueWODiscount,
         });
       }
     });
@@ -84,17 +80,18 @@ export class PackageUpdateComponent {
             this.t.push(
               this.formBuilder.group({
                 id: [x.id, Validators.required],
-                reference: [x.item.reference],
-                description: [x.item.description],
+                product_id: [x.product_id, Validators.required],
+                reference: [x.product.reference],
+                description: [x.product.description],
                 price: [x.price, [Validators.required, Validators.min(1)]],
-                discount: [
-                  x.discount,
-                  [Validators.required, Validators.min(0)],
-                ],
                 quantity: [x.quantity],
-                unit: [x.item_unit == null ? x.item.unit : x.item_unit.unit],
-                conversion: [x.item_unit == null ? 1 : x.item_unit.conversion],
-                default_unit: [x.item.unit],
+                unit: [
+                  x.product_unit == null ? x.product.unit : x.product_unit.unit,
+                ],
+                conversion: [
+                  x.product_unit == null ? 1 : x.product_unit.conversion,
+                ],
+                default_unit: [x.product.unit],
               })
             );
           });

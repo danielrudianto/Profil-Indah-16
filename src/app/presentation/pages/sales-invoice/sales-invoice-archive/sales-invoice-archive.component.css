@@ -18,3 +18,18 @@ tr {
   position: relative;
   float: none;
 }
+
+.icon-display {
+  transform: scale(0.75);
+  opacity: 0.2;
+}
+
+.icon-display.asc {
+  transform: rotate(180deg) scale(0.75);
+  opacity: 1;
+}
+
+.icon-display.desc {
+  transform: rotate(0) scale(0.75);
+  opacity: 1;
+}

@@ -141,7 +141,9 @@
               </svg>
               <div class="meta-data__items__text">
                 <h2>{{ "stock-card__brand" | translate }}</h2>
-                <p *ngIf="!isLoadingData">{{ productDataSource.brand }}</p>
+                <p *ngIf="!isLoadingData">
+                  {{ productDataSource.product_brand.name }}
+                </p>
                 <div class="shimmer-full" *ngIf="isLoadingData"></div>
               </div>
             </div>
@@ -181,7 +183,9 @@
               </svg>
               <div class="meta-data__items__text">
                 <h2>{{ "stock-card__type" | translate }}</h2>
-                <p *ngIf="!isLoadingData">{{ productDataSource.type }}</p>
+                <p *ngIf="!isLoadingData">
+                  {{ productDataSource.product_type.name }}
+                </p>
                 <div class="shimmer-full" *ngIf="isLoadingData"></div>
               </div>
             </div>
@@ -257,12 +261,17 @@
                   (click)="viewDocument(item)"
                 >
                   <td>{{ item.date | date : "dd/MM/YYYY" }}</td>
-                  <td>{{ item.name }}</td>
+                  <td>{{ item.document_name }}</td>
                   <td>
-                    {{ item.quantity | number : "0.0-2" }} {{ item.unit }}
+                    {{ item.display_quantity | number : "0.0-2" }}
+                    {{ item.unit }}
                   </td>
                   <td>
-                    {{ item.stock | number : "0.0-2" }} {{ item.defaultUnit }}
+                    <span *ngIf="item.stock == null">Calculating</span>
+                    <span *ngIf="item.stock != null">
+                      {{ item.stock | number : "0.0-2" }}
+                      {{ item.defaultUnit }}</span
+                    >
                   </td>
                 </tr>
               </tbody>

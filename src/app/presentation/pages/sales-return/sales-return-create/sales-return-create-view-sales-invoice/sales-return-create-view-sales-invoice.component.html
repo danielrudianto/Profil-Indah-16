@@ -124,8 +124,8 @@
                 </th>
               </tr>
             </thead>
-            <tbody>
-              <tr *ngFor="let item of dataSource.bill_payment">
+            <tbody *ngIf="dataSource.sales_invoice_payment.length > 0">
+              <tr *ngFor="let item of dataSource.sales_invoice_payment">
                 <td>{{ item.date | date : "dd/MM/yyyy" }}</td>
                 <td>
                   {{
@@ -135,6 +135,15 @@
                   }}
                 </td>
                 <td>{{ item.value | number : "0.2-2" }}</td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="dataSource.sales_invoice_payment.length == 0">
+              <tr>
+                <td colspan="3">
+                  {{
+                    "sales-invoice__archive__view__payments__empty" | translate
+                  }}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -173,89 +182,38 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of dataSource.bill">
-                <ng-container [ngSwitch]="item.package_code == null ? 1 : 2">
-                  <ng-container *ngSwitchCase="1">
-                    <td>
-                      <p class="mb-0">{{ item.item.reference }}</p>
-                      <p class="text-clamp-1">{{ item.item.description }}</p>
-                    </td>
-                    <td class="text-center">
-                      {{ item.quantity | number : "0.0-2" }}
-                      {{
-                        item.item_unit == null
-                          ? item.item.unit
-                          : item.item_unit.unit
-                      }}
-                    </td>
-                    <td class="text-center">
-                      Rp.&nbsp;{{ item.price | number : "0.2-2" }}
-                    </td>
-                    <td class="text-center">
-                      Rp.&nbsp;{{ item.discount | number : "0.2-2" }}
-                    </td>
-                    <td class="text-center">
-                      {{
-                        item.price == 0
-                          ? 0
-                          : ((item.discount * 100) / item.price
-                            | number : "0.0-2")
-                      }}&nbsp;%
-                    </td>
-                    <td class="text-center">
-                      Rp.&nbsp;{{
-                        item.price * item.quantity | number : "0.2-2"
-                      }}
-                    </td>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="2">
-                    <td>
-                      <p class="mb-0">{{ item.package_code.name }}</p>
-                      <p class="text-clamp-1 mb-0">
-                        {{ item.package_code.description }}
-                      </p>
-                      <ul>
-                        <li
-                          *ngFor="let item of item.package_code.package_content"
-                        >
-                          <p>
-                            {{ item.item.reference }} ({{ item.quantity }}
-                            {{
-                              item.item_unit == null
-                                ? item.item.unit
-                                : item.item_unit.unit
-                            }})
-                          </p>
-                          <p class="text-clamp-2">
-                            {{ item.item.description }}
-                          </p>
-                        </li>
-                      </ul>
-                    </td>
-                    <td class="text-center">
-                      {{ item.quantity | number : "0.0-2" }}
-                    </td>
-                    <td class="text-center">
-                      Rp.&nbsp;{{ item.price | number : "0.2-2" }}
-                    </td>
-                    <td class="text-center">
-                      Rp.&nbsp;{{ item.discount | number : "0.2-2" }}
-                    </td>
-                    <td class="text-center">
-                      {{
-                        item.price == 0
-                          ? 0
-                          : ((item.discount * 100) / item.price
-                            | number : "0.0-2")
-                      }}&nbsp;%
-                    </td>
-                    <td class="text-center">
-                      Rp.&nbsp;{{
-                        item.price * item.quantity | number : "0.2-2"
-                      }}
-                    </td>
-                  </ng-container>
-                </ng-container>
+              <tr *ngFor="let item of dataSource.sales_invoice">
+                <td>
+                  <p class="mb-0">{{ item.product.reference }}</p>
+                  <p class="text-clamp-1">{{ item.product.description }}</p>
+                </td>
+                <td class="text-center">
+                  {{ item.quantity | number : "0.0-2" }}
+                  {{
+                    item.product_unit == null
+                      ? item.product.unit
+                      : item.product_unit.unit
+                  }}
+                </td>
+                <td class="text-center">
+                  Rp.&nbsp;{{ item.price | number : "0.2-2" }}
+                </td>
+                <td class="text-center">
+                  Rp.&nbsp;{{ item.discount | number : "0.2-2" }}
+                </td>
+                <td class="text-center">
+                  {{
+                    item.price == 0
+                      ? 0
+                      : ((item.discount * 100) / item.price | number : "0.0-2")
+                  }}&nbsp;%
+                </td>
+                <td class="text-center">
+                  Rp.&nbsp;{{
+                    (item.price - item.discount) * item.quantity
+                      | number : "0.2-2"
+                  }}
+                </td>
               </tr>
             </tbody>
             <tfoot>
@@ -265,7 +223,7 @@
                   {{ "sales-invoice__archive__view__subtotal" | translate }}
                 </td>
                 <td class="text-center" colspan="2">
-                  Rp.&nbsp;{{ dataSource.subTotal | number : "0.2-2" }}
+                  Rp.&nbsp;{{ subtotal | number : "0.2-2" }}
                 </td>
               </tr>
               <tr>
@@ -300,9 +258,9 @@
                 <td class="text-center">
                   {{ "sales-invoice__archive__view__total" | translate }}
                 </td>
-                <td class="text-center" colspan="2">
+                <td class="text-center" colspan="1">
                   Rp.&nbsp;{{
-                    dataSource.subTotal -
+                    subtotal -
                       dataSource.discount +
                       dataSource.delivery +
                       dataSource.service | number : "0.2-2"

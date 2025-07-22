@@ -11,6 +11,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { of, switchMap } from 'rxjs';
 import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { UpdateProductPurchasePriceComponent } from 'src/app/presentation/components/update-product-purchase-price/update-product-purchase-price.component';
 import { AlertService } from 'src/app/services/alert.service';
@@ -45,12 +46,14 @@ export class PurchaseInvoiceConfirmViewComponent {
    * This will be step 1.
    */
   metaFormGroup: FormGroup = new FormGroup({
+    id: new FormControl('', [Validators.required, Validators.min(0)]),
     date: new FormControl('', Validators.required),
     name: new FormControl('', Validators.required),
-    good_receipt_name: new FormControl('', Validators.required),
+    invoice_name: new FormControl('', Validators.required),
     faktur: new FormControl('', [Validators.pattern(/(^$|(^([0-9]{16})$))/g)]),
     supplier_id: new FormControl('', Validators.required),
     company_id: new FormControl('', Validators.required),
+
     supplier_name: new FormControl(''),
     company_name: new FormControl(''),
   });
@@ -67,18 +70,6 @@ export class PurchaseInvoiceConfirmViewComponent {
     total: new FormControl(0),
   });
 
-  /**
-   * Value form group is used to store confirm.
-   * Only confirm is required.
-   * This will be step 3.
-   */
-  valueFormGroup: FormGroup = new FormGroup({
-    confirm: new FormControl('', [
-      Validators.required,
-      Validators.requiredTrue,
-    ]),
-  });
-
   get f() {
     return this.purchaseDocumentFormGroup.controls;
   }
@@ -87,10 +78,14 @@ export class PurchaseInvoiceConfirmViewComponent {
     return this.f['items'] as FormArray;
   }
 
+  getFormGroupAt(i: number) {
+    return this.t.at(i) as FormGroup;
+  }
+
   ngOnInit(): void {
     this.isLoading = true;
     this.apiService
-      .get(`purchase-invoice/${this.route.snapshot.params['id']}`)
+      .get(`good-receipt/${this.route.snapshot.params['id']}`)
       .subscribe({
         next: (data: any) => {
           if (!data) {
@@ -102,7 +97,7 @@ export class PurchaseInvoiceConfirmViewComponent {
 
           if (data.is_confirm) {
             this.alertService.showSuccess(
-              this.translateService.instant('general__allready-confirmed')
+              this.translateService.instant('general__already-confirmed')
             );
             this.location.back();
           }
@@ -114,15 +109,17 @@ export class PurchaseInvoiceConfirmViewComponent {
             this.location.back();
           }
 
-          let sub_total = 0;
-          (data.good_receipt_code.good_receipt as any[]).forEach((x) => {
+          (data.good_receipt as any[]).forEach((x) => {
             this.t.push(
               this.formBuilder.group({
                 id: [x.id, Validators.required],
-                reference: [x.item.reference, [Validators.required]],
-                description: [x.item.description, [Validators.required]],
-                item_unit_id: [x.item_unit == null ? null : x.item_unit.id],
-                unit: [x.item_unit == null ? x.item.unit : x.item_unit.unit],
+                reference: [x.product.reference, [Validators.required]],
+                description: [x.product.description, [Validators.required]],
+                product_id: [x.product_id],
+                product_unit_id: [x.product_unit_id],
+                unit: [
+                  x.product_unit == null ? x.product.unit : x.product_unit.unit,
+                ],
                 quantity: [x.quantity],
                 price: [x.price],
                 discount: [x.discount],
@@ -134,24 +131,28 @@ export class PurchaseInvoiceConfirmViewComponent {
                 save_price: [false],
               })
             );
-
-            sub_total +=
-              Number(x.quantity) * (Number(x.price) - Number(x.discount));
           });
 
           this.metaFormGroup.patchValue({
-            good_receipt_name: data.good_receipt_code.name,
-            name: data.name == '' ? data.good_receipt_code.name : data.name,
+            id: data.id,
+            name: data.name,
+            invoice_name: data.invoice_name,
             date: data.date,
-            supplier_id: data.good_receipt_code.supplier.id,
-            company_id: data.good_receipt_code.company.id,
-            supplier_name: data.good_receipt_code.supplier.name,
-            company_name: data.good_receipt_code.company.name,
+            supplier_id: data.supplier.id,
+            company_id: data.company.id,
+            supplier_name: data.supplier.name,
+            company_name: data.company.name,
           });
 
           this.purchaseDocumentFormGroup.patchValue({
             discount: data.discount,
-            total: sub_total,
+            total: this.t.controls.reduce((a: any, b: any) => {
+              return (
+                a +
+                b.get('quantity').value *
+                  (b.get('price').value - b.get('discount').value)
+              );
+            }, 0),
           });
         },
         error: (error) => {
@@ -164,15 +165,14 @@ export class PurchaseInvoiceConfirmViewComponent {
 
     this.t.valueChanges.subscribe({
       next: () => {
-        let sub_total = 0;
-        this.t.controls.forEach((x) => {
-          sub_total +=
-            Number(x.get('quantity')?.value) *
-            (Number(x.get('price')?.value) - Number(x.get('discount')?.value));
-        });
-
         this.purchaseDocumentFormGroup.patchValue({
-          total: sub_total,
+          total: this.t.controls.reduce((a: any, b: any) => {
+            return (
+              a +
+              b.get('quantity').value *
+                (b.get('price').value - b.get('discount').value)
+            );
+          }, 0),
         });
       },
       error: (error) => {
@@ -182,156 +182,185 @@ export class PurchaseInvoiceConfirmViewComponent {
   }
 
   openEditDiscount(i: number) {
-    const sheet = this.sheet.open(UpdateProductPurchasePriceComponent, {
-      data: {
-        discount: this.t.controls[i].get('discount')?.value,
-        price: this.t.controls[i].get('price')?.value,
-        discountPercentage: this.t.controls[i].get('discountPercentage')?.value,
-        save_price: this.t.controls[i].get('save_price')?.value,
-      },
-    });
-    sheet.afterDismissed().subscribe((data: any) => {
-      if (data != undefined) {
-        this.t.controls[i].get('discount')?.setValue(data.discount);
-        this.t.controls[i]
-          .get('discountPercentage')!
-          .setValue(data.discountPercentage);
-        this.t.controls[i].get('price')?.setValue(data.price);
-        this.t.controls[i].get('save_price')?.setValue(data.save_price);
-      }
-    });
+    const sheet = this.sheet
+      .open(UpdateProductPurchasePriceComponent, {
+        data: {
+          discount: this.t.controls[i].get('discount')?.value,
+          price: this.t.controls[i].get('price')?.value,
+          discountPercentage:
+            this.t.controls[i].get('discountPercentage')?.value,
+          save_price: this.t.controls[i].get('save_price')?.value,
+        },
+      })
+      .afterDismissed()
+      .subscribe((data: any) => {
+        if (data) {
+          this.t.controls[i].get('discount')?.setValue(data.discount);
+          this.t.controls[i]
+            .get('discountPercentage')!
+            .setValue(data.discountPercentage);
+          this.t.controls[i].get('price')?.setValue(data.price);
+          this.t.controls[i].get('save_price')?.setValue(data.save_price);
+        }
+      });
   }
 
   submitForm(type: string) {
-    if (
-      this.purchaseDocumentFormGroup.invalid ||
-      this.isSubmitting ||
-      this.purchaseDocumentFormGroup.get('discount')?.value >
-        this.purchaseDocumentFormGroup.get('total')?.value
-    ) {
+    if (this.isSubmitting || this.isLoading) {
       return;
-    } else {
-      if (type == 'confirm') {
-        this.dialog
-          .open(DeleteConfirmationComponent, {
-            data: {
-              header: this.translateService.instant(
-                'purchase-invoice__confirm__header'
-              ),
-              title: this.translateService.instant(
-                'purchase-invoice__confirm__confirm__title'
-              ),
-              document: `[${this.metaFormGroup.value.good_receipt_name}]`,
-            },
-          })
-          .afterClosed()
-          .subscribe((data) => {
-            if (data == true) {
-              this.isSubmitting = true;
-              this.apiService
-                .put(`purchase-invoice/confirm`, {
-                  id: this.route.snapshot.params['id'],
-                  discount: this.purchaseDocumentFormGroup.value.discount,
-                  good_receipt: this.t.controls.map((x) => {
-                    return {
-                      id: x.get('id')?.value,
-                      price: x.get('price')?.value,
-                      discount: x.get('discount')?.value,
-                    };
-                  }),
-                  good_receipt_name: this.metaFormGroup.value.good_receipt_name,
-                  purchase_invoice_name: this.metaFormGroup.value.name,
-                  date: this.datePipe.transform(
-                    this.metaFormGroup.value.date,
-                    'yyyy-MM-dd'
-                  ),
-                })
-                .subscribe({
-                  next: (_) => {
-                    this.alertService.showSuccess(
-                      this.translateService.instant(
-                        'purchase-invoice__confirm__confirm__success'
-                      )
-                    );
-                    // navigate to before
-                    const url = this.router.url;
-                    const urlSegments = url.split('/');
-                    urlSegments.pop();
+    }
 
-                    this.router.navigate(urlSegments);
-                  },
-                  error: (error) => {
-                    this.alertService.showError(error);
-                  },
-                })
-                .add(() => {
-                  this.isSubmitting = false;
-                });
-            }
-          });
-      } else if (type == 'delete') {
-        this.dialog
-          .open(DeleteConfirmationComponent, {
-            data: {
-              header: this.translateService.instant(
-                'purchase-invoice__confirm__header'
-              ),
-              title: this.translateService.instant(
-                'purchase-invoice__confirm__delete__title'
-              ),
-              document: `[${this.metaFormGroup.value.good_receipt_name}]`,
-            },
-          })
-          .afterClosed()
-          .subscribe((data) => {
-            if (data == true) {
-              this.isSubmitting = true;
-              this.apiService
-                .put(`purchase-invoice/delete`, {
-                  id: this.route.snapshot.params['id'],
-                  discount: this.purchaseDocumentFormGroup.value.discount,
-                  good_receipt: this.t.controls.map((x) => {
-                    return {
-                      id: x.get('id')?.value,
-                      price: x.get('price')?.value,
-                      discount: x.get('discount')?.value,
-                    };
-                  }),
-                  good_receipt_name: this.metaFormGroup.value.good_receipt_name,
-                  purchase_invoice_name: this.metaFormGroup.value.name,
-                  date: this.datePipe.transform(
-                    this.metaFormGroup.value.date,
-                    'yyyy-MM-dd'
-                  ),
-                })
-                .subscribe({
-                  next: (_) => {
-                    this.alertService.showSuccess(
-                      this.translateService.instant(
-                        'purchase-invoice__confirm__delete__success'
-                      )
-                    );
-                    // navigate to before
-                    const url = this.router.url;
-                    const urlSegments = url.split('/');
-                    urlSegments.pop();
-
-                    this.router.navigate(urlSegments);
-                  },
-                  error: (error) => {
-                    this.alertService.showError(error);
-                  },
-                })
-                .add(() => {
-                  this.isSubmitting = false;
-                });
-            }
-          });
+    if (type == 'confirm') {
+      if (!this.isValid) {
+        return;
       }
+      
+      this.dialog
+        .open(DeleteConfirmationComponent, {
+          data: {
+            header: this.translateService.instant(
+              'purchase-invoice__confirm__header'
+            ),
+            title: this.translateService.instant(
+              'purchase-invoice__confirm__confirm__title'
+            ),
+            document: `[${this.metaFormGroup.value.name}]`,
+          },
+        })
+        .afterClosed()
+        .subscribe((data) => {
+          if (data) {
+            this.apiService
+              .put('good-receipt/confirm', {
+                id: Number(this.metaFormGroup.value.id),
+                name: this.metaFormGroup.value.name,
+                invoice_name: this.metaFormGroup.value.invoice_name,
+                faktur: this.metaFormGroup.value.faktur,
+                date: this.datePipe.transform(
+                  this.metaFormGroup.value.date,
+                  'yyyy-MM-dd'
+                ),
+                discount: Number(
+                  this.purchaseDocumentFormGroup.controls['discount'].value
+                ),
+                good_receipt: this.t.controls.map((x) => {
+                  return {
+                    id: x.get('id')?.value,
+                    price: Number(x.get('price')?.value),
+                    discount: Number(x.get('discount')?.value),
+                  };
+                }),
+              })
+              .pipe(
+                switchMap((result) => {
+                  if (!result) return of(null);
+
+                  const itemsToSave = this.t.controls
+                    .filter((x) => x.get('save_price')?.value)
+                    .map((x) => ({
+                      product_id: x.get('product_id')?.value,
+                      product_unit_id: x.get('product_unit_id')?.value,
+                      price: x.get('price')?.value,
+                      discount: x.get('discount')?.value,
+                    }));
+
+                  if (itemsToSave.length > 0) {
+                    // Post to purchase-price
+                    return this.apiService.put('product/price-purchase', {
+                      items: itemsToSave,
+                    });
+                  }
+                  return of(null);
+                })
+              )
+              .subscribe({
+                next: (result) => {
+                  this.alertService.showSuccess(
+                    this.translateService.instant(
+                      'purchase-invoice__confirm__confirm__success'
+                    )
+                  );
+
+                  const url = this.router.url;
+                  const urlSegments = url.split('/');
+                  urlSegments.pop();
+
+                  this.router.navigate(urlSegments);
+                },
+                error: (error) => {
+                  this.alertService.showError(error);
+                },
+              })
+              .add(() => {
+                this.isSubmitting = false;
+              });
+          }
+        });
+    } else if (type == 'delete') {
+      this.dialog
+        .open(DeleteConfirmationComponent, {
+          data: {
+            header: this.translateService.instant(
+              'purchase-invoice__confirm__header'
+            ),
+            title: this.translateService.instant(
+              'purchase-invoice__confirm__delete__title'
+            ),
+            document: `[${this.metaFormGroup.value.good_receipt_name}]`,
+          },
+        })
+        .afterClosed()
+        .subscribe((data) => {
+          if (data) {
+            this.isSubmitting = true;
+            this.apiService
+              .put(`good-receipt/reject`, {
+                id: Number(this.metaFormGroup.value.id),
+              })
+              .subscribe({
+                next: (_) => {
+                  this.alertService.showSuccess(
+                    this.translateService.instant(
+                      'purchase-invoice__confirm__delete__success'
+                    )
+                  );
+                  // navigate to before
+                  const url = this.router.url;
+                  const urlSegments = url.split('/');
+                  urlSegments.pop();
+
+                  this.router.navigate(urlSegments);
+                },
+                error: (error) => {
+                  this.alertService.showError(error);
+                },
+              })
+              .add(() => {
+                this.isSubmitting = false;
+              });
+          }
+        });
     }
   }
 
-  getFormGroupAt(i: number) {
-    return this.t.at(i) as FormGroup;
+  get isValid(): boolean {
+    if (!this.metaFormGroup.valid) {
+      return false;
+    }
+
+    if (!this.purchaseDocumentFormGroup.valid) {
+      return false;
+    }
+
+    const discount = Number(
+      this.purchaseDocumentFormGroup.get('discount')?.value
+    );
+    const total = Number(this.purchaseDocumentFormGroup.get('total')?.value);
+
+    if (discount > total) {
+      return false;
+    }
+
+    return true;
   }
 }

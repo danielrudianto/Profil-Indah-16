@@ -34,9 +34,13 @@ export class PurchaseInvoiceArchiveComponent {
   filterFormGroup: FormGroup = new FormGroup({
     startDate: new FormControl(''),
     endDate: new FormControl(''),
-    status: new FormControl('', Validators.required),
-    paymentStatus: new FormControl('', Validators.required),
+    isActive: new FormControl(''),
+    isDelete: new FormControl(''),
+    isPending: new FormControl(''),
   });
+
+  sortBy: string = 'date';
+  sortDirection: 'asc' | 'desc' = 'desc';
 
   ngOnInit(): void {}
 
@@ -47,11 +51,11 @@ export class PurchaseInvoiceArchiveComponent {
     this.keyword = '';
 
     this.filterFormGroup.patchValue({
-      // Start date from first day of the month till the end of month
-      // Fetch all payment status and document status
       startDate: new Date(this.year!, this.month! - 1, 1),
       endDate: new Date(this.year!, this.month!, 0),
-      status: 0,
+      isActive: true,
+      isDelete: true,
+      isPending: true,
     });
 
     this.fetchSelectedMonth(1);
@@ -67,7 +71,7 @@ export class PurchaseInvoiceArchiveComponent {
     this.isLoading = true;
 
     this.apiService
-      .post('purchase-invoice/archives/v2', {
+      .post('good-receipt/archives', {
         month: this.month,
         year: this.year,
         page: this.page,
@@ -79,7 +83,11 @@ export class PurchaseInvoiceArchiveComponent {
         endDate: moment(
           new Date(this.filterFormGroup.get('endDate')?.value)
         ).format('YYYY-MM-DD'),
-        status: this.filterFormGroup.get('status')?.value,
+        isActive: this.filterFormGroup.get('isActive')?.value,
+        isDelete: this.filterFormGroup.get('isDelete')?.value,
+        isPending: this.filterFormGroup.get('isPending')?.value,
+        sortBy: this.sortBy,
+        sortDirection: this.sortDirection,
       })
       .subscribe({
         next: (data: any) => {
@@ -131,6 +139,64 @@ export class PurchaseInvoiceArchiveComponent {
       this.filterFormGroup.patchValue(data);
       this.fetchSelectedMonth(1);
     });
+  }
+
+  private checkChanges(data: any) {
+    const isActive = data.isActive;
+    const isDelete = data.isDelete;
+    const isPending = data.isPending;
+
+    const maxDate = data.endDate;
+    const minDate = data.startDate;
+    const existingIsActive = this.filterFormGroup.value.isActive;
+    const existingIsDelete = this.filterFormGroup.value.isDelete;
+    const existingIsPending = this.filterFormGroup.value.isPending;
+
+    const existingMinDate = this.filterFormGroup.value.startDate;
+    const existingMaxDate = this.filterFormGroup.value.endDate;
+
+    let response = false;
+
+    if (isPending != existingIsPending) {
+      response = true;
+    }
+
+    if (isActive != existingIsActive) {
+      response = true;
+    }
+
+    if (isDelete != existingIsDelete) {
+      response = true;
+    }
+
+    if (existingMinDate.getTime() != minDate.getTime()) {
+      response = true;
+    }
+
+    if (existingMaxDate.getTime() != maxDate.getTime()) {
+      response = true;
+    }
+
+    return response;
+  }
+
+  changeSortBy(field: string) {
+    if (this.isLoading) {
+      return;
+    }
+
+    if (this.sortBy == field) {
+      if (this.sortDirection == 'asc') {
+        this.sortDirection = 'desc';
+      } else {
+        this.sortDirection = 'asc';
+      }
+    } else {
+      this.sortBy = field;
+      this.sortDirection = 'asc';
+    }
+
+    this.fetchSelectedMonth(1);
   }
 
   viewArchive(id: number) {

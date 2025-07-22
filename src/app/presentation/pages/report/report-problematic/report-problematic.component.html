@@ -74,9 +74,12 @@
                 <td>
                   <p class="text-clamp-2">{{ data.description }}</p>
                 </td>
-                <td>{{ data.item_brand_name }}</td>
-                <td>{{ data.item_type_name }}</td>
-                <td>{{ data.stock | number : "0.0-2" }} {{ data.unit }}</td>
+                <td>{{ data.product_brand.name }}</td>
+                <td>{{ data.product_type.name }}</td>
+                <td>
+                  {{ data.product_stock.stock | number : "0.0-2" }}
+                  {{ data.unit }}
+                </td>
                 <td>
                   {{ data.minimum_stock | number : "0.0-2" }} {{ data.unit }}
                 </td>

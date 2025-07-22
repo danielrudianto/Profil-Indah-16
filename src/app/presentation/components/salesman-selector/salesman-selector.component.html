@@ -57,13 +57,6 @@
           </mat-menu>
         </div>
       </div>
-
-      <mat-paginator
-        [disabled]="isLoading"
-        [length]="dataCount"
-        pageSize="10"
-        (page)="changePage($event)"
-      />
     </div>
   </div>
 </app-dynamic-dialog>

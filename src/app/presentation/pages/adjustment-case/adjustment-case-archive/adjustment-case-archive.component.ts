@@ -69,7 +69,7 @@ export class AdjustmentCaseArchiveComponent {
     this.isLoading = true;
 
     this.apiService
-      .post('adjustment-event/archives/v2', {
+      .get('adjustment-event/archives', {
         month: this.month,
         year: this.year,
         page: this.page,

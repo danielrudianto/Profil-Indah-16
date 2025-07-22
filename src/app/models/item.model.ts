@@ -43,14 +43,3 @@ export interface Package {
 export interface DataUser {
   name: string;
 }
-
-export interface ItemStock {
-  id: number;
-  reference: string;
-  description: string;
-  item_brand_name: string;
-  item_type_name: string;
-  is_active: boolean;
-  stock: number;
-  unit: string;
-}

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { ItemStock } from 'src/app/models/item.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { StockListReportComponent } from './stock-list-report/stock-list-report.component';
@@ -21,7 +20,7 @@ export class StockListComponent {
   ) {}
 
   isLoading: boolean = true;
-  dataSource: ItemStock[] = [];
+  dataSource: any[] = [];
   dataCount: number = 0;
   page: number = 1;
   previousRoute: string = '';

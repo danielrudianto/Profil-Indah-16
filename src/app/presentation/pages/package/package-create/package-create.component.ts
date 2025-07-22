@@ -25,7 +25,6 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 export class PackageCreateComponent {
   constructor(
     private formBuilder: FormBuilder,
-    private dialog: MatDialog,
     private alertService: AlertService,
     private _hotkeysService: HotkeysService,
     private apiService: ApiService,
@@ -39,6 +38,8 @@ export class PackageCreateComponent {
       }),
     ]);
   }
+
+  isSubmitting: boolean = false;
 
   metaFormGroup: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -77,10 +78,6 @@ export class PackageCreateComponent {
         number_of_items: this.t.length,
       });
     });
-
-    this.itemsFormGroup.valueChanges.subscribe(() => {
-      console.log(this.itemsFormGroup.controls);
-    });
   }
 
   get f() {
@@ -99,37 +96,55 @@ export class PackageCreateComponent {
   }
 
   openItemSelector() {
-    const dialog = this.dynamicComponentService.createDynamicComponent(
-      ProductSelectorComponent,
-      {}
-    );
-    let validation = true;
+    const dialog = this.dynamicComponentService
+      .createDynamicComponent(ProductSelectorComponent, {})
+      .subscribe((result: any) => {
+        if (result) {
+          const data = result.data;
+          const sub = result.sub;
+          const check = this.checkProductExists(
+            data.id,
+            sub == null ? null : sub.id
+          );
 
-    dialog.subscribe((result) => {
-      const data = result.data;
-      const sub = result.sub;
+          if (!check) {
+            this.alertService.showSuccess(
+              this.translateService.instant('general__item__exists')
+            );
+            return;
+          }
 
-      this.t.push(
-        this.formBuilder.group({
-          product_id: [data.id, Validators.required],
-          product_unit_id: [sub == null ? null : sub.id],
-          reference: [data.reference, Validators.required],
-          description: [data.description, Validators.required],
-          price: [
-            sub == null ? data.sales_price : sub.sales_price,
-            [Validators.required, Validators.min(0.01)],
-          ],
-          discount: [
-            sub == null ? data.sales_discount : sub.sales_discount,
-            [Validators.required, Validators.min(0)],
-          ],
-          quantity: [0, [Validators.required, Validators.min(0.01)]],
-        })
-      );
+          this.t.push(
+            this.formBuilder.group({
+              product_id: [data.id, Validators.required],
+              product_unit_id: [sub == null ? null : sub.id],
+              reference: [data.reference, Validators.required],
+              description: [data.description, Validators.required],
+              price: [
+                sub == null ? data.sales_price : sub.sales_price,
+                [Validators.required, Validators.min(0.01)],
+              ],
+              discount: [
+                sub == null ? data.sales_discount : sub.sales_discount,
+                [Validators.required, Validators.min(0)],
+              ],
+              quantity: [0, [Validators.required, Validators.min(0.01)]],
+            })
+          );
+        }
+      });
+  }
+
+  private checkProductExists(productID: number, productUnitID: number | null) {
+    const index = this.t.value.findIndex((x: any) => {
+      return x.product_id == productID && x.product_unit_id == productUnitID;
     });
+
+    return index == -1 ? true : false;
   }
 
   submitForm() {
+    this.isSubmitting = true;
     this.apiService
       .post('product-package', {
         name: this.metaFormGroup.get('name')?.value,
@@ -140,8 +155,7 @@ export class PackageCreateComponent {
             product_id: x.product_id,
             product_unit_id: x.product_unit_id,
             quantity: x.quantity,
-            price: x.price,
-            discount: x.discount,
+            price: x.price - x.discount,
           };
         }),
       })
@@ -167,6 +181,9 @@ export class PackageCreateComponent {
         error: (error) => {
           this.alertService.showError(error);
         },
+      })
+      .add(() => {
+        this.isSubmitting = false;
       });
   }
 }

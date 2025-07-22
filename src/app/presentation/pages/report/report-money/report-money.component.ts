@@ -48,12 +48,10 @@ export class ReportMoneyComponent {
   }
 
   get totalPayments(): number {
-    let total = 0;
-    this.dataSource.forEach((item) => {
-      total += item.bill_payment;
-      total += item.deposit_payment;
-      total -= item.sales_return_payment;
-    });
-    return total;
+    return this.dataSource.length == 0
+      ? 0
+      : this.dataSource.reduce((a, b) => {
+          return a + b.salesInvoice + b.salesDeposit - b.salesReturn;
+        }, 0);
   }
 }

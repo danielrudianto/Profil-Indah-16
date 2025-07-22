@@ -29,25 +29,19 @@ export class SalesmanSelectorComponent {
   isLoading: boolean = false;
   isSubmitting: boolean = false;
   dataSource: any[] = [];
-  dataCount: number = 0;
-  page: number = 1;
 
   ngOnInit(): void {
     this.isOpened = true;
     this.fetchSalesman();
   }
 
-  fetchSalesman(page: number = this.page): void {
-    this.page = page;
+  fetchSalesman(): void {
     this.isLoading = true;
     this.apiService
-      .get('sales-invoice/salesman/pagination', {
-        page: this.page,
-      })
+      .get('salesman/all', {})
       .subscribe({
         next: (response: any) => {
-          this.dataSource = response.data;
-          this.dataCount = response.count;
+          this.dataSource = response;
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -61,14 +55,13 @@ export class SalesmanSelectorComponent {
   deleteSalesman(element: string) {
     this.isSubmitting = true;
     this.apiService
-      .post('sales-invoice/salesman/delete', {
+      .post('salesman/delete', {
         name: element,
       })
       .subscribe({
         next: (_) => {
           const index = this.dataSource.findIndex((x) => x == element);
           this.dataSource.splice(index, 1);
-          this.dataCount = this.dataCount - 1;
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -77,11 +70,6 @@ export class SalesmanSelectorComponent {
       .add(() => {
         this.isSubmitting = false;
       });
-  }
-
-  changePage(page: PageEvent) {
-    this.page = page.pageIndex + 1;
-    this.fetchSalesman();
   }
 
   closeDialog() {

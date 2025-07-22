@@ -67,7 +67,7 @@ export class SalesReturnArchiveComponent {
     this.isLoading = true;
 
     this.apiService
-      .post('sales-return/archives/v2', {
+      .post('sales-return/archives', {
         month: this.month,
         year: this.year,
         page: this.page,

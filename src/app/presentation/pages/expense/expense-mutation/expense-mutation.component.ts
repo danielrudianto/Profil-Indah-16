@@ -67,11 +67,13 @@ export class ExpenseMutationComponent {
   fetchReport(page: number = this.page) {
     this.isLoading = true;
     this.page = page;
-    const month = Number(this.date.value?.format('MM')) - 1;
+    const month = Number(this.date.value?.format('MM'));
     const year = this.date.value?.format('YYYY');
     this.apiService
-      .get(`expense/${year}/${month}`, {
+      .get(`expense/mutation`, {
         page: this.page,
+        month: month,
+        year: year,
       })
       .subscribe({
         next: (data: any) => {

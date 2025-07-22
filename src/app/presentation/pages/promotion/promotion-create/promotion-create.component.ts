@@ -38,7 +38,7 @@ export class PromotionCreateComponent {
 
   onSelectBrand(event: any) {
     const index = this.brands.findIndex((x) => {
-      x.id == event.id;
+      return x.id == event.id;
     });
 
     if (index == -1) {

@@ -1,16 +1,17 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import {
+  AbstractControl,
   FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
   selector: 'app-price-sales-update',
@@ -19,34 +20,46 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 })
 export class PriceSalesUpdateComponent {
   constructor(
-    private dynamicComponentService: DynamicComponentService,
-    private _hotKeysService: HotkeysService,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private apiService: ApiService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
-    private translateService: TranslateService
-  ) {
-    this._hotKeysService.add([
-      new Hotkey('esc', (event: KeyboardEvent): boolean => {
-        this.closeDialog();
-        return false;
-      }),
-    ]);
-  }
+    private translateService: TranslateService,
+    private dialog: MatDialogRef<PriceSalesUpdateComponent>
+  ) {}
 
-  @Input('data') data: any;
-  isOpened: boolean = true;
   isSubmitting: boolean = false;
   isLoading: boolean = true;
-  priceFormGroup: FormGroup = new FormGroup({
-    reference: new FormControl(''),
-    description: new FormControl(''),
-    id: new FormControl('', Validators.required),
-    item_price: new FormArray([]),
-  });
+
+  discountLessThanPriceValidator(control: AbstractControl) {
+    const formGroup = control as FormGroup;
+    const price = formGroup.get('sales_price')?.value;
+    const discount = formGroup.get('sales_discount')?.value;
+    return discount > price ? { discountTooHigh: true } : null;
+  }
+
+  priceFormGroup: FormGroup = new FormGroup(
+    {
+      reference: new FormControl(''),
+      description: new FormControl(''),
+      sales_price: new FormControl(0, [Validators.required, Validators.min(0)]),
+      sales_discount: new FormControl(0, [
+        Validators.required,
+        Validators.min(0),
+      ]),
+      product_id: new FormControl('', Validators.required),
+      unit: new FormControl('', Validators.required),
+      product_unit: new FormArray([]),
+    },
+    [this.discountLessThanPriceValidator]
+  );
 
   ngOnInit(): void {
     this.fetchByID();
+
+    this.priceFormGroup.valueChanges.subscribe(() => {
+      console.log(this.priceFormGroup.controls);
+    });
   }
 
   get f() {
@@ -54,7 +67,7 @@ export class PriceSalesUpdateComponent {
   }
 
   get t() {
-    return this.priceFormGroup.get('item_price') as FormArray;
+    return this.priceFormGroup.get('product_unit') as FormArray;
   }
 
   fetchByID(): void {
@@ -65,45 +78,30 @@ export class PriceSalesUpdateComponent {
           this.priceFormGroup.patchValue({
             reference: data.reference,
             description: data.description,
-            id: data.id,
+            sales_price: data.sales_price,
+            sales_discount: data.sales_discount,
+            unit: data.unit,
+            product_id: data.id,
           });
 
-          const index = data.item_price.findIndex(
-            (x: any) => x.item_unit_id == null
-          );
-
-          this.t.push(
-            this.formBuilder.group({
-              item_id: [data.id],
-              item_unit_id: [null],
-              unit: [data.unit, [Validators.required]],
-              price: [
-                index == -1 ? 0 : data.item_price[index].price,
-                [Validators.required, Validators.min(0)],
-              ],
-              discount: [
-                index == -1 ? 0 : data.item_price[index].discount,
-                [Validators.required, Validators.min(0)],
-              ],
-            })
-          );
-
-          data.item_price
-            .filter((x: any) => x.item_unit_id != null)
-            .forEach((item: any) => {
-              const item_price = this.formBuilder.group({
-                item_id: [data.id],
-                item_unit_id: [item.item_unit_id],
-                unit: [item.item_unit.unit],
-                price: [item.price, [Validators.required, Validators.min(0)]],
-                discount: [
-                  item.discount,
+          for (let i = 0; i < data.product_unit.length; i++) {
+            this.t.push(
+              this.formBuilder.group({
+                product_id: [data.id],
+                product_unit_id: [data.product_unit[i].id],
+                unit: [data.product_unit[i].unit],
+                sales_price: [
+                  data.product_unit[i].sales_price,
                   [Validators.required, Validators.min(0)],
                 ],
-              });
-
-              this.t.push(item_price);
-            });
+                sales_discount: [
+                  data.product_unit[i].sales_discount,
+                  [Validators.required, Validators.min(0)],
+                ],
+                conversion: [data.product_unit[i].conversion],
+              })
+            );
+          }
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -116,10 +114,7 @@ export class PriceSalesUpdateComponent {
   }
 
   closeDialog(data: any = undefined) {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent(data);
-    }, 300);
+    this.dialog.close(data);
   }
 
   getFormGroupAt(i: number) {
@@ -129,15 +124,13 @@ export class PriceSalesUpdateComponent {
   submitForm(): void {
     this.isSubmitting = true;
     this.apiService
-      .put('product-price-sales/v2', {
-        data: this.t.value,
-      })
+      .put('product-price-sales', this.priceFormGroup.value)
       .subscribe({
         next: (_) => {
           this.alertService.showSuccess(
             this.translateService.instant('sales-price__update__success')
           );
-          this.closeDialog(this.t.value);
+          this.closeDialog(this.priceFormGroup.value);
         },
         error: (error) => {
           this.alertService.showError(error);

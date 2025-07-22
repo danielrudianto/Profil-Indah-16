@@ -147,7 +147,7 @@ export class AdministratorDashboardComponent {
   }
 
   fetchStats(): void {
-    this.apiService.post('report/dashboard/administrator', {}).subscribe({
+    this.apiService.post('dashboard/administrator', {}).subscribe({
       next: (data: any) => {
         localStorage.setItem(
           'dashboard:administrator:last-synced',
