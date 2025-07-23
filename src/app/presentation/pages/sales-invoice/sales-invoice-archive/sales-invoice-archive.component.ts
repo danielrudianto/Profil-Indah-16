@@ -29,6 +29,7 @@ export class SalesInvoiceArchiveComponent {
   dataSource: any[] = [];
   dataCount: number = 0;
   page: number = 1;
+  pageSize: number = 10;
   isLoading: boolean = false;
   month: number | null = null;
   year: number | null = null;
@@ -52,6 +53,7 @@ export class SalesInvoiceArchiveComponent {
     this.month = event.month;
     this.year = event.year;
     this.keyword = '';
+    this.pageSize = 10;
 
     this.filterFormGroup.patchValue({
       // Start date from first day of the month till the end of month
@@ -81,6 +83,7 @@ export class SalesInvoiceArchiveComponent {
         month: this.month,
         year: this.year,
         page: this.page,
+        pageSize: this.pageSize,
         keyword: this.keyword,
         // Convert to DD-MM-YYYY
         startDate: moment(
@@ -111,8 +114,13 @@ export class SalesInvoiceArchiveComponent {
   }
 
   changePage(event: PageEvent) {
-    this.page = event.pageIndex + 1;
-    this.fetchSelectedMonth();
+    if (event.pageSize != this.pageSize) {
+      this.pageSize = event.pageSize;
+      this.fetchSelectedMonth(1);
+    } else {
+      this.page = event.pageIndex + 1;
+      this.fetchSelectedMonth();
+    }
   }
 
   backToYear() {

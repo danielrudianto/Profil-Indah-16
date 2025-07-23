@@ -18,17 +18,15 @@
           <th>{{ "sales-deposit__archive__document" | translate }}</th>
           <th>{{ "sales-deposit__archive__customer" | translate }}</th>
           <th>{{ "sales-deposit__archive__amount" | translate }}</th>
-          <th>{{ "sales-deposit__archive__payment" | translate }}</th>
         </tr>
       </thead>
       <tbody *ngIf="!isLoading && dataSource.length > 0">
         <tr *ngFor="let data of dataSource" (click)="viewDeposit(data.id)">
           <td>{{ data.date | date : "dd MMMM YY" }}</td>
-          <td>{{ data.sales }}</td>
+          <td>{{ data.sales ?? "INTERNAL" }}</td>
           <td>{{ data.name }}</td>
-          <td>{{ data.customer_name }}</td>
-          <td>{{ data.value | number : "0.2-2" }}</td>
-          <td>{{ data.payment | number : "0.2-2" }}</td>
+          <td>{{ data.customer == null ? "Retail" : data.customer.name }}</td>
+          <td>{{ getValue(data.deposit) | number : "0.2-2" }}</td>
         </tr>
       </tbody>
       <tbody *ngIf="!isLoading && dataSource.length == 0">

@@ -96,7 +96,7 @@ export class DepositViewComponent {
       .afterClosed()
       .subscribe((data) => {
         if (data == true) {
-          this.apiService.delete(`deposit/${this.data.id}`).subscribe({
+          this.apiService.delete(`sales-deposit/${this.data.id}`).subscribe({
             next: () => {
               this.alertService.showSuccess(
                 this.translateService.instant('deposit__delete__success')
@@ -113,7 +113,7 @@ export class DepositViewComponent {
 
   fetchByID(): void {
     this.apiService
-      .get(`deposit/${this.data.id}`, {})
+      .get(`sales-deposit/${this.data.id}`, {})
       .subscribe({
         next: (data) => {
           this.dataSource = data;

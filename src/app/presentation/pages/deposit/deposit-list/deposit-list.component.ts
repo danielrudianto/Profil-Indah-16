@@ -48,4 +48,10 @@ export class DepositListComponent {
   onUpdatePage() {
     this.page = 1;
   }
+
+  getValue(data: any[]) {
+    return data.reduce((a, b) => {
+      return a + b.quantity * (b.price - b.discount);
+    }, 0);
+  }
 }
