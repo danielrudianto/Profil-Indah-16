@@ -10,6 +10,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import moment from 'moment';
 import { ArchiveViewComponent } from 'src/app/presentation/components/archives/archive-view/archive-view.component';
 import { MatDialog } from '@angular/material/dialog';
+import { SalesInvoiceViewComponent } from './sales-invoice-view/sales-invoice-view.component';
 
 @Component({
   selector: 'app-sales-invoice-archive',
@@ -224,9 +225,14 @@ export class SalesInvoiceArchiveComponent {
   }
 
   viewArchive(id: number) {
-    this.dynamicComponentService.createDynamicComponent(ArchiveViewComponent, {
-      route: 'sales-invoice',
-      id: id,
+    this.dialog.open(SalesInvoiceViewComponent, {
+      data: {
+        id: id,
+      },
     });
+    // this.dynamicComponentService.createDynamicComponent(ArchiveViewComponent, {
+    //   route: 'sales-invoice',
+    //   id: id,
+    // });
   }
 }

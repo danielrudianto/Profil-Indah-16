@@ -19,7 +19,6 @@
       <div *ngIf="!isLoading" [ngSwitch]="data.route">
         <app-sales-invoice-view
           *ngSwitchCase="'sales-invoice'"
-          [data]="dataSource"
           (close)="close()"
         ></app-sales-invoice-view>
         <app-purchase-invoice-view

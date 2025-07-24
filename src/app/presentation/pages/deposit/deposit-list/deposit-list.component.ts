@@ -27,13 +27,14 @@ export class DepositListComponent {
       }
     );
 
-    dialog.subscribe((data) => {
-      if (data == 'deleted') {
-        this.dataCount = this.dataCount - 1;
-        const index = this.dataSource.findIndex((x) => x.id == id);
-        this.dataSource.splice(index, 1);
-      }
-    });
+    // dialog.subscribe((data) => {
+    //   console.log(data);
+    //   if (data == 'deleted') {
+    //     this.dataCount = this.dataCount - 1;
+    //     const index = this.dataSource.findIndex((x) => x.id == id);
+    //     this.dataSource.splice(index, 1);
+    //   }
+    // });
   }
 
   onUpdateData(event: any) {

@@ -189,6 +189,13 @@ Buttons styling
   font-family: "Poppins", sans-serif;
 }
 
+.table.data-table td,
+.table.data-table th {
+  padding: 0.5rem;
+  vertical-align: middle;
+  font-family: "Poppins", sans-serif;
+}
+
 .paginator {
   background-color: transparent;
 }
