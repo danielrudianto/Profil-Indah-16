@@ -4,7 +4,10 @@
   (onMonthSelected)="onMonthSelected($event)"
 />
 
-<div class="container" [@slideInOutAnimation]="mode == 1 ? 'in' : 'out'">
+<div
+  class="container boundary-container"
+  [@slideInOutAnimation]="mode == 1 ? 'in' : 'out'"
+>
   <div class="row">
     <div class="col-12">
       <div class="dashboard-card">

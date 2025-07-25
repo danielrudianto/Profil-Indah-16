@@ -1,4 +1,356 @@
-<div class="view-panel-wrapper">
+<h2 mat-dialog-title>{{ "deposit__view__title" | translate }}</h2>
+<mat-dialog-content>
+  <div *ngIf="isLoading">
+    <mat-spinner id="spinner" class="spinner"></mat-spinner>
+  </div>
+  <form [formGroup]="salesDepositFormGroup" *ngIf="!isLoading">
+    <mat-expansion-panel
+      disabled
+      class="mat-elevation-z0"
+      hideToggle
+      [expanded]="step() === 0"
+      (opened)="setStep(0)"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ "sales-invoice__archive__view__general__title" | translate }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="row">
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{
+              "sales-invoice__archive__view__date" | translate
+            }}</mat-label>
+            <input matInput readonly formControlName="date" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{
+              "sales-invoice__archive__view__name" | translate
+            }}</mat-label>
+            <input matInput readonly formControlName="name" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{
+              "sales-invoice__archive__view__status" | translate
+            }}</mat-label>
+            <input matInput readonly formControlName="status" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{
+              "sales-invoice__archive__view__created-by" | translate
+            }}</mat-label>
+            <input matInput readonly formControlName="createdBy" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{
+              "sales-invoice__archive__view__created-at" | translate
+            }}</mat-label>
+            <input matInput readonly formControlName="createdAt" />
+          </mat-form-field>
+
+          <button
+            mat-stroked-button
+            color="primary"
+            style="letter-spacing: 0"
+            (click)="nextStep()"
+          >
+            {{ "general__next" | translate }}
+          </button>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{
+              "sales-invoice__archive__view__customer" | translate
+            }}</mat-label>
+            <input matInput readonly formControlName="customer" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{
+              "sales-invoice__archive__view__sales" | translate
+            }}</mat-label>
+            <input matInput readonly formControlName="sales" />
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel
+      disabled
+      class="mat-elevation-z0"
+      hideToggle
+      [expanded]="step() === 1"
+      (opened)="setStep(1)"
+    >
+      <div class="row">
+        <div class="col-12">
+          <div class="table-responsive">
+            <table class="table data-table">
+              <thead>
+                <tr>
+                  <th class="text-center" style="width: 200px">
+                    {{
+                      "sales-invoice__archive__view__items__product" | translate
+                    }}
+                  </th>
+                  <th class="text-center" style="width: 200px">
+                    {{
+                      "sales-invoice__archive__view__items__quantity"
+                        | translate
+                    }}
+                  </th>
+                  <th class="text-center" style="width: 200px">
+                    {{
+                      "sales-invoice__archive__view__items__price" | translate
+                    }}
+                  </th>
+                  <th class="text-center" style="width: 300px">
+                    {{
+                      "sales-invoice__archive__view__items__discount"
+                        | translate
+                    }}
+                  </th>
+                  <th class="text-center" style="width: 200px">
+                    {{
+                      "sales-invoice__archive__view__items__total" | translate
+                    }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of dataSource.sales_deposit">
+                  <td>
+                    <p class="mb-0">{{ item.product.reference }}</p>
+                    <p class="text-clamp-1 mb-0">
+                      {{ item.product.description }}
+                    </p>
+                  </td>
+                  <td class="text-center">
+                    {{ item.quantity | number : "0.0-2" }}
+                    {{
+                      item.product_unit == null
+                        ? item.product.unit
+                        : item.product_unit.unit
+                    }}
+                  </td>
+                  <td class="text-center">
+                    Rp.&nbsp;{{ item.price | number : "0.2-2" }}
+                  </td>
+                  <td
+                    class="text-center"
+                    [matTooltip]="
+                      getDiscountPercentage(item.discount, item.price)
+                    "
+                  >
+                    Rp.&nbsp;{{ item.discount | number : "0.2-2" }}
+                  </td>
+                  <td class="text-center">
+                    Rp.&nbsp;{{ item.price * item.quantity | number : "0.2-2" }}
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3"></td>
+                  <td class="text-center">
+                    {{ "sales-invoice__archive__view__subtotal" | translate }}
+                  </td>
+                  <td class="text-center" colspan="2">
+                    Rp.&nbsp;{{ subtotal | number : "0.2-2" }}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3"></td>
+                  <td class="text-center">
+                    {{ "sales-invoice__archive__view__discount" | translate }}
+                  </td>
+                  <td class="text-center" colspan="2">
+                    Rp.&nbsp;{{ dataSource.discount | number : "0.2-2" }}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3"></td>
+                  <td class="text-center">
+                    {{ "sales-invoice__archive__view__service" | translate }}
+                  </td>
+                  <td class="text-center" colspan="2">
+                    Rp.&nbsp;{{ dataSource.service | number : "0.2-2" }}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3"></td>
+                  <td class="text-center">
+                    {{ "sales-invoice__archive__view__delivery" | translate }}
+                  </td>
+                  <td class="text-center" colspan="2">
+                    Rp.&nbsp;{{ dataSource.delivery | number : "0.2-2" }}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3"></td>
+                  <td class="text-center">
+                    {{ "sales-invoice__archive__view__total" | translate }}
+                  </td>
+                  <td class="text-center" colspan="2">
+                    Rp.&nbsp;{{
+                      subtotal -
+                        dataSource.discount +
+                        dataSource.delivery +
+                        dataSource.service | number : "0.2-2"
+                    }}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="d-flex">
+            <button
+              type="button"
+              mat-stroked-button
+              color="warn"
+              class="me-3"
+              style="letter-spacing: 0"
+              (click)="prevStep()"
+            >
+              {{ "general__previous" | translate }}
+            </button>
+
+            <button
+              type="button"
+              mat-stroked-button
+              color="primary"
+              style="letter-spacing: 0"
+              (click)="nextStep()"
+            >
+              {{ "general__next" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel
+      disabled
+      class="mat-elevation-z0"
+      hideToggle
+      [expanded]="step() === 1"
+      (opened)="setStep(1)"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ "sales-invoice__archive__view__item__title" | translate }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+    </mat-expansion-panel>
+    <mat-expansion-panel
+      disabled
+      class="mat-elevation-z0"
+      hideToggle
+      [expanded]="step() === 2"
+      (opened)="setStep(2)"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ "sales-invoice__archive__view__payment__title" | translate }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="table-responsive">
+            <table class="table data-table">
+              <thead>
+                <tr>
+                  <th style="width: 150px">
+                    {{
+                      "sales-invoice__archive__view__payments__date" | translate
+                    }}
+                  </th>
+                  <th style="width: 200px">
+                    {{
+                      "sales-invoice__archive__view__payments__method"
+                        | translate
+                    }}
+                  </th>
+                  <th style="width: 200px">
+                    {{
+                      "sales-invoice__archive__view__payments__amount"
+                        | translate
+                    }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of dataSource.sales_deposit_payment">
+                  <td>{{ item.date | date : "dd/MM/yyyy" }}</td>
+                  <td>
+                    {{
+                      item.payment_method == null
+                        ? "Cash"
+                        : item.payment_method.name
+                    }}
+                  </td>
+                  <td>{{ item.value | number : "0.2-2" }}</td>
+                </tr>
+              </tbody>
+              <tbody *ngIf="dataSource.sales_deposit_payment.length == 0">
+                <td colspan="3">
+                  {{
+                    "sales-invoice__archive__view__payments__empty" | translate
+                  }}
+                </td>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="d-flex">
+            <button
+              type="button"
+              mat-stroked-button
+              color="warn"
+              class="me-3"
+              style="letter-spacing: 0"
+              (click)="prevStep()"
+            >
+              {{ "general__previous" | translate }}
+            </button>
+
+            <button
+              type="button"
+              mat-stroked-button
+              color="primary"
+              style="letter-spacing: 0"
+              [matMenuTriggerFor]="menu"
+            >
+              {{ "sales-deposit__archive__other-actions" | translate }}
+              <mat-icon>menu</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item>
+                <mat-icon>delete</mat-icon>
+                <span>{{ "sales-deposit__archive__delete" | translate }}</span>
+              </button>
+              <button mat-menu-item (click)="confirm()">
+                <mat-icon>check</mat-icon>
+                <span>{{ "sales-deposit__archive__confirm" | translate }}</span>
+              </button>
+            </mat-menu>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button color="primary" mat-dialog-close>
+    {{ "general__close" | translate }}
+  </button>
+</mat-dialog-actions>
+
+<!-- <div class="view-panel-wrapper">
   <div class="view-panel-backdrop" (click)="close()"></div>
   <div class="view-panel" [@panelAnimation]="panelState">
     <div class="row-action">
@@ -17,7 +369,7 @@
       <mat-spinner id="spinner" *ngIf="isLoading" />
 
       <div *ngIf="!isLoading">
-        <h5 class="mt-2">{{ "deposit__view__general-data" | translate }}</h5>
+        <h5 class="mt-2"></h5>
         <mat-divider class="mb-3" />
         <label>{{ "deposit__view__date" | translate }}</label>
         <p>{{ dataSource.date | date : "MM/dd/yyyy" }}</p>
@@ -229,4 +581,4 @@
       </button>
     </div>
   </div>
-</div>
+</div> -->

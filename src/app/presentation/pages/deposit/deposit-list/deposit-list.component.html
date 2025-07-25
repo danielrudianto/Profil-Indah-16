@@ -26,7 +26,7 @@
           <td>{{ data.sales ?? "INTERNAL" }}</td>
           <td>{{ data.name }}</td>
           <td>{{ data.customer == null ? "Retail" : data.customer.name }}</td>
-          <td>{{ getValue(data.deposit) | number : "0.2-2" }}</td>
+          <td>{{ getValue(data.sales_deposit) | number : "0.2-2" }}</td>
         </tr>
       </tbody>
       <tbody *ngIf="!isLoading && dataSource.length == 0">

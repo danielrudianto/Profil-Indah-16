@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { DepositViewComponent } from '../deposit-view/deposit-view.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-deposit-list',
@@ -8,7 +9,7 @@ import { DepositViewComponent } from '../deposit-view/deposit-view.component';
   styleUrls: ['./deposit-list.component.css'],
 })
 export class DepositListComponent {
-  constructor(private dynamicComponentService: DynamicComponentService) {}
+  constructor(private dialog: MatDialog) {}
 
   isLoading: boolean = false;
   dataSource: any[] = [];
@@ -20,12 +21,18 @@ export class DepositListComponent {
   }
 
   viewDeposit(id: number) {
-    const dialog = this.dynamicComponentService.createDynamicComponent(
-      DepositViewComponent,
-      {
+    // const dialog = this.dynamicComponentService.createDynamicComponent(
+    //   DepositViewComponent,
+    //   {
+    //     id: id,
+    //   }
+    // );
+
+    this.dialog.open(DepositViewComponent, {
+      data: {
         id: id,
-      }
-    );
+      },
+    });
 
     // dialog.subscribe((data) => {
     //   console.log(data);

@@ -127,12 +127,8 @@ export class DepositConfirmComponent {
   @ViewChild('input') input: any;
 
   ngOnInit(): void {
-    this.p.valueChanges.subscribe(() => {
-      console.log(this.p.controls);
-    });
-
     this.apiService
-      .get(`deposit/${this.activatedRoute.snapshot.params['id']}`)
+      .get(`sales-deposit/${this.activatedRoute.snapshot.params['id']}`)
       .subscribe({
         next: (result: any) => {
           if (result.is_delete) {
@@ -163,21 +159,14 @@ export class DepositConfirmComponent {
           });
 
           // Insert the items to the form Array
-          (result.deposit as any[]).forEach((x) => {
+          (result.sales_deposit as any[]).forEach((x) => {
             this.t.push(
               this.formBuilder.group({
                 id: [x.id],
                 checked: [true],
-                package_code_id: [x.package_code_id],
-                item_id: [x.item_id],
-                reference: [
-                  x.item_id != null ? x.item.reference : x.package_code.name,
-                ],
-                description: [
-                  x.item_id != null
-                    ? x.item.description
-                    : x.package_code.description,
-                ],
+                item_id: [x.product_id],
+                reference: [x.product.reference],
+                description: [x.product.description],
                 quantity: [
                   Number(x.quantity),
                   [Validators.required, Validators.min(0.1)],
@@ -190,32 +179,23 @@ export class DepositConfirmComponent {
                   Number(x.discount),
                   [Validators.required, Validators.min(0)],
                 ],
-                package_content: [
-                  x.package_code_id == null
-                    ? null
-                    : x.package_code.package_content,
-                ],
                 unit: [
-                  x.item_id == null
-                    ? null
-                    : x.item_unit == null
-                    ? x.item.unit
-                    : x.item_unit.unit,
+                  x.product_unit_id == null
+                    ? x.product.unit
+                    : x.product_unit.unit,
                 ],
                 conversion: [
-                  x.item_id == null
-                    ? null
-                    : x.item_unit == null
-                    ? 1
-                    : x.item_unit.conversion,
+                  x.product_unit_id == null ? 1 : x.product_unit.conversion,
                 ],
-                default_unit: [x.item_id == null ? null : x.item.unit],
+                default_unit: [
+                  x.product_unit == null ? x.product.unit : x.product_unit.unit,
+                ],
               })
             );
           });
 
           // Insert the payments to the form Array
-          result.deposit_payment.forEach((item: any) => {
+          result.sales_deposit_payment.forEach((item: any) => {
             this.pb.push(
               this.formBuilder.group({
                 id: [item.id, Validators.required],

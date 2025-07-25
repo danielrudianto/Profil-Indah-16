@@ -53,6 +53,8 @@ export class SalesInvoiceViewComponent {
     date: new FormControl('', Validators.required),
     customer: new FormControl(''),
     status: new FormControl(''),
+    createdBy: new FormControl('', Validators.required),
+    createdAt: new FormControl('', Validators.required),
   });
 
   ngOnInit(): void {
@@ -113,6 +115,8 @@ export class SalesInvoiceViewComponent {
               : this.translateService.instant(
                   'sales-invoice__archive__view__status__pending'
                 ),
+            createdBy: data.user_bill_code_created_byTouser.name,
+            createdAt: this.datePipe.transform(data.createdAt, 'dd MMMM YYYY'),
           });
         },
         error: (error) => {
@@ -122,6 +126,13 @@ export class SalesInvoiceViewComponent {
       .add(() => {
         this.isLoading = false;
       });
+  }
+
+  get subtotal(): number {
+    if (this.dataSource == null) return 0;
+    return this.dataSource.sales_invoice.reduce((a: any, b: any) => {
+      return a + b.quantity * (b.price - b.discount);
+    }, 0);
   }
 
   getDiscountPercentage(discount: number, price: number) {

@@ -27,7 +27,7 @@ export class PromotionCreateComponent {
     description: new FormControl('', Validators.required),
     start_date: new FormControl(new Date(), [Validators.required]),
     end_date: new FormControl(''),
-    target: new FormControl(0, [Validators.required, Validators.min(0)]),
+    target: new FormControl('', [Validators.required, Validators.min(0)]),
     supplier: new FormControl('', Validators.required),
     rules: new FormArray([]),
   });

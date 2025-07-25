@@ -88,32 +88,22 @@
               [formGroup]="getFormGroupAt(i)"
             >
               <td>
-                <ng-container
-                  *ngIf="!itemForm.get('package_code_id')!.value; else itemTD"
-                >
-                  <p>{{ itemForm.get("reference")?.value }}</p>
-                  <p class="text-clamp-2">
-                    {{ itemForm.get("description")?.value }}
-                  </p>
-                </ng-container>
+                <p>{{ itemForm.get("reference")?.value }}</p>
+                <p class="text-clamp-2">
+                  {{ itemForm.get("description")?.value }}
+                </p>
               </td>
               <td>{{ itemForm.get("price")?.value | number : "0.2-2" }}</td>
               <td>{{ itemForm.get("discount")?.value | number : "0.2-2" }}</td>
               <td>
                 {{ itemForm.get("quantity")?.value | number : "0.0-2" }}
-                <span *ngIf="!itemForm.get('package_code_id')!.value">{{
-                  itemForm.get("unit")?.value
-                }}</span>
+                {{ itemForm.get("unit")?.value }}
               </td>
               <td>
                 {{
                   itemForm.get("quantity")?.value *
                     (itemForm.get("price")?.value -
-                      (itemForm.get("discountType")?.value == "absolute"
-                        ? itemForm.get("discount")?.value
-                        : (itemForm.get("discountPercentage")?.value *
-                            itemForm.get("price")?.value) /
-                          100)) | number : "0.2-2"
+                      itemForm.get("discount")?.value) | number : "0.2-2"
                 }}
               </td>
               <td>
@@ -288,7 +278,7 @@
               [formGroup]="getFormGroupAtNewPayment(i)"
             >
               <td>
-                {{ item.get("date")?.value | date : "dd/MM/yyyy HH:mm" }}
+                {{ item.get("date")?.value | date : "dd MMMM YYYY" }}
               </td>
               <td>{{ item.get("payment_method_name")?.value }}</td>
               <td>{{ item.get("amount")?.value | number : "0.0-2" }}</td>

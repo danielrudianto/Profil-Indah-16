@@ -1,170 +1,181 @@
-<div class="container-fluid">
+<app-feature-background />
+<div class="container">
   <div class="row">
     <div class="col-12">
-      <h2>
-        {{ "promotion__title" | translate }} /
-        {{ "promotion__title__create" | translate }}
-      </h2>
-      <form [formGroup]="promotionFormGroup">
-        <mat-form-field class="w-100" appearance="outline">
-          <mat-label>{{ "promotion__add__name" | translate }}</mat-label>
-          <input
-            [disabled]="isSubmitting"
-            matInput
-            type="text"
-            formControlName="name"
-          />
-        </mat-form-field>
-        <mat-form-field class="w-100" appearance="outline">
-          <mat-label>{{ "promotion__add__description" | translate }}</mat-label>
-          <textarea
-            [disabled]="isSubmitting"
-            matInput
-            type="text"
-            formControlName="description"
-          ></textarea>
-        </mat-form-field>
-        <mat-form-field class="w-100" appearance="outline">
-          <mat-label>{{ "promotion__add__start-date" | translate }}</mat-label>
-          <input
-            [disabled]="isSubmitting"
-            matInput
-            formControlName="start_date"
-            [matDatepicker]="startpicker"
-          />
-          <mat-datepicker-toggle
-            matIconSuffix
-            [for]="startpicker"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #startpicker></mat-datepicker>
-        </mat-form-field>
-        <mat-form-field class="w-100" appearance="outline">
-          <mat-label>{{ "promotion__add__end-date" | translate }}</mat-label>
-          <input
-            [disabled]="isSubmitting"
-            matInput
-            formControlName="end_date"
-            [matDatepicker]="picker"
-          />
-          <mat-datepicker-toggle
-            matIconSuffix
-            [for]="picker"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-        <mat-form-field class="w-100" appearance="outline">
-          <mat-label>{{ "promotion__add__target" | translate }}</mat-label>
-          <input
-            [disabled]="isSubmitting"
-            matInput
-            type="text"
-            formControlName="target"
-            mask="separator.2"
-            thousandSeparator=" "
-            placeholder="Ex. 800"
-          />
-        </mat-form-field>
+      <app-feature-header
+        [title]="
+          ('promotion__title' | translate) +
+          '&nbsp;/&nbsp;' +
+          ('promotion__title__create' | translate)
+        "
+        [isBackAvailable]="true"
+      ></app-feature-header>
+      <div class="dashboard-card">
+        <form [formGroup]="promotionFormGroup">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>{{ "promotion__add__name" | translate }}</mat-label>
+            <input
+              [disabled]="isSubmitting"
+              matInput
+              type="text"
+              formControlName="name"
+            />
+          </mat-form-field>
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>{{
+              "promotion__add__description" | translate
+            }}</mat-label>
+            <textarea
+              [disabled]="isSubmitting"
+              matInput
+              type="text"
+              formControlName="description"
+            ></textarea>
+          </mat-form-field>
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>{{
+              "promotion__add__start-date" | translate
+            }}</mat-label>
+            <input
+              [disabled]="isSubmitting"
+              matInput
+              formControlName="start_date"
+              [matDatepicker]="startpicker"
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="startpicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #startpicker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>{{ "promotion__add__end-date" | translate }}</mat-label>
+            <input
+              [disabled]="isSubmitting"
+              matInput
+              formControlName="end_date"
+              [matDatepicker]="picker"
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>{{ "promotion__add__target" | translate }}</mat-label>
+            <input
+              [disabled]="isSubmitting"
+              matInput
+              type="text"
+              formControlName="target"
+              mask="separator.2"
+              thousandSeparator=" "
+              placeholder="Ex. 800"
+            />
+          </mat-form-field>
 
-        <app-autocomplete-search
-          [label]="'promotion__add__brand' | translate"
-          routeName="product-brand"
-          (onSelectData)="onSelectBrand($event)"
-          [reset]="true"
-        ></app-autocomplete-search>
+          <app-autocomplete-search
+            [label]="'promotion__add__brand' | translate"
+            routeName="product-brand"
+            (onSelectData)="onSelectBrand($event)"
+            [reset]="true"
+          ></app-autocomplete-search>
 
-        <mat-chip-set class="mb-5" *ngIf="brands.length > 0">
-          <mat-chip
-            *ngFor="let brand of brands; index as i"
-            (click)="onRemoveBrand(i)"
-            >{{ brand.name }}</mat-chip
+          <mat-chip-set class="mb-5" *ngIf="brands.length > 0">
+            <mat-chip
+              *ngFor="let brand of brands; index as i"
+              (click)="onRemoveBrand(i)"
+              >{{ brand.name }}</mat-chip
+            >
+          </mat-chip-set>
+
+          <app-autocomplete-search
+            [label]="'promotion__add__supplier' | translate"
+            routeName="supplier"
+            (onSelectData)="onSelectSupplier($event)"
+            (onUnselectData)="onUnselectSupplier()"
+            [selected]="promotionFormGroup.controls['supplier'].valid"
+          ></app-autocomplete-search>
+
+          <button
+            type="button"
+            mat-stroked-button
+            color="primary"
+            style="letter-spacing: 0"
+            (click)="addRule()"
           >
-        </mat-chip-set>
-
-        <app-autocomplete-search
-          [label]="'promotion__add__supplier' | translate"
-          routeName="supplier"
-          (onSelectData)="onSelectSupplier($event)"
-          (onUnselectData)="onUnselectSupplier()"
-          [selected]="promotionFormGroup.controls['supplier'].valid"
-        ></app-autocomplete-search>
-
-        <button
-          type="button"
-          mat-stroked-button
-          color="primary"
-          style="letter-spacing: 0"
-          (click)="addRule()"
-        >
-          {{ "promotion__add__add-rule" | translate }}
-        </button>
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>{{ "promotion__add__rule" | translate }}</th>
-                <th>{{ "promotion__add__rule-type" | translate }}</th>
-                <th>{{ "promotion__add__rule-value" | translate }}</th>
-                <th>{{ "promotion__add__action" | translate }}</th>
-              </tr>
-            </thead>
-            <tbody *ngIf="t.controls.length == 0">
-              <tr>
-                <td colspan="4">
-                  <empty-table />
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="t.controls.length > 0">
-              <tr *ngFor="let control of t.controls; let i = index">
-                <td>{{ i + 1 }}</td>
-                <td>
-                  <span [ngSwitch]="control.value.rule">
-                    <span *ngSwitchCase="'Starts with'">{{
-                      "promotion__add__rule-starts-with" | translate
-                    }}</span>
-                    <span *ngSwitchCase="'Ends with'">
-                      {{ "promotion__add__rule-ends-with" | translate }}
+            {{ "promotion__add__add-rule" | translate }}
+          </button>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ "promotion__add__rule" | translate }}</th>
+                  <th>{{ "promotion__add__rule-type" | translate }}</th>
+                  <th>{{ "promotion__add__rule-value" | translate }}</th>
+                  <th>{{ "promotion__add__action" | translate }}</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="t.controls.length == 0">
+                <tr>
+                  <td colspan="4">
+                    <empty-table />
+                  </td>
+                </tr>
+              </tbody>
+              <tbody *ngIf="t.controls.length > 0">
+                <tr *ngFor="let control of t.controls; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    <span [ngSwitch]="control.value.rule">
+                      <span *ngSwitchCase="'Starts with'">{{
+                        "promotion__add__rule-starts-with" | translate
+                      }}</span>
+                      <span *ngSwitchCase="'Ends with'">
+                        {{ "promotion__add__rule-ends-with" | translate }}
+                      </span>
+                      <span *ngSwitchCase="'Contains'">
+                        {{ "promotion__add__rule-contains" | translate }}
+                      </span>
+                      <span *ngSwitchCase="'Does not start with'">{{
+                        "promotion__add__rule-not-starts-with" | translate
+                      }}</span>
+                      <span *ngSwitchCase="'Does not end with'">{{
+                        "promotion__add__rule-not-ends-with" | translate
+                      }}</span>
+                      <span *ngSwitchCase="'Does not contain'">
+                        {{ "promotion__add__rule-not-contains" | translate }}
+                      </span>
                     </span>
-                    <span *ngSwitchCase="'Contains'">
-                      {{ "promotion__add__rule-contains" | translate }}
-                    </span>
-                    <span *ngSwitchCase="'Does not start with'">{{
-                      "promotion__add__rule-not-starts-with" | translate
-                    }}</span>
-                    <span *ngSwitchCase="'Does not end with'">{{
-                      "promotion__add__rule-not-ends-with" | translate
-                    }}</span>
-                    <span *ngSwitchCase="'Does not contain'">
-                      {{ "promotion__add__rule-not-contains" | translate }}
-                    </span>
-                  </span>
-                </td>
-                <td>{{ control.value.value }}</td>
-                <td>
-                  <button
-                    mat-icon-button
-                    (click)="removeRule(i)"
-                    [disabled]="isSubmitting"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                  </td>
+                  <td>{{ control.value.value }}</td>
+                  <td>
+                    <button
+                      mat-icon-button
+                      (click)="removeRule(i)"
+                      [disabled]="isSubmitting"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-        <button
-          type="submit"
-          mat-stroked-button
-          color="primary"
-          style="letter-spacing:0"
-          (click)="submitForm()"
-          [disabled]="isSubmitting || !promotionFormGroup.valid"
-        >
-          {{ "promotion__add__submit" | translate }}
-        </button>
-      </form>
+          <button
+            type="submit"
+            mat-stroked-button
+            color="primary"
+            style="letter-spacing: 0"
+            (click)="submitForm()"
+            [disabled]="isSubmitting || !promotionFormGroup.valid"
+          >
+            {{ "promotion__add__submit" | translate }}
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 </div>
