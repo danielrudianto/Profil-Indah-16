@@ -34,9 +34,14 @@ export class SalesReturnArchiveComponent {
   filterFormGroup: FormGroup = new FormGroup({
     startDate: new FormControl(''),
     endDate: new FormControl(''),
-    status: new FormControl('', Validators.required),
-    dateType: new FormControl('', Validators.required),
+    isActive: new FormControl(''),
+    isDelete: new FormControl(''),
+    isPending: new FormControl(''),
+    dateType: new FormControl('sales-invoice', Validators.required),
   });
+
+  sortBy: string = 'date';
+  sortDirection: 'asc' | 'desc' = 'desc';
 
   ngOnInit(): void {}
 
@@ -47,11 +52,12 @@ export class SalesReturnArchiveComponent {
     this.keyword = '';
 
     this.filterFormGroup.patchValue({
-      // Start date from first day of the month till the end of month
-      // Fetch all payment status and document status
+      dateType: new FormControl('sales-invoice', Validators.required),
       startDate: new Date(this.year!, this.month! - 1, 1),
       endDate: new Date(this.year!, this.month!, 0),
-      dateType: new FormControl('bill', Validators.required),
+      isActive: true,
+      isDelete: true,
+      isPending: true,
     });
 
     this.fetchSelectedMonth(1);
@@ -79,8 +85,12 @@ export class SalesReturnArchiveComponent {
         endDate: moment(
           new Date(this.filterFormGroup.get('endDate')?.value)
         ).format('YYYY-MM-DD'),
-        status: this.filterFormGroup.get('status')?.value,
-        paymentStatus: this.filterFormGroup.get('paymentStatus')?.value,
+        isActive: this.filterFormGroup.get('isActive')?.value,
+        isDelete: this.filterFormGroup.get('isDelete')?.value,
+        isPending: this.filterFormGroup.get('isPending')?.value,
+        sortBy: this.sortBy,
+        sortDirection: this.sortDirection,
+        type: this.filterFormGroup.get('dateType')?.value,
       })
       .subscribe({
         next: (data: any) => {

@@ -246,7 +246,7 @@ export class PromotionViewComponent {
   fetchByID() {
     this.isLoading = true;
     this.apiService
-      .get(`promotion/result/${this.data.id}`)
+      .get(`promotion/${this.data.id}`)
       .subscribe({
         next: (data) => {
           this.dataSource = data;

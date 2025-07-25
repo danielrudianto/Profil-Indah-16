@@ -1,0 +1,132 @@
+<div class="d-flex mt-4">
+  <div class="d-flex position-relative">
+    <app-vertical-divider />
+    <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <h5>{{ "overpayment__create__general-data" | translate }}</h5>
+    <form [formGroup]="metaFormGroup">
+      <app-autocomplete-search
+        [label]="'overpayment__create__customer' | translate"
+        placeholder="Ex. Bing Jaya"
+        routeName="customer#no-retail"
+        [selected]="metaFormGroup.controls['customer_id'].valid"
+        (onSelectData)="onSelectCustomer($event)"
+        (onUnselectData)="onUnselectCustomer()"
+      ></app-autocomplete-search>
+
+      <app-autocomplete-search
+        [label]="'overpayment__create__payment-method' | translate"
+        placeholder="Ex. Cash"
+        routeName="payment-method#no-dor"
+        [selected]="metaFormGroup.controls['payment_method_id'].valid"
+        (onSelectData)="onSelectPaymentMethod($event)"
+        (onUnselectData)="onUnselectPaymentMethod()"
+      ></app-autocomplete-search>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{ "overpayment__create__date" | translate }}</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Ex. 30/12/2023"
+          [matDatepicker]="picker"
+          formControlName="date"
+          autocomplete="off"
+          (click)="picker.open()"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </form>
+  </div>
+</div>
+<div class="d-flex">
+  <div class="d-flex position-relative">
+    <app-box-stepper step="2" [valid]="returnFormGroup.valid"></app-box-stepper>
+  </div>
+  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
+    <h5>{{ "overpayment__create__return-data" | translate }}</h5>
+    <form [formGroup]="returnFormGroup">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{
+          "overpayment__create__return-date" | translate
+        }}</mat-label>
+
+        <input
+          matInput
+          type="text"
+          placeholder="Ex. 30/12/2023"
+          [matDatepicker]="returnPicker"
+          formControlName="return_payment_date"
+          autocomplete="off"
+          (click)="returnPicker.open()"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="returnPicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #returnPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{
+          "overpayment__create__return-payment-method" | translate
+        }}</mat-label>
+        <mat-select formControlName="return_payment_method">
+          <mat-option [value]="'Cash'">Cash</mat-option>
+          <mat-option [value]="'Bank transfer'">Transfer</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{
+          "overpayment__create__return-payment-name" | translate
+        }}</mat-label>
+        <input matInput formControlName="return_payment_name" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{
+          "overpayment__create__return-payment-bank" | translate
+        }}</mat-label>
+        <input
+          matInput
+          [matAutocomplete]="auto"
+          formControlName="return_payment_bank"
+        />
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+          <mat-option
+            *ngFor="let bank of banks; track: bank"
+            [value]="bank.name"
+            >{{ bank.name }}</mat-option
+          >
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{
+          "overpayment__create__return-payment-number" | translate
+        }}</mat-label>
+        <input matInput formControlName="return_payment_number" />
+      </mat-form-field>
+      <div
+        *ngIf="metaFormGroup.errors?.['bankOrNumberRequired']"
+        class="error-message"
+      >
+        {{ "overpayment__create__bank-error" | translate }}
+      </div>
+
+      <button
+        type="button"
+        class="action-button"
+        (click)="submitForm()"
+        [disabled]="
+          !metaFormGroup.valid || !returnFormGroup.valid || isSubmitting
+        "
+      >
+        {{ "purchase-invoice__create__submit" | translate }}
+      </button>
+    </form>
+  </div>
+</div>

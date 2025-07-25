@@ -78,6 +78,8 @@ import { ReportProblematicComponent } from './presentation/pages/report/report-p
 import { CashierComponent } from './presentation/pages/cashier/cashier.component';
 import { ProductCreateComponent } from './presentation/pages/product/product-create/product-create.component';
 import { PromotionCreateComponent } from './presentation/pages/promotion/promotion-create/promotion-create.component';
+import { OverpaymentComponent } from './presentation/pages/overpayment/overpayment.component';
+import { OverpaymentCreateComponent } from './presentation/pages/overpayment/overpayment-create/overpayment-create.component';
 
 const routes: Routes = [
   {
@@ -624,6 +626,16 @@ const routes: Routes = [
           {
             path: 'Stock',
             component: StockListComponent,
+          },
+          {
+            path: 'Overpayment',
+            component: OverpaymentComponent,
+            children: [
+              {
+                path: '',
+                component: OverpaymentCreateComponent,
+              },
+            ],
           },
           {
             path: 'Expense-type',

@@ -25,6 +25,7 @@
   "side-nav__receivable": "Piutang",
   "side-nav__expense": "Pengeluaran",
   "side-nav__promotion": "Promosi",
+  "side-nav__overpayment": "Kelebihan Bayar",
   "dashboard-administrator__hero": "Beranda Administrator",
   "dashboard-administrator__description": "Mencapai keberhasilan melalui kerjasama dan kepercayaan.",
   "dashboard-administrator__other-application": "Fitur aplikasi lainnya",
@@ -959,6 +960,7 @@
   "good-receipt__archive__tax-invoice-name": "Faktur pajak",
   "good-receipt__archive__company": "Perusahaan",
   "good-receipt__archive__supplier": "Supplier",
+  "overpayment__title": "Overpayments",
   "expense__mutation__month-year": "Bulan dan tahun",
   "report-output__title": "Laporan pengeluaran barang",
   "report-output__month-year": "Bulan dan tahun",
@@ -1005,5 +1007,15 @@
   "user__list__name": "Nama",
   "user__list__username": "Username",
   "user__list__NIK": "NIK",
-  "user__list__role": "Jabatan"
+  "user__list__role": "Jabatan",
+  "overpayment__create__general-data": "Data umum",
+  "overpayment__create__customer": "Konsumen",
+  "overpayment__create__date": "Tanggal",
+  "overpayment__create__return-date": "Tanggal pengembalian",
+  "overpayment__create__return-payment-method": "Metode pengembalian",
+  "overpayment__create__return-payment-bank": "Nama bank",
+  "overpayment__create__return-payment-number": "Nomor akun bank",
+  "overpayment__create__return-payment-name": "Nama akun bank",
+  "overpayment__create__payment-method": "Metode penerimaan uang",
+  "overpayment__create__return-data": "Data pengembalian"
 }

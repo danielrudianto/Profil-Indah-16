@@ -110,22 +110,29 @@ export class AutocompleteSearchComponent {
 
   fetchItems() {
     this.isLoading = true;
+    const formattedRouteName = this.routeName.split('#')[0];
     this.apiService
-      .get(`${this.routeName}/autocomplete`, {
+      .get(`${formattedRouteName}/autocomplete`, {
         keyword: this.searchFormGroup.controls['searchBar'].value,
       })
       .subscribe({
         next: (data: any) => {
-          if (this.routeName == 'customer') {
-            this.items = [
-              {
-                id: 0,
-                name: 'Retail customer',
-              },
-              ...data,
-            ];
-          } else {
-            this.items = data;
+          switch (this.routeName) {
+            case 'customer':
+              this.items = [
+                {
+                  id: 0,
+                  name: 'Retail customer',
+                },
+                ...data,
+              ];
+              break;
+            case 'payment-method#no-dor':
+              this.items = data.filter((x: any) => x.id != 0);
+              break;
+            default:
+              this.items = data;
+              break;
           }
         },
       })

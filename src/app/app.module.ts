@@ -233,6 +233,10 @@ import { CashierComponent } from './presentation/pages/cashier/cashier.component
 import { CashierViewBillComponent } from './presentation/pages/cashier/cashier-view-bill/cashier-view-bill.component';
 import { CashierViewBillPaymentSelectorComponent } from './presentation/pages/cashier/cashier-view-bill/cashier-view-bill-payment-selector/cashier-view-bill-payment-selector.component';
 import { ProductCreateUnitComponent } from './presentation/pages/product/product-create/product-create-unit/product-create-unit.component';
+import { OverpaymentComponent } from './presentation/pages/overpayment/overpayment.component';
+import { OverpaymentCreateComponent } from './presentation/pages/overpayment/overpayment-create/overpayment-create.component';
+import { OverpaymentConfirmComponent } from './presentation/pages/overpayment/overpayment-confirm/overpayment-confirm.component';
+import { OverpaymentArchiveComponent } from './presentation/pages/overpayment/overpayment-archive/overpayment-archive.component';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -413,6 +417,10 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     CashierViewBillComponent,
     CashierViewBillPaymentSelectorComponent,
     ProductCreateUnitComponent,
+        OverpaymentComponent,
+        OverpaymentCreateComponent,
+        OverpaymentConfirmComponent,
+        OverpaymentArchiveComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

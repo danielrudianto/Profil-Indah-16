@@ -1,0 +1,13 @@
+<app-feature-background />
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <app-transaction-header
+        [title]="'overpayment__title' | translate"
+        [availbleMenus]="availbleMenus"
+        route="Good-receipt"
+      />
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

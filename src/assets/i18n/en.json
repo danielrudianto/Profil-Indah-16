@@ -25,6 +25,7 @@
   "side-nav__receivable": "Receivable",
   "side-nav__expense": "Expense",
   "side-nav__promotion": "Promotion",
+  "side-nav__overpayment": "Overpayments",
   "dashboard-administrator__hero": "Administrator Dashboard",
   "dashboard-administrator__description": "Achieving greatness through teamwork and leadership.",
   "dashboard-administrator__other-application": "Other application features",
@@ -960,6 +961,7 @@
   "good-receipt__archive__tax-invoice-name": "Tax invoice",
   "good-receipt__archive__company": "Company",
   "good-receipt__archive__supplier": "Supplier",
+  "overpayment__title": "Overpayments",
   "expense__mutation__month-year": "Month and year",
   "report-output__title": "Output report",
   "report-output__month-year": "Month and year",
@@ -1006,5 +1008,15 @@
   "user__list__name": "Name",
   "user__list__username": "Username",
   "user__list__NIK": "NIK",
-  "user__list__role": "Role"
+  "user__list__role": "Role",
+  "overpayment__create__general-data": "General data",
+  "overpayment__create__customer": "Customer",
+  "overpayment__create__date": "Date",
+  "overpayment__create__return-date": "Return date",
+  "overpayment__create__return-payment-method": "Return payment method",
+  "overpayment__create__return-payment-bank": "Bank name",
+  "overpayment__create__return-payment-number": "Bank account number",
+  "overpayment__create__return-payment-name": "Bank account name",
+  "overpayment__create__payment-method": "Payment method",
+  "overpayment__create__return-data": "Return data"
 }
