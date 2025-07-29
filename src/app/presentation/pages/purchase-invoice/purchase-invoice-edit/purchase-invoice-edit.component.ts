@@ -156,7 +156,7 @@ export class PurchaseInvoiceEditComponent {
 
   ngOnInit(): void {
     this.apiService
-      .get(`purchase-invoice/${this.route.snapshot.paramMap.get('id')}`)
+      .get(`good-receipt/${this.route.snapshot.paramMap.get('id')}`)
       .subscribe({
         next: (data: any) => {
           if (data.is_delete || !data.is_confirm) {
@@ -164,35 +164,41 @@ export class PurchaseInvoiceEditComponent {
             this.router.navigate(['/Administrator/Purchase-invoice']);
           }
           this.metaFormGroup.patchValue({
-            company_id: data.good_receipt_code.company.id,
-            supplier_id: data.good_receipt_code.supplier.id,
-            company_name: data.good_receipt_code.company.name,
-            supplier_name: data.good_receipt_code.supplier.name,
+            company_id: data.company_id,
+            supplier_id: data.supplier_id,
+            company_name: data.company.name,
+            supplier_name: data.supplier.name,
           });
 
           this.documentFormGroup.patchValue({
             date: data.date,
-            name: data.good_receipt_code.name,
-            invoice_name: data.name,
+            name: data.name,
+            invoice_name: data.invoice_name,
             faktur: data.faktur,
           });
 
-          (data.good_receipt_code.good_receipt as any[]).forEach((x) => {
+          data.good_receipt.forEach((x: any) => {
             this.t.push(
               this.formBuilder.group({
-                item_id: [x.item.id, Validators.required],
-                item_unit_id: [x.item_unit_id],
-                reference: [x.item.reference, Validators.required],
-                description: [x.item.description, Validators.required],
+                product_id: [x.product_id, Validators.required],
+                product_unit_id: [x.product_unit_id],
+                reference: [x.product.reference, Validators.required],
+                description: [x.product.description, Validators.required],
                 quantity: [
                   x.quantity,
                   [Validators.required, Validators.min(0.01)],
                 ],
                 price: [x.price, [Validators.min(0), Validators.required]],
                 discount: [x.discount, [Validators.min(0)]],
-                unit: [x.item_unit == null ? x.item.unit : x.item_unit.unit],
-                conversion: [x.item_unit == null ? 1 : x.item_unit.conversion],
-                default_unit: [x.item.unit],
+                unit: [
+                  x.product_unit_id == null
+                    ? x.product.unit
+                    : x.product_unit.unit,
+                ],
+                conversion: [
+                  x.product_unit_id == null ? 1 : x.product_unit.conversion,
+                ],
+                default_unit: [x.product.unit],
               })
             );
           });
@@ -210,37 +216,12 @@ export class PurchaseInvoiceEditComponent {
         this.isLoading = false;
       });
     this.itemFormGroup.controls['items'].valueChanges.subscribe(() => {
-      let quantity = 0;
-      let totalPrice = 0;
-      this.t.controls.forEach((x) => {
-        quantity +=
-          x.get('quantity') == undefined ||
-          x.get('quantity') == null ||
-          x.get('quantity')?.value == null ||
-          x.get('quantity')?.value == undefined
-            ? 0
-            : parseInt(x.get('quantity')?.value.toString());
-
-        const _quantity =
-          x.get('quantity') == undefined ||
-          x.get('quantity') == null ||
-          x.get('quantity')?.value == null ||
-          x.get('quantity')?.value == undefined
-            ? 0
-            : parseInt(x.get('quantity')?.value.toString());
-        const _price =
-          x.get('price') == undefined ||
-          x.get('price') == null ||
-          x.get('price')?.value == null ||
-          x.get('price')?.value == undefined
-            ? 0
-            : parseInt(x.get('price')?.value.toString());
-
-        totalPrice += _quantity * _price;
-      });
-
       this.valueFormGroup.patchValue({
-        total: totalPrice,
+        total: this.t.controls.reduce((acc, curr) => {
+          const price = curr.get('price')?.value || 0;
+          const quantity = curr.get('quantity')?.value || 0;
+          return acc + price * quantity;
+        }, 0),
       });
     });
   }
@@ -254,7 +235,6 @@ export class PurchaseInvoiceEditComponent {
     );
 
     dialog.subscribe((data) => {
-      console.log(data);
       if (data != null && data != undefined) {
         if (
           this.t.controls.filter(
@@ -269,8 +249,10 @@ export class PurchaseInvoiceEditComponent {
           );
         } else {
           const productFormGroup = this.formBuilder.group({
-            item_id: [data.item.id, Validators.required],
-            item_unit_id: [data.price == null ? null : data.price.item_unit_id],
+            product_id: [data.product_id, Validators.required],
+            product_unit_id: [
+              data.price == null ? null : data.price.item_unit_id,
+            ],
             reference: [data.item.reference, Validators.required],
             description: [data.item.description, Validators.required],
             quantity: [0, [Validators.required, Validators.min(0.01)]],

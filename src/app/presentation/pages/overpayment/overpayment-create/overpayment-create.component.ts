@@ -46,7 +46,7 @@ export class OverpaymentCreateComponent {
   }
 
   metaFormGroup: FormGroup = new FormGroup({
-    customer_id: new FormControl('', Validators.required),
+    customer_id: new FormControl(0, Validators.required),
     date: new FormControl('', Validators.required),
     payment_method_id: new FormControl('', Validators.required),
     value: new FormControl(0, [Validators.required, Validators.min(0)]),
@@ -146,26 +146,31 @@ export class OverpaymentCreateComponent {
     if (!this.returnFormGroup.valid) return;
 
     this.isSubmitting = true;
+    const customerID = this.metaFormGroup.get('customer_id')?.value;
+
     this.apiService
       .post('overpayment', {
+        customer_id: customerID == 0 ? null : customerID,
+        payment_method_id: this.metaFormGroup.get('payment_method_id')?.value,
+
         date: moment(new Date(this.metaFormGroup.get('date')?.value)).format(
           'YYYY-MM-DD'
         ),
         return_payment_date: moment(
-          new Date(this.metaFormGroup.get('return_payment_date')?.value)
+          new Date(this.returnFormGroup.get('return_payment_date')?.value)
         ).format('YYYY-MM-DD'),
-        return_payment_name: this.metaFormGroup.get('return_payment_name')
+        return_payment_name: this.returnFormGroup.get('return_payment_name')
           ?.value,
         return_payment_bank:
-          this.metaFormGroup.get('return_payment_method')?.value == 'Cash'
+          this.returnFormGroup.get('return_payment_method')?.value == 'Cash'
             ? null
             : this.returnFormGroup.get('return_payment_bank')?.value,
-        return_payment_method: this.metaFormGroup.get('return_payment_method')
+        return_payment_method: this.returnFormGroup.get('return_payment_method')
           ?.value,
         return_payment_number:
-          this.metaFormGroup.get('return_payment_method')?.value == 'Cash'
+          this.returnFormGroup.get('return_payment_method')?.value == 'Cash'
             ? null
-            : this.metaFormGroup.get('return_payment_number')?.value,
+            : this.returnFormGroup.get('return_payment_number')?.value,
         value: this.metaFormGroup.controls['value']?.value,
         sales_deposit_code_id: null,
       })

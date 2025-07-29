@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatChipSelectionChange } from '@angular/material/chips';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { panelAnimation } from 'src/app/animations/panel.animation';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
   selector: 'app-purchase-invoice-archive-filter',
@@ -12,67 +13,66 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 })
 export class PurchaseInvoiceArchiveFilterComponent {
   constructor(
-    private dynamicComponentService: DynamicComponentService,
-    private _hotKeysService: HotkeysService
-  ) {
-    this._hotKeysService.add([
-      new Hotkey('esc', (event: KeyboardEvent): boolean => {
-        this.close();
-        return false; // Prevent bubbling
-      }),
-      new Hotkey('f', (event: KeyboardEvent): boolean => {
-        this.enlarge();
-        return false;
-      }),
-    ]);
-  }
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialog: MatDialogRef<PurchaseInvoiceArchiveFilterComponent>,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  @Input('data') data: any;
-  panelState: string = 'closed';
   maxDate: Date = new Date();
   minDate: Date = new Date();
   salesInvoiceArchiveFilterFormGroup: FormGroup = new FormGroup({
     startDate: new FormControl(''),
     endDate: new FormControl(''),
-    status: new FormControl('', Validators.required),
   });
 
+  filterObject = {
+    isPending: false,
+    isDelete: false,
+    isActive: false,
+  };
+
   ngOnInit(): void {
-    this.panelState = 'opened';
     this.maxDate = new Date(this.data.year, this.data.month, 0);
     this.minDate = new Date(this.data.year, this.data.month - 1, 1);
     this.salesInvoiceArchiveFilterFormGroup.patchValue({
       startDate: this.data.startDate,
       endDate: this.data.endDate,
-      status: this.data.status,
     });
+
+    this.filterObject.isActive = this.data.isActive;
+    this.filterObject.isDelete = this.data.isDelete;
+    this.filterObject.isPending = this.data.isPending;
+
+    this.cdr.detectChanges();
   }
 
-  close() {
-    this.panelState = 'closed';
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
-    }, 300);
-  }
-
-  enlarge() {
-    if (this.panelState == 'opened') {
-      this.panelState = 'enlarged';
-    } else if (this.panelState == 'enlarged') {
-      this.panelState = 'opened';
-    }
+  close(data: any = undefined) {
+    this.dialog.close(data);
   }
 
   saveFilters() {
-    this.panelState = 'closed';
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent(
-        this.salesInvoiceArchiveFilterFormGroup.value
-      );
-    }, 300);
+    this.close({
+      ...this.salesInvoiceArchiveFilterFormGroup.value,
+      ...this.filterObject,
+    });
   }
 
-  setStatusFilter(value: number) {
-    this.salesInvoiceArchiveFilterFormGroup.get('status')?.setValue(value);
+  selectionChange(event: MatChipSelectionChange) {
+    const checked = event.selected;
+    const field = event.source.value;
+
+    switch (field) {
+      case 'isActive':
+        this.filterObject.isActive = checked;
+        break;
+      case 'isDelete':
+        this.filterObject.isDelete = checked;
+        break;
+      case 'isPending':
+        this.filterObject.isPending = checked;
+        break;
+      default:
+        break;
+    }
   }
 }

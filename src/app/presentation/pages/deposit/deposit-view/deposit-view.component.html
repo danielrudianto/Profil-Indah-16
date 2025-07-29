@@ -284,7 +284,7 @@
               </thead>
               <tbody>
                 <tr *ngFor="let item of dataSource.sales_deposit_payment">
-                  <td>{{ item.date | date : "dd/MM/yyyy" }}</td>
+                  <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
                   <td>
                     {{
                       item.payment_method == null

@@ -239,6 +239,7 @@ import { OverpaymentConfirmComponent } from './presentation/pages/overpayment/ov
 import { OverpaymentArchiveComponent } from './presentation/pages/overpayment/overpayment-archive/overpayment-archive.component';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { DepositConfirmUpdatePaymentComponent } from './presentation/pages/deposit/deposit-confirm/deposit-confirm-update-payment/deposit-confirm-update-payment.component';
 
 @NgModule({
   declarations: [
@@ -421,6 +422,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
         OverpaymentCreateComponent,
         OverpaymentConfirmComponent,
         OverpaymentArchiveComponent,
+        DepositConfirmUpdatePaymentComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

@@ -42,7 +42,7 @@ export class PurchaseInvoiceCreateComponent {
   ) {
     this._hotkeysService.add([
       new Hotkey('alt+a', (event: KeyboardEvent): boolean => {
-        this.openItemSelector();
+        this.openProductSelector();
         return false; // Prevent bubbling
       }),
       new Hotkey('alt+s', (event: KeyboardEvent): boolean => {
@@ -61,23 +61,12 @@ export class PurchaseInvoiceCreateComponent {
     ]);
   }
 
-  dataSource: any[] = [];
-
-  /**
-   * Meta form group
-   * Used for filling in company and supplier data
-   */
   metaFormGroup: FormGroup = new FormGroup({
     uuid: new FormControl(v4(), Validators.required),
     company_id: new FormControl('', Validators.required),
     supplier_id: new FormControl('', Validators.required),
   });
 
-  /**
-   * Document form group
-   * Used for filling in document data
-   * Such as date, name, invoice name, and faktur
-   */
   documentFormGroup: FormGroup = new FormGroup({
     date: new FormControl('', Validators.required),
     name: new FormControl('', Validators.required),
@@ -85,11 +74,6 @@ export class PurchaseInvoiceCreateComponent {
     faktur: new FormControl('', Validators.pattern(/(^$|(^([0-9]{16})$))/g)),
   });
 
-  /**
-   * Item form group
-   * Used for filling in item data
-   * Such as item name, quantity, and price
-   */
   itemFormGroup: FormGroup = new FormGroup({
     number_of_items: new FormControl(0, [
       Validators.required,
@@ -98,11 +82,6 @@ export class PurchaseInvoiceCreateComponent {
     items: new FormArray([]),
   });
 
-  /**
-   * Value form group
-   * Used for filling in total and discount data
-   * Such as total and discount
-   */
   valueFormGroup: FormGroup = new FormGroup({
     total: new FormControl(0, [Validators.required, Validators.min(1)]),
     discount: new FormControl(0, [Validators.required, Validators.min(0)]),
@@ -152,50 +131,18 @@ export class PurchaseInvoiceCreateComponent {
 
   ngOnInit(): void {
     this.itemFormGroup.controls['items'].valueChanges.subscribe(() => {
-      let quantity = 0;
-      let totalPrice = 0;
-      this.t.controls.forEach((x) => {
-        quantity +=
-          x.get('quantity') == undefined ||
-          x.get('quantity') == null ||
-          x.get('quantity')?.value == null ||
-          x.get('quantity')?.value == undefined
-            ? 0
-            : parseInt(x.get('quantity')?.value.toString());
-
-        const _quantity =
-          x.get('quantity') == undefined ||
-          x.get('quantity') == null ||
-          x.get('quantity')?.value == null ||
-          x.get('quantity')?.value == undefined
-            ? 0
-            : parseInt(x.get('quantity')?.value.toString());
-        const _price =
-          x.get('price') == undefined ||
-          x.get('price') == null ||
-          x.get('price')?.value == null ||
-          x.get('price')?.value == undefined
-            ? 0
-            : parseFloat(x.get('price')?.value.toString());
-
-        const _discount =
-          x.get('discount') == undefined ||
-          x.get('discount') == null ||
-          x.get('discount')?.value == null ||
-          x.get('discount')?.value == undefined
-            ? 0
-            : parseFloat(x.get('discount')?.value.toString());
-
-        totalPrice += _quantity * (_price - _discount);
-      });
-
       this.valueFormGroup.patchValue({
-        total: totalPrice,
+        total: this.t.controls.reduce((acc, curr) => {
+          const quantity = Number(curr.get('quantity')?.value || 0);
+          const price = Number(curr.get('price')?.value || 0);
+          const discount = Number(curr.get('discount')?.value || 0);
+          return acc + quantity * (price - discount);
+        }, 0),
       });
     });
   }
 
-  openItemSelector() {
+  openProductSelector() {
     const dialog = this.dynamicComponentService.createDynamicComponent(
       ProductSelectorComponent,
       {
@@ -205,9 +152,20 @@ export class PurchaseInvoiceCreateComponent {
 
     dialog.subscribe((result) => {
       if (result) {
-        console.log(result);
         const data = result.data;
         const sub = result.sub;
+
+        const existing = this.checkExistingProduct(
+          data.id,
+          sub == null ? null : sub.id
+        );
+
+        if (existing) {
+          this.alertService.showError(
+            this.translateService.instant('general__item__exists')
+          );
+          return;
+        }
 
         this.t.push(
           this.formBuilder.group({
@@ -238,73 +196,20 @@ export class PurchaseInvoiceCreateComponent {
         });
       }
     });
+  }
 
-    // dialog.subscribe((data) => {
-    //   console.log(data);
-    //   if (data != null && data != undefined) {
-    //     if (
-    //       this.t.controls.filter(
-    //         (x) =>
-    //           x.get('item_id')?.value == data.item.id &&
-    //           x.get('item_unit_id')?.value ==
-    //             (data.price == null ? null : data.price.item_unit_id)
-    //       ).length > 0
-    //     ) {
-    //       this.alertService.showSuccess(
-    //         'Item already exists! Please select different item.'
-    //       );
-    //     } else {
-    //       const productFormGroup = this.formBuilder.group({
-    //         item_id: [data.item.id, Validators.required],
-    //         item_unit_id: [data.price == null ? null : data.price.item_unit_id],
-    //         reference: [data.item.reference, Validators.required],
-    //         description: [data.item.description, Validators.required],
-    //         quantity: [0, [Validators.required, Validators.min(0.01)]],
-    //         price: [
-    //           data.price == null ? data.item.price : data.price.price,
-    //           [Validators.min(0), Validators.required],
-    //         ],
-    //         discount: [
-    //           data.price == null ? data.item.discount : data.price.discount,
-    //           [Validators.min(0), Validators.required],
-    //         ],
-    //         discountPercentage: [
-    //           data.price == null
-    //             ? data.item.price == 0
-    //               ? 0
-    //               : (data.item.discount * 100) / data.item.price
-    //             : data.price.price == 0
-    //             ? 0
-    //             : (data.price.discount * 100) / data.price.price,
-    //           [Validators.min(0), Validators.required, Validators.max(100)],
-    //         ],
-    //         discountType: [
-    //           'absolute',
-    //           [Validators.required, Validators.pattern('absolute|percentage')],
-    //         ],
-    //         initial_price: [
-    //           data.price == null ? data.item.price : data.price.price,
-    //           Validators.required,
-    //         ],
-    //         initial_discount: [
-    //           data.discount == null ? data.item.discount : data.price.discount,
-    //           Validators.required,
-    //         ],
-    //         unit: [data.price == null ? data.item.unit : data.price.unit],
-    //         conversion: [data.price == null ? 1 : data.price.conversion],
-    //         default_unit: [data.item.unit],
-    //         save_price: [false],
-    //         stock: [data.item.stock],
-    //       });
+  private checkExistingProduct(
+    productID: number,
+    productUnitID: number | null
+  ) {
+    const data = this.t.controls.filter((x) => {
+      return (
+        x.get('product_id')?.value == productID &&
+        x.get('product_unit_id')?.value == productUnitID
+      );
+    });
 
-    //       this.t.push(productFormGroup);
-
-    //       this.itemFormGroup.patchValue({
-    //         number_of_items: this.t.length,
-    //       });
-    //     }
-    //   }
-    // });
+    return data.length > 0;
   }
 
   deleteItem(i: number) {

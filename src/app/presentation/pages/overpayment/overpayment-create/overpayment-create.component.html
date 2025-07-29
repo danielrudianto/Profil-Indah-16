@@ -9,7 +9,8 @@
       <app-autocomplete-search
         [label]="'overpayment__create__customer' | translate"
         placeholder="Ex. Bing Jaya"
-        routeName="customer#no-retail"
+        routeName="customer"
+        [defaultValue]="'Retail customer'"
         [selected]="metaFormGroup.controls['customer_id'].valid"
         (onSelectData)="onSelectCustomer($event)"
         (onUnselectData)="onUnselectCustomer()"
@@ -37,6 +38,19 @@
         />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label> {{ "overpayment__create__value" | translate }}</mat-label>
+        <input
+          type="text"
+          matInput
+          type="text"
+          mask="separator.2"
+          thousandSeparator=" "
+          formControlName="value"
+          placeholder="Ex. 8 000"
+        />
       </mat-form-field>
     </form>
   </div>

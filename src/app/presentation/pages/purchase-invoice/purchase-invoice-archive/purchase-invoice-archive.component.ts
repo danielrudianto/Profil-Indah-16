@@ -9,6 +9,8 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { ArchiveViewComponent } from 'src/app/presentation/components/archives/archive-view/archive-view.component';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
+import { MatDialog } from '@angular/material/dialog';
+import { PurchaseInvoiceViewComponent } from './purchase-invoice-view/purchase-invoice-view.component';
 
 @Component({
   selector: 'app-purchase-invoice-archive',
@@ -20,7 +22,8 @@ export class PurchaseInvoiceArchiveComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dynamicComponentService: DynamicComponentService
+    private dynamicComponentService: DynamicComponentService,
+    private dialog: MatDialog
   ) {}
 
   mode: ArchiveMode = ArchiveMode.year;
@@ -124,21 +127,23 @@ export class PurchaseInvoiceArchiveComponent {
    * @return {void} This function does not return anything.
    */
   openFilter() {
-    const filterComponent = this.dynamicComponentService.createDynamicComponent(
-      PurchaseInvoiceArchiveFilterComponent,
-      {
-        month: this.month,
-        year: this.year,
-        startDate: this.filterFormGroup.get('startDate')?.value,
-        endDate: this.filterFormGroup.get('endDate')?.value,
-        status: this.filterFormGroup.get('status')?.value,
-      }
-    );
-
-    filterComponent.subscribe((data) => {
-      this.filterFormGroup.patchValue(data);
-      this.fetchSelectedMonth(1);
-    });
+    this.dialog
+      .open(PurchaseInvoiceArchiveFilterComponent, {
+        data: {
+          month: this.month,
+          year: this.year,
+          ...this.filterFormGroup.value,
+        },
+      })
+      .afterClosed()
+      .subscribe((data: any) => {
+        // Check if it is the same
+        const change = this.checkChanges(data);
+        if (change) {
+          this.filterFormGroup.patchValue(data);
+          this.fetchSelectedMonth(1);
+        }
+      });
   }
 
   private checkChanges(data: any) {
@@ -200,9 +205,10 @@ export class PurchaseInvoiceArchiveComponent {
   }
 
   viewArchive(id: number) {
-    this.dynamicComponentService.createDynamicComponent(ArchiveViewComponent, {
-      route: 'purchase-invoice',
-      id: id,
+    this.dialog.open(PurchaseInvoiceViewComponent, {
+      data: {
+        id: id,
+      },
     });
   }
 }

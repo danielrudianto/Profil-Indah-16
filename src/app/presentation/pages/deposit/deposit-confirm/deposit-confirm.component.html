@@ -77,9 +77,6 @@
               <th style="width: 200px">
                 {{ "deposit__confirm__table__total" | translate }}
               </th>
-              <th style="width: 150px">
-                {{ "deposit__confirm__table__action" | translate }}
-              </th>
             </tr>
           </thead>
           <tbody *ngIf="t.controls.length > 0">
@@ -106,22 +103,6 @@
                       itemForm.get("discount")?.value) | number : "0.2-2"
                 }}
               </td>
-              <td>
-                <mat-slide-toggle color="primary" formControlName="checked">
-                  {{
-                    (itemForm.get("checked")?.value
-                      ? "deposit__confirm__table__included"
-                      : "deposit__confirm__table__excluded"
-                    ) | translate
-                  }}
-                </mat-slide-toggle>
-              </td>
-              <ng-template #itemTD>
-                <p>{{ itemForm.get("reference")?.value }}</p>
-                <p class="text-clamp-2">
-                  {{ itemForm.get("description")?.value }}
-                </p>
-              </ng-template>
             </tr>
           </tbody>
           <tbody *ngIf="t.controls.length == 0">
@@ -141,7 +122,7 @@
 <div class="d-flex">
   <div class="d-flex position-relative">
     <app-vertical-divider></app-vertical-divider>
-    <app-box-stepper step="3" [valid]="billFormGroup.valid"></app-box-stepper>
+    <app-box-stepper step="3" [valid]="valueFormGroup.valid"></app-box-stepper>
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
     <h5>{{ "sales-invoice__create__bill-data" | translate }}</h5>
@@ -164,7 +145,6 @@
           "sales-invoice__create__discount" | translate
         }}</mat-label>
         <input
-          readonly
           matInput
           type="text"
           mask="separator"
@@ -180,7 +160,6 @@
           "sales-invoice__create__service" | translate
         }}</mat-label>
         <input
-          readonly
           matInput
           type="text"
           mask="separator"
@@ -196,7 +175,6 @@
           "sales-invoice__create__delivery" | translate
         }}</mat-label>
         <input
-          readonly
           matInput
           type="text"
           mask="separator"
@@ -244,6 +222,9 @@
         />
         <div matTextPrefix>Rp.&nbsp;</div>
       </mat-form-field>
+      <div *ngIf="valueFormGroup.errors?.['sales']">
+        <span>{{ "sales-deposit__total__negative" | translate }}</span>
+      </div>
     </form>
   </div>
 </div>
@@ -254,7 +235,7 @@
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
     <form [formGroup]="valueFormGroup">
-      <h5>{{ "deposit__confirm__payment-data" | translate }}</h5>
+      <h5>{{ "deposit__confirm__existing-payment-data" | translate }}</h5>
       <div class="table-responsive">
         <table class="table">
           <thead>
@@ -262,41 +243,25 @@
               <th>{{ "deposit__payment__date" | translate }}</th>
               <th>{{ "deposit__payment__payment-method" | translate }}</th>
               <th>{{ "deposit__payment__amount" | translate }}</th>
-              <th>{{ "deposit__payment__used-amount" | translate }}</th>
             </tr>
           </thead>
-          <tbody *ngIf="pb.controls.length == 0">
+          <tbody *ngIf="sales_deposit_payment.controls.length == 0">
             <tr>
-              <td colspan="4">
+              <td colspan="3">
                 <empty-table />
               </td>
             </tr>
           </tbody>
-          <tbody *ngIf="pb.controls.length > 0">
+          <tbody *ngIf="sales_deposit_payment.controls.length > 0">
             <tr
-              *ngFor="let item of pb.controls; let i = index"
+              *ngFor="let item of sales_deposit_payment.controls; let i = index"
               [formGroup]="getFormGroupAtNewPayment(i)"
             >
               <td>
                 {{ item.get("date")?.value | date : "dd MMMM YYYY" }}
               </td>
               <td>{{ item.get("payment_method_name")?.value }}</td>
-              <td>{{ item.get("amount")?.value | number : "0.0-2" }}</td>
-              <td>
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>{{
-                    "deposit__payment__used-amount" | translate
-                  }}</mat-label>
-                  <input
-                    matInput
-                    type="text"
-                    formControlName="usedAmount"
-                    mask="separator"
-                    thousandSeparator=" "
-                    [readonly]="isAllChecked"
-                  />
-                </mat-form-field>
-              </td>
+              <td>{{ item.get("value")?.value | number : "0.0-2" }}</td>
             </tr>
           </tbody>
         </table>
@@ -316,88 +281,60 @@
     <h5>{{ "sales-invoice__create__payment-data" | translate }}</h5>
     <form [formGroup]="paymentsFormGroup">
       <div class="row">
-        <div class="col-6">
-          <mat-slide-toggle
-            formControlName="immediate_payment"
-            [class.d-none]="
-              metaFormGroup.get('type')?.value == 'deposit-internal'
-            "
-          >
-            {{
-              (paymentsFormGroup.controls["immediate_payment"].value == true
-                ? "sales-invoice__create__immediate-payment"
-                : "sales-invoice__create__due-payment"
-              ) | translate
-            }}
-          </mat-slide-toggle>
-          <br />
-          <mat-form-field
-            appearance="outline"
-            class="w-100 mt-3"
-            [class.d-none]="
-              metaFormGroup.get('type')?.value == 'deposit-internal'
-            "
-          >
-            <mat-label>{{
-              "sales-invoice__create__due-time" | translate
-            }}</mat-label>
-            <input
-              matInput
-              placeholder="Ex. 30"
-              formControlName="due_time"
-              type="number"
-            />
-            <span matTextSuffix>{{
-              "sales-invoice__create__day" | translate
-            }}</span>
-          </mat-form-field>
-
+        <div class="col-12">
           <button
+            mat-stroked-button
+            color="primary"
             type="button"
+            style="letter-spacing: 0"
             (click)="openPaymentSelector()"
-            class="action-button"
-            [class.d-none]="
-              paymentsFormGroup.controls['immediate_payment'].value == false
-            "
           >
             {{ "sales-invoice__create__add-payment-method" | translate }}
           </button>
-        </div>
-        <div
-          class="col-6"
-          [class.d-none]="
-            paymentsFormGroup.controls['immediate_payment'].value == false
-          "
-        >
-          <div
-            class="payment-card"
-            *ngFor="let payment of p.controls; index as i"
-          >
-            <form [formGroup]="getFormGroupAtPayment(i)">
-              <h3 class="mb-0">
-                {{ payment.get("name")?.value }}
-              </h3>
-              <p>{{ payment.get("description")?.value }}</p>
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>{{
-                  "sales-invoice__create__payment-value" | translate
-                }}</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  mask="separator.2"
-                  thousandSeparator=" "
-                  formControlName="payment_value"
-                  [allowNegativeNumbers]="true"
-                />
-                <!-- Add button on suffix to delete -->
-                <div matSuffix>
-                  <button mat-icon-button (click)="deletePayment(i)">
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </div>
-              </mat-form-field>
-            </form>
+
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ "deposit__payment__date" | translate }}</th>
+                  <th>{{ "deposit__payment__payment-method" | translate }}</th>
+                  <th>{{ "deposit__payment__amount" | translate }}</th>
+                  <th>{{ "deposit__payment__action" | translate }}</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="sales_invoice_payment.controls.length == 0">
+                <tr>
+                  <td colspan="3">
+                    <empty-table />
+                  </td>
+                </tr>
+              </tbody>
+              <tbody *ngIf="sales_invoice_payment.controls.length > 0">
+                <tr
+                  (click)="updatePaymentMethod(i)"
+                  *ngFor="
+                    let item of sales_invoice_payment.controls;
+                    let i = index
+                  "
+                  [formGroup]="getFormGroupAtNewPayment(i)"
+                >
+                  <td>
+                    {{ item.get("date")?.value | date : "dd MMMM YYYY" }}
+                  </td>
+                  <td>{{ item.get("name")?.value }}</td>
+                  <td>{{ item.get("value")?.value | number : "0.0-2" }}</td>
+                  <td>
+                    <button
+                      mat-icon-button
+                      type="button"
+                      (click)="deletePayment(i)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

@@ -4,11 +4,9 @@ import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { ArchiveMode } from 'src/app/presentation/components/archives/archives.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { SalesInvoiceArchiveFilterComponent } from './sales-invoice-archive-filter/sales-invoice-archive-filter.component';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import moment from 'moment';
-import { ArchiveViewComponent } from 'src/app/presentation/components/archives/archive-view/archive-view.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SalesInvoiceViewComponent } from './sales-invoice-view/sales-invoice-view.component';
 
@@ -22,7 +20,6 @@ export class SalesInvoiceArchiveComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dynamicComponentService: DynamicComponentService,
     private dialog: MatDialog
   ) {}
 
@@ -70,11 +67,6 @@ export class SalesInvoiceArchiveComponent {
     this.fetchSelectedMonth(1);
   }
 
-  /**
-   * Fetches the selected month's sales invoice archives from the API.
-   * @param {number} [page=this.page] - The page number of the results to fetch. Defaults to the current page.
-   * @return {void} This function does not return anything.
-   */
   fetchSelectedMonth(page: number = this.page) {
     this.page = page;
     this.isLoading = true;
@@ -135,10 +127,6 @@ export class SalesInvoiceArchiveComponent {
     this.fetchSelectedMonth(1);
   }
 
-  /**
-   * Opens the filter component and subscribes to its data changes.
-   * @return {void} This function does not return anything.
-   */
   openFilter() {
     this.dialog
       .open(SalesInvoiceArchiveFilterComponent, {

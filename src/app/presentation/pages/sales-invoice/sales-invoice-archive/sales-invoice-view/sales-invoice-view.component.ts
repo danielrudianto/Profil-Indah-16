@@ -7,7 +7,13 @@ import {
   Output,
   signal,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import {
   MAT_DIALOG_DATA,
@@ -37,7 +43,8 @@ export class SalesInvoiceViewComponent {
     private translateService: TranslateService,
     private dialogRef: MatDialogRef<SalesInvoiceViewComponent>,
     private datePipe: DatePipe,
-    private decimalPipe: DecimalPipe
+    private decimalPipe: DecimalPipe,
+    private formBuilder: FormBuilder
   ) {}
 
   isAdministrator: boolean = false;
@@ -55,6 +62,11 @@ export class SalesInvoiceViewComponent {
     status: new FormControl(''),
     createdBy: new FormControl('', Validators.required),
     createdAt: new FormControl('', Validators.required),
+    discount: new FormControl(0, Validators.required),
+    service: new FormControl(0, Validators.required),
+    delivery: new FormControl(0, Validators.required),
+    sales_invoice: new FormArray([]),
+    sales_invoice_payment: new FormArray([]),
   });
 
   ngOnInit(): void {
@@ -63,25 +75,30 @@ export class SalesInvoiceViewComponent {
   }
 
   openDeleteConfirmation() {
-    const dialog = this.dialog.open(DeleteConfirmationComponent, {
-      data: {},
-    });
-
-    dialog.afterClosed().subscribe((data) => {
-      if (data == true) {
-        this.apiService.delete(`sales-invoice/${this.data.id}`).subscribe({
-          next: () => {
-            this.alertService.showSuccess(
-              this.translateService.instant('sales-invoice__delete__success')
-            );
-            this.dialogRef.close();
-          },
-          error: (error) => {
-            this.alertService.showError(error);
-          },
-        });
-      }
-    });
+    this.dialog
+      .open(DeleteConfirmationComponent, {
+        data: {
+          title: this.translateService.instant(
+            'sales-invoice__archive__view__delete__title'
+          ),
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data === true) {
+          this.apiService.delete(`sales-invoice/${this.data.id}`).subscribe({
+            next: () => {
+              this.alertService.showSuccess(
+                this.translateService.instant('sales-invoice__delete__success')
+              );
+              this.dialogRef.close();
+            },
+            error: (error) => {
+              this.alertService.showError(error);
+            },
+          });
+        }
+      });
   }
 
   openPaymentModal() {
@@ -99,6 +116,34 @@ export class SalesInvoiceViewComponent {
       .subscribe({
         next: (data: any) => {
           this.dataSource = data;
+          data.sales_invoice.forEach((x: any) => {
+            this.t.push(
+              this.formBuilder.group({
+                id: [x.id],
+                price: [x.price],
+                discount: [x.discount],
+                product_id: [x.product_id],
+                product_unit_id: [x.product_unit_id],
+                reference: [x.reference],
+                description: [x.description],
+                unit: [
+                  x.product_unit == null ? x.product.unit : x.product_unit.unit,
+                ],
+              })
+            );
+          });
+
+          data.sales_invoice_payment.forEach((x: any) => {
+            this.u.push(
+              this.formBuilder.group({
+                id: [x.id],
+                date: [x.date],
+                payment_method: [x.payment_method],
+                amount: [x.amount],
+              })
+            );
+          });
+
           this.salesInvoiceFormGroup.patchValue({
             date: this.datePipe.transform(data.date, 'dd MMMM YYYY'),
             name: data.name,
@@ -115,8 +160,12 @@ export class SalesInvoiceViewComponent {
               : this.translateService.instant(
                   'sales-invoice__archive__view__status__pending'
                 ),
+            delivery: data.delivery,
+            discount: data.discount,
+            service: data.service,
             createdBy: data.user_bill_code_created_byTouser.name,
             createdAt: this.datePipe.transform(data.createdAt, 'dd MMMM YYYY'),
+            sales_invoice: new FormArray([]),
           });
         },
         error: (error) => {
@@ -126,6 +175,18 @@ export class SalesInvoiceViewComponent {
       .add(() => {
         this.isLoading = false;
       });
+  }
+
+  get f() {
+    return this.salesInvoiceFormGroup.controls;
+  }
+
+  get t() {
+    return this.f['sales_invoice'] as FormArray;
+  }
+
+  get u() {
+    return this.f['sales_invoice_payment'] as FormArray;
   }
 
   get subtotal(): number {

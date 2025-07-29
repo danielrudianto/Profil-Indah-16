@@ -9,6 +9,7 @@ import moment from 'moment';
 import { PageEvent } from '@angular/material/paginator';
 import { ArchiveViewComponent } from 'src/app/presentation/components/archives/archive-view/archive-view.component';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-adjustment-case-archive',
@@ -20,7 +21,7 @@ export class AdjustmentCaseArchiveComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dynamicComponentService: DynamicComponentService
+    private dialog: MatDialog
   ) {}
 
   mode: ArchiveMode = ArchiveMode.year;
@@ -34,9 +35,13 @@ export class AdjustmentCaseArchiveComponent {
   filterFormGroup: FormGroup = new FormGroup({
     startDate: new FormControl(''),
     endDate: new FormControl(''),
-    status: new FormControl('', Validators.required),
-    paymentStatus: new FormControl('', Validators.required),
-    type: new FormControl('', Validators.required),
+    isConfirmed: new FormControl(true),
+    isPending: new FormControl(true),
+    isRejected: new FormControl(true),
+    isActive: new FormControl(true),
+    isDelete: new FormControl(true),
+    isLost: new FormControl(true),
+    isFound: new FormControl(true),
   });
 
   ngOnInit(): void {}
@@ -48,8 +53,6 @@ export class AdjustmentCaseArchiveComponent {
     this.keyword = '';
 
     this.filterFormGroup.patchValue({
-      // Start date from first day of the month till the end of month
-      // Fetch all payment status and document status
       startDate: new Date(this.year!, this.month! - 1, 1),
       endDate: new Date(this.year!, this.month!, 0),
       status: 0,
@@ -59,30 +62,29 @@ export class AdjustmentCaseArchiveComponent {
     this.fetchSelectedMonth(1);
   }
 
-  /**
-   * Fetches the selected month's sales invoice archives from the API.
-   * @param {number} [page=this.page] - The page number of the results to fetch. Defaults to the current page.
-   * @return {void} This function does not return anything.
-   */
   fetchSelectedMonth(page: number = this.page) {
     this.page = page;
     this.isLoading = true;
 
     this.apiService
-      .get('adjustment-event/archives', {
+      .get('adjustment-case/archives', {
         month: this.month,
         year: this.year,
         page: this.page,
         keyword: this.keyword,
-        // Convert to DD-MM-YYYY
         startDate: moment(
           new Date(this.filterFormGroup.get('startDate')?.value)
         ).format('YYYY-MM-DD'),
         endDate: moment(
           new Date(this.filterFormGroup.get('endDate')?.value)
         ).format('YYYY-MM-DD'),
-        status: this.filterFormGroup.get('status')?.value,
-        type: this.filterFormGroup.get('type')?.value,
+        isConfirmed: this.filterFormGroup.get('isConfirmed')?.value,
+        isPending: this.filterFormGroup.get('isPending')?.value,
+        isRejected: this.filterFormGroup.get('isRejected')?.value,
+        isActive: this.filterFormGroup.get('isActive')?.value,
+        isDelete: this.filterFormGroup.get('isDelete')?.value,
+        isLost: this.filterFormGroup.get('isLost')?.value,
+        isFound: this.filterFormGroup.get('isFound')?.value,
       })
       .subscribe({
         next: (data: any) => {
@@ -114,33 +116,23 @@ export class AdjustmentCaseArchiveComponent {
     this.fetchSelectedMonth(1);
   }
 
-  /**
-   * Opens the filter component and subscribes to its data changes.
-   * @return {void} This function does not return anything.
-   */
   openFilter() {
-    const filterComponent = this.dynamicComponentService.createDynamicComponent(
-      AdjustmentCaseArchiveFilterComponent,
-      {
-        month: this.month,
-        year: this.year,
-        startDate: this.filterFormGroup.get('startDate')?.value,
-        endDate: this.filterFormGroup.get('endDate')?.value,
-        status: this.filterFormGroup.get('status')?.value,
-        type: this.filterFormGroup.get('type')?.value,
-      }
-    );
-
-    filterComponent.subscribe((data) => {
-      this.filterFormGroup.patchValue(data);
-      this.fetchSelectedMonth(1);
-    });
+    this.dialog
+      .open(AdjustmentCaseArchiveFilterComponent, {
+        data: {
+          month: this.month,
+          year: this.year,
+          ...this.filterFormGroup.value,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {});
   }
 
   viewArchive(id: number) {
-    this.dynamicComponentService.createDynamicComponent(ArchiveViewComponent, {
-      route: 'adjustment-event',
-      id: id,
-    });
+    // this.dynamicComponentService.createDynamicComponent(ArchiveViewComponent, {
+    //   route: 'adjustment-event',
+    //   id: id,
+    // });
   }
 }
