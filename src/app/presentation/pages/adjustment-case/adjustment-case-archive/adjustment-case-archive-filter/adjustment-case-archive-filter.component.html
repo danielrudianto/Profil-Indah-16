@@ -1,4 +1,101 @@
-<div class="view-panel-wrapper">
+<h2 mat-dialog-title>
+  {{ "adjustment-case__archive__filter__title" | translate }}
+</h2>
+
+<form
+  [formGroup]="adjustmentCaseArchiveFilterFormGroup"
+  (ngSubmit)="saveFilters()"
+>
+  <mat-dialog-content>
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>{{
+        "adjustment-case__archive__filter__date-range" | translate
+      }}</mat-label>
+      <mat-date-range-input
+        [rangePicker]="picker"
+        [min]="minDate"
+        [max]="maxDate"
+      >
+        <input
+          matStartDate
+          placeholder="Start date"
+          formControlName="startDate"
+        />
+        <input matEndDate placeholder="End date" formControlName="endDate" />
+      </mat-date-range-input>
+      <mat-hint>MM/DD/YYYY - MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker
+        #picker
+        [startAt]="minDate"
+      ></mat-date-range-picker>
+    </mat-form-field>
+
+    <mat-divider />
+    <h6>
+      {{ "adjustment-case__archive__filter__document-status" | translate }}
+    </h6>
+    <mat-chip-listbox class="mb-3" selectable multiple>
+      <mat-chip-option
+        [value]="'isDelete'"
+        [selected]="filterObject.isDelete"
+        (selectionChange)="selectionChange($event)"
+        >{{
+          "adjustment-case__archive__filter__document-status__deleted"
+            | translate
+        }}</mat-chip-option
+      >
+      <mat-chip-option
+        [value]="'isActive'"
+        [selected]="filterObject.isActive"
+        (selectionChange)="selectionChange($event)"
+        >{{
+          "adjustment-case__archive__filter__document-status__active"
+            | translate
+        }}</mat-chip-option
+      >
+    </mat-chip-listbox>
+
+    <h6>
+      {{ "adjustment-case__archive__filter__document-type" | translate }}
+    </h6>
+    <mat-chip-listbox selectable multiple>
+      <mat-chip-option
+        [value]="'isLost'"
+        [selected]="filterObject.isLost"
+        (selectionChange)="selectionChange($event)"
+        >{{
+          "adjustment-case__archive__filter__type__lost" | translate
+        }}</mat-chip-option
+      >
+      <mat-chip-option
+        [value]="'isFound'"
+        [selected]="filterObject.isFound"
+        (selectionChange)="selectionChange($event)"
+        >{{
+          "adjustment-case__archive__filter__type__found" | translate
+        }}</mat-chip-option
+      >
+    </mat-chip-listbox>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      type="submit"
+      mat-stroked-button
+      color="primary"
+      style="letter-spacing: 0"
+      class="mx-1"
+    >
+      {{ "adjustment-case__filter__apply" | translate }}
+    </button>
+  </mat-dialog-actions>
+</form>
+
+<!-- <div class="view-panel-wrapper">
   <div class="view-panel-backdrop" (click)="close()"></div>
   <div class="view-panel" [@panelAnimation]="panelState">
     <div class="row-action">
@@ -111,4 +208,4 @@
       <button class="action-button mx-1" (click)="saveFilters()">Apply</button>
     </div>
   </div>
-</div>
+</div> -->

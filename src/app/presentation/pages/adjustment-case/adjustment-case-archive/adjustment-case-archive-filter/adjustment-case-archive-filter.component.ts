@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input, signal } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { MatChipSelectionChange } from '@angular/material/chips';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { panelAnimation } from 'src/app/animations/panel.animation';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
   selector: 'app-adjustment-case-archive-filter',
@@ -12,73 +12,68 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 })
 export class AdjustmentCaseArchiveFilterComponent {
   constructor(
-    private dynamicComponentService: DynamicComponentService,
-    private _hotKeysService: HotkeysService
-  ) {
-    this._hotKeysService.add([
-      new Hotkey('esc', (event: KeyboardEvent): boolean => {
-        this.close();
-        return false; // Prevent bubbling
-      }),
-      new Hotkey('f', (event: KeyboardEvent): boolean => {
-        this.enlarge();
-        return false;
-      }),
-    ]);
-  }
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialog: MatDialogRef<AdjustmentCaseArchiveFilterComponent>
+  ) {}
 
-  @Input('data') data: any;
-  panelState: string = 'closed';
   maxDate: Date = new Date();
   minDate: Date = new Date();
   adjustmentCaseArchiveFilterFormGroup: FormGroup = new FormGroup({
     startDate: new FormControl(''),
     endDate: new FormControl(''),
-    status: new FormControl('', Validators.required),
-    type: new FormControl('', Validators.required),
   });
 
+  filterObject = {
+    isLost: false,
+    isFound: false,
+    isDelete: false,
+    isActive: false,
+  };
+
   ngOnInit(): void {
-    this.panelState = 'opened';
     this.maxDate = new Date(this.data.year, this.data.month, 0);
     this.minDate = new Date(this.data.year, this.data.month - 1, 1);
     this.adjustmentCaseArchiveFilterFormGroup.patchValue({
       startDate: this.data.startDate,
       endDate: this.data.endDate,
-      status: this.data.status,
-      type: this.data.type,
     });
+
+    this.filterObject.isActive = this.data.isActive;
+    this.filterObject.isDelete = this.data.isDelete;
+    this.filterObject.isLost = this.data.isLost;
+    this.filterObject.isFound = this.data.isFound;
   }
 
-  close() {
-    this.panelState = 'closed';
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
-    }, 300);
-  }
-
-  enlarge() {
-    if (this.panelState == 'opened') {
-      this.panelState = 'enlarged';
-    } else if (this.panelState == 'enlarged') {
-      this.panelState = 'opened';
-    }
+  close(data: any = undefined) {
+    this.dialog.close(data);
   }
 
   saveFilters() {
-    this.panelState = 'closed';
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent(
-        this.adjustmentCaseArchiveFilterFormGroup.value
-      );
-    }, 300);
+    this.close({
+      ...this.adjustmentCaseArchiveFilterFormGroup.value,
+      ...this.filterObject,
+    });
   }
 
-  setStatusFilter(value: number) {
-    this.adjustmentCaseArchiveFilterFormGroup.get('status')?.setValue(value);
-  }
+  selectionChange(event: MatChipSelectionChange) {
+    const checked = event.selected;
+    const field = event.source.value;
 
-  setTypeFilter(value: number) {
-    this.adjustmentCaseArchiveFilterFormGroup.get('type')?.setValue(value);
+    switch (field) {
+      case 'isActive':
+        this.filterObject.isActive = checked;
+        break;
+      case 'isDelete':
+        this.filterObject.isDelete = checked;
+        break;
+      case 'isLost':
+        this.filterObject.isLost = checked;
+        break;
+      case 'isFound':
+        this.filterObject.isFound = checked;
+        break;
+      default:
+        break;
+    }
   }
 }

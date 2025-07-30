@@ -17,14 +17,50 @@
           <table class="table">
             <thead>
               <tr>
-                <th style="width: 250px">
-                  {{ "adjustment-case__archive__date" | translate }}
+                <th style="width: 250px" (click)="changeSortBy('date')">
+                  <div class="d-flex align-items center">
+                    <span>{{
+                      "adjustment-case__archive__date" | translate
+                    }}</span>
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc: sortBy === 'date' && sortDirection === 'asc',
+                        desc: sortBy === 'date' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
                 </th>
-                <th style="width: 250px">
-                  {{ "adjustment-case__archive__name" | translate }}
+                <th style="width: 250px" (click)="changeSortBy('name')">
+                  <div class="d-flex align-items-center">
+                    <span>
+                      {{ "adjustment-case__archive__name" | translate }}</span
+                    >
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc: sortBy === 'name' && sortDirection === 'asc',
+                        desc: sortBy === 'name' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
                 </th>
-                <th style="width: 250px">
-                  {{ "adjustment-case__archive__type" | translate }}
+                <th style="width: 250px" (click)="changeSortBy('type')">
+                  <div class="d-flex align-items-center">
+                    <span>{{
+                      "adjustment-case__archive__type" | translate
+                    }}</span>
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc: sortBy === 'type' && sortDirection === 'asc',
+                        desc: sortBy === 'type' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
                 </th>
                 <th style="width: 250px">
                   {{ "adjustment-case__archive__company" | translate }}
@@ -55,7 +91,14 @@
               >
                 <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
                 <td>{{ item.name }}</td>
-                <td>{{ item.type == 1 ? "Found" : "Lost" }}</td>
+                <td>
+                  {{
+                    (item.company != null
+                      ? "adjustment-case__archive__found"
+                      : "adjustment-case__archive__lost"
+                    ) | translate
+                  }}
+                </td>
                 <td>
                   {{ item.company_name == null ? "N/A" : item.company_name }}
                 </td>
@@ -70,7 +113,8 @@
           </button>
           <mat-paginator
             [length]="dataCount"
-            [pageSize]="20"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[10, 25, 50]"
             [pageIndex]="page - 1"
             (page)="changePage($event)"
           />
