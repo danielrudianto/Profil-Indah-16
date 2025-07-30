@@ -8,6 +8,7 @@ import moment from 'moment';
 import { PageEvent } from '@angular/material/paginator';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { MatDialog } from '@angular/material/dialog';
+import { AdjustmentCaseViewComponent } from './adjustment-case-view/adjustment-case-view.component';
 
 @Component({
   selector: 'app-adjustment-case-archive',
@@ -206,6 +207,11 @@ export class AdjustmentCaseArchiveComponent {
   }
 
   viewArchive(id: number) {
+    this.dialog.open(AdjustmentCaseViewComponent, {
+      data: {
+        id: id,
+      },
+    });
     // this.dynamicComponentService.createDynamicComponent(ArchiveViewComponent, {
     //   route: 'adjustment-event',
     //   id: id,

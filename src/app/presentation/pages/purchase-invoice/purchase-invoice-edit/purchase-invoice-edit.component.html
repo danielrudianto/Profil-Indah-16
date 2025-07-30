@@ -6,7 +6,6 @@
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
     <h5>{{ "purchase-invoice__edit__general-data" | translate }}</h5>
     <app-autocomplete-search
-      *ngIf="dataSource != null"
       routeName="supplier"
       [label]="'purchase-invoice__edit__supplier' | translate"
       placeholder="Ex. Bing Jaya"
@@ -38,7 +37,9 @@
   </div>
   <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
     <form [formGroup]="documentFormGroup">
-      <h5>{{ "purchase-invoice__edit__general-data" | translate }}</h5>
+      <h5>
+        {{ "purchase-invoice__edit__purchase-data" | translate }}
+      </h5>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>{{ "purchase-invoice__edit__date" | translate }}</mat-label>
         <input
@@ -67,9 +68,6 @@
       </mat-form-field>
 
       <mat-divider></mat-divider>
-      <h5 class="mt-3">
-        {{ "purchase-invoice__edit__purchase-data" | translate }}
-      </h5>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>{{
           "purchase-invoice__edit__invoice-name" | translate

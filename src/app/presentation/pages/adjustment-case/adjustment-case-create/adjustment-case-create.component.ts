@@ -7,6 +7,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { Subject } from 'rxjs';
 import {
@@ -29,7 +30,8 @@ export class AdjustmentCaseCreateComponent {
     private formBuilder: FormBuilder,
     private apiService: ApiService,
     private _hotkeysService: HotkeysService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private translateService: TranslateService
   ) {
     this._hotkeysService.add(
       new Hotkey('alt+a', (event: KeyboardEvent): boolean => {
@@ -183,11 +185,11 @@ export class AdjustmentCaseCreateComponent {
       }),
     };
     this.apiService
-      .post('adjustment-event', adjusment_case)
+      .post('adjustment-case', adjusment_case)
       .subscribe({
         next: () => {
           this.alertService.showSuccess(
-            'Adjustment event is successfully created.'
+            this.translateService.instant('adjustment-case__create__success')
           );
 
           this.adjustmentEventFormGroup.reset();

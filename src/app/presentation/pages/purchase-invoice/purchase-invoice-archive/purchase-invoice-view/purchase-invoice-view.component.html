@@ -40,9 +40,16 @@
             </mat-form-field>
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{
-                "good-receipt__archive__view__status" | translate
+                "good-receipt__archive__view__invoice-name" | translate
               }}</mat-label>
-              <input matInput readonly formControlName="status" />
+              <input matInput readonly formControlName="invoice_name" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "good-receipt__archive__view__tax-invoice-name" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="faktur" />
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="w-100">
@@ -71,9 +78,29 @@
           <div class="col-6">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{
-                "good-receipt__archive__view__customer" | translate
+                "good-receipt__archive__view__supplier" | translate
               }}</mat-label>
               <input matInput readonly formControlName="supplier" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "good-receipt__archive__view__status" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="status" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "good-receipt__archive__view__created-by" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="createdBy" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "good-receipt__archive__view__created-at" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="createdAt" />
             </mat-form-field>
           </div>
         </div>
@@ -230,9 +257,7 @@
                 </button>
                 <button mat-menu-item (click)="updatePurchaseInvoice()">
                   <mat-icon>check</mat-icon>
-                  <span>{{
-                    "good-receipt__archive__edit" | translate
-                  }}</span>
+                  <span>{{ "good-receipt__archive__edit" | translate }}</span>
                 </button>
               </mat-menu>
             </div>

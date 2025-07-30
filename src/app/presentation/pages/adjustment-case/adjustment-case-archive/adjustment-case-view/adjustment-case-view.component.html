@@ -1,3 +1,182 @@
+<h2
+  mat-dialog-title
+  cdkDrag
+  cdkDragRootElement=".cdk-overlay-pane"
+  cdkDragHandle
+  cdkDragBoundary="body"
+>
+  {{ "adjustment-case__archive__view__title" | translate }}
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="adjustmentCaseFormGroup">
+    <mat-accordion>
+      <mat-expansion-panel
+        disabled
+        class="mat-elevation-z0"
+        hideToggle
+        [expanded]="step() === 0"
+        (opened)="setStep(0)"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ "adjustment-case__archive__view__general__title" | translate }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="row">
+          <div class="col-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "adjustment-case__archive__view__date" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="date" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "adjustment-case__archive__view__name" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="name" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "adjustment-case__archive__view__created-by" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="createdBy" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "adjustment-case__archive__view__created-at" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="createdAt" />
+            </mat-form-field>
+
+            <button
+              mat-stroked-button
+              color="primary"
+              style="letter-spacing: 0"
+              (click)="nextStep()"
+            >
+              {{ "general__next" | translate }}
+            </button>
+          </div>
+          <div class="col-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "adjustment-case__archive__view__company" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="company" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "adjustment-case__archive__view__type" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="type" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "adjustment-case__archive__view__status" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="status" />
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel
+        disabled
+        class="mat-elevation-z0"
+        hideToggle
+        [expanded]="step() === 1"
+        (opened)="setStep(1)"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ "adjustment-case__archive__view__item__title" | translate }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="table-responsive">
+              <table class="table data-table">
+                <thead>
+                  <tr>
+                    <th class="text-center" style="width: 200px">
+                      {{
+                        "adjustment-case__archive__view__items__product"
+                          | translate
+                      }}
+                    </th>
+                    <th class="text-center" style="width: 200px">
+                      {{
+                        "adjustment-case__archive__view__items__quantity"
+                          | translate
+                      }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of t.controls">
+                    <td>
+                      <p class="mb-0">{{ item.get("reference")?.value }}</p>
+                      <p class="text-clamp-1 mb-0">
+                        {{ item.get("description")?.value }}
+                      </p>
+                    </td>
+                    <td class="text-center">
+                      {{ item.get("quantity")?.value | number : "0.0-2" }}
+                      {{ item.get("unit")?.value }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="d-flex">
+              <button
+                type="button"
+                mat-stroked-button
+                color="warn"
+                class="me-3"
+                style="letter-spacing: 0"
+                (click)="prevStep()"
+              >
+                {{ "general__previous" | translate }}
+              </button>
+
+              <button
+                type="button"
+                mat-stroked-button
+                color="warn"
+                style="letter-spacing: 0"
+                [disabled]="!isAdministrator"
+                (click)="openDeleteConfirmation()"
+              >
+                {{ "adjustment-case__archive__view__delete" | translate }}
+                <mat-icon>warning</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button
+    mat-stroked-button
+    color="primary"
+    style="letter-spacing: 0"
+    type="button"
+    mat-dialog-close
+  >
+    {{ "general__close" | translate }}</button
+  >"
+</mat-dialog-actions>
+<!-- 
 <label>Date</label>
 <p>{{ data.date | date : "dd MMMM YYYY" }}</p>
 
@@ -89,4 +268,4 @@
     <mat-icon>delete</mat-icon>
     Delete
   </button>
-</div>
+</div> -->

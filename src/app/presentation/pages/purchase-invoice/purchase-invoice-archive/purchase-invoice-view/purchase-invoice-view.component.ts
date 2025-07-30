@@ -64,6 +64,8 @@ export class PurchaseInvoiceViewComponent {
     createdAt: new FormControl('', Validators.required),
     discount: new FormControl(0, Validators.required),
     good_receipt: new FormArray([]),
+    is_delete: new FormControl(false),
+    is_confirm: new FormControl(false),
   });
 
   get f() {
@@ -112,7 +114,30 @@ export class PurchaseInvoiceViewComponent {
       .get(`good-receipt/${this.data.id}`)
       .subscribe({
         next: (data: any) => {
-          this.dataSource = data;
+          this.goodReceiptFormGroup.patchValue({
+            name: data.name,
+            invoice_name: data.invoice_name == '' ? 'N/A' : data.invoice_name,
+            faktur:
+              data.faktur == '' || data.faktur == null ? 'N/A' : data.faktur,
+            date: this.datePipe.transform(data.date, 'dd MMMM YYYY'),
+            supplier: data.supplier.name,
+            status: data.is_delete
+              ? this.translateService.instant(
+                  'purchase-invoice__archive__view__status__deleted'
+                )
+              : data.is_confirm
+              ? this.translateService.instant(
+                  'purchase-invoice__archive__view__status__confirmed'
+                )
+              : this.translateService.instant(
+                  'purchase-invoice__archive__view__status__pending'
+                ),
+            is_delete: data.is_delete,
+            is_confirm: data.is_confirm,
+            createdBy: data.user_good_receipt_code_created_byTouser.name,
+            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM YYYY'),
+          });
+
           data.good_receipt.forEach((x: any) => {
             this.t.push(
               this.formBuilder.group({
@@ -164,9 +189,11 @@ export class PurchaseInvoiceViewComponent {
   }
 
   get subtotal(): number {
-    if (this.dataSource == null) return 0;
-    return this.dataSource.good_receipt.reduce((a: any, b: any) => {
-      return a + b.quantity * (b.price - b.discount);
+    return this.t.controls.reduce((acc: number, item: any) => {
+      const price = item.get('price').value || 0;
+      const quantity = item.get('quantity').value || 0;
+      const discount = item.get('discount').value || 0;
+      return acc + (price - discount) * quantity;
     }, 0);
   }
 

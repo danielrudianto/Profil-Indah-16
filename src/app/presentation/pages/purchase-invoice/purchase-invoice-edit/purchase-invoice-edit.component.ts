@@ -20,6 +20,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { v4 } from 'uuid';
 import { Location } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-purchase-invoice-edit',
@@ -37,7 +38,8 @@ export class PurchaseInvoiceEditComponent {
     private datePipe: DatePipe,
     private router: Router,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private translateService: TranslateService
   ) {
     this._hotkeysService.add([
       new Hotkey('alt+a', (event: KeyboardEvent): boolean => {
@@ -61,7 +63,6 @@ export class PurchaseInvoiceEditComponent {
   }
 
   isLoading: boolean = false;
-  dataSource: any[] = [];
 
   /**
    * Meta form group
@@ -93,10 +94,6 @@ export class PurchaseInvoiceEditComponent {
    * Such as item name, quantity, and price
    */
   itemFormGroup: FormGroup = new FormGroup({
-    number_of_items: new FormControl(0, [
-      Validators.required,
-      Validators.min(1),
-    ]),
     items: new FormArray([]),
   });
 
@@ -160,7 +157,9 @@ export class PurchaseInvoiceEditComponent {
       .subscribe({
         next: (data: any) => {
           if (data.is_delete || !data.is_confirm) {
-            this.alertService.showError(Error('Data not found.'));
+            this.alertService.showSuccess(
+              this.translateService.instant('general__not-found')
+            );
             this.router.navigate(['/Administrator/Purchase-invoice']);
           }
           this.metaFormGroup.patchValue({
@@ -201,10 +200,6 @@ export class PurchaseInvoiceEditComponent {
                 default_unit: [x.product.unit],
               })
             );
-          });
-
-          this.itemFormGroup.patchValue({
-            number_of_items: data.good_receipt_code.good_receipt.length,
           });
 
           this.valueFormGroup.patchValue({
@@ -294,10 +289,6 @@ export class PurchaseInvoiceEditComponent {
           });
 
           this.t.push(productFormGroup);
-
-          this.itemFormGroup.patchValue({
-            number_of_items: this.t.length,
-          });
         }
       }
     });
@@ -306,10 +297,6 @@ export class PurchaseInvoiceEditComponent {
   deleteItem(i: number) {
     this.t.removeAt(i);
     this.unit_selection.splice(i, 1);
-
-    this.itemFormGroup.patchValue({
-      number_of_items: this.t.length,
-    });
   }
 
   getFormGroupAt(i: number) {

@@ -32,9 +32,6 @@
                 <th scope="col" class="text-center">
                   {{ "product__brand__created-at" | translate }}
                 </th>
-                <th scope="col" class="text-center">
-                  {{ "product__brand__action" | translate }}
-                </th>
               </tr>
             </thead>
             <tbody *ngIf="!isLoading && dataSource.length > 0">
@@ -45,11 +42,6 @@
                 </td>
                 <td class="text-center">
                   {{ item.created_at | date : "dd MMMM yyyy" }}
-                </td>
-                <td>
-                  <button mat-icon-button>
-                    <mat-icon>edit</mat-icon>
-                  </button>
                 </td>
                 <mat-menu #menu="matMenu">
                   <button (click)="openDialog('edit', item.id)" mat-menu-item>
