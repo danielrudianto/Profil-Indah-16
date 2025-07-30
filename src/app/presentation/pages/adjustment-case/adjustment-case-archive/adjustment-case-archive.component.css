@@ -1,3 +1,13 @@
+.table {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+tr {
+  cursor: pointer;
+}
+
 .paginator__wrapper {
   display: flex;
   justify-content: space-between;
@@ -7,4 +17,19 @@
 .action-button {
   position: relative;
   float: none;
+}
+
+.icon-display {
+  transform: scale(0.75);
+  opacity: 0.2;
+}
+
+.icon-display.asc {
+  transform: rotate(180deg) scale(0.75);
+  opacity: 1;
+}
+
+.icon-display.desc {
+  transform: rotate(0) scale(0.75);
+  opacity: 1;
 }

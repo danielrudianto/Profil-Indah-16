@@ -2,12 +2,10 @@ import { Component } from '@angular/core';
 import { AdjustmentCaseArchiveFilterComponent } from './adjustment-case-archive-filter/adjustment-case-archive-filter.component';
 import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { ArchiveMode } from 'src/app/presentation/components/archives/archives.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import moment from 'moment';
 import { PageEvent } from '@angular/material/paginator';
-import { ArchiveViewComponent } from 'src/app/presentation/components/archives/archive-view/archive-view.component';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -28,6 +26,7 @@ export class AdjustmentCaseArchiveComponent {
   dataSource: any[] = [];
   dataCount: number = 0;
   page: number = 1;
+  pageSize: number = 10;
   isLoading: boolean = false;
   month: number | null = null;
   year: number | null = null;
@@ -35,14 +34,14 @@ export class AdjustmentCaseArchiveComponent {
   filterFormGroup: FormGroup = new FormGroup({
     startDate: new FormControl(''),
     endDate: new FormControl(''),
-    isConfirmed: new FormControl(true),
-    isPending: new FormControl(true),
-    isRejected: new FormControl(true),
     isActive: new FormControl(true),
     isDelete: new FormControl(true),
     isLost: new FormControl(true),
     isFound: new FormControl(true),
   });
+
+  sortBy: string = 'date';
+  sortDirection = 'asc';
 
   ngOnInit(): void {}
 
@@ -67,10 +66,11 @@ export class AdjustmentCaseArchiveComponent {
     this.isLoading = true;
 
     this.apiService
-      .get('adjustment-case/archives', {
+      .post('adjustment-case/archives', {
         month: this.month,
         year: this.year,
         page: this.page,
+        pageSize: this.pageSize,
         keyword: this.keyword,
         startDate: moment(
           new Date(this.filterFormGroup.get('startDate')?.value)
@@ -78,13 +78,12 @@ export class AdjustmentCaseArchiveComponent {
         endDate: moment(
           new Date(this.filterFormGroup.get('endDate')?.value)
         ).format('YYYY-MM-DD'),
-        isConfirmed: this.filterFormGroup.get('isConfirmed')?.value,
-        isPending: this.filterFormGroup.get('isPending')?.value,
-        isRejected: this.filterFormGroup.get('isRejected')?.value,
         isActive: this.filterFormGroup.get('isActive')?.value,
         isDelete: this.filterFormGroup.get('isDelete')?.value,
         isLost: this.filterFormGroup.get('isLost')?.value,
         isFound: this.filterFormGroup.get('isFound')?.value,
+        sortBy: this.sortBy,
+        sortDirection: this.sortDirection,
       })
       .subscribe({
         next: (data: any) => {
@@ -101,8 +100,13 @@ export class AdjustmentCaseArchiveComponent {
   }
 
   changePage(event: PageEvent) {
-    this.page = event.pageIndex + 1;
-    this.fetchSelectedMonth();
+    if (event.pageSize == this.pageSize) {
+      this.page = event.pageIndex + 1;
+      this.fetchSelectedMonth();
+    } else {
+      this.pageSize = event.pageSize;
+      this.fetchSelectedMonth(1);
+    }
   }
 
   backToYear() {
@@ -126,7 +130,79 @@ export class AdjustmentCaseArchiveComponent {
         },
       })
       .afterClosed()
-      .subscribe((data) => {});
+      .subscribe((data) => {
+        const change = this.checkChanges(data);
+        if (change) {
+          this.filterFormGroup.patchValue(data);
+          this.fetchSelectedMonth(1);
+        }
+      });
+  }
+
+  private checkChanges(data: any) {
+    const isActive = data.isActive;
+    const isDelete = data.isDelete;
+    const isLost = data.isLost;
+    const isFound = data.isFound;
+
+    const maxDate = data.endDate;
+    const minDate = data.startDate;
+
+    const existingIsActive = this.filterFormGroup.value.isActive;
+    const existingIsDelete = this.filterFormGroup.value.isDelete;
+
+    const existingIsLost = this.filterFormGroup.value.isLost;
+    const existingIsFound = this.filterFormGroup.value.isFound;
+
+    const existingMinDate = this.filterFormGroup.value.startDate;
+    const existingMaxDate = this.filterFormGroup.value.endDate;
+
+    let response = false;
+
+    if (isActive != existingIsActive) {
+      response = true;
+    }
+
+    if (isDelete != existingIsDelete) {
+      response = true;
+    }
+
+    if (isLost != existingIsLost) {
+      response = true;
+    }
+
+    if (isFound != existingIsFound) {
+      response = true;
+    }
+
+    if (existingMinDate.getTime() != minDate.getTime()) {
+      response = true;
+    }
+
+    if (existingMaxDate.getTime() != maxDate.getTime()) {
+      response = true;
+    }
+
+    return response;
+  }
+
+  changeSortBy(field: string) {
+    if (this.isLoading) {
+      return;
+    }
+
+    if (this.sortBy == field) {
+      if (this.sortDirection == 'asc') {
+        this.sortDirection = 'desc';
+      } else {
+        this.sortDirection = 'asc';
+      }
+    } else {
+      this.sortBy = field;
+      this.sortDirection = 'asc';
+    }
+
+    this.fetchSelectedMonth(1);
   }
 
   viewArchive(id: number) {
