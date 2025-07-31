@@ -74,7 +74,7 @@
           <td>{{ item.company == null ? "N/A" : item.company.name }}</td>
           <td>
             {{
-              (item.type == 0
+              (item.company != null
                 ? "adjustment-case__confirm__type__found"
                 : "adjustment-case__confirm__type__lost"
               ) | translate

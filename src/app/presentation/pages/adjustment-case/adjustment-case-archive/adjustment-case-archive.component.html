@@ -14,7 +14,7 @@
           (onFilterButtonClicked)="openFilter()"
         />
         <div class="table-responsive">
-          <table class="table">
+          <table class="table data-table w-100">
             <thead>
               <tr>
                 <th style="width: 250px" (click)="changeSortBy('date')">
@@ -102,7 +102,16 @@
                 <td>
                   {{ item.company_name == null ? "N/A" : item.company_name }}
                 </td>
-                <td>{{ item.is_delete ? "Deleted" : "Active" }}</td>
+                <td>
+                  {{
+                    (item.is_delete
+                      ? "adjustment-case__archive__status__deleted"
+                      : item.is_confirm
+                      ? "adjustment-case__archive__status__confirmed"
+                      : "adjustment-case__archive__status__pending"
+                    ) | translate
+                  }}
+                </td>
               </tr>
             </tbody>
           </table>

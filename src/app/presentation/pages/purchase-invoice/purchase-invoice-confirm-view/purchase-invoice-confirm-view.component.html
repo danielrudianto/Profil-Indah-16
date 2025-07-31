@@ -106,30 +106,26 @@
         <table class="table">
           <thead>
             <tr>
-              <th style="width: 30%" rowspan="2">
+              <th style="width: 30%">
                 {{ "purchase-invoice__confirm__table__item" | translate }}
               </th>
-              <th class="text-center" rowspan="2">
+              <th class="text-center">
                 {{ "purchase-invoice__confirm__table__unit-price" | translate }}
               </th>
-              <th class="text-center" colspan="2">
+              <th class="text-center">
                 {{ "purchase-invoice__confirm__table__discount" | translate }}
               </th>
-              <th class="text-center" rowspan="2">
+              <th class="text-center">
                 {{ "purchase-invoice__confirm__table__quantity" | translate }}
               </th>
-              <th class="text-center" rowspan="2">
+              <th class="text-center">
                 {{
                   "purchase-invoice__confirm__table__total-price" | translate
                 }}
               </th>
-              <th class="text-center" rowspan="2">
+              <th class="text-center">
                 {{ "purchase-invoice__confirm__table__action" | translate }}
               </th>
-            </tr>
-            <tr>
-              <td class="text-center">Rp.</td>
-              <td class="text-center">%</td>
             </tr>
           </thead>
           <tbody>
@@ -146,13 +142,17 @@
               <td class="text-center" (click)="openEditDiscount(i)">
                 {{ data.get("price")?.value | number : "0.0-2" }}
               </td>
-              <td class="text-center" (click)="openEditDiscount(i)">
+              <td
+                class="text-center"
+                (click)="openEditDiscount(i)"
+                [matTooltip]="
+                  getDiscountPercentage(
+                    data.get('discount')?.value,
+                    data.get('price')?.value
+                  )
+                "
+              >
                 {{ data.get("discount")?.value | number : "0.0-2" }}
-              </td>
-              <td class="text-center" (click)="openEditDiscount(i)">
-                {{
-                  data.get("discountPercentage")?.value | number : "0.0-2"
-                }}&nbsp;%
               </td>
               <td class="text-center">
                 {{ data.get("quantity")?.value | number : "0.0-2" }}
@@ -237,7 +237,7 @@
               <td>
                 {{ "purchase-invoice__confirm__table__subtotal" | translate }}
               </td>
-              <td class="text-center" colspan="2">
+              <td class="text-center">
                 <p>
                   Rp.&nbsp;{{
                     purchaseDocumentFormGroup.get("total")?.value
@@ -251,7 +251,7 @@
               <td>
                 {{ "purchase-invoice__confirm__table__discount" | translate }}
               </td>
-              <td class="text-center" colspan="2">
+              <td class="text-center">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>{{
                     "purchase-invoice__confirm__table__discount" | translate
@@ -272,7 +272,7 @@
               <td>
                 {{ "purchase-invoice__confirm__table__total" | translate }}
               </td>
-              <td class="text-center" colspan="2">
+              <td class="text-center">
                 Rp.&nbsp;{{
                   purchaseDocumentFormGroup.get("total")?.value -
                     purchaseDocumentFormGroup.get("discount")?.value

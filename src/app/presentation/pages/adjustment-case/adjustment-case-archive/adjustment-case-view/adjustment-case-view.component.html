@@ -151,7 +151,7 @@
                 mat-stroked-button
                 color="warn"
                 style="letter-spacing: 0"
-                [disabled]="!isAdministrator"
+                [disabled]="!canDelete"
                 (click)="openDeleteConfirmation()"
               >
                 {{ "adjustment-case__archive__view__delete" | translate }}

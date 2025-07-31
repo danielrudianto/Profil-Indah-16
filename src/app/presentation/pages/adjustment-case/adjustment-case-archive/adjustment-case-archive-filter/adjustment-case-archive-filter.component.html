@@ -40,8 +40,8 @@
     </h6>
     <mat-chip-listbox class="mb-3" selectable multiple>
       <mat-chip-option
-        [value]="'isDelete'"
-        [selected]="filterObject.isDelete"
+        [value]="'isReject'"
+        [selected]="filterObject.isReject"
         (selectionChange)="selectionChange($event)"
         >{{
           "adjustment-case__archive__filter__document-status__deleted"
@@ -49,11 +49,20 @@
         }}</mat-chip-option
       >
       <mat-chip-option
-        [value]="'isActive'"
-        [selected]="filterObject.isActive"
+        [value]="'isConfirm'"
+        [selected]="filterObject.isConfirm"
         (selectionChange)="selectionChange($event)"
         >{{
-          "adjustment-case__archive__filter__document-status__active"
+          "adjustment-case__archive__filter__document-status__confirm"
+            | translate
+        }}</mat-chip-option
+      >
+      <mat-chip-option
+        [value]="'isPending'"
+        [selected]="filterObject.isPending"
+        (selectionChange)="selectionChange($event)"
+        >{{
+          "adjustment-case__archive__filter__document-status__pending"
             | translate
         }}</mat-chip-option
       >

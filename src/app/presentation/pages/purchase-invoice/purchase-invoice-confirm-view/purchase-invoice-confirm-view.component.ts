@@ -1,4 +1,4 @@
-import { DatePipe, Location } from '@angular/common';
+import { DatePipe, DecimalPipe, Location } from '@angular/common';
 import { Component } from '@angular/core';
 import {
   FormArray,
@@ -33,7 +33,8 @@ export class PurchaseInvoiceConfirmViewComponent {
     private dialog: MatDialog,
     private location: Location,
     private translateService: TranslateService,
-    private router: Router
+    private router: Router,
+    private decimalPipe: DecimalPipe
   ) {}
 
   isSubmitting: boolean = false;
@@ -214,7 +215,7 @@ export class PurchaseInvoiceConfirmViewComponent {
       if (!this.isValid) {
         return;
       }
-      
+
       this.dialog
         .open(DeleteConfirmationComponent, {
           data: {
@@ -362,5 +363,16 @@ export class PurchaseInvoiceConfirmViewComponent {
     }
 
     return true;
+  }
+
+  getDiscountPercentage(discount: number, price: number) {
+    if (price == 0) {
+      return '0%';
+    } else {
+      return `${this.decimalPipe.transform(
+        (discount * 100) / price,
+        '1.2-2'
+      )}%`;
+    }
   }
 }

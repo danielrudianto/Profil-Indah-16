@@ -35,8 +35,9 @@ export class AdjustmentCaseArchiveComponent {
   filterFormGroup: FormGroup = new FormGroup({
     startDate: new FormControl(''),
     endDate: new FormControl(''),
-    isActive: new FormControl(true),
-    isDelete: new FormControl(true),
+    isConfirm: new FormControl(true),
+    isReject: new FormControl(true),
+    isPending: new FormControl(true),
     isLost: new FormControl(true),
     isFound: new FormControl(true),
   });
@@ -55,8 +56,6 @@ export class AdjustmentCaseArchiveComponent {
     this.filterFormGroup.patchValue({
       startDate: new Date(this.year!, this.month! - 1, 1),
       endDate: new Date(this.year!, this.month!, 0),
-      status: 0,
-      type: 0,
     });
 
     this.fetchSelectedMonth(1);
@@ -79,8 +78,9 @@ export class AdjustmentCaseArchiveComponent {
         endDate: moment(
           new Date(this.filterFormGroup.get('endDate')?.value)
         ).format('YYYY-MM-DD'),
-        isActive: this.filterFormGroup.get('isActive')?.value,
-        isDelete: this.filterFormGroup.get('isDelete')?.value,
+        isConfirm: this.filterFormGroup.get('isConfirm')?.value,
+        isReject: this.filterFormGroup.get('isReject')?.value,
+        isPending: this.filterFormGroup.get('isPending')?.value,
         isLost: this.filterFormGroup.get('isLost')?.value,
         isFound: this.filterFormGroup.get('isFound')?.value,
         sortBy: this.sortBy,
@@ -141,16 +141,18 @@ export class AdjustmentCaseArchiveComponent {
   }
 
   private checkChanges(data: any) {
-    const isActive = data.isActive;
-    const isDelete = data.isDelete;
+    const isConfirm = data.isConfirm;
+    const isReject = data.isReject;
+    const isPending = data.isPending;
     const isLost = data.isLost;
     const isFound = data.isFound;
 
     const maxDate = data.endDate;
     const minDate = data.startDate;
 
-    const existingIsActive = this.filterFormGroup.value.isActive;
-    const existingIsDelete = this.filterFormGroup.value.isDelete;
+    const existingIsConfirm = this.filterFormGroup.value.isConfirm;
+    const existingIsReject = this.filterFormGroup.value.isReject;
+    const existingIsPending = this.filterFormGroup.value.isPending;
 
     const existingIsLost = this.filterFormGroup.value.isLost;
     const existingIsFound = this.filterFormGroup.value.isFound;
@@ -160,11 +162,15 @@ export class AdjustmentCaseArchiveComponent {
 
     let response = false;
 
-    if (isActive != existingIsActive) {
+    if (isConfirm != existingIsConfirm) {
       response = true;
     }
 
-    if (isDelete != existingIsDelete) {
+    if (isReject != existingIsReject) {
+      response = true;
+    }
+
+    if (isPending != existingIsPending) {
       response = true;
     }
 
@@ -207,14 +213,24 @@ export class AdjustmentCaseArchiveComponent {
   }
 
   viewArchive(id: number) {
-    this.dialog.open(AdjustmentCaseViewComponent, {
-      data: {
-        id: id,
-      },
-    });
-    // this.dynamicComponentService.createDynamicComponent(ArchiveViewComponent, {
-    //   route: 'adjustment-event',
-    //   id: id,
-    // });
+    this.dialog
+      .open(AdjustmentCaseViewComponent, {
+        data: {
+          id: id,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data) {
+          const is_delete = data.is_delete;
+          const is_confirm = data.is_confirm;
+
+          const index = this.dataSource.findIndex((x) => x.id == id);
+          if (index != -1) {
+            this.dataSource[index].is_delete = is_delete;
+            this.dataSource[index].is_confirm = is_confirm;
+          }
+        }
+      });
   }
 }

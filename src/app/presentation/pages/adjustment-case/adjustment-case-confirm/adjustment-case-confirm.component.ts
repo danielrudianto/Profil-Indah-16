@@ -4,6 +4,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { AdjustmentCaseConfirmViewComponent } from './adjustment-case-confirm-view/adjustment-case-confirm-view.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-adjustment-case-confirm',
@@ -14,7 +15,7 @@ export class AdjustmentCaseConfirmComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dynamicComponentService: DynamicComponentService
+    private dialog: MatDialog
   ) {}
 
   dataSource: any[] = [];
@@ -30,7 +31,7 @@ export class AdjustmentCaseConfirmComponent {
     this.page = page;
     this.isLoading = true;
     this.apiService
-      .get('adjustment-event/unconfirmed', {
+      .get('adjustment-case/unconfirmed', {
         page: page,
       })
       .subscribe({
@@ -52,14 +53,17 @@ export class AdjustmentCaseConfirmComponent {
   }
 
   viewAdjustmentCase(id: number) {
-    this.dynamicComponentService
-      .createDynamicComponent(AdjustmentCaseConfirmViewComponent, {
-        id: id,
+    this.dialog
+      .open(AdjustmentCaseConfirmViewComponent, {
+        data: {
+          id: id,
+        },
       })
-      .subscribe((data) => {
-        if (data != undefined && data != null) {
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
           // Remove where id = id
-          const index = this.dataSource.findIndex((x) => x.id == data.id);
+          const index = this.dataSource.findIndex((x) => x.id == result.id);
           if (index != -1) {
             this.dataSource.splice(index, 1);
             this.dataCount = this.dataCount - 1;

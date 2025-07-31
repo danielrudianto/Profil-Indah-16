@@ -26,8 +26,9 @@ export class AdjustmentCaseArchiveFilterComponent {
   filterObject = {
     isLost: false,
     isFound: false,
-    isDelete: false,
-    isActive: false,
+    isConfirm: false,
+    isReject: false,
+    isPending: false,
   };
 
   ngOnInit(): void {
@@ -38,8 +39,9 @@ export class AdjustmentCaseArchiveFilterComponent {
       endDate: this.data.endDate,
     });
 
-    this.filterObject.isActive = this.data.isActive;
-    this.filterObject.isDelete = this.data.isDelete;
+    this.filterObject.isConfirm = this.data.isConfirm;
+    this.filterObject.isReject = this.data.isReject;
+    this.filterObject.isPending = this.data.isPending;
     this.filterObject.isLost = this.data.isLost;
     this.filterObject.isFound = this.data.isFound;
   }
@@ -60,11 +62,14 @@ export class AdjustmentCaseArchiveFilterComponent {
     const field = event.source.value;
 
     switch (field) {
-      case 'isActive':
-        this.filterObject.isActive = checked;
+      case 'isConfirm':
+        this.filterObject.isConfirm = checked;
         break;
-      case 'isDelete':
-        this.filterObject.isDelete = checked;
+      case 'isReject':
+        this.filterObject.isReject = checked;
+        break;
+      case 'isPending':
+        this.filterObject.isPending = checked;
         break;
       case 'isLost':
         this.filterObject.isLost = checked;
