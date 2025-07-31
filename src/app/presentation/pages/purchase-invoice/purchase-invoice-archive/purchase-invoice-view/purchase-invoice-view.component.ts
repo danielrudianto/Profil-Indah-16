@@ -228,4 +228,19 @@ export class PurchaseInvoiceViewComponent {
       ]);
     }, 100);
   }
+
+  get canDelete(): boolean {
+    if (this.isAdministrator) {
+      return true;
+    }
+
+    const isConfirmed = this.goodReceiptFormGroup.get('is_confirm')?.value;
+    const isDeleted = this.goodReceiptFormGroup.get('is_delete')?.value;
+
+    if (!isConfirmed && !isDeleted) {
+      return true;
+    }
+
+    return false;
+  }
 }

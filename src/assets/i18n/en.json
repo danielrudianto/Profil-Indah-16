@@ -382,6 +382,7 @@
   "purchase-invoice__create__table__price": "Price",
   "purchase-invoice__create__table__quantity": "Quantity",
   "purchase-invoice__create__table__current-stock": "Current stock",
+  "purchase-invoice__create__error": "Please check the data you entered. Ensure all required fields are filled out correctly.",
   "deposit__view__general-data": "General data",
   "deposit__view__deposit-data": "Deposit data",
   "deposit__view__submit": "Submit",

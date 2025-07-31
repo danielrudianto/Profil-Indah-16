@@ -234,7 +234,7 @@ export class PurchaseInvoiceCreateComponent {
       !this.valueFormGroup.valid
     ) {
       this.alertService.showSuccess(
-        'Please check your input. Some of the input is invalid.'
+        this.translateService.instant('purchase-invoice__create__error')
       );
       this.isSubmitting = false;
       return;
@@ -314,9 +314,6 @@ export class PurchaseInvoiceCreateComponent {
                   title: this.translateService.instant(
                     'general__confirm-confirmation__body'
                   ),
-                  document: `${data.name}, Supplier ${
-                    data.supplier.name
-                  }, Date ${this.datePipe.transform(data.date, 'dd/MM/yyyy')}`,
                 },
               })
               .afterClosed();
@@ -325,15 +322,19 @@ export class PurchaseInvoiceCreateComponent {
           }
         }),
         switchMap((confirmed: boolean) => {
-          if (confirmed) {
-            return this.apiService.post('good-receipt', goodReceipt);
-          } else {
+          if (confirmed !== true) {
             this.isSubmitting = false;
             return of(null);
           }
+
+          if (confirmed === true) {
+            return this.apiService.post('good-receipt', goodReceipt);
+          }
+
+          return of(null);
         }),
         switchMap((result) => {
-          if (!result) return of(null);
+          if (result == null) return of(null);
 
           const itemsToSave = this.t.controls
             .filter((x) => x.get('save_price')?.value)
@@ -350,6 +351,7 @@ export class PurchaseInvoiceCreateComponent {
               items: itemsToSave,
             });
           }
+
           return of(null);
         })
       )
@@ -358,7 +360,6 @@ export class PurchaseInvoiceCreateComponent {
           this.metaFormGroup.patchValue({
             uuid: v4(),
           });
-
           this.alertService.showSuccess(
             this.translateService.instant('good-receipt__create__success')
           );

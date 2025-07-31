@@ -395,6 +395,7 @@
   "purchase-invoice__create__table__price": "Harga",
   "purchase-invoice__create__table__quantity": "Jumlah",
   "purchase-invoice__create__table__current-stock": "Stok sekarang",
+  "purchase-invoice__create__error": "Silakan periksa kembali data yang Anda masukkan. Pastikan semua kolom yang diperlukan telah diisi dengan benar.",
   "deposit__view__general-data": "Data umum",
   "deposit__view__deposit-data": "Data deposit",
   "deposit__view__submit": "Kirim",
