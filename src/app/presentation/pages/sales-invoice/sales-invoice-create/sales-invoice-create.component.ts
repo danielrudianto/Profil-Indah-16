@@ -298,6 +298,10 @@ export class SalesInvoiceCreateComponent {
       );
 
     this.productSelectorSubject.subscribe((result: any) => {
+      if (result == undefined) {
+        return;
+      }
+      
       if (result) {
         const data = result.data;
         const sub = result.sub;

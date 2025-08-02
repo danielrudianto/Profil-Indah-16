@@ -96,7 +96,7 @@ export class ProductSelectorComponent {
   ) {
     this.isLoading = true;
     this.dataService
-      .get(`product`, {
+      .get(`product/selector`, {
         keyword: keyword,
         page: page,
       })

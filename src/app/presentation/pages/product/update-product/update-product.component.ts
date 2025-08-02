@@ -5,10 +5,16 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
@@ -23,9 +29,12 @@ export class UpdateProductComponent {
     private apiService: ApiService,
     private alertService: AlertService,
     private translateService: TranslateService,
-    private dialog: MatDialogRef<UpdateProductComponent>
+    private dialogRef: MatDialogRef<UpdateProductComponent>,
+    private dialog: MatDialog,
+    private authService: AuthService
   ) {}
 
+  isAdministrator: boolean = false;
   isSubmitting: boolean = false;
   isLoading: boolean = false;
   isLoadingType: boolean = false;
@@ -51,10 +60,14 @@ export class UpdateProductComponent {
     product_type_name: new FormControl('', Validators.required),
     unit: new FormControl('', Validators.required),
     minimum_stock: new FormControl(0, [Validators.required, Validators.min(0)]),
+    can_delete: new FormControl(false),
+    is_delete: new FormControl(false),
+    is_active: new FormControl(true),
   });
 
   ngOnInit(): void {
     this.fetchByID();
+    this.isAdministrator = this.authService.isAdministrator();
   }
 
   onSelectBrand(data: any) {
@@ -126,6 +139,9 @@ export class UpdateProductComponent {
           product_type_name: data.product_type.name,
           minimum_stock: data.minimum_stock,
           unit: data.unit,
+          can_delete: data.can_delete,
+          is_delete: data.is_delete,
+          is_active: data.is_active,
         });
       },
       error: (error) => {
@@ -150,6 +166,44 @@ export class UpdateProductComponent {
   }
 
   closeDialog(data: any = undefined) {
-    this.dialog.close(data);
+    this.dialogRef.close(data);
+  }
+
+  openDeleteConfirmation() {
+    this.dialog
+      .open(DeleteConfirmationComponent, {
+        data: {
+          title: this.translateService.instant(
+            'product__update__delete-confirmation-message'
+          ),
+        },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        console.log(result);
+        if (result === true) {
+          this.deleteProduct();
+        }
+      });
+  }
+
+  deleteProduct() {
+    this.isSubmitting = true;
+    this.apiService
+      .delete('product/' + this.data.id)
+      .subscribe({
+        next: (data: any) => {
+          this.alertService.showSuccess(
+            this.translateService.instant('product__deleted-successfully')
+          );
+          this.closeDialog(data);
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isSubmitting = false;
+      });
   }
 }

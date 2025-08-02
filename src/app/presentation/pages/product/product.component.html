@@ -68,15 +68,6 @@
                       "product__set-active" | translate
                     }}</span>
                   </button>
-                  <button
-                    [class.delete-button]="item.can_delete"
-                    mat-menu-item
-                    (click)="openDialog('delete', item.id)"
-                    [disabled]="!(item.can_delete && isAdministrator)"
-                  >
-                    <mat-icon>delete</mat-icon>
-                    <span>{{ "product__delete" | translate }}</span>
-                  </button>
                 </mat-menu>
               </tr>
             </tbody>

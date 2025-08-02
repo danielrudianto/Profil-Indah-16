@@ -64,6 +64,19 @@
         formControlName="minimum_stock"
       />
     </mat-form-field>
+
+    <button
+      mat-stroked-button
+      color="warn"
+      (click)="openDeleteConfirmation()"
+      type="button"
+      [disabled]="
+        !itemFormGroup.controls['can_delete'].value || !isAdministrator
+      "
+    >
+      <mat-icon>warning</mat-icon>
+      <span>{{ "product__update__delete" | translate }}</span>
+    </button>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button
