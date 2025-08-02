@@ -1,12 +1,5 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  Output,
-  signal,
-} from '@angular/core';
+import { Component, Inject, signal } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -21,17 +14,16 @@ import {
 } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-purchase-invoice-view',
-  templateUrl: './purchase-invoice-view.component.html',
-  styleUrls: ['./purchase-invoice-view.component.css'],
+  selector: 'app-good-receipt-view',
+  templateUrl: './good-receipt-view.component.html',
+  styleUrl: './good-receipt-view.component.css',
 })
-export class PurchaseInvoiceViewComponent {
+export class GoodReceiptViewComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { id: number },
     private authService: AuthService,
@@ -39,7 +31,7 @@ export class PurchaseInvoiceViewComponent {
     private apiService: ApiService,
     private alertService: AlertService,
     private translateService: TranslateService,
-    private dialogRef: MatDialogRef<PurchaseInvoiceViewComponent>,
+    private dialogRef: MatDialogRef<GoodReceiptViewComponent>,
     private datePipe: DatePipe,
     private decimalPipe: DecimalPipe,
     private formBuilder: FormBuilder,
@@ -81,33 +73,6 @@ export class PurchaseInvoiceViewComponent {
     this.fetchByID();
   }
 
-  openDeleteConfirmation() {
-    this.dialog
-      .open(DeleteConfirmationComponent, {
-        data: {
-          title: this.translateService.instant(
-            'sales-invoice__archive__view__delete__title'
-          ),
-        },
-      })
-      .afterClosed()
-      .subscribe((data) => {
-        if (data === true) {
-          this.apiService.delete(`sales-invoice/${this.data.id}`).subscribe({
-            next: () => {
-              this.alertService.showSuccess(
-                this.translateService.instant('sales-invoice__delete__success')
-              );
-              this.dialogRef.close();
-            },
-            error: (error) => {
-              this.alertService.showError(error);
-            },
-          });
-        }
-      });
-  }
-
   fetchByID(): void {
     this.isLoading = true;
     this.apiService
@@ -116,9 +81,6 @@ export class PurchaseInvoiceViewComponent {
         next: (data: any) => {
           this.goodReceiptFormGroup.patchValue({
             name: data.name,
-            invoice_name: data.invoice_name == '' ? 'N/A' : data.invoice_name,
-            faktur:
-              data.faktur == '' || data.faktur == null ? 'N/A' : data.faktur,
             date: this.datePipe.transform(data.date, 'dd MMMM YYYY'),
             supplier: data.supplier.name,
             status: data.is_delete
@@ -218,52 +180,5 @@ export class PurchaseInvoiceViewComponent {
 
   prevStep() {
     this.step.update((i) => i - 1);
-  }
-
-  updatePurchaseInvoice() {
-    this.dialogRef.close();
-    setTimeout(() => {
-      this.router.navigate([
-        `/Administrator/Purchase-invoice/Edit/${this.data.id}`,
-      ]);
-    }, 100);
-  }
-
-  get canDelete(): boolean {
-    if (!this.isAdministrator) {
-      return false;
-    }
-
-    const isConfirmed = this.goodReceiptFormGroup.get('is_confirm')?.value;
-    const isDeleted = this.goodReceiptFormGroup.get('is_delete')?.value;
-
-    if (isDeleted) {
-      return false;
-    }
-
-    if (!isConfirmed) {
-      return false;
-    }
-
-    return true;
-  }
-
-  get canEdit(): boolean {
-    if (!this.isAdministrator) {
-      return false;
-    }
-
-    const isConfirmed = this.goodReceiptFormGroup.get('is_confirm')?.value;
-    const isDeleted = this.goodReceiptFormGroup.get('is_delete')?.value;
-
-    if (isDeleted) {
-      return false;
-    }
-
-    if (!isConfirmed) {
-      return false;
-    }
-
-    return true;
   }
 }

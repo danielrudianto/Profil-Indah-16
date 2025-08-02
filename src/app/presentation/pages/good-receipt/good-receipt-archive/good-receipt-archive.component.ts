@@ -10,6 +10,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { slideInOutAnimation } from '../../../../animations/slide-in-out.animation';
 import { MatDialog } from '@angular/material/dialog';
+import { GoodReceiptViewComponent } from './good-receipt-view/good-receipt-view.component';
 
 @Component({
   selector: 'app-good-receipt-archive',
@@ -202,10 +203,12 @@ export class GoodReceiptArchiveComponent {
 
     this.fetchSelectedMonth(1);
   }
+
   viewArchive(id: number) {
-    this.dynamicComponentService.createDynamicComponent(ArchiveViewComponent, {
-      route: 'purchase-invoice',
-      id: id,
+    this.dialog.open(GoodReceiptViewComponent, {
+      data: {
+        id: id,
+      },
     });
   }
 }

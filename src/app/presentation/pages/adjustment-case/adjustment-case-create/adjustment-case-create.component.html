@@ -98,7 +98,7 @@
               </mat-form-field>
             </td>
             <td>
-              <button mat-icon-button (click)="removeItem(i)">
+              <button mat-icon-button (click)="removeItem(i)" type="button">
                 <mat-icon>delete</mat-icon>
               </button>
             </td>
@@ -115,6 +115,7 @@
     </form>
 
     <button
+      type="submit"
       [disabled]="!metaFormGroup.valid || !adjustmentEventFormGroup.valid"
       class="action-button"
       (click)="submitForm()"

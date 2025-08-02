@@ -21,6 +21,7 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { v4 } from 'uuid';
 import { Location } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-purchase-invoice-edit',
@@ -39,7 +40,8 @@ export class PurchaseInvoiceEditComponent {
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private dialog: MatDialog
   ) {
     this._hotkeysService.add([
       new Hotkey('alt+a', (event: KeyboardEvent): boolean => {
@@ -198,6 +200,7 @@ export class PurchaseInvoiceEditComponent {
                   x.product_unit_id == null ? 1 : x.product_unit.conversion,
                 ],
                 default_unit: [x.product.unit],
+                save_price: [false],
               })
             );
           });
@@ -222,76 +225,59 @@ export class PurchaseInvoiceEditComponent {
   }
 
   openItemSelector() {
-    const dialog = this.dynamicComponentService.createDynamicComponent(
-      ProductSelectorComponent,
-      {
+    this.dynamicComponentService
+      .createDynamicComponent(ProductSelectorComponent, {
         type: ProductSelectorType.purchase,
-      }
-    );
+      })
+      .subscribe((result) => {
+        console.log(result);
+        if (result) {
+          const productID = result.data.id;
+          const productUnitID = result.sub == null ? null : result.sub.id;
 
-    dialog.subscribe((data) => {
-      if (data != null && data != undefined) {
-        if (
-          this.t.controls.filter(
-            (x) =>
-              x.get('item_id')?.value == data.item.id &&
-              x.get('item_unit_id')?.value ==
-                (data.price == null ? null : data.price.item_unit_id)
-          ).length > 0
-        ) {
-          this.alertService.showSuccess(
-            'Item already exists! Please select different item.'
+          const exists = this.checkExistingItem(productID, productUnitID);
+
+          if (exists) {
+            this.alertService.showSuccess(
+              this.translateService.instant('general__item__exists')
+            );
+            return;
+          }
+
+          const data = result.data;
+          const sub = result.sub;
+
+          this.t.push(
+            this.formBuilder.group({
+              product_id: [data.id, Validators.required],
+              product_unit_id: [sub == null ? null : sub.id],
+              reference: [data.reference, Validators.required],
+              description: [data.description, Validators.required],
+              quantity: [0, [Validators.required, Validators.min(0.01)]],
+              price: [
+                data.purchase_price,
+                [Validators.min(0), Validators.required],
+              ],
+              discount: [data.purchase_discount, [Validators.min(0)]],
+              unit: [sub == null ? data.unit : sub.unit],
+              conversion: [sub == null ? 1 : sub.conversion],
+              default_unit: [data.unit],
+              save_price: [false],
+            })
           );
-        } else {
-          const productFormGroup = this.formBuilder.group({
-            product_id: [data.product_id, Validators.required],
-            product_unit_id: [
-              data.price == null ? null : data.price.item_unit_id,
-            ],
-            reference: [data.item.reference, Validators.required],
-            description: [data.item.description, Validators.required],
-            quantity: [0, [Validators.required, Validators.min(0.01)]],
-            price: [
-              data.price == null ? data.item.price : data.price.price,
-              [Validators.min(0), Validators.required],
-            ],
-            discount: [
-              data.price == null ? data.item.discount : data.price.discount,
-              [Validators.min(0), Validators.required],
-            ],
-            discountPercentage: [
-              data.price == null
-                ? data.item.price == 0
-                  ? 0
-                  : (data.item.discount * 100) / data.item.price
-                : data.price.price == 0
-                ? 0
-                : (data.price.discount * 100) / data.price.price,
-              [Validators.min(0), Validators.required, Validators.max(100)],
-            ],
-            discountType: [
-              'absolute',
-              [Validators.required, Validators.pattern('absolute|percentage')],
-            ],
-            initial_price: [
-              data.price == null ? data.item.price : data.price.price,
-              Validators.required,
-            ],
-            initial_discount: [
-              data.discount == null ? data.item.discount : data.price.discount,
-              Validators.required,
-            ],
-            unit: [data.price == null ? data.item.unit : data.price.unit],
-            conversion: [data.price == null ? 1 : data.price.conversion],
-            default_unit: [data.item.unit],
-            save_price: [false],
-            stock: [data.item.stock],
-          });
-
-          this.t.push(productFormGroup);
         }
-      }
-    });
+      });
+  }
+
+  private checkExistingItem(
+    productID: number,
+    productUnitID: number | null
+  ): boolean {
+    return this.t.controls.some(
+      (x) =>
+        x.get('product_id')?.value === productID &&
+        x.get('product_unit_id')?.value === productUnitID
+    );
   }
 
   deleteItem(i: number) {
@@ -411,25 +397,42 @@ export class PurchaseInvoiceEditComponent {
   }
 
   openEditData(i: number) {
-    const sheet = this.sheet.open(UpdateProductPurchasePriceComponent, {
-      data: {
-        price: this.t.at(i).get('price')?.value,
-        discount: this.t.at(i).get('discount')?.value,
-        initial_price: this.t.at(i).get('initial_price')?.value,
-        initial_discount: this.t.at(i).get('initial_discount')?.value,
-        save_price: this.t.at(i).get('save_price')?.value,
-      },
-    });
+    this.dialog
+      .open(UpdateProductPurchasePriceComponent, {
+        data: {
+          price: this.t.at(i).get('price')?.value,
+          discount: this.t.at(i).get('discount')?.value,
+          initial_price: this.t.at(i).get('initial_price')?.value,
+          initial_discount: this.t.at(i).get('initial_discount')?.value,
+          save_price: this.t.at(i).get('save_price')?.value,
+        },
+        autoFocus: '#price',
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data) {
+          console.log(data);
+        }
+      });
+    // const sheet = this.sheet.open(UpdateProductPurchasePriceComponent, {
+    //   data: {
+    //     price: this.t.at(i).get('price')?.value,
+    //     discount: this.t.at(i).get('discount')?.value,
+    //     initial_price: this.t.at(i).get('initial_price')?.value,
+    //     initial_discount: this.t.at(i).get('initial_discount')?.value,
+    //     save_price: this.t.at(i).get('save_price')?.value,
+    //   },
+    // });
 
-    sheet.afterDismissed().subscribe((data) => {
-      if (data != undefined) {
-        this.t.at(i).patchValue({
-          price: data.price,
-          discount: data.discount,
-          save_price: data.save_price,
-        });
-      }
-    });
+    // sheet.afterDismissed().subscribe((data) => {
+    //   if (data != undefined) {
+    //     this.t.at(i).patchValue({
+    //       price: data.price,
+    //       discount: data.discount,
+    //       save_price: data.save_price,
+    //     });
+    //   }
+    // });
   }
 
   canExit() {

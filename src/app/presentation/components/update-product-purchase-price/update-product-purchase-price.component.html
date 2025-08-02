@@ -1,71 +1,74 @@
-<form [formGroup]="priceFormGroup" class="mt-3" (ngSubmit)="saveSheet()">
-  <h1>{{ "purchase-invoice__confirm__update-price" | translate }}</h1>
-  <mat-form-field appearance="outline" class="w-100">
-    <mat-label>{{ "purchase-invoice__confirm__price" | translate }}</mat-label>
-    <input
-      type="text"
-      matInput
-      mask="separator.2"
-      thousandSeparator=" "
-      (focus)="setFocus('price')"
-      (blur)="unsetFocus()"
-      placeholder="Ex. 8 000"
-      formControlName="price"
-    />
-  </mat-form-field>
+<h2 mat-dialog-title>
+  {{ "purchase-invoice__confirm__update-price" | translate }}
+</h2>
 
-  <mat-form-field appearance="outline" class="w-100">
-    <mat-label
-      >{{ "purchase-invoice__confirm__discount" | translate }} (Rp.)</mat-label
+<form [formGroup]="priceFormGroup" (ngSubmit)="savePurchasePrice()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{
+        "purchase-invoice__confirm__price" | translate
+      }}</mat-label>
+      <input
+        #price
+        type="text"
+        matInput
+        mask="separator.2"
+        thousandSeparator=" "
+        placeholder="Ex. 8 000"
+        formControlName="price"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label
+        >{{
+          "purchase-invoice__confirm__discount" | translate
+        }}
+        (Rp.)</mat-label
+      >
+      <input
+        type="text"
+        matInput
+        mask="separator.2"
+        thousandSeparator=" "
+        placeholder="Ex. 800"
+        formControlName="discount"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label
+        >{{ "purchase-invoice__confirm__discount" | translate }} (%)</mat-label
+      >
+      <input
+        type="text"
+        matInput
+        mask="separator.2"
+        thousandSeparator=" "
+        placeholder="Ex. 800"
+        formControlName="discountPercentage"
+      />
+    </mat-form-field>
+
+    <!-- Slide toggle, disabled if initialPrice is same with price -->
+    <mat-slide-toggle
+      class="w-100"
+      color="primary"
+      formControlName="save_price"
     >
-    <input
-      type="text"
-      matInput
-      mask="separator.2"
-      thousandSeparator=" "
-      placeholder="Ex. 800"
-      (focus)="setFocus('absolute')"
-      formControlName="discount"
-    />
-  </mat-form-field>
+      {{ "purchase-invoice__confirm__save-price" | translate }}
+    </mat-slide-toggle>
+  </mat-dialog-content>
 
-  <mat-form-field appearance="outline" class="w-100">
-    <mat-label
-      >{{ "purchase-invoice__confirm__discount" | translate }} (%)</mat-label
+  <mat-dialog-actions align="end">
+    <button
+      mat-stroked-button
+      color="primary"
+      style="letter-spacing: 0"
+      type="submit"
+      [disabled]="!priceFormGroup.valid"
     >
-    <input
-      type="text"
-      matInput
-      mask="separator.2"
-      thousandSeparator=" "
-      placeholder="Ex. 800"
-      (focus)="setFocus('percentage')"
-      (blur)="unsetFocus()"
-      formControlName="discountPercentage"
-    />
-  </mat-form-field>
-
-  <!-- Slide toggle, disabled if initialPrice is same with price -->
-  <mat-slide-toggle class="w-100" formControlName="save_price">
-    {{ "purchase-invoice__confirm__save-price" | translate }}
-  </mat-slide-toggle>
-
-  <button
-    class="action-button"
-    (click)="saveSheet()"
-    type="submit"
-    [disabled]="!priceFormGroup.valid"
-  >
-    {{ "purchase-invoice__confirm__save" | translate }}
-  </button>
+      {{ "purchase-invoice__confirm__save" | translate }}
+    </button>
+  </mat-dialog-actions>
 </form>
-
-<svg width="300" height="40" viewBox="0 0 300 40">
-  <path
-    d="M0 20 Q 7.5 0, 15 20 T 30 20 T 45 20 T 60 20 T 75 20 T 90 20 T 105 20 T 120 20 T 135 20 T 150 20 T 165 20 T 180 20 T 195 20 T 210 20 T 225 20 T 240 20 T 255 20 T 270 20 T 285 20 T 300 20"
-    fill="none"
-    stroke="black"
-    stroke-width="2"
-    stroke-dasharray="4,4"
-  />
-</svg>

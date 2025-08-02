@@ -115,6 +115,15 @@ export class GoodReceiptCreateComponent {
         const data = result.data;
         const sub = result.sub;
 
+        const exists = this.checkExisting(data.id, sub == null ? null : sub.id);
+
+        if (exists) {
+          this.alertService.showError(
+            this.translateService.instant('general__item__exists')
+          );
+          return;
+        }
+
         this.t.push(
           this.formBuilder.group({
             product_id: [data.id, Validators.required],
@@ -136,6 +145,20 @@ export class GoodReceiptCreateComponent {
           number_of_items: this.t.length,
         });
       }
+    });
+  }
+
+  private checkExisting(
+    productID: number,
+    productUnitID: number | null
+  ): boolean {
+    return this.t.controls.some((x) => {
+      const existingProductID = x.get('product_id')?.value;
+      const existingProductUnitID = x.get('product_unit_id')?.value;
+      return (
+        existingProductID === productID &&
+        (productUnitID === null || existingProductUnitID === productUnitID)
+      );
     });
   }
 
