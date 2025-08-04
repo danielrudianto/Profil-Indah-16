@@ -80,6 +80,9 @@ import { ProductCreateComponent } from './presentation/pages/product/product-cre
 import { PromotionCreateComponent } from './presentation/pages/promotion/promotion-create/promotion-create.component';
 import { OverpaymentComponent } from './presentation/pages/overpayment/overpayment.component';
 import { OverpaymentCreateComponent } from './presentation/pages/overpayment/overpayment-create/overpayment-create.component';
+import { OverpaymentArchiveComponent } from './presentation/pages/overpayment/overpayment-archive/overpayment-archive.component';
+import { ReceivableListComponent } from './presentation/pages/receivable/receivable-list/receivable-list.component';
+import { ReceivableViewComponent } from './presentation/pages/receivable/receivable-view/receivable-view.component';
 
 const routes: Routes = [
   {
@@ -114,6 +117,20 @@ const routes: Routes = [
           {
             path: '',
             component: AdministratorDashboardComponent,
+          },
+          {
+            path: 'Overpayment',
+            component: OverpaymentComponent,
+            children: [
+              {
+                path: '',
+                component: OverpaymentCreateComponent,
+              },
+              {
+                path: 'Archive',
+                component: OverpaymentArchiveComponent,
+              },
+            ],
           },
           {
             path: 'Product',
@@ -188,6 +205,16 @@ const routes: Routes = [
           {
             path: 'Receivable',
             component: ReceivableComponent,
+            children: [
+              {
+                path: '',
+                component: ReceivableListComponent,
+              },
+              {
+                path: ':id',
+                component: ReceivableViewComponent,
+              },
+            ],
           },
           {
             path: 'Deposit',

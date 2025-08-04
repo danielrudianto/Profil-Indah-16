@@ -120,34 +120,38 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let item of dataSource.sales_deposit">
+                <tr *ngFor="let item of t.controls">
                   <td>
-                    <p class="mb-0">{{ item.product.reference }}</p>
+                    <p class="mb-0">{{ item.get("reference")?.value }}</p>
                     <p class="text-clamp-1 mb-0">
-                      {{ item.product.description }}
+                      {{ item.get("description")?.value }}
                     </p>
                   </td>
                   <td class="text-center">
-                    {{ item.quantity | number : "0.0-2" }}
-                    {{
-                      item.product_unit == null
-                        ? item.product.unit
-                        : item.product_unit.unit
-                    }}
+                    {{ item.get("quantity")?.value | number : "0.0-2" }}
+                    {{ item.get("unit")?.value }}
                   </td>
                   <td class="text-center">
-                    Rp.&nbsp;{{ item.price | number : "0.2-2" }}
+                    Rp.&nbsp;{{ item.get("price")?.value | number : "0.2-2" }}
                   </td>
                   <td
                     class="text-center"
                     [matTooltip]="
-                      getDiscountPercentage(item.discount, item.price)
+                      getDiscountPercentage(
+                        item.get('discount')!.value,
+                        item.get('price')?.value
+                      )
                     "
                   >
-                    Rp.&nbsp;{{ item.discount | number : "0.2-2" }}
+                    Rp.&nbsp;{{
+                      item.get("discount")?.value | number : "0.2-2"
+                    }}
                   </td>
                   <td class="text-center">
-                    Rp.&nbsp;{{ item.price * item.quantity | number : "0.2-2" }}
+                    Rp.&nbsp;{{
+                      (item.get("price")?.value - item.get("discount")?.value) *
+                        item.get("quantity")?.value | number : "0.2-2"
+                    }}
                   </td>
                 </tr>
               </tbody>
@@ -328,7 +332,7 @@
               <mat-icon>menu</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item>
+              <button mat-menu-item (click)="delete()">
                 <mat-icon>delete</mat-icon>
                 <span>{{ "sales-deposit__archive__delete" | translate }}</span>
               </button>

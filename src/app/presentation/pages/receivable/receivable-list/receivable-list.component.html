@@ -1,0 +1,49 @@
+<app-feature-background />
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <app-feature-header
+        [title]="'receivable__title' | translate"
+        [isBackAvailable]="true"
+      ></app-feature-header>
+      <div class="dashboard-card">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 250px">
+                  {{ "receivable__name" | translate }}
+                </th>
+                <th style="width: 200px">
+                  {{ "receivable__amount" | translate }}
+                </th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let data of dataSource"
+                (click)="viewReceivable(data.id)"
+              >
+                <td>
+                  <p class="mb-0 text-clamp-1">
+                    {{ data.name }}
+                  </p>
+                </td>
+                <td>{{ data.value | number : "0.2-2" }}</td>
+                <td>
+                  <div class="receivable-bar__wrapper">
+                    <div
+                      class="receivable-bar"
+                      [style.width]="(data.value * 100) / max + '%'"
+                    ></div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

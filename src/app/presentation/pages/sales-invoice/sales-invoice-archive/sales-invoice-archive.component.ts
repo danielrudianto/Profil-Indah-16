@@ -216,11 +216,8 @@ export class SalesInvoiceArchiveComponent {
     this.dialog.open(SalesInvoiceViewComponent, {
       data: {
         id: id,
+        noAction: false,
       },
     });
-    // this.dynamicComponentService.createDynamicComponent(ArchiveViewComponent, {
-    //   route: 'sales-invoice',
-    //   id: id,
-    // });
   }
 }

@@ -241,6 +241,8 @@ import { OverpaymentArchiveComponent } from './presentation/pages/overpayment/ov
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DepositConfirmUpdatePaymentComponent } from './presentation/pages/deposit/deposit-confirm/deposit-confirm-update-payment/deposit-confirm-update-payment.component';
 import { GoodReceiptViewComponent } from './presentation/pages/good-receipt/good-receipt-archive/good-receipt-view/good-receipt-view.component';
+import { ReceivableListComponent } from './presentation/pages/receivable/receivable-list/receivable-list.component';
+import { DepositDeleteConfirmationComponent } from './presentation/pages/deposit/deposit-delete-confirmation/deposit-delete-confirmation.component';
 
 @NgModule({
   declarations: [
@@ -425,6 +427,8 @@ import { GoodReceiptViewComponent } from './presentation/pages/good-receipt/good
         OverpaymentArchiveComponent,
         DepositConfirmUpdatePaymentComponent,
         GoodReceiptViewComponent,
+        ReceivableListComponent,
+        DepositDeleteConfirmationComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

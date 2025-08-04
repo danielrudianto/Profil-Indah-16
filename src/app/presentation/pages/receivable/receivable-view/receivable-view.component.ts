@@ -8,6 +8,9 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { ReceivablePaymentHistoryComponent } from './receivable-payment-history/receivable-payment-history.component';
 import { ReceivablePaymentCreateComponent } from './receivable-payment-create/receivable-payment-create.component';
 import { ArchiveViewComponent } from '../../../components/archives/archive-view/archive-view.component';
+import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { SalesInvoiceViewComponent } from '../../sales-invoice/sales-invoice-archive/sales-invoice-view/sales-invoice-view.component';
 
 @Component({
   selector: 'app-receivable-view',
@@ -20,11 +23,11 @@ export class ReceivableViewComponent {
     private apiService: ApiService,
     private alertSerivce: AlertService,
     private dynamicComponentService: DynamicComponentService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) {}
 
-  @Input('data') data: any;
-  isOpened: boolean = false;
   isLoadingData: boolean = true;
   isLoadingCard: boolean = true;
 
@@ -32,10 +35,11 @@ export class ReceivableViewComponent {
   dataSource: any[] = [];
   dataCount: number = 0;
   page: number = 1;
+  pageSize: number = 10;
 
   ngOnInit(): void {
-    this.isOpened = true;
-    if (this.data.id == null) {
+    const id = this.route.snapshot.params['id'];
+    if (id == 0) {
       this.customerDataSource = {
         name: this.translateService.instant('general__retail-customer'),
         address: this.translateService.instant(
@@ -43,8 +47,6 @@ export class ReceivableViewComponent {
         ),
         id: 0,
       };
-
-      this.isLoadingData = false;
     } else {
       this.fetchCustomerData();
     }
@@ -54,8 +56,9 @@ export class ReceivableViewComponent {
 
   fetchCustomerData(): void {
     this.isLoadingData = true;
+    const id = this.route.snapshot.params['id'];
     this.apiService
-      .get(`customer/${this.data.id}`)
+      .get(`customer/${id}`)
       .subscribe({
         next: (data) => {
           this.customerDataSource = data;
@@ -70,15 +73,14 @@ export class ReceivableViewComponent {
   }
 
   fetchReceivableData(page: number = this.page): void {
+    const id = this.route.snapshot.params['id'];
     this.page = page;
     this.isLoadingCard = true;
     this.apiService
-      .get(
-        `receivable/customer/v2/${this.data.id == null ? 0 : this.data.id}`,
-        {
-          page: this.page,
-        }
-      )
+      .get(`receivable/customer/${id}`, {
+        page: this.page,
+        pageSize: this.pageSize,
+      })
       .subscribe({
         next: (data: any) => {
           this.dataSource = data.data;
@@ -94,13 +96,6 @@ export class ReceivableViewComponent {
       });
   }
 
-  closeDialog(data: any = undefined) {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent(data);
-    }, 300);
-  }
-
   copyData(data: string): void {
     navigator.clipboard.writeText(data);
     this.alertSerivce.showSuccess(
@@ -109,8 +104,12 @@ export class ReceivableViewComponent {
   }
 
   changePage(event: PageEvent) {
-    this.page = event.pageIndex + 1;
-    this.fetchReceivableData();
+    if (event.pageSize == this.pageSize) {
+      this.page = event.pageIndex + 1;
+      this.fetchReceivableData();
+    } else {
+      this.fetchReceivableData(1);
+    }
   }
 
   openPaymentHistory(id: number) {
@@ -152,9 +151,11 @@ export class ReceivableViewComponent {
   }
 
   openView(id: number) {
-    this.dynamicComponentService.createDynamicComponent(ArchiveViewComponent, {
-      route: 'sales-invoice',
-      id: id,
+    this.dialog.open(SalesInvoiceViewComponent, {
+      data: {
+        id: id,
+        noAction: true,
+      },
     });
   }
 
@@ -162,5 +163,21 @@ export class ReceivableViewComponent {
     return this.dataSource.reduce((a: any, b: any) => {
       return a + (Number(b.value) - Number(b.payment));
     }, 0);
+  }
+
+  valueOf(data: any[], additional: number) {
+    const sales_invoice = data.reduce((a, b) => {
+      return a + (b.price - b.discount) * b.quantity;
+    }, 0);
+
+    return sales_invoice + additional;
+  }
+
+  paymentOf(data: any[]) {
+    const sales_invoice_payment = data.reduce((a, b) => {
+      return a + b.value;
+    }, 0);
+
+    return sales_invoice_payment;
   }
 }

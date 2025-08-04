@@ -163,8 +163,9 @@
                     </td>
                     <td class="text-center">
                       Rp.&nbsp;{{
-                        item.get("price")?.value * item.get("quantity")?.value
-                          | number : "0.2-2"
+                        (item.get("price")?.value -
+                          item.get("discount")?.value) *
+                          item.get("quantity")?.value | number : "0.2-2"
                       }}
                     </td>
                   </tr>
@@ -197,7 +198,10 @@
                       {{ "sales-invoice__archive__view__service" | translate }}
                     </td>
                     <td class="text-center" colspan="2">
-                      Rp.&nbsp;{{ dataSource.service | number : "0.2-2" }}
+                      Rp.&nbsp;{{
+                        salesInvoiceFormGroup.get("service")?.value
+                          | number : "0.2-2"
+                      }}
                     </td>
                   </tr>
                   <tr>
@@ -206,7 +210,10 @@
                       {{ "sales-invoice__archive__view__delivery" | translate }}
                     </td>
                     <td class="text-center" colspan="2">
-                      Rp.&nbsp;{{ dataSource.delivery | number : "0.2-2" }}
+                      Rp.&nbsp;{{
+                        salesInvoiceFormGroup.get("delivery")?.value
+                          | number : "0.2-2"
+                      }}
                     </td>
                   </tr>
                   <tr>
@@ -215,12 +222,7 @@
                       {{ "sales-invoice__archive__view__total" | translate }}
                     </td>
                     <td class="text-center" colspan="2">
-                      Rp.&nbsp;{{
-                        subtotal -
-                          dataSource.discount +
-                          dataSource.delivery +
-                          dataSource.service | number : "0.2-2"
-                      }}
+                      Rp.&nbsp;{{ grandTotal | number : "0.2-2" }}
                     </td>
                   </tr>
                 </tfoot>
@@ -292,19 +294,21 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let item of dataSource.sales_invoice_payment">
-                    <td>{{ item.date | date : "dd/MM/yyyy" }}</td>
+                  <tr *ngFor="let item of u.controls">
+                    <td>
+                      {{ item.get("date")?.value | date : "dd MMMM YYYY" }}
+                    </td>
                     <td>
                       {{
-                        item.payment_method == null
+                        item.get("payment_method")?.value == null
                           ? "Cash"
-                          : item.payment_method.name
+                          : item.get("payment_method")?.value.name
                       }}
                     </td>
                     <td>{{ item.value | number : "0.2-2" }}</td>
                   </tr>
                 </tbody>
-                <tbody *ngIf="dataSource.sales_invoice_payment.length == 0">
+                <tbody *ngIf="u.controls.length == 0">
                   <td colspan="3">
                     {{
                       "sales-invoice__archive__view__payments__empty"
@@ -334,6 +338,7 @@
                 style="letter-spacing: 0"
                 [disabled]="!isAdministrator"
                 (click)="openDeleteConfirmation()"
+                *ngIf="!data.noAction"
               >
                 {{ "sales-invoice__archive__view__delete" | translate }}
                 <mat-icon>warning</mat-icon>

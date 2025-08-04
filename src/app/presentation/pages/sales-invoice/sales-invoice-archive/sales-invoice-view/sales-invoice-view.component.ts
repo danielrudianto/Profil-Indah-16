@@ -34,7 +34,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class SalesInvoiceViewComponent {
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { id: number },
+    @Inject(MAT_DIALOG_DATA) public data: { id: number; noAction: boolean },
     private authService: AuthService,
     private dialog: MatDialog,
     private sheet: MatBottomSheet,
@@ -49,7 +49,6 @@ export class SalesInvoiceViewComponent {
 
   isAdministrator: boolean = false;
   isLoading: boolean = false;
-  dataSource: any;
 
   step = signal(0);
 
@@ -115,17 +114,17 @@ export class SalesInvoiceViewComponent {
       .get(`sales-invoice/${this.data.id}`)
       .subscribe({
         next: (data: any) => {
-          this.dataSource = data;
           data.sales_invoice.forEach((x: any) => {
             this.t.push(
               this.formBuilder.group({
                 id: [x.id],
                 price: [x.price],
+                quantity: [x.quantity],
                 discount: [x.discount],
                 product_id: [x.product_id],
                 product_unit_id: [x.product_unit_id],
-                reference: [x.reference],
-                description: [x.description],
+                reference: [x.product.reference],
+                description: [x.product.description],
                 unit: [
                   x.product_unit == null ? x.product.unit : x.product_unit.unit,
                 ],
@@ -165,7 +164,6 @@ export class SalesInvoiceViewComponent {
             service: data.service,
             createdBy: data.user_bill_code_created_byTouser.name,
             createdAt: this.datePipe.transform(data.createdAt, 'dd MMMM YYYY'),
-            sales_invoice: new FormArray([]),
           });
         },
         error: (error) => {
@@ -190,10 +188,23 @@ export class SalesInvoiceViewComponent {
   }
 
   get subtotal(): number {
-    if (this.dataSource == null) return 0;
-    return this.dataSource.sales_invoice.reduce((a: any, b: any) => {
+    return this.t.value.reduce((a: any, b: any) => {
       return a + b.quantity * (b.price - b.discount);
     }, 0);
+  }
+
+  get grandTotal(): number {
+    const discount = Number(
+      this.salesInvoiceFormGroup.controls['discount'].value
+    );
+    const service = Number(
+      this.salesInvoiceFormGroup.controls['service'].value
+    );
+    const delivery = Number(
+      this.salesInvoiceFormGroup.controls['delivery'].value
+    );
+
+    return this.subtotal + delivery + service - discount;
   }
 
   getDiscountPercentage(discount: number, price: number) {

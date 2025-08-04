@@ -301,7 +301,7 @@ export class SalesInvoiceCreateComponent {
       if (result == undefined) {
         return;
       }
-      
+
       if (result) {
         const data = result.data;
         const sub = result.sub;
@@ -803,22 +803,6 @@ export class SalesInvoiceCreateComponent {
       .add(() => {
         this.isSubmitting = false;
       });
-  }
-
-  get errorMessage(): string {
-    if (this.metaFormGroup.controls['type']?.value != 'sales') {
-      return 'tipe';
-    }
-
-    if (this.paymentsFormGroup.controls['method']?.value != 'paid') {
-      return 'belum lunas';
-    }
-
-    if (this.metaFormGroup.controls['customer_id']?.value == 0) {
-      return 'customer id kosong';
-    }
-
-    return '';
   }
 
   get overPaymentAvailable(): boolean {

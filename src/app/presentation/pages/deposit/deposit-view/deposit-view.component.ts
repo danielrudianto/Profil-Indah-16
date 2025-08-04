@@ -1,5 +1,11 @@
 import { Component, Inject, Input, signal } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -17,6 +23,7 @@ import { Margins, PageOrientation, PageSize } from 'pdfmake/interfaces';
 import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DepositDeleteConfirmationComponent } from '../deposit-delete-confirmation/deposit-delete-confirmation.component';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -38,7 +45,8 @@ export class DepositViewComponent {
     private translateService: TranslateService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private dialogRef: MatDialogRef<DepositViewComponent>
+    private dialogRef: MatDialogRef<DepositViewComponent>,
+    private formBuilder: FormBuilder
   ) {
     this._hotKeysService.add([
       new Hotkey('esc', (event: KeyboardEvent): boolean => {
@@ -72,7 +80,16 @@ export class DepositViewComponent {
     status: new FormControl('', Validators.required),
     createdBy: new FormControl('', Validators.required),
     createdAt: new FormControl('', Validators.required),
+    sales_deposit: new FormArray([]),
   });
+
+  get f() {
+    return this.salesDepositFormGroup.controls;
+  }
+
+  get t(): FormArray {
+    return this.f['sales_deposit'] as FormArray;
+  }
 
   isLoading: boolean = true;
   dataSource: any = null;
@@ -115,6 +132,15 @@ export class DepositViewComponent {
         }
       );
     }, 300);
+  }
+
+  delete(): void {
+    this.dialog.open(DepositDeleteConfirmationComponent, {
+      data: {
+        id: this.data.id,
+      },
+      disableClose: true,
+    });
   }
 
   // confirmDeposit(): void {
@@ -185,6 +211,26 @@ export class DepositViewComponent {
                   'sales-deposit__archive__view__pending'
                 ),
           });
+
+          data.sales_deposit.forEach((x: any) => {
+            this.t.push(
+              this.formBuilder.group({
+                product_id: [x.product.id],
+                product_unit_id: [x.product_unit_id],
+                reference: [x.product.reference],
+                description: [x.product.description],
+                price: [x.price],
+                discount: [x.discount],
+                unit: [
+                  x.product_unit == null ? x.product.unit : x.product_unit.unit,
+                ],
+                conversion: [
+                  x.product_unit == null ? 1 : x.product_unit.conversion,
+                ],
+                quantity: [x.quantity],
+              })
+            );
+          });
         },
         error: (error) => {
           this.alertService.showError(Error(error));
@@ -208,7 +254,9 @@ export class DepositViewComponent {
   }
 
   get subtotal(): number {
-    return 0;
+    return this.t.value.reduce((a: any, b: any) => {
+      return a + b.quantity * (b.price - b.discount);
+    }, 0);
   }
 
   // print() {

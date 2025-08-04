@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>
+  {{ "sales-deposit__delete__confirm__title" | translate }}
+</h2>
+<form [formGroup]="formGroup">
+  <mat-dialog-content>
+    <p>{{ "sales-deposit__delete__confirm" | translate }}</p>
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ "sales-deposit__delete__method" | translate }}</mat-label>
+      <mat-select formControlName="method">
+        <mat-option value="overpayment">{{
+          "sales-deposit__delete__create_overpayment" | translate
+        }}</mat-option>
+        <mat-option value="overpayment">{{
+          "sales-deposit__delete__delete_payment" | translate
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      type="button"
+      mat-stroked-button
+      color="warn"
+      style="letter-spacing: 0"
+      mat-dialog-close
+    >
+      {{ "general__delete-confirmation__close" | translate }}
+    </button>
+
+    <button
+      type="submit"
+      mat-stroked-button
+      color="primary"
+      style="letter-spacing: 0"
+      [disabled]="!formGroup.valid"
+    >
+      {{ "general__delete-confirmation__submit" | translate }}
+    </button>
+  </mat-dialog-actions>
+</form>
