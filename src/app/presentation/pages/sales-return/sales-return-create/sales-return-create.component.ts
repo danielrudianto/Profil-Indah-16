@@ -355,6 +355,7 @@ export class SalesReturnCreateComponent {
       this.isSubmitting = true;
       this.apiService
         .post('sales-return', {
+          sales_invoice_code_id: this.selectedBill.id,
           date: this.datePipe.transform(
             this.metaFormGroup.value.bill_date,
             'yyyy-MM-dd'

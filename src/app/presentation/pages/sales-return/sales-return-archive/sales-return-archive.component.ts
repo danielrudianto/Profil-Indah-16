@@ -9,6 +9,8 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { SalesReturnArchiveFilterComponent } from './sales-return-archive-filter/sales-return-archive-filter.component';
 import { ArchiveViewComponent } from 'src/app/presentation/components/archives/archive-view/archive-view.component';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
+import { MatDialog } from '@angular/material/dialog';
+import { SalesReturnArchiveViewComponent } from './sales-return-archive-view/sales-return-archive-view.component';
 
 @Component({
   selector: 'app-sales-return-archive',
@@ -20,7 +22,8 @@ export class SalesReturnArchiveComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dynamicComponentService: DynamicComponentService
+    private dynamicComponentService: DynamicComponentService,
+    private dialog: MatDialog
   ) {}
 
   mode: ArchiveMode = ArchiveMode.year;
@@ -145,9 +148,10 @@ export class SalesReturnArchiveComponent {
   }
 
   viewArchive(id: number) {
-    this.dynamicComponentService.createDynamicComponent(ArchiveViewComponent, {
-      route: 'sales-return',
-      id: id,
+    this.dialog.open(SalesReturnArchiveViewComponent, {
+      data: {
+        id: id,
+      },
     });
   }
 }
