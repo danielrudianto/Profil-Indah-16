@@ -15,18 +15,6 @@
     </div>
     <div class="view-panel-content" id="content">
       <mat-spinner id="spinner" *ngIf="isLoading" />
-
-      <div *ngIf="!isLoading" [ngSwitch]="data.route">
-        <app-sales-invoice-view
-          *ngSwitchCase="'sales-invoice'"
-          (close)="close()"
-        ></app-sales-invoice-view>
-        <app-sales-return-archive-view
-          *ngSwitchCase="'sales-return'"
-          [data]="dataSource"
-          (close)="close()"
-        />
-      </div>
     </div>
     <div class="shortcuts">
       <div class="shortcut-key">

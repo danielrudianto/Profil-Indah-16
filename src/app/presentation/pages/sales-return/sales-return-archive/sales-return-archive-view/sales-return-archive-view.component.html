@@ -1,4 +1,277 @@
-<label>{{ "sales-return__archive__view__date" | translate }}</label>
+<h2
+  mat-dialog-title
+  cdkDrag
+  cdkDragRootElement=".cdk-overlay-pane"
+  cdkDragHandle
+  cdkDragBoundary="body"
+>
+  {{ "sales-return__archive__title" | translate }}
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="salesReturnFormGroup">
+    <mat-accordion>
+      <mat-expansion-panel
+        disabled
+        class="mat-elevation-z0"
+        hideToggle
+        [expanded]="step() === 0"
+        (opened)="setStep(0)"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ "sales-return__archive__view__general__title" | translate }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="row">
+          <div class="col-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-return__archive__view__date" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="date" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-return__archive__view__name" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="name" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-return__archive__view__status" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="status" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-return__archive__view__created-by" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="createdBy" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-return__archive__view__created-at" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="createdAt" />
+            </mat-form-field>
+
+            <button
+              mat-stroked-button
+              color="primary"
+              style="letter-spacing: 0"
+              (click)="nextStep()"
+            >
+              {{ "general__next" | translate }}
+            </button>
+          </div>
+          <div class="col-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-return__archive__view__sales-invoice-date" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="invoice_date" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-return__archive__view__sales-invoice-name" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="invoice_name" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-return__archive__view__customer" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="customer" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-return__archive__view__sales" | translate
+              }}</mat-label>
+              <input matInput readonly formControlName="sales" />
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel
+        disabled
+        class="mat-elevation-z0"
+        hideToggle
+        [expanded]="step() === 1"
+        (opened)="setStep(1)"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ "sales-return__archive__view__item__title" | translate }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="table-responsive">
+              <table class="table data-table">
+                <thead>
+                  <tr>
+                    <th class="text-center" style="width: 200px">
+                      {{
+                        "sales-return__archive__view__items__product"
+                          | translate
+                      }}
+                    </th>
+                    <th class="text-center" style="width: 200px">
+                      {{
+                        "sales-return__archive__view__items__quantity"
+                          | translate
+                      }}
+                    </th>
+                    <th class="text-center" style="width: 200px">
+                      {{
+                        "sales-return__archive__view__items__price" | translate
+                      }}
+                    </th>
+                    <th class="text-center" style="width: 300px">
+                      {{
+                        "sales-return__archive__view__items__discount"
+                          | translate
+                      }}
+                    </th>
+                    <th class="text-center" style="width: 200px">
+                      {{
+                        "sales-return__archive__view__items__total" | translate
+                      }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of t.controls">
+                    <td>
+                      <p class="mb-0">{{ item.get("reference")?.value }}</p>
+                      <p class="text-clamp-1 mb-0">
+                        {{ item.get("description")?.value }}
+                      </p>
+                    </td>
+                    <td class="text-center">
+                      {{ item.get("quantity")?.value | number : "0.0-2" }}
+                      {{ item.get("unit")?.value }}
+                    </td>
+                    <td class="text-center">
+                      Rp.&nbsp;{{ item.get("price")?.value | number : "0.2-2" }}
+                    </td>
+                    <td class="text-center">
+                      Rp.&nbsp;{{
+                        item.get("discount")?.value | number : "0.2-2"
+                      }}
+                    </td>
+                    <td class="text-center">
+                      Rp.&nbsp;{{
+                        (item.get("price")?.value -
+                          item.get("discount")?.value) *
+                          item.get("quantity")?.value | number : "0.2-2"
+                      }}
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="3"></td>
+                    <td>
+                      {{
+                        "sales-return__archive__view__items__total" | translate
+                      }}
+                    </td>
+                    <td>Rp.{{ subtotal | number : "0.2-2" }}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <div class="d-flex">
+              <button
+                type="button"
+                mat-stroked-button
+                color="warn"
+                class="me-3"
+                style="letter-spacing: 0"
+                (click)="prevStep()"
+              >
+                {{ "general__previous" | translate }}
+              </button>
+
+              <button
+                type="button"
+                mat-stroked-button
+                color="primary"
+                style="letter-spacing: 0"
+                (click)="nextStep()"
+              >
+                {{ "general__next" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel
+        disabled
+        class="mat-elevation-z0"
+        hideToggle
+        [expanded]="step() === 2"
+        (opened)="setStep(2)"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ "sales-return__archive__view__payment__title" | translate }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="row">
+          <div class="col-12">
+            <p>
+              {{
+                "sales-return__archive__view__payment__message" | translate
+              }}&nbsp;<b>{{
+                salesReturnFormGroup.get("payment_method")?.value
+              }}</b>
+            </p>
+            <div class="d-flex">
+              <button
+                type="button"
+                mat-stroked-button
+                color="warn"
+                class="me-3"
+                style="letter-spacing: 0"
+                (click)="prevStep()"
+              >
+                {{ "general__previous" | translate }}
+              </button>
+
+              <button
+                type="button"
+                mat-stroked-button
+                color="warn"
+                style="letter-spacing: 0"
+                [disabled]="!isAdministrator"
+              >
+                {{ "sales-return__archive__view__delete" | translate }}
+                <mat-icon>warning</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button color="primary" mat-dialog-close>
+    {{ "general__close" | translate }}
+  </button>
+</mat-dialog-actions>
+
+<!-- <label>{{ "sales-return__archive__view__date" | translate }}</label>
 <p>{{ data.date | date : "dd/MM/YYYY" }}</p>
 
 <label>{{ "sales-return__archive__view__name" | translate }}</label>
@@ -149,4 +422,4 @@
       </tr>
     </tfoot>
   </table>
-</div>
+</div> -->

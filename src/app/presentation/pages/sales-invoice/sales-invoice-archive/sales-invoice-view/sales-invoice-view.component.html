@@ -305,7 +305,7 @@
                           : item.get("payment_method")?.value.name
                       }}
                     </td>
-                    <td>{{ item.value | number : "0.2-2" }}</td>
+                    <td>{{ item.get("value")?.value | number : "0.2-2" }}</td>
                   </tr>
                 </tbody>
                 <tbody *ngIf="u.controls.length == 0">

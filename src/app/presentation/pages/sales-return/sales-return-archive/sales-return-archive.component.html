@@ -24,6 +24,9 @@
                   {{ "sales-return__archive__name" | translate }}
                 </th>
                 <th style="width: 150px">
+                  {{ "sales-return__archive__created-by" | translate }}
+                </th>
+                <th style="width: 150px">
                   {{ "sales-return__archive__status" | translate }}
                 </th>
               </tr>
@@ -49,7 +52,15 @@
               >
                 <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
                 <td>{{ item.name }}</td>
-                <td>{{ item.is_delete ? "Deleted" : "Active" }}</td>
+                <td>{{ item.user_sales_return_code_created_byTouser.name }}</td>
+                <td>
+                  {{
+                    (item.is_delete
+                      ? "sales-return__status__deleted"
+                      : "sales-return__status__active"
+                    ) | translate
+                  }}
+                </td>
               </tr>
             </tbody>
           </table>

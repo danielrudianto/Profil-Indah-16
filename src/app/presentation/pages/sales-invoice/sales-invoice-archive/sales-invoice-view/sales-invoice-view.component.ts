@@ -138,7 +138,7 @@ export class SalesInvoiceViewComponent {
                 id: [x.id],
                 date: [x.date],
                 payment_method: [x.payment_method],
-                amount: [x.amount],
+                value: [x.value],
               })
             );
           });
