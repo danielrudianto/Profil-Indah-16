@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { panelAnimation } from 'src/app/animations/panel.animation';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { StockCardViewComponent } from './stock-card-view/stock-card-view.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-stock-card',
@@ -18,40 +18,34 @@ export class StockCardComponent {
     private apiService: ApiService,
     private alertService: AlertService,
     private dynamicComponentService: DynamicComponentService,
-    private _hotKeysService: HotkeysService
-  ) {
-    this._hotKeysService.add([
-      new Hotkey('esc', (): boolean => {
-        this.closeDialog();
-        return false;
-      }),
-    ]);
-  }
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
-  @Input('data') data: any;
   isLoadingCard: boolean = false;
   isLoadingData: boolean = false;
   dataSource: any[] = [];
   dataCount: number = 0;
   page: number = 1;
+  pageSize: number = 10;
   productDataSource: any = null;
-  isOpened: boolean = false;
   id: number | null = null;
 
   ngOnInit(): void {
-    this.isOpened = true;
-    this.id = Number(this.data.id);
+    this.id = Number(this.route.snapshot.params['id']);
 
-    this.fetchProduct(this.id);
-    this.fetchStockCard(this.id, 1);
+    this.fetchProduct();
+    this.fetchStockCard(1);
   }
 
-  fetchStockCard(id: number, page: number = this.page) {
+  fetchStockCard(page: number = this.page) {
     this.page = page;
     this.isLoadingCard = true;
+    const id = Number(this.route.snapshot.params['id']);
     this.apiService
       .get(`product-stock/${id}`, {
         page: this.page,
+        pageSize: this.pageSize,
       })
       .subscribe({
         next: (data: any) => {
@@ -67,10 +61,11 @@ export class StockCardComponent {
       });
   }
 
-  fetchProduct(id: number) {
+  fetchProduct() {
     this.isLoadingData = true;
+    const id = Number(this.route.snapshot.params['id']);
     this.apiService
-      .get(`product-stock/meta/${id}`)
+      .get(`product/${id}`)
       .subscribe({
         next: (data) => {
           this.productDataSource = data;
@@ -104,13 +99,22 @@ export class StockCardComponent {
   }
 
   changePage(event: PageEvent) {
-    this.fetchStockCard(this.id!, event.pageIndex + 1);
+    if (event.pageSize == this.pageSize) {
+      this.page = event.pageIndex + 1;
+      this.fetchStockCard();
+    } else {
+      this.pageSize = event.pageSize;
+      this.fetchStockCard(1);
+    }
   }
 
-  closeDialog() {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
-    }, 300);
+  onBackButtonPressed() {
+    const backUrl = this.route.snapshot.queryParams['backLocation'];
+    console.log(backUrl);
+    if (backUrl == undefined) {
+    } else {
+      console.log(backUrl);
+      this.router.navigate([backUrl]);
+    }
   }
 }

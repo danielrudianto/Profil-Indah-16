@@ -8,16 +8,20 @@
         [isBackAvailable]="true"
       ></app-feature-header>
       <div class="dashboard-card">
-        <app-feature-search
-          [addButton]="false"
-          route="product-stock"
-          [page]="page"
-          [enable]="true"
-          (onChange)="onUpdateData($event)"
-          (onLoadingChange)="onUpdateLoadingStatus($event)"
-          (updatePage)="onUpdatePage()"
-          (onNewQuery)="page = 1"
-        ></app-feature-search>
+        <form [formGroup]="searchFormGroup">
+          <div class="d-flex">
+            <mat-form-field class="w-100" appearance="outline">
+              <mat-label>{{ "general__search-bar" | translate }}</mat-label>
+              <input
+                matInput
+                #searchBar
+                placeholder="Search item by its reference or description"
+                formControlName="searchBar"
+                [readonly]="isLoading"
+              />
+            </mat-form-field>
+          </div>
+        </form>
         <div class="table-responsive">
           <table class="table">
             <thead>
@@ -82,10 +86,10 @@
           class="paginator"
           [pageIndex]="page - 1"
           [length]="dataCount"
-          [pageSize]="10"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="[10, 25, 50]"
           (page)="changePage($event)"
           aria-label="Select page"
-          hidePageSize="true"
           *ngIf="!isLoading"
         >
         </mat-paginator>

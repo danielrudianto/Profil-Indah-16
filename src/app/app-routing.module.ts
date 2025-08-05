@@ -21,7 +21,6 @@ import { SalesComponent } from './presentation/pages/entries/sales/sales.compone
 import { SalesDashboardComponent } from './presentation/pages/dashboard/sales-dashboard/sales-dashboard.component';
 import { ProfileComponent } from './presentation/pages/entries/profile/profile.component';
 import { ProfileOverviewComponent } from './presentation/pages/profile-overview/profile-overview.component';
-import { StockListComponent } from './presentation/pages/stock-list/stock-list.component';
 import { GeneralComponent } from './presentation/pages/entries/general/general.component';
 import { GeneralDashboardComponent } from './presentation/pages/dashboard/general-dashboard/general-dashboard.component';
 import { ExpenseComponent } from './presentation/pages/expense/expense.component';
@@ -64,7 +63,6 @@ import { DepositConfirmComponent } from './presentation/pages/deposit/deposit-co
 import { PackageListComponent } from './presentation/pages/package/package-list/package-list.component';
 import { PackageCreateComponent } from './presentation/pages/package/package-create/package-create.component';
 import { PackageUpdateComponent } from './presentation/pages/package/package-update/package-update.component';
-import { StockCardComponent } from './presentation/pages/stock-list/stock-card/stock-card.component';
 import { ReportComponent } from './presentation/pages/report/report.component';
 import { ReportSalesComponent } from './presentation/pages/report/report-sales/report-sales.component';
 import { ReportPurchaseComponent } from './presentation/pages/report/report-purchase/report-purchase.component';
@@ -83,6 +81,9 @@ import { OverpaymentCreateComponent } from './presentation/pages/overpayment/ove
 import { OverpaymentArchiveComponent } from './presentation/pages/overpayment/overpayment-archive/overpayment-archive.component';
 import { ReceivableListComponent } from './presentation/pages/receivable/receivable-list/receivable-list.component';
 import { ReceivableViewComponent } from './presentation/pages/receivable/receivable-view/receivable-view.component';
+import { StockComponent } from './presentation/pages/stock/stock.component';
+import { StockListComponent } from './presentation/pages/stock/stock-list/stock-list.component';
+import { StockCardComponent } from './presentation/pages/stock/stock-card/stock-card.component';
 
 const routes: Routes = [
   {
@@ -192,7 +193,17 @@ const routes: Routes = [
           },
           {
             path: 'Stock',
-            component: StockListComponent,
+            component: StockComponent,
+            children: [
+              {
+                path: '',
+                component: StockListComponent,
+              },
+              {
+                path: 'Card/:id',
+                component: StockCardComponent,
+              },
+            ],
           },
           {
             path: 'Promotion',
@@ -444,11 +455,17 @@ const routes: Routes = [
           },
           {
             path: 'Stock',
-            component: StockListComponent,
-          },
-          {
-            path: 'Stock/:id',
-            component: StockCardComponent,
+            component: StockComponent,
+            children: [
+              {
+                path: '',
+                component: StockListComponent,
+              },
+              {
+                path: 'Card/:id',
+                component: StockCardComponent,
+              },
+            ],
           },
           {
             path: 'Good-receipt',
@@ -517,7 +534,17 @@ const routes: Routes = [
           },
           {
             path: 'Stock',
-            component: StockListComponent,
+            component: StockComponent,
+            children: [
+              {
+                path: '',
+                component: StockListComponent,
+              },
+              {
+                path: 'Card/:id',
+                component: StockCardComponent,
+              },
+            ],
           },
           {
             path: 'Receivable',
@@ -652,7 +679,17 @@ const routes: Routes = [
           },
           {
             path: 'Stock',
-            component: StockListComponent,
+            component: StockComponent,
+            children: [
+              {
+                path: '',
+                component: StockListComponent,
+              },
+              {
+                path: 'Card/:id',
+                component: StockCardComponent,
+              },
+            ],
           },
           {
             path: 'Overpayment',

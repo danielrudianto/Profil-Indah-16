@@ -1,20 +1,89 @@
 <h2 mat-dialog-title>
   {{ "sales-deposit__delete__confirm__title" | translate }}
 </h2>
-<form [formGroup]="formGroup">
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
   <mat-dialog-content>
     <p>{{ "sales-deposit__delete__confirm" | translate }}</p>
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>{{ "sales-deposit__delete__method" | translate }}</mat-label>
       <mat-select formControlName="method">
-        <mat-option value="overpayment">{{
+        <mat-option value="create">{{
           "sales-deposit__delete__create_overpayment" | translate
         }}</mat-option>
-        <mat-option value="overpayment">{{
+        <mat-option value="delete">{{
           "sales-deposit__delete__delete_payment" | translate
         }}</mat-option>
       </mat-select>
     </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{
+        "overpayment__create__return-date" | translate
+      }}</mat-label>
+
+      <input
+        matInput
+        type="text"
+        placeholder="Ex. 30/12/2023"
+        [matDatepicker]="returnPicker"
+        formControlName="return_payment_date"
+        autocomplete="off"
+        (click)="returnPicker.open()"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="returnPicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #returnPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{
+        "overpayment__create__return-payment-method" | translate
+      }}</mat-label>
+      <mat-select formControlName="return_payment_method">
+        <mat-option [value]="'Cash'">Cash</mat-option>
+        <mat-option [value]="'Bank transfer'">Transfer</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{
+        "overpayment__create__return-payment-name" | translate
+      }}</mat-label>
+      <input matInput formControlName="return_payment_name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{
+        "overpayment__create__return-payment-bank" | translate
+      }}</mat-label>
+      <input
+        matInput
+        [matAutocomplete]="auto"
+        formControlName="return_payment_bank"
+      />
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option
+          *ngFor="let bank of banks; track: bank"
+          [value]="bank.name"
+          >{{ bank.name }}</mat-option
+        >
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{
+        "overpayment__create__return-payment-number" | translate
+      }}</mat-label>
+      <input matInput formControlName="return_payment_number" />
+    </mat-form-field>
+    <div
+      *ngIf="formGroup.errors?.['bankOrNumberRequired']"
+      class="error-message"
+    >
+      {{ "overpayment__create__bank-error" | translate }}
+    </div>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
@@ -24,6 +93,7 @@
       color="warn"
       style="letter-spacing: 0"
       mat-dialog-close
+      [disabled]="isSubmitting"
     >
       {{ "general__delete-confirmation__close" | translate }}
     </button>
@@ -33,7 +103,7 @@
       mat-stroked-button
       color="primary"
       style="letter-spacing: 0"
-      [disabled]="!formGroup.valid"
+      [disabled]="!formGroup.valid || isSubmitting"
     >
       {{ "general__delete-confirmation__submit" | translate }}
     </button>

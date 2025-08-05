@@ -172,10 +172,9 @@ export class ReportSalesComponent {
   download(): void {
     this.isSubmitting = true;
     this.apiService
-      .post('report/sales', {
+      .post('report/sales/download', {
         month: this.date.value!.month() + 1,
         year: this.date.value!.year(),
-        mode: 'download',
       })
       .subscribe({
         next: (data: any) => {

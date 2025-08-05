@@ -76,7 +76,6 @@ import { CustomStepperComponent } from './presentation/components/custom-stepper
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BoxStepperComponent } from './presentation/components/box-stepper/box-stepper.component';
 import { VerticalDividerComponent } from './presentation/components/vertical-divider/vertical-divider.component';
-import { StockListComponent } from './presentation/pages/stock-list/stock-list.component';
 import { GeneralDashboardComponent } from './presentation/pages/dashboard/general-dashboard/general-dashboard.component';
 import { TransactionHeaderComponent } from './presentation/components/transaction-header/transaction-header.component';
 import { SalesInvoiceComponent } from './presentation/pages/sales-invoice/sales-invoice.component';
@@ -172,7 +171,6 @@ import {
 } from '@ngx-translate/core';
 import { CustomLoader } from './loader/translate.loader';
 import { LanguageSelectorComponent } from './presentation/components/topbar/language-selector/language-selector.component';
-import { StockListReportComponent } from './presentation/pages/stock-list/stock-list-report/stock-list-report.component';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { DarkModeSelectorComponent } from './presentation/components/topbar/dark-mode-selector/dark-mode-selector.component';
 import { AdjustmentCaseConfirmComponent } from './presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm.component';
@@ -192,7 +190,6 @@ import { ReportSalesComponent } from './presentation/pages/report/report-sales/r
 import { NgChartjsModule } from 'ng-chartjs';
 import { NgChartsModule } from 'ng2-charts';
 import { GoodReceiptArchiveFilterComponent } from './presentation/pages/good-receipt/good-receipt-archive/good-receipt-archive-filter/good-receipt-archive-filter.component';
-import { StockCardComponent } from './presentation/pages/stock-list/stock-card/stock-card.component';
 import { AdjustmentCaseConfirmViewComponent } from './presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm-view/adjustment-case-confirm-view.component';
 import { SalesReturnComponent } from './presentation/pages/sales-return/sales-return.component';
 import { SalesReturnCreateComponent } from './presentation/pages/sales-return/sales-return-create/sales-return-create.component';
@@ -200,7 +197,6 @@ import { ReceivableViewComponent } from './presentation/pages/receivable/receiva
 import { ReceivablePaymentHistoryComponent } from './presentation/pages/receivable/receivable-view/receivable-payment-history/receivable-payment-history.component';
 import { ReceivablePaymentCreateComponent } from './presentation/pages/receivable/receivable-view/receivable-payment-create/receivable-payment-create.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { StockCardViewComponent } from './presentation/pages/stock-list/stock-card/stock-card-view/stock-card-view.component';
 import { SalesChartComponent } from './presentation/components/charts/sales-chart/sales-chart.component';
 import { CustomerSalesChartComponent } from './presentation/pages/report/report-sales/customer-sales-chart/customer-sales-chart.component';
 import { BrandSalesChartComponent } from './presentation/pages/report/report-sales/brand-sales-chart/brand-sales-chart.component';
@@ -243,6 +239,11 @@ import { DepositConfirmUpdatePaymentComponent } from './presentation/pages/depos
 import { GoodReceiptViewComponent } from './presentation/pages/good-receipt/good-receipt-archive/good-receipt-view/good-receipt-view.component';
 import { ReceivableListComponent } from './presentation/pages/receivable/receivable-list/receivable-list.component';
 import { DepositDeleteConfirmationComponent } from './presentation/pages/deposit/deposit-delete-confirmation/deposit-delete-confirmation.component';
+import { StockListComponent } from './presentation/pages/stock/stock-list/stock-list.component';
+import { StockComponent } from './presentation/pages/stock/stock.component';
+import { StockListReportComponent } from './presentation/pages/stock/stock-list-report/stock-list-report.component';
+import { StockCardComponent } from './presentation/pages/stock/stock-card/stock-card.component';
+import { StockCardViewComponent } from './presentation/pages/stock/stock-card/stock-card-view/stock-card-view.component';
 
 @NgModule({
   declarations: [
@@ -292,6 +293,7 @@ import { DepositDeleteConfirmationComponent } from './presentation/pages/deposit
     CustomStepperComponent,
     BoxStepperComponent,
     VerticalDividerComponent,
+    StockComponent,
     StockListComponent,
     GeneralDashboardComponent,
     TransactionHeaderComponent,
@@ -421,14 +423,14 @@ import { DepositDeleteConfirmationComponent } from './presentation/pages/deposit
     CashierViewBillComponent,
     CashierViewBillPaymentSelectorComponent,
     ProductCreateUnitComponent,
-        OverpaymentComponent,
-        OverpaymentCreateComponent,
-        OverpaymentConfirmComponent,
-        OverpaymentArchiveComponent,
-        DepositConfirmUpdatePaymentComponent,
-        GoodReceiptViewComponent,
-        ReceivableListComponent,
-        DepositDeleteConfirmationComponent,
+    OverpaymentComponent,
+    OverpaymentCreateComponent,
+    OverpaymentConfirmComponent,
+    OverpaymentArchiveComponent,
+    DepositConfirmUpdatePaymentComponent,
+    GoodReceiptViewComponent,
+    ReceivableListComponent,
+    DepositDeleteConfirmationComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
