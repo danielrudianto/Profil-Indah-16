@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { Hotkey, HotkeysService } from 'angular2-hotkeys';
-import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { UserCreateStatusComponent } from './user-create-status/user-create-status.component';
 import { availableRoles, user } from 'src/app/models/user.model';
 import { panelAnimation } from 'src/app/animations/panel.animation';
@@ -20,12 +17,9 @@ export class UserCreateComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dynamicComponentService: DynamicComponentService,
-    private _hotKeysService: HotkeysService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private dialogRef: MatDialogRef<UserCreateComponent>
   ) {}
-
-  panelState: string = 'closed';
 
   userFormGroup: FormGroup = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -48,19 +42,6 @@ export class UserCreateComponent {
   isLoading: boolean = false;
 
   ngOnInit(): void {
-    this.panelState = 'opened';
-
-    this._hotKeysService.add([
-      new Hotkey('esc', (event: KeyboardEvent): boolean => {
-        this.close();
-        return false;
-      }),
-      new Hotkey('f', (event: KeyboardEvent): boolean => {
-        this.enlarge();
-        return false;
-      }),
-    ]);
-
     this.userFormGroup.controls['role'].valueChanges.subscribe({
       next: (data) => {
         if (data != 6) {
@@ -70,7 +51,7 @@ export class UserCreateComponent {
     });
   }
 
-  submitForm() {
+  onSubmit() {
     this.isSubmitting = true;
     this.apiService
       .post('user', {
@@ -81,7 +62,7 @@ export class UserCreateComponent {
         role: this.userFormGroup.controls['role'].value,
         user_sales: this.selectedTypes.map((x) => {
           return {
-            item_type_id: x.id,
+            product_type_id: x.id,
           };
         }),
       })
@@ -92,8 +73,7 @@ export class UserCreateComponent {
             minWidth: '300px',
             maxWidth: '400px',
           });
-
-          this.close();
+          this.dialogRef.close();
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -102,21 +82,6 @@ export class UserCreateComponent {
       .add(() => {
         this.isSubmitting = false;
       });
-  }
-
-  enlarge() {
-    if (this.panelState == 'opened') {
-      this.panelState = 'enlarged';
-    } else if (this.panelState == 'enlarged') {
-      this.panelState = 'opened';
-    }
-  }
-
-  close() {
-    this.panelState = 'closed';
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
-    }, 300);
   }
 
   onSelectType(event: any) {

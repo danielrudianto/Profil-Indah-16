@@ -6,6 +6,11 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { StockCardViewComponent } from './stock-card-view/stock-card-view.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { SalesReturnArchiveViewComponent } from '../../sales-return/sales-return-archive/sales-return-archive-view/sales-return-archive-view.component';
+import { SalesInvoiceViewComponent } from '../../sales-invoice/sales-invoice-archive/sales-invoice-view/sales-invoice-view.component';
+import { GoodReceiptViewComponent } from '../../good-receipt/good-receipt-archive/good-receipt-view/good-receipt-view.component';
+import { AdjustmentCaseViewComponent } from '../../adjustment-case/adjustment-case-archive/adjustment-case-view/adjustment-case-view.component';
 
 @Component({
   selector: 'app-stock-card',
@@ -17,7 +22,7 @@ export class StockCardComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dynamicComponentService: DynamicComponentService,
+    private dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -80,22 +85,40 @@ export class StockCardComponent {
   }
 
   viewDocument(data: any) {
-    this.dynamicComponentService.createDynamicComponent(
-      StockCardViewComponent,
-      {
-        id: data.document_id,
-        route:
-          data.sales_return_id != null
-            ? 'sales-return'
-            : data.adjustment_case_id != null
-            ? 'adjustment-event'
-            : data.bill_id != null
-            ? 'sales-invoice'
-            : data.good_receipt_id != null
-            ? 'good-receipt'
-            : null,
-      }
-    );
+    if (data.sales_return_code_id != null) {
+      this.dialog.open(SalesReturnArchiveViewComponent, {
+        data: {
+          id: data.sales_return_code_id,
+        },
+      });
+      return;
+    }
+
+    if (data.sales_invoice_code_id != null) {
+      this.dialog.open(SalesInvoiceViewComponent, {
+        data: {
+          id: data.sales_invoice_code_id,
+          noAction: true,
+        },
+      });
+    }
+
+    if (data.good_receipt_code_id != null) {
+      this.dialog.open(GoodReceiptViewComponent, {
+        data: {
+          id: data.good_receipt_code_id,
+        },
+      });
+    }
+
+    if (data.adjustment_case_code_id != null) {
+      this.dialog.open(AdjustmentCaseViewComponent, {
+        data: {
+          id: data.adjustment_case_code_id,
+          noAction: true,
+        },
+      });
+    }
   }
 
   changePage(event: PageEvent) {
@@ -110,11 +133,18 @@ export class StockCardComponent {
 
   onBackButtonPressed() {
     const backUrl = this.route.snapshot.queryParams['backLocation'];
-    console.log(backUrl);
     if (backUrl == undefined) {
+      const url = this.router.url.split('/');
+      if (url.length > 2) {
+        for (let i = 0; i < url.length - 2; i++) {
+          url.pop();
+        }
+      }
+
+      this.router.navigate(url);
     } else {
-      console.log(backUrl);
-      this.router.navigate([backUrl]);
+      const decodedURL = decodeURIComponent(backUrl);
+      this.router.navigateByUrl(decodedURL);
     }
   }
 }

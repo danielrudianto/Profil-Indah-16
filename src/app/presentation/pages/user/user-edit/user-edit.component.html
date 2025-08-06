@@ -1,4 +1,87 @@
-<div class="view-panel-wrapper">
+<h2 mat-dialog-title>{{ "user__edit__title" | translate }}</h2>
+<form [formGroup]="userFormGroup" (ngSubmit)="submitForm()">
+  <mat-dialog-content>
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>Name</mat-label>
+      <input
+        [disabled]="isSubmitting"
+        matInput
+        placeholder="Ex. Abdul"
+        type="text"
+        formControlName="name"
+      />
+    </mat-form-field>
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>Username</mat-label>
+      <input
+        [disabled]="isSubmitting"
+        matInput
+        placeholder="Ex. abdul"
+        type="text"
+        formControlName="username"
+      />
+    </mat-form-field>
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>NIK</mat-label>
+      <input
+        [disabled]="isSubmitting"
+        matInput
+        placeholder="Ex. XXXXXXXXXXXXXXXX"
+        type="text"
+        formControlName="nik"
+        minlength="16"
+        maxlength="16"
+      />
+    </mat-form-field>
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>Role</mat-label>
+      <mat-select
+        [disabled]="isLoading"
+        placeholder="Ex. Administrator"
+        type="text"
+        formControlName="role"
+      >
+        <mat-option *ngFor="let role of roles" [value]="role.id">
+          {{ role.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div *ngIf="userFormGroup.get('role')?.value == 6" class="w-100">
+      <app-autocomplete-search
+        label="Add type"
+        placeholder="Select from our product types collection"
+        [selected]="false"
+        routeName="product-type"
+        [reset]="true"
+        (onSelectData)="onSelectType($event)"
+      ></app-autocomplete-search>
+      <!-- <mat-chip-set class="mt-0 mb-3 w-50">
+        <mat-chip
+          selected
+          *ngFor="let item of selectedTypes"
+          (click)="onRemoveType(item)"
+          >{{ item.name }}</mat-chip
+        >
+      </mat-chip-set> -->
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-stroked-button color="warn" type="button" mat-dialog-close>
+      {{ "general__close" | translate }}
+    </button>
+    <button
+      mat-stroked-button
+      color="primary"
+      type="submit"
+      [disabled]="!userFormGroup.valid || isSubmitting"
+    >
+      {{ "general__submit" | translate }}
+    </button>
+  </mat-dialog-actions>
+</form>
+
+<!-- <div class="view-panel-wrapper">
   <div class="view-panel-backdrop" (click)="close()"></div>
   <div class="view-panel" [@panelAnimation]="panelState">
     <div class="row-action">
@@ -17,72 +100,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-            <form [formGroup]="userFormGroup" (ngSubmit)="submitForm()">
-              <mat-form-field class="w-100" appearance="outline">
-                <mat-label>Name</mat-label>
-                <input
-                  [disabled]="isSubmitting"
-                  matInput
-                  placeholder="Ex. Abdul"
-                  type="text"
-                  formControlName="name"
-                />
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="outline">
-                <mat-label>Username</mat-label>
-                <input
-                  [disabled]="isSubmitting"
-                  matInput
-                  placeholder="Ex. abdul"
-                  type="text"
-                  formControlName="username"
-                />
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="outline">
-                <mat-label>NIK</mat-label>
-                <input
-                  [disabled]="isSubmitting"
-                  matInput
-                  placeholder="Ex. XXXXXXXXXXXXXXXX"
-                  type="text"
-                  formControlName="nik"
-                  minlength="16"
-                  maxlength="16"
-                />
-              </mat-form-field>
-              <mat-form-field class="w-100" appearance="outline">
-                <mat-label>Role</mat-label>
-                <mat-select
-                  [disabled]="isLoading"
-                  placeholder="Ex. Administrator"
-                  type="text"
-                  formControlName="role"
-                >
-                  <mat-option *ngFor="let role of roles" [value]="role.id">
-                    {{ role.name }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <div *ngIf="userFormGroup.get('role')?.value == 6" class="w-100">
-                <app-autocomplete-search
-                  label="Add type"
-                  placeholder="Select from our product types collection"
-                  [selected]="false"
-                  routeName="product-type"
-                  [reset]="true"
-                  (onSelectData)="onSelectType($event)"
-                ></app-autocomplete-search>
-                <mat-chip-set class="mt-0 mb-3 w-50">
-                  <mat-chip
-                    selected
-                    *ngFor="let item of selectedTypes"
-                    (click)="onRemoveType(item)"
-                    >{{ item.name }}</mat-chip
-                  >
-                </mat-chip-set>
-              </div>
-            </form>
+            <form [formGroup]="userFormGroup" (ngSubmit)="submitForm()"></form>
           </div>
         </div>
       </div>
@@ -111,4 +129,4 @@
       </button>
     </div>
   </div>
-</div>
+</div> -->

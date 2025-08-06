@@ -1,4 +1,88 @@
-<div class="view-panel-wrapper">
+<h2 mat-dialog-title>{{ "user__create__title" | translate }}</h2>
+
+<form [formGroup]="userFormGroup" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ "user__create__name" | translate }}</mat-label>
+      <input matInput formControlName="name" placeholder="Ex. John Doe" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ "user__create__username" | translate }}</mat-label>
+      <input matInput formControlName="username" placeholder="Ex. johndoe" />
+    </mat-form-field>
+
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>NIK</mat-label>
+      <input
+        [disabled]="isSubmitting"
+        matInput
+        placeholder="Ex. XXXXXXXXXXXXXXXX"
+        type="text"
+        formControlName="nik"
+        minlength="16"
+        maxlength="16"
+      />
+    </mat-form-field>
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>{{ "user__create__role" | translate }}</mat-label>
+      <mat-select
+        [disabled]="isLoading"
+        placeholder="Ex. Administrator"
+        type="text"
+        formControlName="role"
+      >
+        <mat-option *ngFor="let role of roles" [value]="role.id">
+          {{ role.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div *ngIf="userFormGroup.get('role')?.value == 6" class="w-100">
+      <app-autocomplete-search
+        label="Add type"
+        placeholder="Select from our product types collection"
+        [selected]="false"
+        routeName="product-type"
+        [reset]="true"
+        (onSelectData)="onSelectType($event)"
+      ></app-autocomplete-search>
+      <mat-chip-set class="mt-0 mb-3 w-50">
+        <mat-chip
+          selected
+          *ngFor="let item of selectedTypes"
+          (click)="onRemoveType(item)"
+          >{{ item.name }}</mat-chip
+        >
+      </mat-chip-set>
+    </div>
+    <p class="mt-4">
+      {{ "user__create__help" | translate }}
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button
+      type="button"
+      mat-stroked-button
+      color="primary"
+      style="letter-spacing: 0"
+      mat-dialog-close=""
+    >
+      {{ "general__close" | translate }}
+    </button>
+    <button
+      type="submit"
+      mat-stroked-button
+      color="primary"
+      style="letter-spacing: 0"
+      [disabled]="isSubmitting || !userFormGroup.valid"
+    >
+      {{ "general__submit" | translate }}
+    </button>
+  </mat-dialog-actions>
+</form>
+
+<!-- <div class="view-panel-wrapper">
   <div class="view-panel-backdrop" (click)="close()"></div>
   <div class="view-panel" [@panelAnimation]="panelState">
     <div class="row-action">
@@ -100,7 +184,9 @@
       </div>
       <div class="shortcut-key">
         <span class="shortcut-key-label">F</span>
-        <span class="shortcut-key-function">{{ "general__toggle-full-screen" | translate }}</span>
+        <span class="shortcut-key-function">{{
+          "general__toggle-full-screen" | translate
+        }}</span>
       </div>
     </div>
     <div class="actions">
@@ -113,4 +199,4 @@
       </button>
     </div>
   </div>
-</div>
+</div> -->

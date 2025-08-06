@@ -5,7 +5,7 @@
       <app-feature-header
         [title]="'stock-card__title' | translate"
         [isBackAvailable]="true"
-        (onClickBackButton)="onBackButtonPressed.bind(this)"
+        [onClickBackButton]="onBackButtonPressed.bind(this)"
       />
       <div class="dashboard-card">
         <div class="meta-data__wrapper">

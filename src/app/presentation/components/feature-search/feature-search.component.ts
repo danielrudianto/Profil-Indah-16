@@ -84,10 +84,7 @@ export class FeatureSearchComponent {
         this.dialog.open(SupplierCreateComponent, {});
         break;
       case 'user':
-        this.dynamicComponentService.createDynamicComponent(
-          UserCreateComponent,
-          {}
-        );
+        this.dialog.open(UserCreateComponent, {});
         break;
       case 'expense-type':
         this.dialog.open(ExpenseTypeCreateComponent, {

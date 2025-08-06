@@ -53,21 +53,21 @@ export class UserComponent {
           }
         });
     } else if (dialogType == 'edit') {
-      this.dynamicComponentService
-        .createDynamicComponent(UserEditComponent, {
-          id: id,
-        })
-        .subscribe({
-          next: (data) => {
-            if (data != undefined) {
-              const index = this.dataSource.findIndex((x) => x.id === id);
-              this.dataSource[index].name = data.name;
-              this.dataSource[index].nik = data.nik;
-              this.dataSource[index].username = data.username;
-              this.dataSource[index].role = data.role;
-            }
+      this.dialog
+        .open(UserEditComponent, {
+          data: {
+            id: id,
           },
-          error: (error) => {},
+        })
+        .afterClosed()
+        .subscribe((data) => {
+          if (data) {
+            const index = this.dataSource.findIndex((x) => x.id === id);
+            this.dataSource[index].name = data.name;
+            this.dataSource[index].nik = data.nik;
+            this.dataSource[index].username = data.username;
+            this.dataSource[index].role = data.role;
+          }
         });
     }
   }
@@ -92,6 +92,4 @@ export class UserComponent {
   onUpdateLoadingStatus(data: any) {
     this.isLoading = data;
   }
-
-  onAddButtonPressed() {}
 }
