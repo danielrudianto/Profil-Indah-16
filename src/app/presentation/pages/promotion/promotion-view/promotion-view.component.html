@@ -1,5 +1,155 @@
 <h2 mat-dialog-title>{{ "promotion__view__view-result" | translate }}</h2>
-<mat-dialog-content> </mat-dialog-content>
+<mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <mat-accordion>
+      <mat-expansion-panel
+        disabled
+        class="mat-elevation-z0"
+        hideToggle
+        [expanded]="step() === 0"
+        (opened)="setStep(0)"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ "promotion__view__general" | translate }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ "promotion__view__name" | translate }}</mat-label>
+              <input
+                matInput
+                formControlName="name"
+                placeholder="Ex. Promosi TACO"
+              />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "promotion__view__description" | translate
+              }}</mat-label>
+              <textarea
+                matInput
+                formControlName="description"
+                style="resize: none"
+                rows="3"
+              ></textarea>
+            </mat-form-field>
+          </div>
+          <div class="col-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "promotion__view__start-date" | translate
+              }}</mat-label>
+              <input matInput formControlName="startDate" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ "promotion__view__target" | translate }}</mat-label>
+              <input
+                formControlName="target"
+                matInput
+                type="text"
+                mask="separator.2"
+                thousandSeparator=" "
+                placeholder="Ex. 8 000"
+              />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "promotion__view__created-by" | translate
+              }}</mat-label>
+              <input matInput formControlName="createdBy" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "promotion__view__created-at" | translate
+              }}</mat-label>
+              <input matInput formControlName="createdAt" />
+            </mat-form-field>
+          </div>
+          <div class="col-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "promotion__view__end-date" | translate
+              }}</mat-label>
+              <input matInput formControlName="endDate" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "promotion__view__supplier" | translate
+              }}</mat-label>
+              <input matInput formControlName="supplierName" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ "promotion__view__status" | translate }}</mat-label>
+              <input matInput formControlName="status" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <p>{{ "promotion__view__brand" | translate }}</p>
+        <mat-chip-listbox>
+          <mat-chip *ngFor="let item of t.controls">{{
+            item.get("name")?.value
+          }}</mat-chip>
+        </mat-chip-listbox>
+
+        <button
+          mat-stroked-button
+          color="primary"
+          style="letter-spacing: 0"
+          (click)="nextStep()"
+          class="mt-3"
+        >
+          {{ "general__next" | translate }}
+        </button>
+      </mat-expansion-panel>
+      <mat-expansion-panel
+        disabled
+        class="mat-elevation-z0"
+        hideToggle
+        [expanded]="step() === 1"
+        (opened)="setStep(1)"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ "promotion__view__rules" | translate }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{{ "promotion__rules__rule" | translate }}</th>
+              <th>{{ "promotion__rules__value" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of u.controls">
+              <td>{{ item.get("rule")?.value }}</td>
+              <td>{{ item.get("value")?.value }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="d-flex">
+          <button
+            type="button"
+            mat-stroked-button
+            color="warn"
+            class="me-3"
+            style="letter-spacing: 0"
+            (click)="prevStep()"
+          >
+            {{ "general__previous" | translate }}
+          </button>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </form>
+</mat-dialog-content>
 <!-- <div *ngIf="isLoading">
   <mat-spinner id="spinner"></mat-spinner>
 </div>

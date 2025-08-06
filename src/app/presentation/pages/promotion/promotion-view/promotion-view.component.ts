@@ -1,11 +1,18 @@
 import { DatePipe } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import * as xlsx from 'xlsx';
 import { saveAs } from 'file-saver';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-promotion-view',
@@ -19,12 +26,42 @@ export class PromotionViewComponent {
     private alertService: AlertService,
     private dialog: MatDialogRef<PromotionViewComponent>,
     private translateService: TranslateService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private formBuilder: FormBuilder
   ) {}
 
   isLoading: boolean = false;
   isDownloading: boolean = false;
-  dataSource: any = null;
+
+  step = signal(0);
+
+  formGroup: FormGroup = new FormGroup({
+    id: new FormControl('', Validators.required),
+    name: new FormControl('', Validators.required),
+    description: new FormControl('', Validators.required),
+    target: new FormControl('', Validators.required),
+    supplierID: new FormControl('', Validators.required),
+    supplierName: new FormControl('', Validators.required),
+    startDate: new FormControl('', Validators.required),
+    endDate: new FormControl('', Validators.required),
+    status: new FormControl('', Validators.required),
+    createdBy: new FormControl('', Validators.required),
+    createdAt: new FormControl('', Validators.required),
+    promotion_brand: new FormArray([]),
+    promotion_rules: new FormArray([]),
+  });
+
+  get f() {
+    return this.formGroup.controls;
+  }
+
+  get t() {
+    return this.f['promotion_brand'] as FormArray;
+  }
+
+  get u() {
+    return this.f['promotion_rules'] as FormArray;
+  }
 
   ngOnInit(): void {
     this.fetchByID();
@@ -248,8 +285,47 @@ export class PromotionViewComponent {
     this.apiService
       .get(`promotion/${this.data.id}`)
       .subscribe({
-        next: (data) => {
-          this.dataSource = data;
+        next: (data: any) => {
+          this.formGroup.patchValue({
+            id: data.id,
+            name: data.name,
+            target: data.target,
+            description: data.description,
+            supplierID: data.supplier_id,
+            supplierName: data.supplier.name,
+            startDate: this.datePipe.transform(data.startDate, 'dd MMMM YYYY'),
+            endDate:
+              data.endDate == null
+                ? this.translateService.instant('promotion__view__continuous')
+                : this.datePipe.transform(data.endDate, 'dd MMMM YYYY'),
+            status: data.is_delete
+              ? this.translateService.instant(
+                  'promotion__view__status__deleted'
+                )
+              : this.translateService.instant(
+                  'promotion__view__status__active'
+                ),
+            createdBy: data.promotion_code_created_by.name,
+            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM YYYY'),
+          });
+
+          data.promotion_brand.forEach((x: any) => {
+            this.t.push(
+              this.formBuilder.group({
+                id: [x.id],
+                name: [x.product_brand.name],
+              })
+            );
+          });
+
+          data.promotion_rules.forEach((x: any) => {
+            this.u.push(
+              this.formBuilder.group({
+                rule: [x.rule],
+                value: [x.value],
+              })
+            );
+          });
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -266,5 +342,17 @@ export class PromotionViewComponent {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
     });
     saveAs(data, `${fileName}_${new Date().getTime()}.xlsx`);
+  }
+
+  setStep(index: number) {
+    this.step.set(index);
+  }
+
+  nextStep() {
+    this.step.update((i) => i + 1);
+  }
+
+  prevStep() {
+    this.step.update((i) => i - 1);
   }
 }
