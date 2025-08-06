@@ -1133,5 +1133,22 @@
   "sales-deposit__confirm__update-payment__date": "Date",
   "sales-deposit__confirm__update-payment__payment-method": "Payment method",
   "sales-deposit__confirm__update-payment__amount": "Amount",
-  "sales-deposit__total__negative": "Total invoice cannot be negative"
+  "sales-deposit__total__negative": "Total invoice cannot be negative",
+  "promotion__view__general": "General data",
+  "promotion__view__continuous": "Continuous",
+  "promotion__view__name": "Name",
+  "promotion__view__description": "Description",
+  "promotion__view__start-date": "Start date",
+  "promotion__view__end-date": "End date",
+  "promotion__view__target": "Target",
+  "promotion__view__created-by": "Created by",
+  "promotion__view__created-at": "Created at",
+  "promotion__view__supplier": "Supplier",
+  "promotion__vieww__status": "Status",
+  "promotion__view__brand": "Product brand",
+  "promotion__view__rules": "Promotion rules data",
+  "promotion__rules__rule": "Rule",
+  "promotion__rules__value": "Value",
+  "promotion__view__status__active": "Active",
+  "promotion__view__status__deleted": "Deleted"
 }

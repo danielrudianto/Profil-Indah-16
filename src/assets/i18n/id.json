@@ -1140,5 +1140,22 @@
   "sales-deposit__confirm__update-payment__amount": "Nominal",
   "sales-deposit__total__negative": "Total penjualan tidak boleh kurang dari 0",
   "sales-deposit__archive__confirm": "Konfirmasi deposit",
-  "sales-deposit__archive__delete": "Hapus deposit"
+  "sales-deposit__archive__delete": "Hapus deposit",
+  "promotion__view__general": "Data umum",
+  "promotion__view__continuous": "Kontinu",
+  "promotion__view__name": "Nama",
+  "promotion__view__description": "Deskripsi",
+  "promotion__view__start-date": "Tanggal mulai",
+  "promotion__view__end-date": "Tanggal berakhir",
+  "promotion__view__target": "Target",
+  "promotion__view__created-by": "Dibuat oleh",
+  "promotion__view__created-at": "Dibuat pada",
+  "promotion__view__supplier": "Supplier",
+  "promotion__vieww__status": "Status",
+  "promotion__view__brand": "Merek produk",
+  "promotion__view__rules": "Data aturan",
+  "promotion__rules__rule": "Aturan",
+  "promotion__rules__value": "Nilai",
+  "promotion__view__status__active": "Aktif",
+  "promotion__view__status__deleted": "Dihapus"
 }
