@@ -66,6 +66,7 @@ export class SalesInvoiceViewComponent {
     delivery: new FormControl(0, Validators.required),
     sales_invoice: new FormArray([]),
     sales_invoice_payment: new FormArray([]),
+    isDelete: new FormControl(false),
   });
 
   ngOnInit(): void {
@@ -90,7 +91,7 @@ export class SalesInvoiceViewComponent {
               this.alertService.showSuccess(
                 this.translateService.instant('sales-invoice__delete__success')
               );
-              this.dialogRef.close();
+              this.dialogRef.close('deleted');
             },
             error: (error) => {
               this.alertService.showError(error);
@@ -164,6 +165,7 @@ export class SalesInvoiceViewComponent {
             service: data.service,
             createdBy: data.user_bill_code_created_byTouser.name,
             createdAt: this.datePipe.transform(data.createdAt, 'dd MMMM YYYY'),
+            isDelete: data.isDelete,
           });
         },
         error: (error) => {

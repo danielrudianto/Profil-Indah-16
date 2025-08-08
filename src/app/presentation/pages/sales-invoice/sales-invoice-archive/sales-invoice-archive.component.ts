@@ -213,11 +213,20 @@ export class SalesInvoiceArchiveComponent {
   }
 
   viewArchive(id: number) {
-    this.dialog.open(SalesInvoiceViewComponent, {
-      data: {
-        id: id,
-        noAction: false,
-      },
-    });
+    this.dialog
+      .open(SalesInvoiceViewComponent, {
+        data: {
+          id: id,
+          noAction: false,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        switch (data) {
+          case 'deleted':
+            const index = this.dataSource.findIndex((x) => x.id == id);
+            this.dataSource[index].isDelete = true;
+        }
+      });
   }
 }

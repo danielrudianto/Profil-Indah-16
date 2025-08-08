@@ -336,7 +336,10 @@
                 mat-stroked-button
                 color="warn"
                 style="letter-spacing: 0"
-                [disabled]="!isAdministrator"
+                [disabled]="
+                  !isAdministrator ||
+                  salesInvoiceFormGroup.get('isDelete')?.value == true
+                "
                 (click)="openDeleteConfirmation()"
                 *ngIf="!data.noAction"
               >

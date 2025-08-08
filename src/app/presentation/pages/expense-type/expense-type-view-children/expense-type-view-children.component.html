@@ -1,4 +1,31 @@
-<div class="view-panel-wrapper">
+<form [formGroup]="expenseTypeFormGroup">
+  <div class="d-flex justify-content-center">
+    <div class="flex-grow-1">
+      <h2 class="mb-0">{{ expenseTypeFormGroup.get("name")?.value }}</h2>
+      <p>{{ expenseTypeFormGroup.get("description")?.value }}</p>
+    </div>
+    <button mat-icon-button type="button" (click)="openUpdateParentDialog()">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+
+  <mat-list>
+    <mat-list-item
+      *ngFor="let item of t.controls"
+      (click)="openUpdateDialog(item.get('id')?.value)"
+    >
+      <mat-icon matListItemIcon>folder</mat-icon>
+      <div matListItemTitle>{{ item.get("name")?.value }}</div>
+      <div matListItemLine>{{ item.get("description")?.value }}</div>
+    </mat-list-item>
+    <mat-list-item (click)="addExpenseType()">
+      <mat-icon matListItemIcon>add</mat-icon>
+      <div matListItemTitle>{{ "expense-type__view__add" | translate }}</div>
+    </mat-list-item>
+  </mat-list>
+</form>
+
+<!-- <div class="view-panel-wrapper">
   <div class="view-panel-backdrop" (click)="close()"></div>
   <div class="view-panel" [@panelAnimation]="panelState">
     <div class="row-action">
@@ -82,4 +109,4 @@
       </button>
     </div>
   </div>
-</div>
+</div> -->

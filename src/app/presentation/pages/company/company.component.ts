@@ -25,17 +25,35 @@ export class CompanyComponent {
     this.isAdministrator = this.authService.isAdministrator();
   }
 
-  openDialog(dialogType: string, id: number) {
-    if (dialogType == 'edit') {
-      this.dialog.open(CompanyUpdateComponent, {
+  openDialog(id: number) {
+    this.dialog
+      .open(CompanyUpdateComponent, {
         data: {
           id: id,
         },
-      });
-    }
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data === 'deleted') {
+          const index = this.dataSource.findIndex((x) => x.id === id);
+          if (index != -1) {
+            this.dataSource.splice(index, 1);
+          }
 
-    if (dialogType == 'delete') {
-    }
+          this.dataCount--;
+
+          return;
+        }
+
+        if (data) {
+          const index = this.dataSource.findIndex((x) => x.id === id);
+          if (index != -1) {
+            this.dataSource[index].name = data.name;
+            this.dataSource[index].address = data.address;
+            this.dataSource[index].npwp = data.npwp;
+          }
+        }
+      });
   }
 
   changePage(event: PageEvent) {

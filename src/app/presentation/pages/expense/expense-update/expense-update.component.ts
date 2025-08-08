@@ -1,7 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
@@ -17,16 +21,15 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 })
 export class ExpenseUpdateComponent {
   constructor(
-    private dynamicComponentService: DynamicComponentService,
+    @Inject(MAT_DIALOG_DATA) public data: { id: number },
     private apiService: ApiService,
     private alertService: AlertService,
     private translateService: TranslateService,
     private dialog: MatDialog,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private dialogRef: MatDialogRef<ExpenseUpdateComponent>
   ) {}
 
-  @Input('data') data: any;
-  isOpened: boolean = false;
   isSubmitting: boolean = false;
   expenseFormGroup: FormGroup = new FormGroup({
     id: new FormControl('', Validators.required),
@@ -40,7 +43,6 @@ export class ExpenseUpdateComponent {
   });
 
   ngOnInit(): void {
-    this.isOpened = true;
     this.fetchByID();
   }
 
@@ -66,10 +68,7 @@ export class ExpenseUpdateComponent {
   }
 
   closeDialog(data: any = undefined) {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent(data);
-    }, 300);
+    this.dialogRef.close(data);
   }
 
   onSelectCompany(event: any) {
@@ -145,15 +144,11 @@ export class ExpenseUpdateComponent {
       });
   }
 
-  deleteForm() {
+  delete() {
     this.dialog
       .open(DeleteConfirmationComponent, {
         data: {
           title: this.translateService.instant('expense__delete__title'),
-          document: `${this.datePipe.transform(
-            this.expenseFormGroup.controls['date'].value,
-            'dd/MM/yyyy'
-          )} - ${this.expenseFormGroup.controls['description'].value}`,
         },
       })
       .afterClosed()

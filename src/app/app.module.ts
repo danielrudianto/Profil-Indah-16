@@ -244,6 +244,7 @@ import { StockComponent } from './presentation/pages/stock/stock.component';
 import { StockListReportComponent } from './presentation/pages/stock/stock-list-report/stock-list-report.component';
 import { StockCardComponent } from './presentation/pages/stock/stock-card/stock-card.component';
 import { StockCardViewComponent } from './presentation/pages/stock/stock-card/stock-card-view/stock-card-view.component';
+import { OverpaymentArchiveViewComponent } from './presentation/pages/overpayment/overpayment-archive/overpayment-archive-view/overpayment-archive-view.component';
 
 @NgModule({
   declarations: [
@@ -431,6 +432,7 @@ import { StockCardViewComponent } from './presentation/pages/stock/stock-card/st
     GoodReceiptViewComponent,
     ReceivableListComponent,
     DepositDeleteConfirmationComponent,
+    OverpaymentArchiveViewComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

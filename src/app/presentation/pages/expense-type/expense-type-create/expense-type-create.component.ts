@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 
@@ -14,7 +15,8 @@ export class ExpenseTypeCreateComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private apiService: ApiService,
     private dialog: MatDialogRef<ExpenseTypeCreateComponent>,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private translateService: TranslateService
   ) {}
 
   isSubmitting: boolean = false;
@@ -22,7 +24,7 @@ export class ExpenseTypeCreateComponent {
   expenseTypeFormGroup: FormGroup = new FormGroup({
     parent_id: new FormControl(this.data.parentId),
     name: new FormControl('', Validators.required),
-    description: new FormControl(''),
+    description: new FormControl('', Validators.required),
   });
 
   save() {
@@ -31,7 +33,9 @@ export class ExpenseTypeCreateComponent {
       .post('expense-type', this.expenseTypeFormGroup.value)
       .subscribe({
         next: (data: any) => {
-          this.alertService.showSuccess('Expense type created successfully');
+          this.alertService.showSuccess(
+            this.translateService.instant('expense-type__create__success')
+          );
           this.dialog.close(data);
         },
         error: (error) => {

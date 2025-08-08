@@ -3,7 +3,7 @@
 <form [formGroup]="supplierFormGroup" (ngSubmit)="submitForm()">
   <mat-dialog-content>
     <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ 'supplier__name' | translate }}</mat-label>
+      <mat-label>{{ "supplier__name" | translate }}</mat-label>
       <input
         [disabled]="isSubmitting"
         matInput
@@ -13,7 +13,7 @@
       />
     </mat-form-field>
     <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ 'supplier__address' | translate }}</mat-label>
+      <mat-label>{{ "supplier__address" | translate }}</mat-label>
       <textarea
         [disabled]="isSubmitting"
         matInput
@@ -24,7 +24,7 @@
     </mat-form-field>
 
     <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ 'supplier__npwp' | translate }}</mat-label>
+      <mat-label>{{ "supplier__npwp" | translate }}</mat-label>
       <input
         [disabled]="isSubmitting"
         matInput
@@ -34,6 +34,21 @@
         formControlName="npwp"
       />
     </mat-form-field>
+
+    <button
+      type="button"
+      mat-stroked-button
+      color="warn"
+      style="letter-spacing: 0"
+      [disabled]="
+        !isAdministrator || supplierFormGroup.get('can_delete')?.value == false
+      "
+      (click)="openDeleteConfirmation()"
+      *ngIf="!data.noAction"
+    >
+      {{ "supplier__view__delete" | translate }}
+      <mat-icon>warning</mat-icon>
+    </button>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">

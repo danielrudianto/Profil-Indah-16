@@ -1,1 +1,96 @@
-<p>overpayment-archive works!</p>
+<div class="dashboard-card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>
+          <div class="d-flex align-items center" (click)="changeSortBy('date')">
+            <span>{{ "overpayment__archive__date" | translate }}</span>
+            <mat-icon
+              class="icon-display"
+              [ngClass]="{
+                asc: sortBy === 'date' && sortDirection === 'asc',
+                desc: sortBy === 'date' && sortDirection === 'desc'
+              }"
+              >arrow_downward</mat-icon
+            >
+          </div>
+        </th>
+        <th>{{ "overpayment__archive__payment-method" | translate }}</th>
+        <th>
+          <div
+            class="d-flex align-items center"
+            (click)="changeSortBy('value')"
+          >
+            <span>{{ "overpayment__archive__value" | translate }}</span>
+            <mat-icon
+              class="icon-display"
+              [ngClass]="{
+                asc: sortBy === 'value' && sortDirection === 'asc',
+                desc: sortBy === 'value' && sortDirection === 'desc'
+              }"
+              >arrow_downward</mat-icon
+            >
+          </div>
+        </th>
+        <th>
+          <div
+            class="d-flex align-items center"
+            (click)="changeSortBy('return')"
+          >
+            <span>{{ "overpayment__archive__return-date" | translate }}</span>
+            <mat-icon
+              class="icon-display"
+              [ngClass]="{
+                asc: sortBy === 'return' && sortDirection === 'asc',
+                desc: sortBy === 'return' && sortDirection === 'desc'
+              }"
+              >arrow_downward</mat-icon
+            >
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody *ngIf="isLoading">
+      <tr>
+        <td colspan="5">
+          <mat-spinner id="spinner"></mat-spinner>
+        </td>
+      </tr>
+    </tbody>
+    <tbody *ngIf="!isLoading && dataSource.length == 0">
+      <tr>
+        <td colspan="5">
+          <empty-table />
+        </td>
+      </tr>
+    </tbody>
+    <tbody *ngIf="!isLoading && dataSource.length > 0">
+      <tr
+        *ngFor="let data of dataSource"
+        (click)="openViewOverpayment(data.id)"
+      >
+        <td>{{ data.date | date : "dd MMMM YYYY" }}</td>
+        <td>
+          {{ data.payment_method == null ? "Cash" : data.payment_method.name }}
+        </td>
+        <td>
+          {{ data.value | number : "0.2-2" }}
+        </td>
+        <td>
+          {{ data.return_payment_date | date : "dd MMMM YYYY" }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <mat-paginator
+    class="paginator"
+    [pageIndex]="page - 1"
+    [length]="dataCount"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[10, 25, 50]"
+    (page)="changePage($event)"
+    aria-label="Select page"
+    *ngIf="!isLoading"
+  >
+  </mat-paginator>
+</div>

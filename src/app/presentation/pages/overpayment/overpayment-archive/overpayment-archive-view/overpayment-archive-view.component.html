@@ -1,0 +1,120 @@
+<h2 mat-dialog-title>{{ "overpayment__view__title" | translate }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="overpaymentFormGroup">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ "overpayment__view__date" | translate }}</mat-label>
+      <input
+        matInput
+        formControlName="date"
+        readonly
+        placeholder="Ex. 08/08/2023"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ "overpayment__view__customer" | translate }}</mat-label>
+      <input
+        matInput
+        formControlName="customer"
+        readonly
+        placeholder="Ex. Bapak John"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{
+        "overpayment__view__payment-method" | translate
+      }}</mat-label>
+      <input
+        matInput
+        formControlName="payment_method"
+        readonly
+        placeholder="Ex. Cash"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ "overpayment__view__value" | translate }}</mat-label>
+      <input
+        matInput
+        formControlName="value"
+        readonly
+        placeholder="Ex. 8 000"
+        mask="separator.2"
+        thousandSeparator=" "
+        placeholder="Ex. 800"
+      />
+    </mat-form-field>
+
+    <mat-divider></mat-divider>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ "overpayment__view__return-date" | translate }}</mat-label>
+      <input
+        matInput
+        formControlName="return_payment_date"
+        readonly
+        placeholder="Ex. 08/08/2023"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{
+        "overpayment__view__return-payment-method" | translate
+      }}</mat-label>
+      <input
+        matInput
+        formControlName="return_payment_method"
+        readonly
+        placeholder="Ex. Cash"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{
+        "overpayment__view__return-payment-name" | translate
+      }}</mat-label>
+      <input
+        matInput
+        formControlName="return_payment_name"
+        readonly
+        placeholder="Ex. Bapak Abdul"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{
+        "overpayment__view__return-payment-bank" | translate
+      }}</mat-label>
+      <input
+        matInput
+        formControlName="return_payment_bank"
+        readonly
+        placeholder="Ex. Bapak Abdul"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{
+        "overpayment__view__return-payment-number" | translate
+      }}</mat-label>
+      <input
+        matInput
+        formControlName="return_payment_number"
+        readonly
+        placeholder="Ex. 8090XXXXXX"
+      />
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button
+    mat-stroked-button
+    color="primary"
+    mat-dialog-close
+    type="button"
+    style="letter-spacing: 0"
+  >
+    {{ "general__close" | translate }}
+  </button>
+</mat-dialog-actions>

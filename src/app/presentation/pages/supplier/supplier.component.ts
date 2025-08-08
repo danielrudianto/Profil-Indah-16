@@ -30,26 +30,32 @@ export class SupplierComponent {
     this.isAdministrator = this.authService.isAdministrator();
   }
 
-  openDialog(dialogType: string, id: number) {
-    if (dialogType == 'edit') {
-      this.dialog
-        .open(SupplierUpdateComponent, {
-          data: {
-            id: id,
-          },
-        })
-        .afterClosed()
-        .subscribe((result) => {
-          if (result) {
-            const index = this.dataSource.findIndex(
-              (item) => item.id === result.id
-            );
-            this.dataSource[index].name = result.name;
-            this.dataSource[index].address = result.address;
-            this.dataSource[index].npwp = result.npwp;
-          }
-        });
-    }
+  openDialog(id: number) {
+    this.dialog
+      .open(SupplierUpdateComponent, {
+        data: {
+          id: id,
+        },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result === 'deleted') {
+          const index = this.dataSource.findIndex(
+            (item) => item.id === result.id
+          );
+
+          this.dataSource.splice(index, 1);
+          return;
+        } else if (result) {
+          const index = this.dataSource.findIndex(
+            (item) => item.id === result.id
+          );
+          this.dataSource[index].name = result.name;
+          this.dataSource[index].address = result.address;
+          this.dataSource[index].npwp = result.npwp;
+          return;
+        }
+      });
   }
 
   changePage(event: PageEvent) {

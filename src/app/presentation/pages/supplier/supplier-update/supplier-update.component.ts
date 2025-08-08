@@ -1,10 +1,15 @@
 import { Component, Inject, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-supplier-update',
@@ -14,14 +19,15 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 export class SupplierUpdateComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private dynamicComponentService: DynamicComponentService,
     private apiService: ApiService,
     private alertService: AlertService,
-    private dialog: MatDialogRef<SupplierUpdateComponent>,
-    private translateService: TranslateService
+    private dialogRef: MatDialogRef<SupplierUpdateComponent>,
+    private translateService: TranslateService,
+    private authService: AuthService,
+    private dialog: MatDialog
   ) {}
 
-  isOpened: boolean = false;
+  isAdministrator: boolean = false;
   isSubmitting: boolean = false;
   isLoading: boolean = false;
   supplierFormGroup: FormGroup = new FormGroup({
@@ -29,11 +35,12 @@ export class SupplierUpdateComponent {
     name: new FormControl('', Validators.required),
     address: new FormControl('', Validators.required),
     npwp: new FormControl('', Validators.pattern(/^([0-9]{15})|^$/)),
+    can_delete: new FormControl(false),
   });
 
   ngOnInit(): void {
     this.fetchByID();
-    this.isOpened = true;
+    this.isAdministrator = this.authService.isAdministrator();
   }
 
   fetchByID(): void {
@@ -53,8 +60,33 @@ export class SupplierUpdateComponent {
       });
   }
 
+  openDeleteConfirmation() {
+    this.dialog
+      .open(DeleteConfirmationComponent, {
+        data: {
+          title: this.translateService.instant('supplier__delete__message'),
+        },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result == true) {
+          this.apiService.delete(`supplier/${this.data.id}`).subscribe({
+            next: (data) => {
+              this.alertService.showSuccess(
+                this.translateService.instant('supplier__delete__success')
+              );
+              this.closeDialog('deleted');
+            },
+            error: (error) => {
+              this.alertService.showError(error);
+            },
+          });
+        }
+      });
+  }
+
   closeDialog(data: any = undefined) {
-    this.dialog.close(data);
+    this.dialogRef.close(data);
   }
 
   submitForm() {

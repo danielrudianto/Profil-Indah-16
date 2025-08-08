@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ExpenseTypeUpdateComponent } from './expense-type-update/expense-type-update.component';
 import { DeleteConfirmationComponent } from '../../components/delete-confirmation/delete-confirmation.component';
 import { ApiService } from 'src/app/services/api.service';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 
 @Component({
   selector: 'app-expense-type',
@@ -16,17 +17,14 @@ import { ApiService } from 'src/app/services/api.service';
 export class ExpenseTypeComponent {
   constructor(
     private authService: AuthService,
-    private dynamicComponentService: DynamicComponentService,
-    private dialog: MatDialog,
-    private apiService: ApiService
+    private sheet: MatBottomSheet
   ) {}
 
-  panelState: string = 'closed';
   isLoading: boolean = true;
   dataSource: any[] = [];
   dataCount: number = 0;
+
   page: number = 1;
-  previousRoute: string = '';
   isAdministrator: boolean = false;
   isSubmitting: boolean = false;
 
@@ -34,60 +32,32 @@ export class ExpenseTypeComponent {
     this.isAdministrator = this.authService.isAdministrator();
   }
 
-  openDialog(dialogType: string, id: number) {
-    switch (dialogType) {
-      case 'children':
-        this.dynamicComponentService.createDynamicComponent(
-          ExpenseTypeViewChildrenComponent,
-          {
-            id: id,
-            name: this.dataSource.filter((e) => e.id == id)[0].name,
-            description: this.dataSource.filter((e) => e.id == id)[0]
-              .description,
+  openDialog(id: number) {
+    this.sheet
+      .open(ExpenseTypeViewChildrenComponent, {
+        data: {
+          id: id,
+        },
+      })
+      .afterDismissed()
+      .subscribe((data) => {
+        if (data === 'deleted') {
+          const index = this.dataSource.findIndex((x) => x.id == id);
+          if (index != -1) {
+            this.dataSource.splice(index, 1);
+            this.dataCount -= 1;
           }
-        );
-        break;
-      case 'edit':
-        this.dialog.open(ExpenseTypeUpdateComponent, {
-          data: {
-            id: id,
-          },
-        });
-        break;
-      case 'delete':
-        const dialog = this.dialog.open(DeleteConfirmationComponent, {
-          data: {
-            title: 'Are you sure to delete this expense type?',
-            document:
-              'This operation will also delete the children data (if any).',
-          },
-        });
-
-        dialog.afterClosed().subscribe({
-          next: (data) => {
-            if (data == true) {
-              this.isSubmitting = true;
-              this.apiService
-                .delete(`expense-type/${id}`)
-                .subscribe({
-                  next: (data) => {},
-                  error: (error) => {},
-                })
-                .add(() => {
-                  this.isSubmitting = false;
-                });
-            }
-          },
-        });
-        break;
-    }
+        } else {
+          this.fetchProducts();
+        }
+      });
   }
 
   changePage(event: PageEvent) {
     this.page = event.pageIndex + 1;
   }
 
-  fetchProducts(page: number) {
+  fetchProducts(page: number = this.page) {
     this.page = page;
   }
 

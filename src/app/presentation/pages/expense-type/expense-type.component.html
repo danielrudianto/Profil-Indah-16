@@ -24,7 +24,6 @@
               <tr>
                 <th>{{ "expense-type__table__name" | translate }}</th>
                 <th>{{ "expense-type__table__description" | translate }}</th>
-                <th>{{ "expense-type__table__action" | translate }}</th>
               </tr>
             </thead>
             <tbody *ngIf="isLoading">
@@ -35,39 +34,12 @@
               </tr>
             </tbody>
             <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr *ngFor="let item of dataSource">
-                <td (click)="openDialog('children', item.id)">
+              <tr *ngFor="let item of dataSource" (click)="openDialog(item.id)">
+                <td>
                   {{ item.name }}
                 </td>
-                <td (click)="openDialog('children', item.id)">
-                  {{ item.description }}
-                </td>
                 <td>
-                  <button mat-icon-button [matMenuTriggerFor]="menu">
-                    <mat-icon>more_vert</mat-icon>
-                  </button>
-                  <mat-menu #menu="matMenu">
-                    <button
-                      [disabled]="isSubmitting"
-                      mat-menu-item
-                      (click)="openDialog('edit', item.id)"
-                    >
-                      <mat-icon>edit</mat-icon>
-                      <span>{{
-                        "expense-type__table__update" | translate
-                      }}</span>
-                    </button>
-                    <button
-                      [disabled]="isSubmitting || !item.can_delete"
-                      mat-menu-item
-                      (click)="openDialog('delete', item.id)"
-                    >
-                      <mat-icon>delete</mat-icon>
-                      <span>{{
-                        "expense-type__table__delete" | translate
-                      }}</span>
-                    </button>
-                  </mat-menu>
+                  {{ item.description }}
                 </td>
               </tr>
             </tbody>

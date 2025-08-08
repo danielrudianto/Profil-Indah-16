@@ -1,8 +1,15 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-expense-type-update',
@@ -13,33 +20,40 @@ export class ExpenseTypeUpdateComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private apiService: ApiService,
-    private dialog: MatDialogRef<ExpenseTypeUpdateComponent>,
-    private alertService: AlertService
+    private dialogRef: MatDialogRef<ExpenseTypeUpdateComponent>,
+    private alertService: AlertService,
+    private translateService: TranslateService,
+    private authService: AuthService,
+    private dialog: MatDialog
   ) {}
 
   isSubmitting: boolean = false;
   isLoading: boolean = true;
 
+  isAdministrator: boolean = false;
+
   expenseTypeFormGroup: FormGroup = new FormGroup({
     name: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
     id: new FormControl('', Validators.required),
+    can_delete: new FormControl(false),
   });
 
   ngOnInit(): void {
+    this.isAdministrator = this.authService.isAdministrator();
     this.fetchByID();
   }
 
-  /**
-   * Fetches expense type data by ID and updates the form group with the fetched data.
-   * @return {void} This function does not return anything.
-   */
   fetchByID() {
     this.apiService
       .get(`expense-type/${this.data.id}`, {})
       .subscribe({
-        next: (data) => {
+        next: (data: any) => {
           this.expenseTypeFormGroup.patchValue(data);
+          console.log(data.children.length);
+          this.expenseTypeFormGroup.patchValue({
+            can_delete: data.children.length == 0,
+          });
         },
         error: (error) => {
           this.alertService.showError(Error(error));
@@ -50,14 +64,45 @@ export class ExpenseTypeUpdateComponent {
       });
   }
 
+  delete() {
+    this.dialog
+      .open(DeleteConfirmationComponent, {
+        data: {
+          title: this.translateService.instant('expense-type__delete__message'),
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data === true) {
+          this.isSubmitting = true;
+          this.apiService.delete(`expense-type/${this.data.id}`).subscribe({
+            next: (_) => {
+              this.alertService.showSuccess(
+                this.translateService.instant('expense-type__delete__success')
+              );
+
+              if (data.id == this.data.id) {
+                this.dialogRef.close('parent-deleted');
+              } else {
+                this.dialogRef.close('deleted');
+              }
+            },
+            error: (error) => {},
+          });
+        }
+      });
+  }
+
   save() {
     this.isSubmitting = true;
     this.apiService
       .put(`expense-type`, this.expenseTypeFormGroup.value)
       .subscribe({
         next: (data) => {
-          this.alertService.showSuccess('Expense type updated successfully');
-          this.dialog.close(data);
+          this.alertService.showSuccess(
+            this.translateService.instant('expense-type__update__success')
+          );
+          this.dialogRef.close(data);
         },
         error: (error) => {
           this.alertService.showError(Error(error));

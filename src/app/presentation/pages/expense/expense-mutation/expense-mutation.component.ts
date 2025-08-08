@@ -18,6 +18,7 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { ExpenseUpdateComponent } from '../expense-update/expense-update.component';
 import { PageEvent } from '@angular/material/paginator';
 import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
+import { MatDialog } from '@angular/material/dialog';
 
 const moment = _rollupMoment || _moment;
 
@@ -38,7 +39,7 @@ export class ExpenseMutationComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dynamicComponentService: DynamicComponentService
+    private dialog: MatDialog
   ) {}
 
   date = new FormControl(moment());
@@ -90,28 +91,37 @@ export class ExpenseMutationComponent {
   }
 
   openUpdateExpenseDialog(i: number) {
-    const dialog = this.dynamicComponentService.createDynamicComponent(
-      ExpenseUpdateComponent,
-      {
-        id: this.dataSource[i].id,
-      }
-    );
-
-    dialog.subscribe((data) => {
-      if (data != undefined && data != null) {
-        if (data == 'deleted') {
+    this.dialog
+      .open(ExpenseUpdateComponent, {
+        data: {
+          id: this.dataSource[i].id,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data === 'deleted') {
           this.dataSource.splice(i, 1);
-          this.dataCount = this.dataCount - 1;
-        } else {
-          const index = this.dataSource.findIndex((x) => x.id == data.id);
-          this.dataSource[index].date = data.date;
-          this.dataSource[index].description = data.description;
-          this.dataSource[index].value = data.value;
-          this.dataSource[index].expense_type.name = data.expense_type.name;
-          this.dataSource[index].company.name = data.company.name;
+          this.dataCount--;
+          return;
+        } else if (data) {
         }
-      }
-    });
+      });
+
+    // dialog.subscribe((data) => {
+    //   if (data != undefined && data != null) {
+    //     if (data == 'deleted') {
+    //       this.dataSource.splice(i, 1);
+    //       this.dataCount = this.dataCount - 1;
+    //     } else {
+    //       const index = this.dataSource.findIndex((x) => x.id == data.id);
+    //       this.dataSource[index].date = data.date;
+    //       this.dataSource[index].description = data.description;
+    //       this.dataSource[index].value = data.value;
+    //       this.dataSource[index].expense_type.name = data.expense_type.name;
+    //       this.dataSource[index].company.name = data.company.name;
+    //     }
+    //   }
+    // });
   }
 
   changePage(event: PageEvent) {

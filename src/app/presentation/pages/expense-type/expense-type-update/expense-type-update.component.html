@@ -24,6 +24,23 @@
           type="text"
         ></textarea>
       </mat-form-field>
+
+      <button
+        mat-stroked-button
+        type="button"
+        color="warn"
+        style="letter-spacing: 0"
+        [disabled]="
+          !isAdministrator ||
+          isSubmitting ||
+          !this.expenseTypeFormGroup.get('can_delete')?.value
+        "
+        (click)="delete()"
+        *ngIf="!data.noAction"
+      >
+        <mat-icon>warning</mat-icon>
+        <span>{{ "expense-type__update__delete" | translate }}</span>
+      </button>
     </form>
   </div>
 </mat-dialog-content>

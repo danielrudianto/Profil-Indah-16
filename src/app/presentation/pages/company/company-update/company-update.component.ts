@@ -1,9 +1,15 @@
 import { Component, Inject, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-company-update',
@@ -15,22 +21,25 @@ export class CompanyUpdateComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private apiService: ApiService,
     private alertService: AlertService,
-    private dialog: MatDialogRef<CompanyUpdateComponent>,
-    private translateService: TranslateService
+    private dialogRef: MatDialogRef<CompanyUpdateComponent>,
+    private translateService: TranslateService,
+    private authService: AuthService,
+    private dialog: MatDialog
   ) {}
 
-  isOpened: boolean = false;
   isSubmitting: boolean = false;
+  isAdministrator: boolean = false;
   companyFormGroup: FormGroup = new FormGroup({
     id: new FormControl('', Validators.required),
     name: new FormControl('', Validators.required),
     address: new FormControl('', Validators.required),
     npwp: new FormControl('', Validators.pattern(/^([0-9]{15})|^$/)),
+    can_delete: new FormControl(false),
   });
 
   ngOnInit(): void {
-    this.isOpened = true;
     this.fetchByID();
+    this.isAdministrator = this.authService.isAdministrator();
   }
 
   fetchByID(): void {
@@ -41,8 +50,35 @@ export class CompanyUpdateComponent {
     });
   }
 
+  delete() {
+    this.dialog
+      .open(DeleteConfirmationComponent, {
+        data: {
+          title: this.translateService.instant(
+            'company__update__delete__message'
+          ),
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data == true) {
+          this.apiService.delete(`company/${this.data.id}`).subscribe({
+            next: (_) => {
+              this.alertService.showSuccess(
+                this.translateService.instant('company__delete__success')
+              );
+              this.dialogRef.close('deleted');
+            },
+            error: (error) => {
+              this.alertService.showError(error);
+            },
+          });
+        }
+      });
+  }
+
   closeDialog(data: any = undefined) {
-    this.dialog.close(data);
+    this.dialogRef.close(data);
   }
 
   submitForm() {
