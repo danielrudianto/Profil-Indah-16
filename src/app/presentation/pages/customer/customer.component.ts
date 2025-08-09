@@ -30,26 +30,32 @@ export class CustomerComponent {
     this.isAdministrator = this.authService.isAdministrator();
   }
 
-  openDialog(dialogType: string, id: number) {
-    if (dialogType == 'edit') {
-      this.dialog
-        .open(CustomerUpdateComponent, {
-          data: {
-            id: id,
-          },
-        })
-        .afterClosed()
-        .subscribe((data) => {
-          if (data) {
-            const index = this.dataSource.findIndex((x) => x.id == id);
-            if (index != -1) {
-              this.dataSource[index].name = data.name;
-              this.dataSource[index].address = data.address;
-              this.dataSource[index].npwp = data.npwp;
-            }
+  openDialog(id: number) {
+    this.dialog
+      .open(CustomerUpdateComponent, {
+        data: {
+          id: id,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data === 'deleted') {
+          const index = this.dataSource.findIndex((x) => x.id == id);
+          if (index != -1) {
+            this.dataSource.splice(index, 1);
           }
-        });
-    }
+
+          this.dataCount--;
+          return;
+        } else if (data) {
+          const index = this.dataSource.findIndex((x) => x.id == id);
+          if (index != -1) {
+            this.dataSource[index].name = data.name;
+            this.dataSource[index].address = data.address;
+            this.dataSource[index].npwp = data.npwp;
+          }
+        }
+      });
   }
 
   changePage(event: PageEvent) {

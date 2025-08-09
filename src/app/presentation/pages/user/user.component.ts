@@ -31,45 +31,33 @@ export class UserComponent {
     this.isAdministrator = this.authService.isAdministrator();
   }
 
-  openDialog(dialogType: string, id: number) {
-    if (dialogType == 'delete') {
-      this.dialog
-        .open(DeleteConfirmationComponent, {
-          data: {
-            header: 'Delete User',
-            document: `Are you sure to delete this user?`,
-            id: id,
-          },
-        })
-        .afterClosed()
-        .subscribe((data) => {
-          if (data === true) {
-            this.apiService.delete(`user/${id}`).subscribe((data) => {
-              const index = this.dataSource.findIndex((x) => x.id === id);
-              this.dataSource.splice(index, 1);
-              this.dataSource = [...this.dataSource];
-              this.dataCount = this.dataCount - 1;
-            });
+  openDialog(id: number) {
+    this.dialog
+      .open(UserEditComponent, {
+        data: {
+          id: id,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data === 'deleted') {
+          const index = this.dataSource.findIndex((x) => x.id === id);
+          if (index != -1) {
+            this.dataSource.splice(index, 1);
           }
-        });
-    } else if (dialogType == 'edit') {
-      this.dialog
-        .open(UserEditComponent, {
-          data: {
-            id: id,
-          },
-        })
-        .afterClosed()
-        .subscribe((data) => {
-          if (data) {
-            const index = this.dataSource.findIndex((x) => x.id === id);
+
+          this.dataCount--;
+          return;
+        } else if (data) {
+          const index = this.dataSource.findIndex((x) => x.id === id);
+          if (index != -1) {
             this.dataSource[index].name = data.name;
             this.dataSource[index].nik = data.nik;
             this.dataSource[index].username = data.username;
             this.dataSource[index].role = data.role;
           }
-        });
-    }
+        }
+      });
   }
 
   changePage(event: PageEvent) {

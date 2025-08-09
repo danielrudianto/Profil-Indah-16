@@ -143,47 +143,6 @@ export class DepositViewComponent {
     });
   }
 
-  // confirmDeposit(): void {
-  //   this.close();
-  //   const url = this.router.url.split('/');
-  //   url.pop();
-
-  //   setTimeout(() => {
-  //     this.router.navigate(
-  //       [url.join('/'), 'Deposit', 'Confirm', this.data.id],
-  //       {
-  //         relativeTo: this.activatedRoute,
-  //       }
-  //     );
-  //   }, 300);
-  // }
-
-  // deleteDeposit(): void {
-  //   this.dialog
-  //     .open(DeleteConfirmationComponent, {
-  //       data: {
-  //         title: this.translateService.instant('deposit__delete__title'),
-  //         document: `${this.dataSource.name}`,
-  //       },
-  //     })
-  //     .afterClosed()
-  //     .subscribe((data) => {
-  //       if (data == true) {
-  //         this.apiService.delete(`sales-deposit/${this.data.id}`).subscribe({
-  //           next: () => {
-  //             this.alertService.showSuccess(
-  //               this.translateService.instant('deposit__delete__success')
-  //             );
-  //             this.close();
-  //           },
-  //           error: (error) => {
-  //             this.alertService.showError(Error(error));
-  //           },
-  //         });
-  //       }
-  //     });
-  // }
-
   fetchByID(): void {
     this.apiService
       .get(`sales-deposit/${this.data.id}`, {})
@@ -234,6 +193,7 @@ export class DepositViewComponent {
         },
         error: (error) => {
           this.alertService.showError(Error(error));
+          this.dialogRef.close();
         },
       })
       .add(() => {

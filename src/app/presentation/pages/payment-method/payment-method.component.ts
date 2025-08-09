@@ -29,25 +29,32 @@ export class PaymentMethodComponent {
     this.isAdministrator = this.authService.isAdministrator();
   }
 
-  openDialog(dialogType: string, id: number) {
-    if (dialogType == 'edit') {
-      this.dialog
-        .open(PaymentMethodUpdateComponent, {
-          data: {
-            id: id,
-          },
-        })
-        .afterClosed()
-        .subscribe((data) => {
-          if (data) {
-            const index = this.dataSource.findIndex((x) => x.id == id);
-            if (index != -1) {
-              this.dataSource[index].name = data.name;
-              this.dataSource[index].description = data.description;
-            }
+  openDialog(id: number) {
+    if (id === 0) return;
+
+    this.dialog
+      .open(PaymentMethodUpdateComponent, {
+        data: {
+          id: id,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data === 'deleted') {
+          const index = this.dataSource.findIndex((x) => x.id === id);
+          if (index != -1) {
+            this.dataSource.splice(index, 1);
           }
-        });
-    }
+          this.dataCount--;
+          return;
+        } else if (data) {
+          const index = this.dataSource.findIndex((x) => x.id == id);
+          if (index != -1) {
+            this.dataSource[index].name = data.name;
+            this.dataSource[index].description = data.description;
+          }
+        }
+      });
   }
 
   changePage(event: PageEvent) {

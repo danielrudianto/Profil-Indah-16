@@ -1181,5 +1181,21 @@
   "overpayment__view__return-payment-number": "Recepient bank account number",
   "company__update__delete": "Delete company data",
   "company__update__delete__message": "Are you sure to delete this company data?",
-  "company__delete__success": "Company data deleted successfully"
+  "company__delete__success": "Company data deleted successfully",
+  "payment-method__update__delete": "Delete payment method",
+  "payment-method__delete__message": "Are you sure to delete this payment method data?",
+  "payment-method__delete__success": "Successfully deleted payment method data",
+  "customer__update__delete": "Delete customer data",
+  "customer__delete__message": "Are you sure to delete this customer data?",
+  "customer__delete__success": "Successfully deleted customer data",
+  "user__edit__title": "Update user data",
+  "user__edit__name": "Name",
+  "user__edit__username": "Username",
+  "user__edit__role": "Role",
+  "user__edit__nik": "NIK",
+  "user__create__title": "Create new user data",
+  "user__edit__role__error": "Warehouse users must select at lease 1 product type",
+  "user__delete__message": "Are you sure to delete this user data?",
+  "user__edit__delete": "Delete user data",
+  "user__delete__success": "Successfully deleted user"
 }

@@ -31,30 +31,11 @@
               </tr>
             </thead>
             <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr *ngFor="let item of dataSource" [matMenuTriggerFor]="menu">
+              <tr *ngFor="let item of dataSource" (click)="openDialog(item.id)">
                 <td class="text-center">{{ item.name }}</td>
                 <td class="text-center">
                   <div class="text-clamp-1">{{ item.description }}</div>
                 </td>
-                <mat-menu
-                  #menu="matMenu"
-                  [xPosition]="'after'"
-                  [yPosition]="'below'"
-                >
-                  <button (click)="openDialog('edit', item.id)" mat-menu-item>
-                    <mat-icon>edit</mat-icon>
-                    <span>{{ "payment-method__update" | translate }}</span>
-                  </button>
-                  <button
-                    [class.delete-button]="item.can_delete"
-                    mat-menu-item
-                    (click)="openDialog('delete', item.id)"
-                    [disabled]="!item.can_delete"
-                  >
-                    <mat-icon>delete</mat-icon>
-                    <span>{{ "payment-method__delete" | translate }}</span>
-                  </button>
-                </mat-menu>
               </tr>
             </tbody>
             <tbody *ngIf="!isLoading && dataSource.length == 0">

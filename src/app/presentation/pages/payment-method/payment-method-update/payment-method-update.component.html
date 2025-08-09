@@ -22,6 +22,18 @@
         formControlName="description"
       />
     </mat-form-field>
+
+    <button
+      mat-stroked-button
+      color="warn"
+      type="button"
+      (click)="delete()"
+      style="letter-spacing: 0"
+      [disabled]="!isAdministrator || isSubmitting || isLoading"
+    >
+      <mat-icon>warning</mat-icon>
+      <span>{{ "payment-method__update__delete" | translate }}</span>
+    </button>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button
@@ -29,7 +41,7 @@
       mat-stroked-button
       color="primary"
       (click)="submitForm()"
-      [disabled]="isSubmitting || !paymentMethodFormGroup.valid"
+      [disabled]="isSubmitting || !paymentMethodFormGroup.valid || isLoading"
     >
       {{ "payment-method__add__submit" | translate }}
     </button>

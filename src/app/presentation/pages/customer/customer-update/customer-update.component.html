@@ -56,6 +56,23 @@
         formControlName="phone_number"
       />
     </mat-form-field>
+
+    <button
+      mat-stroked-button
+      color="warn"
+      style="letter-spacing: 0"
+      type="button"
+      [disabled]="
+        isSubmitting ||
+        isLoading ||
+        !isAdministrator ||
+        customerFormGroup.get('can_delete')?.value == false
+      "
+      (click)="delete()"
+    >
+      <mat-icon>warning</mat-icon>
+      <span>{{ "customer__update__delete" | translate }}</span>
+    </button>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">

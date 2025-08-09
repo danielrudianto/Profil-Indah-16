@@ -2,7 +2,7 @@
 <form [formGroup]="userFormGroup" (ngSubmit)="submitForm()">
   <mat-dialog-content>
     <mat-form-field class="w-100" appearance="outline">
-      <mat-label>Name</mat-label>
+      <mat-label>{{ "user__edit__name" | translate }}</mat-label>
       <input
         [disabled]="isSubmitting"
         matInput
@@ -12,7 +12,7 @@
       />
     </mat-form-field>
     <mat-form-field class="w-100" appearance="outline">
-      <mat-label>Username</mat-label>
+      <mat-label>{{ "user__edit__username" | translate }}</mat-label>
       <input
         [disabled]="isSubmitting"
         matInput
@@ -22,7 +22,7 @@
       />
     </mat-form-field>
     <mat-form-field class="w-100" appearance="outline">
-      <mat-label>NIK</mat-label>
+      <mat-label>{{ "user__edit__nik" | translate }}</mat-label>
       <input
         [disabled]="isSubmitting"
         matInput
@@ -34,7 +34,7 @@
       />
     </mat-form-field>
     <mat-form-field class="w-100" appearance="outline">
-      <mat-label>Role</mat-label>
+      <mat-label>{{ "user__edit__role" | translate }}</mat-label>
       <mat-select
         [disabled]="isLoading"
         placeholder="Ex. Administrator"
@@ -56,15 +56,30 @@
         [reset]="true"
         (onSelectData)="onSelectType($event)"
       ></app-autocomplete-search>
-      <!-- <mat-chip-set class="mt-0 mb-3 w-50">
+      <mat-chip-set class="mt-0 mb-3 w-50">
         <mat-chip
           selected
-          *ngFor="let item of selectedTypes"
-          (click)="onRemoveType(item)"
-          >{{ item.name }}</mat-chip
+          *ngFor="let item of t.controls; index as i"
+          (click)="onRemoveType(i)"
+          >{{ item.get("product_type_name")?.value }}</mat-chip
         >
-      </mat-chip-set> -->
+      </mat-chip-set>
+      <div *ngIf="userFormGroup.errors?.['userSalesRequired']">
+        {{ "user__edit__role__error" | translate }}
+      </div>
     </div>
+
+    <button
+      mat-stroked-button
+      type="button"
+      color="warn"
+      style="letter-spacing: 0"
+      (click)="delete()"
+      [disabled]="!isAdministrator || isSubmitting || isLoading"
+    >
+      <mat-icon>warning</mat-icon>
+      <span>{{ "user__edit__delete" | translate }}</span>
+    </button>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button mat-stroked-button color="warn" type="button" mat-dialog-close>

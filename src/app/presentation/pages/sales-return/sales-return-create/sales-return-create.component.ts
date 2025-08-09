@@ -228,7 +228,32 @@ export class SalesReturnCreateComponent {
         })
         .subscribe({
           next: (data: any) => {
-            this.billOptions = data;
+            const invoices: any[] = [];
+            data.forEach((x: any) => {
+              let validation = true;
+              for (let i = 0; i < this.t.value.length; i++) {
+                const product_id = this.t.value[i].product_id;
+                const product_unit_id = this.t.value[i].product_unit_id;
+                const quantity = this.t.value[i].quantity;
+
+                const si = x.sales_invoice.filter(
+                  (z: any) =>
+                    (z.product_id =
+                      product_id &&
+                      z.product_unit_id == product_unit_id &&
+                      z.quantity > quantity)
+                ).length;
+
+                if (si == 0) {
+                  validation = false;
+                }
+              }
+
+              if (validation) {
+                invoices.push(x);
+              }
+            });
+            this.billOptions = invoices;
             this.selectedBill = null;
           },
           error: (error) => {

@@ -52,7 +52,7 @@ export const availableRoles: any[] = [
   },
   {
     id: 6,
-    name: 'Agen Penjualan',
+    name: 'Gudang',
     available: true,
   },
 ];
