@@ -1,1 +1,145 @@
-<p>deposit-archive works!</p>
+<app-archives
+  [@slideInOutAnimation]="mode == 0 ? 'in' : 'out'"
+  route="sales-deposit"
+  (onMonthSelected)="onMonthSelected($event)"
+/>
+
+<div
+  class="container boundary-container"
+  [@slideInOutAnimation]="mode == 1 ? 'in' : 'out'"
+>
+  <div class="row">
+    <div class="col-12">
+      <div class="dashboard-card">
+        <app-archive-search
+          [isFilterAvailable]="true"
+          (onQueryChanged)="onQueryChanged($event)"
+          (onFilterButtonClicked)="openFilter()"
+        />
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 250px" (click)="changeSortBy('date')">
+                  <div class="d-flex align-items-center">
+                    <span>{{
+                      "sales-deposit__archive__date" | translate
+                    }}</span>
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc: sortBy === 'date' && sortDirection === 'asc',
+                        desc: sortBy === 'date' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
+                </th>
+                <th style="width: 250px" (click)="changeSortBy('name')">
+                  <div class="d-flex align-items-center">
+                    <span>
+                      {{ "sales-deposit__archive__name" | translate }}</span
+                    >
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc: sortBy === 'name' && sortDirection === 'asc',
+                        desc: sortBy === 'name' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
+                </th>
+                <th style="width: 250px" (click)="changeSortBy('customer')">
+                  <div class="d-flex align-items-center">
+                    <span>
+                      {{ "sales-deposit__archive__customer" | translate }}</span
+                    >
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc: sortBy === 'customer' && sortDirection === 'asc',
+                        desc: sortBy === 'customer' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
+                </th>
+                <th style="width: 200px" (click)="changeSortBy('sales')">
+                  <div class="d-flex align-items-center">
+                    <span>
+                      {{ "sales-deposit__archive__sales" | translate }}</span
+                    >
+                    <mat-icon
+                      class="icon-display"
+                      [ngClass]="{
+                        asc: sortBy === 'sales' && sortDirection === 'asc',
+                        desc: sortBy === 'sales' && sortDirection === 'desc'
+                      }"
+                      >arrow_downward</mat-icon
+                    >
+                  </div>
+                </th>
+                <th style="width: 150px">
+                  <div class="d-flex align-items-center">
+                    <span>
+                      {{ "sales-deposit__archive__status" | translate }}</span
+                    >
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody *ngIf="isLoading">
+              <tr>
+                <td colspan="5">
+                  <mat-spinner id="spinner"></mat-spinner>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length == 0">
+              <tr>
+                <td colspan="5">
+                  <empty-table />
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length > 0">
+              <tr
+                *ngFor="let item of dataSource; index as i"
+                (click)="viewArchive(item.id)"
+              >
+                <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
+                <td>{{ item.name }}</td>
+                <td>
+                  {{ item.customer == null ? "Retail" : item.customer.name }}
+                </td>
+                <td>{{ item.sales == null ? "N/A" : item.sales }}</td>
+                <td>
+                  {{
+                    (item.isDelete
+                      ? "sales-deposit__archive__deleted"
+                      : "sales-deposit__archive__active"
+                    ) | translate
+                  }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="paginator__wrapper">
+          <button class="action-button p-relative" (click)="backToYear()">
+            {{ "general__archive__back-to-previous" | translate }}
+          </button>
+          <mat-paginator
+            [length]="dataCount"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[10, 25, 50]"
+            [pageIndex]="page - 1"
+            [pageSizeOptions]="[10, 25, 50]"
+            (page)="changePage($event)"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

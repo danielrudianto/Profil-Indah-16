@@ -252,7 +252,12 @@
                 mat-stroked-button
                 color="warn"
                 style="letter-spacing: 0"
-                [disabled]="!isAdministrator"
+                [disabled]="
+                  !isAdministrator ||
+                  isSubmitting ||
+                  salesReturnFormGroup.get('isDelete')?.value == true
+                "
+                (click)="delete()"
               >
                 {{ "sales-return__archive__view__delete" | translate }}
                 <mat-icon>warning</mat-icon>

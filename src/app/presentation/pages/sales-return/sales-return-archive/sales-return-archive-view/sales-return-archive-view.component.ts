@@ -16,6 +16,7 @@ import {
 } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
+import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 
 @Component({
   selector: 'app-sales-return-archive-view',
@@ -36,6 +37,7 @@ export class SalesReturnArchiveViewComponent {
   ) {}
 
   isAdministrator: boolean = false;
+  isSubmitting: boolean = false;
   isLoading: boolean = false;
   step = signal(0);
 
@@ -127,6 +129,7 @@ export class SalesReturnArchiveViewComponent {
         },
         error: (error) => {
           this.alertService.showError(error);
+          this.dialogRef.close();
         },
       })
       .add(() => {
@@ -150,5 +153,33 @@ export class SalesReturnArchiveViewComponent {
     return this.t.value.reduce((a: any, b: any) => {
       return a + b.quantity * (b.price - b.discount);
     }, 0);
+  }
+
+  delete() {
+    this.dialog
+      .open(DeleteConfirmationComponent, {
+        data: {
+          title: this.translateService.instant('sales-return__delete__message'),
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data == true) {
+          this.isSubmitting = true;
+          this.apiService
+            .delete(`sales-return/${this.data.id}`)
+            .subscribe({
+              next: (_) => {
+                this.dialogRef.close('deleted');
+              },
+              error: (error) => {
+                this.alertService.showError(error);
+              },
+            })
+            .add(() => {
+              this.isSubmitting = false;
+            });
+        }
+      });
   }
 }

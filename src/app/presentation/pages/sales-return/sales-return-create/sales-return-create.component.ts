@@ -241,7 +241,7 @@ export class SalesReturnCreateComponent {
                     (z.product_id =
                       product_id &&
                       z.product_unit_id == product_unit_id &&
-                      z.quantity > quantity)
+                      z.quantity >= quantity)
                 ).length;
 
                 if (si == 0) {

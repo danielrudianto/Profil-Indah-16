@@ -148,10 +148,20 @@ export class SalesReturnArchiveComponent {
   }
 
   viewArchive(id: number) {
-    this.dialog.open(SalesReturnArchiveViewComponent, {
-      data: {
-        id: id,
-      },
-    });
+    this.dialog
+      .open(SalesReturnArchiveViewComponent, {
+        data: {
+          id: id,
+        },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result == 'deleted') {
+          const index = this.dataSource.findIndex((x) => x.id == id);
+          if (index != -1) {
+            this.dataSource[index].isDelete = true;
+          }
+        }
+      });
   }
 }

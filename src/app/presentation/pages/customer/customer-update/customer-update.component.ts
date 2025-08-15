@@ -63,6 +63,7 @@ export class CustomerUpdateComponent {
   }
 
   delete() {
+    this.isSubmitting = true;
     this.dialog
       .open(DeleteConfirmationComponent, {
         data: {
@@ -72,15 +73,25 @@ export class CustomerUpdateComponent {
       .afterClosed()
       .subscribe({
         next: (_) => {
-          this.alertService.showSuccess(
-            this.translateService.instant('customer__delete__success')
-          );
+          this.apiService.delete(`customer/${this.data.id}`).subscribe({
+            next: (_) => {
+              this.alertService.showSuccess(
+                this.translateService.instant('customer__delete__success')
+              );
 
-          this.dialogRef.close('deleted');
+              this.dialogRef.close('deleted');
+            },
+            error: (error) => {
+              this.alertService.showError(error);
+            },
+          });
         },
         error: (error) => {
           this.alertService.showError(error);
         },
+      })
+      .add(() => {
+        this.isSubmitting = false;
       });
   }
 

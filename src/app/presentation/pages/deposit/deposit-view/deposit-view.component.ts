@@ -49,14 +49,6 @@ export class DepositViewComponent {
     private formBuilder: FormBuilder
   ) {
     this._hotKeysService.add([
-      new Hotkey('esc', (event: KeyboardEvent): boolean => {
-        // this.close();
-        return false;
-      }),
-      new Hotkey('f', (event: KeyboardEvent): boolean => {
-        // this.enlarge();
-        return false;
-      }),
       new Hotkey('p', (event: KeyboardEvent): boolean => {
         // this.print();
         return false;

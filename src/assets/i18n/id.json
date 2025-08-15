@@ -1204,5 +1204,9 @@
   "user__edit__role__error": "Pengguna gudang perlu memilih minimal 1 tipe produk",
   "user__delete__message": "Apakah anda yakin untuk menghapus data pengguna ini?",
   "user__edit__delete": "Hapus data pengguna",
-  "user__delete__success": "Berhasil menghapus data pengguna"
+  "user__delete__success": "Berhasil menghapus data pengguna",
+  "sales-deposit__archive__name": "Nama dokumen",
+  "sales-deposit__archive__status": "Status",
+  "sales-deposit__archive__active": "Menunggu konfirmasi",
+  "sales-deposit__archive__deleted": "Sudah dikonfirmasi / dihapus"
 }
