@@ -347,7 +347,7 @@
   "good-receipt__archive__view__invoice-name": "Faktur pembelian",
   "good-receipt__archive__view__tax-invoice-name": "Faktur pajak",
   "good-receipt__archive__edit": "Perbaharui",
-  "good-receipt__archive__delete": "Napus",
+  "good-receipt__archive__delete": "Hapus",
   "sales-invoice__delete__confirmation": "Apakah anda yakin untuk menghapus data nota ini?",
   "sales-invoice__delete__success": "Data faktur penjualan berhasil dihapus.",
   "sales-invoice__archive__view__payments__empty": "Tidak ada data pembayaran tercatat.",
@@ -1204,5 +1204,9 @@
   "user__edit__role__error": "Pengguna gudang perlu memilih minimal 1 tipe produk",
   "user__delete__message": "Apakah anda yakin untuk menghapus data pengguna ini?",
   "user__edit__delete": "Hapus data pengguna",
-  "user__delete__success": "Berhasil menghapus data pengguna"
+  "user__delete__success": "Berhasil menghapus data pengguna",
+  "sales-deposit__archive__name": "Nama dokumen",
+  "sales-deposit__archive__status": "Status",
+  "sales-deposit__archive__active": "Menunggu konfirmasi",
+  "sales-deposit__archive__deleted": "Sudah dikonfirmasi / dihapus"
 }

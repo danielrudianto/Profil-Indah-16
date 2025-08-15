@@ -1197,5 +1197,9 @@
   "user__edit__role__error": "Warehouse users must select at lease 1 product type",
   "user__delete__message": "Are you sure to delete this user data?",
   "user__edit__delete": "Delete user data",
-  "user__delete__success": "Successfully deleted user"
+  "user__delete__success": "Successfully deleted user",
+  "sales-deposit__archive__name": "Document name",
+  "sales-deposit__archive__status": "Status",
+  "sales-deposit__archive__active": "Waiting for confirmation",
+  "sales-deposit__archive__deleted": "Confirmed / deleted"
 }

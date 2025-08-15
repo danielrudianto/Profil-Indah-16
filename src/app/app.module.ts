@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './presentation/pages/login/login.component';
 import { DashboardComponent } from './presentation/pages/dashboard/dashboard.component';
-import { SideNavigationComponent } from './presentation/components/side-navigation/side-navigation.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -253,7 +252,6 @@ import { DepositArchiveFilterComponent } from './presentation/pages/deposit/depo
     AppComponent,
     LoginComponent,
     DashboardComponent,
-    SideNavigationComponent,
     CircleAvatarComponent,
     ProfileDialogComponent,
     DashboardTopComponent,

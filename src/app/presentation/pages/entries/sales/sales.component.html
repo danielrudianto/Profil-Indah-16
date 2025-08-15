@@ -27,6 +27,13 @@
         <mat-icon matListItemIcon>folder</mat-icon>
         <div matListItemTitle>{{ "side-nav__deposit" | translate }}</div>
       </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/Sales/Overpayment']"
+        [routerLinkActive]="'active'"
+      >
+        <mat-icon matListItemIcon>folder</mat-icon>
+        <div matListItemTitle>{{ "side-nav__overpayment" | translate }}</div>
+      </mat-list-item>
       <mat-divider></mat-divider>
       <div mat-subheader>{{ "side-nav__master-data" | translate }}</div>
       <mat-list-item
