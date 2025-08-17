@@ -211,6 +211,15 @@ export class DepositViewComponent {
     }, 0);
   }
 
+  get total(): number {
+    return (
+      this.subtotal +
+      this.salesDepositFormGroup.get('delivery')?.value +
+      this.salesDepositFormGroup.get('service')?.value -
+      this.salesDepositFormGroup.get('discount')?.value
+    );
+  }
+
   // print() {
   //   const title = 'Sales deposit';
   //   const filename = 'Sales_deposit';

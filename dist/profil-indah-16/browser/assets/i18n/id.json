@@ -478,7 +478,7 @@
   "expense__update__delete": "Hapus data pengeluaran",
   "expense__delete__title": "Apakah Anda yakin ingin menghapus pengeluaran ini?",
   "expense__delete__success": "Data pengeluaran berhasil dihapus.",
-  "company__title": "Perushaan",
+  "company__title": "Perusahaan",
   "company__help": "Di sini anda dapat mengatur perusahaan yang sedang berjalan.",
   "company__name": "Nama perusahaan",
   "company__address": "Alamat",
@@ -801,6 +801,7 @@
   "sales-report__sales__table__value": "Jumlah",
   "sales-report__sales__table__percentage": "Persentase",
   "sales-report__export__successful": "Data laporan penjualan berhasil diekspor",
+  "purchase-report__export__successful": "Data laporan pembelian berhasil diekspor",
   "deposit__payment__info": "Pembayaran di atas merupakan pembayaran yang sudah dilakukan pada saat pembuatan deposit. Pembayaran ini tidak dapat dirubah tanggalnya. Alokasi hanya dapat dirubah apabila terdapat perubahan data barang dari deposit.",
   "deposit__payment__date": "Tanggal pembayaran",
   "deposit__payment__payment-method": "Metode pembayaran",
@@ -1208,5 +1209,6 @@
   "sales-deposit__archive__name": "Nama dokumen",
   "sales-deposit__archive__status": "Status",
   "sales-deposit__archive__active": "Menunggu konfirmasi",
-  "sales-deposit__archive__deleted": "Sudah dikonfirmasi / dihapus"
+  "sales-deposit__archive__deleted": "Sudah dikonfirmasi / dihapus",
+  "money-receipt__dor__description": "Pembayaran akibat kesalahan personel penjualan"
 }

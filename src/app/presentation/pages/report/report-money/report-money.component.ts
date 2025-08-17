@@ -17,6 +17,7 @@ export class ReportMoneyComponent {
   ) {}
 
   dataSource: any[] = [];
+  dorDataSource: any = null;
   isLoading: boolean = false;
   date: FormControl = new FormControl(new Date(), Validators.required);
 
@@ -36,7 +37,11 @@ export class ReportMoneyComponent {
       })
       .subscribe({
         next: (data: any) => {
-          this.dataSource = data;
+          this.dataSource = data.filter((x: any) => x.id != 0);
+          const dorIndex = data.findIndex((x: any) => x.id == 0);
+          if (dorIndex != 0) {
+            this.dorDataSource = data[dorIndex];
+          }
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -48,10 +53,20 @@ export class ReportMoneyComponent {
   }
 
   get totalPayments(): number {
-    return this.dataSource.length == 0
-      ? 0
-      : this.dataSource.reduce((a, b) => {
-          return a + b.salesInvoice + b.salesDeposit - b.salesReturn;
-        }, 0);
+    const payments =
+      this.dataSource.length == 0
+        ? 0
+        : this.dataSource.reduce((a, b) => {
+            return a + b.salesInvoice + b.salesDeposit - b.salesReturn;
+          }, 0);
+
+    const dorPayments =
+      this.dorDataSource.data.length == 0
+        ? 0
+        : this.dorDataSource.data.reduce((a: any, b: any) => {
+            return a + b.salesInvoice + b.salesDeposit;
+          }, 0);
+
+    return payments + dorPayments;
   }
 }

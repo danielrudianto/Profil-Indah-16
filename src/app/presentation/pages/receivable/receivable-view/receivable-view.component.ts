@@ -112,42 +112,41 @@ export class ReceivableViewComponent {
     }
   }
 
-  openPaymentHistory(id: number) {
-    this.dynamicComponentService
-      .createDynamicComponent(ReceivablePaymentHistoryComponent, {
-        id: id,
-      })
-      .subscribe({
-        next: (data) => {
-          if (data != undefined && data != null) {
-            const index = this.dataSource.findIndex((x) => x.id == id);
-            if (index != -1) {
-              this.dataSource[index].payment = data;
-            }
-          }
-        },
-      });
-  }
-
   createPayment(id: number) {
     const index = this.dataSource.findIndex((x) => x.id == id);
-    const value = this.dataSource[index].value - this.dataSource[index].payment;
+    const data = this.dataSource[index];
 
-    this.dynamicComponentService
-      .createDynamicComponent(ReceivablePaymentCreateComponent, {
-        id: id,
-        max: value,
+    const value = this.valueOf(
+      data.sales_invoice,
+      data.delivery + data.service - data.discount
+    );
+
+    const payment = this.paymentOf(data.sales_invoice_payment);
+    this.dialog
+      .open(ReceivablePaymentCreateComponent, {
+        data: {
+          id: id,
+          max: value - payment,
+        },
       })
-      .subscribe((data) => {
-        if (data != undefined && data != null) {
-          this.dataSource[index].payment =
-            Number(this.dataSource[index].payment) + Number(data);
-          if (this.dataSource[index].value == this.dataSource[index].payment) {
-            this.dataSource.splice(index, 1);
-            this.dataCount = this.dataCount - 1;
-          }
-        }
-      });
+      .afterClosed()
+      .subscribe((data) => {});
+
+    // this.dynamicComponentService
+    //   .createDynamicComponent(ReceivablePaymentCreateComponent, {
+    //     id: id,
+    //     max: value,
+    //   })
+    //   .subscribe((data) => {
+    //     if (data != undefined && data != null) {
+    //       this.dataSource[index].payment =
+    //         Number(this.dataSource[index].payment) + Number(data);
+    //       if (this.dataSource[index].value == this.dataSource[index].payment) {
+    //         this.dataSource.splice(index, 1);
+    //         this.dataCount = this.dataCount - 1;
+    //       }
+    //     }
+    //   });
   }
 
   openView(id: number) {

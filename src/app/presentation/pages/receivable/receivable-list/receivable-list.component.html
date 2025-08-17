@@ -23,7 +23,7 @@
             <tbody>
               <tr
                 *ngFor="let data of dataSource"
-                (click)="viewReceivable(data.id)"
+                (click)="viewReceivable(data.id == null ? 0 : data.id)"
               >
                 <td>
                   <p class="mb-0 text-clamp-1">

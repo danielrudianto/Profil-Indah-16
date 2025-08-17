@@ -171,7 +171,10 @@
                     {{ "sales-invoice__archive__view__discount" | translate }}
                   </td>
                   <td class="text-center" colspan="2">
-                    Rp.&nbsp;{{ dataSource.discount | number : "0.2-2" }}
+                    Rp.&nbsp;{{
+                      salesDepositFormGroup.get("discount")?.value
+                        | number : "0.2-2"
+                    }}
                   </td>
                 </tr>
                 <tr>
@@ -180,7 +183,10 @@
                     {{ "sales-invoice__archive__view__service" | translate }}
                   </td>
                   <td class="text-center" colspan="2">
-                    Rp.&nbsp;{{ dataSource.service | number : "0.2-2" }}
+                    Rp.&nbsp;{{
+                      salesDepositFormGroup.get("service")?.value
+                        | number : "0.2-2"
+                    }}
                   </td>
                 </tr>
                 <tr>
@@ -189,7 +195,10 @@
                     {{ "sales-invoice__archive__view__delivery" | translate }}
                   </td>
                   <td class="text-center" colspan="2">
-                    Rp.&nbsp;{{ dataSource.delivery | number : "0.2-2" }}
+                    Rp.&nbsp;{{
+                      salesDepositFormGroup.get("delivery")?.value
+                        | number : "0.2-2"
+                    }}
                   </td>
                 </tr>
                 <tr>
@@ -198,12 +207,7 @@
                     {{ "sales-invoice__archive__view__total" | translate }}
                   </td>
                   <td class="text-center" colspan="2">
-                    Rp.&nbsp;{{
-                      subtotal -
-                        dataSource.discount +
-                        dataSource.delivery +
-                        dataSource.service | number : "0.2-2"
-                    }}
+                    Rp.&nbsp;{{ total | number : "0.2-2" }}
                   </td>
                 </tr>
               </tfoot>

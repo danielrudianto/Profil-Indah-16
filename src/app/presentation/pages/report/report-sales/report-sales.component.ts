@@ -96,13 +96,6 @@ export class ReportSalesComponent {
         next: (data: any) => {
           this.chartDataSource = data.chart;
           this.transactions = data.salesInvoiceCount;
-          // this.customerCount = data.customer.length;
-          // this.bestSales =
-          //   data.sales.length == 0
-          //     ? 'N/A'
-          //     : data.sales.sort((a: any, b: any) => {
-          //         return b.value - a.value;
-          //       })[0].name ?? 'N/A';
 
           this.totalSales = data.total - data.discount;
           this.totalDelivery = data.delivery;
@@ -194,9 +187,13 @@ export class ReportSalesComponent {
           ];
 
           data.forEach((y: any, index: number) => {
+            const excelDateSerialNumber = xlsx.SSF.parse_date_code(
+              new Date(y.date).getTime() / (24 * 60 * 60 * 1000) + 25569
+            );
+
             worksheetData.push([
               index + 1,
-              y.date,
+              excelDateSerialNumber,
               y.name,
               y.customer_name,
               y.value,
@@ -209,17 +206,38 @@ export class ReportSalesComponent {
           });
 
           const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);
-
+          // Convert range to table for filter functionality
           const range = xlsx.utils.decode_range(worksheet['!ref']!);
-          for (let C = range.s.c; C <= range.e.c; ++C) {
-            const cell = worksheet[xlsx.utils.encode_cell({ r: 0, c: C })];
-            if (cell) {
-              cell.s = {
-                font: {
-                  bold: true,
-                },
-              };
-            }
+          worksheet['!ref'] = xlsx.utils.encode_range({
+            s: { r: 0, c: 0 },
+            e: { r: range.e.r, c: range.e.c },
+          });
+
+          worksheet['!autofilter'] = {
+            ref: xlsx.utils.encode_range({
+              s: { r: 0, c: 0 },
+              e: { r: 0, c: range.e.c },
+            }),
+          };
+
+          for (let C = 0; C <= range.e.c; ++C) {
+            const address = xlsx.utils.encode_cell({ r: 0, c: C });
+            worksheet[address].s = {
+              font: {
+                bold: true,
+                color: { rgb: 'FFFFFF' },
+                name: 'Calibri',
+                sz: 11,
+              },
+              fill: {
+                fgColor: { rgb: '000000' }, // Black background
+                patternType: 'solid',
+              },
+              alignment: {
+                horizontal: 'center',
+                vertical: 'center',
+              },
+            };
           }
 
           worksheet['!cols'] = [
@@ -234,6 +252,22 @@ export class ReportSalesComponent {
             { wpx: 120 }, // Total
             { wpx: 120 }, // Sales
           ];
+
+          for (let R = 1; R <= range.e.r; ++R) {
+            const dateAddr = xlsx.utils.encode_cell({ r: R, c: 1 });
+            const jsDate = new Date(data[R - 1].date);
+            worksheet[dateAddr] = {
+              t: 'd',
+              v: jsDate,
+              z: 'dd-mmm-yyyy', // Format as "05-Jul-2023"
+            };
+            [4, 5, 6, 7, 8].forEach((col) => {
+              const addr = xlsx.utils.encode_cell({ r: R, c: col });
+              if (worksheet[addr]) {
+                worksheet[addr].z = '#,##0.00;[Red]-#,##0.00'; // Currency format
+              }
+            });
+          }
 
           const workbook = xlsx.utils.book_new();
           xlsx.utils.book_append_sheet(workbook, worksheet, 'Sales Report');

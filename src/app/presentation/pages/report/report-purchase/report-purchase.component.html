@@ -247,11 +247,16 @@
         </mat-form-field>
 
         <button
-          class="sales-report__download-button w-100"
+          mat-stroked-button
+          color="primary"
+          type="button"
+          style="letter-spacing: 0"
+          class="w-100"
           [disabled]="isSubmitting"
           (click)="download()"
         >
-          {{ "purchase-report__download" | translate }}
+          <mat-icon>table</mat-icon>
+          <span>{{ "purchase-report__download" | translate }}</span>
         </button>
       </div>
     </div>

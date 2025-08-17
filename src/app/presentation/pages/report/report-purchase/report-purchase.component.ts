@@ -22,6 +22,7 @@ import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
 import { SupplierPurchaseChartComponent } from './supplier-purchase-chart/supplier-purchase-chart.component';
 import { BrandPurchaseChartComponent } from './brand-purchase-chart/brand-purchase-chart.component';
 import { TypePurchaseChartComponent } from './type-purchase-chart/type-purchase-chart.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-report-purchase',
@@ -41,7 +42,8 @@ export class ReportPurchaseComponent {
     private translateService: TranslateService,
     private apiService: ApiService,
     private dynamicComponentService: DynamicComponentService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private datePipe: DatePipe
   ) {}
 
   isLoading: boolean = false;
@@ -141,10 +143,9 @@ export class ReportPurchaseComponent {
   download(): void {
     this.isSubmitting = true;
     this.apiService
-      .post('report/sales', {
+      .post('report/purchase/download', {
         month: this.date.value!.month() + 1,
         year: this.date.value!.year(),
-        mode: 'download',
       })
       .subscribe({
         next: (data: any) => {
@@ -153,71 +154,128 @@ export class ReportPurchaseComponent {
               'No',
               'Date',
               'Name',
-              'Customer name',
+              'Invoice name',
+              'Faktur',
+              'Supplier name',
               'Value',
               'Discount',
-              'Service',
-              'Delivery',
               'Total',
-              'Sales',
             ],
           ];
 
           data.forEach((y: any, index: number) => {
+            const excelDateSerialNumber = xlsx.SSF.parse_date_code(
+              new Date(y.date).getTime() / (24 * 60 * 60 * 1000) + 25569
+            );
+
             worksheetData.push([
               index + 1,
-              y.date,
+              excelDateSerialNumber,
               y.name,
-              y.customer_name,
+              y.invoice_name,
+              y.faktur,
+              y.supplier_name,
               y.value,
               y.discount,
-              y.service,
-              y.delivery,
-              y.value - y.discount + y.service + y.delivery,
-              y.sales,
+              y.value - y.discount,
             ]);
           });
 
           const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);
-
+          // Convert range to table for filter functionality
           const range = xlsx.utils.decode_range(worksheet['!ref']!);
-          for (let C = range.s.c; C <= range.e.c; ++C) {
-            const cell = worksheet[xlsx.utils.encode_cell({ r: 0, c: C })];
-            if (cell) {
-              cell.s = {
-                font: {
-                  bold: true,
-                },
-              };
-            }
+          worksheet['!ref'] = xlsx.utils.encode_range({
+            s: { r: 0, c: 0 },
+            e: { r: range.e.r, c: range.e.c },
+          });
+
+          worksheet['!autofilter'] = {
+            ref: xlsx.utils.encode_range({
+              s: { r: 0, c: 0 },
+              e: { r: 0, c: range.e.c },
+            }),
+          };
+
+          for (let C = 0; C <= range.e.c; ++C) {
+            const address = xlsx.utils.encode_cell({ r: 0, c: C });
+            worksheet[address].s = {
+              font: {
+                bold: true,
+                color: { rgb: 'FFFFFF' },
+                name: 'Calibri',
+                sz: 11,
+              },
+              fill: {
+                fgColor: { rgb: '000000' }, // Black background
+                patternType: 'solid',
+              },
+              alignment: {
+                horizontal: 'center',
+                vertical: 'center',
+              },
+            };
           }
 
+          // Column widths and formatting
           worksheet['!cols'] = [
             { wpx: 40 }, // No
-            { wpx: 120 }, // Date
+            { wpx: 90 }, // Date
             { wpx: 120 }, // Name
-            { wpx: 200 }, // Customer name
-            { wpx: 120 }, // Value
-            { wpx: 120 }, // Discount
-            { wpx: 120 }, // Service
-            { wpx: 120 }, // Delivery
-            { wpx: 120 }, // Total
-            { wpx: 120 }, // Sales
+            { wpx: 120 }, // Invoice name
+            { wpx: 80 }, // Faktur
+            { wpx: 150 }, // Supplier name
+            { wpx: 80 }, // Value
+            { wpx: 80 }, // Discount
+            { wpx: 80 }, // Total
           ];
+          // Format dates (column B)
+          for (let R = 1; R <= range.e.r; ++R) {
+            const dateAddr = xlsx.utils.encode_cell({ r: R, c: 1 });
+            const jsDate = new Date(data[R - 1].date);
+            worksheet[dateAddr] = {
+              t: 'd',
+              v: jsDate,
+              z: 'dd-mmm-yyyy', // Format as "05-Jul-2023"
+            };
+            // Format currency (columns G, H, I)
+            [6, 7, 8].forEach((col) => {
+              // Use numeric indices for columns G (6), H (7), I (8)
+              const addr = xlsx.utils.encode_cell({ r: R, c: col });
+              if (worksheet[addr]) {
+                worksheet[addr].z = '#,##0.00;[Red]-#,##0.00'; // Currency format
+              }
+            });
+          }
 
+          worksheet['!margins'] = {
+            left: 0.7,
+            right: 0.7,
+            top: 0.75,
+            bottom: 0.75,
+            header: 0.3,
+            footer: 0.3,
+          };
+
+          worksheet['!page'] = {
+            orientation: 'landscape',
+            paperSize: 9, // A4 (9=Letter, 9=A4)
+            fitToPage: true,
+            fitToWidth: 1,
+            fitToHeight: 0,
+          };
+
+          // Create workbook
           const workbook = xlsx.utils.book_new();
-          xlsx.utils.book_append_sheet(workbook, worksheet, 'Sales Report');
+          xlsx.utils.book_append_sheet(workbook, worksheet, 'Purchase Report');
+          // Export file
+          xlsx.writeFile(
+            workbook,
+            `Purchase_Report_${new Date().getTime()}.xlsx`
+          );
 
-          const excelBuffer = xlsx.write(workbook, {
-            bookType: 'xlsx',
-            type: 'array',
-          });
-          const blob = new Blob([excelBuffer], {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          });
-          saveAs(blob, `Sales_report_${new Date().getTime()}.xlsx`);
+          // Show success message
           this.alertService.showSuccess(
-            this.translateService.instant('sales-report__export__successful')
+            this.translateService.instant('purchase-report__export__successful')
           );
         },
         error: (error) => {

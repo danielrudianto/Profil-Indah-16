@@ -60,6 +60,23 @@
               </td>
             </tr>
           </tbody>
+          <tbody *ngIf="!isLoading && dorDataSource != null">
+            <tr>
+              <td colspan="5">
+                <b
+                  >{{ dorDataSource.name }} -
+                  {{ "money-receipt__dor__description" | translate }}</b
+                >
+              </td>
+            </tr>
+            <tr *ngFor="let data of dorDataSource.data">
+              <td>{{ data.sales }}</td>
+              <td>{{ data.salesInvoice | number : "0.2-2" }}</td>
+              <td>{{ data.salesDeposit | number : "0.2-2" }}</td>
+              <td>{{ 0 | number : "0.2-2" }}</td>
+              <td>{{ data.salesInvoice + data.salesDeposit | number : "0.2-2" }}</td>
+            </tr>
+          </tbody>
           <tfoot *ngIf="!isLoading && dataSource.length > 0">
             <tr>
               <td colspan="3"></td>

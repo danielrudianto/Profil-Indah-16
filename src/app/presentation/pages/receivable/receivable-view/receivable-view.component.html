@@ -135,7 +135,6 @@
                 <th>{{ "receivable__view__name" | translate }}</th>
                 <th>{{ "receivable__view__value" | translate }}</th>
                 <th>{{ "receivable__view__payment" | translate }}</th>
-                <th>{{ "receivable__view__balance" | translate }}</th>
               </tr>
             </thead>
             <tbody *ngIf="isLoadingCard">
@@ -174,9 +173,6 @@
                 <mat-menu #menu="matMenu">
                   <button mat-menu-item (click)="openView(data.id)">
                     {{ "receivable-view__view" | translate }}
-                  </button>
-                  <button mat-menu-item (click)="openPaymentHistory(data.id)">
-                    {{ "receivable-view__payment-history" | translate }}
                   </button>
                   <button mat-menu-item (click)="createPayment(data.id)">
                     {{ "receivable-view__add-payment" | translate }}

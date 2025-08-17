@@ -786,6 +786,7 @@
   "sales-report__sales__table__value": "Value",
   "sales-report__sales__table__percentage": "Percentage",
   "sales-report__export__successful": "Sales report document successfully exported",
+  "purchase-report__export__successful": "Purchase report document successfully exported",
   "deposit__payment__info": "Payment above is an invoice payment that has been made at the time of creating the deposit. The payment cannot be changed the date. The used amount can only be changed if there is changes on the deposit items.",
   "deposit__payment__date": "Payment date",
   "deposit__payment__payment-method": "Payment method",
@@ -1201,5 +1202,8 @@
   "sales-deposit__archive__name": "Document name",
   "sales-deposit__archive__status": "Status",
   "sales-deposit__archive__active": "Waiting for confirmation",
-  "sales-deposit__archive__deleted": "Confirmed / deleted"
+  "sales-deposit__archive__deleted": "Confirmed / deleted",
+  "money-receipt__dor__description": "Payment by sales personel",
+  "sales-deposit__archive__delete": "Delete sales deposit",
+  "sales-deposit__archive__confirm": "Confirm sales deposit"
 }

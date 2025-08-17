@@ -317,79 +317,91 @@ export class SalesInvoiceCreateComponent {
           return;
         }
 
-        if (sub == null) {
-          this.t.push(
-            this.formBuilder.group({
-              product_id: [data.id, Validators.required],
-              product_unit_id: [null],
-              reference: [data.reference],
-              description: [data.description],
-              quantity: [0, [Validators.required, Validators.min(0.01)]],
-              initial_price: [
-                data.sales_price,
-                [Validators.required, Validators.min(0)],
-              ],
-              price: [
-                data.sales_price,
-                [Validators.required, Validators.min(0)],
-              ],
-              initial_discount: [
-                data.sales_discount,
-                [Validators.required, Validators.min(0)],
-              ],
-              discount: [
-                data.sales_discount,
-                [Validators.required, Validators.min(0)],
-              ],
-              unit: [data.unit],
-              conversion: [1],
-              default_unit: [data.unit],
-              save_price: [false],
-            })
-          );
-        } else {
-          this.t.push(
-            this.formBuilder.group({
-              product_id: [data.id, Validators.required],
-              product_unit_id: [sub.id],
-              reference: [data.reference],
-              description: [data.description],
-              quantity: [0, [Validators.required, Validators.min(0.01)]],
-              initial_price: [
-                sub.sales_price,
-                [Validators.required, Validators.min(0)],
-              ],
-              price: [
-                sub.sales_price,
-                [Validators.required, Validators.min(0)],
-              ],
-              initial_discount: [
-                sub.sales_discount,
-                [Validators.required, Validators.min(0)],
-              ],
-              discount: [
-                sub.sales_discount,
-                [Validators.required, Validators.min(0)],
-              ],
-              unit: [sub.unit],
-              conversion: [sub.conversion],
-              default_unit: [data.unit],
-              save_price: [false],
-            })
-          );
-        }
+        this.apiService.get(`product-stock/product/${data.id}`).subscribe({
+          next: (stock: any) => {
+            if (sub == null) {
+              this.t.push(
+                this.formBuilder.group({
+                  product_id: [data.id, Validators.required],
+                  product_unit_id: [null],
+                  reference: [data.reference],
+                  description: [data.description],
+                  quantity: [0, [Validators.required, Validators.min(0.01)]],
+                  initial_price: [
+                    data.sales_price,
+                    [Validators.required, Validators.min(0)],
+                  ],
+                  price: [
+                    data.sales_price,
+                    [Validators.required, Validators.min(0)],
+                  ],
+                  initial_discount: [
+                    data.sales_discount,
+                    [Validators.required, Validators.min(0)],
+                  ],
+                  discount: [
+                    data.sales_discount,
+                    [Validators.required, Validators.min(0)],
+                  ],
+                  unit: [data.unit],
+                  conversion: [1],
+                  default_unit: [data.unit],
+                  save_price: [false],
+                  stock: [stock.stock],
+                })
+              );
+            } else {
+              this.t.push(
+                this.formBuilder.group({
+                  product_id: [data.id, Validators.required],
+                  product_unit_id: [sub.id],
+                  reference: [data.reference],
+                  description: [data.description],
+                  quantity: [0, [Validators.required, Validators.min(0.01)]],
+                  initial_price: [
+                    sub.sales_price,
+                    [Validators.required, Validators.min(0)],
+                  ],
+                  price: [
+                    sub.sales_price,
+                    [Validators.required, Validators.min(0)],
+                  ],
+                  initial_discount: [
+                    sub.sales_discount,
+                    [Validators.required, Validators.min(0)],
+                  ],
+                  discount: [
+                    sub.sales_discount,
+                    [Validators.required, Validators.min(0)],
+                  ],
+                  unit: [sub.unit],
+                  conversion: [sub.conversion],
+                  default_unit: [data.unit],
+                  save_price: [false],
+                  stock: [stock.stock],
+                })
+              );
+            }
 
-        this.billFormGroup.patchValue({
-          number_of_items: this.t.length,
+            this.billFormGroup.patchValue({
+              number_of_items: this.t.length,
+            });
+
+            setTimeout(() => {
+              const autofocusLength =
+                document.querySelectorAll('[focusedInput]').length;
+              const input =
+                document.querySelectorAll('[focusedInput]')[
+                  autofocusLength - 1
+                ];
+              (input as HTMLElement).focus();
+            }, 100);
+          },
+          error: (error) => {
+            this.alertService.showError(error);
+            return;
+          },
         });
-
-        setTimeout(() => {
-          const autofocusLength =
-            document.querySelectorAll('[focusedInput]').length;
-          const input =
-            document.querySelectorAll('[focusedInput]')[autofocusLength - 1];
-          (input as HTMLElement).focus();
-        }, 100);
       } else {
         this.alertService.showSuccess(
           this.translateService.instant('general__item__exists')
@@ -422,34 +434,45 @@ export class SalesInvoiceCreateComponent {
             return;
           }
 
-          this.t.push(
-            this.formBuilder.group({
-              package_code_id: [data.item.id, Validators.required],
-              name: [data.item.name, Validators.required],
-              description: [data.item.description, Validators.required],
-              quantity: [0, [Validators.required, Validators.min(1)]],
-              initial_price: [data.item.price],
-              package_content: [data.item.package_content],
-              price: [
-                data.item.price,
-                [Validators.min(0), Validators.required],
-              ],
-              discount: [0],
-              save_price: [false],
-            })
-          );
+          this.apiService
+            .get(`product-stock/package/${data.item.id}`)
+            .subscribe({
+              next: (stock: any) => {
+                this.t.push(
+                  this.formBuilder.group({
+                    package_code_id: [data.item.id, Validators.required],
+                    name: [data.item.name, Validators.required],
+                    description: [data.item.description, Validators.required],
+                    quantity: [0, [Validators.required, Validators.min(1)]],
+                    initial_price: [data.item.price],
+                    package_content: [[]],
+                    price: [
+                      data.item.price,
+                      [Validators.min(0), Validators.required],
+                    ],
+                    discount: [0],
+                    save_price: [false],
+                  })
+                );
 
-          this.billFormGroup.patchValue({
-            number_of_items: this.t.length,
-          });
+                this.billFormGroup.patchValue({
+                  number_of_items: this.t.length,
+                });
 
-          setTimeout(() => {
-            const autofocusLength =
-              document.querySelectorAll('[focusedInput]').length;
-            const input =
-              document.querySelectorAll('[focusedInput]')[autofocusLength - 1];
-            (input as HTMLElement).focus();
-          }, 100);
+                setTimeout(() => {
+                  const autofocusLength =
+                    document.querySelectorAll('[focusedInput]').length;
+                  const input =
+                    document.querySelectorAll('[focusedInput]')[
+                      autofocusLength - 1
+                    ];
+                  (input as HTMLElement).focus();
+                }, 100);
+              },
+              error: (error) => {
+                this.alertService.showError(error);
+              },
+            });
         }
       });
   }
