@@ -438,6 +438,7 @@ export class SalesInvoiceCreateComponent {
             .get(`product-stock/package/${data.item.id}`)
             .subscribe({
               next: (stock: any) => {
+                console.log(data);
                 this.t.push(
                   this.formBuilder.group({
                     package_code_id: [data.item.id, Validators.required],
@@ -445,7 +446,17 @@ export class SalesInvoiceCreateComponent {
                     description: [data.item.description, Validators.required],
                     quantity: [0, [Validators.required, Validators.min(1)]],
                     initial_price: [data.item.price],
-                    package_content: [[]],
+                    package_content: [
+                      data.item.package_content.map((x: any) => {
+                        const index = stock.findIndex(
+                          (y: any) => y.product_id == x.product_id
+                        );
+                        return {
+                          ...x,
+                          stock: index == -1 ? 0 : stock[index].stock,
+                        };
+                      }),
+                    ],
                     price: [
                       data.item.price,
                       [Validators.min(0), Validators.required],

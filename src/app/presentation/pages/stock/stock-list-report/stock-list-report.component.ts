@@ -53,7 +53,8 @@ export class StockListReportComponent {
   isLoading: boolean = true;
   dataSource: any = null;
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    await this.fetchMetaData();
     this.fetchByID();
     this.stockFormGroup.controls['date'].valueChanges.subscribe(() => {
       this.fetchByID();
@@ -81,7 +82,7 @@ export class StockListReportComponent {
             previous: data.previous,
           });
 
-          let stock = data.previous;
+          let stock = data.previous ?? 0;
 
           this.t.clear();
           data.data.forEach((x: any) => {
@@ -94,7 +95,12 @@ export class StockListReportComponent {
                 document_name: [x.document_name],
                 display_quantity: [x.display_quantity],
                 stock: [stock + x.quantity],
-                unit: [x.unit],
+                unit: [
+                  x.product_unit == null
+                    ? this.dataSource.unit
+                    : x.product_unit.unit,
+                ],
+                default_unit: [this.dataSource.unit],
               })
             );
 
@@ -110,6 +116,21 @@ export class StockListReportComponent {
         this.isLoading = false;
         this.stockFormGroup.enable({ emitEvent: false });
       });
+  }
+
+  fetchMetaData(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.apiService.get(`product/${this.data.id}`).subscribe({
+        next: (data) => {
+          this.dataSource = data;
+          resolve(); // Resolve the promise when data is fetched
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+          reject(error); // Reject the promise on error
+        },
+      });
+    });
   }
 
   private getOpponentName(data: any) {

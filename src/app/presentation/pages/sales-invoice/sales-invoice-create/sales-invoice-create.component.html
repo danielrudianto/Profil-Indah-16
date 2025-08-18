@@ -134,10 +134,15 @@
               >
                 <ng-container *ngSwitchCase="2">
                   <td>
-                    <p>{{ itemForm.get("reference")?.value }}</p>
-                    <div class="text-clamp-2">
+                    <p class="mb-0">{{ itemForm.get("reference")?.value }}</p>
+                    <div class="text-clamp-2 mb-2">
                       {{ itemForm.get("description")?.value }}
                     </div>
+                    <mat-divider></mat-divider>
+                    <p class="mt-2">
+                      Stock:
+                      {{ itemForm.get("stock")?.value | number : "0.0-2" }}
+                    </p>
                   </td>
                   <td class="text-center" (click)="updatePrice(i)">
                     {{ itemForm.get("price")?.value | number : "0.2-2" }}
@@ -276,6 +281,10 @@
                         </p>
                         <p class="text-clamp-2">
                           {{ content.product.description }}
+                        </p>
+                        <p class="mt-2">
+                          Stock:
+                          {{ content.stock | number : "0.0-2" }}
                         </p>
                       </li>
                     </ul>
