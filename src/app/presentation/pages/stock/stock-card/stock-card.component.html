@@ -2,11 +2,15 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <app-feature-header
-        [title]="'stock-card__title' | translate"
-        [isBackAvailable]="true"
-        [onClickBackButton]="onBackButtonPressed.bind(this)"
-      />
+      <h1>
+        <button mat-icon-button (click)="onBackButtonPressed()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        {{ "stock-card__title" | translate }}
+        <button mat-icon-button (click)="fetchStockCard()">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </h1>
       <div class="dashboard-card">
         <div class="meta-data__wrapper">
           <div class="meta-data__items">
@@ -253,7 +257,7 @@
             </tbody>
             <tbody *ngIf="!isLoadingCard && dataSource.length > 0">
               <tr *ngFor="let item of dataSource" (click)="viewDocument(item)">
-                <td>{{ item.date | date : "dd/MM/YYYY" }}</td>
+                <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
                 <td>{{ item.document_name }}</td>
                 <td>
                   {{ item.display_quantity | number : "0.0-2" }}

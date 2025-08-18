@@ -883,6 +883,9 @@
   "sales-return__create": "Buat baru",
   "sales-return__archive__date": "Tanggal retur",
   "sales-return__archive__name": "Dokumen",
+  "sales-return__archive__invoice-name": "Faktur penjualan",
+  "sales-return__archive__view__delete": "Hapus data retur penjualan",
+  "sales-return__delete__message": "Apakah anda yakin untuk menghapus data retur penjualan ini?",
   "sales-return__archive__customer": "Konsumen",
   "sales-return__archive__status": "Status",
   "sales-return__archive__created-by": "Created by",
@@ -891,7 +894,7 @@
   "sales-return__archive__filter__document-status__deleted": "Dihapus",
   "sales-return__archive__filter__document-status__active": "Aktif",
   "sales-return__archive__filter__date-range": "Rentang tanggal",
-  "sales-return__archive__filter__title": "Saring dokumen",
+  "sales-return__archive__filter__title": "Filter dokumen retur penjualan",
   "sales-return__status__deleted": "Telah dihapus",
   "sales-return__status__active": "Aktif",
   "sales-return__title": "Retur penjualan",
@@ -1210,5 +1213,11 @@
   "sales-deposit__archive__status": "Status",
   "sales-deposit__archive__active": "Menunggu konfirmasi",
   "sales-deposit__archive__deleted": "Sudah dikonfirmasi / dihapus",
-  "money-receipt__dor__description": "Pembayaran akibat kesalahan personel penjualan"
+  "money-receipt__dor__description": "Pembayaran akibat kesalahan personel penjualan",
+  "deposit__archive__filter__date-range": "Rentan tanggal",
+  "deposit__archive__filter__title": "Filter deposit penjualan",
+  "deposit__archive__filter__document-status": "Status dokumen",
+  "deposit__archive__filter__document-status__deleted": "Dihapus / Dikonfirmasi",
+  "deposit__archive__filter__document-status__active": "Menunggu konfirmasi",
+  "general__save-filter": "Filter"
 }

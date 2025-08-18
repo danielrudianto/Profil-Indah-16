@@ -1,1 +1,62 @@
-<p>deposit-archive-filter works!</p>
+<h2 mat-dialog-title>
+  {{ "deposit__archive__filter__title" | translate }}
+</h2>
+<form [formGroup]="salesInvoiceArchiveFilterFormGroup">
+  <mat-dialog-content>
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>{{
+        "deposit__archive__filter__date-range" | translate
+      }}</mat-label>
+      <mat-date-range-input
+        [rangePicker]="picker"
+        [min]="minDate"
+        [max]="maxDate"
+      >
+        <input
+          matStartDate
+          placeholder="Start date"
+          formControlName="startDate"
+        />
+        <input matEndDate placeholder="End date" formControlName="endDate" />
+      </mat-date-range-input>
+      <mat-hint>MM/DD/YYYY - MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker
+        #picker
+        [startAt]="minDate"
+      ></mat-date-range-picker>
+    </mat-form-field>
+
+    <mat-divider />
+    <h6>
+      {{ "deposit__archive__filter__document-status" | translate }}
+    </h6>
+    <mat-chip-listbox class="mb-3" selectable multiple>
+      <mat-chip-option
+        [value]="'isDelete'"
+        [selected]="filterObject.isDelete"
+        (selectionChange)="selectionChange($event)"
+        >{{
+          "deposit__archive__filter__document-status__deleted" | translate
+        }}</mat-chip-option
+      >
+      <mat-chip-option
+        [value]="'isPending'"
+        [selected]="filterObject.isPending"
+        (selectionChange)="selectionChange($event)"
+        >{{
+          "deposit__archive__filter__document-status__pending" | translate
+        }}</mat-chip-option
+      >
+    </mat-chip-listbox>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button class="action-button mx-1" (click)="saveFilters()">
+      {{ "general__save-filter" | translate }}
+    </button>
+  </mat-dialog-actions>
+</form>

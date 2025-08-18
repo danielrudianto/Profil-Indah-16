@@ -18,7 +18,6 @@ import { AlertService } from 'src/app/services/alert.service';
 export class StockListComponent {
   constructor(
     private authService: AuthService,
-    private dynamicComponentService: DynamicComponentService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
@@ -87,10 +86,8 @@ export class StockListComponent {
     }
 
     if (dialogType == 'card') {
-      const queryParams = this.activatedRoute.snapshot.queryParams;
       const url = this.router.url;
 
-      console.log(url);
       this.router.navigate(['Card', id], {
         relativeTo: this.route,
         queryParams: {

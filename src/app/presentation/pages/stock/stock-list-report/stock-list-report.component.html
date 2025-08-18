@@ -1,4 +1,215 @@
-<div class="view-panel-wrapper">
+<h2 mat-dialog-title>
+  {{ "stock-report__title" | translate }}
+</h2>
+<mat-dialog-content>
+  <form [formGroup]="stockFormGroup">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ "stock-report__date" | translate }}</mat-label>
+            <input formControlName="date" matInput [matDatepicker]="picker" />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ "stock-report__type" | translate }}</mat-label>
+            <mat-select formControlName="viewBy">
+              <mat-option value="date">{{
+                "stock-report__document" | translate
+              }}</mat-option>
+              <mat-option value="created">{{
+                "stock-report__input" | translate
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{
+              "stock-report__initial-stock" | translate
+            }}</mat-label>
+            <input matInput readonly formControlName="previousStock" />
+          </mat-form-field>
+          <mat-divider class="mb-3" />
+
+          <mat-spinner id="spinner" *ngIf="isLoading" />
+          <div *ngIf="!isLoading">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 100px">
+                    {{ "stock-report__table__date" | translate }}
+                  </th>
+                  <th style="width: 150px">
+                    {{ "stock-report__table__created-at" | translate }}
+                  </th>
+                  <th style="width: 150px">
+                    {{ "stock-report__table__document" | translate }}
+                  </th>
+                  <th style="width: 200px">
+                    {{ "stock-report__table__opponent" | translate }}
+                  </th>
+                  <th style="width: 100px">
+                    {{ "stock-report__table__quantity" | translate }}
+                  </th>
+                  <th style="width: 100px">
+                    {{ "stock-report__table__stock" | translate }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of t.controls">
+                  <td>{{ data.get("date")?.value | date : "dd/MM/YYYY" }}</td>
+                  <td>
+                    {{
+                      data.get("created_at")?.value | date : "dd/MM/YYYY HH:mm"
+                    }}
+                  </td>
+                  <td>{{ data.get("document_name")?.value }}</td>
+                  <td>
+                    <span class="text-clamp-1">
+                      {{ data.get("opponent")?.value }}
+                    </span>
+                  </td>
+                  <td>
+                    {{ data.get("display_quantity")?.value | number : "1.0-2" }}
+                    {{ data.get("unit")?.value }}
+                  </td>
+                  <td>
+                    {{ data.get("stock")?.value | number : "1.0-2" }}
+                    {{ data.get("default_unit")?.value }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- <div class="table-responsive">
+      <table class="table">
+        <tbody>
+          <tr>
+            <td style="width: 100px">
+              {{ "stock-report__initial-stock" | translate }}
+            </td>
+            <td style="width: 150px">
+              {{ dataSource.previous ?? 0 | number : "1.0-2" }}
+            </td>
+            <td style="width: 100px">
+              {{ "stock-report__final-stock" | translate }}
+            </td>
+            <td style="width: 150px">
+              {{ 0 | number : "1.0-2" }}
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 100px">
+              {{ "stock-report__output-mutation" | translate }}
+            </td>
+            <td style="width: 150px">
+              {{ 0 | number : "1.0-2" }}
+            </td>
+            <td style="width: 100px">
+              {{ "stock-report__input-mutation" | translate }}
+            </td>
+            <td style="width: 150px">
+              {{ 0 | number : "1.0-2" }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width: 100px">
+              {{ "stock-report__table__date" | translate }}
+            </th>
+            <th style="width: 150px">
+              {{ "stock-report__table__created-at" | translate }}
+            </th>
+            <th style="width: 150px">
+              {{ "stock-report__table__document" | translate }}
+            </th>
+            <th style="width: 200px">
+              {{ "stock-report__table__opponent" | translate }}
+            </th>
+            <th style="width: 100px">
+              {{ "stock-report__table__quantity" | translate }}
+            </th>
+            <th style="width: 100px">
+              {{ "stock-report__table__stock" | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          *ngIf="
+            !formGroup.get('view_by')?.value &&
+            dataSource.document.mutation.length > 0
+          "
+        >
+          <tr *ngFor="let data of dataSource.document.mutation">
+            <td>{{ data.date | date : "dd/MM/YYYY" }}</td>
+            <td>
+              {{ data.createdAt | date : "dd/MM/YYYY HH:mm" }}
+            </td>
+            <td>{{ data.name }}</td>
+            <td>
+              <span class="text-clamp-1">
+                {{ data.opponent }}
+              </span>
+            </td>
+            <td>
+              {{ data.displayQuantity | number : "1.0-2" }} {{ data.unit }}
+            </td>
+            <td>{{ data.stock | number : "1.0-2" }} {{ data.defaultUnit }}</td>
+          </tr>
+        </tbody>
+        <tbody
+          *ngIf="
+            formGroup.get('view_by')?.value &&
+            dataSource.input.mutation.length > 0
+          "
+        >
+          <tr *ngFor="let data of dataSource.input.mutation">
+            <td>{{ data.date | date : "dd/MM/YYYY" }}</td>
+            <td>
+              {{ data.createdAt | date : "dd/MM/YYYY HH:mm" }}
+            </td>
+            <td>{{ data.name }}</td>
+            <td>{{ data.opponent }}</td>
+            <td>
+              {{ data.displayQuantity | number : "1.0-2" }} {{ data.unit }}
+            </td>
+            <td>{{ data.stock | number : "1.0-2" }} {{ data.defaultUnit }}</td>
+          </tr>
+        </tbody>
+        <tbody
+          *ngIf="
+            (index == 0 && dataSource.document.mutation.length == 0) ||
+            (index == 1 && dataSource.input.mutation.length == 0)
+          "
+        >
+          <tr>
+            <td colspan="6">
+              <empty-table />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div> -->
+</mat-dialog-content>
+
+<!-- <div class="view-panel-wrapper">
   <div class="view-panel-backdrop" (click)="close()"></div>
   <div class="view-panel" [@panelAnimation]="panelState">
     <div class="row-action">
@@ -15,15 +226,7 @@
     </div>
     <div class="view-panel-content" id="content">
       <form [formGroup]="formGroup" class="py-1">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>{{ "stock-report__date" | translate }}</mat-label>
-          <input formControlName="date" matInput [matDatepicker]="picker" />
-          <mat-datepicker-toggle
-            matSuffix
-            [for]="picker"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+        
 
         <mat-slide-toggle
           color="primary"
@@ -38,153 +241,7 @@
           }}
         </mat-slide-toggle>
       </form>
-      <mat-spinner id="spinner" *ngIf="isLoading" />
-      <div *ngIf="!isLoading">
-        <mat-divider class="mb-3" />
-        <div class="table-responsive">
-          <table class="table">
-            <tbody>
-              <tr>
-                <td style="width: 100px">
-                  {{ "stock-report__initial-stock" | translate }}
-                </td>
-                <td style="width: 150px">
-                  {{
-                    (!formGroup.get("view_by")?.value
-                      ? dataSource.document.initialStock
-                      : dataSource.input.initialStock
-                    ) | number : "1.0-2"
-                  }}
-                </td>
-                <td style="width: 100px">
-                  {{ "stock-report__final-stock" | translate }}
-                </td>
-                <td style="width: 150px">
-                  {{
-                    (!formGroup.get("view_by")?.value
-                      ? dataSource.document.initialStock +
-                        dataSource.document.totalInput -
-                        dataSource.document.totalOutput
-                      : dataSource.input.initialStock +
-                        dataSource.input.totalInput -
-                        dataSource.document.totalOutput
-                    ) | number : "1.0-2"
-                  }}
-                </td>
-              </tr>
-              <tr>
-                <td style="width: 100px">
-                  {{ "stock-report__output-mutation" | translate }}
-                </td>
-                <td style="width: 150px">
-                  {{
-                    (!formGroup.get("view_by")?.value
-                      ? dataSource.document.totalOutput
-                      : dataSource.input.totalOutput
-                    ) | number : "1.0-2"
-                  }}
-                </td>
-                <td style="width: 100px">
-                  {{ "stock-report__input-mutation" | translate }}
-                </td>
-                <td style="width: 150px">
-                  {{
-                    (!formGroup.get("view_by")?.value
-                      ? dataSource.document.totalInput
-                      : dataSource.input.totalInput
-                    ) | number : "1.0-2"
-                  }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th style="width: 100px">
-                  {{ "stock-report__table__date" | translate }}
-                </th>
-                <th style="width: 150px">
-                  {{ "stock-report__table__created-at" | translate }}
-                </th>
-                <th style="width: 150px">
-                  {{ "stock-report__table__document" | translate }}
-                </th>
-                <th style="width: 200px">
-                  {{ "stock-report__table__opponent" | translate }}
-                </th>
-                <th style="width: 100px">
-                  {{ "stock-report__table__quantity" | translate }}
-                </th>
-                <th style="width: 100px">
-                  {{ "stock-report__table__stock" | translate }}
-                </th>
-              </tr>
-            </thead>
-            <tbody
-              *ngIf="
-                !formGroup.get('view_by')?.value &&
-                dataSource.document.mutation.length > 0
-              "
-            >
-              <tr *ngFor="let data of dataSource.document.mutation">
-                <td>{{ data.date | date : "dd/MM/YYYY" }}</td>
-                <td>
-                  {{ data.createdAt | date : "dd/MM/YYYY HH:mm" }}
-                </td>
-                <td>{{ data.name }}</td>
-                <td>
-                  <span class="text-clamp-1">
-                    {{ data.opponent }}
-                  </span>
-                </td>
-                <td>
-                  {{ data.displayQuantity | number : "1.0-2" }} {{ data.unit }}
-                </td>
-                <td>
-                  {{ data.stock | number : "1.0-2" }} {{ data.defaultUnit }}
-                </td>
-              </tr>
-            </tbody>
-            <tbody
-              *ngIf="
-                formGroup.get('view_by')?.value &&
-                dataSource.input.mutation.length > 0
-              "
-            >
-              <tr *ngFor="let data of dataSource.input.mutation">
-                <td>{{ data.date | date : "dd/MM/YYYY" }}</td>
-                <td>
-                  {{ data.createdAt | date : "dd/MM/YYYY HH:mm" }}
-                </td>
-                <td>{{ data.name }}</td>
-                <td>{{ data.opponent }}</td>
-                <td>
-                  {{ data.displayQuantity | number : "1.0-2" }} {{ data.unit }}
-                </td>
-                <td>
-                  {{ data.stock | number : "1.0-2" }} {{ data.defaultUnit }}
-                </td>
-              </tr>
-            </tbody>
-            <tbody
-              *ngIf="
-                (index == 0 && dataSource.document.mutation.length == 0) ||
-                (index == 1 && dataSource.input.mutation.length == 0)
-              "
-            >
-              <tr>
-                <td colspan="6">
-                  <empty-table />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      
     </div>
     <div class="shortcuts">
       <div class="shortcut-key">
@@ -208,4 +265,4 @@
     </div>
     <div class="actions"></div>
   </div>
-</div>
+</div> -->

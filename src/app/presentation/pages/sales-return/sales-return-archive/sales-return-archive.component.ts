@@ -22,7 +22,6 @@ export class SalesReturnArchiveComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dynamicComponentService: DynamicComponentService,
     private dialog: MatDialog
   ) {}
 
@@ -39,8 +38,6 @@ export class SalesReturnArchiveComponent {
     endDate: new FormControl(''),
     isActive: new FormControl(''),
     isDelete: new FormControl(''),
-    isPending: new FormControl(''),
-    dateType: new FormControl('sales-invoice', Validators.required),
   });
 
   sortBy: string = 'date';
@@ -55,22 +52,15 @@ export class SalesReturnArchiveComponent {
     this.keyword = '';
 
     this.filterFormGroup.patchValue({
-      dateType: new FormControl('sales-invoice', Validators.required),
       startDate: new Date(this.year!, this.month! - 1, 1),
       endDate: new Date(this.year!, this.month!, 0),
       isActive: true,
       isDelete: true,
-      isPending: true,
     });
 
     this.fetchSelectedMonth(1);
   }
 
-  /**
-   * Fetches the selected month's sales invoice archives from the API.
-   * @param {number} [page=this.page] - The page number of the results to fetch. Defaults to the current page.
-   * @return {void} This function does not return anything.
-   */
   fetchSelectedMonth(page: number = this.page) {
     this.page = page;
     this.isLoading = true;
@@ -90,7 +80,6 @@ export class SalesReturnArchiveComponent {
         ).format('YYYY-MM-DD'),
         isActive: this.filterFormGroup.get('isActive')?.value,
         isDelete: this.filterFormGroup.get('isDelete')?.value,
-        isPending: this.filterFormGroup.get('isPending')?.value,
         sortBy: this.sortBy,
         sortDirection: this.sortDirection,
         type: this.filterFormGroup.get('dateType')?.value,
@@ -125,26 +114,60 @@ export class SalesReturnArchiveComponent {
     this.fetchSelectedMonth(1);
   }
 
-  /**
-   * Opens the filter component and subscribes to its data changes.
-   * @return {void} This function does not return anything.
-   */
   openFilter() {
-    const filterComponent = this.dynamicComponentService.createDynamicComponent(
-      SalesReturnArchiveFilterComponent,
-      {
-        month: this.month,
-        year: this.year,
-        startDate: this.filterFormGroup.get('startDate')?.value,
-        endDate: this.filterFormGroup.get('endDate')?.value,
-        dateType: this.filterFormGroup.get('dateType')?.value,
-      }
-    );
+    this.dialog
+      .open(SalesReturnArchiveFilterComponent, {
+        data: {
+          month: this.month,
+          year: this.year,
+          startDate: this.filterFormGroup.get('startDate')?.value,
+          endDate: this.filterFormGroup.get('endDate')?.value,
+          isActive: this.filterFormGroup.get('isActive')?.value,
+          isDelete: this.filterFormGroup.get('isDelete')?.value,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        const changes = this.checkChanges(data);
+        if (changes) {
+          this.filterFormGroup.patchValue(data);
+          this.fetchSelectedMonth(1);
+        }
+      });
+  }
 
-    filterComponent.subscribe((data) => {
-      this.filterFormGroup.patchValue(data);
-      this.fetchSelectedMonth(1);
-    });
+  private checkChanges(data: any) {
+    const isActive = data.isActive;
+    const isDelete = data.isDelete;
+
+    const maxDate = data.endDate;
+    const minDate = data.startDate;
+
+    const existingIsActive = this.filterFormGroup.value.isActive;
+    const existingIsDelete = this.filterFormGroup.value.isDelete;
+
+    const existingMinDate = this.filterFormGroup.value.startDate;
+    const existingMaxDate = this.filterFormGroup.value.endDate;
+
+    let response = false;
+
+    if (isActive != existingIsActive) {
+      response = true;
+    }
+
+    if (isDelete != existingIsDelete) {
+      response = true;
+    }
+
+    if (existingMinDate.getTime() != minDate.getTime()) {
+      response = true;
+    }
+
+    if (existingMaxDate.getTime() != maxDate.getTime()) {
+      response = true;
+    }
+
+    return response;
   }
 
   viewArchive(id: number) {

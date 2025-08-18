@@ -1,11 +1,20 @@
 import { DatePipe } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { Component, Inject, Input } from '@angular/core';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { panelAnimation } from 'src/app/animations/panel.animation';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
   selector: 'app-stock-list-report',
@@ -15,60 +24,82 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 })
 export class StockListReportComponent {
   constructor(
-    private dynamicComponentService: DynamicComponentService,
-    private _hotKeysService: HotkeysService,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private apiService: ApiService,
     private alertService: AlertService,
-    private datePipe: DatePipe
-  ) {
-    this._hotKeysService.add([
-      new Hotkey('esc', (event: KeyboardEvent): boolean => {
-        this.close();
-        return false; // Prevent bubbling
-      }),
-      new Hotkey('f', (event: KeyboardEvent): boolean => {
-        this.enlarge();
-        return false;
-      }),
-    ]);
-  }
+    private datePipe: DatePipe,
+    private dialog: MatDialogRef<StockListReportComponent>,
+    private formBuilder: FormBuilder
+  ) {}
 
-  @Input('data') data: any;
-  panelState: string = 'closed';
-  isLoading: boolean = true;
-  dataSource: any = null;
-  index: number = 1;
-  formGroup: FormGroup = new FormGroup({
-    date: new FormControl(
-      this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
-      Validators.required
-    ),
-    view_by: new FormControl(true, Validators.required),
+  stockFormGroup: FormGroup = new FormGroup({
+    date: new FormControl(new Date(), Validators.required),
+    viewBy: new FormControl('date', [
+      Validators.required,
+      Validators.pattern('date|created'),
+    ]),
+    previousStock: new FormControl(0, Validators.required),
+    mutation: new FormArray([]),
   });
 
-  ngOnInit(): void {
-    this.panelState = 'opened';
-    this.fetchByID();
+  get f() {
+    return this.stockFormGroup.controls;
+  }
 
-    this.formGroup.controls['date'].valueChanges.subscribe(() => {
+  get t() {
+    return this.f['mutation'] as FormArray;
+  }
+
+  isLoading: boolean = true;
+  dataSource: any = null;
+
+  ngOnInit(): void {
+    this.fetchByID();
+    this.stockFormGroup.controls['date'].valueChanges.subscribe(() => {
+      this.fetchByID();
+    });
+
+    this.stockFormGroup.controls['viewBy'].valueChanges.subscribe(() => {
       this.fetchByID();
     });
   }
 
   fetchByID(): void {
     this.isLoading = true;
-    this.formGroup.disable({ emitEvent: false });
-    const date = new Date(this.formGroup.controls['date'].value);
+    this.stockFormGroup.disable({ emitEvent: false });
     this.apiService
-      .post('product-stock', {
-        mode: 'mutation',
-        itemID: this.data.id,
-        date: this.datePipe.transform(date, 'yyyy-MM-dd'),
-        offset: date.getTimezoneOffset(),
+      .post('product-stock/mutation', {
+        date: this.datePipe.transform(
+          this.stockFormGroup.controls['date']?.value,
+          'yyyy-MM-dd'
+        ),
+        viewBy: this.stockFormGroup.controls['viewBy']?.value,
       })
       .subscribe({
-        next: (data) => {
-          this.dataSource = data;
+        next: (data: any) => {
+          this.stockFormGroup.patchValue({
+            previous: data.previous,
+          });
+
+          let stock = data.previous;
+
+          this.t.clear();
+          data.data.forEach((x: any) => {
+            this.t.push(
+              this.formBuilder.group({
+                date: [x.date],
+                created_at: [x.created_at],
+                opponent: [this.getOpponentName(x)],
+                quantity: [x.quantity],
+                document_name: [x.document_name],
+                display_quantity: [x.display_quantity],
+                stock: [stock + x.quantity],
+                unit: [x.unit],
+              })
+            );
+
+            stock += x.quantity;
+          });
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -77,22 +108,27 @@ export class StockListReportComponent {
       })
       .add(() => {
         this.isLoading = false;
-        this.formGroup.enable({ emitEvent: false });
+        this.stockFormGroup.enable({ emitEvent: false });
       });
   }
 
-  close() {
-    this.panelState = 'closed';
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
-    }, 300);
+  private getOpponentName(data: any) {
+    if (data.good_receipt_code_id) {
+      return data.supplier.name;
+    }
+
+    if (data.adjustment_case_code_id) {
+      return 'INTERNAL';
+    }
+
+    if (data.customer != null) {
+      return data.customer.name;
+    }
+
+    return 'RETAIL';
   }
 
-  enlarge() {
-    if (this.panelState == 'opened') {
-      this.panelState = 'enlarged';
-    } else if (this.panelState == 'enlarged') {
-      this.panelState = 'opened';
-    }
+  close() {
+    this.dialog.close();
   }
 }

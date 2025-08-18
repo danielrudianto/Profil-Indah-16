@@ -23,6 +23,12 @@
                 <th style="width: 250px">
                   {{ "sales-return__archive__name" | translate }}
                 </th>
+                <th style="width: 250px">
+                  {{ "sales-return__archive__invoice-name" | translate }}
+                </th>
+                <th style="width: 250px">
+                  {{ "sales-return__archive__customer" | translate }}
+                </th>
                 <th style="width: 150px">
                   {{ "sales-return__archive__created-by" | translate }}
                 </th>
@@ -33,14 +39,14 @@
             </thead>
             <tbody *ngIf="isLoading">
               <tr>
-                <td colspan="3">
+                <td colspan="4">
                   <mat-spinner id="spinner"></mat-spinner>
                 </td>
               </tr>
             </tbody>
             <tbody *ngIf="!isLoading && dataSource.length == 0">
               <tr>
-                <td colspan="3">
+                <td colspan="4">
                   <empty-table />
                 </td>
               </tr>
@@ -52,6 +58,14 @@
               >
                 <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
                 <td>{{ item.name }}</td>
+                <td>{{ item.sales_invoice_code.name }}</td>
+                <td>
+                  {{
+                    item.sales_invoice_code.customer == null
+                      ? "Retail"
+                      : item.sales_invoice_code.customer.name
+                  }}
+                </td>
                 <td>{{ item.user_sales_return_code_created_byTouser.name }}</td>
                 <td>
                   {{

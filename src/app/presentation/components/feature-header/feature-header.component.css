@@ -9,11 +9,3 @@ h1 {
   align-items: center;
   gap: 10px;
 }
-
-.light-mode h1 {
-  color: #041e49;
-}
-
-.dark-mode h1 {
-  color: rgb(211, 227, 253);
-}

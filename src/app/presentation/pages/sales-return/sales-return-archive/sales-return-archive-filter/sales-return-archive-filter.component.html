@@ -1,101 +1,68 @@
-<div class="view-panel-wrapper">
-  <div class="view-panel-backdrop" (click)="close()"></div>
-  <div class="view-panel" [@panelAnimation]="panelState">
-    <div class="row-action">
-      <h2 mat-dialog-title>
-        {{ "sales-return__archive__filter__title" | translate }}
-      </h2>
-      <div class="d-flex">
-        <button mat-icon-button (click)="enlarge()">
-          <mat-icon *ngIf="panelState != 'enlarged'">open_in_full</mat-icon>
-          <mat-icon *ngIf="panelState == 'enlarged'">close_fullscreen</mat-icon>
-        </button>
-        <button mat-icon-button (click)="close()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-    </div>
-    <div class="view-panel-content" id="content">
-      <form [formGroup]="salesInvoiceArchiveFilterFormGroup" class="mt-2">
-        <mat-form-field class="w-100" appearance="outline">
-          <mat-label>{{
-            "sales-return__archive__filter__date-range" | translate
-          }}</mat-label>
-          <mat-date-range-input
-            [rangePicker]="picker"
-            [min]="minDate"
-            [max]="maxDate"
-          >
-            <input
-              matStartDate
-              placeholder="Start date"
-              formControlName="startDate"
-            />
-            <input
-              matEndDate
-              placeholder="End date"
-              formControlName="endDate"
-            />
-          </mat-date-range-input>
-          <mat-hint>MM/DD/YYYY - MM/DD/YYYY</mat-hint>
-          <mat-datepicker-toggle
-            matIconSuffix
-            [for]="picker"
-          ></mat-datepicker-toggle>
-          <mat-date-range-picker
-            #picker
-            [startAt]="minDate"
-          ></mat-date-range-picker>
-        </mat-form-field>
+<h2 mat-dialog-title>
+  {{ "sales-return__archive__filter__title" | translate }}
+</h2>
+<form [formGroup]="salesInvoiceArchiveFilterFormGroup">
+  <mat-dialog-content>
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>{{
+        "sales-return__archive__filter__date-range" | translate
+      }}</mat-label>
+      <mat-date-range-input
+        [rangePicker]="picker"
+        [min]="minDate"
+        [max]="maxDate"
+      >
+        <input
+          matStartDate
+          placeholder="Start date"
+          formControlName="startDate"
+        />
+        <input matEndDate placeholder="End date" formControlName="endDate" />
+      </mat-date-range-input>
+      <mat-hint>MM/DD/YYYY - MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker
+        #picker
+        [startAt]="minDate"
+      ></mat-date-range-picker>
+    </mat-form-field>
 
-        <h5>
-          {{ "sales-return__archive__filter__document-status" | translate }}
-        </h5>
-        <mat-divider />
-        <mat-selection-list [multiple]="false">
-          <mat-list-option
-            [selected]="salesInvoiceArchiveFilterFormGroup.value.status == 0"
-            (selectedChange)="setStatusFilter(0)"
-            [value]="0"
-            >{{
-              "sales-return__archive__filter__document-status__all" | translate
-            }}</mat-list-option
-          >
-          <mat-list-option
-            [selected]="salesInvoiceArchiveFilterFormGroup.value.status == 1"
-            (selectedChange)="setStatusFilter(1)"
-            [value]="1"
-            >{{
-              "sales-return__archive__filter__document-status__deleted"
-                | translate
-            }}</mat-list-option
-          >
-          <mat-list-option
-            [selected]="salesInvoiceArchiveFilterFormGroup.value.status == 2"
-            (selectedChange)="setStatusFilter(2)"
-            [value]="2"
-            >{{
-              "sales-return__archive__filter__document-status__active"
-                | translate
-            }}</mat-list-option
-          >
-        </mat-selection-list>
-      </form>
-    </div>
-    <div class="shortcuts">
-      <div class="shortcut-key">
-        <span class="shortcut-key-label">ESC</span>
-        <span class="shortcut-key-function">{{
-          "general__back" | translate
-        }}</span>
-      </div>
-      <div class="shortcut-key">
-        <span class="shortcut-key-label">F</span>
-        <span class="shortcut-key-function">{{ "general__toggle-full-screen" | translate }}</span>
-      </div>
-    </div>
-    <div class="actions">
-      <button class="action-button mx-1" (click)="saveFilters()">Apply</button>
-    </div>
-  </div>
-</div>
+    <h5>
+      {{ "sales-return__archive__filter__document-status" | translate }}
+    </h5>
+    <mat-divider />
+    <mat-chip-listbox class="mb-3" selectable multiple>
+      <mat-chip-option
+        [value]="'isDelete'"
+        [selected]="filterObject.isDelete"
+        (selectionChange)="selectionChange($event)"
+        >{{
+          "deposit__archive__filter__document-status__deleted" | translate
+        }}</mat-chip-option
+      >
+      <mat-chip-option
+        [value]="'isActive'"
+        [selected]="filterObject.isActive"
+        (selectionChange)="selectionChange($event)"
+        >{{
+          "deposit__archive__filter__document-status__active" | translate
+        }}</mat-chip-option
+      >
+    </mat-chip-listbox>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      type="submit"
+      mat-stroked-button
+      color="primary"
+      style="letter-spacing: 0"
+      (click)="saveFilters()"
+    >
+      {{ "general__save-filter" | translate }}
+    </button>
+  </mat-dialog-actions>
+</form>

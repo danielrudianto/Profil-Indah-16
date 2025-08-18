@@ -80,8 +80,7 @@ export class ReportProblematicComponent {
   download() {
     this.isDownloading = true;
     this.apiService
-      .post('product-stock', {
-        mode: 'problematic',
+      .post('product-stock/problematic/download', {
         brand: this.selectedBrands.map((x) => x.id),
         type: this.selectedTypes.map((x) => x.id),
       })
@@ -90,18 +89,27 @@ export class ReportProblematicComponent {
           // Create excel file
           const worksheet: xlsx.WorkSheet = xlsx.utils.aoa_to_sheet([]);
           const worksheetData = [
-            ['Reference', 'Description', 'Stock', 'Minimum stock', 'Unit'],
+            [
+              'No',
+              'Reference',
+              'Description',
+              'Stock',
+              'Minimum stock',
+              'Unit',
+            ],
           ];
 
-          (data as any[]).forEach((x) => {
+          for (let i = 0; i < data.length; i++) {
+            const x = data[i];
             worksheetData.push([
+              i + 1,
               x.reference,
               x.description,
               x.stock,
               x.minimum_stock,
               x.unit,
             ]);
-          });
+          }
 
           xlsx.utils.sheet_add_aoa(worksheet, worksheetData);
 

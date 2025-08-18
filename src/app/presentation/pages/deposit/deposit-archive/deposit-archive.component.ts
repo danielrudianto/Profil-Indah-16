@@ -35,7 +35,7 @@ export class DepositArchiveComponent {
   filterFormGroup: FormGroup = new FormGroup({
     startDate: new FormControl(''),
     endDate: new FormControl(''),
-    isActive: new FormControl(''),
+    isPending: new FormControl(''),
     isDelete: new FormControl(''),
   });
 
@@ -56,7 +56,7 @@ export class DepositArchiveComponent {
       // Fetch all payment status and document status
       startDate: new Date(this.year!, this.month! - 1, 1),
       endDate: new Date(this.year!, this.month!, 0),
-      isActive: true,
+      isPending: true,
       isDelete: true,
     });
 
@@ -81,7 +81,7 @@ export class DepositArchiveComponent {
         endDate: moment(
           new Date(this.filterFormGroup.get('endDate')?.value)
         ).format('YYYY-MM-DD'),
-        isActive: this.filterFormGroup.get('isActive')?.value,
+        isPending: this.filterFormGroup.get('isPending')?.value,
         isDelete: this.filterFormGroup.get('isDelete')?.value,
         sortBy: this.sortBy,
         sortDirection: this.sortDirection,
@@ -144,7 +144,7 @@ export class DepositArchiveComponent {
   private checkChanges(data: any) {
     const isPaid = data.isPaid;
     const isUnpaid = data.isUnpaid;
-    const isActive = data.isActive;
+    const isPending = data.isPending;
     const isDelete = data.isDelete;
 
     const maxDate = data.endDate;
@@ -152,7 +152,7 @@ export class DepositArchiveComponent {
 
     const existingIsPaid = this.filterFormGroup.value.isPaid;
     const existingIsUnpaid = this.filterFormGroup.value.isUnpaid;
-    const existingIsActive = this.filterFormGroup.value.isActive;
+    const existingIsPending = this.filterFormGroup.value.isPending;
     const existingIsDelete = this.filterFormGroup.value.isDelete;
 
     const existingMinDate = this.filterFormGroup.value.startDate;
@@ -168,7 +168,7 @@ export class DepositArchiveComponent {
       response = true;
     }
 
-    if (isActive != existingIsActive) {
+    if (isPending != existingIsPending) {
       response = true;
     }
 
