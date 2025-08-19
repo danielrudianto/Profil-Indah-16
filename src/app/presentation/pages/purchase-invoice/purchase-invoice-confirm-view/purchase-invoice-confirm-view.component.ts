@@ -183,7 +183,7 @@ export class PurchaseInvoiceConfirmViewComponent {
   }
 
   openEditDiscount(i: number) {
-    const sheet = this.sheet
+    this.dialog
       .open(UpdateProductPurchasePriceComponent, {
         data: {
           discount: this.t.controls[i].get('discount')?.value,
@@ -193,9 +193,9 @@ export class PurchaseInvoiceConfirmViewComponent {
           save_price: this.t.controls[i].get('save_price')?.value,
         },
       })
-      .afterDismissed()
+      .afterClosed()
       .subscribe((data: any) => {
-        if (data) {
+        if (data != undefined) {
           this.t.controls[i].get('discount')?.setValue(data.discount);
           this.t.controls[i]
             .get('discountPercentage')!

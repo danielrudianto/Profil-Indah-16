@@ -48,6 +48,7 @@ export class PurchaseInvoiceViewComponent {
 
   isAdministrator: boolean = false;
   isLoading: boolean = false;
+  isSubmitting: boolean = false;
   dataSource: any;
 
   step = signal(0);
@@ -265,5 +266,35 @@ export class PurchaseInvoiceViewComponent {
     }
 
     return true;
+  }
+
+  delete() {
+    this.dialog
+      .open(DeleteConfirmationComponent, {
+        data: {
+          title: this.translateService.instant(
+            'purchase-invoice__delete__message'
+          ),
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data == true) {
+          this.isSubmitting = true;
+          this.apiService
+            .delete(`good-receipt/${this.data.id}`)
+            .subscribe({
+              next: () => {
+                this.dialogRef.close('deleted');
+              },
+              error: (error) => {
+                this.alertService.showError(error);
+              },
+            })
+            .add(() => {
+              this.isSubmitting = false;
+            });
+        }
+      });
   }
 }

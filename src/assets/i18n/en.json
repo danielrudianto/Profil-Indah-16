@@ -1214,5 +1214,9 @@
   "deposit__archive__filter__document-status": "Document status",
   "deposit__archive__filter__document-status__deleted": "Deleted / Confirmed",
   "deposit__archive__filter__document-status__active": "Waiting for confirmation",
-  "general__save-filter": "Apply"
+  "general__save-filter": "Apply",
+  "purchase-invoice__delete__message": "Are you sure to delete this purchase invoice data?",
+  "purchase-invoice__edit__general-data": "General data",
+  "purchase-invoice__edit__purchase-data": "Purchase data",
+  "purchase-invoice__update__success__message": "Purchase invoice successfully updated"
 }

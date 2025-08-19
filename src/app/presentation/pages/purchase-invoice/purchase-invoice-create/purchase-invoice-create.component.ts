@@ -377,25 +377,26 @@ export class PurchaseInvoiceCreateComponent {
   }
 
   openEditData(i: number) {
-    const sheet = this.sheet.open(UpdateProductPurchasePriceComponent, {
-      data: {
-        price: this.t.at(i).get('price')?.value,
-        discount: this.t.at(i).get('discount')?.value,
-        initial_price: this.t.at(i).get('initial_price')?.value,
-        initial_discount: this.t.at(i).get('initial_discount')?.value,
-        save_price: this.t.at(i).get('save_price')?.value,
-      },
-    });
-
-    sheet.afterDismissed().subscribe((data) => {
-      if (data != undefined) {
-        this.t.at(i).patchValue({
-          price: data.price,
-          discount: data.discount,
-          save_price: data.save_price,
-        });
-      }
-    });
+    this.dialog
+      .open(UpdateProductPurchasePriceComponent, {
+        data: {
+          price: this.t.at(i).get('price')?.value,
+          discount: this.t.at(i).get('discount')?.value,
+          initial_price: this.t.at(i).get('initial_price')?.value,
+          initial_discount: this.t.at(i).get('initial_discount')?.value,
+          save_price: this.t.at(i).get('save_price')?.value,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data != undefined) {
+          this.t.at(i).patchValue({
+            price: data.price,
+            discount: data.discount,
+            save_price: data.save_price,
+          });
+        }
+      });
   }
 
   canExit() {

@@ -246,19 +246,24 @@
                 color="primary"
                 style="letter-spacing: 0"
                 [matMenuTriggerFor]="menu"
+                [disabled]="isSubmitting"
               >
                 {{ "sales-deposit__archive__other-actions" | translate }}
                 <mat-icon>menu</mat-icon>
               </button>
               <mat-menu #menu="matMenu">
-                <button mat-menu-item [disabled]="!canDelete">
+                <button
+                  mat-menu-item
+                  [disabled]="!canDelete || isSubmitting"
+                  (click)="delete()"
+                >
                   <mat-icon>delete</mat-icon>
                   <span>{{ "good-receipt__archive__delete" | translate }}</span>
                 </button>
                 <button
                   mat-menu-item
                   (click)="updatePurchaseInvoice()"
-                  [disabled]="!canEdit"
+                  [disabled]="!canEdit || isSubmitting"
                 >
                   <mat-icon>edit</mat-icon>
                   <span>{{ "good-receipt__archive__edit" | translate }}</span>

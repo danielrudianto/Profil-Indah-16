@@ -290,110 +290,97 @@ export class PurchaseInvoiceEditComponent {
   }
 
   submitForm() {
-    this.isSubmitting = true;
     if (
       !this.metaFormGroup.valid ||
       !this.documentFormGroup.valid ||
       !this.itemFormGroup.valid ||
       !this.valueFormGroup.valid
     ) {
-      this.alertService.showSuccess(
-        'Please check your input. Some of the input is invalid.'
-      );
-      this.isSubmitting = false;
       return;
-    } else if (
+    }
+
+    if (
       this.valueFormGroup.get('discount')?.value >
       this.valueFormGroup.get('total')?.value
     ) {
-      this.alertService.showSuccess('Discount cannot be greater than total.');
-      this.isSubmitting = false;
       return;
-    } else {
-      const supplierId = this.metaFormGroup.controls['supplier_id'].value;
-      const companyId = this.metaFormGroup.controls['company_id'].value;
-      const date = this.documentFormGroup.controls['date'].value as Date;
-      const name = this.documentFormGroup.controls['name'].value;
-      const invoice_name =
-        this.documentFormGroup.controls['invoice_name'].value;
-      const discount = parseFloat(
-        this.valueFormGroup.controls['discount'].value
-      );
-      const faktur =
-        this.documentFormGroup.controls['faktur'].value == ''
-          ? null
-          : this.documentFormGroup.controls['faktur'].value;
-
-      const items: any[] = [];
-      this.t.controls.forEach((x) => {
-        const item_id = parseInt(x.get('item_id')?.value);
-        const quantity = parseInt(x.get('quantity')?.value);
-        const price = parseFloat(x.get('price')?.value);
-        let discount = 0;
-        const initial_price = parseFloat(x.get('initial_price')?.value);
-        const save_price =
-          price == initial_price ? false : x.get('save_price')?.value;
-        const item_unit_id = parseInt(x.get('item_unit_id')?.value);
-        const discountType = x.get('discountType')?.value;
-        if (discountType == 'percentage') {
-          discount = parseFloat(
-            parseFloat(((price * discount) / 100).toString()).toFixed(2)
-          );
-        } else {
-          discount = parseFloat(
-            parseFloat(x.get('discount')?.value).toFixed(2)
-          );
-        }
-
-        items.push({
-          item_id: item_id,
-          quantity: quantity,
-          price: price,
-          discount: discount,
-          save: save_price,
-          item_unit_id: item_unit_id == 0 ? null : item_unit_id,
-        });
-      });
-
-      const goodReceipt = {
-        id: Number(this.route.snapshot.paramMap.get('id')),
-        uuid: this.metaFormGroup.controls['uuid'].value,
-        name: name,
-        date: this.datePipe.transform(date, 'yyyy-MM-dd'),
-        good_receipt: items,
-        company_id: companyId,
-        supplier_id: supplierId,
-        purchase_invoice: {
-          name: invoice_name,
-          date: this.datePipe.transform(date, 'yyyy-MM-dd'),
-          discount: discount,
-          is_confirm: true,
-          confirmed_at: new Date(),
-          faktur: faktur,
-        },
-      };
-
-      this.apiService
-        .put('purchase-invoice', goodReceipt)
-        .subscribe({
-          next: () => {
-            this.alertService.showSuccess(
-              'Purchase invoice successfully updated.'
-            );
-            this.t.clear();
-            this.documentFormGroup.reset();
-            this.itemFormGroup.reset();
-
-            this.location.back();
-          },
-          error: (error) => {
-            this.alertService.showError(new Error(error));
-          },
-        })
-        .add(() => {
-          this.isSubmitting = false;
-        });
     }
+
+    this.isSubmitting = true;
+
+    const supplierId = this.metaFormGroup.controls['supplier_id'].value;
+    const companyId = this.metaFormGroup.controls['company_id'].value;
+    const date = this.documentFormGroup.controls['date'].value as Date;
+    const name = this.documentFormGroup.controls['name'].value;
+    const invoice_name = this.documentFormGroup.controls['invoice_name'].value;
+    const discount = parseFloat(this.valueFormGroup.controls['discount'].value);
+    const faktur =
+      this.documentFormGroup.controls['faktur'].value == ''
+        ? null
+        : this.documentFormGroup.controls['faktur'].value;
+
+    const items: any[] = [];
+    this.t.controls.forEach((x) => {
+      const product_id = parseInt(x.get('product_id')?.value);
+      const quantity = parseInt(x.get('quantity')?.value);
+      const price = parseFloat(x.get('price')?.value);
+      let discount = 0;
+      const initial_price = parseFloat(x.get('initial_price')?.value);
+      const save_price =
+        price == initial_price ? false : x.get('save_price')?.value;
+      const item_unit_id = parseInt(x.get('item_unit_id')?.value);
+      const discountType = x.get('discountType')?.value;
+      if (discountType == 'percentage') {
+        discount = parseFloat(
+          parseFloat(((price * discount) / 100).toString()).toFixed(2)
+        );
+      } else {
+        discount = parseFloat(parseFloat(x.get('discount')?.value).toFixed(2));
+      }
+
+      items.push({
+        product_id: product_id,
+        quantity: quantity,
+        price: price,
+        discount: discount,
+        save: save_price,
+        item_unit_id: item_unit_id == 0 ? null : item_unit_id,
+      });
+    });
+
+    const goodReceipt = {
+      id: Number(this.route.snapshot.paramMap.get('id')),
+      uuid: this.metaFormGroup.controls['uuid'].value,
+      name: name,
+      date: this.datePipe.transform(date, 'yyyy-MM-dd'),
+      good_receipt: items,
+      company_id: companyId,
+      supplier_id: supplierId,
+      invoice_name: invoice_name,
+      discount: discount,
+      is_confirm: true,
+      confirmed_at: new Date(),
+      faktur: faktur,
+    };
+
+    this.apiService
+      .put('good-receipt', goodReceipt)
+      .subscribe({
+        next: () => {
+          this.alertService.showSuccess(
+            this.translateService.instant(
+              'purchase-invoice__update__success__message'
+            )
+          );
+          this.location.back();
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isSubmitting = false;
+      });
   }
 
   openEditData(i: number) {

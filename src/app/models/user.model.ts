@@ -55,4 +55,9 @@ export const availableRoles: any[] = [
     name: 'Gudang',
     available: true,
   },
+  {
+    id: 7,
+    name: 'Superadministrator',
+    available: true,
+  },
 ];

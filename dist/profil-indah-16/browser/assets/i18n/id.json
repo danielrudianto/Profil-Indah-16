@@ -1219,5 +1219,9 @@
   "deposit__archive__filter__document-status": "Status dokumen",
   "deposit__archive__filter__document-status__deleted": "Dihapus / Dikonfirmasi",
   "deposit__archive__filter__document-status__active": "Menunggu konfirmasi",
-  "general__save-filter": "Filter"
+  "general__save-filter": "Filter",
+  "purchase-invoice__delete__message": "Apakah anda yakin untuk menghapus data pembelian ini?",
+  "purchase-invoice__edit__general-data": "Data umum",
+  "purchase-invoice__edit__purchase-data": "Data pembelian",
+  "purchase-invoice__update__success__message": "Data pembelian berhasil diperbaharui"
 }

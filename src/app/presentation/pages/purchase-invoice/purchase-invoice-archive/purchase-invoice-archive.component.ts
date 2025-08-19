@@ -4,10 +4,8 @@ import { PageEvent } from '@angular/material/paginator';
 import moment from 'moment';
 import { ArchiveMode } from 'src/app/presentation/components/archives/archives.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { ArchiveViewComponent } from 'src/app/presentation/components/archives/archive-view/archive-view.component';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { MatDialog } from '@angular/material/dialog';
 import { PurchaseInvoiceViewComponent } from './purchase-invoice-view/purchase-invoice-view.component';
@@ -22,7 +20,6 @@ export class PurchaseInvoiceArchiveComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dynamicComponentService: DynamicComponentService,
     private dialog: MatDialog
   ) {}
 
@@ -205,10 +202,21 @@ export class PurchaseInvoiceArchiveComponent {
   }
 
   viewArchive(id: number) {
-    this.dialog.open(PurchaseInvoiceViewComponent, {
-      data: {
-        id: id,
-      },
-    });
+    this.dialog
+      .open(PurchaseInvoiceViewComponent, {
+        data: {
+          id: id,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data === 'deleted') {
+          const index = this.dataSource.findIndex((x) => x.id == id);
+          if (index != -1) {
+            this.dataSource[index].is_delete = true;
+            return;
+          }
+        }
+      });
   }
 }
