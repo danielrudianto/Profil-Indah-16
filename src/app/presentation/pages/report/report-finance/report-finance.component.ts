@@ -33,17 +33,9 @@ export class ReportFinanceComponent {
     private apiService: ApiService,
     private dynamicComponentService: DynamicComponentService,
     private alertService: AlertService,
-    private _hotKeysService: HotkeysService,
     private datePipe: DatePipe,
     private decimalPipe: DecimalPipe
-  ) {
-    this._hotKeysService.add([
-      new Hotkey('esc', (): boolean => {
-        this.closeDialog();
-        return false;
-      }),
-    ]);
-  }
+  ) {}
 
   isOpened: boolean = false;
   isLoading: boolean = true;
@@ -70,9 +62,11 @@ export class ReportFinanceComponent {
   downloadReport() {
     this.isDownloading = true;
     this.apiService
-      .get(
-        `report/profitloss/${this.financeReportFormGroup.value.month}/${this.financeReportFormGroup.value.year}/${this.financeReportFormGroup.value.type}`
-      )
+      .post(`report/profit-loss`, {
+        month: this.financeReportFormGroup.controls['month']?.value,
+        year: this.financeReportFormGroup.controls['year']?.value,
+        report: this.financeReportFormGroup.controls['report']?.value,
+      })
       .subscribe({
         next: (data: any) => {
           const salesValue = data.bills.value;

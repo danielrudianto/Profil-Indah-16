@@ -8,6 +8,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-administrator-dashboard',
@@ -21,7 +22,8 @@ export class AdministratorDashboardComponent {
     private apiService: ApiService,
     private alertService: AlertService,
     private translateService: TranslateService,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog
   ) {}
 
   stats: StatCard[] = [
@@ -74,19 +76,16 @@ export class AdministratorDashboardComponent {
   openReport(type: string) {
     switch (type) {
       case 'finance':
-        if (this.authService.isSuperAdministrator()) {
-          this.dynamicComponentService.createDynamicComponent(
-            ReportFinanceComponent,
-            {}
-          );
-        } else {
+        if (!this.authService.isSuperAdministrator()) {
           this.alertService.showSuccess(
             this.translateService.instant(
               'general__superadministrator-required'
             )
           );
+          return;
         }
-
+        
+        this.dialog.open(ReportFinanceComponent, {});
         break;
       case 'sales':
         this.router.navigate(['/Administrator/Report/Sales']);
