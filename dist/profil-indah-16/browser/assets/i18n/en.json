@@ -530,7 +530,7 @@
   "adjustment-case__confirm__success": "Adjustment case data confirmed successfully.",
   "adjustment-case__create__success": "Adjustment case data created successfully.",
   "adjustment-case__delete__success": "Adjustment case data deleted successfully.",
-  "general__archive__back-to-previous": "Kembali",
+  "general__archive__back-to-previous": "Previous",
   "deposit__view__title": "View deposit data",
   "deposit__view__delete-button": "Delete",
   "deposit__view__confirm-button": "Confirm",

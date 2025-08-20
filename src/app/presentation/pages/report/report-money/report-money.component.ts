@@ -57,7 +57,13 @@ export class ReportMoneyComponent {
       this.dataSource.length == 0
         ? 0
         : this.dataSource.reduce((a, b) => {
-            return a + b.salesInvoice + b.salesDeposit - b.salesReturn;
+            return (
+              a +
+              b.salesInvoice +
+              b.salesDeposit -
+              b.salesReturn +
+              b.overpayment
+            );
           }, 0);
 
     const dorPayments =

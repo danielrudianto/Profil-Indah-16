@@ -78,7 +78,7 @@ export class ReceivablePaymentCreateComponent {
       })
       .subscribe({
         next: (data: any) => {
-          this.closeDialog(data.value);
+          this.closeDialog(data);
         },
         error: (error) => {
           this.alertService.showError(error);

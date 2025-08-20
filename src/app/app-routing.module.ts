@@ -84,6 +84,7 @@ import { ReceivableViewComponent } from './presentation/pages/receivable/receiva
 import { StockComponent } from './presentation/pages/stock/stock.component';
 import { StockListComponent } from './presentation/pages/stock/stock-list/stock-list.component';
 import { StockCardComponent } from './presentation/pages/stock/stock-card/stock-card.component';
+import { OverpaymentReturnListComponent } from './presentation/pages/overpayment/overpayment-return-list/overpayment-return-list.component';
 
 const routes: Routes = [
   {
@@ -126,6 +127,10 @@ const routes: Routes = [
               {
                 path: '',
                 component: OverpaymentCreateComponent,
+              },
+              {
+                path: 'Return',
+                component: OverpaymentReturnListComponent,
               },
               {
                 path: 'Archive',
@@ -573,6 +578,10 @@ const routes: Routes = [
                 component: OverpaymentCreateComponent,
               },
               {
+                path: 'Return',
+                component: OverpaymentReturnListComponent,
+              },
+              {
                 path: 'Archive',
                 component: OverpaymentArchiveComponent,
               },
@@ -712,6 +721,14 @@ const routes: Routes = [
               {
                 path: '',
                 component: OverpaymentCreateComponent,
+              },
+              {
+                path: 'Return',
+                component: OverpaymentReturnListComponent,
+              },
+              {
+                path: 'Archive',
+                component: OverpaymentArchiveComponent,
               },
             ],
           },

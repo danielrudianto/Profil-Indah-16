@@ -71,7 +71,7 @@ export class PurchaseInvoiceCreateComponent {
     date: new FormControl('', Validators.required),
     name: new FormControl('', Validators.required),
     invoice_name: new FormControl('', Validators.required),
-    faktur: new FormControl('', Validators.pattern(/(^$|(^([0-9]{16})$))/g)),
+    faktur: new FormControl('', Validators.pattern(/^(?:\d{10,17})?$/gm)),
   });
 
   itemFormGroup: FormGroup = new FormGroup({
@@ -87,20 +87,12 @@ export class PurchaseInvoiceCreateComponent {
     discount: new FormControl(0, [Validators.required, Validators.min(0)]),
   });
 
-  /**
-   * Updates the supplier_id field in the metaFormGroup with the id of the selected supplier.
-   * @param {any} data - The data object containing the id of the selected supplier.
-   */
   onSelectSupplier(data: any) {
     this.metaFormGroup.patchValue({
       supplier_id: data.id,
     });
   }
 
-  /**
-   * Updates the supplier_id field in the metaFormGroup with the id of the selected supplier.
-   * @param {any} data - The data object containing the id of the selected supplier.
-   */
   onUnselectSupplier() {
     this.metaFormGroup.patchValue({
       supplier_id: '',
@@ -299,6 +291,7 @@ export class PurchaseInvoiceCreateComponent {
       invoice_name: invoice_name,
       faktur: faktur,
       is_confirm: true,
+      discount: discount,
     };
 
     this.apiService
@@ -356,16 +349,18 @@ export class PurchaseInvoiceCreateComponent {
         })
       )
       .subscribe({
-        next: () => {
-          this.metaFormGroup.patchValue({
-            uuid: v4(),
-          });
-          this.alertService.showSuccess(
-            this.translateService.instant('good-receipt__create__success')
-          );
-          this.t.clear();
-          this.documentFormGroup.reset();
-          this.itemFormGroup.reset();
+        next: (data) => {
+          if (data != null) {
+            this.metaFormGroup.patchValue({
+              uuid: v4(),
+            });
+            this.alertService.showSuccess(
+              this.translateService.instant('good-receipt__create__success')
+            );
+            this.t.clear();
+            this.documentFormGroup.reset();
+            this.itemFormGroup.reset();
+          }
         },
         error: (error) => {
           this.alertService.showError(new Error(error));

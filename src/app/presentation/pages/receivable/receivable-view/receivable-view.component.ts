@@ -28,8 +28,8 @@ export class ReceivableViewComponent {
     private dialog: MatDialog
   ) {}
 
-  isLoadingData: boolean = true;
-  isLoadingCard: boolean = true;
+  isLoadingData: boolean = false;
+  isLoadingCard: boolean = false;
 
   customerDataSource: any = null;
   dataSource: any[] = [];
@@ -39,15 +39,7 @@ export class ReceivableViewComponent {
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];
-    if (id == 0) {
-      this.customerDataSource = {
-        name: this.translateService.instant('general__retail-customer'),
-        address: this.translateService.instant(
-          'general__retail-customer__address'
-        ),
-        id: 0,
-      };
-    } else {
+    if (id != 0) {
       this.fetchCustomerData();
     }
 
@@ -130,7 +122,14 @@ export class ReceivableViewComponent {
         },
       })
       .afterClosed()
-      .subscribe((data) => {});
+      .subscribe((data) => {
+        if (data) {
+          this.alertSerivce.showSuccess(
+            this.translateService.instant('receivable__success__message')
+          );
+          this.dataSource[index].sales_invoice_payment.push(data);
+        }
+      });
 
     // this.dynamicComponentService
     //   .createDynamicComponent(ReceivablePaymentCreateComponent, {

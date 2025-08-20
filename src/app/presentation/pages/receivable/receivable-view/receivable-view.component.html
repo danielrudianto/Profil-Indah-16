@@ -40,10 +40,13 @@
             <div class="meta-data__items__text">
               <h2>{{ "receivable__view__customer-name" | translate }}</h2>
               <p
-                *ngIf="!isLoadingData"
+                *ngIf="!isLoadingData && customerDataSource != null"
                 (click)="copyData(customerDataSource.name)"
               >
                 {{ customerDataSource.name }}
+              </p>
+              <p *ngIf="!isLoadingData && customerDataSource == null">
+                {{ "general__retail-customer" | translate }}
               </p>
               <div class="shimmer-full" *ngIf="isLoadingData"></div>
             </div>
@@ -76,10 +79,13 @@
             <div class="meta-data__items__text">
               <h2>{{ "receivable__view__customer-address" | translate }}</h2>
               <p
-                *ngIf="!isLoadingData"
+                *ngIf="!isLoadingData && customerDataSource != null"
                 (click)="copyData(customerDataSource.address)"
               >
                 {{ customerDataSource.address || "-" }}
+              </p>
+              <p *ngIf="!isLoadingData && customerDataSource == null">
+                {{ "general__retail-customer__address" | translate }}
               </p>
               <div class="shimmer-full" *ngIf="isLoadingData"></div>
               <div class="shimmer-full w-50" *ngIf="isLoadingData"></div>

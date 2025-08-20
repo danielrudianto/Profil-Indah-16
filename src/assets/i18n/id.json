@@ -878,6 +878,7 @@
   "report-money__sales-invoice": "Faktur penjualan / nota",
   "report-money__sales-return": "Retur penjualan",
   "report-money__deposit": "Deposit",
+  "report-money__overpayment": "Kelebihan pembayaran",
   "report-money__total": "Total",
   "sales-return__archive": "Arsip",
   "sales-return__create": "Buat baru",
@@ -1223,5 +1224,14 @@
   "purchase-invoice__delete__message": "Apakah anda yakin untuk menghapus data pembelian ini?",
   "purchase-invoice__edit__general-data": "Data umum",
   "purchase-invoice__edit__purchase-data": "Data pembelian",
-  "purchase-invoice__update__success__message": "Data pembelian berhasil diperbaharui"
+  "purchase-invoice__update__success__message": "Data pembelian berhasil diperbaharui",
+  "general__archive": "Arsip",
+  "general__create": "Tambah data",
+  "overpayment__return-list": "Daftar pengembalian",
+  "overpayment__return__transaction-date": "Tanggal penerimaan",
+  "overpayment__return__return-date": "Tanggal pengembalian",
+  "overpayment__return__value": "Nominal",
+  "overpayment__return__name": "Nama penerima",
+  "overpayment__return__date": "Tanggal pengembalian",
+  "receivable__success__message": "Pembayaran berhasil dibuat"
 }

@@ -29,6 +29,7 @@
               <th>{{ "report-money__sales-invoice" | translate }}</th>
               <th>{{ "report-money__deposit" | translate }}</th>
               <th>{{ "report-money__sales-return" | translate }}</th>
+              <th>{{ "report-money__overpayment" | translate }}</th>
               <th>{{ "report-money__total" | translate }}</th>
             </tr>
           </thead>
@@ -52,17 +53,20 @@
               <td>{{ item.salesInvoice | number : "0.2-2" }}</td>
               <td>{{ item.salesDeposit | number : "0.2-2" }}</td>
               <td>{{ item.salesReturn | number : "0.2-2" }}</td>
+              <td>{{ item.overpayment | number : "0.2-2" }}</td>
               <td>
                 {{
-                  item.salesInvoice + item.salesDeposit - item.salesReturn
-                    | number : "0.2-2"
+                  item.salesInvoice +
+                    item.salesDeposit -
+                    item.salesReturn +
+                    item.overpayment | number : "0.2-2"
                 }}
               </td>
             </tr>
           </tbody>
           <tbody *ngIf="!isLoading && dorDataSource != null">
             <tr>
-              <td colspan="5">
+              <td colspan="6">
                 <b
                   >{{ dorDataSource.name }} -
                   {{ "money-receipt__dor__description" | translate }}</b
@@ -74,12 +78,15 @@
               <td>{{ data.salesInvoice | number : "0.2-2" }}</td>
               <td>{{ data.salesDeposit | number : "0.2-2" }}</td>
               <td>{{ 0 | number : "0.2-2" }}</td>
-              <td>{{ data.salesInvoice + data.salesDeposit | number : "0.2-2" }}</td>
+              <td>N/A</td>
+              <td>
+                {{ data.salesInvoice + data.salesDeposit | number : "0.2-2" }}
+              </td>
             </tr>
           </tbody>
           <tfoot *ngIf="!isLoading && dataSource.length > 0">
             <tr>
-              <td colspan="3"></td>
+              <td colspan="4"></td>
               <td>{{ "report-money__total" | translate }}</td>
               <td>{{ totalPayments | number : "0.2-2" }}</td>
             </tr>

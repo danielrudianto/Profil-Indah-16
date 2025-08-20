@@ -1,0 +1,53 @@
+<form [formGroup]="formGroup">
+  <div class="dashboard-card">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ "overpayment__return__date" | translate }}</mat-label>
+      <input
+        matInput
+        formControlName="date"
+        autocomplete="off"
+        [matDatepicker]="dp"
+      />
+      <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+      <mat-datepicker #dp panelClass="example-month-picker"> </mat-datepicker>
+    </mat-form-field>
+
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ "overpayment__return__transaction-date" | translate }}</th>
+            <th>{{ "overpayment__return__return-date" | translate }}</th>
+            <th>{{ "overpayment__return__value" | translate }}</th>
+            <th>{{ "overpayment__return__name" | translate }}</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="isLoading">
+          <tr>
+            <td colspan="3">
+              <mat-spinner id="spinner"></mat-spinner>
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="!isLoading && dataSource.length == 0">
+          <tr>
+            <td colspan="3">
+              <empty-table />
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="!isLoading && dataSource.length > 0">
+          <tr
+            *ngFor="let data of dataSource"
+            (click)="openOverpaymentView(data.id)"
+          >
+            <td>{{ data.date | date : "dd MMMM YYYY" }}</td>
+            <td>{{ data.return_payment_date | date : "dd MMMM YYYY" }}</td>
+            <td>{{ data.value | number : "0.2-2" }}</td>
+            <td>{{ data.return_payment_name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</form>
