@@ -863,6 +863,7 @@
   "report-money__sales-invoice": "Sales invoice / bill",
   "report-money__sales-return": "Sales return",
   "report-money__deposit": "Deposit",
+  "report-money__overpayment": "Overpayment",
   "report-money__total": "Total",
   "sales-return__archive": "Archive",
   "sales-return__create": "Create",
@@ -1218,5 +1219,18 @@
   "purchase-invoice__delete__message": "Are you sure to delete this purchase invoice data?",
   "purchase-invoice__edit__general-data": "General data",
   "purchase-invoice__edit__purchase-data": "Purchase data",
-  "purchase-invoice__update__success__message": "Purchase invoice successfully updated"
+  "purchase-invoice__update__success__message": "Purchase invoice successfully updated",
+  "general__archive": "Archive",
+  "general__create": "Create",
+  "overpayment__return-list": "Return list",
+  "overpayment__return__transaction-date": "Received date",
+  "overpayment__return__return-date": "Return date",
+  "overpayment__return__value": "Amount",
+  "overpayment__return__name": "Receipient name",
+  "overpayment__return__date": "Return date",
+  "receivable__success__message": "Payment successfully added",
+  "promotion__view__action": "Other actions",
+  "promotion__view__action__edit": "Update promotion data",
+  "promotion__view__action__view-result": "View promotion result",
+  "promotion__title__update": "Update promotion date"
 }

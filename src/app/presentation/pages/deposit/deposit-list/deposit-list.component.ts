@@ -21,27 +21,13 @@ export class DepositListComponent {
   }
 
   viewDeposit(id: number) {
-    // const dialog = this.dynamicComponentService.createDynamicComponent(
-    //   DepositViewComponent,
-    //   {
-    //     id: id,
-    //   }
-    // );
-
     this.dialog.open(DepositViewComponent, {
       data: {
         id: id,
+        noAction: true,
+        print: true,
       },
     });
-
-    // dialog.subscribe((data) => {
-    //   console.log(data);
-    //   if (data == 'deleted') {
-    //     this.dataCount = this.dataCount - 1;
-    //     const index = this.dataSource.findIndex((x) => x.id == id);
-    //     this.dataSource.splice(index, 1);
-    //   }
-    // });
   }
 
   onUpdateData(event: any) {

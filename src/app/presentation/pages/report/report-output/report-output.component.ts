@@ -73,7 +73,6 @@ export class ReportOutputComponent {
     ) {
       return;
     } else {
-      console.log(this.documentFormGroup.value.format);
       this.apiService
         .post('report/output', {
           month: this.documentFormGroup.value.date.getMonth() + 1,
@@ -86,6 +85,8 @@ export class ReportOutputComponent {
         .subscribe({
           next: (data: any) => {
             const format = this.documentFormGroup.value.format;
+            const groupBy = this.documentFormGroup.value.groupBy;
+
             if (format == 'PDF') {
               let content: Content[] = [];
               (data as any[]).forEach((x, i) => {
@@ -262,63 +263,59 @@ export class ReportOutputComponent {
                             style: 'tableContent',
                           },
                           {
-                            text: y.brand,
+                            text: y.product_brand.name,
                             style: 'tableContent',
                           },
                           {
-                            text: y.type,
+                            text: y.product_type.name,
+                            style: 'tableContent',
+                          },
+                          {
+                            text: this.decimalPipe.transform(y.stock, '1.0-2'),
                             style: 'tableContent',
                           },
                           {
                             text: this.decimalPipe.transform(
-                              y.initialStock,
+                              y.report.adjustment_case_found,
                               '1.0-2'
                             ),
                             style: 'tableContent',
                           },
                           {
                             text: this.decimalPipe.transform(
-                              y.adjustment_input,
+                              y.report.adjustment_case_lost,
                               '1.0-2'
                             ),
                             style: 'tableContent',
                           },
                           {
                             text: this.decimalPipe.transform(
-                              y.adjustment_output,
+                              y.report.good_receipt,
                               '1.0-2'
                             ),
                             style: 'tableContent',
                           },
                           {
                             text: this.decimalPipe.transform(
-                              y.good_receipt_input,
+                              y.report.sales_invoice,
                               '1.0-2'
                             ),
                             style: 'tableContent',
                           },
                           {
                             text: this.decimalPipe.transform(
-                              y.bill_output,
+                              y.report.sales_return,
                               '1.0-2'
                             ),
                             style: 'tableContent',
                           },
                           {
                             text: this.decimalPipe.transform(
-                              y.sales_return,
-                              '1.0-2'
-                            ),
-                            style: 'tableContent',
-                          },
-                          {
-                            text: this.decimalPipe.transform(
-                              y.initialStock +
-                                y.good_receipt_input +
-                                y.bill_output +
-                                y.adjustment_input +
-                                y.adjustment_output +
-                                y.sales_return,
+                              y.report.adjustment_case_found +
+                                y.report.adjustment_case_lost +
+                                y.report.good_receipt +
+                                y.report.sales_invoice +
+                                y.report.sales_return,
                               '1.0-2'
                             ),
                             style: 'tableContent',
@@ -405,50 +402,53 @@ export class ReportOutputComponent {
             } else if (format == 'Excel') {
               const workbook = xlsx.utils.book_new();
 
-              (data as any[]).forEach((x) => {
-                const worksheetData = [
-                  [
-                    'No',
-                    'Reference',
-                    'Description',
-                    'Brand',
-                    'Type',
-                    'Initial Stock',
-                    'Adjustment Input',
-                    'Adjustment Output',
-                    'Good Receipt Input',
-                    'Bill Output',
-                    'Sales Return',
-                    'Final Stock',
-                    'Unit',
-                  ],
-                ];
+              if (groupBy == 'brand') {
+                data.brands.forEach((brand: any) => {
+                  const brandName = brand.name;
+                  const worksheetData = [
+                    [
+                      'No',
+                      'Reference',
+                      'Description',
+                      'Brand',
+                      'Type',
+                      'Initial Stock',
+                      'Adjustment Input',
+                      'Adjustment Output',
+                      'Good Receipt Input',
+                      'Bill Output',
+                      'Sales Return',
+                      'Final Stock',
+                      'Unit',
+                    ],
+                    ...(data.data as any[])
+                      .filter((x) => x.product_brand.id == brand.id)
+                      .map((x, index) => {
+                        return [
+                          index + 1,
+                          x.reference,
+                          x.description,
+                          x.product_brand.name,
+                          x.product_type.name,
+                          x.stock,
+                          x.report.adjustment_case_found,
+                          x.report.adjustment_case_lost,
+                          x.report.good_receipt,
+                          x.report.sales_invoice,
+                          x.report.sales_return,
+                          x.report.adjustment_case_found +
+                            x.report.adjustment_case_lost +
+                            x.report.good_receipt +
+                            x.report.sales_invoice +
+                            x.report.sales_return,
+                          x.unit,
+                        ];
+                      }),
+                  ];
 
-                (x.items as any[]).forEach((y, index) => {
-                  worksheetData.push([
-                    index + 1,
-                    y.reference,
-                    y.description,
-                    y.brand,
-                    y.type,
-                    y.initialStock,
-                    y.adjustment_input,
-                    y.adjustment_output,
-                    y.good_receipt_input,
-                    y.bill_output,
-                    y.sales_return,
-                    y.initialStock +
-                      y.good_receipt_input +
-                      y.bill_output +
-                      y.adjustment_input +
-                      y.adjustment_output +
-                      y.sales_return,
-                    y.unit,
-                  ]);
+                  const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);
+                  xlsx.utils.book_append_sheet(workbook, worksheet, brandName);
                 });
-
-                const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);
-                xlsx.utils.book_append_sheet(workbook, worksheet, x.name);
 
                 const excelBuffer = xlsx.write(workbook, {
                   bookType: 'xlsx',
@@ -463,7 +463,68 @@ export class ReportOutputComponent {
                     'report-output__export__successful'
                   )
                 );
-              });
+              } else if (groupBy == 'type') {
+                data.types.forEach((type: any) => {
+                  const typeName = type.name;
+                  const worksheetData = [
+                    [
+                      'No',
+                      'Reference',
+                      'Description',
+                      'Brand',
+                      'Type',
+                      'Initial Stock',
+                      'Adjustment Input',
+                      'Adjustment Output',
+                      'Good Receipt Input',
+                      'Bill Output',
+                      'Sales Return',
+                      'Final Stock',
+                      'Unit',
+                    ],
+                    ...(data.data as any[])
+                      .filter((x) => x.product_type.id == type.id)
+                      .map((x, index) => {
+                        return [
+                          index + 1,
+                          x.reference,
+                          x.description,
+                          x.product_brand.name,
+                          x.product_type.name,
+                          x.stock,
+                          x.report.adjustment_case_found,
+                          x.report.adjustment_case_lost,
+                          x.report.good_receipt,
+                          x.report.sales_invoice,
+                          x.report.sales_return,
+                          x.report.adjustment_case_found +
+                            x.report.adjustment_case_lost +
+                            x.report.good_receipt +
+                            x.report.sales_invoice +
+                            x.report.sales_return,
+                          x.unit,
+                        ];
+                      }),
+                  ];
+
+                  const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);
+                  xlsx.utils.book_append_sheet(workbook, worksheet, typeName);
+                });
+
+                const excelBuffer = xlsx.write(workbook, {
+                  bookType: 'xlsx',
+                  type: 'array',
+                });
+                const blob = new Blob([excelBuffer], {
+                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                });
+                saveAs(blob, `Output_report_${new Date().getTime()}.xlsx`);
+                this.alertService.showSuccess(
+                  this.translateService.instant(
+                    'report-output__export__successful'
+                  )
+                );
+              }
             }
           },
           error: (error) => {
@@ -475,6 +536,10 @@ export class ReportOutputComponent {
         });
     }
   }
+
+  printPDF(data: any) {}
+
+  printExcel(data: any) {}
 
   setMonthAndYear(
     normalizedMonthAndYear: Moment,

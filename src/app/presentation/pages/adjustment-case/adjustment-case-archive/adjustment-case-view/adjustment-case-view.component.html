@@ -155,8 +155,8 @@
                 *ngIf="!data.noAction"
                 (click)="openDeleteConfirmation()"
               >
-                {{ "adjustment-case__archive__view__delete" | translate }}
                 <mat-icon>warning</mat-icon>
+                {{ "adjustment-case__archive__view__delete" | translate }}
               </button>
             </div>
           </div>
@@ -167,6 +167,15 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
+  <button
+    mat-stroked-button
+    color="primary"
+    style="letter-spacing: 0"
+    type="button"
+    (click)="print()"
+  >
+    {{ "general__print" | translate }}</button
+  >"
   <button
     mat-stroked-button
     color="primary"

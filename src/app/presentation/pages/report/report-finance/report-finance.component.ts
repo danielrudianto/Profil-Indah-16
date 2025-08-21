@@ -66,7 +66,7 @@ export class ReportFinanceComponent {
         month: this.financeReportFormGroup.controls['month']?.value,
         year: this.financeReportFormGroup.controls['year']?.value,
         report: this.financeReportFormGroup.controls['report']?.value,
-      })+
+      })
       .subscribe({
         next: (data: any) => {
           const salesValue = data.bills.value;

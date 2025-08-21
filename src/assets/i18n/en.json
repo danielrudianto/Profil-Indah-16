@@ -1228,5 +1228,9 @@
   "overpayment__return__value": "Amount",
   "overpayment__return__name": "Receipient name",
   "overpayment__return__date": "Return date",
-  "receivable__success__message": "Payment successfully added"
+  "receivable__success__message": "Payment successfully added",
+  "promotion__view__action": "Other actions",
+  "promotion__view__action__edit": "Update promotion data",
+  "promotion__view__action__view-result": "View promotion result",
+  "promotion__title__update": "Update promotion date"
 }

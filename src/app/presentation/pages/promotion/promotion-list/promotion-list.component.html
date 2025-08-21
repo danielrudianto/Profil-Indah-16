@@ -1,0 +1,100 @@
+<app-feature-background />
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <app-feature-header
+        [title]="'promotion__title' | translate"
+        [help]="'promotion__help' | translate"
+        [isBackAvailable]="true"
+      ></app-feature-header>
+      <div class="dashboard-card">
+        <app-feature-search
+          [addButton]="true"
+          route="promotion"
+          [page]="page"
+          [enable]="true"
+          (onChange)="onUpdateData($event)"
+          (onLoadingChange)="onUpdateLoadingStatus($event)"
+          (updatePage)="onUpdatePage()"
+          (onNewQuery)="page = 1"
+        ></app-feature-search>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 150px">
+                  {{ "promotion__name" | translate }}
+                </th>
+                <th style="width: 300px">
+                  {{ "promotion__description" | translate }}
+                </th>
+                <th style="width: 200px">
+                  {{ "promotion__supplier" | translate }}
+                </th>
+                <th style="width: 150px">
+                  {{ "promotion__start-date" | translate }}
+                </th>
+                <th style="width: 150px">
+                  {{ "promotion__end-date" | translate }}
+                </th>
+                <th style="width: 150px">
+                  {{ "promotion__brand" | translate }}
+                </th>
+                <th>{{ "promotion__target" | translate }}</th>
+                <th>{{ "promotion__status" | translate }}</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="isLoading">
+              <tr>
+                <td colspan="8">
+                  <mat-spinner id="spinner"></mat-spinner>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length == 0">
+              <tr>
+                <td colspan="8">
+                  <empty-table />
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && dataSource.length > 0">
+              <tr
+                *ngFor="let data of dataSource; index as i"
+                (click)="viewPromotion(i)"
+              >
+                <td>{{ data.name }}</td>
+                <td>{{ data.description }}</td>
+                <td>{{ data.supplier.name }}</td>
+                <td>{{ data.startDate | date : "dd/MM/yyyy" }}</td>
+                <td>
+                  {{
+                    data.endDate == null
+                      ? "Continuous"
+                      : (data.endDate | date : "dd/MM/yyyy")
+                  }}
+                </td>
+                <td>{{ data.promotion_brand.length }} brand(s)</td>
+                <td>{{ data.target | number }}</td>
+                <td>
+                  {{ status(data) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <mat-paginator
+          class="paginator"
+          [pageIndex]="page - 1"
+          [length]="dataCount"
+          [pageSize]="10"
+          (page)="changePage($event)"
+          aria-label="Select page"
+          hidePageSize="true"
+          *ngIf="!isLoading"
+        >
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

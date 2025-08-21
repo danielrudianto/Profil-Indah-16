@@ -331,6 +331,7 @@
               color="primary"
               style="letter-spacing: 0"
               [matMenuTriggerFor]="menu"
+              *ngIf="!data.noAction"
             >
               {{ "sales-deposit__archive__other-actions" | translate }}
               <mat-icon>menu</mat-icon>
@@ -352,8 +353,23 @@
   </form>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-stroked-button color="primary" mat-dialog-close>
+<mat-dialog-actions align="end"
+  ><button
+    mat-stroked-button
+    type="button"
+    color="primary"
+    style="letter-spacing: 0"
+    (click)="print()"
+  >
+    {{ "general__print" | translate }}
+  </button>
+  <button
+    mat-stroked-button
+    type="button"
+    color="primary"
+    style="letter-spacing: 0"
+    mat-dialog-close
+  >
     {{ "general__close" | translate }}
   </button>
 </mat-dialog-actions>

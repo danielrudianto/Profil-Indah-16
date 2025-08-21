@@ -1233,5 +1233,9 @@
   "overpayment__return__value": "Nominal",
   "overpayment__return__name": "Nama penerima",
   "overpayment__return__date": "Tanggal pengembalian",
-  "receivable__success__message": "Pembayaran berhasil dibuat"
+  "receivable__success__message": "Pembayaran berhasil dibuat",
+  "promotion__view__action": "Aksi lainnya",
+  "promotion__view__action__edit": "Perbaharui data promosi",
+  "promotion__view__action__view-result": "Lihat hasil promosi",
+  "promotion__title__update": "Perbaharui data promosi"
 }

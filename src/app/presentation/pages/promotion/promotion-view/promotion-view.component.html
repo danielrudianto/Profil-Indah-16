@@ -145,6 +145,29 @@
           >
             {{ "general__previous" | translate }}
           </button>
+          <button
+            type="button"
+            mat-stroked-button
+            color="warn"
+            style="letter-spacing: 0"
+            *ngIf="!data.noAction"
+            [matMenuTriggerFor]="menu"
+          >
+            <mat-icon>warning</mat-icon>
+            {{ "promotion__view__action" | translate }}
+          </button>
+          <mat-menu #menu>
+            <button mat-menu-item (click)="openUpdatePromotion()">
+              <mat-icon>edit</mat-icon>
+              <span>{{ "promotion__view__action__edit" | translate }}</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>view_list</mat-icon>
+              <span>{{
+                "promotion__view__action__view-result" | translate
+              }}</span>
+            </button>
+          </mat-menu>
         </div>
       </mat-expansion-panel>
     </mat-accordion>

@@ -85,6 +85,8 @@ import { StockComponent } from './presentation/pages/stock/stock.component';
 import { StockListComponent } from './presentation/pages/stock/stock-list/stock-list.component';
 import { StockCardComponent } from './presentation/pages/stock/stock-card/stock-card.component';
 import { OverpaymentReturnListComponent } from './presentation/pages/overpayment/overpayment-return-list/overpayment-return-list.component';
+import { PromotionListComponent } from './presentation/pages/promotion/promotion-list/promotion-list.component';
+import { PromotionUpdateComponent } from './presentation/pages/promotion/promotion-update/promotion-update.component';
 
 const routes: Routes = [
   {
@@ -213,6 +215,16 @@ const routes: Routes = [
           {
             path: 'Promotion',
             component: PromotionComponent,
+            children: [
+              {
+                path: '',
+                component: PromotionListComponent,
+              },
+              {
+                path: ':id',
+                component: PromotionUpdateComponent,
+              },
+            ],
           },
           {
             path: 'Promotion/Create',

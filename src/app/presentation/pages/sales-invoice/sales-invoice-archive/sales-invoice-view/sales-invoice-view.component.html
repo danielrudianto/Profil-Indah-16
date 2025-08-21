@@ -355,7 +355,21 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-stroked-button color="primary" mat-dialog-close>
+  <button
+    mat-stroked-button
+    color="primary"
+    style="letter-spacing: 0"
+    type="button"
+    (click)="print()"
+  >
+    {{ "general__print" | translate }}
+  </button>
+  <button
+    mat-stroked-button
+    color="primary"
+    style="letter-spacing: 0"
+    mat-dialog-close
+  >
     {{ "general__close" | translate }}
   </button>
 </mat-dialog-actions>

@@ -217,6 +217,7 @@ export class AdjustmentCaseArchiveComponent {
       .open(AdjustmentCaseViewComponent, {
         data: {
           id: id,
+          print: true,
         },
       })
       .afterClosed()

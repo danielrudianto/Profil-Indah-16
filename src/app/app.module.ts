@@ -246,6 +246,8 @@ import { StockCardViewComponent } from './presentation/pages/stock/stock-card/st
 import { OverpaymentArchiveViewComponent } from './presentation/pages/overpayment/overpayment-archive/overpayment-archive-view/overpayment-archive-view.component';
 import { DepositArchiveFilterComponent } from './presentation/pages/deposit/deposit-archive/deposit-archive-filter/deposit-archive-filter.component';
 import { OverpaymentReturnListComponent } from './presentation/pages/overpayment/overpayment-return-list/overpayment-return-list.component';
+import { PromotionListComponent } from './presentation/pages/promotion/promotion-list/promotion-list.component';
+import { PromotionUpdateComponent } from './presentation/pages/promotion/promotion-update/promotion-update.component';
 
 @NgModule({
   declarations: [
@@ -435,6 +437,8 @@ import { OverpaymentReturnListComponent } from './presentation/pages/overpayment
     OverpaymentArchiveViewComponent,
     DepositArchiveFilterComponent,
     OverpaymentReturnListComponent,
+    PromotionListComponent,
+    PromotionUpdateComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

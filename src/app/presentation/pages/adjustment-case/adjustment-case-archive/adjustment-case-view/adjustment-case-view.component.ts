@@ -19,7 +19,8 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class AdjustmentCaseViewComponent {
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { id: number; noAction: boolean },
+    @Inject(MAT_DIALOG_DATA)
+    public data: { id: number; noAction: boolean; print: boolean },
     private authService: AuthService,
     private dialog: MatDialog,
     private apiService: ApiService,
@@ -186,4 +187,6 @@ export class AdjustmentCaseViewComponent {
   prevStep() {
     this.step.update((i) => i - 1);
   }
+
+  print() {}
 }

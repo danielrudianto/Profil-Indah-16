@@ -212,6 +212,7 @@ export class DepositArchiveComponent {
         data: {
           id: id,
           noAction: false,
+          print: true,
         },
       })
       .afterClosed()

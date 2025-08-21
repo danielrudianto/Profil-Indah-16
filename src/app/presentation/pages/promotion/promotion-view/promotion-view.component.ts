@@ -13,6 +13,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-promotion-view',
@@ -21,13 +22,15 @@ import {
 })
 export class PromotionViewComponent {
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: { id: number; noAction: boolean },
     private apiService: ApiService,
     private alertService: AlertService,
     private dialog: MatDialogRef<PromotionViewComponent>,
     private translateService: TranslateService,
     private datePipe: DatePipe,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   isLoading: boolean = false;
@@ -354,5 +357,12 @@ export class PromotionViewComponent {
 
   prevStep() {
     this.step.update((i) => i - 1);
+  }
+
+  openUpdatePromotion() {
+    this.dialog.close();
+    this.router.navigate(['Administrator', 'Promotion', this.data.id], {
+      relativeTo: this.route,
+    });
   }
 }

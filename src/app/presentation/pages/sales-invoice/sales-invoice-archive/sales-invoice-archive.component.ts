@@ -218,6 +218,7 @@ export class SalesInvoiceArchiveComponent {
         data: {
           id: id,
           noAction: false,
+          print: true,
         },
       })
       .afterClosed()

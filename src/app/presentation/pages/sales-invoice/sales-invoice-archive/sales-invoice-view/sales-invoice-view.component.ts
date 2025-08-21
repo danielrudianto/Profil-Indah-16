@@ -1,12 +1,5 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  Output,
-  signal,
-} from '@angular/core';
+import { Component, Inject, signal } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -21,11 +14,16 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { Margins, PageOrientation, PageSize } from 'pdfmake/interfaces';
 import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { PaymentListComponent } from 'src/app/presentation/components/payment-list/payment-list.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-sales-invoice-view',
@@ -230,5 +228,331 @@ export class SalesInvoiceViewComponent {
 
   prevStep() {
     this.step.update((i) => i - 1);
+  }
+
+  print() {
+    const title = 'Sales Invoice';
+    const fileName = 'Sales_invoice';
+    const content = [
+      {
+        text: 'Sales invoice',
+        bold: true,
+        fontSize: 16,
+      },
+      {
+        layout: 'lightHorizontalLines',
+        table: {
+          widths: [100, '*', 100, '*'],
+          body: [
+            [
+              {
+                text: 'Date',
+                bold: true,
+                fontSize: 12,
+              },
+              {
+                text: this.datePipe.transform(
+                  this.salesInvoiceFormGroup.controls['date']?.value,
+                  'dd MMM yyyy'
+                ),
+                bold: false,
+                fontSize: 12,
+              },
+              {
+                text: 'Name',
+                bold: true,
+                fontSize: 12,
+              },
+              {
+                text: this.salesInvoiceFormGroup.controls['name']?.value,
+                bold: false,
+                fontSize: 12,
+              },
+            ],
+            [
+              {
+                text: 'Status',
+                bold: true,
+                fontSize: 12,
+              },
+              {
+                text: `${this.salesInvoiceFormGroup.controls['status']?.value}`,
+                bold: false,
+                fontSize: 12,
+              },
+              {
+                text: 'Customer',
+                bold: true,
+                fontSize: 12,
+              },
+              {
+                text: this.salesInvoiceFormGroup.controls['customer']?.value,
+                bold: false,
+                fontSize: 12,
+              },
+            ],
+            [
+              {
+                text: 'Created by',
+                bold: true,
+                fontSize: 12,
+              },
+              {
+                text: this.salesInvoiceFormGroup.controls['createdBy']?.value,
+                bold: false,
+                fontSize: 12,
+              },
+              {
+                text: 'Created at',
+                bold: true,
+                fontSize: 12,
+              },
+              {
+                text: this.salesInvoiceFormGroup.controls['createdAt']?.value,
+                bold: false,
+                fontSize: 12,
+              },
+            ],
+          ],
+        },
+        margin: [0, 10, 0, 10] as Margins,
+      },
+      {
+        layout: 'lightHorizontalLines',
+        table: {
+          headerRows: 1,
+          widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'],
+          body: [
+            [
+              {
+                text: 'Product',
+                bold: true,
+              },
+              {
+                text: 'Quantity',
+                bold: true,
+              },
+              {
+                text: 'Price',
+                bold: true,
+              },
+              {
+                text: 'Discount (Rp.)',
+                bold: true,
+              },
+              {
+                text: 'Discount (%)',
+                bold: true,
+              },
+              {
+                text: 'Total',
+                bold: true,
+              },
+            ],
+            ...this.t.controls.map((item: any) => {
+              return [
+                [
+                  {
+                    text: item.get('reference')?.value,
+                    style: 'label',
+                  },
+                  {
+                    text: item.get('description')?.value,
+                    style: 'value',
+                  },
+                ],
+                {
+                  text: `${this.decimalPipe.transform(
+                    item.get('quantity')?.value,
+                    '1.0-2'
+                  )} ${item.get('unit')?.value}`,
+                },
+                {
+                  text: `${this.decimalPipe.transform(
+                    item.get('price')?.value,
+                    '1.2-2'
+                  )}`,
+                },
+                {
+                  text: `${this.decimalPipe.transform(
+                    item.get('discount')?.value,
+                    '1.2-2'
+                  )}`,
+                },
+                {
+                  text: `${this.decimalPipe.transform(
+                    item.get('price')?.value == 0
+                      ? 0
+                      : (item.get('discount')?.value * 100) /
+                          item.get('price')?.value,
+                    '1.0-2'
+                  )}%`,
+                },
+                {
+                  text: `${this.decimalPipe.transform(
+                    (item.get('price')?.value - item.get('discount')?.value) *
+                      item.get('quantity')?.value,
+                    '1.2-2'
+                  )}`,
+                },
+              ];
+            }),
+            [
+              '',
+              '',
+              '',
+              '',
+              {
+                text: 'Subtotal',
+                style: 'label',
+                border: [true, true, true, true],
+              },
+              {
+                text: `${this.decimalPipe.transform(this.subtotal, '1.2-2')}`,
+                style: 'value',
+              },
+            ],
+            [
+              '',
+              '',
+              '',
+              '',
+              {
+                text: 'Discount',
+                style: 'label',
+              },
+              {
+                text: `${this.decimalPipe.transform(
+                  this.salesInvoiceFormGroup.get('discount')?.value,
+                  '1.2-2'
+                )}`,
+                style: 'value',
+              },
+            ],
+            [
+              '',
+              '',
+              '',
+              '',
+              {
+                text: 'Service',
+                style: 'label',
+              },
+              {
+                text: `${this.decimalPipe.transform(
+                  this.salesInvoiceFormGroup.get('service')?.value,
+                  '1.2-2'
+                )}`,
+                style: 'value',
+              },
+            ],
+            [
+              '',
+              '',
+              '',
+              '',
+              {
+                text: 'Delivery',
+                style: 'label',
+              },
+              {
+                text: `${this.decimalPipe.transform(
+                  this.salesInvoiceFormGroup.get('delivery')?.value,
+                  '1.2-2'
+                )}`,
+                style: 'value',
+              },
+            ],
+            [
+              '',
+              '',
+              '',
+              '',
+              {
+                text: 'Total',
+                style: 'label',
+              },
+              {
+                text: `${this.decimalPipe.transform(this.grandTotal, '1.2-2')}`,
+                style: 'value',
+              },
+            ],
+          ],
+        },
+        margin: [0, 0, 0, 10] as Margins,
+      },
+      {
+        layout: 'lightHorizontalLines',
+        table: {
+          headerRows: 1,
+          widths: ['*', '*', '*'],
+          body: [
+            ['Date', 'Payment method', 'Amount'],
+            ...(this.u.controls.length == 0
+              ? [
+                  [
+                    {
+                      text: 'No payment',
+                      colSpan: 3,
+                      alignment: 'center',
+                    },
+                    {},
+                    {},
+                  ],
+                ]
+              : [
+                  ...this.u.controls.map((item: any) => {
+                    return [
+                      this.datePipe.transform(
+                        item.get('date')?.value,
+                        'dd MMMM yyyy'
+                      ),
+                      item.get('payment_method')?.value == null
+                        ? 'Cash'
+                        : item.get('payment_method')?.value.name,
+                      `${this.decimalPipe.transform(
+                        item.get('value')?.value,
+                        '1.2-2'
+                      )}`,
+                    ];
+                  }),
+                ]),
+          ],
+        },
+      },
+    ];
+
+    const documentDefinition = {
+      pageOrientation: 'portrait' as PageOrientation,
+      pageSize: 'A4' as PageSize,
+      pageMargins: 15,
+      watermark: {
+        text: 'DRAFT',
+        color: 'black',
+        opacity: 0.15,
+        bold: true,
+        italics: false,
+      },
+      info: {
+        title: `${title} - Toko Profil Indah`,
+        author: 'Toko Profil Indah',
+        subject: title,
+      },
+      content: content,
+      styles: {
+        label: {
+          fontSize: 10,
+          bold: true,
+        },
+        value: {
+          fontSize: 12,
+          bold: false,
+        },
+      },
+    };
+
+    pdfMake
+      .createPdf(documentDefinition)
+      .download(`${fileName}${new Date().getTime()}.pdf`);
   }
 }

@@ -34,8 +34,8 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 })
 export class DepositViewComponent {
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { id: number },
-    private dynamicComponentService: DynamicComponentService,
+    @Inject(MAT_DIALOG_DATA)
+    public data: { id: number; noAction: boolean; print: boolean },
     private apiService: ApiService,
     private dialog: MatDialog,
     private _hotKeysService: HotkeysService,
@@ -73,6 +73,7 @@ export class DepositViewComponent {
     createdBy: new FormControl('', Validators.required),
     createdAt: new FormControl('', Validators.required),
     sales_deposit: new FormArray([]),
+    sales_deposit_payment: new FormArray([]),
   });
 
   get f() {
@@ -81,6 +82,10 @@ export class DepositViewComponent {
 
   get t(): FormArray {
     return this.f['sales_deposit'] as FormArray;
+  }
+
+  get u(): FormArray {
+    return this.f['sales_deposit_payment'] as FormArray;
   }
 
   isLoading: boolean = true;
@@ -182,6 +187,18 @@ export class DepositViewComponent {
               })
             );
           });
+
+          data.sales_deposit_payment.forEach((x: any) => {
+            this.u.push(
+              this.formBuilder.group({
+                date: [x.date],
+                payment_method: [
+                  x.payment_method == null ? 'Cash' : x.payment_method.name,
+                ],
+                value: [x.value],
+              })
+            );
+          });
         },
         error: (error) => {
           this.alertService.showError(Error(error));
@@ -220,385 +237,328 @@ export class DepositViewComponent {
     );
   }
 
-  // print() {
-  //   const title = 'Sales deposit';
-  //   const filename = 'Sales_deposit';
-  //   const content: any[] = [
-  //     {
-  //       width: '*',
-  //       columns: [
-  //         [
-  //           {
-  //             text: 'Date',
-  //             style: 'label',
-  //           },
-  //           {
-  //             text: this.datePipe.transform(
-  //               this.dataSource.date,
-  //               'dd MMM yyyy'
-  //             ),
-  //             style: 'value',
-  //             margin: [0, 0, 0, 10] as Margins,
-  //           },
-  //           {
-  //             text: 'Name',
-  //             style: 'label',
-  //           },
-  //           {
-  //             text: this.dataSource.name || '',
-  //             style: 'value',
-  //             margin: [0, 0, 0, 10] as Margins,
-  //           },
-  //           {
-  //             text: 'Status',
-  //             style: 'label',
-  //           },
-  //           {
-  //             text: `${
-  //               this.dataSource.is_delete
-  //                 ? 'Deleted'
-  //                 : this.dataSource.is_confirm
-  //                 ? 'Confirmed'
-  //                 : 'Waiting for confirmation'
-  //             }`,
-  //             style: 'value',
-  //             margin: [0, 0, 0, 10] as Margins,
-  //           },
-  //           {
-  //             text: 'Sales',
-  //             style: 'label',
-  //           },
-  //           {
-  //             text:
-  //               this.dataSource.sales == null
-  //                 ? 'INTERNAL'
-  //                 : this.dataSource.sales,
-  //             style: 'value',
-  //             margin: [0, 0, 0, 10] as Margins,
-  //           },
-  //           {
-  //             text: 'Customer',
-  //             style: 'label',
-  //           },
-  //           {
-  //             text:
-  //               this.dataSource.customer == null
-  //                 ? 'Retail customer'
-  //                 : this.dataSource.customer.name || '',
-  //             style: 'value',
-  //             margin: [0, 0, 0, 10] as Margins,
-  //           },
-  //           {
-  //             text: 'Created by',
-  //             style: 'label',
-  //           },
-  //           {
-  //             text: this.dataSource.user_bill_code_created_byTouser.name || '',
-  //             style: 'value',
-  //             margin: [0, 0, 0, 10] as Margins,
-  //           },
-  //           {
-  //             text: 'Created at',
-  //             style: 'label',
-  //           },
-  //           {
-  //             text: this.datePipe.transform(
-  //               this.dataSource.created_at,
-  //               'dd MMM yyyy HH:mm'
-  //             ),
-  //             margin: [0, 0, 0, 10] as Margins,
-  //           },
-  //         ],
-  //         {
-  //           qr: this.dataSource.name,
-  //           fit: '50',
-  //           alignment: 'right',
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       layout: 'lightHorizontalLines',
-  //       table: {
-  //         headerRows: 1,
-  //         widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'],
-  //         body: [
-  //           [
-  //             'Item',
-  //             'Quantity',
-  //             'Price',
-  //             'Discount (Rp.)',
-  //             'Discount (%)',
-  //             'Total',
-  //           ],
-  //           ...this.dataSource.deposit.map((item: any) => {
-  //             if (item.package_code != null) {
-  //               return [
-  //                 [
-  //                   {
-  //                     text: item.package_code.name,
-  //                     style: 'value',
-  //                   },
-  //                   {
-  //                     text: item.package_code.description,
-  //                     style: 'value',
-  //                   },
-  //                   {
-  //                     ol: item.package_code.package_content.map(
-  //                       (content: any) => {
-  //                         return [
-  //                           {
-  //                             text: content.item.reference,
-  //                             style: 'value',
-  //                           },
-  //                           {
-  //                             text: content.item.description,
-  //                             style: 'value',
-  //                           },
-  //                         ];
-  //                       }
-  //                     ),
-  //                   },
-  //                 ],
-  //                 {
-  //                   text: `${this.decimalPipe.transform(
-  //                     item.quantity,
-  //                     '1.0-2'
-  //                   )}`,
-  //                 },
-  //                 {
-  //                   text: `Rp.${this.decimalPipe.transform(
-  //                     item.price,
-  //                     '1.2-2'
-  //                   )}`,
-  //                 },
-  //                 {
-  //                   text: `Rp.${this.decimalPipe.transform(
-  //                     item.discount,
-  //                     '1.2-2'
-  //                   )}`,
-  //                 },
-  //                 {
-  //                   text: `${this.decimalPipe.transform(
-  //                     item.price == 0 ? 0 : (item.discount * 100) / item.price,
-  //                     '1.0-2'
-  //                   )}%`,
-  //                 },
-  //                 {
-  //                   text: `Rp.${this.decimalPipe.transform(
-  //                     (item.price - item.discount) * item.quantity,
-  //                     '1.2-2'
-  //                   )}`,
-  //                 },
-  //               ];
-  //             } else {
-  //               return [
-  //                 [
-  //                   {
-  //                     text: item.item.reference,
-  //                     style: 'label',
-  //                   },
-  //                   {
-  //                     text: item.item.description,
-  //                     style: 'value',
-  //                   },
-  //                 ],
-  //                 {
-  //                   text: `${this.decimalPipe.transform(
-  //                     item.quantity,
-  //                     '1.0-2'
-  //                   )} ${
-  //                     item.item_unit == null
-  //                       ? item.item.unit
-  //                       : item.item_unit.unit
-  //                   }`,
-  //                 },
-  //                 {
-  //                   text: `Rp.${this.decimalPipe.transform(
-  //                     item.price,
-  //                     '1.2-2'
-  //                   )}`,
-  //                 },
-  //                 {
-  //                   text: `Rp.${this.decimalPipe.transform(
-  //                     item.discount,
-  //                     '1.2-2'
-  //                   )}`,
-  //                 },
-  //                 {
-  //                   text: `${this.decimalPipe.transform(
-  //                     item.price == 0 ? 0 : (item.discount * 100) / item.price,
-  //                     '1.0-2'
-  //                   )}%`,
-  //                 },
-  //                 {
-  //                   text: `Rp.${this.decimalPipe.transform(
-  //                     (item.price - item.discount) * item.quantity,
-  //                     '1.2-2'
-  //                   )}`,
-  //                 },
-  //               ];
-  //             }
-  //           }),
-  //           [
-  //             '',
-  //             '',
-  //             '',
-  //             '',
-  //             {
-  //               text: 'Subtotal',
-  //               style: 'label',
-  //               border: [true, true, true, true],
-  //             },
-  //             {
-  //               text: `Rp.${this.decimalPipe.transform(
-  //                 this.dataSource.subTotal,
-  //                 '1.2-2'
-  //               )}`,
-  //               style: 'value',
-  //             },
-  //           ],
-  //           [
-  //             '',
-  //             '',
-  //             '',
-  //             '',
-  //             {
-  //               text: 'Discount',
-  //               style: 'label',
-  //             },
-  //             {
-  //               text: `Rp.${this.decimalPipe.transform(
-  //                 this.dataSource.discount,
-  //                 '1.2-2'
-  //               )}`,
-  //               style: 'value',
-  //             },
-  //           ],
-  //           [
-  //             '',
-  //             '',
-  //             '',
-  //             '',
-  //             {
-  //               text: 'Service',
-  //               style: 'label',
-  //             },
-  //             {
-  //               text: `Rp.${this.decimalPipe.transform(
-  //                 this.dataSource.service,
-  //                 '1.2-2'
-  //               )}`,
-  //               style: 'value',
-  //             },
-  //           ],
-  //           [
-  //             '',
-  //             '',
-  //             '',
-  //             '',
-  //             {
-  //               text: 'Delivery',
-  //               style: 'label',
-  //             },
-  //             {
-  //               text: `Rp.${this.decimalPipe.transform(
-  //                 this.dataSource.delivery,
-  //                 '1.2-2'
-  //               )}`,
-  //               style: 'value',
-  //             },
-  //           ],
-  //           [
-  //             '',
-  //             '',
-  //             '',
-  //             '',
-  //             {
-  //               text: 'Total',
-  //               style: 'label',
-  //             },
-  //             {
-  //               text: `Rp.${this.decimalPipe.transform(
-  //                 this.dataSource.subTotal -
-  //                   this.dataSource.discount +
-  //                   this.dataSource.service +
-  //                   this.dataSource.delivery,
-  //                 '1.2-2'
-  //               )}`,
-  //               style: 'value',
-  //             },
-  //           ],
-  //         ],
-  //       },
-  //       margin: [0, 0, 0, 10] as Margins,
-  //     },
-  //     {
-  //       // Create table for payments
-  //       layout: 'lightHorizontalLines',
-  //       table: {
-  //         headerRows: 1,
-  //         widths: ['*', '*', '*'],
-  //         body: [
-  //           ['Date', 'Payment method', 'Amount'],
-  //           ...(this.dataSource.deposit_payment.length == 0
-  //             ? [
-  //                 [
-  //                   {
-  //                     text: 'No payment',
-  //                     colSpan: 3,
-  //                     alignment: 'center',
-  //                   },
-  //                   {},
-  //                   {},
-  //                 ],
-  //               ]
-  //             : [
-  //                 ...this.dataSource.deposit_payment.map((item: any) => {
-  //                   return [
-  //                     this.datePipe.transform(item.date, 'dd MMM yyyy'),
-  //                     item.payment_method == null
-  //                       ? 'Cash'
-  //                       : item.payment_method.name,
-  //                     `Rp.${this.decimalPipe.transform(item.value, '1.2-2')}`,
-  //                   ];
-  //                 }),
-  //               ]),
-  //         ],
-  //       },
-  //     },
-  //   ];
+  print() {
+    const title = 'Sales deposit';
+    const filename = 'Sales_deposit';
+    const content: any[] = [
+      {
+        text: 'Sales deposit',
+        bold: true,
+        fontSize: 16,
+      },
+      {
+        layout: 'lightHorizontalLines',
+        table: {
+          widths: [100, '*', 100, '*'],
+          body: [
+            [
+              {
+                text: 'Date',
+                bold: true,
+                fontSize: 12,
+              },
+              {
+                text: this.datePipe.transform(
+                  this.salesDepositFormGroup.controls['date']?.value,
+                  'dd MMMM yyyy'
+                ),
+                bold: false,
+                fontSize: 12,
+              },
+              {
+                text: 'Name',
+                bold: true,
+                fontSize: 12,
+              },
+              {
+                text: this.salesDepositFormGroup.controls['name']?.value,
+                bold: false,
+                fontSize: 12,
+              },
+            ],
+            [
+              {
+                text: 'Status',
+                bold: true,
+                fontSize: 12,
+              },
+              {
+                text: `${this.salesDepositFormGroup.controls['status']?.value}`,
+                bold: false,
+                fontSize: 12,
+              },
+              {
+                text: 'Customer',
+                bold: true,
+                fontSize: 12,
+              },
+              {
+                text: this.salesDepositFormGroup.controls['customer']?.value,
+                bold: false,
+                fontSize: 12,
+              },
+            ],
+            [
+              {
+                text: 'Created by',
+                bold: true,
+                fontSize: 12,
+              },
+              {
+                text: this.salesDepositFormGroup.controls['createdBy']?.value,
+                bold: false,
+                fontSize: 12,
+              },
+              {
+                text: 'Created at',
+                bold: true,
+                fontSize: 12,
+              },
+              {
+                text: this.salesDepositFormGroup.controls['createdAt']?.value,
+                bold: false,
+                fontSize: 12,
+              },
+            ],
+          ],
+        },
+        margin: [0, 10, 0, 10] as Margins,
+      },
+      {
+        layout: 'lightHorizontalLines',
+        table: {
+          headerRows: 1,
+          widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'],
+          body: [
+            [
+              {
+                text: 'Product',
+                bold: true,
+              },
+              {
+                text: 'Quantity',
+                bold: true,
+              },
+              {
+                text: 'Price',
+                bold: true,
+              },
+              {
+                text: 'Discount (Rp.)',
+                bold: true,
+              },
+              {
+                text: 'Discount (%)',
+                bold: true,
+              },
+              {
+                text: 'Total',
+                bold: true,
+              },
+            ],
+            ...this.t.controls.map((item: any) => {
+              return [
+                [
+                  {
+                    text: item.get('reference')?.value,
+                    style: 'label',
+                  },
+                  {
+                    text: item.get('description')?.value,
+                    style: 'value',
+                  },
+                ],
+                {
+                  text: `${this.decimalPipe.transform(
+                    item.get('quantity')?.value,
+                    '1.0-2'
+                  )} ${item.get('unit')?.value}`,
+                },
+                {
+                  text: `${this.decimalPipe.transform(
+                    item.get('price')?.value,
+                    '1.2-2'
+                  )}`,
+                },
+                {
+                  text: `${this.decimalPipe.transform(
+                    item.get('discount')?.value,
+                    '1.2-2'
+                  )}`,
+                },
+                {
+                  text: `${this.decimalPipe.transform(
+                    item.get('price')?.value == 0
+                      ? 0
+                      : (item.get('discount')?.value * 100) /
+                          item.get('price')?.value,
+                    '1.0-2'
+                  )}%`,
+                },
+                {
+                  text: `${this.decimalPipe.transform(
+                    (item.get('price')?.value - item.get('discount')?.value) *
+                      item.get('quantity')?.value,
+                    '1.2-2'
+                  )}`,
+                },
+              ];
+            }),
+            [
+              '',
+              '',
+              '',
+              '',
+              {
+                text: 'Subtotal',
+                style: 'label',
+                border: [true, true, true, true],
+              },
+              {
+                text: `${this.decimalPipe.transform(this.subtotal, '1.2-2')}`,
+                style: 'value',
+              },
+            ],
+            [
+              '',
+              '',
+              '',
+              '',
+              {
+                text: 'Discount',
+                style: 'label',
+              },
+              {
+                text: `${this.decimalPipe.transform(
+                  this.salesDepositFormGroup.get('discount')?.value,
+                  '1.2-2'
+                )}`,
+                style: 'value',
+              },
+            ],
+            [
+              '',
+              '',
+              '',
+              '',
+              {
+                text: 'Service',
+                style: 'label',
+              },
+              {
+                text: `${this.decimalPipe.transform(
+                  this.salesDepositFormGroup.get('service')?.value,
+                  '1.2-2'
+                )}`,
+                style: 'value',
+              },
+            ],
+            [
+              '',
+              '',
+              '',
+              '',
+              {
+                text: 'Delivery',
+                style: 'label',
+              },
+              {
+                text: `${this.decimalPipe.transform(
+                  this.salesDepositFormGroup.get('delivery')?.value,
+                  '1.2-2'
+                )}`,
+                style: 'value',
+              },
+            ],
+            [
+              '',
+              '',
+              '',
+              '',
+              {
+                text: 'Total',
+                style: 'label',
+              },
+              {
+                text: `${this.decimalPipe.transform(this.total, '1.2-2')}`,
+                style: 'value',
+              },
+            ],
+          ],
+        },
+        margin: [0, 0, 0, 10] as Margins,
+      },
+      {
+        // Create table for payments
+        layout: 'lightHorizontalLines',
+        table: {
+          headerRows: 1,
+          widths: ['*', '*', '*'],
+          body: [
+            ['Date', 'Payment method', 'Amount'],
+            ...(this.u.controls.length == 0
+              ? [
+                  [
+                    {
+                      text: 'No payment',
+                      colSpan: 3,
+                      alignment: 'center',
+                    },
+                    {},
+                    {},
+                  ],
+                ]
+              : [
+                  ...this.u.controls.map((item: any) => {
+                    return [
+                      this.datePipe.transform(
+                        item.get('date')?.value,
+                        'dd MMMM yyyy'
+                      ),
+                      item.get('payment_method')?.value,
+                      `Rp.${this.decimalPipe.transform(
+                        item.get('value')?.value,
+                        '1.2-2'
+                      )}`,
+                    ];
+                  }),
+                ]),
+          ],
+        },
+      },
+    ];
 
-  //   const documentDefinition = {
-  //     pageOrientation: 'portrait' as PageOrientation,
-  //     pageSize: 'A4' as PageSize,
-  //     pageMargins: 15,
-  //     watermark: {
-  //       text: 'DRAFT',
-  //       color: 'black',
-  //       opacity: 0.3,
-  //       bold: true,
-  //       italics: false,
-  //     },
-  //     info: {
-  //       title: `${title} - Toko Profil Indah`,
-  //       author: 'Toko Profil Indah',
-  //       subject: title,
-  //     },
-  //     content: content,
-  //     styles: {
-  //       label: {
-  //         fontSize: 10,
-  //         bold: true,
-  //       },
-  //       value: {
-  //         fontSize: 12,
-  //         bold: false,
-  //       },
-  //     },
-  //   };
+    const documentDefinition = {
+      pageOrientation: 'portrait' as PageOrientation,
+      pageSize: 'A4' as PageSize,
+      pageMargins: 15,
+      watermark: {
+        text: 'DRAFT',
+        color: 'black',
+        opacity: 0.3,
+        bold: true,
+        italics: false,
+      },
+      info: {
+        title: `${title} - Toko Profil Indah`,
+        author: 'Toko Profil Indah',
+        subject: title,
+      },
+      content: content,
+      styles: {
+        label: {
+          fontSize: 10,
+          bold: true,
+        },
+        value: {
+          fontSize: 12,
+          bold: false,
+        },
+      },
+    };
 
-  //   pdfMake
-  //     .createPdf(documentDefinition)
-  //     .download(`${filename}${new Date().getTime()}.pdf`);
-  // }
+    pdfMake
+      .createPdf(documentDefinition)
+      .download(`${filename}${new Date().getTime()}.pdf`);
+  }
 }
