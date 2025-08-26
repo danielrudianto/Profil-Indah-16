@@ -255,11 +255,15 @@
         </mat-form-field>
 
         <button
-          class="sales-report__download-button w-100"
+          mat-stroked-button
+          color="primary"
+          style="letter-spacing: 0"
+          class="w-100"
           [disabled]="isSubmitting"
           (click)="download()"
         >
-          {{ "sales-report__download" | translate }}
+          <mat-icon>table</mat-icon>
+          <span> {{ "sales-report__download" | translate }}</span>
         </button>
 
         <mat-divider class="mb-4 mt-2" />

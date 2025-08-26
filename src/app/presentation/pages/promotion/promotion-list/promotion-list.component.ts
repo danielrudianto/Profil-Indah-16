@@ -8,6 +8,7 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { MatDialog } from '@angular/material/dialog';
+import { PromotionResultComponent } from '../promotion-result/promotion-result.component';
 
 @Component({
   selector: 'app-promotion-list',
@@ -100,11 +101,22 @@ export class PromotionListComponent {
 
   viewPromotion(index: number) {
     const id = this.dataSource[index].id;
-    this.dialog.open(PromotionViewComponent, {
-      data: {
-        id: id,
-      },
-    });
+    this.dialog
+      .open(PromotionViewComponent, {
+        data: {
+          id: id,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data === 'result') {
+          this.dialog.open(PromotionResultComponent, {
+            data: {
+              id: id,
+            },
+          });
+        }
+      });
   }
 
   status(data: any) {

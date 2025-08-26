@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>{{ "promotion__result__title" | translate }}</h2>
+<form [formGroup]="promotionFormGroup">
+  <mat-dialog-content>
+    <mat-accordion>
+      <mat-expansion-panel class="mat-elevation-z0" hideToggle expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{
+            "promotion__result__result" | translate
+          }}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{ "promotion__result__sales" | translate }}</mat-label>
+          <input
+            matInput
+            formControlName="sales"
+            mask="separator.2"
+            thousandSeparator=" "
+            placeholder="Ex. 8 000"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>{{ "promotion__result__purchase" | translate }}</mat-label>
+          <input
+            matInput
+            formControlName="purchase"
+            mask="separator.2"
+            thousandSeparator=" "
+            placeholder="Ex. 8 000"
+          />
+        </mat-form-field>
+      </mat-expansion-panel>
+      <mat-expansion-panel class="mat-elevation-z0" hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{
+            "promotion__result__product-list" | translate
+          }}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-list>
+          <mat-list-item *ngFor="let item of t.controls">
+            <div matListItemTitle>{{ item.get("reference")?.value }}</div>
+            <div matListItemLine>
+              {{ item.get("description")?.value }}
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-stroked-button color="primary"></button>
+  </mat-dialog-actions>
+</form>

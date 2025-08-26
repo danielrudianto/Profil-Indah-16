@@ -21,14 +21,7 @@ export class ReportCompanyComponent {
     private datePipe: DatePipe,
     private alertService: AlertService,
     private translateService: TranslateService,
-    private _hotKeysService: HotkeysService
   ) {
-    this._hotKeysService.add([
-      new Hotkey('esc', (): boolean => {
-        this.closeDialog();
-        return false;
-      }),
-    ]);
   }
 
   companyFormGroup: FormGroup = new FormGroup({
@@ -66,7 +59,7 @@ export class ReportCompanyComponent {
   downloadReport() {
     this.isDownloading = true;
     this.apiService
-      .post('report/output-company/download', {
+      .post('report/output-company', {
         date: this.datePipe.transform(
           this.companyFormGroup.value.date,
           'yyyy-MM-dd'

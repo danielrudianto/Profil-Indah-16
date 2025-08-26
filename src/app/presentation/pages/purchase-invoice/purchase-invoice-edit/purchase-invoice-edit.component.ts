@@ -398,7 +398,11 @@ export class PurchaseInvoiceEditComponent {
       .afterClosed()
       .subscribe((data) => {
         if (data) {
-          console.log(data);
+          this.t.at(i).patchValue({
+            price: data.price,
+            dicount: data.discount,
+            save_price: data.save_price,
+          });
         }
       });
     // const sheet = this.sheet.open(UpdateProductPurchasePriceComponent, {

@@ -248,6 +248,7 @@ import { DepositArchiveFilterComponent } from './presentation/pages/deposit/depo
 import { OverpaymentReturnListComponent } from './presentation/pages/overpayment/overpayment-return-list/overpayment-return-list.component';
 import { PromotionListComponent } from './presentation/pages/promotion/promotion-list/promotion-list.component';
 import { PromotionUpdateComponent } from './presentation/pages/promotion/promotion-update/promotion-update.component';
+import { PromotionResultComponent } from './presentation/pages/promotion/promotion-result/promotion-result.component';
 
 @NgModule({
   declarations: [
@@ -439,6 +440,7 @@ import { PromotionUpdateComponent } from './presentation/pages/promotion/promoti
     OverpaymentReturnListComponent,
     PromotionListComponent,
     PromotionUpdateComponent,
+    PromotionResultComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

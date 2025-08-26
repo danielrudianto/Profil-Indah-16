@@ -10,14 +10,12 @@ import {
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
 import { TranslateService } from '@ngx-translate/core';
-import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { ApiService } from 'src/app/services/api.service';
 import moment, { Moment } from 'moment';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { AlertService } from 'src/app/services/alert.service';
 import * as xlsx from 'xlsx';
-import { saveAs } from 'file-saver';
 import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
 import { SupplierPurchaseChartComponent } from './supplier-purchase-chart/supplier-purchase-chart.component';
 import { BrandPurchaseChartComponent } from './brand-purchase-chart/brand-purchase-chart.component';

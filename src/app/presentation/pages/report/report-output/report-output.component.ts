@@ -89,253 +89,515 @@ export class ReportOutputComponent {
 
             if (format == 'PDF') {
               let content: Content[] = [];
-              (data as any[]).forEach((x, i) => {
-                content.push({
-                  text: x.name,
-                  style: 'header',
-                  marginBottom: 20,
-                });
+              if (groupBy === 'brand') {
+                data.brands.forEach((brand: any, i: number) => {
+                  content.push({
+                    text: brand.name,
+                    style: 'header',
+                    marginBottom: 20,
+                  });
 
-                const dataTable = {
-                  layout: 'lightHorizontalLines',
-                  table: {
-                    headerRows: 1,
-                    widths: [
-                      'auto',
-                      75,
-                      '*',
-                      'auto',
-                      'auto',
-                      50,
-                      50,
-                      50,
-                      50,
-                      50,
-                      50,
-                      50,
-                      50,
-                    ],
-                    body: [
-                      [
-                        [
-                          {
-                            text: 'No',
-                            style: 'tableHeader',
-                          },
-                          {
-                            text: 'No.',
-                            style: 'tableHeaderSubtitle',
-                          },
-                        ],
-                        [
-                          {
-                            text: 'Referensi',
-                            style: 'tableHeader',
-                          },
-                          {
-                            text: 'Reference',
-                            style: 'tableHeaderSubtitle',
-                          },
-                        ],
-                        [
-                          {
-                            text: 'Deskripsi',
-                            style: 'tableHeader',
-                          },
-                          {
-                            text: 'Description',
-                            style: 'tableHeaderSubtitle',
-                          },
-                        ],
-                        [
-                          {
-                            text: 'Merek',
-                            style: 'tableHeader',
-                          },
-                          {
-                            text: 'Brand',
-                            style: 'tableHeaderSubtitle',
-                          },
-                        ],
-                        [
-                          {
-                            text: 'Tipe',
-                            style: 'tableHeader',
-                          },
-                          {
-                            text: 'Type',
-                            style: 'tableHeaderSubtitle',
-                          },
-                        ],
-                        [
-                          {
-                            text: 'Stok awal',
-                            style: 'tableHeader',
-                          },
-                          {
-                            text: 'Initial stock',
-                            style: 'tableHeaderSubtitle',
-                          },
-                        ],
-                        [
-                          {
-                            text: 'Masukan atas kasus penyesuaian',
-                            style: 'tableHeader',
-                          },
-                          {
-                            text: 'Adjustment case input',
-                            style: 'tableHeaderSubtitle',
-                          },
-                        ],
-                        [
-                          {
-                            text: 'Keluaran atas kasus penyesuaian',
-                            style: 'tableHeader',
-                          },
-                          {
-                            text: 'Adjustment case output',
-                            style: 'tableHeaderSubtitle',
-                          },
-                        ],
-                        [
-                          {
-                            text: 'Masukan atas pembelian',
-                            style: 'tableHeader',
-                          },
-                          {
-                            text: 'Input from purchase',
-                            style: 'tableHeaderSubtitle',
-                          },
-                        ],
-                        [
-                          {
-                            text: 'Keluaran atas penjualan',
-                            style: 'tableHeader',
-                          },
-                          {
-                            text: 'Output from sales',
-                            style: 'tableHeaderSubtitle',
-                          },
-                        ],
-                        [
-                          {
-                            text: 'Masukan atas retur penjualan',
-                            style: 'tableHeader',
-                          },
-                          {
-                            text: 'Input from sales return',
-                            style: 'tableHeaderSubtitle',
-                          },
-                        ],
-                        [
-                          {
-                            text: 'Stock akhir',
-                            style: 'tableHeader',
-                          },
-                          {
-                            text: 'Final stock',
-                            style: 'tableHeaderSubtitle',
-                          },
-                        ],
-                        [
-                          {
-                            text: 'Satuan',
-                            style: 'tableHeader',
-                          },
-                          {
-                            text: 'Unit',
-                            style: 'tableHeaderSubtitle',
-                          },
-                        ],
+                  const dataTable = {
+                    layout: 'lightHorizontalLines',
+                    table: {
+                      headerRows: 1,
+                      widths: [
+                        'auto',
+                        75,
+                        '*',
+                        'auto',
+                        'auto',
+                        50,
+                        50,
+                        50,
+                        50,
+                        50,
+                        50,
+                        50,
+                        50,
                       ],
-                      ...(x.items as any[]).map((y, index) => {
-                        return [
-                          {
-                            text: this.decimalPipe.transform(index + 1, '1.0'),
-                            style: 'tableContent',
-                          },
-                          {
-                            text: y.reference,
-                            style: 'tableContent',
-                          },
-                          {
-                            text: y.description,
-                            style: 'tableContent',
-                          },
-                          {
-                            text: y.product_brand.name,
-                            style: 'tableContent',
-                          },
-                          {
-                            text: y.product_type.name,
-                            style: 'tableContent',
-                          },
-                          {
-                            text: this.decimalPipe.transform(y.stock, '1.0-2'),
-                            style: 'tableContent',
-                          },
-                          {
-                            text: this.decimalPipe.transform(
-                              y.report.adjustment_case_found,
-                              '1.0-2'
-                            ),
-                            style: 'tableContent',
-                          },
-                          {
-                            text: this.decimalPipe.transform(
-                              y.report.adjustment_case_lost,
-                              '1.0-2'
-                            ),
-                            style: 'tableContent',
-                          },
-                          {
-                            text: this.decimalPipe.transform(
-                              y.report.good_receipt,
-                              '1.0-2'
-                            ),
-                            style: 'tableContent',
-                          },
-                          {
-                            text: this.decimalPipe.transform(
-                              y.report.sales_invoice,
-                              '1.0-2'
-                            ),
-                            style: 'tableContent',
-                          },
-                          {
-                            text: this.decimalPipe.transform(
-                              y.report.sales_return,
-                              '1.0-2'
-                            ),
-                            style: 'tableContent',
-                          },
-                          {
-                            text: this.decimalPipe.transform(
-                              y.report.adjustment_case_found +
-                                y.report.adjustment_case_lost +
-                                y.report.good_receipt +
-                                y.report.sales_invoice +
+                      body: [
+                        [
+                          [
+                            {
+                              text: 'No',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'No.',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Referensi',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Reference',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Deskripsi',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Description',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Merek',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Brand',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Tipe',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Type',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Stok awal',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Initial stock',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Masukan atas kasus penyesuaian',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Adjustment case input',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Keluaran atas kasus penyesuaian',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Adjustment case output',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Masukan atas pembelian',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Input from purchase',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Keluaran atas penjualan',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Output from sales',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Masukan atas retur penjualan',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Input from sales return',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Stock akhir',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Final stock',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Satuan',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Unit',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                        ],
+                        ...(data.data as any[]).map((y, index) => {
+                          return [
+                            {
+                              text: this.decimalPipe.transform(
+                                index + 1,
+                                '1.0'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: y.reference,
+                              style: 'tableContent',
+                            },
+                            {
+                              text: y.description,
+                              style: 'tableContent',
+                            },
+                            {
+                              text: y.product_brand.name,
+                              style: 'tableContent',
+                            },
+                            {
+                              text: y.product_type.name,
+                              style: 'tableContent',
+                            },
+                            {
+                              text: this.decimalPipe.transform(
+                                y.stock,
+                                '1.0-2'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: this.decimalPipe.transform(
+                                y.report.adjustment_case_found,
+                                '1.0-2'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: this.decimalPipe.transform(
+                                y.report.adjustment_case_lost,
+                                '1.0-2'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: this.decimalPipe.transform(
+                                y.report.good_receipt,
+                                '1.0-2'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: this.decimalPipe.transform(
+                                y.report.sales_invoice,
+                                '1.0-2'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: this.decimalPipe.transform(
                                 y.report.sales_return,
-                              '1.0-2'
-                            ),
-                            style: 'tableContent',
-                          },
-                          {
-                            text: y.unit,
-                            style: 'tableContent',
-                          },
-                        ];
-                      }),
-                    ],
-                  },
-                  pageBreak:
-                    i == (data as any[]).length - 1
-                      ? undefined
-                      : ('after' as PageBreak),
-                };
+                                '1.0-2'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: this.decimalPipe.transform(
+                                y.report.adjustment_case_found +
+                                  y.report.adjustment_case_lost +
+                                  y.report.good_receipt +
+                                  y.report.sales_invoice +
+                                  y.report.sales_return,
+                                '1.0-2'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: y.unit,
+                              style: 'tableContent',
+                            },
+                          ];
+                        }),
+                      ],
+                    },
+                    pageBreak:
+                      i == (data.brands as any[]).length - 1
+                        ? undefined
+                        : ('after' as PageBreak),
+                  };
 
-                content.push(dataTable);
-              });
+                  content.push(dataTable);
+                });
+              } else if (groupBy === 'type') {
+                data.types.forEach((type: any, i: number) => {
+                  content.push({
+                    text: type.name,
+                    style: 'header',
+                    marginBottom: 20,
+                  });
+
+                  const dataTable = {
+                    layout: 'lightHorizontalLines',
+                    table: {
+                      headerRows: 1,
+                      widths: [
+                        'auto',
+                        75,
+                        '*',
+                        'auto',
+                        'auto',
+                        50,
+                        50,
+                        50,
+                        50,
+                        50,
+                        50,
+                        50,
+                        50,
+                      ],
+                      body: [
+                        [
+                          [
+                            {
+                              text: 'No',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'No.',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Referensi',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Reference',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Deskripsi',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Description',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Merek',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Brand',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Tipe',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Type',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Stok awal',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Initial stock',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Masukan atas kasus penyesuaian',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Adjustment case input',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Keluaran atas kasus penyesuaian',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Adjustment case output',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Masukan atas pembelian',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Input from purchase',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Keluaran atas penjualan',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Output from sales',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Masukan atas retur penjualan',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Input from sales return',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Stock akhir',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Final stock',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                          [
+                            {
+                              text: 'Satuan',
+                              style: 'tableHeader',
+                            },
+                            {
+                              text: 'Unit',
+                              style: 'tableHeaderSubtitle',
+                            },
+                          ],
+                        ],
+                        ...(data.data as any[]).map((y, index) => {
+                          return [
+                            {
+                              text: this.decimalPipe.transform(
+                                index + 1,
+                                '1.0'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: y.reference,
+                              style: 'tableContent',
+                            },
+                            {
+                              text: y.description,
+                              style: 'tableContent',
+                            },
+                            {
+                              text: y.product_brand.name,
+                              style: 'tableContent',
+                            },
+                            {
+                              text: y.product_type.name,
+                              style: 'tableContent',
+                            },
+                            {
+                              text: this.decimalPipe.transform(
+                                y.stock,
+                                '1.0-2'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: this.decimalPipe.transform(
+                                y.report.adjustment_case_found,
+                                '1.0-2'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: this.decimalPipe.transform(
+                                y.report.adjustment_case_lost,
+                                '1.0-2'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: this.decimalPipe.transform(
+                                y.report.good_receipt,
+                                '1.0-2'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: this.decimalPipe.transform(
+                                y.report.sales_invoice,
+                                '1.0-2'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: this.decimalPipe.transform(
+                                y.report.sales_return,
+                                '1.0-2'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: this.decimalPipe.transform(
+                                y.report.adjustment_case_found +
+                                  y.report.adjustment_case_lost +
+                                  y.report.good_receipt +
+                                  y.report.sales_invoice +
+                                  y.report.sales_return,
+                                '1.0-2'
+                              ),
+                              style: 'tableContent',
+                            },
+                            {
+                              text: y.unit,
+                              style: 'tableContent',
+                            },
+                          ];
+                        }),
+                      ],
+                    },
+                    pageBreak:
+                      i == (data.brands as any[]).length - 1
+                        ? undefined
+                        : ('after' as PageBreak),
+                  };
+
+                  content.push(dataTable);
+                });
+              }
 
               let documentDefinition: TDocumentDefinitions = {
                 pageSize: 'A4' as PageSize,

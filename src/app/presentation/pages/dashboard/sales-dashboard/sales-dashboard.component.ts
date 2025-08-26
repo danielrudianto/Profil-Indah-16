@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { TranslateService } from '@ngx-translate/core';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { ReportCompanyComponent } from '../../report/report-company/report-company.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-sales-dashboard',
@@ -18,7 +18,7 @@ export class SalesDashboardComponent {
     private alertService: AlertService,
     private apiService: ApiService,
     private translateService: TranslateService,
-    private dynamicComponentService: DynamicComponentService
+    private dialog: MatDialog
   ) {}
 
   stats: StatCard[] = [
@@ -71,10 +71,7 @@ export class SalesDashboardComponent {
         this.router.navigate(['/Sales/Report/Sales']);
         break;
       case 'company':
-        this.dynamicComponentService.createDynamicComponent(
-          ReportCompanyComponent,
-          {}
-        );
+        this.dialog.open(ReportCompanyComponent, {});
         break;
       case 'output':
         this.router.navigate(['/Sales/Report/Output']);

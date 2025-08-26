@@ -1237,5 +1237,10 @@
   "promotion__view__action": "Aksi lainnya",
   "promotion__view__action__edit": "Perbaharui data promosi",
   "promotion__view__action__view-result": "Lihat hasil promosi",
-  "promotion__title__update": "Perbaharui data promosi"
+  "promotion__result__title": "Hasil promosi",
+  "promotion__title__update": "Perbaharui data promosi",
+  "promotion__result__result": "Hasil promosi",
+  "promotion__result__product-list": "Produk dalam promosi",
+  "promotion__result__sales": "Nominal penjualan",
+  "promotion__result__purchase": "Nominal pembelian"
 }

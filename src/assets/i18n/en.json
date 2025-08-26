@@ -1232,5 +1232,10 @@
   "promotion__view__action": "Other actions",
   "promotion__view__action__edit": "Update promotion data",
   "promotion__view__action__view-result": "View promotion result",
-  "promotion__title__update": "Update promotion date"
+  "promotion__result__title": "Promotion result",
+  "promotion__title__update": "Update promotion data",
+  "promotion__result__result": "Promotion result",
+  "promotion__result__product-list": "Promotion product list",
+  "promotion__result__sales": "Sales amount",
+  "promotion__result__purchase": "Purchase amount"
 }

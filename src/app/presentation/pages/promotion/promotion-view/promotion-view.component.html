@@ -161,7 +161,7 @@
               <mat-icon>edit</mat-icon>
               <span>{{ "promotion__view__action__edit" | translate }}</span>
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item (click)="openPromotionResult()">
               <mat-icon>view_list</mat-icon>
               <span>{{
                 "promotion__view__action__view-result" | translate

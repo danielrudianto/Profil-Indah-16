@@ -69,10 +69,10 @@ export class ReportFinanceComponent {
       })
       .subscribe({
         next: (data: any) => {
-          const salesValue = data.bills.value;
-          const salesDiscount = data.bills.discount;
-          const salesDelivery = data.bills.delivery;
-          const salesService = data.bills.service;
+          const salesValue = data.sales.value;
+          const salesDiscount = data.sales.discount;
+          const salesDelivery = data.sales.delivery;
+          const salesService = data.sales.service;
 
           const headerText =
             this.financeReportFormGroup.controls['type'].value == '0'
@@ -141,8 +141,10 @@ export class ReportFinanceComponent {
                 },
               ],
             ],
-            ...data.companies.map((x: any) => {
-              const cogsIndex = data.cogs.findIndex((y: any) => y._id == x.id);
+            ...data.company.map((x: any) => {
+              const cogsIndex = data.stockOut.data.findIndex(
+                (y: any) => y.company_id == x.id
+              );
               return cogsIndex == -1
                 ? [
                     {
@@ -173,14 +175,14 @@ export class ReportFinanceComponent {
                     },
                     {
                       text: this.decimalPipe.transform(
-                        data.cogs[cogsIndex].totalStockoutValue,
+                        data.stockOut.data[cogsIndex].sales,
                         '1.2-2'
                       ),
                       style: 'tableContent',
                     },
                     {
                       text: this.decimalPipe.transform(
-                        data.cogs[cogsIndex].totalCOGS,
+                        data.stockOut.data[cogsIndex].hpp,
                         '1.2-2'
                       ),
                       style: 'tableContent',
@@ -188,20 +190,20 @@ export class ReportFinanceComponent {
                     [
                       {
                         text: `${this.decimalPipe.transform(
-                          data.cogs[cogsIndex].totalStockoutValue -
-                            data.cogs[cogsIndex].totalCOGS,
+                          data.stockOut.data[cogsIndex].sales -
+                            data.stockOut.data[cogsIndex].hpp,
                           '1.2-2'
                         )}`,
                         style: 'tableContent',
                       },
                       {
                         text: `${this.decimalPipe.transform(
-                          data.cogs[cogsIndex].totalStockoutValue == 0
+                          data.stockOut.data[cogsIndex].sales == 0
                             ? 0
-                            : ((data.cogs[cogsIndex].totalStockoutValue -
-                                data.cogs[cogsIndex].totalCOGS) *
+                            : ((data.stockOut.data[cogsIndex].sales -
+                                data.stockOut.data[cogsIndex].hpp) *
                                 100) /
-                                data.cogs[cogsIndex].totalStockoutValue,
+                                data.stockOut.data[cogsIndex].hpp,
                           '1.2-2'
                         )}%`,
                         style: 'tableContentSubtitle',
@@ -210,9 +212,9 @@ export class ReportFinanceComponent {
                     [
                       {
                         text: `${this.decimalPipe.transform(
-                          data.cogs[cogsIndex].totalStockoutValue -
-                            data.cogs[cogsIndex].totalCOGS -
-                            (data.expenses as any[])
+                          data.stockOut.data[cogsIndex].sales -
+                            data.stockOut.data[cogsIndex].hpp -
+                            (data.expense as any[])
                               .filter((y) => y.company_id == x.id)
                               .reduce(
                                 (a, b) => a + parseFloat(b.value.toString()),
@@ -224,11 +226,11 @@ export class ReportFinanceComponent {
                       },
                       {
                         text: `${this.decimalPipe.transform(
-                          data.cogs[cogsIndex].totalStockoutValue == 0
+                          data.stockOut.data[cogsIndex].sales == 0
                             ? 0
-                            : ((data.cogs[cogsIndex].totalStockoutValue -
-                                data.cogs[cogsIndex].totalCOGS -
-                                (data.expenses as any[])
+                            : ((data.stockOut.data[cogsIndex].sales -
+                                data.stockOut.data[cogsIndex].hpp -
+                                (data.expense as any[])
                                   .filter((y) => y.company_id == x.id)
                                   .reduce(
                                     (a, b) =>
@@ -236,7 +238,7 @@ export class ReportFinanceComponent {
                                     0
                                   )) *
                                 100) /
-                                data.cogs[cogsIndex].totalStockoutValue,
+                                data.stockOut.data[cogsIndex].hpp,
                           '1.2-2'
                         )}%`,
                         style: 'tableContentSubtitle',
@@ -250,7 +252,10 @@ export class ReportFinanceComponent {
                 style: 'tableContent',
               },
               {
-                text: this.decimalPipe.transform(data.overflows, '1.2-2'),
+                text: this.decimalPipe.transform(
+                  data.stockOut.unallocated,
+                  '1.2-2'
+                ),
                 style: 'tableContent',
               },
               {
@@ -273,17 +278,14 @@ export class ReportFinanceComponent {
               },
               {
                 text: this.decimalPipe.transform(
-                  data.cogs.reduce(
-                    (a: any, b: any) => a + b.totalStockoutValue,
-                    0
-                  ),
+                  data.stockOut.data.reduce((a: any, b: any) => a + b.sales, 0),
                   '1.2-2'
                 ),
                 style: 'tableContent',
               },
               {
                 text: this.decimalPipe.transform(
-                  data.cogs.reduce((a: any, b: any) => a + b.totalCOGS, 0),
+                  data.stockOut.data.reduce((a: any, b: any) => a + b.hpp, 0),
                   '1.2-2'
                 ),
                 style: 'tableContent',
@@ -291,9 +293,8 @@ export class ReportFinanceComponent {
               [
                 {
                   text: this.decimalPipe.transform(
-                    data.cogs.reduce(
-                      (a: any, b: any) =>
-                        a + b.totalStockoutValue - b.totalCOGS,
+                    data.stockOut.data.reduce(
+                      (a: any, b: any) => a + b.sales - b.hpp,
                       0
                     ),
                     '1.2-2'
@@ -302,13 +303,12 @@ export class ReportFinanceComponent {
                 },
                 {
                   text: `${this.decimalPipe.transform(
-                    (data.cogs.reduce(
-                      (a: any, b: any) =>
-                        a + b.totalStockoutValue - b.totalCOGS,
+                    (data.stockOut.data.reduce(
+                      (a: any, b: any) => a + b.sales - b.hpp,
                       0
                     ) /
-                      data.cogs.reduce(
-                        (a: any, b: any) => a + b.totalStockoutValue,
+                      data.stockOut.data.reduce(
+                        (a: any, b: any) => a + b.sales,
                         0
                       )) *
                       100,
@@ -320,12 +320,11 @@ export class ReportFinanceComponent {
               [
                 {
                   text: this.decimalPipe.transform(
-                    data.cogs.reduce(
-                      (a: any, b: any) =>
-                        a + b.totalStockoutValue - b.totalCOGS,
+                    data.stockOut.data.reduce(
+                      (a: any, b: any) => a + b.sales - b.hpp,
                       0
                     ) -
-                      (data.expenses as any[]).reduce(
+                      (data.expense as any[]).reduce(
                         (a, b) => a + parseFloat(b.value.toString()),
                         0
                       ),
@@ -335,18 +334,17 @@ export class ReportFinanceComponent {
                 },
                 {
                   text: `${this.decimalPipe.transform(
-                    ((data.cogs.reduce(
-                      (a: any, b: any) =>
-                        a + b.totalStockoutValue - b.totalCOGS,
+                    ((data.stockOut.data.reduce(
+                      (a: any, b: any) => a + b.sales - b.hpp,
                       0
                     ) -
-                      (data.expenses as any[]).reduce(
+                      (data.expense as any[]).reduce(
                         (a, b) => a + parseFloat(b.value.toString()),
                         0
                       )) *
                       100) /
-                      data.cogs.reduce(
-                        (a: any, b: any) => a + b.totalStockoutValue,
+                      data.stockOut.data.reduce(
+                        (a: any, b: any) => a + b.sales,
                         0
                       ),
                     '1.2-2'
@@ -491,12 +489,12 @@ export class ReportFinanceComponent {
                 },
               ],
             ],
-            ...data.companies.map((company: any) => {
-              const purchaseIndex = data.purchases.findIndex(
+            ...data.company.map((company: any) => {
+              const purchaseIndex = data.purchase.findIndex(
                 (x: any) => x.company_id == company.id
               );
 
-              const purchase = data.purchases[purchaseIndex];
+              const purchase = data.purchase[purchaseIndex];
               return purchaseIndex == -1
                 ? [
                     {
@@ -518,7 +516,7 @@ export class ReportFinanceComponent {
                   ]
                 : [
                     {
-                      text: purchase.name,
+                      text: company.name,
                       style: 'tableContent',
                     },
                     {
@@ -567,7 +565,7 @@ export class ReportFinanceComponent {
                 },
               ],
             ],
-            ...data.companies.map((x: any) => {
+            ...data.company.map((x: any) => {
               return [
                 {
                   text: x.name,
@@ -575,7 +573,7 @@ export class ReportFinanceComponent {
                 },
                 {
                   text: this.decimalPipe.transform(
-                    (data.expenses as any[])
+                    (data.expense as any[])
                       .filter((y) => y.company_id == x.id)
                       .reduce((a, b) => a + parseFloat(b.value.toString()), 0),
                     '1.2-2'

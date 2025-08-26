@@ -365,4 +365,8 @@ export class PromotionViewComponent {
       relativeTo: this.route,
     });
   }
+
+  openPromotionResult() {
+    this.dialog.close('result');
+  }
 }

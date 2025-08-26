@@ -1,7 +1,12 @@
-<div class="card">
+<div class="card" (click)="navigate()">
   <h4>{{ title }}</h4>
   <div class="dashboard__description-wrapper"></div>
-  <button class="button" (click)="navigate()">
+  <button
+    mat-stroked-button
+    color="primary"
+    style="letter-spacing: 0"
+    (click)="navigate()"
+  >
     <span>Navigate&nbsp;</span>
   </button>
 </div>
