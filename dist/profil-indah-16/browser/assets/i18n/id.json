@@ -1071,6 +1071,8 @@
   "inadequate-report__export__successful": "Laporan barang kurang berhasil diekspor",
   "general__superadministrator-required": "Superadmin diperlukan untuk mengakses halaman ini.",
   "good-receipt__title": "Penerimaan barang",
+  "good-receipt__archive": "Arsip",
+  "good-receipt__create": "Buat baru",
   "good-receipt__archive__date": "Tanggal",
   "good-receipt__archive__name": "Surat jalan",
   "good-receipt__archive__invoice-name": "Faktur",

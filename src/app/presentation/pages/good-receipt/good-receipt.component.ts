@@ -8,12 +8,12 @@ import { Component } from '@angular/core';
 export class GoodReceiptComponent {
   availbleMenus = [
     {
-      label: 'Archive',
+      label: 'good-receipt__archive',
       link: 'Archive',
       icon: 'folder',
     },
     {
-      label: 'Create',
+      label: 'good-receipt__create',
       link: '',
       icon: 'add',
     },
