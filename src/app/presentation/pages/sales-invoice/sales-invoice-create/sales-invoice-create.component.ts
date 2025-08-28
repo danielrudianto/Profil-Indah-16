@@ -275,6 +275,10 @@ export class SalesInvoiceCreateComponent {
       });
   }
 
+  ngOnDestroy(): void {
+    this._hotkeysService.reset();
+  }
+
   fetchSalesmen() {
     this.apiService
       .get('salesman', {

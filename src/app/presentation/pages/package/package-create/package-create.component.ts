@@ -80,6 +80,10 @@ export class PackageCreateComponent {
     });
   }
 
+  ngOnDestroy(): void {
+    this._hotkeysService.reset();
+  }
+
   get f() {
     return this.itemsFormGroup.controls;
   }

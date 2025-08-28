@@ -37,8 +37,16 @@ export class FeatureSearchComponent {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private alertService: AlertService,
-    private hotKeysService: HotkeysService
-  ) {}
+    private _hotKeysService: HotkeysService
+  ) {
+    this._hotKeysService.add([
+      new Hotkey('alt+a', (event: KeyboardEvent): boolean => {
+        this.onAddButtonPressed.emit(true);
+        this.openDialog();
+        return false; // Prevent bubbling
+      }),
+    ]);
+  }
 
   @Input('buttonLabel') buttonLabel!: string;
   @Input('route') route!: string;
@@ -164,14 +172,10 @@ export class FeatureSearchComponent {
         this.onNewQuery.emit();
         this.fetchItems();
       });
+  }
 
-    this.hotKeysService.add([
-      new Hotkey('alt+a', (event: KeyboardEvent): boolean => {
-        this.onAddButtonPressed.emit(true);
-        this.openDialog();
-        return false; // Prevent bubbling
-      }),
-    ]);
+  ngOnDestroy(): void {
+    this._hotKeysService.reset();
   }
 
   fetchItems() {

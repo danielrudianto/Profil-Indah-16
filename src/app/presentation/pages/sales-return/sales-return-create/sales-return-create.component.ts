@@ -31,13 +31,13 @@ export class SalesReturnCreateComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private _hotKeysService: HotkeysService,
+    private _hotkeysService: HotkeysService,
     private formBuilder: FormBuilder,
     private dynamicComponentService: DynamicComponentService,
     private translateService: TranslateService,
     private datePipe: DatePipe
   ) {
-    this._hotKeysService.add([
+    this._hotkeysService.add([
       new Hotkey('alt+a', (): boolean => {
         this.openItemSelector();
         return false;
@@ -71,6 +71,10 @@ export class SalesReturnCreateComponent {
     this.metaFormGroup.controls['bill_date'].valueChanges.subscribe(() => {
       this.refreshSubscription();
     });
+  }
+
+  ngOnDestroy(): void {
+    this._hotkeysService.reset();
   }
 
   get f() {

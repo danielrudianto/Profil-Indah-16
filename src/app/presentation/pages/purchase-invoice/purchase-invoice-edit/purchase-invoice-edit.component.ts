@@ -224,6 +224,10 @@ export class PurchaseInvoiceEditComponent {
     });
   }
 
+  ngOnDestroy(): void {
+    this._hotkeysService.reset();
+  }
+
   openItemSelector() {
     this.dynamicComponentService
       .createDynamicComponent(ProductSelectorComponent, {

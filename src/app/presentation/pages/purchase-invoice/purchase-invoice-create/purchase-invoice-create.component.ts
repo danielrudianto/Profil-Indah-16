@@ -134,6 +134,10 @@ export class PurchaseInvoiceCreateComponent {
     });
   }
 
+  ngOnDestroy(): void {
+    this._hotkeysService.reset();
+  }
+
   openProductSelector() {
     const dialog = this.dynamicComponentService.createDynamicComponent(
       ProductSelectorComponent,

@@ -83,6 +83,10 @@ export class AdjustmentCaseCreateComponent {
     });
   }
 
+  ngOnDestroy(): void {
+    this._hotkeysService.reset();
+  }
+
   onSelectCompany(data: any) {
     this.metaFormGroup.patchValue({
       company_id: data.id,
