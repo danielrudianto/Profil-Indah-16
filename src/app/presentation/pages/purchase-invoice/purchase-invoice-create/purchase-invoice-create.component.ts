@@ -45,19 +45,6 @@ export class PurchaseInvoiceCreateComponent {
         this.openProductSelector();
         return false; // Prevent bubbling
       }),
-      new Hotkey('alt+s', (event: KeyboardEvent): boolean => {
-        if (
-          this.metaFormGroup.valid &&
-          this.documentFormGroup.valid &&
-          this.itemFormGroup.valid &&
-          this.valueFormGroup.valid
-        ) {
-          this.submitForm();
-        } else {
-          this.alertService.showError(Error('Please check your input.'));
-        }
-        return false;
-      }),
     ]);
   }
 

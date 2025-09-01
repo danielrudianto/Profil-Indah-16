@@ -75,6 +75,7 @@ export class StockListReportComponent {
           'yyyy-MM-dd'
         ),
         viewBy: this.stockFormGroup.controls['viewBy']?.value,
+        product_id: this.data.id,
       })
       .subscribe({
         next: (data: any) => {
