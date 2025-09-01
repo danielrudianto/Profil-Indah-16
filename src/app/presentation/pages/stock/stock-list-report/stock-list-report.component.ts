@@ -38,7 +38,7 @@ export class StockListReportComponent {
       Validators.required,
       Validators.pattern('date|created'),
     ]),
-    previousStock: new FormControl(0, Validators.required),
+    previous: new FormControl(0, Validators.required),
     mutation: new FormArray([]),
   });
 
@@ -80,7 +80,7 @@ export class StockListReportComponent {
       .subscribe({
         next: (data: any) => {
           this.stockFormGroup.patchValue({
-            previous: data.previous,
+            previous: data.previous ?? 0,
           });
 
           let stock = data.previous ?? 0;
@@ -95,7 +95,7 @@ export class StockListReportComponent {
                 quantity: [x.quantity],
                 document_name: [x.document_name],
                 display_quantity: [x.display_quantity],
-                stock: [stock + x.quantity],
+                stock: [stock + x.quantity, Validators.required],
                 unit: [
                   x.product_unit == null
                     ? this.dataSource.unit
@@ -152,5 +152,33 @@ export class StockListReportComponent {
 
   close() {
     this.dialog.close();
+  }
+
+  get incoming(): number {
+    const filtered = this.t.controls.filter((x) => {
+      return x.get('quantity')?.value > 0;
+    });
+
+    return filtered.length == 0
+      ? 0
+      : filtered.reduce((a, b) => {
+          return a + b.get('quantity')?.value;
+        }, 0);
+  }
+
+  get outgoing(): number {
+    const filtered = this.t.controls.filter((x) => {
+      return x.get('quantity')?.value < 0;
+    });
+
+    return filtered.length == 0
+      ? 0
+      : filtered.reduce((a, b) => {
+          return a + b.get('quantity')?.value;
+        }, 0);
+  }
+
+  get finalStock(): number {
+    return this.stockFormGroup.value.previous + this.incoming + this.outgoing;
   }
 }

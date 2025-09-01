@@ -189,6 +189,8 @@
   "stock-report__table__opponent": "Opponent",
   "stock-report__table__quantity": "Quantity",
   "stock-report__table__stock": "Stock",
+  "stock-report__outgoing-stock": "Outgoing quantity",
+  "stock-report__incoming-stock": "Incoming quantity",
   "dark-mode-selector__tooltip": "Dark theme is currently not available.",
   "payment-method__title": "Payment method",
   "payment-method__name": "Name",

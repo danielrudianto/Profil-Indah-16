@@ -186,6 +186,8 @@
   "stock-report__table__opponent": "Lawan transaksi",
   "stock-report__table__quantity": "Jumlah",
   "stock-report__table__stock": "Stok",
+  "stock-report__outgoing-stock": "Qty. Keluar",
+  "stock-report__incoming-stock": "Qty. Masuk",
   "dark-mode-selector__tooltip": "Tema gelap saat ini belum tersedia.",
   "payment-method__title": "Metode pembayaran",
   "payment-method__name": "Nama",

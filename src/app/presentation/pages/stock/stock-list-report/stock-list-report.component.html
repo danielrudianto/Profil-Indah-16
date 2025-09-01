@@ -32,7 +32,48 @@
             <mat-label>{{
               "stock-report__initial-stock" | translate
             }}</mat-label>
-            <input matInput readonly formControlName="previousStock" />
+            <input matInput readonly formControlName="previous" />
+          </mat-form-field>
+          <mat-divider />
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{
+              "stock-report__incoming-stock" | translate
+            }}</mat-label>
+            <input
+              matInput
+              readonly
+              [value]="incoming"
+              type="text"
+              mask="separator.2"
+              thousandSeparator=" "
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{
+              "stock-report__outgoing-stock" | translate
+            }}</mat-label>
+            <input
+              matInput
+              readonly
+              [value]="outgoing"
+              type="text"
+              mask="separator.2"
+              thousandSeparator=" "
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ "stock-report__final-stock" | translate }}</mat-label>
+            <input
+              matInput
+              readonly
+              [value]="finalStock"
+              type="text"
+              mask="separator.2"
+              thousandSeparator=" "
+            />
           </mat-form-field>
           <mat-divider class="mb-3" />
 
