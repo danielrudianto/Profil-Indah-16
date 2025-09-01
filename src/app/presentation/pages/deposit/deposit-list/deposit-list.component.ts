@@ -24,7 +24,7 @@ export class DepositListComponent {
     this.dialog.open(DepositViewComponent, {
       data: {
         id: id,
-        noAction: true,
+        noAction: false,
         print: true,
       },
     });
