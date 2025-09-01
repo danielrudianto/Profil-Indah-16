@@ -99,7 +99,7 @@
                 {{
                   "purchase-invoice__create__table__current-stock" | translate
                 }}:
-                {{ itemForm.get("stock")?.value | number : "0.0-2" }}
+                {{ itemForm.get("stock")?.value.stock | number : "0.0-2" }}
                 {{ itemForm.get("default_unit")?.value }}
               </p>
             </td>

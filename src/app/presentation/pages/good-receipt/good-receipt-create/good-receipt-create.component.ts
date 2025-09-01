@@ -130,7 +130,7 @@ export class GoodReceiptCreateComponent {
             product_unit_id: [sub == null ? null : sub.id],
             reference: [data.reference],
             description: [data.description],
-            quantity: [0, [Validators.required, Validators.min(0.01)]],
+            quantity: ['', [Validators.required, Validators.min(0.01)]],
             unit: [sub == null ? data.unit : sub.unit],
             conversion: [sub == null ? 1 : sub.conversion],
             price: [sub == null ? data.purchase_price : sub.purchase_price],

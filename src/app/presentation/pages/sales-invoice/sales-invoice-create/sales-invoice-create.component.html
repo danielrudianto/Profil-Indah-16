@@ -141,7 +141,9 @@
                     <mat-divider></mat-divider>
                     <p class="mt-2">
                       Stock:
-                      {{ itemForm.get("stock")?.value | number : "0.0-2" }}
+                      {{
+                        itemForm.get("stock")?.value.stock | number : "0.0-2"
+                      }}
                     </p>
                   </td>
                   <td class="text-center" (click)="updatePrice(i)">

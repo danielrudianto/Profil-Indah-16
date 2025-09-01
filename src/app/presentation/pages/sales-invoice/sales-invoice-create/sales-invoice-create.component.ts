@@ -330,7 +330,7 @@ export class SalesInvoiceCreateComponent {
                   product_unit_id: [null],
                   reference: [data.reference],
                   description: [data.description],
-                  quantity: [0, [Validators.required, Validators.min(0.01)]],
+                  quantity: ['', [Validators.required, Validators.min(0.01)]],
                   initial_price: [
                     data.sales_price,
                     [Validators.required, Validators.min(0)],
