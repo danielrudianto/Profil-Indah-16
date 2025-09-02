@@ -34,7 +34,7 @@ export class StockListReportComponent {
 
   stockFormGroup: FormGroup = new FormGroup({
     date: new FormControl(new Date(), Validators.required),
-    viewBy: new FormControl('date', [
+    viewBy: new FormControl('created', [
       Validators.required,
       Validators.pattern('date|created'),
     ]),
