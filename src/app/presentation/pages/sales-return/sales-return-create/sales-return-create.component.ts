@@ -386,7 +386,7 @@ export class SalesReturnCreateComponent {
         .post('sales-return', {
           sales_invoice_code_id: this.selectedBill.id,
           date: this.datePipe.transform(
-            this.metaFormGroup.value.bill_date,
+            this.metaFormGroup.value.date,
             'yyyy-MM-dd'
           ),
           payment_method_id: this.metaFormGroup.value.payment_method,
