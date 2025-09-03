@@ -280,6 +280,7 @@
   "sales-invoice__create__subtotal": "Subtotal",
   "sales-invoice__create__success": "Successfully created sales invoice",
   "sales-deposit__create__success": "Successfully created sales deposit",
+  "sales-deposit__reject__success": "Successfully deleted sales deposit",
   "sales-invoice__create__action": "Action",
   "sales-invoice__create__item__payment-method": "Payment method",
   "sales-invoice__create__item__payment-method__amount": "Amount",

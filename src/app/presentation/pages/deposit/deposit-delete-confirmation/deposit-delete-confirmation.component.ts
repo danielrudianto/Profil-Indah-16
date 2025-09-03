@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import {
   AbstractControl,
@@ -7,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { availableBankSearch, IBank } from 'src/app/utils/bank';
@@ -21,7 +23,9 @@ export class DepositDeleteConfirmationComponent {
     @Inject(MAT_DIALOG_DATA) public data: { id: number },
     private dialog: MatDialogRef<DepositDeleteConfirmationComponent>,
     private apiService: ApiService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private translateService: TranslateService,
+    private datePipe: DatePipe
   ) {}
 
   isSubmitting: boolean = false;
@@ -137,10 +141,22 @@ export class DepositDeleteConfirmationComponent {
   onSubmit() {
     this.isSubmitting = true;
     this.apiService
-      .post('sales-deposit/reject', this.formGroup.value)
+      .post('sales-deposit/reject', {
+        ...this.formGroup.value,
+        return_payment_date:
+          this.formGroup.get('method')?.value == 'delete'
+            ? undefined
+            : this.datePipe.transform(
+                this.formGroup.get('return_payment_date')?.value,
+                'yyyy-MM-dd'
+              ),
+      })
       .subscribe({
-        next: (data) => {
-          this.dialog.close();
+        next: () => {
+          this.alertService.showSuccess(
+            this.translateService.instant('sales-deposit__reject__success')
+          );
+          this.dialog.close('reject');
         },
         error: (error) => {
           this.alertService.showError(error);

@@ -277,6 +277,7 @@
   "sales-invoice__create__subtotal": "Subtotal",
   "sales-invoice__create__success": "Data faktur penjualan berhasil dibuat",
   "sales-deposit__create__success": "Data deposit penjualan berhasil dibuat",
+  "sales-deposit__reject__success": "Data deposit penjualan berhasil dihapus",
   "sales-invoice__create__action": "Tindakan",
   "sales-invoice__create__item__payment-method": "Metode pembayaran",
   "sales-invoice__create__item__payment-method__amount": "Nominal",

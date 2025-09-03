@@ -21,13 +21,24 @@ export class DepositListComponent {
   }
 
   viewDeposit(id: number) {
-    this.dialog.open(DepositViewComponent, {
-      data: {
-        id: id,
-        noAction: false,
-        print: true,
-      },
-    });
+    this.dialog
+      .open(DepositViewComponent, {
+        data: {
+          id: id,
+          noAction: false,
+          print: true,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data === 'reject') {
+          const index = this.dataSource.findIndex((x) => x.id === id);
+          if (index != -1) {
+            this.dataSource.splice(index, 1);
+          }
+          this.dataCount--;
+        }
+      });
   }
 
   onUpdateData(event: any) {

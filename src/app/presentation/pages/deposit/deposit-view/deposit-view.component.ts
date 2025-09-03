@@ -132,12 +132,19 @@ export class DepositViewComponent {
   }
 
   delete(): void {
-    this.dialog.open(DepositDeleteConfirmationComponent, {
-      data: {
-        id: this.data.id,
-      },
-      disableClose: true,
-    });
+    this.dialog
+      .open(DepositDeleteConfirmationComponent, {
+        data: {
+          id: this.data.id,
+        },
+        disableClose: true,
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data == 'reject') {
+          this.dialogRef.close('reject');
+        }
+      });
   }
 
   fetchByID(): void {
