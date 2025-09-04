@@ -55,23 +55,12 @@ export class PricePurchaseComponent {
       .afterClosed()
       .subscribe((data) => {
         if (data) {
+          const index = this.dataSource.findIndex((x) => x.id == id);
+          if (index != -1) {
+            this.dataSource[index].purchase_price = data[0].price;
+            this.dataSource[index].purchase_discount = data[0].discount;
+          }
         }
       });
-    // this.dynamicComponentService
-    //   .createDynamicComponent(PricePurchaseUpdateComponent, {
-    //     id: id,
-    //   })
-    //   .subscribe((data) => {
-    //     if (data != undefined && data != null) {
-    //       const index = (data as any[]).findIndex(
-    //         (x) => x.item_unit_id == null
-    //       );
-    //       if (index != -1) {
-    //         const dataIndex = this.dataSource.findIndex((x) => x.id == id);
-    //         this.dataSource[dataIndex].price = data[index].price;
-    //         this.dataSource[dataIndex].discount = data[index].discount;
-    //       }
-    //     }
-    //   });
   }
 }

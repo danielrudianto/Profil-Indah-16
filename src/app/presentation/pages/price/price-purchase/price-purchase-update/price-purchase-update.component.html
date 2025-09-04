@@ -1,94 +1,93 @@
-<app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
-  <div class="create-dialog">
-    <app-dialog-header
-      [title]="'purchase-price__update__title' | translate"
-      (onDialogClose)="closeDialog()"
+<h2 mat-dialog-title>{{ "purchase-price__update__title" | translate }}</h2>
+<form [formGroup]="priceFormGroup" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div *ngIf="isLoading">
+      <mat-spinner id="spinner" />
+    </div>
+    <div *ngIf="!isLoading">
+      <label>{{ "purchase-price__update__reference" | translate }}</label>
+      <p>{{ priceFormGroup.get("reference")?.value }}</p>
+
+      <label>{{ "purchase-price__update__description" | translate }}</label>
+      <p class="text-clamp-2">
+        {{ priceFormGroup.get("description")?.value }}
+      </p>
+
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>
+                {{ "purchase-price__update__unit" | translate }}
+              </th>
+              <th>
+                {{ "purchase-price__update__price" | translate }}
+              </th>
+              <th>{{ "purchase-price__update__discount" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let itemForm of t.controls; index as i"
+              [formGroup]="getFormGroupAt(i)"
+            >
+              <td>
+                <p>{{ itemForm.get("unit")?.value }}</p>
+                <small *ngIf="itemForm.get('conversion')?.value != 1"
+                  >{{ itemForm.get("conversion")?.value }}
+                  {{ priceFormGroup.get("unit")?.value }}</small
+                >
+              </td>
+
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-label>{{
+                    "purchase-price__update__price" | translate
+                  }}</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    class="text-center"
+                    mask="separator"
+                    thousandSeparator=" "
+                    formControlName="price"
+                    autocomplete="off"
+                    placeholder="Ex. 20"
+                  />
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-label>{{
+                    "purchase-price__update__discount" | translate
+                  }}</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    class="text-center"
+                    mask="separator"
+                    thousandSeparator=" "
+                    formControlName="discount"
+                    autocomplete="off"
+                    placeholder="Ex. 20"
+                  />
+                </mat-form-field>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button
+      type="submit"
+      mat-stroked-button
+      color="primary"
+      style="letter-spacing: 0"
+      [disabled]="isSubmitting || !priceFormGroup.valid"
     >
-    </app-dialog-header>
-    <div class="create-dialog__content">
-      <div *ngIf="isLoading">
-        <mat-spinner id="spinner" />
-      </div>
-      <div *ngIf="!isLoading">
-        <label>{{ "purchase-price__update__reference" | translate }}</label>
-        <p>{{ priceFormGroup.get("reference")?.value }}</p>
-
-        <label>{{ "purchase-price__update__description" | translate }}</label>
-        <p class="text-clamp-2">
-          {{ priceFormGroup.get("description")?.value }}
-        </p>
-
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>
-                  {{ "purchase-price__update__unit" | translate }}
-                </th>
-                <th>
-                  {{ "purchase-price__update__price" | translate }}
-                </th>
-                <th>{{ "purchase-price__update__discount" | translate }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="let itemForm of t.controls; index as i"
-                [formGroup]="getFormGroupAt(i)"
-              >
-                <td>
-                  <p>{{ itemForm.get("unit")?.value }}</p>
-                </td>
-
-                <td>
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{
-                      "purchase-price__update__price" | translate
-                    }}</mat-label>
-                    <input
-                      matInput
-                      type="text"
-                      class="text-center"
-                      mask="separator"
-                      thousandSeparator=" "
-                      formControlName="price"
-                      autocomplete="off"
-                      placeholder="Ex. 20"
-                    />
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{
-                      "purchase-price__update__discount" | translate
-                    }}</mat-label>
-                    <input
-                      matInput
-                      type="text"
-                      class="text-center"
-                      mask="separator"
-                      thousandSeparator=" "
-                      formControlName="discount"
-                      autocomplete="off"
-                      placeholder="Ex. 20"
-                    />
-                  </mat-form-field>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="create-dialog__footer">
-      <button
-        type="button"
-        class="next-button"
-        (click)="submitForm()"
-        [disabled]="isSubmitting || !priceFormGroup.valid"
-      >
-        {{ "purchase-price__update__submit" | translate }}
-      </button>
-    </div>
-  </div>
-</app-dynamic-dialog>
+      {{ "purchase-price__update__submit" | translate }}
+    </button>
+  </mat-dialog-actions>
+</form>

@@ -22,53 +22,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>
-            <p>{{ priceFormGroup.get("unit")?.value }}</p>
-          </td>
-
-          <td>
-            <mat-form-field appearance="outline">
-              <mat-label>{{
-                "sales-price__update__price" | translate
-              }}</mat-label>
-              <input
-                matInput
-                type="text"
-                class="text-center"
-                mask="separator"
-                thousandSeparator=" "
-                formControlName="sales_price"
-                autocomplete="off"
-                placeholder="Ex. 20"
-              />
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field appearance="outline">
-              <mat-label>{{
-                "sales-price__update__discount" | translate
-              }}</mat-label>
-              <input
-                matInput
-                type="text"
-                class="text-center"
-                mask="separator"
-                thousandSeparator=" "
-                formControlName="sales_discount"
-                autocomplete="off"
-                placeholder="Ex. 20"
-              />
-            </mat-form-field>
-          </td>
-        </tr>
         <tr
           *ngFor="let itemForm of t.controls; index as i"
           [formGroup]="getFormGroupAt(i)"
         >
           <td>
             <p class="mb-0">{{ itemForm.get("unit")?.value }}</p>
-            <small
+            <small *ngIf="itemForm.get('conversion')?.value != 1"
               >{{ itemForm.get("conversion")?.value }}
               {{ priceFormGroup.get("unit")?.value }}</small
             >
@@ -85,7 +45,7 @@
                 class="text-center"
                 mask="separator"
                 thousandSeparator=" "
-                formControlName="sales_price"
+                formControlName="price"
                 autocomplete="off"
                 placeholder="Ex. 20"
               />
@@ -102,7 +62,7 @@
                 class="text-center"
                 mask="separator"
                 thousandSeparator=" "
-                formControlName="sales_discount"
+                formControlName="discount"
                 autocomplete="off"
                 placeholder="Ex. 20"
               />

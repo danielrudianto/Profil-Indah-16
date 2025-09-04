@@ -55,12 +55,11 @@ export class PriceSalesComponent {
       })
       .afterClosed()
       .subscribe((data: any) => {
-        console.log(data);
         if (data) {
-          const dataIndex = this.dataSource.findIndex((x) => x.id == id);
-          if (dataIndex != -1) {
-            this.dataSource[dataIndex].sales_price = data.sales_price;
-            this.dataSource[dataIndex].sales_discount = data.sales_discount;
+          const index = this.dataSource.findIndex((x) => x.id == id);
+          if (index != -1) {
+            this.dataSource[index].sales_price = data[0].price;
+            this.dataSource[index].sales_discount = data[0].discount;
           }
         }
       });

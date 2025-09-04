@@ -1,5 +1,6 @@
 import { Component, Inject, Input } from '@angular/core';
 import {
+  AbstractControl,
   FormArray,
   FormBuilder,
   FormControl,
@@ -8,10 +9,8 @@ import {
 } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
   selector: 'app-price-purchase-update',
@@ -21,29 +20,28 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 export class PricePurchaseUpdateComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _hotKeysService: HotkeysService,
     private apiService: ApiService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
     private translateService: TranslateService,
     private dialog: MatDialogRef<PricePurchaseUpdateComponent>
-  ) {
-    this._hotKeysService.add([
-      new Hotkey('esc', (event: KeyboardEvent): boolean => {
-        this.closeDialog();
-        return false;
-      }),
-    ]);
+  ) {}
+
+  discountLessThanPriceValidator(control: AbstractControl) {
+    const formGroup = control as FormGroup;
+    const price = formGroup.get('price')?.value;
+    const discount = formGroup.get('discount')?.value;
+    return discount > price ? { discountTooHigh: true } : null;
   }
 
-  isOpened: boolean = true;
   isSubmitting: boolean = false;
   isLoading: boolean = true;
   priceFormGroup: FormGroup = new FormGroup({
     reference: new FormControl(''),
     description: new FormControl(''),
+    unit: new FormControl(''),
     id: new FormControl('', Validators.required),
-    item_price: new FormArray([]),
+    purchase_price: new FormArray([]),
   });
 
   ngOnInit(): void {
@@ -55,56 +53,64 @@ export class PricePurchaseUpdateComponent {
   }
 
   get t() {
-    return this.priceFormGroup.get('item_price') as FormArray;
+    return this.priceFormGroup.get('purchase_price') as FormArray;
   }
 
   fetchByID(): void {
     this.apiService
-      .get(`product-price-purchase/v2/${this.data.id}`)
+      .get(`product/${this.data.id}`)
       .subscribe({
         next: (data: any) => {
           this.priceFormGroup.patchValue({
             reference: data.reference,
             description: data.description,
             id: data.id,
+            unit: data.unit,
           });
 
-          const index = data.item_price.findIndex(
-            (x: any) => x.item_unit_id == null
-          );
-
           this.t.push(
-            this.formBuilder.group({
-              item_id: [data.id],
-              item_unit_id: [null],
-              unit: [data.unit, [Validators.required]],
-              price: [
-                index == -1 ? 0 : data.item_price[index].price,
-                [Validators.required, Validators.min(0)],
-              ],
-              discount: [
-                index == -1 ? 0 : data.item_price[index].discount,
-                [Validators.required, Validators.min(0)],
-              ],
-            })
+            this.formBuilder.group(
+              {
+                unit: [data.unit],
+                product_unit_id: [null],
+                price: [
+                  data.purchase_price,
+                  [Validators.min(0), Validators.required],
+                ],
+                discount: [
+                  data.purchase_discount,
+                  [Validators.min(0), Validators.required],
+                ],
+                conversion: [1],
+              },
+              {
+                validators: this.discountLessThanPriceValidator,
+              }
+            )
           );
 
-          data.item_price
-            .filter((x: any) => x.item_unit_id != null)
-            .forEach((item: any) => {
-              const item_price = this.formBuilder.group({
-                item_id: [data.id],
-                item_unit_id: [item.item_unit_id],
-                unit: [item.item_unit.unit],
-                price: [item.price, [Validators.required, Validators.min(0)]],
-                discount: [
-                  item.discount,
-                  [Validators.required, Validators.min(0)],
-                ],
-              });
-
-              this.t.push(item_price);
-            });
+          data.product_unit.forEach((x: any) => {
+            this.t.push(
+              this.formBuilder.group(
+                {
+                  unit: [x.unit],
+                  product_unit_id: [x.id],
+                  price: [
+                    x.purchase_price,
+                    [Validators.min(0), Validators.required],
+                  ],
+                  discount: [
+                    x.purchase_discount,
+                    [Validators.min(0), Validators.required],
+                  ],
+                  conversion: [x.conversion],
+                },
+                {
+                  validators: this.discountLessThanPriceValidator,
+                }
+              )
+            );
+          });
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -124,10 +130,11 @@ export class PricePurchaseUpdateComponent {
     return this.t.at(i) as FormGroup;
   }
 
-  submitForm(): void {
+  onSubmit(): void {
     this.isSubmitting = true;
     this.apiService
-      .put('product-price-purchase/v2', {
+      .put('product-price-purchase', {
+        product_id: this.priceFormGroup.get('id')?.value,
         data: this.t.value,
       })
       .subscribe({
