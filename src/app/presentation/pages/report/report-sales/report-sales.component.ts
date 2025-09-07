@@ -23,6 +23,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import * as xlsx from 'xlsx';
 import { saveAs } from 'file-saver';
 import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-report-sales',
@@ -43,7 +44,8 @@ export class ReportSalesComponent {
     private translateService: TranslateService,
     private apiService: ApiService,
     private dynamicComponentService: DynamicComponentService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialog: MatDialog
   ) {}
 
   isLoading: boolean = false;
@@ -316,5 +318,23 @@ export class ReportSalesComponent {
       this.date.value!.month() + 1,
       0
     ).getDate();
+  }
+
+  openBrandSalesReport() {
+    this.dialog.open(BrandSalesChartComponent, {
+      data: {
+        month: this.date.value?.month(),
+        year: this.date.value?.year(),
+      },
+    });
+  }
+
+  openTypeSalesReport() {
+    this.dialog.open(TypeSalesChartComponent, {
+      data: {
+        month: this.date.value?.month(),
+        year: this.date.value?.year(),
+      },
+    });
   }
 }
