@@ -87,6 +87,7 @@ import { StockCardComponent } from './presentation/pages/stock/stock-card/stock-
 import { OverpaymentReturnListComponent } from './presentation/pages/overpayment/overpayment-return-list/overpayment-return-list.component';
 import { PromotionListComponent } from './presentation/pages/promotion/promotion-list/promotion-list.component';
 import { PromotionUpdateComponent } from './presentation/pages/promotion/promotion-update/promotion-update.component';
+import { ReportMoneyDorComponent } from './presentation/pages/report/report-money/report-money-dor/report-money-dor.component';
 
 const routes: Routes = [
   {
@@ -406,6 +407,10 @@ const routes: Routes = [
               {
                 path: 'Money',
                 component: ReportMoneyComponent,
+              },
+              {
+                path: 'Money/Dor',
+                component: ReportMoneyDorComponent,
               },
               {
                 path: 'Inadequate',

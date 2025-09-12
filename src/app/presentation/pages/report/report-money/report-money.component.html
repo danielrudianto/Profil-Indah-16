@@ -67,10 +67,15 @@
           <tbody *ngIf="!isLoading && dorDataSource != null">
             <tr>
               <td colspan="6">
-                <b
-                  >{{ dorDataSource.name }} -
-                  {{ "money-receipt__dor__description" | translate }}</b
-                >
+                <div class="d-flex justify-content-start align-items-center">
+                  <button mat-icon-button [routerLink]="'Dor'">
+                    <mat-icon>arrow_forward</mat-icon>
+                  </button>
+                  <b
+                    >{{ dorDataSource.name }} -
+                    {{ "money-receipt__dor__description" | translate }}</b
+                  >
+                </div>
               </td>
             </tr>
             <tr *ngFor="let data of dorDataSource.data">

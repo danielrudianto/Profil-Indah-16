@@ -875,6 +875,7 @@
   "general__against-yesterday": "Dibandingkan kemarin",
   "general__against-last-month": "Dibandingkan bulan lalu",
   "report-money__title": "Laporan penerimaan uang",
+  "report-money__dor__title": "Laporan penerimaan uang (DOR)",
   "report-money__description": "Laporan ini menunjukkan uang yang diterima dari penjualan atau deposit ke Profil Indah.",
   "report-money__date": "Tanggal penerimaan uang",
   "report-money__method": "Metode pembayaran",

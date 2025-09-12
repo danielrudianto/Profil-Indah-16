@@ -249,6 +249,7 @@ import { OverpaymentReturnListComponent } from './presentation/pages/overpayment
 import { PromotionListComponent } from './presentation/pages/promotion/promotion-list/promotion-list.component';
 import { PromotionUpdateComponent } from './presentation/pages/promotion/promotion-update/promotion-update.component';
 import { PromotionResultComponent } from './presentation/pages/promotion/promotion-result/promotion-result.component';
+import { ReportMoneyDorComponent } from './presentation/pages/report/report-money/report-money-dor/report-money-dor.component';
 
 @NgModule({
   declarations: [
@@ -441,6 +442,7 @@ import { PromotionResultComponent } from './presentation/pages/promotion/promoti
     PromotionListComponent,
     PromotionUpdateComponent,
     PromotionResultComponent,
+    ReportMoneyDorComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
