@@ -222,6 +222,10 @@ const routes: Routes = [
                 component: PromotionListComponent,
               },
               {
+                path: 'Create',
+                component: PromotionCreateComponent,
+              },
+              {
                 path: ':id',
                 component: PromotionUpdateComponent,
               },
