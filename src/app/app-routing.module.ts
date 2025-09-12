@@ -571,6 +571,16 @@ const routes: Routes = [
           {
             path: 'Receivable',
             component: ReceivableComponent,
+            children: [
+              {
+                path: '',
+                component: ReceivableListComponent,
+              },
+              {
+                path: ':id',
+                component: ReceivableViewComponent,
+              },
+            ],
           },
           {
             path: 'Sales-invoice',
