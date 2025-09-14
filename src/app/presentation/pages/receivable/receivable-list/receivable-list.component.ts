@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 
@@ -15,15 +16,24 @@ export class ReceivableListComponent {
   ) {}
 
   dataSource: any[] = [];
+  filteredDataSource: any[] = [];
+  searchFormControl: FormControl = new FormControl('');
 
   ngOnInit(): void {
     this.fetchReceivable();
+    this.searchFormControl.valueChanges.subscribe(() => {
+      const search = this.searchFormControl.value.toLowerCase();
+      this.filteredDataSource = this.dataSource.filter((item) =>
+        item.name?.toLowerCase().includes(search)
+      );
+    });
   }
 
   fetchReceivable() {
     this.apiService.get('receivable').subscribe({
       next: (data: any) => {
         this.dataSource = data;
+        this.filteredDataSource = data;
       },
     });
   }

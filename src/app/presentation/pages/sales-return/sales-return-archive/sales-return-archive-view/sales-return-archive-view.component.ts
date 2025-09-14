@@ -97,7 +97,7 @@ export class SalesReturnArchiveViewComponent {
               ? this.translateService.instant('sales-return__status__deleted')
               : this.translateService.instant('sales-return__status__active'),
             createdBy: data.user_sales_return_code_created_byTouser.name,
-            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM YYYY'),
+            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM YYYY HH:mm'),
             payment_method:
               data.payment_method == null ? 'Cash' : data.payment_method.name,
           });

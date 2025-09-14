@@ -162,7 +162,7 @@ export class SalesInvoiceViewComponent {
             discount: data.discount,
             service: data.service,
             createdBy: data.user_bill_code_created_byTouser.name,
-            createdAt: this.datePipe.transform(data.createdAt, 'dd MMMM YYYY'),
+            createdAt: this.datePipe.transform(data.createdAt, 'dd MMMM YYYY HH:mm'),
             isDelete: data.isDelete,
           });
         },

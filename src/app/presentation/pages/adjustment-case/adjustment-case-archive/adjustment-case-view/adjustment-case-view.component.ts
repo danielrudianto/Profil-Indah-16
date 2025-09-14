@@ -108,7 +108,7 @@ export class AdjustmentCaseViewComponent {
           is_confirm: data.is_confirm,
           is_delete: data.is_delete,
           createdBy: data.user_adjustment_case_code_created_byTouser.name,
-          createdAt: this.datePipe.transform(data.created_at, 'dd MMMM YYYY'),
+          createdAt: this.datePipe.transform(data.created_at, 'dd MMMM YYYY HH:mm'),
         });
 
         for (const adjustment of data.adjustment_case) {

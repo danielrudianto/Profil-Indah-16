@@ -48,6 +48,31 @@
     </mat-accordion>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <button mat-stroked-button color="primary"></button>
+    <button
+      mat-stroked-button
+      color="primary"
+      [matMenuTriggerFor]="menu"
+      [disabled]="isDownloading || isLoading"
+    >
+      {{ "promotion__result__download" | translate }}
+    </button>
+    <mat-menu #menu="matMenu">
+      <button
+        mat-menu-item
+        (click)="downloadReport('sales')"
+        [disabled]="isDownloading || isLoading"
+      >
+        <mat-icon>bar_chart</mat-icon>
+        <span>{{ "promotion__result__download__sales" | translate }}</span>
+      </button>
+      <button
+        mat-menu-item
+        (click)="downloadReport('purchase')"
+        [disabled]="isDownloading || isLoading"
+      >
+        <mat-icon>candlestick_chart</mat-icon>
+        <span>{{ "promotion__result__download__purchase" | translate }}</span>
+      </button>
+    </mat-menu>
   </mat-dialog-actions>
 </form>

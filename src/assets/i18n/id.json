@@ -1173,6 +1173,7 @@
   "promotion__view__rules": "Data aturan",
   "promotion__rules__rule": "Aturan",
   "promotion__rules__value": "Nilai",
+  "promotion__view__status": "Status",
   "promotion__view__status__active": "Aktif",
   "promotion__view__status__deleted": "Dihapus",
   "supplier__delete__message": "Apakah anda yakin untuk menghapus data supplier ini?",
@@ -1248,5 +1249,9 @@
   "promotion__result__result": "Hasil promosi",
   "promotion__result__product-list": "Produk dalam promosi",
   "promotion__result__sales": "Nominal penjualan",
-  "promotion__result__purchase": "Nominal pembelian"
+  "promotion__result__purchase": "Nominal pembelian",
+  "promotion__result__download": "Unduh laporan",
+  "promotion__result__download__sales": "Download laporan penjualan",
+  "promotion__result__download__purchase": "Download laporan pembelian",
+  "promotion__result__download__success": "Data hasil laporan promosi berhasil diunduh"
 }

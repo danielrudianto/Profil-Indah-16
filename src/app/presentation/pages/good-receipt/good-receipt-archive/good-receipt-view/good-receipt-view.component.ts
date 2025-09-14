@@ -97,7 +97,7 @@ export class GoodReceiptViewComponent {
             is_delete: data.is_delete,
             is_confirm: data.is_confirm,
             createdBy: data.user_good_receipt_code_created_byTouser.name,
-            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM YYYY'),
+            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM YYYY HH:mm'),
           });
 
           data.good_receipt.forEach((x: any) => {
