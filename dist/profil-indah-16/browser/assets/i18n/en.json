@@ -1165,6 +1165,7 @@
   "promotion__view__rules": "Promotion rules data",
   "promotion__rules__rule": "Rule",
   "promotion__rules__value": "Value",
+  "promotion__view__status": "Status",
   "promotion__view__status__active": "Active",
   "promotion__view__status__deleted": "Deleted",
   "supplier__delete__message": "Are you sure to delete this supplier data?",
@@ -1242,5 +1243,9 @@
   "promotion__result__result": "Promotion result",
   "promotion__result__product-list": "Promotion product list",
   "promotion__result__sales": "Sales amount",
-  "promotion__result__purchase": "Purchase amount"
+  "promotion__result__purchase": "Purchase amount",
+  "promotion__result__download": "Download result",
+  "promotion__result__download__sales": "Download sales report",
+  "promotion__result__download__purchase": "Download purchase report",
+  "promotion__result__download__success": "Promotion result data successfully downloaded"
 }
