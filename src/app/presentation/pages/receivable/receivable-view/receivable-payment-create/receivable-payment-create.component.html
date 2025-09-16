@@ -38,7 +38,6 @@
       placeholder="Ex. Cash"
       [routeName]="'payment-method'"
       [selected]="paymentFormGroup.controls['payment_method'].valid"
-      [defaultValue]="'Cash'"
       (onSelectData)="onSelectPaymentMethod($event)"
       (onUnselectData)="onUnselectPaymentMethod()"
     />

@@ -130,7 +130,15 @@ export class AutocompleteSearchComponent {
             case 'payment-method#no-dor':
               this.items = data.filter((x: any) => x.id != 0);
               this.items.unshift({
-                id: 0,
+                id: -1,
+                name: 'Cash',
+                description: 'Cash',
+              });
+              break;
+            case 'payment-method':
+              this.items = data;
+              this.items.unshift({
+                id: -1,
                 name: 'Cash',
                 description: 'Cash',
               });

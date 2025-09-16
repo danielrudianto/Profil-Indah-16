@@ -24,7 +24,7 @@ export class ReceivablePaymentCreateComponent {
   paymentFormGroup: FormGroup = new FormGroup({
     date: new FormControl(new Date(), Validators.required),
     value: new FormControl('', [Validators.required]),
-    payment_method: new FormControl(0, Validators.required),
+    payment_method: new FormControl('', Validators.required),
     full_payment: new FormControl(false, Validators.required),
   });
 
@@ -65,7 +65,9 @@ export class ReceivablePaymentCreateComponent {
     this.apiService
       .post('receivable/payment', {
         payment_method_id:
-          this.paymentFormGroup.controls['payment_method'].value,
+          this.paymentFormGroup.controls['payment_method'].value == -1
+            ? null
+            : this.paymentFormGroup.controls['payment_method'].value,
         amount: this.paymentFormGroup.controls['full_payment'].value
           ? this.data.max
           : Number(this.paymentFormGroup.controls['value'].value),

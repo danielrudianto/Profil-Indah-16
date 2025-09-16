@@ -152,7 +152,7 @@ export class OverpaymentCreateComponent {
       .post('overpayment', {
         customer_id: customerID == 0 ? null : customerID,
         payment_method_id:
-          this.metaFormGroup.get('payment_method_id')?.value == 0
+          this.metaFormGroup.get('payment_method_id')?.value == -1
             ? null
             : this.metaFormGroup.get('payment_method_id')?.value,
         date: moment(new Date(this.metaFormGroup.get('date')?.value)).format(

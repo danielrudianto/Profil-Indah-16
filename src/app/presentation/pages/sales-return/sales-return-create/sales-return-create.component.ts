@@ -389,7 +389,10 @@ export class SalesReturnCreateComponent {
             this.metaFormGroup.value.date,
             'yyyy-MM-dd'
           ),
-          payment_method_id: this.metaFormGroup.value.payment_method,
+          payment_method_id:
+            this.metaFormGroup.value.payment_method == -1
+              ? null
+              : this.metaFormGroup.value.payment_method,
           sales_return: this.t.controls.map((x) => {
             return {
               sales_invoice_id: x.get('sales_invoice_id')?.value,
@@ -398,7 +401,7 @@ export class SalesReturnCreateComponent {
           }),
         })
         .subscribe({
-          next: (data) => {
+          next: (_) => {
             this.alertService.showSuccess(
               this.translateService.instant('sales-return__create__success')
             );

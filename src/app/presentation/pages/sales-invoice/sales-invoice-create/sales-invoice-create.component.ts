@@ -442,7 +442,6 @@ export class SalesInvoiceCreateComponent {
             .get(`product-stock/package/${data.item.id}`)
             .subscribe({
               next: (stock: any) => {
-                console.log(data);
                 this.t.push(
                   this.formBuilder.group({
                     package_code_id: [data.item.id, Validators.required],
@@ -501,7 +500,7 @@ export class SalesInvoiceCreateComponent {
   }
 
   openPaymentSelector() {
-    const sheet = this.sheet
+    this.sheet
       .open(PaymentSelectorComponent, {
         data: this.paymentOptions,
       })
