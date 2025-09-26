@@ -119,36 +119,6 @@ export class FeatureSearchComponent {
           relativeTo: this.activatedRoute,
         });
         break;
-      //   case 'product-type':
-      //     this.dialog.open(AddItemTypeFormComponent, config);
-      //     break;
-      //   case 'product-brand':
-      //     this.dialog.open(AddItemBrandFormComponent, config);
-      //     break;
-      //   case 'product-package':
-      //     this.onAddButtonPressed.emit(true);
-      //     break;
-      //   case 'supplier':
-      //     this.onAddButtonPressed.emit(true);
-      //     break;
-      //   case 'customer':
-      //     this.onAddButtonPressed.emit(true);
-      //     break;
-      //   case 'payment-method':
-      //     this.dialog.open(AddPaymentMethodComponent, config);
-      //     break;
-      //   case 'expense-type':
-      //     this.dialog.open(AddExpenseTypeFormComponent, config);
-      //     break;
-      //   case 'company':
-      //     this.dialog.open(AddCompanyFormComponent, config);
-      //     break;
-      //   case 'user':
-      //     this.onAddButtonPressed.emit(true);
-      //     break;
-      //   case 'promotion':
-      //     this.onAddButtonPressed.emit(true);
-      //     break;
     }
   }
 

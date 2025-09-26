@@ -1,14 +1,13 @@
 <div class="dashboard-card">
-  <app-feature-search
-    [addButton]="false"
-    route="sales-deposit"
-    [page]="page"
-    [enable]="true"
-    (onNewQuery)="page = 1"
-    (onChange)="onUpdateData($event)"
-    (onLoadingChange)="onUpdateLoadingStatus($event)"
-    (updatePage)="onUpdatePage()"
-  ></app-feature-search>
+  <mat-form-field class="w-100" appearance="outline">
+    <mat-label>{{ "general__search-bar" | translate }}</mat-label>
+    <input
+      matInput
+      #searchBar
+      placeholder="Search item by its reference or description"
+      [formControl]="searchBarFormControl"
+    />
+  </mat-form-field>
   <div class="table-responsive">
     <table class="table">
       <thead>
@@ -49,10 +48,10 @@
     class="paginator"
     [pageIndex]="page - 1"
     [length]="dataCount"
-    [pageSize]="20"
+    [pageSizeOptions]="[10, 25, 50]"
+    [pageSize]="pageSize"
     (page)="changePage($event)"
     aria-label="Select page"
-    hidePageSize="true"
     *ngIf="!isLoading"
   >
   </mat-paginator>

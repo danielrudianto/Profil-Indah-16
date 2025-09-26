@@ -2,6 +2,10 @@ import { Component } from '@angular/core';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { DepositViewComponent } from '../deposit-view/deposit-view.component';
 import { MatDialog } from '@angular/material/dialog';
+import { FormControl } from '@angular/forms';
+import { ApiService } from '../../../../services/api.service';
+import { AlertService } from '../../../../services/alert.service';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-deposit-list',
@@ -9,15 +13,38 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./deposit-list.component.css'],
 })
 export class DepositListComponent {
-  constructor(private dialog: MatDialog) {}
+  constructor(
+    private dialog: MatDialog,
+    private apiService: ApiService,
+    private alertService: AlertService
+  ) {}
 
   isLoading: boolean = false;
   dataSource: any[] = [];
   dataCount: number = 0;
   page: number = 1;
+  pageSize: number = 10;
+
+  searchBarFormControl: FormControl = new FormControl('');
+
+  ngOnInit(): void {
+    this.fetch(1);
+
+    this.searchBarFormControl.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(() => {
+        this.fetch(1);
+      });
+  }
 
   changePage(event: any) {
-    this.page = event.pageIndex + 1;
+    if (event.pageIndex == this.page - 1) {
+      this.pageSize = event.pageSize;
+      this.fetch(1);
+    } else {
+      this.page = event.pageIndex + 1;
+      this.fetch();
+    }
   }
 
   viewDeposit(id: number) {
@@ -41,17 +68,26 @@ export class DepositListComponent {
       });
   }
 
-  onUpdateData(event: any) {
-    this.dataSource = event.data;
-    this.dataCount = event.count;
-  }
-
-  onUpdateLoadingStatus(event: any) {
-    this.isLoading = event;
-  }
-
-  onUpdatePage() {
-    this.page = 1;
+  fetch(page: number = this.page) {
+    this.isLoading = true;
+    this.apiService
+      .get(`sales-deposit`, {
+        keyword: this.searchBarFormControl.value,
+        page: this.page,
+        pageSize: this.pageSize,
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.dataSource = data.data;
+          this.dataCount = data.count;
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
   }
 
   getValue(data: any[]) {
