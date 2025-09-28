@@ -100,6 +100,15 @@
       </div>
 
       <p>{{ "report-money__description" | translate }}</p>
+      <button
+        mat-stroked-button
+        color="primary"
+        style="letter-spacing: 0"
+        (click)="downloadTodayReport()"
+        [disabled]="isDownloading"
+      >
+        {{ "report-money__download" | translate }}
+      </button>
     </div>
   </div>
 </div>

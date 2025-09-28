@@ -54,13 +54,13 @@
               [disabled]="isSubmitting"
               matInput
               formControlName="end_date"
-              [matDatepicker]="picker"
+              [matDatepicker]="endPicker"
             />
             <mat-datepicker-toggle
               matIconSuffix
-              [for]="picker"
+              [for]="endPicker"
             ></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
+            <mat-datepicker #endPicker></mat-datepicker>
           </mat-form-field>
           <mat-form-field class="w-100" appearance="outline">
             <mat-label>{{ "promotion__add__target" | translate }}</mat-label>

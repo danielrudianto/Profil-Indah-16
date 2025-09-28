@@ -96,7 +96,8 @@ export class PromotionCreateComponent {
         name: this.promotionFormGroup.value.name,
         description: this.promotionFormGroup.value.description,
         end_date:
-          this.promotionFormGroup.value.end_date == ''
+          this.promotionFormGroup.value.end_date == '' ||
+          this.promotionFormGroup.value.end_date == null
             ? null
             : this.datePipe.transform(
                 this.promotionFormGroup.value.end_date,

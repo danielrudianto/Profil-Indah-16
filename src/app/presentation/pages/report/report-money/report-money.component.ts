@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-report-money',
@@ -19,6 +20,7 @@ export class ReportMoneyComponent {
   dataSource: any[] = [];
   dorDataSource: any = null;
   isLoading: boolean = false;
+  isDownloading: boolean = false;
   date: FormControl = new FormControl(new Date(), Validators.required);
 
   ngOnInit(): void {
@@ -52,6 +54,25 @@ export class ReportMoneyComponent {
       });
   }
 
+  downloadTodayReport() {
+    this.isDownloading = true;
+    this.apiService
+      .post('report/money-receipt/download', {
+        date: this.datePipe.transform(this.date.value, 'yyyy-MM-dd'),
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.exportToExcel(data.data);
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isDownloading = false;
+      });
+  }
+
   get totalPayments(): number {
     const payments =
       this.dataSource.length == 0
@@ -74,5 +95,68 @@ export class ReportMoneyComponent {
           }, 0);
 
     return payments + dorPayments;
+  }
+
+  private exportToExcel(
+    data: {
+      date: Date;
+      invoiceName: string;
+      customer: string;
+      value: number;
+      payment: number;
+      paymentMethod: string;
+    }[]
+  ) {
+    const excelData = data.map((item, index) => ({
+      no: index + 1,
+      date: this.formatDateForExcel(new Date(item.date)),
+      invoice_name: item.invoiceName,
+      Customer: item.customer,
+      Value: item.value,
+      Payment: item.payment,
+      paymentMethod: item.paymentMethod,
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
+
+    // Set number format for Value and Payment columns (columns E and F, 0-indexed)
+    if (worksheet['!ref']) {
+      const range = XLSX.utils.decode_range(worksheet['!ref']);
+      for (let row = range.s.r + 1; row <= range.e.r; row++) {
+        // Column E (Value) - 4th column (0-indexed)
+        const valueCell = worksheet[XLSX.utils.encode_cell({ r: row, c: 4 })];
+        if (valueCell) {
+          valueCell.z = '#,##0.00';
+        }
+
+        // Column F (Payment) - 5th column (0-indexed)
+        const paymentCell = worksheet[XLSX.utils.encode_cell({ r: row, c: 5 })];
+        if (paymentCell) {
+          paymentCell.z = '#,##0.00';
+        }
+      }
+    }
+
+    // Rest of the function remains the same...
+    const columnWidths = [
+      { wch: 5 },
+      { wch: 12 },
+      { wch: 20 },
+      { wch: 20 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+    ];
+    worksheet['!cols'] = columnWidths;
+
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Invoices');
+
+    // Generate Excel file and trigger download
+    XLSX.writeFile(workbook, 'Penerimaan uang.xlsx');
+  }
+
+  private formatDateForExcel(date: Date): string {
+    return date.toISOString().split('T')[0];
   }
 }
