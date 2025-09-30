@@ -1,7 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { panelAnimation } from 'src/app/animations/panel.animation';
 import { sortSVGAnimation } from 'src/app/animations/sort-svg.animation';
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
@@ -12,67 +15,55 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 })
 export class SalesSalesChartComponent {
   constructor(
-    private dynamicComponentService: DynamicComponentService,
-    private _hotKeysService: HotkeysService
-  ) {
-    this._hotKeysService.add([
-      new Hotkey('esc', (): boolean => {
-        this.closeDialog();
-        return false;
-      }),
-    ]);
-  }
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      month: number;
+      year: number;
+    },
+    private apiService: ApiService,
+    private alertService: AlertService,
+    private dialog: MatDialogRef<SalesSalesChartComponent>
+  ) {}
 
-  @Input('data') data: any;
   isOpened: boolean = false;
   sortedBy: string = 'value';
   sortedDirection: string = 'desc';
   dataSource: any[] = [];
 
+  isLoading: boolean = false;
+
   ngOnInit(): void {
-    this.isOpened = true;
-    this.dataSource = this.data;
+    this.fetchBrandDataSales();
   }
 
-  closeDialog() {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
-    }, 300);
+  fetchBrandDataSales() {
+    this.isLoading = true;
+    this.apiService
+      .get('report/sales/sales', {
+        month: this.data.month,
+        year: this.data.year,
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.dataSource = data.data;
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+          this.dialog.close();
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
+  }
+
+  getPercentage(i: number) {
+    return (this.dataSource[i].value * 100) / this.total;
   }
 
   get total(): number {
-    return this.data.reduce((acc: any, curr: any) => {
-      return acc + Number(curr.value);
+    return this.dataSource.reduce((a, b) => {
+      return a + b.value;
     }, 0);
-  }
-
-  sortBy(column: string) {
-    if (column == this.sortedBy) {
-      this.sortedDirection = this.sortedDirection == 'asc' ? 'desc' : 'asc';
-    } else {
-      this.sortedBy = column;
-      this.sortedDirection = 'asc';
-    }
-
-    this.dataSource = this.dataSource.sort((a: any, b: any) => {
-      const valueA = a[this.sortedBy];
-      const valueB = b[this.sortedBy];
-
-      let comparison = 0;
-
-      if (typeof valueA === 'number' && typeof valueB === 'number') {
-        // Numeric comparison
-        comparison = valueA - valueB;
-      } else if (typeof valueA === 'string' && typeof valueB === 'string') {
-        // String comparison
-        comparison = valueA.localeCompare(valueB);
-      } else {
-        // Fallback comparison
-        comparison = `${valueA}`.localeCompare(`${valueB}`);
-      }
-
-      return this.sortedDirection === 'asc' ? comparison : -comparison;
-    });
   }
 }

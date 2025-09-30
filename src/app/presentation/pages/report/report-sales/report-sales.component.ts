@@ -337,4 +337,13 @@ export class ReportSalesComponent {
       },
     });
   }
+
+  openSalesSalesReport() {
+    this.dialog.open(SalesSalesChartComponent, {
+      data: {
+        month: this.date.value?.month(),
+        year: this.date.value?.year(),
+      },
+    });
+  }
 }
