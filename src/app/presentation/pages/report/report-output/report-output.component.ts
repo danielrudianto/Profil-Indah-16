@@ -59,7 +59,7 @@ export class ReportOutputComponent {
   documentFormGroup: FormGroup = new FormGroup({
     format: new FormControl('', Validators.required),
     groupBy: new FormControl('', Validators.required),
-    date: new FormControl(new Date(), Validators.required),
+    date: new FormControl(moment(), Validators.required),
   });
 
   ngOnInit(): void {}
@@ -75,8 +75,8 @@ export class ReportOutputComponent {
     } else {
       this.apiService
         .post('report/output', {
-          month: this.documentFormGroup.value.date.getMonth() + 1,
-          year: this.documentFormGroup.value.date.getFullYear(),
+          month: this.documentFormGroup.value.date._d.getMonth() + 1,
+          year: this.documentFormGroup.value.date._d.getFullYear(),
           format: this.documentFormGroup.value.format,
           group: this.documentFormGroup.value.groupBy,
           brand: this.selectedBrands.map((x) => x.id),
