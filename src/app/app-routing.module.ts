@@ -788,6 +788,14 @@ const routes: Routes = [
                 component: ReportProblematicComponent,
               },
               {
+                path: 'Money',
+                component: ReportMoneyComponent,
+              },
+              {
+                path: 'Money/Dor',
+                component: ReportMoneyDorComponent,
+              },
+              {
                 path: '**',
                 redirectTo: '/General',
               },
