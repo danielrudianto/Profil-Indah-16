@@ -113,21 +113,6 @@ export class ExpenseMutationComponent {
         }
       });
 
-    // dialog.subscribe((data) => {
-    //   if (data != undefined && data != null) {
-    //     if (data == 'deleted') {
-    //       this.dataSource.splice(i, 1);
-    //       this.dataCount = this.dataCount - 1;
-    //     } else {
-    //       const index = this.dataSource.findIndex((x) => x.id == data.id);
-    //       this.dataSource[index].date = data.date;
-    //       this.dataSource[index].description = data.description;
-    //       this.dataSource[index].value = data.value;
-    //       this.dataSource[index].expense_type.name = data.expense_type.name;
-    //       this.dataSource[index].company.name = data.company.name;
-    //     }
-    //   }
-    // });
   }
 
   changePage(event: PageEvent) {

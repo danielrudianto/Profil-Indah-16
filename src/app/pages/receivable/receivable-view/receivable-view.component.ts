@@ -138,21 +138,6 @@ export class ReceivableViewComponent {
         }
       });
 
-    // this.dynamicComponentService
-    //   .createDynamicComponent(ReceivablePaymentCreateComponent, {
-    //     id: id,
-    //     max: value,
-    //   })
-    //   .subscribe((data) => {
-    //     if (data != undefined && data != null) {
-    //       this.dataSource[index].payment =
-    //         Number(this.dataSource[index].payment) + Number(data);
-    //       if (this.dataSource[index].value == this.dataSource[index].payment) {
-    //         this.dataSource.splice(index, 1);
-    //         this.dataCount = this.dataCount - 1;
-    //       }
-    //     }
-    //   });
   }
 
   openView(id: number) {
