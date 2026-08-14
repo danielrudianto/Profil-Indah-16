@@ -8,8 +8,8 @@ describe('ReceivableListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ReceivableListComponent]
-    })
+    imports: [ReceivableListComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(ReceivableListComponent);

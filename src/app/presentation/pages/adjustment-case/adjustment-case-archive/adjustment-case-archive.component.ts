@@ -5,17 +5,24 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ArchiveMode } from 'src/app/presentation/components/archives/archives.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import moment from 'moment';
-import { PageEvent } from '@angular/material/paginator';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { MatDialog } from '@angular/material/dialog';
 import { AdjustmentCaseViewComponent } from './adjustment-case-view/adjustment-case-view.component';
+import { ArchivesComponent } from '../../../components/archives/archives.component';
+import { ArchiveSearchComponent } from '../../../components/archives/archive-search/archive-search.component';
+import { MatIcon } from '@angular/material/icon';
+import { NgClass, NgIf, NgFor, DatePipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-adjustment-case-archive',
     templateUrl: './adjustment-case-archive.component.html',
     styleUrls: ['./adjustment-case-archive.component.css'],
     animations: [slideInOutAnimation],
-    standalone: false
+    imports: [ArchivesComponent, ArchiveSearchComponent, MatIcon, NgClass, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DatePipe, TranslateModule]
 })
 export class AdjustmentCaseArchiveComponent {
   constructor(

@@ -3,13 +3,19 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { panelAnimation } from 'src/app/animations/panel.animation';
 import { sortSVGAnimation } from 'src/app/animations/sort-svg.animation';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { DynamicDialogComponent } from '../../../../components/dynamic-dialog/dynamic-dialog.component';
+import { DialogHeaderComponent } from '../../../../components/dialog-header/dialog-header.component';
+import { MatRipple } from '@angular/material/core';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { EmptyTableComponent } from '../../../../components/empty-table/empty-table.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-supplier-purchase-chart',
     templateUrl: './supplier-purchase-chart.component.html',
     styleUrls: ['./supplier-purchase-chart.component.css'],
     animations: [panelAnimation, sortSVGAnimation],
-    standalone: false
+    imports: [DynamicDialogComponent, DialogHeaderComponent, MatRipple, NgIf, EmptyTableComponent, NgFor, DecimalPipe, TranslateModule]
 })
 export class SupplierPurchaseChartComponent {
   constructor(

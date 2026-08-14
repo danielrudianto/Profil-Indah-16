@@ -8,8 +8,8 @@ describe('SalesInvoiceViewComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SalesInvoiceViewComponent]
-    });
+    imports: [SalesInvoiceViewComponent]
+});
     fixture = TestBed.createComponent(SalesInvoiceViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

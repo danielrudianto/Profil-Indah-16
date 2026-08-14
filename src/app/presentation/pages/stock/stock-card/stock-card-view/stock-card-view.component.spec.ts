@@ -8,8 +8,8 @@ describe('StockCardViewComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [StockCardViewComponent]
-    });
+    imports: [StockCardViewComponent]
+});
     fixture = TestBed.createComponent(StockCardViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

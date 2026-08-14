@@ -8,8 +8,8 @@ describe('DepositConfirmUpdatePaymentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DepositConfirmUpdatePaymentComponent]
-    })
+    imports: [DepositConfirmUpdatePaymentComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(DepositConfirmUpdatePaymentComponent);

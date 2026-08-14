@@ -8,8 +8,8 @@ describe('CashierViewBillPaymentSelectorComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CashierViewBillPaymentSelectorComponent]
-    });
+    imports: [CashierViewBillPaymentSelectorComponent]
+});
     fixture = TestBed.createComponent(CashierViewBillPaymentSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

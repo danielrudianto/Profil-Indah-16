@@ -8,8 +8,8 @@ describe('PaymentListComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PaymentListComponent]
-    });
+    imports: [PaymentListComponent]
+});
     fixture = TestBed.createComponent(PaymentListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

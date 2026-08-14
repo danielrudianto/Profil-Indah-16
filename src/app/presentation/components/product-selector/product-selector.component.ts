@@ -6,13 +6,21 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { debounceTime } from 'rxjs';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { DynamicDialogComponent } from '../dynamic-dialog/dynamic-dialog.component';
+import { DialogHeaderComponent } from '../dialog-header/dialog-header.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatPaginator } from '@angular/material/paginator';
+import { TranslateModule } from '@ngx-translate/core';
 
 export enum ProductSelectorType {
   purchase,
@@ -25,7 +33,7 @@ export enum ProductSelectorType {
     templateUrl: './product-selector.component.html',
     styleUrls: ['./product-selector.component.css'],
     animations: [slideInOutAnimation],
-    standalone: false
+    imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatProgressSpinner, NgFor, MatPaginator, DecimalPipe, TranslateModule]
 })
 export class ProductSelectorComponent {
   constructor(

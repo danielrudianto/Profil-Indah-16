@@ -5,12 +5,20 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ResetPasswordDialogComponent } from './reset-password-dialog/reset-password-dialog.component';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { SetAvatarComponent } from '../set-avatar/set-avatar.component';
+import { NgIf } from '@angular/common';
+import { AvatarComponent } from '../../components/avatar/avatar.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatDivider } from '@angular/material/divider';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-profile-overview',
     templateUrl: './profile-overview.component.html',
     styleUrls: ['./profile-overview.component.css'],
-    standalone: false
+    imports: [NgIf, AvatarComponent, MatTooltip, MatDivider, MatProgressSpinner, MatFormField, MatLabel, MatInput, FormsModule]
 })
 export class ProfileOverviewComponent {
   constructor(

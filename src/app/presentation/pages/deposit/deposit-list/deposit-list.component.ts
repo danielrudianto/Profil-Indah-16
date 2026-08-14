@@ -2,16 +2,23 @@ import { Component } from '@angular/core';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { DepositViewComponent } from '../deposit-view/deposit-view.component';
 import { MatDialog } from '@angular/material/dialog';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../../../../services/api.service';
 import { AlertService } from '../../../../services/alert.service';
 import { debounceTime } from 'rxjs';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatPaginator } from '@angular/material/paginator';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-deposit-list',
     templateUrl: './deposit-list.component.html',
     styleUrls: ['./deposit-list.component.css'],
-    standalone: false
+    imports: [MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, NgIf, NgFor, EmptyTableComponent, MatProgressSpinner, MatPaginator, DecimalPipe, DatePipe, TranslateModule]
 })
 export class DepositListComponent {
   constructor(

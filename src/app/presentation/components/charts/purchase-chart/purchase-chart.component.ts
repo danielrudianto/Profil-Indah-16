@@ -1,12 +1,13 @@
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, NgFor } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-purchase-chart',
     templateUrl: './purchase-chart.component.html',
     styleUrls: ['./purchase-chart.component.css'],
-    standalone: false
+    imports: [NgFor, MatTooltip]
 })
 export class PurchaseChartComponent {
   constructor(

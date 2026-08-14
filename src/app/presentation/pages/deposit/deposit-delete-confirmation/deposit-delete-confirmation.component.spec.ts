@@ -8,8 +8,8 @@ describe('DepositDeleteConfirmationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DepositDeleteConfirmationComponent]
-    })
+    imports: [DepositDeleteConfirmationComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(DepositDeleteConfirmationComponent);

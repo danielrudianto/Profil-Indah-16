@@ -1,14 +1,8 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import {
   ProductSelectorComponent,
@@ -20,12 +14,22 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { v4 } from 'uuid';
 import { DeleteConfirmationComponent } from '../../../components/delete-confirmation/delete-confirmation.component';
 import { SubmitConfirmationComponent } from '../../../components/submit-confirmation/submit-confirmation.component';
+import { VerticalDividerComponent } from '../../../components/vertical-divider/vertical-divider.component';
+import { BoxStepperComponent } from '../../../components/box-stepper/box-stepper.component';
+import { AutocompleteSearchComponent } from '../../../components/autocomplete-search/autocomplete-search.component';
+import { MatFormField, MatLabel, MatSuffix, MatHint } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { NgxMaskDirective } from 'ngx-mask';
+import { MatIcon } from '@angular/material/icon';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 
 @Component({
     selector: 'app-good-receipt-create',
     templateUrl: './good-receipt-create.component.html',
     styleUrls: ['./good-receipt-create.component.css'],
-    standalone: false
+    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatButton, NgIf, NgFor, NgxMaskDirective, MatHint, MatIconButton, MatIcon, EmptyTableComponent, DecimalPipe, TranslateModule]
 })
 export class GoodReceiptCreateComponent {
   constructor(

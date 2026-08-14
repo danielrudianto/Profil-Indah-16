@@ -1,19 +1,10 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgFor, NgIf, NgSwitch, NgSwitchCase, DecimalPipe } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
-import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { Subject, debounceTime, of, switchMap, tap } from 'rxjs';
 import { PackageSelectorComponent } from 'src/app/presentation/components/package-selector/package-selector.component';
@@ -29,12 +20,26 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { v4 } from 'uuid';
+import { VerticalDividerComponent } from '../../../components/vertical-divider/vertical-divider.component';
+import { BoxStepperComponent } from '../../../components/box-stepper/box-stepper.component';
+import { AutocompleteSearchComponent } from '../../../components/autocomplete-search/autocomplete-search.component';
+import { MatFormField, MatLabel, MatSuffix, MatHint, MatPrefix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { MatDivider } from '@angular/material/divider';
+import { NgxMaskDirective } from 'ngx-mask';
+import { MatTooltip } from '@angular/material/tooltip';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 
 @Component({
     selector: 'app-sales-invoice-create',
     templateUrl: './sales-invoice-create.component.html',
     styleUrls: ['./sales-invoice-create.component.css'],
-    standalone: false
+    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, MatAutocompleteTrigger, MatAutocomplete, NgFor, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, NgIf, NgSwitch, NgSwitchCase, MatDivider, NgxMaskDirective, MatHint, MatIconButton, MatTooltip, EmptyTableComponent, MatPrefix, DecimalPipe, TranslateModule]
 })
 export class SalesInvoiceCreateComponent {
   constructor(

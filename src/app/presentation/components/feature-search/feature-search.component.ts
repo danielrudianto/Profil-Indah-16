@@ -5,7 +5,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { debounceTime } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
@@ -23,12 +23,17 @@ import { PromotionCreateComponent } from '../../pages/promotion/promotion-create
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from 'src/app/services/alert.service';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgIf } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-feature-search',
     templateUrl: './feature-search.component.html',
     styleUrls: ['./feature-search.component.css'],
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatIcon, TranslateModule]
 })
 export class FeatureSearchComponent {
   constructor(

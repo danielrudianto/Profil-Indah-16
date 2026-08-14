@@ -8,8 +8,8 @@ describe('ExpenseTypeViewChildrenComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ExpenseTypeViewChildrenComponent]
-    });
+    imports: [ExpenseTypeViewChildrenComponent]
+});
     fixture = TestBed.createComponent(ExpenseTypeViewChildrenComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
-import { TranslateService } from '@ngx-translate/core';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { panelAnimation } from 'src/app/animations/panel.animation';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -11,13 +11,19 @@ import { ArchiveViewComponent } from '../../../components/archives/archive-view/
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { SalesInvoiceViewComponent } from '../../sales-invoice/sales-invoice-archive/sales-invoice-view/sales-invoice-view.component';
+import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
+import { FeatureHeaderComponent } from '../../../components/feature-header/feature-header.component';
+import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 
 @Component({
     selector: 'app-receivable-view',
     templateUrl: './receivable-view.component.html',
     styleUrls: ['./receivable-view.component.css'],
     animations: [panelAnimation],
-    standalone: false
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatPaginator, DecimalPipe, DatePipe, TranslateModule]
 })
 export class ReceivableViewComponent {
   constructor(

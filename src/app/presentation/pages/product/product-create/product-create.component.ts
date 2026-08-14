@@ -1,26 +1,27 @@
 import { Component, ViewChild } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatStepper } from '@angular/material/stepper';
-import { TranslateService } from '@ngx-translate/core';
+import { MatStepper, MatStep, MatStepLabel, MatStepperNext } from '@angular/material/stepper';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { ValueValidator } from 'src/app/validators/value.validator';
 import { ProductCreateUnitComponent } from './product-create-unit/product-create-unit.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { AutocompleteSearchComponent } from '../../../components/autocomplete-search/autocomplete-search.component';
+import { NgxMaskDirective } from 'ngx-mask';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatButton } from '@angular/material/button';
+import { NgFor, DecimalPipe } from '@angular/common';
 
 @Component({
     selector: 'app-product-create',
     templateUrl: './product-create.component.html',
     styleUrls: ['./product-create.component.css'],
     animations: [slideInOutAnimation],
-    standalone: false
+    imports: [MatStepper, MatStep, MatStepLabel, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, AutocompleteSearchComponent, NgxMaskDirective, MatSelect, MatOption, MatButton, MatStepperNext, NgFor, DecimalPipe, TranslateModule]
 })
 export class ProductCreateComponent {
   constructor(

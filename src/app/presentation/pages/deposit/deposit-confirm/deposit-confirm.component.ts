@@ -1,19 +1,10 @@
-import { DatePipe, Location } from '@angular/common';
+import { DatePipe, Location, NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { Subject } from 'rxjs';
 import { CustomerModel } from 'src/app/models/customer.model';
@@ -26,12 +17,21 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { v4 } from 'uuid';
 import { DepositConfirmUpdatePaymentComponent } from './deposit-confirm-update-payment/deposit-confirm-update-payment.component';
 import { MatDialog } from '@angular/material/dialog';
+import { VerticalDividerComponent } from '../../../components/vertical-divider/vertical-divider.component';
+import { BoxStepperComponent } from '../../../components/box-stepper/box-stepper.component';
+import { MatFormField, MatLabel, MatSuffix, MatPrefix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
+import { NgxMaskDirective } from 'ngx-mask';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-deposit-confirm',
     templateUrl: './deposit-confirm.component.html',
     styleUrls: ['./deposit-confirm.component.css'],
-    standalone: false
+    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, NgFor, EmptyTableComponent, NgxMaskDirective, MatPrefix, MatButton, MatIconButton, MatIcon, DecimalPipe, DatePipe, TranslateModule]
 })
 export class DepositConfirmComponent {
   constructor(

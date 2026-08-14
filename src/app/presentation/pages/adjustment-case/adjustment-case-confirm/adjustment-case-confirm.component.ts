@@ -1,16 +1,21 @@
 import { Component } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { AdjustmentCaseConfirmViewComponent } from './adjustment-case-confirm-view/adjustment-case-confirm-view.component';
 import { MatDialog } from '@angular/material/dialog';
+import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
+import { AvatarComponent } from '../../../components/avatar/avatar.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-adjustment-case-confirm',
     templateUrl: './adjustment-case-confirm.component.html',
     styleUrls: ['./adjustment-case-confirm.component.css'],
-    standalone: false
+    imports: [NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, AvatarComponent, MatPaginator, DatePipe, TranslateModule]
 })
 export class AdjustmentCaseConfirmComponent {
   constructor(

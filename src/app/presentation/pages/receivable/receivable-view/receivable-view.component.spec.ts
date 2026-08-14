@@ -8,8 +8,8 @@ describe('ReceivableViewComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ReceivableViewComponent]
-    });
+    imports: [ReceivableViewComponent]
+});
     fixture = TestBed.createComponent(ReceivableViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

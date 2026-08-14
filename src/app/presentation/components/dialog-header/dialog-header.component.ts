@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 export interface DialogHeaderStepper {
   label: string;
@@ -10,7 +12,7 @@ export interface DialogHeaderStepper {
     selector: 'app-dialog-header',
     templateUrl: './dialog-header.component.html',
     styleUrls: ['./dialog-header.component.css'],
-    standalone: false
+    imports: [MatIconButton, MatIcon]
 })
 export class DialogHeaderComponent {
   @Input('title') title!: string;

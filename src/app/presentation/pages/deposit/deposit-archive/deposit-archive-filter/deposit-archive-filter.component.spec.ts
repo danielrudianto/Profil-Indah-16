@@ -8,8 +8,8 @@ describe('DepositArchiveFilterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DepositArchiveFilterComponent]
-    })
+    imports: [DepositArchiveFilterComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(DepositArchiveFilterComponent);

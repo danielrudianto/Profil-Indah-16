@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { PurchaseInvoiceArchiveFilterComponent } from './purchase-invoice-archive-filter/purchase-invoice-archive-filter.component';
-import { PageEvent } from '@angular/material/paginator';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import moment from 'moment';
 import { ArchiveMode } from 'src/app/presentation/components/archives/archives.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -9,13 +9,20 @@ import { ApiService } from 'src/app/services/api.service';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { MatDialog } from '@angular/material/dialog';
 import { PurchaseInvoiceViewComponent } from './purchase-invoice-view/purchase-invoice-view.component';
+import { ArchivesComponent } from '../../../components/archives/archives.component';
+import { ArchiveSearchComponent } from '../../../components/archives/archive-search/archive-search.component';
+import { MatIcon } from '@angular/material/icon';
+import { NgClass, NgIf, NgFor, DatePipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-purchase-invoice-archive',
     templateUrl: './purchase-invoice-archive.component.html',
     styleUrls: ['./purchase-invoice-archive.component.css'],
     animations: [slideInOutAnimation],
-    standalone: false
+    imports: [ArchivesComponent, ArchiveSearchComponent, MatIcon, NgClass, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DatePipe, TranslateModule]
 })
 export class PurchaseInvoiceArchiveComponent {
   constructor(

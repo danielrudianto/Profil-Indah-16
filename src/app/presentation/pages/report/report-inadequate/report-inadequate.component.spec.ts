@@ -8,8 +8,8 @@ describe('ReportInadequateComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ReportInadequateComponent]
-    });
+    imports: [ReportInadequateComponent]
+});
     fixture = TestBed.createComponent(ReportInadequateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

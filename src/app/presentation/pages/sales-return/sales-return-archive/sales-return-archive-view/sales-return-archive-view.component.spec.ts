@@ -8,8 +8,8 @@ describe('SalesReturnArchiveViewComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SalesReturnArchiveViewComponent]
-    });
+    imports: [SalesReturnArchiveViewComponent]
+});
     fixture = TestBed.createComponent(SalesReturnArchiveViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

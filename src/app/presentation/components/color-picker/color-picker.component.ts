@@ -6,13 +6,14 @@ import {
   SimpleChange,
   SimpleChanges,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-color-picker',
     templateUrl: './color-picker.component.html',
     styleUrls: ['./color-picker.component.css'],
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, MatTooltip]
 })
 export class ColorPickerComponent {
   @Input('selectedColor') selectedColor!: string;

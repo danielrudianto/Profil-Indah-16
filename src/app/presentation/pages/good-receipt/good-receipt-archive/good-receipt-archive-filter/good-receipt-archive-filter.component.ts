@@ -1,13 +1,18 @@
 import { ChangeDetectorRef, Component, Inject } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { MatChipSelectionChange } from '@angular/material/chips';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatChipSelectionChange, MatChipListbox, MatChipOption } from '@angular/material/chips';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
+import { MatDateRangeInput, MatStartDate, MatEndDate, MatDatepickerToggle, MatDateRangePicker } from '@angular/material/datepicker';
+import { MatDivider } from '@angular/material/divider';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-good-receipt-archive-filter',
     templateUrl: './good-receipt-archive-filter.component.html',
     styleUrls: ['./good-receipt-archive-filter.component.css'],
-    standalone: false
+    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatDateRangeInput, MatStartDate, MatEndDate, MatHint, MatDatepickerToggle, MatSuffix, MatDateRangePicker, MatDivider, MatChipListbox, MatChipOption, MatDialogActions, TranslateModule]
 })
 export class GoodReceiptArchiveFilterComponent {
   constructor(

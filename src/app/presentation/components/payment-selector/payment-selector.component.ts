@@ -5,12 +5,14 @@ import {
 } from '@angular/material/bottom-sheet';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { NgIf, NgFor } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-payment-selector',
     templateUrl: './payment-selector.component.html',
     styleUrls: ['./payment-selector.component.css'],
-    standalone: false
+    imports: [NgIf, MatProgressSpinner, NgFor]
 })
 export class PaymentSelectorComponent {
   constructor(

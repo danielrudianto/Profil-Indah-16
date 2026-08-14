@@ -1,18 +1,24 @@
 import { Component, Inject, Input } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent } from '@angular/material/dialog';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { panelAnimation } from 'src/app/animations/panel.animation';
 import { sortSVGAnimation } from 'src/app/animations/sort-svg.animation';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { ApiService } from '../../../../../services/api.service';
 import { AlertService } from '../../../../../services/alert.service';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatRipple } from '@angular/material/core';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { EmptyTableComponent } from '../../../../components/empty-table/empty-table.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-brand-sales-chart',
     templateUrl: './brand-sales-chart.component.html',
     styleUrls: ['./brand-sales-chart.component.css'],
     animations: [panelAnimation, sortSVGAnimation],
-    standalone: false
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatRipple, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, DecimalPipe, TranslateModule]
 })
 export class BrandSalesChartComponent {
   constructor(

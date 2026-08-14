@@ -1,20 +1,29 @@
 import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { ReportInadequateFilterComponent } from './report-inadequate-filter/report-inadequate-filter.component';
 import { AlertService } from 'src/app/services/alert.service';
-import { PageEvent } from '@angular/material/paginator';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { debounceTime } from 'rxjs';
 import * as xlsx from 'xlsx';
 import { saveAs } from 'file-saver';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
+import { FeatureHeaderComponent } from '../../../components/feature-header/feature-header.component';
+import { MatFormField, MatLabel, MatSuffix, MatPrefix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 
 @Component({
     selector: 'app-report-inadequate',
     templateUrl: './report-inadequate.component.html',
     styleUrls: ['./report-inadequate.component.css'],
-    standalone: false
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatSuffix, MatIcon, MatPrefix, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, TranslateModule]
 })
 export class ReportInadequateComponent {
   constructor(

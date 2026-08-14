@@ -8,8 +8,8 @@ describe('BoxStepperComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [BoxStepperComponent]
-    });
+    imports: [BoxStepperComponent]
+});
     fixture = TestBed.createComponent(BoxStepperComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

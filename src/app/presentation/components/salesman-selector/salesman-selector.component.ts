@@ -4,12 +4,19 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { DynamicDialogComponent } from '../dynamic-dialog/dynamic-dialog.component';
+import { DialogHeaderComponent } from '../dialog-header/dialog-header.component';
+import { NgIf, NgFor } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-salesman-selector',
     templateUrl: './salesman-selector.component.html',
     styleUrls: ['./salesman-selector.component.css'],
-    standalone: false
+    imports: [DynamicDialogComponent, DialogHeaderComponent, NgIf, MatProgressSpinner, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, TranslateModule]
 })
 export class SalesmanSelectorComponent {
   constructor(

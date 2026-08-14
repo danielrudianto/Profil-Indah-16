@@ -8,8 +8,8 @@ describe('GeneralDashboardComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [GeneralDashboardComponent]
-    });
+    imports: [GeneralDashboardComponent]
+});
     fixture = TestBed.createComponent(GeneralDashboardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

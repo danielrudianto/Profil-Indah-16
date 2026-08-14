@@ -1,13 +1,7 @@
 import { Component } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import {
   ProductSelectorComponent,
@@ -16,12 +10,21 @@ import {
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { VerticalDividerComponent } from '../../../components/vertical-divider/vertical-divider.component';
+import { BoxStepperComponent } from '../../../components/box-stepper/box-stepper.component';
+import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgxMaskDirective } from 'ngx-mask';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 
 @Component({
     selector: 'app-package-create',
     templateUrl: './package-create.component.html',
     styleUrls: ['./package-create.component.css'],
-    standalone: false
+    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatButton, NgIf, NgFor, MatHint, MatIconButton, MatIcon, EmptyTableComponent, DecimalPipe, TranslateModule]
 })
 export class PackageCreateComponent {
   constructor(

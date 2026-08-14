@@ -1,14 +1,18 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { availableRoles } from 'src/app/models/user.model';
 import { AlertService } from 'src/app/services/alert.service';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-user-create-status',
     templateUrl: './user-create-status.component.html',
     styleUrls: ['./user-create-status.component.css'],
-    standalone: false
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatDialogActions, MatButton, MatDialogClose]
 })
 export class UserCreateStatusComponent {
   roles: any[] = availableRoles;

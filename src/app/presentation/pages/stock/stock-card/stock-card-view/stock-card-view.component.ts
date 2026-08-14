@@ -3,12 +3,17 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { DynamicDialogComponent } from '../../../../components/dynamic-dialog/dynamic-dialog.component';
+import { DialogHeaderComponent } from '../../../../components/dialog-header/dialog-header.component';
+import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-stock-card-view',
     templateUrl: './stock-card-view.component.html',
     styleUrls: ['./stock-card-view.component.css'],
-    standalone: false
+    imports: [DynamicDialogComponent, DialogHeaderComponent, NgIf, MatProgressSpinner, NgFor, DecimalPipe, DatePipe, TranslateModule]
 })
 export class StockCardViewComponent {
   constructor(

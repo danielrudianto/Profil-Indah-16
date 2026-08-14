@@ -1,23 +1,26 @@
 import { Component } from '@angular/core';
-import {
-  AbstractControl,
-  FormArray,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import moment from 'moment';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { availableBankSearch, IBank } from 'src/app/utils/bank';
+import { VerticalDividerComponent } from '../../../components/vertical-divider/vertical-divider.component';
+import { BoxStepperComponent } from '../../../components/box-stepper/box-stepper.component';
+import { AutocompleteSearchComponent } from '../../../components/autocomplete-search/autocomplete-search.component';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { NgxMaskDirective } from 'ngx-mask';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-overpayment-create',
     templateUrl: './overpayment-create.component.html',
     styleUrl: './overpayment-create.component.css',
-    standalone: false
+    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, MatSelect, MatOption, MatAutocompleteTrigger, MatAutocomplete, NgFor, NgIf, TranslateModule]
 })
 export class OverpaymentCreateComponent {
   constructor(

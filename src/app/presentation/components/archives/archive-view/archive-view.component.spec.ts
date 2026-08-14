@@ -8,8 +8,8 @@ describe('ArchiveViewComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ArchiveViewComponent]
-    });
+    imports: [ArchiveViewComponent]
+});
     fixture = TestBed.createComponent(ArchiveViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

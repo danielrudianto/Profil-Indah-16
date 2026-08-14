@@ -1,11 +1,15 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgIf } from '@angular/common';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-feature-header',
     templateUrl: './feature-header.component.html',
     styleUrls: ['./feature-header.component.css'],
-    standalone: false
+    imports: [NgIf, MatIconButton, MatIcon, MatTooltip]
 })
 export class FeatureHeaderComponent {
   constructor(private router: Router) {}

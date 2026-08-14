@@ -1,18 +1,21 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../../../../../services/api.service';
 import { AlertService } from '../../../../../services/alert.service';
 import moment from 'moment';
-import {
-  DateRange,
-  MatDatepickerInputEvent,
-} from '@angular/material/datepicker';
+import { DateRange, MatDatepickerInputEvent, MatDateRangeInput, MatStartDate, MatEndDate, MatDatepickerToggle, MatDateRangePicker } from '@angular/material/datepicker';
+import { FeatureBackgroundComponent } from '../../../../components/feature-background/feature-background.component';
+import { FeatureHeaderComponent } from '../../../../components/feature-header/feature-header.component';
+import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-report-money-dor',
     templateUrl: './report-money-dor.component.html',
     styleUrl: './report-money-dor.component.css',
-    standalone: false
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatDateRangeInput, FormsModule, ReactiveFormsModule, MatStartDate, MatEndDate, MatHint, MatDatepickerToggle, MatSuffix, MatDateRangePicker, NgIf, MatProgressSpinner, NgFor, DecimalPipe, TranslateModule]
 })
 export class ReportMoneyDorComponent {
   constructor(

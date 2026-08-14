@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { panelAnimation } from 'src/app/animations/panel.animation';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -11,13 +11,20 @@ import { SalesReturnArchiveViewComponent } from '../../sales-return/sales-return
 import { SalesInvoiceViewComponent } from '../../sales-invoice/sales-invoice-archive/sales-invoice-view/sales-invoice-view.component';
 import { GoodReceiptViewComponent } from '../../good-receipt/good-receipt-archive/good-receipt-view/good-receipt-view.component';
 import { AdjustmentCaseViewComponent } from '../../adjustment-case/adjustment-case-archive/adjustment-case-view/adjustment-case-view.component';
+import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-stock-card',
     templateUrl: './stock-card.component.html',
     styleUrls: ['./stock-card.component.css'],
     animations: [panelAnimation],
-    standalone: false
+    imports: [FeatureBackgroundComponent, MatIconButton, MatIcon, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, DatePipe, TranslateModule]
 })
 export class StockCardComponent {
   constructor(

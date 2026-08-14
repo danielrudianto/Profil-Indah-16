@@ -1,13 +1,7 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgIf, NgFor, NgSwitch, NgSwitchCase, DecimalPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { Subject } from 'rxjs';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
@@ -20,13 +14,24 @@ import { SalesReturnCreateViewSalesInvoiceComponent } from 'src/app/presentation
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { VerticalDividerComponent } from '../../../components/vertical-divider/vertical-divider.component';
+import { BoxStepperComponent } from '../../../components/box-stepper/box-stepper.component';
+import { MatFormField, MatLabel, MatSuffix, MatHint } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { AutocompleteSearchComponent } from '../../../components/autocomplete-search/autocomplete-search.component';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { NgxMaskDirective } from 'ngx-mask';
+import { MatIcon } from '@angular/material/icon';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
+import { MatSelect, MatOption } from '@angular/material/select';
 
 @Component({
     selector: 'app-sales-return-create',
     templateUrl: './sales-return-create.component.html',
     styleUrls: ['./sales-return-create.component.css'],
     animations: [slideInOutAnimation],
-    standalone: false
+    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, AutocompleteSearchComponent, MatButton, NgIf, NgFor, NgSwitch, NgSwitchCase, NgxMaskDirective, MatHint, MatIconButton, MatIcon, EmptyTableComponent, MatSelect, MatOption, DecimalPipe, DatePipe, TranslateModule]
 })
 export class SalesReturnCreateComponent {
   constructor(

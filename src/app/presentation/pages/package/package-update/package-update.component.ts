@@ -1,22 +1,23 @@
-import { Location } from '@angular/common';
+import { Location, NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormControl,
-  Validators,
-  FormArray,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators, FormArray, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { VerticalDividerComponent } from '../../../components/vertical-divider/vertical-divider.component';
+import { BoxStepperComponent } from '../../../components/box-stepper/box-stepper.component';
+import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgxMaskDirective } from 'ngx-mask';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 
 @Component({
     selector: 'app-package-update',
     templateUrl: './package-update.component.html',
     styleUrls: ['./package-update.component.css'],
-    standalone: false
+    imports: [NgIf, MatProgressSpinner, VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgxMaskDirective, NgFor, MatHint, EmptyTableComponent, DecimalPipe, TranslateModule]
 })
 export class PackageUpdateComponent {
   constructor(

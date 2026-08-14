@@ -1,15 +1,20 @@
 import { Component } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { PricePurchaseUpdateComponent } from './price-purchase-update/price-purchase-update.component';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { MatDialog } from '@angular/material/dialog';
+import { TransactionHeaderComponent } from '../../../components/transaction-header/transaction-header.component';
+import { FeatureSearchComponent } from '../../../components/feature-search/feature-search.component';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-price-purchase',
     templateUrl: './price-purchase.component.html',
     styleUrls: ['./price-purchase.component.css'],
-    standalone: false
+    imports: [TransactionHeaderComponent, FeatureSearchComponent, NgIf, NgFor, EmptyTableComponent, MatPaginator, DecimalPipe, TranslateModule]
 })
 export class PricePurchaseComponent {
   constructor(private router: Router, private dialog: MatDialog) {}

@@ -1,17 +1,23 @@
 import { Component } from '@angular/core';
 import { StatCard } from '../dashboard.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { ReportCompanyComponent } from '../../report/report-company/report-company.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { NgFor } from '@angular/common';
+import { StatCardComponent } from '../../../components/stat-card/stat-card.component';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import { GcpInfoComponent } from '../../../components/gcp-info/gcp-info.component';
 
 @Component({
     selector: 'app-sales-dashboard',
     templateUrl: './sales-dashboard.component.html',
     styleUrls: ['./sales-dashboard.component.css'],
-    standalone: false
+    imports: [MatTooltip, RouterLink, MatGridList, NgFor, MatGridTile, StatCardComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, GcpInfoComponent, TranslateModule]
 })
 export class SalesDashboardComponent {
   constructor(

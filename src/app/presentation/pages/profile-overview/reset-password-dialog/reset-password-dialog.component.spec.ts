@@ -8,8 +8,8 @@ describe('ResetPasswordDialogComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ResetPasswordDialogComponent]
-    });
+    imports: [ResetPasswordDialogComponent]
+});
     fixture = TestBed.createComponent(ResetPasswordDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

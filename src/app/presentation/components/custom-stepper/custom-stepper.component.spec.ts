@@ -8,8 +8,8 @@ describe('CustomStepperComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CustomStepperComponent]
-    });
+    imports: [CustomStepperComponent]
+});
     fixture = TestBed.createComponent(CustomStepperComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -1,19 +1,15 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
   MomentDateAdapter,
 } from '@angular/material-moment-adapter';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE,
-} from '@angular/material/core';
-import { TranslateService } from '@ngx-translate/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatRipple } from '@angular/material/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { ApiService } from 'src/app/services/api.service';
 import moment, { Moment } from 'moment';
-import { MatDatepicker } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { SalesSalesChartComponent } from './sales-sales-chart/sales-sales-chart.component';
 import { TypeSalesChartComponent } from './type-sales-chart/type-sales-chart.component';
@@ -24,6 +20,19 @@ import * as xlsx from 'xlsx';
 import { saveAs } from 'file-saver';
 import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
 import { MatDialog } from '@angular/material/dialog';
+import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
+import { FeatureHeaderComponent } from '../../../components/feature-header/feature-header.component';
+import { SalesChartComponent } from '../../../components/charts/sales-chart/sales-chart.component';
+import { SalesValueChartComponent } from '../../../components/charts/sales-value-chart/sales-value-chart.component';
+import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatDivider } from '@angular/material/divider';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { MatTooltip } from '@angular/material/tooltip';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
     selector: 'app-report-sales',
@@ -38,7 +47,7 @@ import { MatDialog } from '@angular/material/dialog';
         },
         { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
     ],
-    standalone: false
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, SalesChartComponent, SalesValueChartComponent, MatRipple, MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, MatButton, MatIcon, MatDivider, MatRadioGroup, MatRadioButton, MatGridList, MatGridTile, MatTooltip, DecimalPipe, TranslateModule]
 })
 export class ReportSalesComponent {
   constructor(

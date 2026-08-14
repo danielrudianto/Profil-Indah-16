@@ -7,13 +7,16 @@ import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe, NgIf, NgFor } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-payment-list',
     templateUrl: './payment-list.component.html',
     styleUrls: ['./payment-list.component.css'],
-    standalone: false
+    imports: [NgIf, MatProgressSpinner, NgFor, MatIconButton, MatIcon, DecimalPipe]
 })
 export class PaymentListComponent {
   constructor(

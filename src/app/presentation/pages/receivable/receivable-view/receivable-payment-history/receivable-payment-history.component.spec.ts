@@ -8,8 +8,8 @@ describe('ReceivablePaymentHistoryComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ReceivablePaymentHistoryComponent]
-    });
+    imports: [ReceivablePaymentHistoryComponent]
+});
     fixture = TestBed.createComponent(ReceivablePaymentHistoryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

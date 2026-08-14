@@ -8,8 +8,8 @@ describe('FeatureBackgroundComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [FeatureBackgroundComponent]
-    });
+    imports: [FeatureBackgroundComponent]
+});
     fixture = TestBed.createComponent(FeatureBackgroundComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

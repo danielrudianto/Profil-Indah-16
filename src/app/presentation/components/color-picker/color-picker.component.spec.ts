@@ -8,8 +8,8 @@ describe('ColorPickerComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ColorPickerComponent]
-    });
+    imports: [ColorPickerComponent]
+});
     fixture = TestBed.createComponent(ColorPickerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

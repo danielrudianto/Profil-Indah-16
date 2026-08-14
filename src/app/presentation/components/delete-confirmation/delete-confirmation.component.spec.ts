@@ -8,8 +8,8 @@ describe('DeleteConfirmationComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [DeleteConfirmationComponent]
-    });
+    imports: [DeleteConfirmationComponent]
+});
     fixture = TestBed.createComponent(DeleteConfirmationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

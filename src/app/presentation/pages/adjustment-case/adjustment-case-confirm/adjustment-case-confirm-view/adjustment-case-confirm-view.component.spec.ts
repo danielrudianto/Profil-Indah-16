@@ -8,8 +8,8 @@ describe('AdjustmentCaseConfirmViewComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AdjustmentCaseConfirmViewComponent]
-    });
+    imports: [AdjustmentCaseConfirmViewComponent]
+});
     fixture = TestBed.createComponent(AdjustmentCaseConfirmViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

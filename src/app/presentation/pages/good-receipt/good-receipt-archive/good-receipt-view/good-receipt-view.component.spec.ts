@@ -8,8 +8,8 @@ describe('GoodReceiptViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [GoodReceiptViewComponent]
-    })
+    imports: [GoodReceiptViewComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(GoodReceiptViewComponent);

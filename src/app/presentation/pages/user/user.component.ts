@@ -1,17 +1,24 @@
 import { Component } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { AuthService } from 'src/app/services/auth.service';
 import { DynamicComponentService } from '../../../services/dynamic-component.service';
 import { DeleteConfirmationComponent } from '../../components/delete-confirmation/delete-confirmation.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiService } from '../../../services/api.service';
 import { UserEditComponent } from './user-edit/user-edit.component';
+import { FeatureBackgroundComponent } from '../../components/feature-background/feature-background.component';
+import { FeatureHeaderComponent } from '../../components/feature-header/feature-header.component';
+import { FeatureSearchComponent } from '../../components/feature-search/feature-search.component';
+import { NgIf, NgFor } from '@angular/common';
+import { EmptyTableComponent } from '../../components/empty-table/empty-table.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-user',
     templateUrl: './user.component.html',
     styleUrls: ['./user.component.css'],
-    standalone: false
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, EmptyTableComponent, MatProgressSpinner, MatPaginator, TranslateModule]
 })
 export class UserComponent {
   constructor(

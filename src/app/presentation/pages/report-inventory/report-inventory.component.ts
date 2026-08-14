@@ -2,12 +2,19 @@ import { Component } from '@angular/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { DynamicDialogComponent } from '../../components/dynamic-dialog/dynamic-dialog.component';
+import { DialogHeaderComponent } from '../../components/dialog-header/dialog-header.component';
+import { CountUpDirective } from '../../../directives/count-up.directive';
+import { MatDivider } from '@angular/material/divider';
+import { NgFor, UpperCasePipe, DecimalPipe } from '@angular/common';
+import { CircleAvatarComponent } from '../../components/circle-avatar/circle-avatar.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-report-inventory',
     templateUrl: './report-inventory.component.html',
     styleUrls: ['./report-inventory.component.css'],
-    standalone: false
+    imports: [DynamicDialogComponent, DialogHeaderComponent, CountUpDirective, MatDivider, NgFor, CircleAvatarComponent, UpperCasePipe, DecimalPipe, TranslateModule]
 })
 export class ReportInventoryComponent {
   isOpened: boolean = false;

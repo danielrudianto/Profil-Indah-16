@@ -8,8 +8,8 @@ describe('AdjustmentCaseComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AdjustmentCaseComponent]
-    });
+    imports: [AdjustmentCaseComponent]
+});
     fixture = TestBed.createComponent(AdjustmentCaseComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

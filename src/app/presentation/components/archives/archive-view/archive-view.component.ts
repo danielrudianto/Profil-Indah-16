@@ -1,4 +1,4 @@
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe, NgIf } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -14,6 +14,11 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { MatDialogTitle } from '@angular/material/dialog';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslateModule } from '@ngx-translate/core';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -23,7 +28,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
     styleUrls: ['./archive-view.component.css'],
     animations: [panelAnimation],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [MatDialogTitle, MatIconButton, NgIf, MatIcon, MatProgressSpinner, TranslateModule]
 })
 export class ArchiveViewComponent {
   constructor(

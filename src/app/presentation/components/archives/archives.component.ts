@@ -1,6 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { NgFor, DatePipe } from '@angular/common';
+import { MatDivider } from '@angular/material/divider';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { ArchiveCardComponent } from './archive-card/archive-card.component';
 
 export enum ArchiveMode {
   year,
@@ -11,7 +15,7 @@ export enum ArchiveMode {
     selector: 'app-archives',
     templateUrl: './archives.component.html',
     styleUrls: ['./archives.component.css'],
-    standalone: false
+    imports: [NgFor, MatDivider, MatGridList, MatGridTile, ArchiveCardComponent, DatePipe]
 })
 export class ArchivesComponent {
   @Output('onMonthSelected') onMonthSelected: EventEmitter<any> =

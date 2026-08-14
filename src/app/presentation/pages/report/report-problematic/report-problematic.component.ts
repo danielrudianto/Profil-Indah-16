@@ -2,19 +2,28 @@ import { Component } from '@angular/core';
 import { DynamicComponentService } from '../../../../services/dynamic-component.service';
 import { ApiService } from '../../../../services/api.service';
 import { AlertService } from '../../../../services/alert.service';
-import { TranslateService } from '@ngx-translate/core';
-import { FormControl } from '@angular/forms';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import * as xlsx from 'xlsx';
 import { saveAs } from 'file-saver';
-import { PageEvent } from '@angular/material/paginator';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { ReportProblematicFilterComponent } from './report-problematic-filter/report-problematic-filter.component';
+import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
+import { FeatureHeaderComponent } from '../../../components/feature-header/feature-header.component';
+import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 
 @Component({
     selector: 'app-report-problematic',
     templateUrl: './report-problematic.component.html',
     styleUrls: ['./report-problematic.component.css'],
-    standalone: false
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatPrefix, MatIcon, MatSuffix, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, TranslateModule]
 })
 export class ReportProblematicComponent {
   constructor(

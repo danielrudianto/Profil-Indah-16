@@ -1,15 +1,20 @@
 import { Component, Inject } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MAT_BOTTOM_SHEET_DATA,
   MatBottomSheetRef,
 } from '@angular/material/bottom-sheet';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgxMaskDirective } from 'ngx-mask';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-update-product-sales-price',
     templateUrl: './update-product-sales-price.component.html',
     styleUrls: ['./update-product-sales-price.component.css'],
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatSlideToggle, TranslateModule]
 })
 export class UpdateProductSalesPriceComponent {
   constructor(

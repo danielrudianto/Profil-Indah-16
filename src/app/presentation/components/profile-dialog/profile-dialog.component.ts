@@ -6,6 +6,8 @@ import {
   trigger,
 } from '@angular/animations';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { CircleAvatarComponent } from '../circle-avatar/circle-avatar.component';
 
 @Component({
     selector: 'app-profile-dialog',
@@ -30,7 +32,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
             transition('* => *', [animate('0.3s ease-in-out')]),
         ]),
     ],
-    standalone: false
+    imports: [MatIcon, CircleAvatarComponent]
 })
 export class ProfileDialogComponent {
   @Output('onClose') onClose: EventEmitter<void> = new EventEmitter<void>();

@@ -8,8 +8,8 @@ describe('CompanyComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CompanyComponent]
-    });
+    imports: [CompanyComponent]
+});
     fixture = TestBed.createComponent(CompanyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

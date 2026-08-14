@@ -1,15 +1,21 @@
 import { Component, Input } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { DynamicDialogComponent } from '../../../../components/dynamic-dialog/dynamic-dialog.component';
+import { DialogHeaderComponent } from '../../../../components/dialog-header/dialog-header.component';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { EmptyTableComponent } from '../../../../components/empty-table/empty-table.component';
 
 @Component({
     selector: 'app-receivable-payment-history',
     templateUrl: './receivable-payment-history.component.html',
     styleUrls: ['./receivable-payment-history.component.css'],
-    standalone: false
+    imports: [DynamicDialogComponent, DialogHeaderComponent, NgIf, MatProgressSpinner, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, EmptyTableComponent, DecimalPipe, TranslateModule]
 })
 export class ReceivablePaymentHistoryComponent {
   constructor(

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
   MomentDateAdapter,
@@ -9,7 +9,7 @@ import {
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
-import { MatDatepicker } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
 import moment, { Moment } from 'moment';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -25,11 +25,18 @@ import {
   PageSize,
   TDocumentDefinitions,
 } from 'pdfmake/interfaces';
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, NgIf, NgFor } from '@angular/common';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
 import { saveAs } from 'file-saver';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
+import { TransactionHeaderComponent } from '../../../components/transaction-header/transaction-header.component';
+import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { AutocompleteSearchComponent } from '../../../components/autocomplete-search/autocomplete-search.component';
+import { MatChipListbox, MatChip } from '@angular/material/chips';
 
 @Component({
     selector: 'app-report-output',
@@ -43,7 +50,7 @@ import { TranslateService } from '@ngx-translate/core';
         },
         { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
     ],
-    standalone: false
+    imports: [FeatureBackgroundComponent, TransactionHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, AutocompleteSearchComponent, NgIf, MatChipListbox, NgFor, MatChip, TranslateModule]
 })
 export class ReportOutputComponent {
   constructor(

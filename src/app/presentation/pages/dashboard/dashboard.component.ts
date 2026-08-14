@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
+import { TopbarComponent } from '../../components/topbar/topbar.component';
+import { DashboardTopComponent } from './dashboard-top/dashboard-top.component';
 
 export interface DashboardCard {
   title: string;
@@ -18,7 +20,7 @@ export interface StatCard {
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.css'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [TopbarComponent, DashboardTopComponent]
 })
 export class DashboardComponent implements OnInit {
   constructor(private authService: AuthService) {}

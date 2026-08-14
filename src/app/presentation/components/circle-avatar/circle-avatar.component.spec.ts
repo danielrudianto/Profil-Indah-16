@@ -8,8 +8,8 @@ describe('CircleAvatarComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CircleAvatarComponent]
-    });
+    imports: [CircleAvatarComponent]
+});
     fixture = TestBed.createComponent(CircleAvatarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

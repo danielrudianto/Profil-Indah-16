@@ -8,8 +8,8 @@ describe('LanguageSelectorComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LanguageSelectorComponent]
-    });
+    imports: [LanguageSelectorComponent]
+});
     fixture = TestBed.createComponent(LanguageSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

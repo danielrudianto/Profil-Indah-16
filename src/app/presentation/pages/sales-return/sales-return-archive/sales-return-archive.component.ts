@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
+import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import moment from 'moment';
 import { ArchiveMode } from 'src/app/presentation/components/archives/archives.component';
 import { AlertService } from 'src/app/services/alert.service';
@@ -11,13 +11,19 @@ import { ArchiveViewComponent } from 'src/app/presentation/components/archives/a
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { MatDialog } from '@angular/material/dialog';
 import { SalesReturnArchiveViewComponent } from './sales-return-archive-view/sales-return-archive-view.component';
+import { ArchivesComponent } from '../../../components/archives/archives.component';
+import { ArchiveSearchComponent } from '../../../components/archives/archive-search/archive-search.component';
+import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-sales-return-archive',
     templateUrl: './sales-return-archive.component.html',
     styleUrls: ['./sales-return-archive.component.css'],
     animations: [slideInOutAnimation],
-    standalone: false
+    imports: [ArchivesComponent, ArchiveSearchComponent, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DatePipe, TranslateModule]
 })
 export class SalesReturnArchiveComponent {
   constructor(

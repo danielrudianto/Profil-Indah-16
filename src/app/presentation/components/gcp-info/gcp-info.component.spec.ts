@@ -8,8 +8,8 @@ describe('GcpInfoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [GcpInfoComponent]
-    });
+    imports: [GcpInfoComponent]
+});
     fixture = TestBed.createComponent(GcpInfoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

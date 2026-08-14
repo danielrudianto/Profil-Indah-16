@@ -7,21 +7,20 @@ import {
   MAT_BOTTOM_SHEET_DATA,
   MatBottomSheetRef,
 } from '@angular/material/bottom-sheet';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ExpenseTypeCreateComponent } from '../expense-type-create/expense-type-create.component';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatList, MatListItem, MatListItemIcon, MatListItemTitle, MatListItemLine } from '@angular/material/list';
+import { NgFor } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-expense-type-view-children',
     templateUrl: './expense-type-view-children.component.html',
     styleUrls: ['./expense-type-view-children.component.css'],
     animations: [panelAnimation],
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, MatIconButton, MatIcon, MatList, NgFor, MatListItem, MatListItemIcon, MatListItemTitle, MatListItemLine, TranslateModule]
 })
 export class ExpenseTypeViewChildrenComponent {
   constructor(

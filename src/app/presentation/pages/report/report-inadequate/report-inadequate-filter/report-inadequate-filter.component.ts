@@ -1,17 +1,24 @@
 import { Component, Input } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { panelAnimation } from 'src/app/animations/panel.animation';
 import { AlertService } from 'src/app/services/alert.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { MatDialogTitle } from '@angular/material/dialog';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { AutocompleteSearchComponent } from '../../../../components/autocomplete-search/autocomplete-search.component';
+import { NgIf, NgFor } from '@angular/common';
+import { MatList, MatListSubheaderCssMatStyler, MatListItem, MatListItemIcon, MatListItemTitle } from '@angular/material/list';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'app-report-inadequate-filter',
     templateUrl: './report-inadequate-filter.component.html',
     styleUrls: ['./report-inadequate-filter.component.css'],
     animations: [panelAnimation],
-    standalone: false
+    imports: [MatDialogTitle, MatIconButton, MatIcon, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, NgIf, MatList, MatListSubheaderCssMatStyler, NgFor, MatListItem, MatListItemIcon, MatListItemTitle, MatDivider, TranslateModule]
 })
 export class ReportInadequateFilterComponent {
   constructor(

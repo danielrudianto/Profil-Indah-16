@@ -8,8 +8,8 @@ describe('DepositViewComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [DepositViewComponent]
-    });
+    imports: [DepositViewComponent]
+});
     fixture = TestBed.createComponent(DepositViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

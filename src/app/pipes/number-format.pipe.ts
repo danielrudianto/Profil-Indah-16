@@ -1,9 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-    name: 'shortNumber',
-    standalone: false
-})
+@Pipe({ name: 'shortNumber' })
 export class ShortNumberPipe implements PipeTransform {
   /**
    * Transforms a number into a short representation with a suffix.

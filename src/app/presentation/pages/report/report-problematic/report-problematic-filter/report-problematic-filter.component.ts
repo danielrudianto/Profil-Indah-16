@@ -1,17 +1,24 @@
 import { Component, Input } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { AlertService } from '../../../../../services/alert.service';
 import { DynamicComponentService } from '../../../../../services/dynamic-component.service';
 import { panelAnimation } from '../../../../../animations/panel.animation';
+import { MatDialogTitle } from '@angular/material/dialog';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { AutocompleteSearchComponent } from '../../../../components/autocomplete-search/autocomplete-search.component';
+import { NgIf, NgFor } from '@angular/common';
+import { MatList, MatListSubheaderCssMatStyler, MatListItem, MatListItemIcon, MatListItemTitle } from '@angular/material/list';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'app-report-problematic-filter',
     templateUrl: './report-problematic-filter.component.html',
     styleUrls: ['./report-problematic-filter.component.css'],
     animations: [panelAnimation],
-    standalone: false
+    imports: [MatDialogTitle, MatIconButton, MatIcon, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, NgIf, MatList, MatListSubheaderCssMatStyler, NgFor, MatListItem, MatListItemIcon, MatListItemTitle, MatDivider, TranslateModule]
 })
 export class ReportProblematicFilterComponent {
   constructor(

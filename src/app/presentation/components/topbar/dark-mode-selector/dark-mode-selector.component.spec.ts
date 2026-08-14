@@ -8,8 +8,8 @@ describe('DarkModeSelectorComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [DarkModeSelectorComponent]
-    });
+    imports: [DarkModeSelectorComponent]
+});
     fixture = TestBed.createComponent(DarkModeSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

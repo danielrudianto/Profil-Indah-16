@@ -8,8 +8,8 @@ describe('SetAvatarComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SetAvatarComponent]
-    });
+    imports: [SetAvatarComponent]
+});
     fixture = TestBed.createComponent(SetAvatarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

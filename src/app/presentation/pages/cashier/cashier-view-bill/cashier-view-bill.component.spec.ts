@@ -8,8 +8,8 @@ describe('CashierViewBillComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CashierViewBillComponent]
-    });
+    imports: [CashierViewBillComponent]
+});
     fixture = TestBed.createComponent(CashierViewBillComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

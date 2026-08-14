@@ -8,8 +8,8 @@ describe('ArchiveSearchComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ArchiveSearchComponent]
-    });
+    imports: [ArchiveSearchComponent]
+});
     fixture = TestBed.createComponent(ArchiveSearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

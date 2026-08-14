@@ -8,8 +8,8 @@ describe('ReportInadequateFilterComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ReportInadequateFilterComponent]
-    });
+    imports: [ReportInadequateFilterComponent]
+});
     fixture = TestBed.createComponent(ReportInadequateFilterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

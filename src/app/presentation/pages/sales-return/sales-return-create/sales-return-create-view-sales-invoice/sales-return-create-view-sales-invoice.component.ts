@@ -3,13 +3,20 @@ import { panelAnimation } from 'src/app/animations/panel.animation';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { MatDialogTitle } from '@angular/material/dialog';
+import { MatIconButton } from '@angular/material/button';
+import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { AvatarComponent } from '../../../../components/avatar/avatar.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-sales-return-create-view-sales-invoice',
     templateUrl: './sales-return-create-view-sales-invoice.component.html',
     styleUrls: ['./sales-return-create-view-sales-invoice.component.css'],
     animations: [panelAnimation],
-    standalone: false
+    imports: [MatDialogTitle, MatIconButton, NgIf, MatIcon, MatProgressSpinner, AvatarComponent, NgFor, DecimalPipe, DatePipe, TranslateModule]
 })
 export class SalesReturnCreateViewSalesInvoiceComponent {
   constructor(

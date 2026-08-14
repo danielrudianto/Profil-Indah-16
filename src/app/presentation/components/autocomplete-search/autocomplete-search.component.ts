@@ -5,15 +5,22 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
+import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { NgIf, NgFor } from '@angular/common';
+import { MatOption } from '@angular/material/select';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-autocomplete-search',
     templateUrl: './autocomplete-search.component.html',
     styleUrls: ['./autocomplete-search.component.css'],
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatAutocompleteTrigger, MatAutocomplete, NgIf, MatOption, NgFor, MatIcon, MatPrefix, MatIconButton, MatSuffix]
 })
 export class AutocompleteSearchComponent {
   constructor(private apiService: ApiService) {}

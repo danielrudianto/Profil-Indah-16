@@ -6,8 +6,7 @@ import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
     selector: 'app-dynamic-dialog',
     templateUrl: './dynamic-dialog.component.html',
     styleUrls: ['./dynamic-dialog.component.css'],
-    animations: [slideInOutAnimation, fadeInOutAnimation],
-    standalone: false
+    animations: [slideInOutAnimation, fadeInOutAnimation]
 })
 export class DynamicDialogComponent {
   @Input('isOpened') isOpened!: boolean;

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { default as _rollupMoment, Moment } from 'moment';
 import * as _moment from 'moment';
-import { MatDatepicker } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -15,6 +15,11 @@ import {
   MomentDateAdapter,
 } from '@angular/material-moment-adapter';
 import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
+import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 const moment = _rollupMoment || _moment;
 
@@ -30,7 +35,7 @@ const moment = _rollupMoment || _moment;
         },
         { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
     ],
-    standalone: false
+    imports: [MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, NgIf, NgFor, DecimalPipe, TranslateModule]
 })
 export class ExpenseReportComponent {
   constructor(

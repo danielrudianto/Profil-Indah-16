@@ -8,8 +8,8 @@ describe('TransactionHeaderComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TransactionHeaderComponent]
-    });
+    imports: [TransactionHeaderComponent]
+});
     fixture = TestBed.createComponent(TransactionHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -8,8 +8,8 @@ describe('AutocompleteSearchComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AutocompleteSearchComponent]
-    });
+    imports: [AutocompleteSearchComponent]
+});
     fixture = TestBed.createComponent(AutocompleteSearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

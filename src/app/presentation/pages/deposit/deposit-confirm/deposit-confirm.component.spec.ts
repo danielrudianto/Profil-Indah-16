@@ -8,8 +8,8 @@ describe('DepositConfirmComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [DepositConfirmComponent]
-    });
+    imports: [DepositConfirmComponent]
+});
     fixture = TestBed.createComponent(DepositConfirmComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

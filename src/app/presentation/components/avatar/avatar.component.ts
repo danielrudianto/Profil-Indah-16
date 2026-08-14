@@ -7,12 +7,13 @@ import {
   AvatarMouth,
   AvatarTop,
 } from 'src/app/models/avatar.model';
+import { NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 
 @Component({
     selector: 'app-avatar',
     templateUrl: './avatar.component.html',
     styleUrls: ['./avatar.component.css'],
-    standalone: false
+    imports: [NgIf, NgSwitch, NgSwitchCase]
 })
 export class AvatarComponent {
   constructor() {}

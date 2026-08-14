@@ -8,8 +8,8 @@ describe('PromotionCreateRuleComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PromotionCreateRuleComponent]
-    });
+    imports: [PromotionCreateRuleComponent]
+});
     fixture = TestBed.createComponent(PromotionCreateRuleComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

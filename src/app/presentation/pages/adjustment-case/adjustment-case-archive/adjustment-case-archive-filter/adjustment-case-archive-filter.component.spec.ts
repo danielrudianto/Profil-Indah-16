@@ -8,8 +8,8 @@ describe('AdjustmentCaseArchiveFilterComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AdjustmentCaseArchiveFilterComponent]
-    });
+    imports: [AdjustmentCaseArchiveFilterComponent]
+});
     fixture = TestBed.createComponent(AdjustmentCaseArchiveFilterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

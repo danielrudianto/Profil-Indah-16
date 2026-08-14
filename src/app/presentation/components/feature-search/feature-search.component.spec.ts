@@ -8,8 +8,8 @@ describe('FeatureSearchComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [FeatureSearchComponent]
-    });
+    imports: [FeatureSearchComponent]
+});
     fixture = TestBed.createComponent(FeatureSearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

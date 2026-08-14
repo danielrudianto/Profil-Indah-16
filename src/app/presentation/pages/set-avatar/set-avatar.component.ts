@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { panelAnimation } from 'src/app/animations/panel.animation';
 import {
   AvatarAccessories,
@@ -13,13 +13,22 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { MatDialogTitle } from '@angular/material/dialog';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { AvatarComponent } from '../../components/avatar/avatar.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { ColorPickerComponent } from '../../components/color-picker/color-picker.component';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-set-avatar',
     templateUrl: './set-avatar.component.html',
     styleUrls: ['./set-avatar.component.css'],
     animations: [panelAnimation],
-    standalone: false
+    imports: [MatDialogTitle, MatIconButton, MatIcon, AvatarComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, ColorPickerComponent, MatSlideToggle, TranslateModule]
 })
 export class SetAvatarComponent {
   constructor(

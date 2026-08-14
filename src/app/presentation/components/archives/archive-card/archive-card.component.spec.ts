@@ -8,8 +8,8 @@ describe('ArchiveCardComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ArchiveCardComponent]
-    });
+    imports: [ArchiveCardComponent]
+});
     fixture = TestBed.createComponent(ArchiveCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

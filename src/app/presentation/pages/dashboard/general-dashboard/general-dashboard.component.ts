@@ -1,18 +1,23 @@
 import { Component } from '@angular/core';
 import { StatCard } from '../dashboard.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
 import * as xlsx from 'xlsx';
 import { saveAs } from 'file-saver';
-import { DatePipe } from '@angular/common';
-import { TranslateService } from '@ngx-translate/core';
+import { DatePipe, NgFor } from '@angular/common';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { StatCardComponent } from '../../../components/stat-card/stat-card.component';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import { GcpInfoComponent } from '../../../components/gcp-info/gcp-info.component';
 
 @Component({
     selector: 'app-general-dashboard',
     templateUrl: './general-dashboard.component.html',
     styleUrls: ['./general-dashboard.component.css'],
-    standalone: false
+    imports: [MatTooltip, RouterLink, MatGridList, NgFor, MatGridTile, StatCardComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, GcpInfoComponent, TranslateModule]
 })
 export class GeneralDashboardComponent {
   constructor(

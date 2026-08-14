@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgFor, NgClass } from '@angular/common';
 
 export interface CustomStepData {
   label: string;
@@ -10,7 +11,7 @@ export interface CustomStepData {
     selector: 'app-custom-stepper',
     templateUrl: './custom-stepper.component.html',
     styleUrls: ['./custom-stepper.component.css'],
-    standalone: false
+    imports: [NgFor, NgClass]
 })
 export class CustomStepperComponent {
   @Input('steps') steps: CustomStepData[] = [];

@@ -8,8 +8,8 @@ describe('PromotionViewComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PromotionViewComponent]
-    });
+    imports: [PromotionViewComponent]
+});
     fixture = TestBed.createComponent(PromotionViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

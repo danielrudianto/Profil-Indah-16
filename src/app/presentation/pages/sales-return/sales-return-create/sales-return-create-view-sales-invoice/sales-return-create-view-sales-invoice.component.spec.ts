@@ -8,8 +8,8 @@ describe('SalesReturnCreateViewSalesInvoiceComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SalesReturnCreateViewSalesInvoiceComponent]
-    });
+    imports: [SalesReturnCreateViewSalesInvoiceComponent]
+});
     fixture = TestBed.createComponent(SalesReturnCreateViewSalesInvoiceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -8,8 +8,8 @@ describe('GoodReceiptComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [GoodReceiptComponent]
-    });
+    imports: [GoodReceiptComponent]
+});
     fixture = TestBed.createComponent(GoodReceiptComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

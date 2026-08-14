@@ -8,8 +8,8 @@ describe('GeneralComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [GeneralComponent]
-    });
+    imports: [GeneralComponent]
+});
     fixture = TestBed.createComponent(GeneralComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

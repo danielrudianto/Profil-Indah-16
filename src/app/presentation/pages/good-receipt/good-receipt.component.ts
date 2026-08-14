@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
+import { FeatureBackgroundComponent } from '../../components/feature-background/feature-background.component';
+import { TransactionHeaderComponent } from '../../components/transaction-header/transaction-header.component';
+import { RouterOutlet } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-good-receipt',
     templateUrl: './good-receipt.component.html',
     styleUrls: ['./good-receipt.component.css'],
-    standalone: false
+    imports: [FeatureBackgroundComponent, TransactionHeaderComponent, RouterOutlet, TranslateModule]
 })
 export class GoodReceiptComponent {
   availbleMenus = [

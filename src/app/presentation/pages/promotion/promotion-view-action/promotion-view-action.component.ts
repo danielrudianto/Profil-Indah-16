@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PromotionCreateRuleComponent } from '../promotion-create-rule/promotion-create-rule.component';
 import { PromotionViewComponent } from '../promotion-view/promotion-view.component';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
@@ -7,17 +7,27 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgIf, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { panelAnimation } from 'src/app/animations/panel.animation';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { DynamicDialogComponent } from '../../../components/dynamic-dialog/dynamic-dialog.component';
+import { DialogHeaderComponent } from '../../../components/dialog-header/dialog-header.component';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { NgxMaskDirective } from 'ngx-mask';
+import { AutocompleteSearchComponent } from '../../../components/autocomplete-search/autocomplete-search.component';
+import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-promotion-view-action',
     templateUrl: './promotion-view-action.component.html',
     styleUrls: ['./promotion-view-action.component.css'],
     animations: [panelAnimation],
-    standalone: false
+    imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, AutocompleteSearchComponent, NgIf, EmptyTableComponent, NgFor, NgSwitch, NgSwitchCase, MatIconButton, MatIcon, MatButton, TranslateModule]
 })
 export class PromotionViewActionComponent {
   constructor(

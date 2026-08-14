@@ -8,8 +8,8 @@ describe('VerticalDividerComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [VerticalDividerComponent]
-    });
+    imports: [VerticalDividerComponent]
+});
     fixture = TestBed.createComponent(VerticalDividerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

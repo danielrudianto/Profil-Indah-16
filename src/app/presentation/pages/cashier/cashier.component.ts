@@ -1,16 +1,18 @@
 import { Component, HostListener } from '@angular/core';
 import { KEY_CODE } from '../../../utils/keycode.utils';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../../../services/api.service';
 import { AlertService } from '../../../services/alert.service';
 import { DynamicComponentService } from '../../../services/dynamic-component.service';
 import { CashierViewBillComponent } from './cashier-view-bill/cashier-view-bill.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 @Component({
     selector: 'app-cashier',
     templateUrl: './cashier.component.html',
     styleUrls: ['./cashier.component.css'],
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput]
 })
 export class CashierComponent {
   constructor(

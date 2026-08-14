@@ -8,8 +8,8 @@ describe('ReportProblematicFilterComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ReportProblematicFilterComponent]
-    });
+    imports: [ReportProblematicFilterComponent]
+});
     fixture = TestBed.createComponent(ReportProblematicFilterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

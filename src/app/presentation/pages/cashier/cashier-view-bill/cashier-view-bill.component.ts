@@ -1,24 +1,27 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { panelAnimation } from '../../../../animations/panel.animation';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DynamicComponentService } from '../../../../services/dynamic-component.service';
 import { ApiService } from '../../../../services/api.service';
 import { AlertService } from '../../../../services/alert.service';
 import { CashierViewBillPaymentSelectorComponent } from './cashier-view-bill-payment-selector/cashier-view-bill-payment-selector.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatDialogTitle } from '@angular/material/dialog';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { NgxMaskDirective } from 'ngx-mask';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatList } from '@angular/material/list';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-cashier-view-bill',
     templateUrl: './cashier-view-bill.component.html',
     styleUrls: ['./cashier-view-bill.component.css'],
     animations: [panelAnimation],
-    standalone: false
+    imports: [MatDialogTitle, MatIconButton, NgIf, MatIcon, NgFor, FormsModule, ReactiveFormsModule, NgxMaskDirective, MatFormField, MatLabel, MatInput, MatButton, MatList, DecimalPipe, DatePipe, TranslateModule]
 })
 export class CashierViewBillComponent {
   constructor(
