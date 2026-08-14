@@ -1,54 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './presentation/pages/login/login.component';
-import { DashboardComponent } from './presentation/pages/dashboard/dashboard.component';
-import { MainComponent } from './presentation/pages/main/main.component';
-import { AdministratorDashboardComponent } from './presentation/pages/dashboard/administrator-dashboard/administrator-dashboard.component';
-import { ProductComponent } from './presentation/pages/product/product.component';
-import { ProductTypeComponent } from './presentation/pages/product-type/product-type.component';
-import { ProductBrandComponent } from './presentation/pages/product-brand/product-brand.component';
-import { AdministratorComponent } from './presentation/pages/entries/administrator/administrator.component';
-import { PackageComponent } from './presentation/pages/package/package.component';
-import { CustomerComponent } from './presentation/pages/customer/customer.component';
-import { SupplierComponent } from './presentation/pages/supplier/supplier.component';
-import { CompanyComponent } from './presentation/pages/company/company.component';
-import { ExpenseTypeComponent } from './presentation/pages/expense-type/expense-type.component';
-import { UserComponent } from './presentation/pages/user/user.component';
-import { PaymentMethodComponent } from './presentation/pages/payment-method/payment-method.component';
-import { PurchasingComponent } from './presentation/pages/entries/purchasing/purchasing.component';
-import { PurchasingDashboardComponent } from './presentation/pages/dashboard/purchasing-dashboard/purchasing-dashboard.component';
-import { SalesComponent } from './presentation/pages/entries/sales/sales.component';
-import { SalesDashboardComponent } from './presentation/pages/dashboard/sales-dashboard/sales-dashboard.component';
-import { ProfileComponent } from './presentation/pages/entries/profile/profile.component';
-import { ProfileOverviewComponent } from './presentation/pages/profile-overview/profile-overview.component';
-import { GeneralComponent } from './presentation/pages/entries/general/general.component';
-import { GeneralDashboardComponent } from './presentation/pages/dashboard/general-dashboard/general-dashboard.component';
-import { ExpenseComponent } from './presentation/pages/expense/expense.component';
-import { SalesInvoiceComponent } from './presentation/pages/sales-invoice/sales-invoice.component';
-import { SalesInvoiceCreateComponent } from './presentation/pages/sales-invoice/sales-invoice-create/sales-invoice-create.component';
-import { SalesInvoiceArchiveComponent } from './presentation/pages/sales-invoice/sales-invoice-archive/sales-invoice-archive.component';
-import { AdjustmentCaseComponent } from './presentation/pages/adjustment-case/adjustment-case.component';
-import { AdjustmentCaseCreateComponent } from './presentation/pages/adjustment-case/adjustment-case-create/adjustment-case-create.component';
-import { AdjustmentCaseArchiveComponent } from './presentation/pages/adjustment-case/adjustment-case-archive/adjustment-case-archive.component';
-import { ExpenseCreateComponent } from './presentation/pages/expense/expense-create/expense-create.component';
-import { ExpenseMutationComponent } from './presentation/pages/expense/expense-mutation/expense-mutation.component';
-import { ExpenseReportComponent } from './presentation/pages/expense/expense-report/expense-report.component';
-import { PromotionComponent } from './presentation/pages/promotion/promotion.component';
-import { PurchaseInvoiceComponent } from './presentation/pages/purchase-invoice/purchase-invoice.component';
-import { PurchaseInvoiceCreateComponent } from './presentation/pages/purchase-invoice/purchase-invoice-create/purchase-invoice-create.component';
-import { GoodReceiptComponent } from './presentation/pages/good-receipt/good-receipt.component';
-import { GoodReceiptCreateComponent } from './presentation/pages/good-receipt/good-receipt-create/good-receipt-create.component';
-import { GoodReceiptArchiveComponent } from './presentation/pages/good-receipt/good-receipt-archive/good-receipt-archive.component';
-import { PurchaseInvoiceArchiveComponent } from './presentation/pages/purchase-invoice/purchase-invoice-archive/purchase-invoice-archive.component';
-import { ReceivableComponent } from './presentation/pages/receivable/receivable.component';
-import { DepositComponent } from './presentation/pages/deposit/deposit.component';
-import { DepositListComponent } from './presentation/pages/deposit/deposit-list/deposit-list.component';
-import { DepositArchiveComponent } from './presentation/pages/deposit/deposit-archive/deposit-archive.component';
-import { PurchaseInvoiceConfirmComponent } from './presentation/pages/purchase-invoice/purchase-invoice-confirm/purchase-invoice-confirm.component';
-import { PurchaseInvoiceEditComponent } from './presentation/pages/purchase-invoice/purchase-invoice-edit/purchase-invoice-edit.component';
-import { PriceComponent } from './presentation/pages/price/price.component';
-import { PriceSalesComponent } from './presentation/pages/price/price-sales/price-sales.component';
-import { PricePurchaseComponent } from './presentation/pages/price/price-purchase/price-purchase.component';
 import { AuthGuard } from './guards/auth.guard';
 import {
   AdministratorGuard,
@@ -57,213 +8,302 @@ import {
   SalesGuard,
   SuperAdministratorGuard,
 } from './guards/administrator.guard';
-import { AdjustmentCaseConfirmComponent } from './presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm.component';
-import { PurchaseInvoiceConfirmViewComponent } from './presentation/pages/purchase-invoice/purchase-invoice-confirm-view/purchase-invoice-confirm-view.component';
-import { DepositConfirmComponent } from './presentation/pages/deposit/deposit-confirm/deposit-confirm.component';
-import { PackageListComponent } from './presentation/pages/package/package-list/package-list.component';
-import { PackageCreateComponent } from './presentation/pages/package/package-create/package-create.component';
-import { PackageUpdateComponent } from './presentation/pages/package/package-update/package-update.component';
-import { ReportComponent } from './presentation/pages/report/report.component';
-import { ReportSalesComponent } from './presentation/pages/report/report-sales/report-sales.component';
-import { ReportPurchaseComponent } from './presentation/pages/report/report-purchase/report-purchase.component';
-import { ReportMoneyComponent } from './presentation/pages/report/report-money/report-money.component';
-import { SalesReturnComponent } from './presentation/pages/sales-return/sales-return.component';
-import { SalesReturnCreateComponent } from './presentation/pages/sales-return/sales-return-create/sales-return-create.component';
-import { SalesReturnArchiveComponent } from './presentation/pages/sales-return/sales-return-archive/sales-return-archive.component';
-import { ReportInadequateComponent } from './presentation/pages/report/report-inadequate/report-inadequate.component';
-import { ReportOutputComponent } from './presentation/pages/report/report-output/report-output.component';
-import { ReportProblematicComponent } from './presentation/pages/report/report-problematic/report-problematic.component';
-import { CashierComponent } from './presentation/pages/cashier/cashier.component';
-import { ProductCreateComponent } from './presentation/pages/product/product-create/product-create.component';
-import { PromotionCreateComponent } from './presentation/pages/promotion/promotion-create/promotion-create.component';
-import { OverpaymentComponent } from './presentation/pages/overpayment/overpayment.component';
-import { OverpaymentCreateComponent } from './presentation/pages/overpayment/overpayment-create/overpayment-create.component';
-import { OverpaymentArchiveComponent } from './presentation/pages/overpayment/overpayment-archive/overpayment-archive.component';
-import { ReceivableListComponent } from './presentation/pages/receivable/receivable-list/receivable-list.component';
-import { ReceivableViewComponent } from './presentation/pages/receivable/receivable-view/receivable-view.component';
-import { StockComponent } from './presentation/pages/stock/stock.component';
-import { StockListComponent } from './presentation/pages/stock/stock-list/stock-list.component';
-import { StockCardComponent } from './presentation/pages/stock/stock-card/stock-card.component';
-import { OverpaymentReturnListComponent } from './presentation/pages/overpayment/overpayment-return-list/overpayment-return-list.component';
-import { PromotionListComponent } from './presentation/pages/promotion/promotion-list/promotion-list.component';
-import { PromotionUpdateComponent } from './presentation/pages/promotion/promotion-update/promotion-update.component';
-import { ReportMoneyDorComponent } from './presentation/pages/report/report-money/report-money-dor/report-money-dor.component';
 
 const routes: Routes = [
   {
     path: '',
     canActivate: [AuthGuard],
-    component: MainComponent,
+    loadComponent: () =>
+          import('./presentation/pages/main/main.component').then(
+            (m) => m.MainComponent
+          ),
     children: [
       {
         path: '',
-        component: DashboardComponent,
+        loadComponent: () =>
+          import('./presentation/pages/dashboard/dashboard.component').then(
+            (m) => m.DashboardComponent
+          ),
       },
       {
         path: 'Profile',
-        component: ProfileComponent,
+        loadComponent: () =>
+          import('./presentation/pages/entries/profile/profile.component').then(
+            (m) => m.ProfileComponent
+          ),
         children: [
           {
             path: '',
-            component: ProfileOverviewComponent,
+            loadComponent: () =>
+          import('./presentation/pages/profile-overview/profile-overview.component').then(
+            (m) => m.ProfileOverviewComponent
+          ),
           },
         ],
       },
 
       {
         path: 'Cashier',
-        component: CashierComponent,
+        loadComponent: () =>
+          import('./presentation/pages/cashier/cashier.component').then(
+            (m) => m.CashierComponent
+          ),
       },
       {
         path: 'Administrator',
-        component: AdministratorComponent,
+        loadComponent: () =>
+          import('./presentation/pages/entries/administrator/administrator.component').then(
+            (m) => m.AdministratorComponent
+          ),
         canActivate: [AdministratorGuard],
         children: [
           {
             path: '',
-            component: AdministratorDashboardComponent,
+            loadComponent: () =>
+          import('./presentation/pages/dashboard/administrator-dashboard/administrator-dashboard.component').then(
+            (m) => m.AdministratorDashboardComponent
+          ),
           },
           {
             path: 'Overpayment',
-            component: OverpaymentComponent,
+            loadComponent: () =>
+          import('./presentation/pages/overpayment/overpayment.component').then(
+            (m) => m.OverpaymentComponent
+          ),
             children: [
               {
                 path: '',
-                component: OverpaymentCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/overpayment/overpayment-create/overpayment-create.component').then(
+            (m) => m.OverpaymentCreateComponent
+          ),
               },
               {
                 path: 'Return',
-                component: OverpaymentReturnListComponent,
+                loadComponent: () =>
+          import('./presentation/pages/overpayment/overpayment-return-list/overpayment-return-list.component').then(
+            (m) => m.OverpaymentReturnListComponent
+          ),
               },
               {
                 path: 'Archive',
-                component: OverpaymentArchiveComponent,
+                loadComponent: () =>
+          import('./presentation/pages/overpayment/overpayment-archive/overpayment-archive.component').then(
+            (m) => m.OverpaymentArchiveComponent
+          ),
               },
             ],
           },
           {
             path: 'Product',
-            component: ProductComponent,
+            loadComponent: () =>
+          import('./presentation/pages/product/product.component').then(
+            (m) => m.ProductComponent
+          ),
           },
           {
             path: 'Product/Create',
-            component: ProductCreateComponent,
+            loadComponent: () =>
+          import('./presentation/pages/product/product-create/product-create.component').then(
+            (m) => m.ProductCreateComponent
+          ),
           },
           {
             path: 'Product-type',
-            component: ProductTypeComponent,
+            loadComponent: () =>
+          import('./presentation/pages/product-type/product-type.component').then(
+            (m) => m.ProductTypeComponent
+          ),
           },
           {
             path: 'Product-brand',
-            component: ProductBrandComponent,
+            loadComponent: () =>
+          import('./presentation/pages/product-brand/product-brand.component').then(
+            (m) => m.ProductBrandComponent
+          ),
           },
           {
             path: 'Package',
-            component: PackageComponent,
+            loadComponent: () =>
+          import('./presentation/pages/package/package.component').then(
+            (m) => m.PackageComponent
+          ),
             children: [
               {
                 path: '',
-                component: PackageListComponent,
+                loadComponent: () =>
+          import('./presentation/pages/package/package-list/package-list.component').then(
+            (m) => m.PackageListComponent
+          ),
               },
               {
                 path: 'Create',
-                component: PackageCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/package/package-create/package-create.component').then(
+            (m) => m.PackageCreateComponent
+          ),
               },
               {
                 path: 'Edit/:id',
-                component: PackageUpdateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/package/package-update/package-update.component').then(
+            (m) => m.PackageUpdateComponent
+          ),
               },
             ],
           },
           {
             path: 'Customer',
-            component: CustomerComponent,
+            loadComponent: () =>
+          import('./presentation/pages/customer/customer.component').then(
+            (m) => m.CustomerComponent
+          ),
           },
           {
             path: 'Supplier',
-            component: SupplierComponent,
+            loadComponent: () =>
+          import('./presentation/pages/supplier/supplier.component').then(
+            (m) => m.SupplierComponent
+          ),
           },
           {
             path: 'Company',
-            component: CompanyComponent,
+            loadComponent: () =>
+          import('./presentation/pages/company/company.component').then(
+            (m) => m.CompanyComponent
+          ),
           },
           {
             path: 'User',
-            component: UserComponent,
+            loadComponent: () =>
+          import('./presentation/pages/user/user.component').then(
+            (m) => m.UserComponent
+          ),
           },
           {
             path: 'Payment-method',
-            component: PaymentMethodComponent,
+            loadComponent: () =>
+          import('./presentation/pages/payment-method/payment-method.component').then(
+            (m) => m.PaymentMethodComponent
+          ),
           },
           {
             path: 'Expense-type',
-            component: ExpenseTypeComponent,
+            loadComponent: () =>
+          import('./presentation/pages/expense-type/expense-type.component').then(
+            (m) => m.ExpenseTypeComponent
+          ),
           },
           {
             path: 'Stock',
-            component: StockComponent,
+            loadComponent: () =>
+          import('./presentation/pages/stock/stock.component').then(
+            (m) => m.StockComponent
+          ),
             children: [
               {
                 path: '',
-                component: StockListComponent,
+                loadComponent: () =>
+          import('./presentation/pages/stock/stock-list/stock-list.component').then(
+            (m) => m.StockListComponent
+          ),
               },
               {
                 path: 'Card/:id',
-                component: StockCardComponent,
+                loadComponent: () =>
+          import('./presentation/pages/stock/stock-card/stock-card.component').then(
+            (m) => m.StockCardComponent
+          ),
               },
             ],
           },
           {
             path: 'Promotion',
-            component: PromotionComponent,
+            loadComponent: () =>
+          import('./presentation/pages/promotion/promotion.component').then(
+            (m) => m.PromotionComponent
+          ),
             children: [
               {
                 path: '',
-                component: PromotionListComponent,
+                loadComponent: () =>
+          import('./presentation/pages/promotion/promotion-list/promotion-list.component').then(
+            (m) => m.PromotionListComponent
+          ),
               },
               {
                 path: 'Create',
-                component: PromotionCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/promotion/promotion-create/promotion-create.component').then(
+            (m) => m.PromotionCreateComponent
+          ),
               },
               {
                 path: ':id',
-                component: PromotionUpdateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/promotion/promotion-update/promotion-update.component').then(
+            (m) => m.PromotionUpdateComponent
+          ),
               },
             ],
           },
           {
             path: 'Promotion/Create',
-            component: PromotionCreateComponent,
+            loadComponent: () =>
+          import('./presentation/pages/promotion/promotion-create/promotion-create.component').then(
+            (m) => m.PromotionCreateComponent
+          ),
           },
           {
             path: 'Receivable',
-            component: ReceivableComponent,
+            loadComponent: () =>
+          import('./presentation/pages/receivable/receivable.component').then(
+            (m) => m.ReceivableComponent
+          ),
             children: [
               {
                 path: '',
-                component: ReceivableListComponent,
+                loadComponent: () =>
+          import('./presentation/pages/receivable/receivable-list/receivable-list.component').then(
+            (m) => m.ReceivableListComponent
+          ),
               },
               {
                 path: ':id',
-                component: ReceivableViewComponent,
+                loadComponent: () =>
+          import('./presentation/pages/receivable/receivable-view/receivable-view.component').then(
+            (m) => m.ReceivableViewComponent
+          ),
               },
             ],
           },
           {
             path: 'Deposit',
-            component: DepositComponent,
+            loadComponent: () =>
+          import('./presentation/pages/deposit/deposit.component').then(
+            (m) => m.DepositComponent
+          ),
             children: [
               {
                 path: '',
-                component: DepositListComponent,
+                loadComponent: () =>
+          import('./presentation/pages/deposit/deposit-list/deposit-list.component').then(
+            (m) => m.DepositListComponent
+          ),
               },
               {
                 path: 'Archive',
-                component: DepositArchiveComponent,
+                loadComponent: () =>
+          import('./presentation/pages/deposit/deposit-archive/deposit-archive.component').then(
+            (m) => m.DepositArchiveComponent
+          ),
               },
               {
                 path: 'Confirm/:id',
-                component: DepositConfirmComponent,
+                loadComponent: () =>
+          import('./presentation/pages/deposit/deposit-confirm/deposit-confirm.component').then(
+            (m) => m.DepositConfirmComponent
+          ),
               },
               {
                 path: '**',
@@ -273,15 +313,24 @@ const routes: Routes = [
           },
           {
             path: 'Sales-invoice',
-            component: SalesInvoiceComponent,
+            loadComponent: () =>
+          import('./presentation/pages/sales-invoice/sales-invoice.component').then(
+            (m) => m.SalesInvoiceComponent
+          ),
             children: [
               {
                 path: '',
-                component: SalesInvoiceCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/sales-invoice/sales-invoice-create/sales-invoice-create.component').then(
+            (m) => m.SalesInvoiceCreateComponent
+          ),
               },
               {
                 path: 'Archive',
-                component: SalesInvoiceArchiveComponent,
+                loadComponent: () =>
+          import('./presentation/pages/sales-invoice/sales-invoice-archive/sales-invoice-archive.component').then(
+            (m) => m.SalesInvoiceArchiveComponent
+          ),
               },
               {
                 path: '**',
@@ -291,27 +340,45 @@ const routes: Routes = [
           },
           {
             path: 'Purchase-invoice',
-            component: PurchaseInvoiceComponent,
+            loadComponent: () =>
+          import('./presentation/pages/purchase-invoice/purchase-invoice.component').then(
+            (m) => m.PurchaseInvoiceComponent
+          ),
             children: [
               {
                 path: '',
-                component: PurchaseInvoiceCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/purchase-invoice/purchase-invoice-create/purchase-invoice-create.component').then(
+            (m) => m.PurchaseInvoiceCreateComponent
+          ),
               },
               {
                 path: 'Archive',
-                component: PurchaseInvoiceArchiveComponent,
+                loadComponent: () =>
+          import('./presentation/pages/purchase-invoice/purchase-invoice-archive/purchase-invoice-archive.component').then(
+            (m) => m.PurchaseInvoiceArchiveComponent
+          ),
               },
               {
                 path: 'Confirm',
-                component: PurchaseInvoiceConfirmComponent,
+                loadComponent: () =>
+          import('./presentation/pages/purchase-invoice/purchase-invoice-confirm/purchase-invoice-confirm.component').then(
+            (m) => m.PurchaseInvoiceConfirmComponent
+          ),
               },
               {
                 path: 'Confirm/:id',
-                component: PurchaseInvoiceConfirmViewComponent,
+                loadComponent: () =>
+          import('./presentation/pages/purchase-invoice/purchase-invoice-confirm-view/purchase-invoice-confirm-view.component').then(
+            (m) => m.PurchaseInvoiceConfirmViewComponent
+          ),
               },
               {
                 path: 'Edit/:id',
-                component: PurchaseInvoiceEditComponent,
+                loadComponent: () =>
+          import('./presentation/pages/purchase-invoice/purchase-invoice-edit/purchase-invoice-edit.component').then(
+            (m) => m.PurchaseInvoiceEditComponent
+          ),
               },
               {
                 path: '**',
@@ -321,34 +388,55 @@ const routes: Routes = [
           },
           {
             path: 'Adjustment-case',
-            component: AdjustmentCaseComponent,
+            loadComponent: () =>
+          import('./presentation/pages/adjustment-case/adjustment-case.component').then(
+            (m) => m.AdjustmentCaseComponent
+          ),
             children: [
               {
                 path: '',
-                component: AdjustmentCaseCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/adjustment-case/adjustment-case-create/adjustment-case-create.component').then(
+            (m) => m.AdjustmentCaseCreateComponent
+          ),
               },
               {
                 path: 'Archive',
-                component: AdjustmentCaseArchiveComponent,
+                loadComponent: () =>
+          import('./presentation/pages/adjustment-case/adjustment-case-archive/adjustment-case-archive.component').then(
+            (m) => m.AdjustmentCaseArchiveComponent
+          ),
               },
               {
                 path: 'Confirm',
                 canActivate: [SuperAdministratorGuard],
-                component: AdjustmentCaseConfirmComponent,
+                loadComponent: () =>
+          import('./presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm.component').then(
+            (m) => m.AdjustmentCaseConfirmComponent
+          ),
               },
             ],
           },
           {
             path: 'Sales-return',
-            component: SalesReturnComponent,
+            loadComponent: () =>
+          import('./presentation/pages/sales-return/sales-return.component').then(
+            (m) => m.SalesReturnComponent
+          ),
             children: [
               {
                 path: '',
-                component: SalesReturnCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/sales-return/sales-return-create/sales-return-create.component').then(
+            (m) => m.SalesReturnCreateComponent
+          ),
               },
               {
                 path: 'Archive',
-                component: SalesReturnArchiveComponent,
+                loadComponent: () =>
+          import('./presentation/pages/sales-return/sales-return-archive/sales-return-archive.component').then(
+            (m) => m.SalesReturnArchiveComponent
+          ),
               },
               {
                 path: '**',
@@ -358,19 +446,31 @@ const routes: Routes = [
           },
           {
             path: 'Expense',
-            component: ExpenseComponent,
+            loadComponent: () =>
+          import('./presentation/pages/expense/expense.component').then(
+            (m) => m.ExpenseComponent
+          ),
             children: [
               {
                 path: '',
-                component: ExpenseCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/expense/expense-create/expense-create.component').then(
+            (m) => m.ExpenseCreateComponent
+          ),
               },
               {
                 path: 'Mutation',
-                component: ExpenseMutationComponent,
+                loadComponent: () =>
+          import('./presentation/pages/expense/expense-mutation/expense-mutation.component').then(
+            (m) => m.ExpenseMutationComponent
+          ),
               },
               {
                 path: 'Report',
-                component: ExpenseReportComponent,
+                loadComponent: () =>
+          import('./presentation/pages/expense/expense-report/expense-report.component').then(
+            (m) => m.ExpenseReportComponent
+          ),
               },
               {
                 path: '**',
@@ -380,15 +480,24 @@ const routes: Routes = [
           },
           {
             path: 'Price',
-            component: PriceComponent,
+            loadComponent: () =>
+          import('./presentation/pages/price/price.component').then(
+            (m) => m.PriceComponent
+          ),
             children: [
               {
                 path: 'Sales',
-                component: PriceSalesComponent,
+                loadComponent: () =>
+          import('./presentation/pages/price/price-sales/price-sales.component').then(
+            (m) => m.PriceSalesComponent
+          ),
               },
               {
                 path: 'Purchase',
-                component: PricePurchaseComponent,
+                loadComponent: () =>
+          import('./presentation/pages/price/price-purchase/price-purchase.component').then(
+            (m) => m.PricePurchaseComponent
+          ),
               },
               {
                 path: '**',
@@ -398,31 +507,52 @@ const routes: Routes = [
           },
           {
             path: 'Report',
-            component: ReportComponent,
+            loadComponent: () =>
+          import('./presentation/pages/report/report.component').then(
+            (m) => m.ReportComponent
+          ),
             children: [
               {
                 path: 'Sales',
-                component: ReportSalesComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-sales/report-sales.component').then(
+            (m) => m.ReportSalesComponent
+          ),
               },
               {
                 path: 'Purchase',
-                component: ReportPurchaseComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-purchase/report-purchase.component').then(
+            (m) => m.ReportPurchaseComponent
+          ),
               },
               {
                 path: 'Money',
-                component: ReportMoneyComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-money/report-money.component').then(
+            (m) => m.ReportMoneyComponent
+          ),
               },
               {
                 path: 'Money/Dor',
-                component: ReportMoneyDorComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-money/report-money-dor/report-money-dor.component').then(
+            (m) => m.ReportMoneyDorComponent
+          ),
               },
               {
                 path: 'Inadequate',
-                component: ReportInadequateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-inadequate/report-inadequate.component').then(
+            (m) => m.ReportInadequateComponent
+          ),
               },
               {
                 path: 'Problematic',
-                component: ReportProblematicComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-problematic/report-problematic.component').then(
+            (m) => m.ReportProblematicComponent
+          ),
               },
               {
                 path: '**',
@@ -434,90 +564,150 @@ const routes: Routes = [
       },
       {
         path: 'Purchasing',
-        component: PurchasingComponent,
+        loadComponent: () =>
+          import('./presentation/pages/entries/purchasing/purchasing.component').then(
+            (m) => m.PurchasingComponent
+          ),
         canActivate: [PurchasingGuard],
         children: [
           {
             path: '',
-            component: PurchasingDashboardComponent,
+            loadComponent: () =>
+          import('./presentation/pages/dashboard/purchasing-dashboard/purchasing-dashboard.component').then(
+            (m) => m.PurchasingDashboardComponent
+          ),
           },
           {
             path: 'Product',
-            component: ProductComponent,
+            loadComponent: () =>
+          import('./presentation/pages/product/product.component').then(
+            (m) => m.ProductComponent
+          ),
           },
           {
             path: 'Product/Create',
-            component: ProductCreateComponent,
+            loadComponent: () =>
+          import('./presentation/pages/product/product-create/product-create.component').then(
+            (m) => m.ProductCreateComponent
+          ),
           },
           {
             path: 'Product-type',
-            component: ProductTypeComponent,
+            loadComponent: () =>
+          import('./presentation/pages/product-type/product-type.component').then(
+            (m) => m.ProductTypeComponent
+          ),
           },
           {
             path: 'Product-brand',
-            component: ProductBrandComponent,
+            loadComponent: () =>
+          import('./presentation/pages/product-brand/product-brand.component').then(
+            (m) => m.ProductBrandComponent
+          ),
           },
           {
             path: 'Package',
-            component: PackageComponent,
+            loadComponent: () =>
+          import('./presentation/pages/package/package.component').then(
+            (m) => m.PackageComponent
+          ),
             children: [
               {
                 path: '',
-                component: PackageListComponent,
+                loadComponent: () =>
+          import('./presentation/pages/package/package-list/package-list.component').then(
+            (m) => m.PackageListComponent
+          ),
               },
               {
                 path: 'Create',
-                component: PackageCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/package/package-create/package-create.component').then(
+            (m) => m.PackageCreateComponent
+          ),
               },
               {
                 path: 'Edit/:id',
-                component: PackageUpdateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/package/package-update/package-update.component').then(
+            (m) => m.PackageUpdateComponent
+          ),
               },
             ],
           },
           {
             path: 'Supplier',
-            component: SupplierComponent,
+            loadComponent: () =>
+          import('./presentation/pages/supplier/supplier.component').then(
+            (m) => m.SupplierComponent
+          ),
           },
           {
             path: 'Stock',
-            component: StockComponent,
+            loadComponent: () =>
+          import('./presentation/pages/stock/stock.component').then(
+            (m) => m.StockComponent
+          ),
             children: [
               {
                 path: '',
-                component: StockListComponent,
+                loadComponent: () =>
+          import('./presentation/pages/stock/stock-list/stock-list.component').then(
+            (m) => m.StockListComponent
+          ),
               },
               {
                 path: 'Card/:id',
-                component: StockCardComponent,
+                loadComponent: () =>
+          import('./presentation/pages/stock/stock-card/stock-card.component').then(
+            (m) => m.StockCardComponent
+          ),
               },
             ],
           },
           {
             path: 'Good-receipt',
-            component: GoodReceiptComponent,
+            loadComponent: () =>
+          import('./presentation/pages/good-receipt/good-receipt.component').then(
+            (m) => m.GoodReceiptComponent
+          ),
             children: [
               {
                 path: '',
-                component: GoodReceiptCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/good-receipt/good-receipt-create/good-receipt-create.component').then(
+            (m) => m.GoodReceiptCreateComponent
+          ),
               },
               {
                 path: 'Archive',
-                component: GoodReceiptArchiveComponent,
+                loadComponent: () =>
+          import('./presentation/pages/good-receipt/good-receipt-archive/good-receipt-archive.component').then(
+            (m) => m.GoodReceiptArchiveComponent
+          ),
               },
             ],
           },
           {
             path: 'Report',
-            component: ReportComponent,
+            loadComponent: () =>
+          import('./presentation/pages/report/report.component').then(
+            (m) => m.ReportComponent
+          ),
             children: [
               {
                 path: 'Purchase',
-                component: ReportPurchaseComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-purchase/report-purchase.component').then(
+            (m) => m.ReportPurchaseComponent
+          ),
               },
               {
                 path: 'Inadequate',
-                component: ReportInadequateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-inadequate/report-inadequate.component').then(
+            (m) => m.ReportInadequateComponent
+          ),
               },
               {
                 path: '**',
@@ -529,110 +719,182 @@ const routes: Routes = [
       },
       {
         path: 'Sales',
-        component: SalesComponent,
+        loadComponent: () =>
+          import('./presentation/pages/entries/sales/sales.component').then(
+            (m) => m.SalesComponent
+          ),
         canActivate: [SalesGuard],
         children: [
           {
             path: '',
-            component: SalesDashboardComponent,
+            loadComponent: () =>
+          import('./presentation/pages/dashboard/sales-dashboard/sales-dashboard.component').then(
+            (m) => m.SalesDashboardComponent
+          ),
           },
           {
             path: 'Customer',
-            component: CustomerComponent,
+            loadComponent: () =>
+          import('./presentation/pages/customer/customer.component').then(
+            (m) => m.CustomerComponent
+          ),
           },
           {
             path: 'Package',
-            component: PackageComponent,
+            loadComponent: () =>
+          import('./presentation/pages/package/package.component').then(
+            (m) => m.PackageComponent
+          ),
             children: [
               {
                 path: '',
-                component: PackageListComponent,
+                loadComponent: () =>
+          import('./presentation/pages/package/package-list/package-list.component').then(
+            (m) => m.PackageListComponent
+          ),
               },
               {
                 path: 'Create',
-                component: PackageCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/package/package-create/package-create.component').then(
+            (m) => m.PackageCreateComponent
+          ),
               },
               {
                 path: 'Edit/:id',
-                component: PackageUpdateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/package/package-update/package-update.component').then(
+            (m) => m.PackageUpdateComponent
+          ),
               },
             ],
           },
           {
             path: 'Stock',
-            component: StockComponent,
+            loadComponent: () =>
+          import('./presentation/pages/stock/stock.component').then(
+            (m) => m.StockComponent
+          ),
             children: [
               {
                 path: '',
-                component: StockListComponent,
+                loadComponent: () =>
+          import('./presentation/pages/stock/stock-list/stock-list.component').then(
+            (m) => m.StockListComponent
+          ),
               },
               {
                 path: 'Card/:id',
-                component: StockCardComponent,
+                loadComponent: () =>
+          import('./presentation/pages/stock/stock-card/stock-card.component').then(
+            (m) => m.StockCardComponent
+          ),
               },
             ],
           },
           {
             path: 'Receivable',
-            component: ReceivableComponent,
+            loadComponent: () =>
+          import('./presentation/pages/receivable/receivable.component').then(
+            (m) => m.ReceivableComponent
+          ),
             children: [
               {
                 path: '',
-                component: ReceivableListComponent,
+                loadComponent: () =>
+          import('./presentation/pages/receivable/receivable-list/receivable-list.component').then(
+            (m) => m.ReceivableListComponent
+          ),
               },
               {
                 path: ':id',
-                component: ReceivableViewComponent,
+                loadComponent: () =>
+          import('./presentation/pages/receivable/receivable-view/receivable-view.component').then(
+            (m) => m.ReceivableViewComponent
+          ),
               },
             ],
           },
           {
             path: 'Sales-invoice',
-            component: SalesInvoiceComponent,
+            loadComponent: () =>
+          import('./presentation/pages/sales-invoice/sales-invoice.component').then(
+            (m) => m.SalesInvoiceComponent
+          ),
             children: [
               {
                 path: '',
-                component: SalesInvoiceCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/sales-invoice/sales-invoice-create/sales-invoice-create.component').then(
+            (m) => m.SalesInvoiceCreateComponent
+          ),
               },
               {
                 path: 'Archive',
-                component: SalesInvoiceArchiveComponent,
+                loadComponent: () =>
+          import('./presentation/pages/sales-invoice/sales-invoice-archive/sales-invoice-archive.component').then(
+            (m) => m.SalesInvoiceArchiveComponent
+          ),
               },
             ],
           },
           {
             path: 'Overpayment',
-            component: OverpaymentComponent,
+            loadComponent: () =>
+          import('./presentation/pages/overpayment/overpayment.component').then(
+            (m) => m.OverpaymentComponent
+          ),
             children: [
               {
                 path: '',
-                component: OverpaymentCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/overpayment/overpayment-create/overpayment-create.component').then(
+            (m) => m.OverpaymentCreateComponent
+          ),
               },
               {
                 path: 'Return',
-                component: OverpaymentReturnListComponent,
+                loadComponent: () =>
+          import('./presentation/pages/overpayment/overpayment-return-list/overpayment-return-list.component').then(
+            (m) => m.OverpaymentReturnListComponent
+          ),
               },
               {
                 path: 'Archive',
-                component: OverpaymentArchiveComponent,
+                loadComponent: () =>
+          import('./presentation/pages/overpayment/overpayment-archive/overpayment-archive.component').then(
+            (m) => m.OverpaymentArchiveComponent
+          ),
               },
             ],
           },
           {
             path: 'Deposit',
-            component: DepositComponent,
+            loadComponent: () =>
+          import('./presentation/pages/deposit/deposit.component').then(
+            (m) => m.DepositComponent
+          ),
             children: [
               {
                 path: '',
-                component: DepositListComponent,
+                loadComponent: () =>
+          import('./presentation/pages/deposit/deposit-list/deposit-list.component').then(
+            (m) => m.DepositListComponent
+          ),
               },
               {
                 path: 'Archive',
-                component: DepositArchiveComponent,
+                loadComponent: () =>
+          import('./presentation/pages/deposit/deposit-archive/deposit-archive.component').then(
+            (m) => m.DepositArchiveComponent
+          ),
               },
               {
                 path: 'Confirm/:id',
-                component: DepositConfirmComponent,
+                loadComponent: () =>
+          import('./presentation/pages/deposit/deposit-confirm/deposit-confirm.component').then(
+            (m) => m.DepositConfirmComponent
+          ),
               },
               {
                 path: '**',
@@ -642,11 +904,17 @@ const routes: Routes = [
           },
           {
             path: 'Price',
-            component: PriceComponent,
+            loadComponent: () =>
+          import('./presentation/pages/price/price.component').then(
+            (m) => m.PriceComponent
+          ),
             children: [
               {
                 path: 'Sales',
-                component: PriceSalesComponent,
+                loadComponent: () =>
+          import('./presentation/pages/price/price-sales/price-sales.component').then(
+            (m) => m.PriceSalesComponent
+          ),
               },
               {
                 path: '**',
@@ -656,15 +924,24 @@ const routes: Routes = [
           },
           {
             path: 'Report',
-            component: ReportComponent,
+            loadComponent: () =>
+          import('./presentation/pages/report/report.component').then(
+            (m) => m.ReportComponent
+          ),
             children: [
               {
                 path: 'Sales',
-                component: ReportSalesComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-sales/report-sales.component').then(
+            (m) => m.ReportSalesComponent
+          ),
               },
               {
                 path: 'Output',
-                component: ReportOutputComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-output/report-output.component').then(
+            (m) => m.ReportOutputComponent
+          ),
               },
               {
                 path: '**',
@@ -674,15 +951,24 @@ const routes: Routes = [
           },
           {
             path: 'Sales-return',
-            component: SalesReturnComponent,
+            loadComponent: () =>
+          import('./presentation/pages/sales-return/sales-return.component').then(
+            (m) => m.SalesReturnComponent
+          ),
             children: [
               {
                 path: '',
-                component: SalesReturnCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/sales-return/sales-return-create/sales-return-create.component').then(
+            (m) => m.SalesReturnCreateComponent
+          ),
               },
               {
                 path: 'Archive',
-                component: SalesReturnArchiveComponent,
+                loadComponent: () =>
+          import('./presentation/pages/sales-return/sales-return-archive/sales-return-archive.component').then(
+            (m) => m.SalesReturnArchiveComponent
+          ),
               },
               {
                 path: '**',
@@ -694,28 +980,46 @@ const routes: Routes = [
       },
       {
         path: 'General',
-        component: GeneralComponent,
+        loadComponent: () =>
+          import('./presentation/pages/entries/general/general.component').then(
+            (m) => m.GeneralComponent
+          ),
         canActivate: [GeneralGuard],
         children: [
           {
             path: '',
-            component: GeneralDashboardComponent,
+            loadComponent: () =>
+          import('./presentation/pages/dashboard/general-dashboard/general-dashboard.component').then(
+            (m) => m.GeneralDashboardComponent
+          ),
           },
           {
             path: 'Expense',
-            component: ExpenseComponent,
+            loadComponent: () =>
+          import('./presentation/pages/expense/expense.component').then(
+            (m) => m.ExpenseComponent
+          ),
             children: [
               {
                 path: '',
-                component: ExpenseCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/expense/expense-create/expense-create.component').then(
+            (m) => m.ExpenseCreateComponent
+          ),
               },
               {
                 path: 'Mutation',
-                component: ExpenseMutationComponent,
+                loadComponent: () =>
+          import('./presentation/pages/expense/expense-mutation/expense-mutation.component').then(
+            (m) => m.ExpenseMutationComponent
+          ),
               },
               {
                 path: 'Report',
-                component: ExpenseReportComponent,
+                loadComponent: () =>
+          import('./presentation/pages/expense/expense-report/expense-report.component').then(
+            (m) => m.ExpenseReportComponent
+          ),
               },
               {
                 path: '**',
@@ -725,75 +1029,126 @@ const routes: Routes = [
           },
           {
             path: 'Company',
-            component: CompanyComponent,
+            loadComponent: () =>
+          import('./presentation/pages/company/company.component').then(
+            (m) => m.CompanyComponent
+          ),
           },
           {
             path: 'Payment-method',
-            component: PaymentMethodComponent,
+            loadComponent: () =>
+          import('./presentation/pages/payment-method/payment-method.component').then(
+            (m) => m.PaymentMethodComponent
+          ),
           },
           {
             path: 'Stock',
-            component: StockComponent,
+            loadComponent: () =>
+          import('./presentation/pages/stock/stock.component').then(
+            (m) => m.StockComponent
+          ),
             children: [
               {
                 path: '',
-                component: StockListComponent,
+                loadComponent: () =>
+          import('./presentation/pages/stock/stock-list/stock-list.component').then(
+            (m) => m.StockListComponent
+          ),
               },
               {
                 path: 'Card/:id',
-                component: StockCardComponent,
+                loadComponent: () =>
+          import('./presentation/pages/stock/stock-card/stock-card.component').then(
+            (m) => m.StockCardComponent
+          ),
               },
             ],
           },
           {
             path: 'Overpayment',
-            component: OverpaymentComponent,
+            loadComponent: () =>
+          import('./presentation/pages/overpayment/overpayment.component').then(
+            (m) => m.OverpaymentComponent
+          ),
             children: [
               {
                 path: '',
-                component: OverpaymentCreateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/overpayment/overpayment-create/overpayment-create.component').then(
+            (m) => m.OverpaymentCreateComponent
+          ),
               },
               {
                 path: 'Return',
-                component: OverpaymentReturnListComponent,
+                loadComponent: () =>
+          import('./presentation/pages/overpayment/overpayment-return-list/overpayment-return-list.component').then(
+            (m) => m.OverpaymentReturnListComponent
+          ),
               },
               {
                 path: 'Archive',
-                component: OverpaymentArchiveComponent,
+                loadComponent: () =>
+          import('./presentation/pages/overpayment/overpayment-archive/overpayment-archive.component').then(
+            (m) => m.OverpaymentArchiveComponent
+          ),
               },
             ],
           },
           {
             path: 'Expense-type',
-            component: ExpenseTypeComponent,
+            loadComponent: () =>
+          import('./presentation/pages/expense-type/expense-type.component').then(
+            (m) => m.ExpenseTypeComponent
+          ),
           },
           {
             path: 'Report',
-            component: ReportComponent,
+            loadComponent: () =>
+          import('./presentation/pages/report/report.component').then(
+            (m) => m.ReportComponent
+          ),
             children: [
               {
                 path: 'Sales',
-                component: ReportSalesComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-sales/report-sales.component').then(
+            (m) => m.ReportSalesComponent
+          ),
               },
               {
                 path: 'Output',
-                component: ReportOutputComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-output/report-output.component').then(
+            (m) => m.ReportOutputComponent
+          ),
               },
               {
                 path: 'Inadequate',
-                component: ReportInadequateComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-inadequate/report-inadequate.component').then(
+            (m) => m.ReportInadequateComponent
+          ),
               },
               {
                 path: 'Problematic',
-                component: ReportProblematicComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-problematic/report-problematic.component').then(
+            (m) => m.ReportProblematicComponent
+          ),
               },
               {
                 path: 'Money',
-                component: ReportMoneyComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-money/report-money.component').then(
+            (m) => m.ReportMoneyComponent
+          ),
               },
               {
                 path: 'Money/Dor',
-                component: ReportMoneyDorComponent,
+                loadComponent: () =>
+          import('./presentation/pages/report/report-money/report-money-dor/report-money-dor.component').then(
+            (m) => m.ReportMoneyDorComponent
+          ),
               },
               {
                 path: '**',
@@ -807,7 +1162,10 @@ const routes: Routes = [
   },
   {
     path: 'Login',
-    component: LoginComponent,
+    loadComponent: () =>
+          import('./presentation/pages/login/login.component').then(
+            (m) => m.LoginComponent
+          ),
     pathMatch: 'full',
   },
 ];
