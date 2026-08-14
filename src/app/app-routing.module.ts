@@ -65,6 +65,19 @@ const routes: Routes = [
           ),
           },
           {
+            /*
+              Jejak aktivitas memperlihatkan siapa mengubah apa di seluruh
+              sistem, jadi letaknya di bawah Administrator — penjagaannya
+              diwarisi dari induknya, sama seperti di server yang memasang
+              administratorMiddleware pada /audit-logs.
+            */
+            path: 'Activity',
+            loadComponent: () =>
+              import('./pages/activity/activity.component').then(
+                (m) => m.ActivityComponent
+              ),
+          },
+          {
             path: 'Overpayment',
             loadComponent: () =>
           import('./pages/overpayment/overpayment.component').then(

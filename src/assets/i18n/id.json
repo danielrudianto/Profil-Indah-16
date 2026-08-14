@@ -1595,5 +1595,16 @@
   },
   "expense": {
     "notFound": "Pengeluaran tidak ditemukan"
-  }
+  },
+  "activity__title": "Aktivitas",
+  "activity__entity": "Jenis data",
+  "activity__all": "Semua",
+  "activity__date_from": "Dari tanggal",
+  "activity__date_to": "Sampai tanggal",
+  "activity__time": "Waktu",
+  "activity__user": "Pengguna",
+  "activity__action": "Tindakan",
+  "activity__changes": "Perubahan",
+  "activity__empty": "Belum ada aktivitas yang tercatat.",
+  "activity__system": "Sistem"
 }

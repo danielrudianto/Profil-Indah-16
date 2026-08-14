@@ -1,0 +1,81 @@
+<!--
+  Tampilan sengaja polos: belum ada berkas gaya sendiri, dan tata letaknya
+  mengandalkan komponen Material apa adanya. Yang dikejar lebih dulu adalah
+  datanya benar dan penyaringnya bekerja.
+-->
+<h2>{{ 'activity__title' | translate }}</h2>
+
+<div>
+  <mat-form-field>
+    <mat-label>{{ 'activity__entity' | translate }}</mat-label>
+    <mat-select [formControl]="entityControl">
+      <mat-option [value]="''">{{ 'activity__all' | translate }}</mat-option>
+      <mat-option *ngFor="let e of entities" [value]="e">{{ e }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>{{ 'activity__date_from' | translate }}</mat-label>
+    <input matInput [matDatepicker]="dariPicker" [formControl]="dateFromControl" />
+    <mat-datepicker-toggle matIconSuffix [for]="dariPicker"></mat-datepicker-toggle>
+    <mat-datepicker #dariPicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>{{ 'activity__date_to' | translate }}</mat-label>
+    <input matInput [matDatepicker]="sampaiPicker" [formControl]="dateToControl" />
+    <mat-datepicker-toggle matIconSuffix [for]="sampaiPicker"></mat-datepicker-toggle>
+    <mat-datepicker #sampaiPicker></mat-datepicker>
+  </mat-form-field>
+</div>
+
+<mat-spinner *ngIf="isLoading" [diameter]="32"></mat-spinner>
+
+<p *ngIf="!isLoading && entries.length === 0">
+  {{ 'activity__empty' | translate }}
+</p>
+
+<table *ngIf="!isLoading && entries.length > 0">
+  <thead>
+    <tr>
+      <th>{{ 'activity__time' | translate }}</th>
+      <th>{{ 'activity__user' | translate }}</th>
+      <th>{{ 'activity__entity' | translate }}</th>
+      <th>{{ 'activity__action' | translate }}</th>
+      <th>{{ 'activity__changes' | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let entry of entries">
+      <td>{{ entry.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+
+      <!--
+        Jejak tanpa pemilik bukan kelainan: perintah pemeliharaan dan pekerjaan
+        latar menulis tanpa permintaan HTTP, sehingga tidak ada pengguna yang
+        bisa disebutkan.
+      -->
+      <td>{{ entry.userName || ('activity__system' | translate) }}</td>
+
+      <td>
+        {{ entry.entity }}
+        <span *ngIf="entry.entityID">#{{ entry.entityID }}</span>
+      </td>
+      <td>{{ entry.action }}</td>
+      <td>
+        <span *ngFor="let ubah of daftarPerubahan(entry)">
+          {{ ubah.field }}: {{ ubah.to }}&nbsp;
+        </span>
+        <em *ngIf="entry.note">({{ entry.note }})</em>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<mat-paginator
+  *ngIf="total > 0"
+  [length]="total"
+  [pageSize]="pageSize"
+  [pageIndex]="page - 1"
+  [pageSizeOptions]="[25, 50, 100]"
+  (page)="onPage($event)"
+></mat-paginator>

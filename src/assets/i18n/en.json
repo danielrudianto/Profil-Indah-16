@@ -1589,5 +1589,16 @@
   },
   "report": {
     "invalidGroup": "Invalid group report"
-  }
+  },
+  "activity__title": "Activity",
+  "activity__entity": "Data type",
+  "activity__all": "All",
+  "activity__date_from": "From date",
+  "activity__date_to": "To date",
+  "activity__time": "Time",
+  "activity__user": "User",
+  "activity__action": "Action",
+  "activity__changes": "Changes",
+  "activity__empty": "No activity recorded yet.",
+  "activity__system": "System"
 }
