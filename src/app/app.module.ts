@@ -186,8 +186,6 @@ import { PackageUpdateComponent } from './presentation/pages/package/package-upd
 import { MatTabsModule } from '@angular/material/tabs';
 import { UpdatePackageSalesPriceComponent } from './presentation/components/update-package-sales-price/update-package-sales-price.component';
 import { ReportSalesComponent } from './presentation/pages/report/report-sales/report-sales.component';
-import { NgChartjsModule } from 'ng-chartjs';
-import { NgChartsModule } from 'ng2-charts';
 import { GoodReceiptArchiveFilterComponent } from './presentation/pages/good-receipt/good-receipt-archive/good-receipt-archive-filter/good-receipt-archive-filter.component';
 import { AdjustmentCaseConfirmViewComponent } from './presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm-view/adjustment-case-confirm-view.component';
 import { SalesReturnComponent } from './presentation/pages/sales-return/sales-return.component';
@@ -288,7 +286,6 @@ import { ReportMoneyDorComponent } from './presentation/pages/report/report-mone
         MatChipsModule,
         MatBadgeModule,
         MatTabsModule,
-        NgChartjsModule,
         MatCheckboxModule,
         MatRadioModule,
         TranslateModule.forRoot({
@@ -299,7 +296,6 @@ import { ReportMoneyDorComponent } from './presentation/pages/report/report-mone
             },
         }),
         HotkeyModule.forRoot(),
-        NgChartsModule,
         MatRippleModule,
         DragDropModule,
         ShortNumberPipe,
