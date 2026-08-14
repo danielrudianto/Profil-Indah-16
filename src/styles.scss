@@ -1,5 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
 @import "bootstrap/dist/css/bootstrap.css";
+
+/*
+  Tema Material 3.
+
+  Menggantikan berkas prebuilt indigo-pink yang sebelumnya dimuat lewat
+  angular.json. Tema prebuilt adalah CSS yang sudah dikompilasi: warnanya
+  terkunci, dan tidak ada satu pun cara mengubahnya saat aplikasi berjalan.
+  mat.theme() memancarkan CSS custom property, sehingga warna aksen bisa
+  ditimpa kapan saja — itulah yang dipakai SettingsService.
+
+  color-scheme: light dark membuat Material mengikuti atribut yang sama pada
+  elemen html. SettingsService cukup menuliskan "light" atau "dark" di sana,
+  tanpa perlu memuat berkas tema kedua.
+*/
+html {
+  color-scheme: light dark;
+
+  @include mat.theme(
+    (
+      color: mat.$azure-palette,
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
 
 :root {
   --width: 1.5rem;

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgClass, NgIf } from '@angular/common';
 import { DarkModeSelectorComponent } from './dark-mode-selector/dark-mode-selector.component';
+import { AccentSelectorComponent } from './accent-selector/accent-selector.component';
 import { LanguageSelectorComponent } from './language-selector/language-selector.component';
 import { CircleAvatarComponent } from '../circle-avatar/circle-avatar.component';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -14,7 +15,8 @@ import { ProfileDialogComponent } from '../profile-dialog/profile-dialog.compone
     selector: 'app-topbar',
     templateUrl: './topbar.component.html',
     styleUrls: ['./topbar.component.scss'],
-    imports: [NgClass, DarkModeSelectorComponent, LanguageSelectorComponent, NgIf, CircleAvatarComponent, MatTooltip, AvatarComponent, ProfileDialogComponent]
+    imports: [NgClass, DarkModeSelectorComponent,
+    AccentSelectorComponent, LanguageSelectorComponent, NgIf, CircleAvatarComponent, MatTooltip, AvatarComponent, ProfileDialogComponent]
 })
 export class TopbarComponent {
   constructor(private router: Router, private authService: AuthService) {}

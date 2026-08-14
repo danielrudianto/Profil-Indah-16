@@ -188,7 +188,7 @@
   "stock-report__table__stock": "Stok",
   "stock-report__outgoing-stock": "Qty. Keluar",
   "stock-report__incoming-stock": "Qty. Masuk",
-  "dark-mode-selector__tooltip": "Tema gelap saat ini belum tersedia.",
+  "dark-mode-selector__tooltip": "Ganti mode gelap",
   "payment-method__title": "Metode pembayaran",
   "payment-method__name": "Nama",
   "payment-method__description": "Deskripsi",
@@ -1254,5 +1254,12 @@
   "promotion__result__download": "Unduh laporan",
   "promotion__result__download__sales": "Download laporan penjualan",
   "promotion__result__download__purchase": "Download laporan pembelian",
-  "promotion__result__download__success": "Data hasil laporan promosi berhasil diunduh"
+  "promotion__result__download__success": "Data hasil laporan promosi berhasil diunduh",
+  "accent-selector__tooltip": "Ganti warna aksen",
+  "accent-selector__azure": "Biru langit",
+  "accent-selector__violet": "Ungu",
+  "accent-selector__green": "Hijau",
+  "accent-selector__rose": "Merah muda",
+  "accent-selector__orange": "Jingga",
+  "accent-selector__slate": "Abu batu"
 }

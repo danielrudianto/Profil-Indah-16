@@ -1,0 +1,32 @@
+/*
+  Lingkaran kecil sebagai isi tombol topbar. Warnanya diikat langsung ke nilai
+  aksen yang sedang aktif, jadi tombolnya sendiri yang memperlihatkan pilihan
+  saat ini tanpa perlu label.
+*/
+.accent__preview {
+  display: inline-block;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.accent__menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.accent__swatch {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  flex: 0 0 auto;
+}
+
+/* Warna yang sedang dipakai diberi cincin, bukan sekadar dibedakan tebalnya. */
+.accent__swatch--active {
+  box-shadow: 0 0 0 2px var(--mat-sys-on-surface, #1b1b1b);
+}

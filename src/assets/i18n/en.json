@@ -191,7 +191,7 @@
   "stock-report__table__stock": "Stock",
   "stock-report__outgoing-stock": "Outgoing quantity",
   "stock-report__incoming-stock": "Incoming quantity",
-  "dark-mode-selector__tooltip": "Dark theme is currently not available.",
+  "dark-mode-selector__tooltip": "Toggle dark mode",
   "payment-method__title": "Payment method",
   "payment-method__name": "Name",
   "payment-method__description": "Description",
@@ -1248,5 +1248,12 @@
   "promotion__result__download": "Download result",
   "promotion__result__download__sales": "Download sales report",
   "promotion__result__download__purchase": "Download purchase report",
-  "promotion__result__download__success": "Promotion result data successfully downloaded"
+  "promotion__result__download__success": "Promotion result data successfully downloaded",
+  "accent-selector__tooltip": "Change accent colour",
+  "accent-selector__azure": "Azure",
+  "accent-selector__violet": "Violet",
+  "accent-selector__green": "Green",
+  "accent-selector__rose": "Rose",
+  "accent-selector__orange": "Orange",
+  "accent-selector__slate": "Slate"
 }

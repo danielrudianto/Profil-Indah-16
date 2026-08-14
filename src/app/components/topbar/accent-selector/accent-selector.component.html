@@ -1,0 +1,23 @@
+<button
+  mat-icon-button
+  [matMenuTriggerFor]="accentMenu"
+  [matTooltip]="'accent-selector__tooltip' | translate"
+>
+  <span class="accent__preview" [style.background]="currentAccent.light"></span>
+</button>
+
+<mat-menu #accentMenu="matMenu">
+  <button
+    mat-menu-item
+    class="accent__menu-item"
+    *ngFor="let color of colors"
+    (click)="changeAccent(color)"
+  >
+    <span
+      class="accent__swatch"
+      [class.accent__swatch--active]="color.label === currentAccent.label"
+      [style.background]="color.light"
+    ></span>
+    {{ color.label | translate }}
+  </button>
+</mat-menu>
