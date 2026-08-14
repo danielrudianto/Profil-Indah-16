@@ -4,7 +4,12 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { Margins, PageOrientation, PageSize } from 'pdfmake/interfaces';
+import {
+  Margins,
+  PageOrientation,
+  PageSize,
+  TDocumentDefinitions,
+} from 'pdfmake/interfaces';
 import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { PaymentListComponent } from 'src/app/presentation/components/payment-list/payment-list.component';
 import { AlertService } from 'src/app/services/alert.service';
@@ -21,7 +26,12 @@ import { MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+// pdfmake 0.2.23 mengekspor objek vfs-nya langsung (module.exports = vfs).
+// Sampai 0.2.10 yang diekspor masih pembungkus, sehingga jalur lamanya
+// pdfFonts.pdfMake.vfs. Bentuk lama itu kini menghasilkan undefined, dan
+// pembuatan PDF gagal saat dijalankan tanpa satu pun galat kompilasi —
+// @types/pdfmake harus ikut disamakan versinya agar selisih itu terlihat.
+pdfMake.vfs = pdfFonts;
 
 @Component({
     selector: 'app-sales-invoice-view',
@@ -550,8 +560,17 @@ export class SalesInvoiceViewComponent {
       },
     };
 
+    /*
+      Sel pertama tiap baris tabel barang sengaja berupa LARIK dua objek —
+      reference di atas description — dan pdfmake memang menumpuk konten
+      seperti itu. Yang tidak sanggup adalah pemodelan tipenya: TableCell
+      tidak menyatu dengan Content bersarang pada kedalaman ini, sehingga
+      createPdf menolaknya sejak @types/pdfmake disamakan dengan runtime
+      0.2.23. Yang dilonggarkan hanya pemeriksaan tipe di titik ini; struktur
+      dokumennya tidak diubah sedikit pun, karena keluarannya sudah benar.
+    */
     pdfMake
-      .createPdf(documentDefinition)
+      .createPdf(documentDefinition as TDocumentDefinitions)
       .download(`${fileName}${new Date().getTime()}.pdf`);
   }
 }

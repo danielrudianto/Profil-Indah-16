@@ -23,7 +23,12 @@ import { MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+// pdfmake 0.2.23 mengekspor objek vfs-nya langsung (module.exports = vfs).
+// Sampai 0.2.10 yang diekspor masih pembungkus, sehingga jalur lamanya
+// pdfFonts.pdfMake.vfs. Bentuk lama itu kini menghasilkan undefined, dan
+// pembuatan PDF gagal saat dijalankan tanpa satu pun galat kompilasi —
+// @types/pdfmake harus ikut disamakan versinya agar selisih itu terlihat.
+pdfMake.vfs = pdfFonts;
 
 @Component({
     selector: 'app-deposit-view',
