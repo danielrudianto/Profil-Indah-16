@@ -14,7 +14,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-sales-return-create-view-sales-invoice',
     templateUrl: './sales-return-create-view-sales-invoice.component.html',
-    styleUrls: ['./sales-return-create-view-sales-invoice.component.css'],
+    styleUrls: ['./sales-return-create-view-sales-invoice.component.scss'],
     animations: [panelAnimation],
     imports: [MatDialogTitle, MatIconButton, NgIf, MatIcon, MatProgressSpinner, AvatarComponent, NgFor, DecimalPipe, DatePipe, TranslatePipe]
 })

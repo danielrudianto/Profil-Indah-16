@@ -18,7 +18,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-receivable-payment-create',
     templateUrl: './receivable-payment-create.component.html',
-    styleUrls: ['./receivable-payment-create.component.css'],
+    styleUrls: ['./receivable-payment-create.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgClass, NgxMaskDirective, AutocompleteSearchComponent, MatCheckbox, MatDialogActions, MatButton, TranslatePipe]
 })
 export class ReceivablePaymentCreateComponent {

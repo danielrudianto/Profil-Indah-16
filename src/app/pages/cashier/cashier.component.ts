@@ -11,7 +11,7 @@ import { MatInput } from '@angular/material/input';
 @Component({
     selector: 'app-cashier',
     templateUrl: './cashier.component.html',
-    styleUrls: ['./cashier.component.css'],
+    styleUrls: ['./cashier.component.scss'],
     imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput]
 })
 export class CashierComponent {

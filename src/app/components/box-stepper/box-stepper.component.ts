@@ -4,7 +4,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-box-stepper',
     templateUrl: './box-stepper.component.html',
-    styleUrls: ['./box-stepper.component.css'],
+    styleUrls: ['./box-stepper.component.scss'],
     imports: [MatIcon]
 })
 export class BoxStepperComponent {

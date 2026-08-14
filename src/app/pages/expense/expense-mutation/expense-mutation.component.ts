@@ -31,7 +31,7 @@ const moment = _rollupMoment || _moment;
 @Component({
     selector: 'app-expense-mutation',
     templateUrl: './expense-mutation.component.html',
-    styleUrls: ['./expense-mutation.component.css'],
+    styleUrls: ['./expense-mutation.component.scss'],
     providers: [
         {
             provide: DateAdapter,

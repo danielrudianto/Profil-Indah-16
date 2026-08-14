@@ -12,7 +12,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-deposit-archive-filter',
     templateUrl: './deposit-archive-filter.component.html',
-    styleUrl: './deposit-archive-filter.component.css',
+    styleUrl: './deposit-archive-filter.component.scss',
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatDateRangeInput, MatStartDate, MatEndDate, MatHint, MatDatepickerToggle, MatSuffix, MatDateRangePicker, MatDivider, MatChipListbox, MatChipOption, MatDialogActions, MatButton, TranslatePipe]
 })
 export class DepositArchiveFilterComponent {

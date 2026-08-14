@@ -15,7 +15,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-payment-method-update',
     templateUrl: './payment-method-update.component.html',
-    styleUrls: ['./payment-method-update.component.css'],
+    styleUrls: ['./payment-method-update.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatButton, MatIcon, MatDialogActions, TranslatePipe]
 })
 export class PaymentMethodUpdateComponent {

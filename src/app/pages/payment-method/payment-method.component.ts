@@ -16,7 +16,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-payment-method',
     templateUrl: './payment-method.component.html',
-    styleUrls: ['./payment-method.component.css'],
+    styleUrls: ['./payment-method.component.scss'],
     imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, EmptyTableComponent, MatProgressSpinner, MatPaginator, TranslatePipe]
 })
 export class PaymentMethodComponent {

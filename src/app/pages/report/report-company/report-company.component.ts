@@ -19,7 +19,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'app-report-company',
     templateUrl: './report-company.component.html',
-    styleUrls: ['./report-company.component.css'],
+    styleUrls: ['./report-company.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, AutocompleteSearchComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatDialogActions, MatButton, TranslatePipe]
 })
 export class ReportCompanyComponent {

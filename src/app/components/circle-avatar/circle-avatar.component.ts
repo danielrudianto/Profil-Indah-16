@@ -4,7 +4,7 @@ import { NgStyle } from '@angular/common';
 @Component({
     selector: 'app-circle-avatar',
     templateUrl: './circle-avatar.component.html',
-    styleUrls: ['./circle-avatar.component.css'],
+    styleUrls: ['./circle-avatar.component.scss'],
     imports: [NgStyle]
 })
 export class CircleAvatarComponent {

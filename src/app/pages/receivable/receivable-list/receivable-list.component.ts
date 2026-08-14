@@ -12,7 +12,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-receivable-list',
     templateUrl: './receivable-list.component.html',
-    styleUrl: './receivable-list.component.css',
+    styleUrl: './receivable-list.component.scss',
     imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, NgFor, DecimalPipe, TranslatePipe]
 })
 export class ReceivableListComponent {

@@ -14,7 +14,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css'],
+    styleUrls: ['./login.component.scss'],
     imports: [NgIf, MatDivider, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatIconButton, MatSuffix, MatIcon]
 })
 export class LoginComponent {

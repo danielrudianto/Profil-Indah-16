@@ -23,7 +23,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-stock-list',
     templateUrl: './stock-list.component.html',
-    styleUrls: ['./stock-list.component.css'],
+    styleUrls: ['./stock-list.component.scss'],
     imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatIconButton, MatIcon, MatPaginator, DecimalPipe, TranslatePipe]
 })
 export class StockListComponent {

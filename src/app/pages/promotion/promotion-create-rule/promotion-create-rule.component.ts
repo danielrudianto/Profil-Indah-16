@@ -9,7 +9,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-promotion-create-rule',
     templateUrl: './promotion-create-rule.component.html',
-    styleUrls: ['./promotion-create-rule.component.css'],
+    styleUrls: ['./promotion-create-rule.component.scss'],
     imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput, TranslatePipe]
 })
 export class PromotionCreateRuleComponent {

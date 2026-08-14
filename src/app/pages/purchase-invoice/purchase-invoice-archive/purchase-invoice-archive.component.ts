@@ -20,7 +20,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-purchase-invoice-archive',
     templateUrl: './purchase-invoice-archive.component.html',
-    styleUrls: ['./purchase-invoice-archive.component.css'],
+    styleUrls: ['./purchase-invoice-archive.component.scss'],
     animations: [slideInOutAnimation],
     imports: [ArchivesComponent, ArchiveSearchComponent, MatIcon, NgClass, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DatePipe, TranslatePipe]
 })

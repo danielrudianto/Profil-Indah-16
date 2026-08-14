@@ -22,7 +22,7 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
 @Component({
     selector: 'app-report-problematic',
     templateUrl: './report-problematic.component.html',
-    styleUrls: ['./report-problematic.component.css'],
+    styleUrls: ['./report-problematic.component.scss'],
     imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatPrefix, MatIcon, MatSuffix, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, TranslatePipe]
 })
 export class ReportProblematicComponent {

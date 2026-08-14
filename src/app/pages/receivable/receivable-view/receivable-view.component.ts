@@ -21,7 +21,7 @@ import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 @Component({
     selector: 'app-receivable-view',
     templateUrl: './receivable-view.component.html',
-    styleUrls: ['./receivable-view.component.css'],
+    styleUrls: ['./receivable-view.component.scss'],
     animations: [panelAnimation],
     imports: [FeatureBackgroundComponent, FeatureHeaderComponent, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatPaginator, DecimalPipe, DatePipe, TranslatePipe]
 })

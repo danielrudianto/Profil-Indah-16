@@ -21,7 +21,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-promotion-list',
     templateUrl: './promotion-list.component.html',
-    styleUrl: './promotion-list.component.css',
+    styleUrl: './promotion-list.component.scss',
     imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class PromotionListComponent {

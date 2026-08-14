@@ -29,7 +29,7 @@ import { MatSelect, MatOption } from '@angular/material/select';
 @Component({
     selector: 'app-sales-return-create',
     templateUrl: './sales-return-create.component.html',
-    styleUrls: ['./sales-return-create.component.css'],
+    styleUrls: ['./sales-return-create.component.scss'],
     animations: [slideInOutAnimation],
     imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, AutocompleteSearchComponent, MatButton, NgIf, NgFor, NgSwitch, NgSwitchCase, NgxMaskDirective, MatHint, MatIconButton, MatIcon, EmptyTableComponent, MatSelect, MatOption, DecimalPipe, DatePipe, TranslatePipe]
 })

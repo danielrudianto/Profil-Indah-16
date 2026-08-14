@@ -13,7 +13,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-adjustment-case-archive-filter',
     templateUrl: './adjustment-case-archive-filter.component.html',
-    styleUrls: ['./adjustment-case-archive-filter.component.css'],
+    styleUrls: ['./adjustment-case-archive-filter.component.scss'],
     animations: [panelAnimation],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatDateRangeInput, MatStartDate, MatEndDate, MatHint, MatDatepickerToggle, MatSuffix, MatDateRangePicker, MatDivider, MatChipListbox, MatChipOption, MatDialogActions, MatButton, TranslatePipe]
 })

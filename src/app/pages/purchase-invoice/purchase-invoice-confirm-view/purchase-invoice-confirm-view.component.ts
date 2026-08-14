@@ -22,7 +22,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 @Component({
     selector: 'app-purchase-invoice-confirm-view',
     templateUrl: './purchase-invoice-confirm-view.component.html',
-    styleUrls: ['./purchase-invoice-confirm-view.component.css'],
+    styleUrls: ['./purchase-invoice-confirm-view.component.scss'],
     imports: [NgIf, VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, MatHint, NgFor, MatTooltip, NgClass, MatProgressSpinner, DecimalPipe, TranslatePipe]
 })
 export class PurchaseInvoiceConfirmViewComponent {

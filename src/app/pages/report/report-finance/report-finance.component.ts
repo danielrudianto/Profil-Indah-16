@@ -37,7 +37,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-report-finance',
     templateUrl: './report-finance.component.html',
-    styleUrls: ['./report-finance.component.css'],
+    styleUrls: ['./report-finance.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatSelect, MatOption, NgFor, MatDialogActions, MatButton, TranslatePipe]
 })
 export class ReportFinanceComponent {

@@ -18,7 +18,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-sales-return-archive-view',
     templateUrl: './sales-return-archive-view.component.html',
-    styleUrls: ['./sales-return-archive-view.component.css'],
+    styleUrls: ['./sales-return-archive-view.component.scss'],
     imports: [MatDialogTitle, CdkDrag, CdkDragHandle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, MatIcon, MatDialogActions, MatDialogClose, DecimalPipe, TranslatePipe]
 })
 export class SalesReturnArchiveViewComponent {

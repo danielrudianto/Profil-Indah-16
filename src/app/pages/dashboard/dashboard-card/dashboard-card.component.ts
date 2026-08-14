@@ -5,7 +5,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'app-dashboard-card',
     templateUrl: './dashboard-card.component.html',
-    styleUrls: ['./dashboard-card.component.css'],
+    styleUrls: ['./dashboard-card.component.scss'],
     imports: [MatButton]
 })
 export class DashboardCardComponent {

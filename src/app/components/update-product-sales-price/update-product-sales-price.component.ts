@@ -13,7 +13,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-update-product-sales-price',
     templateUrl: './update-product-sales-price.component.html',
-    styleUrls: ['./update-product-sales-price.component.css'],
+    styleUrls: ['./update-product-sales-price.component.scss'],
     imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatSlideToggle, TranslatePipe]
 })
 export class UpdateProductSalesPriceComponent {

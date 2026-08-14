@@ -18,7 +18,7 @@ export interface StatCard {
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.css'],
+    styleUrls: ['./dashboard.component.scss'],
     encapsulation: ViewEncapsulation.None,
     imports: [TopbarComponent, DashboardTopComponent]
 })

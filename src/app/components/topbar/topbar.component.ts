@@ -13,7 +13,7 @@ import { ProfileDialogComponent } from '../profile-dialog/profile-dialog.compone
 @Component({
     selector: 'app-topbar',
     templateUrl: './topbar.component.html',
-    styleUrls: ['./topbar.component.css'],
+    styleUrls: ['./topbar.component.scss'],
     imports: [NgClass, DarkModeSelectorComponent, LanguageSelectorComponent, NgIf, CircleAvatarComponent, MatTooltip, AvatarComponent, ProfileDialogComponent]
 })
 export class TopbarComponent {

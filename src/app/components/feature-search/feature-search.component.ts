@@ -32,7 +32,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-feature-search',
     templateUrl: './feature-search.component.html',
-    styleUrls: ['./feature-search.component.css'],
+    styleUrls: ['./feature-search.component.scss'],
     imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatIcon, TranslatePipe]
 })
 export class FeatureSearchComponent {

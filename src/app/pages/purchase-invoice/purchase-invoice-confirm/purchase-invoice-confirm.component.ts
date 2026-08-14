@@ -11,7 +11,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-purchase-invoice-confirm',
     templateUrl: './purchase-invoice-confirm.component.html',
-    styleUrls: ['./purchase-invoice-confirm.component.css'],
+    styleUrls: ['./purchase-invoice-confirm.component.scss'],
     imports: [FeatureSearchComponent, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, RouterLink, AvatarComponent, MatPaginator, DatePipe, TranslatePipe]
 })
 export class PurchaseInvoiceConfirmComponent {

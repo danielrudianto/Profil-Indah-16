@@ -13,7 +13,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-overpayment-archive',
     templateUrl: './overpayment-archive.component.html',
-    styleUrl: './overpayment-archive.component.css',
+    styleUrl: './overpayment-archive.component.scss',
     imports: [MatIcon, NgClass, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class OverpaymentArchiveComponent {

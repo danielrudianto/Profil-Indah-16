@@ -14,7 +14,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-purchasing-dashboard',
     templateUrl: './purchasing-dashboard.component.html',
-    styleUrls: ['./purchasing-dashboard.component.css'],
+    styleUrls: ['./purchasing-dashboard.component.scss'],
     imports: [MatTooltip, RouterLink, MatGridList, NgFor, MatGridTile, StatCardComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, GcpInfoComponent, TranslatePipe]
 })
 export class PurchasingDashboardComponent {

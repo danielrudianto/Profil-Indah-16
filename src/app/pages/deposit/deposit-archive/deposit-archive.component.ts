@@ -20,7 +20,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-deposit-archive',
     templateUrl: './deposit-archive.component.html',
-    styleUrls: ['./deposit-archive.component.css'],
+    styleUrls: ['./deposit-archive.component.scss'],
     animations: [slideInOutAnimation],
     imports: [ArchivesComponent, ArchiveSearchComponent, MatIcon, NgClass, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DatePipe, TranslatePipe]
 })

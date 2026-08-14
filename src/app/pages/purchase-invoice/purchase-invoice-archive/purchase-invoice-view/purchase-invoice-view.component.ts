@@ -28,7 +28,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-purchase-invoice-view',
     templateUrl: './purchase-invoice-view.component.html',
-    styleUrls: ['./purchase-invoice-view.component.css'],
+    styleUrls: ['./purchase-invoice-view.component.scss'],
     imports: [MatDialogTitle, CdkDrag, CdkDragHandle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, MatTooltip, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, MatDialogActions, MatDialogClose, DecimalPipe, TranslatePipe]
 })
 export class PurchaseInvoiceViewComponent {

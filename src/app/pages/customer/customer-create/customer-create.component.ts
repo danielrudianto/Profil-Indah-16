@@ -13,7 +13,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'app-customer-create',
     templateUrl: './customer-create.component.html',
-    styleUrls: ['./customer-create.component.css'],
+    styleUrls: ['./customer-create.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatDialogActions, MatButton, TranslatePipe]
 })
 export class CustomerCreateComponent {

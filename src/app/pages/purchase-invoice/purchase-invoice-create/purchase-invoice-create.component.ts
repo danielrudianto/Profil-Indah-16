@@ -32,7 +32,7 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
 @Component({
     selector: 'app-purchase-invoice-create',
     templateUrl: './purchase-invoice-create.component.html',
-    styleUrls: ['./purchase-invoice-create.component.css'],
+    styleUrls: ['./purchase-invoice-create.component.scss'],
     imports: [VerticalDividerComponent, BoxStepperComponent, AutocompleteSearchComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatDivider, MatButton, NgIf, NgFor, NgxMaskDirective, MatHint, MatIconButton, MatIcon, MatTooltip, EmptyTableComponent, MatPrefix, DecimalPipe, TranslatePipe]
 })
 export class PurchaseInvoiceCreateComponent {

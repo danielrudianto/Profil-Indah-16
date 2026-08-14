@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 @Component({
     selector: 'app-main',
     templateUrl: './main.component.html',
-    styleUrls: ['./main.component.css'],
+    styleUrls: ['./main.component.scss'],
     encapsulation: ViewEncapsulation.None,
     imports: [RouterOutlet]
 })

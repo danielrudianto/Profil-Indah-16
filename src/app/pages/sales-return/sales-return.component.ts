@@ -7,7 +7,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-sales-return',
     templateUrl: './sales-return.component.html',
-    styleUrls: ['./sales-return.component.css'],
+    styleUrls: ['./sales-return.component.scss'],
     imports: [FeatureBackgroundComponent, TransactionHeaderComponent, RouterOutlet, TranslatePipe]
 })
 export class SalesReturnComponent {

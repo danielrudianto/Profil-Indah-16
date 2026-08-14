@@ -30,7 +30,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-deposit-confirm',
     templateUrl: './deposit-confirm.component.html',
-    styleUrls: ['./deposit-confirm.component.css'],
+    styleUrls: ['./deposit-confirm.component.scss'],
     imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, NgFor, EmptyTableComponent, NgxMaskDirective, MatPrefix, MatButton, MatIconButton, MatIcon, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class DepositConfirmComponent {

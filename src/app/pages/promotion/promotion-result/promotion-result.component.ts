@@ -20,7 +20,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-promotion-result',
     templateUrl: './promotion-result.component.html',
-    styleUrl: './promotion-result.component.css',
+    styleUrl: './promotion-result.component.scss',
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatList, NgFor, MatListItem, MatListItemTitle, MatListItemLine, MatDialogActions, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, TranslatePipe]
 })
 export class PromotionResultComponent {

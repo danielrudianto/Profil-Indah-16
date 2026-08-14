@@ -31,7 +31,7 @@ export enum ProductSelectorType {
 @Component({
     selector: 'app-product-selector',
     templateUrl: './product-selector.component.html',
-    styleUrls: ['./product-selector.component.css'],
+    styleUrls: ['./product-selector.component.scss'],
     animations: [slideInOutAnimation],
     imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatProgressSpinner, NgFor, MatPaginator, DecimalPipe, TranslatePipe]
 })

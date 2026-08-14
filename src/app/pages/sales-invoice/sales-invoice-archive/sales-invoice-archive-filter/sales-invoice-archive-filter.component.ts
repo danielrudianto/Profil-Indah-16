@@ -12,7 +12,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-sales-invoice-archive-filter',
     templateUrl: './sales-invoice-archive-filter.component.html',
-    styleUrls: ['./sales-invoice-archive-filter.component.css'],
+    styleUrls: ['./sales-invoice-archive-filter.component.scss'],
     animations: [panelAnimation],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatDateRangeInput, MatStartDate, MatEndDate, MatHint, MatDatepickerToggle, MatSuffix, MatDateRangePicker, MatDivider, MatChipListbox, MatChipOption, MatDialogActions, MatButton, TranslatePipe]
 })

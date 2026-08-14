@@ -26,7 +26,7 @@ const moment = _rollupMoment || _moment;
 @Component({
     selector: 'app-expense-report',
     templateUrl: './expense-report.component.html',
-    styleUrls: ['./expense-report.component.css'],
+    styleUrls: ['./expense-report.component.scss'],
     providers: [
         {
             provide: DateAdapter,

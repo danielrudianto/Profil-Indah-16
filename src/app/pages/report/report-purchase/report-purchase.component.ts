@@ -29,7 +29,7 @@ import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 @Component({
     selector: 'app-report-purchase',
     templateUrl: './report-purchase.component.html',
-    styleUrls: ['./report-purchase.component.css'],
+    styleUrls: ['./report-purchase.component.scss'],
     providers: [
         {
             provide: DateAdapter,

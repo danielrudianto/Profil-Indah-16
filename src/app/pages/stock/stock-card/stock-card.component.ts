@@ -22,7 +22,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-stock-card',
     templateUrl: './stock-card.component.html',
-    styleUrls: ['./stock-card.component.css'],
+    styleUrls: ['./stock-card.component.scss'],
     animations: [panelAnimation],
     imports: [FeatureBackgroundComponent, MatIconButton, MatIcon, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, DatePipe, TranslatePipe]
 })

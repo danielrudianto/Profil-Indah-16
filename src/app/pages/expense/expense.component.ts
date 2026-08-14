@@ -7,7 +7,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-expense',
     templateUrl: './expense.component.html',
-    styleUrls: ['./expense.component.css'],
+    styleUrls: ['./expense.component.scss'],
     imports: [FeatureBackgroundComponent, TransactionHeaderComponent, RouterOutlet, TranslatePipe]
 })
 export class ExpenseComponent {

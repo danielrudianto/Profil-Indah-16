@@ -18,7 +18,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-stock-list-report',
     templateUrl: './stock-list-report.component.html',
-    styleUrls: ['./stock-list-report.component.css'],
+    styleUrls: ['./stock-list-report.component.scss'],
     animations: [panelAnimation],
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, MatDivider, NgxMaskDirective, NgIf, MatProgressSpinner, NgFor, DecimalPipe, DatePipe, TranslatePipe]
 })

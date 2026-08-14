@@ -11,7 +11,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 @Component({
     selector: 'app-payment-selector',
     templateUrl: './payment-selector.component.html',
-    styleUrls: ['./payment-selector.component.css'],
+    styleUrls: ['./payment-selector.component.scss'],
     imports: [NgIf, MatProgressSpinner, NgFor]
 })
 export class PaymentSelectorComponent {

@@ -10,7 +10,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-package',
     templateUrl: './package.component.html',
-    styleUrls: ['./package.component.css'],
+    styleUrls: ['./package.component.scss'],
     imports: [FeatureBackgroundComponent, FeatureHeaderComponent, RouterOutlet, TranslatePipe]
 })
 export class PackageComponent {}

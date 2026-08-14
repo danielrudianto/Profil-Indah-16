@@ -6,7 +6,7 @@ import { ShortNumberPipe } from '../../pipes/number-format.pipe';
 @Component({
     selector: 'app-stat-card',
     templateUrl: './stat-card.component.html',
-    styleUrls: ['./stat-card.component.css'],
+    styleUrls: ['./stat-card.component.scss'],
     imports: [NgIf, NgClass, MatIcon, DecimalPipe, ShortNumberPipe]
 })
 export class StatCardComponent {

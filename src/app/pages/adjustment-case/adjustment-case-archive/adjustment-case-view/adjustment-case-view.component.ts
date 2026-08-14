@@ -18,7 +18,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-adjustment-case-view',
     templateUrl: './adjustment-case-view.component.html',
-    styleUrls: ['./adjustment-case-view.component.css'],
+    styleUrls: ['./adjustment-case-view.component.scss'],
     imports: [MatDialogTitle, CdkDrag, CdkDragHandle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, NgIf, MatIcon, MatDialogActions, MatDialogClose, DecimalPipe, TranslatePipe]
 })
 export class AdjustmentCaseViewComponent {

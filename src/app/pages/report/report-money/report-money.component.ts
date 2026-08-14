@@ -19,7 +19,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-report-money',
     templateUrl: './report-money.component.html',
-    styleUrls: ['./report-money.component.css'],
+    styleUrls: ['./report-money.component.scss'],
     imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatIconButton, RouterLink, MatIcon, MatButton, DecimalPipe, TranslatePipe]
 })
 export class ReportMoneyComponent {

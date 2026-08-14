@@ -5,7 +5,7 @@ import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 @Component({
     selector: 'app-dynamic-dialog',
     templateUrl: './dynamic-dialog.component.html',
-    styleUrls: ['./dynamic-dialog.component.css'],
+    styleUrls: ['./dynamic-dialog.component.scss'],
     animations: [slideInOutAnimation, fadeInOutAnimation]
 })
 export class DynamicDialogComponent {

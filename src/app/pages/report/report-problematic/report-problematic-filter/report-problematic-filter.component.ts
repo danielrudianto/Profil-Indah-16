@@ -16,7 +16,7 @@ import { MatDivider } from '@angular/material/divider';
 @Component({
     selector: 'app-report-problematic-filter',
     templateUrl: './report-problematic-filter.component.html',
-    styleUrls: ['./report-problematic-filter.component.css'],
+    styleUrls: ['./report-problematic-filter.component.scss'],
     animations: [panelAnimation],
     imports: [MatDialogTitle, MatIconButton, MatIcon, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, NgIf, MatList, MatListSubheaderCssMatStyler, NgFor, MatListItem, MatListItemIcon, MatListItemTitle, MatDivider, TranslatePipe]
 })

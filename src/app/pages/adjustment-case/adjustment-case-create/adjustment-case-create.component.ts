@@ -26,7 +26,7 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
 @Component({
     selector: 'app-adjustment-case-create',
     templateUrl: './adjustment-case-create.component.html',
-    styleUrls: ['./adjustment-case-create.component.css'],
+    styleUrls: ['./adjustment-case-create.component.scss'],
     imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, AutocompleteSearchComponent, MatButton, NgIf, NgFor, NgxMaskDirective, MatHint, MatIconButton, MatIcon, EmptyTableComponent, TranslatePipe]
 })
 export class AdjustmentCaseCreateComponent {

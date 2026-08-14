@@ -13,7 +13,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-report-inventory',
     templateUrl: './report-inventory.component.html',
-    styleUrls: ['./report-inventory.component.css'],
+    styleUrls: ['./report-inventory.component.scss'],
     imports: [DynamicDialogComponent, DialogHeaderComponent, CountUpDirective, MatDivider, NgFor, CircleAvatarComponent, UpperCasePipe, DecimalPipe, TranslatePipe]
 })
 export class ReportInventoryComponent {

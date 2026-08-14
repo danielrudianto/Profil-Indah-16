@@ -37,7 +37,7 @@ import { DecimalPipe } from '@angular/common';
 @Component({
     selector: 'app-report-sales',
     templateUrl: './report-sales.component.html',
-    styleUrls: ['./report-sales.component.css'],
+    styleUrls: ['./report-sales.component.scss'],
     animations: [slideInOutAnimation, slideInOutAnimation],
     providers: [
         {

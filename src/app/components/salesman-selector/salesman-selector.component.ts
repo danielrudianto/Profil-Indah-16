@@ -15,7 +15,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-salesman-selector',
     templateUrl: './salesman-selector.component.html',
-    styleUrls: ['./salesman-selector.component.css'],
+    styleUrls: ['./salesman-selector.component.scss'],
     imports: [DynamicDialogComponent, DialogHeaderComponent, NgIf, MatProgressSpinner, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, TranslatePipe]
 })
 export class SalesmanSelectorComponent {

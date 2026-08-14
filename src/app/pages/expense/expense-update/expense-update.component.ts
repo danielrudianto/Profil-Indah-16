@@ -20,7 +20,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-expense-update',
     templateUrl: './expense-update.component.html',
-    styleUrls: ['./expense-update.component.css'],
+    styleUrls: ['./expense-update.component.scss'],
     animations: [slideInOutAnimation],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, MatPrefix, AutocompleteSearchComponent, MatButton, MatIcon, MatDialogActions, TranslatePipe]
 })

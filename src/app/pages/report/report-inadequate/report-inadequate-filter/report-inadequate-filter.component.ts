@@ -16,7 +16,7 @@ import { MatDivider } from '@angular/material/divider';
 @Component({
     selector: 'app-report-inadequate-filter',
     templateUrl: './report-inadequate-filter.component.html',
-    styleUrls: ['./report-inadequate-filter.component.css'],
+    styleUrls: ['./report-inadequate-filter.component.scss'],
     animations: [panelAnimation],
     imports: [MatDialogTitle, MatIconButton, MatIcon, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, NgIf, MatList, MatListSubheaderCssMatStyler, NgFor, MatListItem, MatListItemIcon, MatListItemTitle, MatDivider, TranslatePipe]
 })

@@ -17,7 +17,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-expense-type-update',
     templateUrl: './expense-type-update.component.html',
-    styleUrls: ['./expense-type-update.component.css'],
+    styleUrls: ['./expense-type-update.component.scss'],
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, NgIf, MatProgressSpinner, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatButton, MatIcon, MatDialogActions, TranslatePipe]
 })
 export class ExpenseTypeUpdateComponent {

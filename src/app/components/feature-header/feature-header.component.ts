@@ -8,7 +8,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 @Component({
     selector: 'app-feature-header',
     templateUrl: './feature-header.component.html',
-    styleUrls: ['./feature-header.component.css'],
+    styleUrls: ['./feature-header.component.scss'],
     imports: [NgIf, MatIconButton, MatIcon, MatTooltip]
 })
 export class FeatureHeaderComponent {

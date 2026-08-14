@@ -11,7 +11,7 @@ import { MatInput } from '@angular/material/input';
 @Component({
     selector: 'app-reset-password-dialog',
     templateUrl: './reset-password-dialog.component.html',
-    styleUrls: ['./reset-password-dialog.component.css'],
+    styleUrls: ['./reset-password-dialog.component.scss'],
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput]
 })
 export class ResetPasswordDialogComponent {

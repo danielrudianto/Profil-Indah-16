@@ -28,7 +28,7 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
 @Component({
     selector: 'app-good-receipt-create',
     templateUrl: './good-receipt-create.component.html',
-    styleUrls: ['./good-receipt-create.component.css'],
+    styleUrls: ['./good-receipt-create.component.scss'],
     imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatButton, NgIf, NgFor, NgxMaskDirective, MatHint, MatIconButton, MatIcon, EmptyTableComponent, DecimalPipe, TranslatePipe]
 })
 export class GoodReceiptCreateComponent {

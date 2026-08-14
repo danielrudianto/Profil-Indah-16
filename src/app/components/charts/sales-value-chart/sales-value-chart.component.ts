@@ -6,7 +6,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 @Component({
     selector: 'app-sales-value-chart',
     templateUrl: './sales-value-chart.component.html',
-    styleUrls: ['./sales-value-chart.component.css'],
+    styleUrls: ['./sales-value-chart.component.scss'],
     imports: [NgFor, MatTooltip, TranslatePipe]
 })
 export class SalesValueChartComponent {

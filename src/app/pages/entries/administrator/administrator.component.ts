@@ -17,7 +17,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-administrator',
     templateUrl: './administrator.component.html',
-    styleUrls: ['./administrator.component.css'],
+    styleUrls: ['./administrator.component.scss'],
     animations: [slideUpAnimation, slideUpDownAnimation],
     imports: [MatDrawerContainer, MatDrawer, MatNavList, MatListSubheaderCssMatStyler, MatListItem, RouterLink, RouterLinkActive, MatIcon, MatListItemIcon, MatListItemTitle, MatDivider, MatMenuTrigger, MatMenu, MatMenuItem, MatDrawerContent, MatTooltip, TopbarComponent, RouterOutlet, AsyncPipe, TranslatePipe]
 })

@@ -10,7 +10,7 @@ export interface CustomStepData {
 @Component({
     selector: 'app-custom-stepper',
     templateUrl: './custom-stepper.component.html',
-    styleUrls: ['./custom-stepper.component.css'],
+    styleUrls: ['./custom-stepper.component.scss'],
     imports: [NgFor, NgClass]
 })
 export class CustomStepperComponent {

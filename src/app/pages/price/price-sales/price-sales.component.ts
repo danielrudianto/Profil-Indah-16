@@ -14,7 +14,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-price-sales',
     templateUrl: './price-sales.component.html',
-    styleUrls: ['./price-sales.component.css'],
+    styleUrls: ['./price-sales.component.scss'],
     imports: [TransactionHeaderComponent, FeatureSearchComponent, NgIf, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, TranslatePipe]
 })
 export class PriceSalesComponent {

@@ -15,7 +15,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 @Component({
     selector: 'app-expense-create',
     templateUrl: './expense-create.component.html',
-    styleUrls: ['./expense-create.component.css'],
+    styleUrls: ['./expense-create.component.scss'],
     imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, TranslatePipe]
 })
 export class ExpenseCreateComponent {

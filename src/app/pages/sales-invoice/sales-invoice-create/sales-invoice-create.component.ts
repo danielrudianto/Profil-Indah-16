@@ -38,7 +38,7 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
 @Component({
     selector: 'app-sales-invoice-create',
     templateUrl: './sales-invoice-create.component.html',
-    styleUrls: ['./sales-invoice-create.component.css'],
+    styleUrls: ['./sales-invoice-create.component.scss'],
     imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, MatAutocompleteTrigger, MatAutocomplete, NgFor, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, NgIf, NgSwitch, NgSwitchCase, MatDivider, NgxMaskDirective, MatHint, MatIconButton, MatTooltip, EmptyTableComponent, MatPrefix, DecimalPipe, TranslatePipe]
 })
 export class SalesInvoiceCreateComponent {

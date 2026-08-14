@@ -14,7 +14,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-general',
     templateUrl: './general.component.html',
-    styleUrls: ['./general.component.css'],
+    styleUrls: ['./general.component.scss'],
     animations: [slideUpDownAnimation],
     imports: [MatDrawerContainer, MatDrawer, MatNavList, MatListSubheaderCssMatStyler, MatListItem, RouterLink, RouterLinkActive, MatIcon, MatListItemIcon, MatListItemTitle, MatDivider, MatDrawerContent, MatTooltip, TopbarComponent, RouterOutlet, AsyncPipe, TranslatePipe]
 })

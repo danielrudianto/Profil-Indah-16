@@ -9,7 +9,7 @@ import { NgFor } from '@angular/common';
 @Component({
     selector: 'app-cashier-view-bill-payment-selector',
     templateUrl: './cashier-view-bill-payment-selector.component.html',
-    styleUrls: ['./cashier-view-bill-payment-selector.component.css'],
+    styleUrls: ['./cashier-view-bill-payment-selector.component.scss'],
     imports: [MatList, NgFor, MatListItem]
 })
 export class CashierViewBillPaymentSelectorComponent {

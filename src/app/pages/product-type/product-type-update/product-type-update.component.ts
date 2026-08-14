@@ -15,7 +15,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-product-type-update',
     templateUrl: './product-type-update.component.html',
-    styleUrls: ['./product-type-update.component.css'],
+    styleUrls: ['./product-type-update.component.scss'],
     imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, NgIf, MatProgressSpinner, MatFormField, MatLabel, MatInput, MatButton, TranslatePipe]
 })
 export class ProductTypeUpdateComponent {

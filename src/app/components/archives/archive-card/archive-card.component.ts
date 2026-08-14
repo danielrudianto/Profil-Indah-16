@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
     selector: 'app-archive-card',
     templateUrl: './archive-card.component.html',
-    styleUrls: ['./archive-card.component.css']
+    styleUrls: ['./archive-card.component.scss']
 })
 export class ArchiveCardComponent {
   @Input('title') title!: string;

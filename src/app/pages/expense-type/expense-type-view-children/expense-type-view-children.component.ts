@@ -18,7 +18,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-expense-type-view-children',
     templateUrl: './expense-type-view-children.component.html',
-    styleUrls: ['./expense-type-view-children.component.css'],
+    styleUrls: ['./expense-type-view-children.component.scss'],
     animations: [panelAnimation],
     imports: [FormsModule, ReactiveFormsModule, MatIconButton, MatIcon, MatList, NgFor, MatListItem, MatListItemIcon, MatListItemTitle, MatListItemLine, TranslatePipe]
 })

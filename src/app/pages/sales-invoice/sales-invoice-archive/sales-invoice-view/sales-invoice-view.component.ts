@@ -36,7 +36,7 @@ pdfMake.vfs = pdfFonts;
 @Component({
     selector: 'app-sales-invoice-view',
     templateUrl: './sales-invoice-view.component.html',
-    styleUrls: ['./sales-invoice-view.component.css'],
+    styleUrls: ['./sales-invoice-view.component.scss'],
     imports: [MatDialogTitle, CdkDrag, CdkDragHandle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, MatTooltip, NgIf, MatIcon, MatDialogActions, MatDialogClose, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class SalesInvoiceViewComponent {

@@ -19,7 +19,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-expense-type',
     templateUrl: './expense-type.component.html',
-    styleUrls: ['./expense-type.component.css'],
+    styleUrls: ['./expense-type.component.scss'],
     imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, MatProgressSpinner, NgFor, EmptyTableComponent, TranslatePipe]
 })
 export class ExpenseTypeComponent {

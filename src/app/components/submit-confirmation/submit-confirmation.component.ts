@@ -8,7 +8,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-submit-confirmation',
     templateUrl: './submit-confirmation.component.html',
-    styleUrls: ['./submit-confirmation.component.css'],
+    styleUrls: ['./submit-confirmation.component.scss'],
     imports: [MatDialogTitle, NgIf, CdkScrollable, MatDialogContent, MatDialogActions, MatButton, MatDialogClose, TranslatePipe]
 })
 export class SubmitConfirmationComponent {

@@ -13,7 +13,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-customer-sales-chart',
     templateUrl: './customer-sales-chart.component.html',
-    styleUrls: ['./customer-sales-chart.component.css'],
+    styleUrls: ['./customer-sales-chart.component.scss'],
     animations: [panelAnimation, sortSVGAnimation],
     imports: [DynamicDialogComponent, DialogHeaderComponent, MatRipple, NgIf, EmptyTableComponent, NgFor, DecimalPipe, TranslatePipe]
 })

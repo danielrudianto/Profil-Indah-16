@@ -17,7 +17,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
     selector: 'app-profile-overview',
     templateUrl: './profile-overview.component.html',
-    styleUrls: ['./profile-overview.component.css'],
+    styleUrls: ['./profile-overview.component.scss'],
     imports: [NgIf, AvatarComponent, MatTooltip, MatDivider, MatProgressSpinner, MatFormField, MatLabel, MatInput, FormsModule]
 })
 export class ProfileOverviewComponent {

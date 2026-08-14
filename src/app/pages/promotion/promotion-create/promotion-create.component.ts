@@ -22,7 +22,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-promotion-create',
     templateUrl: './promotion-create.component.html',
-    styleUrls: ['./promotion-create.component.css'],
+    styleUrls: ['./promotion-create.component.scss'],
     imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, AutocompleteSearchComponent, NgIf, MatChipSet, NgFor, MatChip, MatButton, EmptyTableComponent, NgSwitch, NgSwitchCase, MatIconButton, MatIcon, TranslatePipe]
 })
 export class PromotionCreateComponent {

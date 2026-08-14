@@ -19,7 +19,7 @@ import { NgFor, DecimalPipe } from '@angular/common';
 @Component({
     selector: 'app-product-create',
     templateUrl: './product-create.component.html',
-    styleUrls: ['./product-create.component.css'],
+    styleUrls: ['./product-create.component.scss'],
     animations: [slideInOutAnimation],
     imports: [MatStepper, MatStep, MatStepLabel, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, AutocompleteSearchComponent, NgxMaskDirective, MatSelect, MatOption, MatButton, MatStepperNext, NgFor, DecimalPipe, TranslatePipe]
 })

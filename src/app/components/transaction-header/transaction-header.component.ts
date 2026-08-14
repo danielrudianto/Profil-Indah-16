@@ -9,7 +9,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-transaction-header',
     templateUrl: './transaction-header.component.html',
-    styleUrls: ['./transaction-header.component.css'],
+    styleUrls: ['./transaction-header.component.scss'],
     imports: [MatIconButton, MatIcon, NgIf, MatMenuTrigger, MatMenu, NgFor, MatMenuItem, RouterLink, RouterLinkActive, TranslatePipe]
 })
 export class TransactionHeaderComponent {

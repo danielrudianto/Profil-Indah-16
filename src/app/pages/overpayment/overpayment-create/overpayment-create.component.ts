@@ -19,7 +19,7 @@ import { NgFor, NgIf } from '@angular/common';
 @Component({
     selector: 'app-overpayment-create',
     templateUrl: './overpayment-create.component.html',
-    styleUrl: './overpayment-create.component.css',
+    styleUrl: './overpayment-create.component.scss',
     imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, MatSelect, MatOption, MatAutocompleteTrigger, MatAutocomplete, NgFor, NgIf, TranslatePipe]
 })
 export class OverpaymentCreateComponent {

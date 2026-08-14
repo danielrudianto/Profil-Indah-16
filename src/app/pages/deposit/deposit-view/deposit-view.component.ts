@@ -33,7 +33,7 @@ pdfMake.vfs = pdfFonts;
 @Component({
     selector: 'app-deposit-view',
     templateUrl: './deposit-view.component.html',
-    styleUrls: ['./deposit-view.component.css'],
+    styleUrls: ['./deposit-view.component.scss'],
     animations: [panelAnimation],
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, NgIf, MatProgressSpinner, FormsModule, ReactiveFormsModule, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, MatTooltip, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, MatDialogActions, MatDialogClose, DecimalPipe, DatePipe, TranslatePipe]
 })

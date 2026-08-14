@@ -30,7 +30,7 @@ pdfMake.vfs = pdfFonts;
 @Component({
     selector: 'app-archive-view',
     templateUrl: './archive-view.component.html',
-    styleUrls: ['./archive-view.component.css'],
+    styleUrls: ['./archive-view.component.scss'],
     animations: [panelAnimation],
     encapsulation: ViewEncapsulation.None,
     imports: [MatDialogTitle, MatIconButton, NgIf, MatIcon, MatProgressSpinner, TranslatePipe]

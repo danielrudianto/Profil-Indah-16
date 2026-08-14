@@ -6,7 +6,7 @@ import { DashboardCardComponent } from '../dashboard-card/dashboard-card.compone
 @Component({
     selector: 'app-dashboard-top',
     templateUrl: './dashboard-top.component.html',
-    styleUrls: ['./dashboard-top.component.css'],
+    styleUrls: ['./dashboard-top.component.scss'],
     imports: [NgFor, DashboardCardComponent]
 })
 export class DashboardTopComponent {

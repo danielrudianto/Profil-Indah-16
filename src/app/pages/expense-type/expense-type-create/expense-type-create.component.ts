@@ -14,7 +14,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'app-expense-type-create',
     templateUrl: './expense-type-create.component.html',
-    styleUrls: ['./expense-type-create.component.css'],
+    styleUrls: ['./expense-type-create.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, NgIf, MatDivider, MatFormField, MatLabel, MatInput, MatDialogActions, MatButton, TranslatePipe]
 })
 export class ExpenseTypeCreateComponent {

@@ -12,7 +12,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 @Component({
     selector: 'app-color-picker',
     templateUrl: './color-picker.component.html',
-    styleUrls: ['./color-picker.component.css'],
+    styleUrls: ['./color-picker.component.scss'],
     imports: [FormsModule, ReactiveFormsModule, MatTooltip]
 })
 export class ColorPickerComponent {

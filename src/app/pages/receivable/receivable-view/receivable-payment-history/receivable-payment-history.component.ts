@@ -14,7 +14,7 @@ import { EmptyTableComponent } from '../../../../components/empty-table/empty-ta
 @Component({
     selector: 'app-receivable-payment-history',
     templateUrl: './receivable-payment-history.component.html',
-    styleUrls: ['./receivable-payment-history.component.css'],
+    styleUrls: ['./receivable-payment-history.component.scss'],
     imports: [DynamicDialogComponent, DialogHeaderComponent, NgIf, MatProgressSpinner, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, EmptyTableComponent, DecimalPipe, TranslatePipe]
 })
 export class ReceivablePaymentHistoryComponent {

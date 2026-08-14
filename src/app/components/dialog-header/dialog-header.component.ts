@@ -11,7 +11,7 @@ export interface DialogHeaderStepper {
 @Component({
     selector: 'app-dialog-header',
     templateUrl: './dialog-header.component.html',
-    styleUrls: ['./dialog-header.component.css'],
+    styleUrls: ['./dialog-header.component.scss'],
     imports: [MatIconButton, MatIcon]
 })
 export class DialogHeaderComponent {

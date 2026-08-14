@@ -20,7 +20,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-adjustment-case-archive',
     templateUrl: './adjustment-case-archive.component.html',
-    styleUrls: ['./adjustment-case-archive.component.css'],
+    styleUrls: ['./adjustment-case-archive.component.scss'],
     animations: [slideInOutAnimation],
     imports: [ArchivesComponent, ArchiveSearchComponent, MatIcon, NgClass, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DatePipe, TranslatePipe]
 })

@@ -14,7 +14,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-report-money-dor',
     templateUrl: './report-money-dor.component.html',
-    styleUrl: './report-money-dor.component.css',
+    styleUrl: './report-money-dor.component.scss',
     imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatDateRangeInput, FormsModule, ReactiveFormsModule, MatStartDate, MatEndDate, MatHint, MatDatepickerToggle, MatSuffix, MatDateRangePicker, NgIf, MatProgressSpinner, NgFor, DecimalPipe, TranslatePipe]
 })
 export class ReportMoneyDorComponent {

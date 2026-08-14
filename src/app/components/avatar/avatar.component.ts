@@ -12,7 +12,7 @@ import { NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 @Component({
     selector: 'app-avatar',
     templateUrl: './avatar.component.html',
-    styleUrls: ['./avatar.component.css'],
+    styleUrls: ['./avatar.component.scss'],
     imports: [NgIf, NgSwitch, NgSwitchCase]
 })
 export class AvatarComponent {

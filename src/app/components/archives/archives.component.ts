@@ -14,7 +14,7 @@ export enum ArchiveMode {
 @Component({
     selector: 'app-archives',
     templateUrl: './archives.component.html',
-    styleUrls: ['./archives.component.css'],
+    styleUrls: ['./archives.component.scss'],
     imports: [NgFor, MatDivider, MatGridList, MatGridTile, ArchiveCardComponent, DatePipe]
 })
 export class ArchivesComponent {

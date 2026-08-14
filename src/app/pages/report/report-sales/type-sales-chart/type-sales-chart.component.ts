@@ -15,7 +15,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-type-sales-chart',
     templateUrl: './type-sales-chart.component.html',
-    styleUrls: ['./type-sales-chart.component.css'],
+    styleUrls: ['./type-sales-chart.component.scss'],
     animations: [panelAnimation, sortSVGAnimation],
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatRipple, NgIf, EmptyTableComponent, NgFor, DecimalPipe, TranslatePipe]
 })

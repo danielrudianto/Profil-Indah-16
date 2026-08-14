@@ -21,7 +21,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-sales-return-archive',
     templateUrl: './sales-return-archive.component.html',
-    styleUrls: ['./sales-return-archive.component.css'],
+    styleUrls: ['./sales-return-archive.component.scss'],
     animations: [slideInOutAnimation],
     imports: [ArchivesComponent, ArchiveSearchComponent, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DatePipe, TranslatePipe]
 })

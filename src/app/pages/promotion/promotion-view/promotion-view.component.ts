@@ -21,7 +21,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-promotion-view',
     templateUrl: './promotion-view.component.html',
-    styleUrls: ['./promotion-view.component.css'],
+    styleUrls: ['./promotion-view.component.scss'],
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatChipListbox, NgFor, MatChip, MatButton, NgIf, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, TranslatePipe]
 })
 export class PromotionViewComponent {

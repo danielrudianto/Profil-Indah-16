@@ -18,7 +18,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 @Component({
     selector: 'app-package-list',
     templateUrl: './package-list.component.html',
-    styleUrls: ['./package-list.component.css'],
+    styleUrls: ['./package-list.component.scss'],
     imports: [FeatureSearchComponent, NgIf, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, EmptyTableComponent, MatProgressSpinner, MatPaginator, DecimalPipe, TranslatePipe]
 })
 export class PackageListComponent {

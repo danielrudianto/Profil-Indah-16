@@ -19,7 +19,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-cashier-view-bill',
     templateUrl: './cashier-view-bill.component.html',
-    styleUrls: ['./cashier-view-bill.component.css'],
+    styleUrls: ['./cashier-view-bill.component.scss'],
     animations: [panelAnimation],
     imports: [MatDialogTitle, MatIconButton, NgIf, MatIcon, NgFor, FormsModule, ReactiveFormsModule, NgxMaskDirective, MatFormField, MatLabel, MatInput, MatButton, MatList, DecimalPipe, DatePipe, TranslatePipe]
 })

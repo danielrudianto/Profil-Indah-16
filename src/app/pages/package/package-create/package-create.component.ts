@@ -23,7 +23,7 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
 @Component({
     selector: 'app-package-create',
     templateUrl: './package-create.component.html',
-    styleUrls: ['./package-create.component.css'],
+    styleUrls: ['./package-create.component.scss'],
     imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatButton, NgIf, NgFor, MatHint, MatIconButton, MatIcon, EmptyTableComponent, DecimalPipe, TranslatePipe]
 })
 export class PackageCreateComponent {

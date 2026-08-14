@@ -17,7 +17,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-package-selector',
     templateUrl: './package-selector.component.html',
-    styleUrls: ['./package-selector.component.css'],
+    styleUrls: ['./package-selector.component.scss'],
     imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatProgressSpinner, NgFor, MatPaginator, TranslatePipe]
 })
 export class PackageSelectorComponent {

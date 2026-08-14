@@ -14,7 +14,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-supplier-create',
     templateUrl: './supplier-create.component.html',
-    styleUrls: ['./supplier-create.component.css'],
+    styleUrls: ['./supplier-create.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatDialogActions, MatButton, TranslatePipe]
 })
 export class SupplierCreateComponent {

@@ -25,7 +25,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-promotion-view-action',
     templateUrl: './promotion-view-action.component.html',
-    styleUrls: ['./promotion-view-action.component.css'],
+    styleUrls: ['./promotion-view-action.component.scss'],
     animations: [panelAnimation],
     imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, AutocompleteSearchComponent, NgIf, EmptyTableComponent, NgFor, NgSwitch, NgSwitchCase, MatIconButton, MatIcon, MatButton, TranslatePipe]
 })

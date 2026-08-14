@@ -22,7 +22,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-adjustment-case-confirm-view',
     templateUrl: './adjustment-case-confirm-view.component.html',
-    styleUrls: ['./adjustment-case-confirm-view.component.css'],
+    styleUrls: ['./adjustment-case-confirm-view.component.scss'],
     animations: [panelAnimation],
     imports: [MatDialogTitle, CdkDrag, CdkDragHandle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, MatDialogActions, MatDialogClose, DecimalPipe, TranslatePipe]
 })

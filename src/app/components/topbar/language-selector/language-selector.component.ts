@@ -7,7 +7,7 @@ import { NgIf } from '@angular/common';
 @Component({
     selector: 'app-language-selector',
     templateUrl: './language-selector.component.html',
-    styleUrls: ['./language-selector.component.css'],
+    styleUrls: ['./language-selector.component.scss'],
     imports: [MatIconButton, MatMenuTrigger, NgIf, MatMenu, MatMenuItem]
 })
 export class LanguageSelectorComponent {

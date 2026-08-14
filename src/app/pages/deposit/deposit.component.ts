@@ -7,7 +7,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-deposit',
     templateUrl: './deposit.component.html',
-    styleUrls: ['./deposit.component.css'],
+    styleUrls: ['./deposit.component.scss'],
     imports: [FeatureBackgroundComponent, TransactionHeaderComponent, RouterOutlet, TranslatePipe]
 })
 export class DepositComponent {
