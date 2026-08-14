@@ -1,0 +1,73 @@
+import { Component, Inject, Input } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent } from '@angular/material/dialog';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { panelAnimation } from 'src/app/animations/panel.animation';
+import { sortSVGAnimation } from 'src/app/animations/sort-svg.animation';
+import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { ApiService } from '../../../../services/api.service';
+import { AlertService } from '../../../../services/alert.service';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatRipple } from '@angular/material/core';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { EmptyTableComponent } from '../../../../components/empty-table/empty-table.component';
+import { TranslatePipe } from '@ngx-translate/core';
+
+@Component({
+    selector: 'app-type-sales-chart',
+    templateUrl: './type-sales-chart.component.html',
+    styleUrls: ['./type-sales-chart.component.css'],
+    animations: [panelAnimation, sortSVGAnimation],
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatRipple, NgIf, EmptyTableComponent, NgFor, DecimalPipe, TranslatePipe]
+})
+export class TypeSalesChartComponent {
+  constructor(
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      month: number;
+      year: number;
+    },
+    private apiService: ApiService,
+    private alertService: AlertService,
+    private dialog: MatDialogRef<TypeSalesChartComponent>
+  ) {}
+
+  isOpened: boolean = false;;
+  dataSource: any[] = [];
+
+  isLoading: boolean = false;
+
+  ngOnInit(): void {
+    this.fetchBrandDataSales();
+  }
+
+  fetchBrandDataSales() {
+    this.isLoading = true;
+    this.apiService
+      .get('report/sales/type', {
+        month: this.data.month,
+        year: this.data.year,
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.dataSource = data.data;
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+          this.dialog.close();
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
+  }
+
+  getPercentage(i: number) {
+    return (this.dataSource[i].value * 100) / this.total;
+  }
+
+  get total(): number {
+    return this.dataSource.reduce((a, b) => {
+      return a + b.value;
+    }, 0);
+  }
+}

@@ -6,7 +6,7 @@ import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromD
 import { AuthInterceptor } from './app/interceptors/auth.interceptor';
 import { ErrorInterceptor } from './app/interceptors/error.interceptor';
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
-import { CustomLoader } from './app/loader/translate.loader';
+import { CustomLoader } from './app/loaders/translate.loader';
 import { provideNgxMask, NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';

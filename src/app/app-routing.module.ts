@@ -14,28 +14,28 @@ const routes: Routes = [
     path: '',
     canActivate: [AuthGuard],
     loadComponent: () =>
-          import('./presentation/pages/main/main.component').then(
+          import('./pages/main/main.component').then(
             (m) => m.MainComponent
           ),
     children: [
       {
         path: '',
         loadComponent: () =>
-          import('./presentation/pages/dashboard/dashboard.component').then(
+          import('./pages/dashboard/dashboard.component').then(
             (m) => m.DashboardComponent
           ),
       },
       {
         path: 'Profile',
         loadComponent: () =>
-          import('./presentation/pages/entries/profile/profile.component').then(
+          import('./pages/entries/profile/profile.component').then(
             (m) => m.ProfileComponent
           ),
         children: [
           {
             path: '',
             loadComponent: () =>
-          import('./presentation/pages/profile-overview/profile-overview.component').then(
+          import('./pages/profile-overview/profile-overview.component').then(
             (m) => m.ProfileOverviewComponent
           ),
           },
@@ -45,14 +45,14 @@ const routes: Routes = [
       {
         path: 'Cashier',
         loadComponent: () =>
-          import('./presentation/pages/cashier/cashier.component').then(
+          import('./pages/cashier/cashier.component').then(
             (m) => m.CashierComponent
           ),
       },
       {
         path: 'Administrator',
         loadComponent: () =>
-          import('./presentation/pages/entries/administrator/administrator.component').then(
+          import('./pages/entries/administrator/administrator.component').then(
             (m) => m.AdministratorComponent
           ),
         canActivate: [AdministratorGuard],
@@ -60,35 +60,35 @@ const routes: Routes = [
           {
             path: '',
             loadComponent: () =>
-          import('./presentation/pages/dashboard/administrator-dashboard/administrator-dashboard.component').then(
+          import('./pages/dashboard/administrator-dashboard/administrator-dashboard.component').then(
             (m) => m.AdministratorDashboardComponent
           ),
           },
           {
             path: 'Overpayment',
             loadComponent: () =>
-          import('./presentation/pages/overpayment/overpayment.component').then(
+          import('./pages/overpayment/overpayment.component').then(
             (m) => m.OverpaymentComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/overpayment/overpayment-create/overpayment-create.component').then(
+          import('./pages/overpayment/overpayment-create/overpayment-create.component').then(
             (m) => m.OverpaymentCreateComponent
           ),
               },
               {
                 path: 'Return',
                 loadComponent: () =>
-          import('./presentation/pages/overpayment/overpayment-return-list/overpayment-return-list.component').then(
+          import('./pages/overpayment/overpayment-return-list/overpayment-return-list.component').then(
             (m) => m.OverpaymentReturnListComponent
           ),
               },
               {
                 path: 'Archive',
                 loadComponent: () =>
-          import('./presentation/pages/overpayment/overpayment-archive/overpayment-archive.component').then(
+          import('./pages/overpayment/overpayment-archive/overpayment-archive.component').then(
             (m) => m.OverpaymentArchiveComponent
           ),
               },
@@ -97,56 +97,56 @@ const routes: Routes = [
           {
             path: 'Product',
             loadComponent: () =>
-          import('./presentation/pages/product/product.component').then(
+          import('./pages/product/product.component').then(
             (m) => m.ProductComponent
           ),
           },
           {
             path: 'Product/Create',
             loadComponent: () =>
-          import('./presentation/pages/product/product-create/product-create.component').then(
+          import('./pages/product/product-create/product-create.component').then(
             (m) => m.ProductCreateComponent
           ),
           },
           {
             path: 'Product-type',
             loadComponent: () =>
-          import('./presentation/pages/product-type/product-type.component').then(
+          import('./pages/product-type/product-type.component').then(
             (m) => m.ProductTypeComponent
           ),
           },
           {
             path: 'Product-brand',
             loadComponent: () =>
-          import('./presentation/pages/product-brand/product-brand.component').then(
+          import('./pages/product-brand/product-brand.component').then(
             (m) => m.ProductBrandComponent
           ),
           },
           {
             path: 'Package',
             loadComponent: () =>
-          import('./presentation/pages/package/package.component').then(
+          import('./pages/package/package.component').then(
             (m) => m.PackageComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/package/package-list/package-list.component').then(
+          import('./pages/package/package-list/package-list.component').then(
             (m) => m.PackageListComponent
           ),
               },
               {
                 path: 'Create',
                 loadComponent: () =>
-          import('./presentation/pages/package/package-create/package-create.component').then(
+          import('./pages/package/package-create/package-create.component').then(
             (m) => m.PackageCreateComponent
           ),
               },
               {
                 path: 'Edit/:id',
                 loadComponent: () =>
-          import('./presentation/pages/package/package-update/package-update.component').then(
+          import('./pages/package/package-update/package-update.component').then(
             (m) => m.PackageUpdateComponent
           ),
               },
@@ -155,63 +155,63 @@ const routes: Routes = [
           {
             path: 'Customer',
             loadComponent: () =>
-          import('./presentation/pages/customer/customer.component').then(
+          import('./pages/customer/customer.component').then(
             (m) => m.CustomerComponent
           ),
           },
           {
             path: 'Supplier',
             loadComponent: () =>
-          import('./presentation/pages/supplier/supplier.component').then(
+          import('./pages/supplier/supplier.component').then(
             (m) => m.SupplierComponent
           ),
           },
           {
             path: 'Company',
             loadComponent: () =>
-          import('./presentation/pages/company/company.component').then(
+          import('./pages/company/company.component').then(
             (m) => m.CompanyComponent
           ),
           },
           {
             path: 'User',
             loadComponent: () =>
-          import('./presentation/pages/user/user.component').then(
+          import('./pages/user/user.component').then(
             (m) => m.UserComponent
           ),
           },
           {
             path: 'Payment-method',
             loadComponent: () =>
-          import('./presentation/pages/payment-method/payment-method.component').then(
+          import('./pages/payment-method/payment-method.component').then(
             (m) => m.PaymentMethodComponent
           ),
           },
           {
             path: 'Expense-type',
             loadComponent: () =>
-          import('./presentation/pages/expense-type/expense-type.component').then(
+          import('./pages/expense-type/expense-type.component').then(
             (m) => m.ExpenseTypeComponent
           ),
           },
           {
             path: 'Stock',
             loadComponent: () =>
-          import('./presentation/pages/stock/stock.component').then(
+          import('./pages/stock/stock.component').then(
             (m) => m.StockComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/stock/stock-list/stock-list.component').then(
+          import('./pages/stock/stock-list/stock-list.component').then(
             (m) => m.StockListComponent
           ),
               },
               {
                 path: 'Card/:id',
                 loadComponent: () =>
-          import('./presentation/pages/stock/stock-card/stock-card.component').then(
+          import('./pages/stock/stock-card/stock-card.component').then(
             (m) => m.StockCardComponent
           ),
               },
@@ -220,28 +220,28 @@ const routes: Routes = [
           {
             path: 'Promotion',
             loadComponent: () =>
-          import('./presentation/pages/promotion/promotion.component').then(
+          import('./pages/promotion/promotion.component').then(
             (m) => m.PromotionComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/promotion/promotion-list/promotion-list.component').then(
+          import('./pages/promotion/promotion-list/promotion-list.component').then(
             (m) => m.PromotionListComponent
           ),
               },
               {
                 path: 'Create',
                 loadComponent: () =>
-          import('./presentation/pages/promotion/promotion-create/promotion-create.component').then(
+          import('./pages/promotion/promotion-create/promotion-create.component').then(
             (m) => m.PromotionCreateComponent
           ),
               },
               {
                 path: ':id',
                 loadComponent: () =>
-          import('./presentation/pages/promotion/promotion-update/promotion-update.component').then(
+          import('./pages/promotion/promotion-update/promotion-update.component').then(
             (m) => m.PromotionUpdateComponent
           ),
               },
@@ -250,28 +250,28 @@ const routes: Routes = [
           {
             path: 'Promotion/Create',
             loadComponent: () =>
-          import('./presentation/pages/promotion/promotion-create/promotion-create.component').then(
+          import('./pages/promotion/promotion-create/promotion-create.component').then(
             (m) => m.PromotionCreateComponent
           ),
           },
           {
             path: 'Receivable',
             loadComponent: () =>
-          import('./presentation/pages/receivable/receivable.component').then(
+          import('./pages/receivable/receivable.component').then(
             (m) => m.ReceivableComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/receivable/receivable-list/receivable-list.component').then(
+          import('./pages/receivable/receivable-list/receivable-list.component').then(
             (m) => m.ReceivableListComponent
           ),
               },
               {
                 path: ':id',
                 loadComponent: () =>
-          import('./presentation/pages/receivable/receivable-view/receivable-view.component').then(
+          import('./pages/receivable/receivable-view/receivable-view.component').then(
             (m) => m.ReceivableViewComponent
           ),
               },
@@ -280,28 +280,28 @@ const routes: Routes = [
           {
             path: 'Deposit',
             loadComponent: () =>
-          import('./presentation/pages/deposit/deposit.component').then(
+          import('./pages/deposit/deposit.component').then(
             (m) => m.DepositComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/deposit/deposit-list/deposit-list.component').then(
+          import('./pages/deposit/deposit-list/deposit-list.component').then(
             (m) => m.DepositListComponent
           ),
               },
               {
                 path: 'Archive',
                 loadComponent: () =>
-          import('./presentation/pages/deposit/deposit-archive/deposit-archive.component').then(
+          import('./pages/deposit/deposit-archive/deposit-archive.component').then(
             (m) => m.DepositArchiveComponent
           ),
               },
               {
                 path: 'Confirm/:id',
                 loadComponent: () =>
-          import('./presentation/pages/deposit/deposit-confirm/deposit-confirm.component').then(
+          import('./pages/deposit/deposit-confirm/deposit-confirm.component').then(
             (m) => m.DepositConfirmComponent
           ),
               },
@@ -314,21 +314,21 @@ const routes: Routes = [
           {
             path: 'Sales-invoice',
             loadComponent: () =>
-          import('./presentation/pages/sales-invoice/sales-invoice.component').then(
+          import('./pages/sales-invoice/sales-invoice.component').then(
             (m) => m.SalesInvoiceComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/sales-invoice/sales-invoice-create/sales-invoice-create.component').then(
+          import('./pages/sales-invoice/sales-invoice-create/sales-invoice-create.component').then(
             (m) => m.SalesInvoiceCreateComponent
           ),
               },
               {
                 path: 'Archive',
                 loadComponent: () =>
-          import('./presentation/pages/sales-invoice/sales-invoice-archive/sales-invoice-archive.component').then(
+          import('./pages/sales-invoice/sales-invoice-archive/sales-invoice-archive.component').then(
             (m) => m.SalesInvoiceArchiveComponent
           ),
               },
@@ -341,42 +341,42 @@ const routes: Routes = [
           {
             path: 'Purchase-invoice',
             loadComponent: () =>
-          import('./presentation/pages/purchase-invoice/purchase-invoice.component').then(
+          import('./pages/purchase-invoice/purchase-invoice.component').then(
             (m) => m.PurchaseInvoiceComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/purchase-invoice/purchase-invoice-create/purchase-invoice-create.component').then(
+          import('./pages/purchase-invoice/purchase-invoice-create/purchase-invoice-create.component').then(
             (m) => m.PurchaseInvoiceCreateComponent
           ),
               },
               {
                 path: 'Archive',
                 loadComponent: () =>
-          import('./presentation/pages/purchase-invoice/purchase-invoice-archive/purchase-invoice-archive.component').then(
+          import('./pages/purchase-invoice/purchase-invoice-archive/purchase-invoice-archive.component').then(
             (m) => m.PurchaseInvoiceArchiveComponent
           ),
               },
               {
                 path: 'Confirm',
                 loadComponent: () =>
-          import('./presentation/pages/purchase-invoice/purchase-invoice-confirm/purchase-invoice-confirm.component').then(
+          import('./pages/purchase-invoice/purchase-invoice-confirm/purchase-invoice-confirm.component').then(
             (m) => m.PurchaseInvoiceConfirmComponent
           ),
               },
               {
                 path: 'Confirm/:id',
                 loadComponent: () =>
-          import('./presentation/pages/purchase-invoice/purchase-invoice-confirm-view/purchase-invoice-confirm-view.component').then(
+          import('./pages/purchase-invoice/purchase-invoice-confirm-view/purchase-invoice-confirm-view.component').then(
             (m) => m.PurchaseInvoiceConfirmViewComponent
           ),
               },
               {
                 path: 'Edit/:id',
                 loadComponent: () =>
-          import('./presentation/pages/purchase-invoice/purchase-invoice-edit/purchase-invoice-edit.component').then(
+          import('./pages/purchase-invoice/purchase-invoice-edit/purchase-invoice-edit.component').then(
             (m) => m.PurchaseInvoiceEditComponent
           ),
               },
@@ -389,21 +389,21 @@ const routes: Routes = [
           {
             path: 'Adjustment-case',
             loadComponent: () =>
-          import('./presentation/pages/adjustment-case/adjustment-case.component').then(
+          import('./pages/adjustment-case/adjustment-case.component').then(
             (m) => m.AdjustmentCaseComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/adjustment-case/adjustment-case-create/adjustment-case-create.component').then(
+          import('./pages/adjustment-case/adjustment-case-create/adjustment-case-create.component').then(
             (m) => m.AdjustmentCaseCreateComponent
           ),
               },
               {
                 path: 'Archive',
                 loadComponent: () =>
-          import('./presentation/pages/adjustment-case/adjustment-case-archive/adjustment-case-archive.component').then(
+          import('./pages/adjustment-case/adjustment-case-archive/adjustment-case-archive.component').then(
             (m) => m.AdjustmentCaseArchiveComponent
           ),
               },
@@ -411,7 +411,7 @@ const routes: Routes = [
                 path: 'Confirm',
                 canActivate: [SuperAdministratorGuard],
                 loadComponent: () =>
-          import('./presentation/pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm.component').then(
+          import('./pages/adjustment-case/adjustment-case-confirm/adjustment-case-confirm.component').then(
             (m) => m.AdjustmentCaseConfirmComponent
           ),
               },
@@ -420,21 +420,21 @@ const routes: Routes = [
           {
             path: 'Sales-return',
             loadComponent: () =>
-          import('./presentation/pages/sales-return/sales-return.component').then(
+          import('./pages/sales-return/sales-return.component').then(
             (m) => m.SalesReturnComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/sales-return/sales-return-create/sales-return-create.component').then(
+          import('./pages/sales-return/sales-return-create/sales-return-create.component').then(
             (m) => m.SalesReturnCreateComponent
           ),
               },
               {
                 path: 'Archive',
                 loadComponent: () =>
-          import('./presentation/pages/sales-return/sales-return-archive/sales-return-archive.component').then(
+          import('./pages/sales-return/sales-return-archive/sales-return-archive.component').then(
             (m) => m.SalesReturnArchiveComponent
           ),
               },
@@ -447,28 +447,28 @@ const routes: Routes = [
           {
             path: 'Expense',
             loadComponent: () =>
-          import('./presentation/pages/expense/expense.component').then(
+          import('./pages/expense/expense.component').then(
             (m) => m.ExpenseComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/expense/expense-create/expense-create.component').then(
+          import('./pages/expense/expense-create/expense-create.component').then(
             (m) => m.ExpenseCreateComponent
           ),
               },
               {
                 path: 'Mutation',
                 loadComponent: () =>
-          import('./presentation/pages/expense/expense-mutation/expense-mutation.component').then(
+          import('./pages/expense/expense-mutation/expense-mutation.component').then(
             (m) => m.ExpenseMutationComponent
           ),
               },
               {
                 path: 'Report',
                 loadComponent: () =>
-          import('./presentation/pages/expense/expense-report/expense-report.component').then(
+          import('./pages/expense/expense-report/expense-report.component').then(
             (m) => m.ExpenseReportComponent
           ),
               },
@@ -481,21 +481,21 @@ const routes: Routes = [
           {
             path: 'Price',
             loadComponent: () =>
-          import('./presentation/pages/price/price.component').then(
+          import('./pages/price/price.component').then(
             (m) => m.PriceComponent
           ),
             children: [
               {
                 path: 'Sales',
                 loadComponent: () =>
-          import('./presentation/pages/price/price-sales/price-sales.component').then(
+          import('./pages/price/price-sales/price-sales.component').then(
             (m) => m.PriceSalesComponent
           ),
               },
               {
                 path: 'Purchase',
                 loadComponent: () =>
-          import('./presentation/pages/price/price-purchase/price-purchase.component').then(
+          import('./pages/price/price-purchase/price-purchase.component').then(
             (m) => m.PricePurchaseComponent
           ),
               },
@@ -508,49 +508,49 @@ const routes: Routes = [
           {
             path: 'Report',
             loadComponent: () =>
-          import('./presentation/pages/report/report.component').then(
+          import('./pages/report/report.component').then(
             (m) => m.ReportComponent
           ),
             children: [
               {
                 path: 'Sales',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-sales/report-sales.component').then(
+          import('./pages/report/report-sales/report-sales.component').then(
             (m) => m.ReportSalesComponent
           ),
               },
               {
                 path: 'Purchase',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-purchase/report-purchase.component').then(
+          import('./pages/report/report-purchase/report-purchase.component').then(
             (m) => m.ReportPurchaseComponent
           ),
               },
               {
                 path: 'Money',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-money/report-money.component').then(
+          import('./pages/report/report-money/report-money.component').then(
             (m) => m.ReportMoneyComponent
           ),
               },
               {
                 path: 'Money/Dor',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-money/report-money-dor/report-money-dor.component').then(
+          import('./pages/report/report-money/report-money-dor/report-money-dor.component').then(
             (m) => m.ReportMoneyDorComponent
           ),
               },
               {
                 path: 'Inadequate',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-inadequate/report-inadequate.component').then(
+          import('./pages/report/report-inadequate/report-inadequate.component').then(
             (m) => m.ReportInadequateComponent
           ),
               },
               {
                 path: 'Problematic',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-problematic/report-problematic.component').then(
+          import('./pages/report/report-problematic/report-problematic.component').then(
             (m) => m.ReportProblematicComponent
           ),
               },
@@ -565,7 +565,7 @@ const routes: Routes = [
       {
         path: 'Purchasing',
         loadComponent: () =>
-          import('./presentation/pages/entries/purchasing/purchasing.component').then(
+          import('./pages/entries/purchasing/purchasing.component').then(
             (m) => m.PurchasingComponent
           ),
         canActivate: [PurchasingGuard],
@@ -573,63 +573,63 @@ const routes: Routes = [
           {
             path: '',
             loadComponent: () =>
-          import('./presentation/pages/dashboard/purchasing-dashboard/purchasing-dashboard.component').then(
+          import('./pages/dashboard/purchasing-dashboard/purchasing-dashboard.component').then(
             (m) => m.PurchasingDashboardComponent
           ),
           },
           {
             path: 'Product',
             loadComponent: () =>
-          import('./presentation/pages/product/product.component').then(
+          import('./pages/product/product.component').then(
             (m) => m.ProductComponent
           ),
           },
           {
             path: 'Product/Create',
             loadComponent: () =>
-          import('./presentation/pages/product/product-create/product-create.component').then(
+          import('./pages/product/product-create/product-create.component').then(
             (m) => m.ProductCreateComponent
           ),
           },
           {
             path: 'Product-type',
             loadComponent: () =>
-          import('./presentation/pages/product-type/product-type.component').then(
+          import('./pages/product-type/product-type.component').then(
             (m) => m.ProductTypeComponent
           ),
           },
           {
             path: 'Product-brand',
             loadComponent: () =>
-          import('./presentation/pages/product-brand/product-brand.component').then(
+          import('./pages/product-brand/product-brand.component').then(
             (m) => m.ProductBrandComponent
           ),
           },
           {
             path: 'Package',
             loadComponent: () =>
-          import('./presentation/pages/package/package.component').then(
+          import('./pages/package/package.component').then(
             (m) => m.PackageComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/package/package-list/package-list.component').then(
+          import('./pages/package/package-list/package-list.component').then(
             (m) => m.PackageListComponent
           ),
               },
               {
                 path: 'Create',
                 loadComponent: () =>
-          import('./presentation/pages/package/package-create/package-create.component').then(
+          import('./pages/package/package-create/package-create.component').then(
             (m) => m.PackageCreateComponent
           ),
               },
               {
                 path: 'Edit/:id',
                 loadComponent: () =>
-          import('./presentation/pages/package/package-update/package-update.component').then(
+          import('./pages/package/package-update/package-update.component').then(
             (m) => m.PackageUpdateComponent
           ),
               },
@@ -638,28 +638,28 @@ const routes: Routes = [
           {
             path: 'Supplier',
             loadComponent: () =>
-          import('./presentation/pages/supplier/supplier.component').then(
+          import('./pages/supplier/supplier.component').then(
             (m) => m.SupplierComponent
           ),
           },
           {
             path: 'Stock',
             loadComponent: () =>
-          import('./presentation/pages/stock/stock.component').then(
+          import('./pages/stock/stock.component').then(
             (m) => m.StockComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/stock/stock-list/stock-list.component').then(
+          import('./pages/stock/stock-list/stock-list.component').then(
             (m) => m.StockListComponent
           ),
               },
               {
                 path: 'Card/:id',
                 loadComponent: () =>
-          import('./presentation/pages/stock/stock-card/stock-card.component').then(
+          import('./pages/stock/stock-card/stock-card.component').then(
             (m) => m.StockCardComponent
           ),
               },
@@ -668,21 +668,21 @@ const routes: Routes = [
           {
             path: 'Good-receipt',
             loadComponent: () =>
-          import('./presentation/pages/good-receipt/good-receipt.component').then(
+          import('./pages/good-receipt/good-receipt.component').then(
             (m) => m.GoodReceiptComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/good-receipt/good-receipt-create/good-receipt-create.component').then(
+          import('./pages/good-receipt/good-receipt-create/good-receipt-create.component').then(
             (m) => m.GoodReceiptCreateComponent
           ),
               },
               {
                 path: 'Archive',
                 loadComponent: () =>
-          import('./presentation/pages/good-receipt/good-receipt-archive/good-receipt-archive.component').then(
+          import('./pages/good-receipt/good-receipt-archive/good-receipt-archive.component').then(
             (m) => m.GoodReceiptArchiveComponent
           ),
               },
@@ -691,21 +691,21 @@ const routes: Routes = [
           {
             path: 'Report',
             loadComponent: () =>
-          import('./presentation/pages/report/report.component').then(
+          import('./pages/report/report.component').then(
             (m) => m.ReportComponent
           ),
             children: [
               {
                 path: 'Purchase',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-purchase/report-purchase.component').then(
+          import('./pages/report/report-purchase/report-purchase.component').then(
             (m) => m.ReportPurchaseComponent
           ),
               },
               {
                 path: 'Inadequate',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-inadequate/report-inadequate.component').then(
+          import('./pages/report/report-inadequate/report-inadequate.component').then(
             (m) => m.ReportInadequateComponent
           ),
               },
@@ -720,7 +720,7 @@ const routes: Routes = [
       {
         path: 'Sales',
         loadComponent: () =>
-          import('./presentation/pages/entries/sales/sales.component').then(
+          import('./pages/entries/sales/sales.component').then(
             (m) => m.SalesComponent
           ),
         canActivate: [SalesGuard],
@@ -728,42 +728,42 @@ const routes: Routes = [
           {
             path: '',
             loadComponent: () =>
-          import('./presentation/pages/dashboard/sales-dashboard/sales-dashboard.component').then(
+          import('./pages/dashboard/sales-dashboard/sales-dashboard.component').then(
             (m) => m.SalesDashboardComponent
           ),
           },
           {
             path: 'Customer',
             loadComponent: () =>
-          import('./presentation/pages/customer/customer.component').then(
+          import('./pages/customer/customer.component').then(
             (m) => m.CustomerComponent
           ),
           },
           {
             path: 'Package',
             loadComponent: () =>
-          import('./presentation/pages/package/package.component').then(
+          import('./pages/package/package.component').then(
             (m) => m.PackageComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/package/package-list/package-list.component').then(
+          import('./pages/package/package-list/package-list.component').then(
             (m) => m.PackageListComponent
           ),
               },
               {
                 path: 'Create',
                 loadComponent: () =>
-          import('./presentation/pages/package/package-create/package-create.component').then(
+          import('./pages/package/package-create/package-create.component').then(
             (m) => m.PackageCreateComponent
           ),
               },
               {
                 path: 'Edit/:id',
                 loadComponent: () =>
-          import('./presentation/pages/package/package-update/package-update.component').then(
+          import('./pages/package/package-update/package-update.component').then(
             (m) => m.PackageUpdateComponent
           ),
               },
@@ -772,21 +772,21 @@ const routes: Routes = [
           {
             path: 'Stock',
             loadComponent: () =>
-          import('./presentation/pages/stock/stock.component').then(
+          import('./pages/stock/stock.component').then(
             (m) => m.StockComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/stock/stock-list/stock-list.component').then(
+          import('./pages/stock/stock-list/stock-list.component').then(
             (m) => m.StockListComponent
           ),
               },
               {
                 path: 'Card/:id',
                 loadComponent: () =>
-          import('./presentation/pages/stock/stock-card/stock-card.component').then(
+          import('./pages/stock/stock-card/stock-card.component').then(
             (m) => m.StockCardComponent
           ),
               },
@@ -795,21 +795,21 @@ const routes: Routes = [
           {
             path: 'Receivable',
             loadComponent: () =>
-          import('./presentation/pages/receivable/receivable.component').then(
+          import('./pages/receivable/receivable.component').then(
             (m) => m.ReceivableComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/receivable/receivable-list/receivable-list.component').then(
+          import('./pages/receivable/receivable-list/receivable-list.component').then(
             (m) => m.ReceivableListComponent
           ),
               },
               {
                 path: ':id',
                 loadComponent: () =>
-          import('./presentation/pages/receivable/receivable-view/receivable-view.component').then(
+          import('./pages/receivable/receivable-view/receivable-view.component').then(
             (m) => m.ReceivableViewComponent
           ),
               },
@@ -818,21 +818,21 @@ const routes: Routes = [
           {
             path: 'Sales-invoice',
             loadComponent: () =>
-          import('./presentation/pages/sales-invoice/sales-invoice.component').then(
+          import('./pages/sales-invoice/sales-invoice.component').then(
             (m) => m.SalesInvoiceComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/sales-invoice/sales-invoice-create/sales-invoice-create.component').then(
+          import('./pages/sales-invoice/sales-invoice-create/sales-invoice-create.component').then(
             (m) => m.SalesInvoiceCreateComponent
           ),
               },
               {
                 path: 'Archive',
                 loadComponent: () =>
-          import('./presentation/pages/sales-invoice/sales-invoice-archive/sales-invoice-archive.component').then(
+          import('./pages/sales-invoice/sales-invoice-archive/sales-invoice-archive.component').then(
             (m) => m.SalesInvoiceArchiveComponent
           ),
               },
@@ -841,28 +841,28 @@ const routes: Routes = [
           {
             path: 'Overpayment',
             loadComponent: () =>
-          import('./presentation/pages/overpayment/overpayment.component').then(
+          import('./pages/overpayment/overpayment.component').then(
             (m) => m.OverpaymentComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/overpayment/overpayment-create/overpayment-create.component').then(
+          import('./pages/overpayment/overpayment-create/overpayment-create.component').then(
             (m) => m.OverpaymentCreateComponent
           ),
               },
               {
                 path: 'Return',
                 loadComponent: () =>
-          import('./presentation/pages/overpayment/overpayment-return-list/overpayment-return-list.component').then(
+          import('./pages/overpayment/overpayment-return-list/overpayment-return-list.component').then(
             (m) => m.OverpaymentReturnListComponent
           ),
               },
               {
                 path: 'Archive',
                 loadComponent: () =>
-          import('./presentation/pages/overpayment/overpayment-archive/overpayment-archive.component').then(
+          import('./pages/overpayment/overpayment-archive/overpayment-archive.component').then(
             (m) => m.OverpaymentArchiveComponent
           ),
               },
@@ -871,28 +871,28 @@ const routes: Routes = [
           {
             path: 'Deposit',
             loadComponent: () =>
-          import('./presentation/pages/deposit/deposit.component').then(
+          import('./pages/deposit/deposit.component').then(
             (m) => m.DepositComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/deposit/deposit-list/deposit-list.component').then(
+          import('./pages/deposit/deposit-list/deposit-list.component').then(
             (m) => m.DepositListComponent
           ),
               },
               {
                 path: 'Archive',
                 loadComponent: () =>
-          import('./presentation/pages/deposit/deposit-archive/deposit-archive.component').then(
+          import('./pages/deposit/deposit-archive/deposit-archive.component').then(
             (m) => m.DepositArchiveComponent
           ),
               },
               {
                 path: 'Confirm/:id',
                 loadComponent: () =>
-          import('./presentation/pages/deposit/deposit-confirm/deposit-confirm.component').then(
+          import('./pages/deposit/deposit-confirm/deposit-confirm.component').then(
             (m) => m.DepositConfirmComponent
           ),
               },
@@ -905,14 +905,14 @@ const routes: Routes = [
           {
             path: 'Price',
             loadComponent: () =>
-          import('./presentation/pages/price/price.component').then(
+          import('./pages/price/price.component').then(
             (m) => m.PriceComponent
           ),
             children: [
               {
                 path: 'Sales',
                 loadComponent: () =>
-          import('./presentation/pages/price/price-sales/price-sales.component').then(
+          import('./pages/price/price-sales/price-sales.component').then(
             (m) => m.PriceSalesComponent
           ),
               },
@@ -925,21 +925,21 @@ const routes: Routes = [
           {
             path: 'Report',
             loadComponent: () =>
-          import('./presentation/pages/report/report.component').then(
+          import('./pages/report/report.component').then(
             (m) => m.ReportComponent
           ),
             children: [
               {
                 path: 'Sales',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-sales/report-sales.component').then(
+          import('./pages/report/report-sales/report-sales.component').then(
             (m) => m.ReportSalesComponent
           ),
               },
               {
                 path: 'Output',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-output/report-output.component').then(
+          import('./pages/report/report-output/report-output.component').then(
             (m) => m.ReportOutputComponent
           ),
               },
@@ -952,21 +952,21 @@ const routes: Routes = [
           {
             path: 'Sales-return',
             loadComponent: () =>
-          import('./presentation/pages/sales-return/sales-return.component').then(
+          import('./pages/sales-return/sales-return.component').then(
             (m) => m.SalesReturnComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/sales-return/sales-return-create/sales-return-create.component').then(
+          import('./pages/sales-return/sales-return-create/sales-return-create.component').then(
             (m) => m.SalesReturnCreateComponent
           ),
               },
               {
                 path: 'Archive',
                 loadComponent: () =>
-          import('./presentation/pages/sales-return/sales-return-archive/sales-return-archive.component').then(
+          import('./pages/sales-return/sales-return-archive/sales-return-archive.component').then(
             (m) => m.SalesReturnArchiveComponent
           ),
               },
@@ -981,7 +981,7 @@ const routes: Routes = [
       {
         path: 'General',
         loadComponent: () =>
-          import('./presentation/pages/entries/general/general.component').then(
+          import('./pages/entries/general/general.component').then(
             (m) => m.GeneralComponent
           ),
         canActivate: [GeneralGuard],
@@ -989,35 +989,35 @@ const routes: Routes = [
           {
             path: '',
             loadComponent: () =>
-          import('./presentation/pages/dashboard/general-dashboard/general-dashboard.component').then(
+          import('./pages/dashboard/general-dashboard/general-dashboard.component').then(
             (m) => m.GeneralDashboardComponent
           ),
           },
           {
             path: 'Expense',
             loadComponent: () =>
-          import('./presentation/pages/expense/expense.component').then(
+          import('./pages/expense/expense.component').then(
             (m) => m.ExpenseComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/expense/expense-create/expense-create.component').then(
+          import('./pages/expense/expense-create/expense-create.component').then(
             (m) => m.ExpenseCreateComponent
           ),
               },
               {
                 path: 'Mutation',
                 loadComponent: () =>
-          import('./presentation/pages/expense/expense-mutation/expense-mutation.component').then(
+          import('./pages/expense/expense-mutation/expense-mutation.component').then(
             (m) => m.ExpenseMutationComponent
           ),
               },
               {
                 path: 'Report',
                 loadComponent: () =>
-          import('./presentation/pages/expense/expense-report/expense-report.component').then(
+          import('./pages/expense/expense-report/expense-report.component').then(
             (m) => m.ExpenseReportComponent
           ),
               },
@@ -1030,35 +1030,35 @@ const routes: Routes = [
           {
             path: 'Company',
             loadComponent: () =>
-          import('./presentation/pages/company/company.component').then(
+          import('./pages/company/company.component').then(
             (m) => m.CompanyComponent
           ),
           },
           {
             path: 'Payment-method',
             loadComponent: () =>
-          import('./presentation/pages/payment-method/payment-method.component').then(
+          import('./pages/payment-method/payment-method.component').then(
             (m) => m.PaymentMethodComponent
           ),
           },
           {
             path: 'Stock',
             loadComponent: () =>
-          import('./presentation/pages/stock/stock.component').then(
+          import('./pages/stock/stock.component').then(
             (m) => m.StockComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/stock/stock-list/stock-list.component').then(
+          import('./pages/stock/stock-list/stock-list.component').then(
             (m) => m.StockListComponent
           ),
               },
               {
                 path: 'Card/:id',
                 loadComponent: () =>
-          import('./presentation/pages/stock/stock-card/stock-card.component').then(
+          import('./pages/stock/stock-card/stock-card.component').then(
             (m) => m.StockCardComponent
           ),
               },
@@ -1067,28 +1067,28 @@ const routes: Routes = [
           {
             path: 'Overpayment',
             loadComponent: () =>
-          import('./presentation/pages/overpayment/overpayment.component').then(
+          import('./pages/overpayment/overpayment.component').then(
             (m) => m.OverpaymentComponent
           ),
             children: [
               {
                 path: '',
                 loadComponent: () =>
-          import('./presentation/pages/overpayment/overpayment-create/overpayment-create.component').then(
+          import('./pages/overpayment/overpayment-create/overpayment-create.component').then(
             (m) => m.OverpaymentCreateComponent
           ),
               },
               {
                 path: 'Return',
                 loadComponent: () =>
-          import('./presentation/pages/overpayment/overpayment-return-list/overpayment-return-list.component').then(
+          import('./pages/overpayment/overpayment-return-list/overpayment-return-list.component').then(
             (m) => m.OverpaymentReturnListComponent
           ),
               },
               {
                 path: 'Archive',
                 loadComponent: () =>
-          import('./presentation/pages/overpayment/overpayment-archive/overpayment-archive.component').then(
+          import('./pages/overpayment/overpayment-archive/overpayment-archive.component').then(
             (m) => m.OverpaymentArchiveComponent
           ),
               },
@@ -1097,56 +1097,56 @@ const routes: Routes = [
           {
             path: 'Expense-type',
             loadComponent: () =>
-          import('./presentation/pages/expense-type/expense-type.component').then(
+          import('./pages/expense-type/expense-type.component').then(
             (m) => m.ExpenseTypeComponent
           ),
           },
           {
             path: 'Report',
             loadComponent: () =>
-          import('./presentation/pages/report/report.component').then(
+          import('./pages/report/report.component').then(
             (m) => m.ReportComponent
           ),
             children: [
               {
                 path: 'Sales',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-sales/report-sales.component').then(
+          import('./pages/report/report-sales/report-sales.component').then(
             (m) => m.ReportSalesComponent
           ),
               },
               {
                 path: 'Output',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-output/report-output.component').then(
+          import('./pages/report/report-output/report-output.component').then(
             (m) => m.ReportOutputComponent
           ),
               },
               {
                 path: 'Inadequate',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-inadequate/report-inadequate.component').then(
+          import('./pages/report/report-inadequate/report-inadequate.component').then(
             (m) => m.ReportInadequateComponent
           ),
               },
               {
                 path: 'Problematic',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-problematic/report-problematic.component').then(
+          import('./pages/report/report-problematic/report-problematic.component').then(
             (m) => m.ReportProblematicComponent
           ),
               },
               {
                 path: 'Money',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-money/report-money.component').then(
+          import('./pages/report/report-money/report-money.component').then(
             (m) => m.ReportMoneyComponent
           ),
               },
               {
                 path: 'Money/Dor',
                 loadComponent: () =>
-          import('./presentation/pages/report/report-money/report-money-dor/report-money-dor.component').then(
+          import('./pages/report/report-money/report-money-dor/report-money-dor.component').then(
             (m) => m.ReportMoneyDorComponent
           ),
               },
@@ -1163,7 +1163,7 @@ const routes: Routes = [
   {
     path: 'Login',
     loadComponent: () =>
-          import('./presentation/pages/login/login.component').then(
+          import('./pages/login/login.component').then(
             (m) => m.LoginComponent
           ),
     pathMatch: 'full',
