@@ -11,14 +11,14 @@ import { MatRipple } from '@angular/material/core';
 import { NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { EmptyTableComponent } from '../../../../components/empty-table/empty-table.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-sales-sales-chart',
     templateUrl: './sales-sales-chart.component.html',
     styleUrls: ['./sales-sales-chart.component.css'],
     animations: [panelAnimation, sortSVGAnimation],
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatRipple, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, DecimalPipe, TranslateModule]
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatRipple, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, DecimalPipe, TranslatePipe]
 })
 export class SalesSalesChartComponent {
   constructor(

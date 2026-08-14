@@ -1,7 +1,7 @@
 import { Component, Inject, Input } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { CdkScrollable } from '@angular/cdk/scrolling';
@@ -16,7 +16,7 @@ import { MatButton } from '@angular/material/button';
     selector: 'app-price-purchase-update',
     templateUrl: './price-purchase-update.component.html',
     styleUrls: ['./price-purchase-update.component.css'],
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, NgIf, MatProgressSpinner, NgFor, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatDialogActions, MatButton, TranslateModule]
+    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, NgIf, MatProgressSpinner, NgFor, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatDialogActions, MatButton, TranslatePipe]
 })
 export class PricePurchaseUpdateComponent {
   constructor(

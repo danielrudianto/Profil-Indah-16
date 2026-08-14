@@ -14,14 +14,14 @@ import { NgFor, NgIf } from '@angular/common';
 import { AutocompleteSearchComponent } from '../../../components/autocomplete-search/autocomplete-search.component';
 import { MatChipSet, MatChip } from '@angular/material/chips';
 import { MatButton } from '@angular/material/button';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-user-create',
     templateUrl: './user-create.component.html',
     styleUrls: ['./user-create.component.css'],
     animations: [panelAnimation],
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatSelect, NgFor, MatOption, NgIf, AutocompleteSearchComponent, MatChipSet, MatChip, MatDialogActions, MatButton, MatDialogClose, TranslateModule]
+    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatSelect, NgFor, MatOption, NgIf, AutocompleteSearchComponent, MatChipSet, MatChip, MatDialogActions, MatButton, MatDialogClose, TranslatePipe]
 })
 export class UserCreateComponent {
   constructor(

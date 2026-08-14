@@ -20,7 +20,7 @@ import { MatInput } from '@angular/material/input';
 import { NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatPaginator } from '@angular/material/paginator';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export enum ProductSelectorType {
   purchase,
@@ -33,7 +33,7 @@ export enum ProductSelectorType {
     templateUrl: './product-selector.component.html',
     styleUrls: ['./product-selector.component.css'],
     animations: [slideInOutAnimation],
-    imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatProgressSpinner, NgFor, MatPaginator, DecimalPipe, TranslateModule]
+    imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatProgressSpinner, NgFor, MatPaginator, DecimalPipe, TranslatePipe]
 })
 export class ProductSelectorComponent {
   constructor(

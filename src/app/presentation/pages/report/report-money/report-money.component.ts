@@ -14,13 +14,13 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
 import { MatIconButton, MatButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-report-money',
     templateUrl: './report-money.component.html',
     styleUrls: ['./report-money.component.css'],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatIconButton, RouterLink, MatIcon, MatButton, DecimalPipe, TranslateModule]
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatIconButton, RouterLink, MatIcon, MatButton, DecimalPipe, TranslatePipe]
 })
 export class ReportMoneyComponent {
   constructor(

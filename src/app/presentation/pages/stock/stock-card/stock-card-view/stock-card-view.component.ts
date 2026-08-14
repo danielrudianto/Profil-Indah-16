@@ -7,13 +7,13 @@ import { DynamicDialogComponent } from '../../../../components/dynamic-dialog/dy
 import { DialogHeaderComponent } from '../../../../components/dialog-header/dialog-header.component';
 import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-stock-card-view',
     templateUrl: './stock-card-view.component.html',
     styleUrls: ['./stock-card-view.component.css'],
-    imports: [DynamicDialogComponent, DialogHeaderComponent, NgIf, MatProgressSpinner, NgFor, DecimalPipe, DatePipe, TranslateModule]
+    imports: [DynamicDialogComponent, DialogHeaderComponent, NgIf, MatProgressSpinner, NgFor, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class StockCardViewComponent {
   constructor(

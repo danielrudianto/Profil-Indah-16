@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { FeatureBackgroundComponent } from '../../components/feature-background/feature-background.component';
 import { TransactionHeaderComponent } from '../../components/transaction-header/transaction-header.component';
 import { RouterOutlet } from '@angular/router';
@@ -7,7 +7,7 @@ import { RouterOutlet } from '@angular/router';
     selector: 'app-overpayment',
     templateUrl: './overpayment.component.html',
     styleUrl: './overpayment.component.css',
-    imports: [FeatureBackgroundComponent, TransactionHeaderComponent, RouterOutlet, TranslateModule]
+    imports: [FeatureBackgroundComponent, TransactionHeaderComponent, RouterOutlet, TranslatePipe]
 })
 export class OverpaymentComponent {
   constructor(private translateService: TranslateService) {}

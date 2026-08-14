@@ -17,14 +17,14 @@ import { MatIcon } from '@angular/material/icon';
 import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-stock-card',
     templateUrl: './stock-card.component.html',
     styleUrls: ['./stock-card.component.css'],
     animations: [panelAnimation],
-    imports: [FeatureBackgroundComponent, MatIconButton, MatIcon, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, DatePipe, TranslateModule]
+    imports: [FeatureBackgroundComponent, MatIconButton, MatIcon, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class StockCardComponent {
   constructor(

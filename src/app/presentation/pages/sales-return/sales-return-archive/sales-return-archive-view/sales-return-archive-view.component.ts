@@ -5,7 +5,7 @@ import { ApiService } from '../../../../../services/api.service';
 import { AuthService } from '../../../../../services/auth.service';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe, NgFor, DecimalPipe } from '@angular/common';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { CdkScrollable } from '@angular/cdk/scrolling';
@@ -19,7 +19,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'app-sales-return-archive-view',
     templateUrl: './sales-return-archive-view.component.html',
     styleUrls: ['./sales-return-archive-view.component.css'],
-    imports: [MatDialogTitle, CdkDrag, CdkDragHandle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, MatIcon, MatDialogActions, MatDialogClose, DecimalPipe, TranslateModule]
+    imports: [MatDialogTitle, CdkDrag, CdkDragHandle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, MatIcon, MatDialogActions, MatDialogClose, DecimalPipe, TranslatePipe]
 })
 export class SalesReturnArchiveViewComponent {
   constructor(

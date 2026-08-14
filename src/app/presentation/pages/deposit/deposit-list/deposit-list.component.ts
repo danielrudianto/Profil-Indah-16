@@ -12,13 +12,13 @@ import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
 import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatPaginator } from '@angular/material/paginator';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-deposit-list',
     templateUrl: './deposit-list.component.html',
     styleUrls: ['./deposit-list.component.css'],
-    imports: [MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, NgIf, NgFor, EmptyTableComponent, MatProgressSpinner, MatPaginator, DecimalPipe, DatePipe, TranslateModule]
+    imports: [MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, NgIf, NgFor, EmptyTableComponent, MatProgressSpinner, MatPaginator, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class DepositListComponent {
   constructor(

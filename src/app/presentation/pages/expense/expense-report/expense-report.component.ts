@@ -19,7 +19,7 @@ import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/fo
 import { MatInput } from '@angular/material/input';
 import { MatSelect, MatOption } from '@angular/material/select';
 import { NgIf, NgFor, DecimalPipe } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 const moment = _rollupMoment || _moment;
 
@@ -35,7 +35,7 @@ const moment = _rollupMoment || _moment;
         },
         { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
     ],
-    imports: [MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, NgIf, NgFor, DecimalPipe, TranslateModule]
+    imports: [MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, NgIf, NgFor, DecimalPipe, TranslatePipe]
 })
 export class ExpenseReportComponent {
   constructor(

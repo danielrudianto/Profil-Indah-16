@@ -8,14 +8,14 @@ import { DialogHeaderComponent } from '../../../../components/dialog-header/dial
 import { MatRipple } from '@angular/material/core';
 import { NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { EmptyTableComponent } from '../../../../components/empty-table/empty-table.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-supplier-purchase-chart',
     templateUrl: './supplier-purchase-chart.component.html',
     styleUrls: ['./supplier-purchase-chart.component.css'],
     animations: [panelAnimation, sortSVGAnimation],
-    imports: [DynamicDialogComponent, DialogHeaderComponent, MatRipple, NgIf, EmptyTableComponent, NgFor, DecimalPipe, TranslateModule]
+    imports: [DynamicDialogComponent, DialogHeaderComponent, MatRipple, NgIf, EmptyTableComponent, NgFor, DecimalPipe, TranslatePipe]
 })
 export class SupplierPurchaseChartComponent {
   constructor(

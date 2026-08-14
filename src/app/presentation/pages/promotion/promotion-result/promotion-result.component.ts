@@ -2,7 +2,7 @@ import { DatePipe, NgFor } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -21,7 +21,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'app-promotion-result',
     templateUrl: './promotion-result.component.html',
     styleUrl: './promotion-result.component.css',
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatList, NgFor, MatListItem, MatListItemTitle, MatListItemLine, MatDialogActions, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, TranslateModule]
+    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatList, NgFor, MatListItem, MatListItemTitle, MatListItemLine, MatDialogActions, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, TranslatePipe]
 })
 export class PromotionResultComponent {
   constructor(

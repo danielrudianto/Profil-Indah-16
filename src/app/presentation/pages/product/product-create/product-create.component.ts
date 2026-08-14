@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper, MatStep, MatStepLabel, MatStepperNext } from '@angular/material/stepper';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -21,7 +21,7 @@ import { NgFor, DecimalPipe } from '@angular/common';
     templateUrl: './product-create.component.html',
     styleUrls: ['./product-create.component.css'],
     animations: [slideInOutAnimation],
-    imports: [MatStepper, MatStep, MatStepLabel, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, AutocompleteSearchComponent, NgxMaskDirective, MatSelect, MatOption, MatButton, MatStepperNext, NgFor, DecimalPipe, TranslateModule]
+    imports: [MatStepper, MatStep, MatStepLabel, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, AutocompleteSearchComponent, NgxMaskDirective, MatSelect, MatOption, MatButton, MatStepperNext, NgFor, DecimalPipe, TranslatePipe]
 })
 export class ProductCreateComponent {
   constructor(

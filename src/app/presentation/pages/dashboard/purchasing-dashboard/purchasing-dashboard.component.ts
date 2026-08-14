@@ -9,13 +9,13 @@ import { NgFor } from '@angular/common';
 import { StatCardComponent } from '../../../components/stat-card/stat-card.component';
 import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
 import { GcpInfoComponent } from '../../../components/gcp-info/gcp-info.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-purchasing-dashboard',
     templateUrl: './purchasing-dashboard.component.html',
     styleUrls: ['./purchasing-dashboard.component.css'],
-    imports: [MatTooltip, RouterLink, MatGridList, NgFor, MatGridTile, StatCardComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, GcpInfoComponent, TranslateModule]
+    imports: [MatTooltip, RouterLink, MatGridList, NgFor, MatGridTile, StatCardComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, GcpInfoComponent, TranslatePipe]
 })
 export class PurchasingDashboardComponent {
   constructor(

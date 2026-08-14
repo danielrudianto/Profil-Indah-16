@@ -16,14 +16,14 @@ import { ArchiveSearchComponent } from '../../../components/archives/archive-sea
 import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-sales-return-archive',
     templateUrl: './sales-return-archive.component.html',
     styleUrls: ['./sales-return-archive.component.css'],
     animations: [slideInOutAnimation],
-    imports: [ArchivesComponent, ArchiveSearchComponent, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DatePipe, TranslateModule]
+    imports: [ArchivesComponent, ArchiveSearchComponent, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DatePipe, TranslatePipe]
 })
 export class SalesReturnArchiveComponent {
   constructor(

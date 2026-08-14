@@ -7,7 +7,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle, MatDialogCont
 import { AbstractControl, Form, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { availableRoles, user } from '../../../../models/user.model';
 import { panelAnimation } from '../../../../animations/panel.animation';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { CdkScrollable } from '@angular/cdk/scrolling';
@@ -24,7 +24,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'app-user-edit',
     templateUrl: './user-edit.component.html',
     styleUrls: ['./user-edit.component.css'],
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatSelect, NgFor, MatOption, NgIf, AutocompleteSearchComponent, MatChipSet, MatChip, MatButton, MatIcon, MatDialogActions, MatDialogClose, TranslateModule]
+    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatSelect, NgFor, MatOption, NgIf, AutocompleteSearchComponent, MatChipSet, MatChip, MatButton, MatIcon, MatDialogActions, MatDialogClose, TranslatePipe]
 })
 export class UserEditComponent {
   constructor(

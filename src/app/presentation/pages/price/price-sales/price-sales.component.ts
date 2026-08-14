@@ -9,13 +9,13 @@ import { TransactionHeaderComponent } from '../../../components/transaction-head
 import { FeatureSearchComponent } from '../../../components/feature-search/feature-search.component';
 import { NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-price-sales',
     templateUrl: './price-sales.component.html',
     styleUrls: ['./price-sales.component.css'],
-    imports: [TransactionHeaderComponent, FeatureSearchComponent, NgIf, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, TranslateModule]
+    imports: [TransactionHeaderComponent, FeatureSearchComponent, NgIf, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, TranslatePipe]
 })
 export class PriceSalesComponent {
   constructor(private router: Router, private dialog: MatDialog) {}

@@ -3,7 +3,7 @@ import { Component, Inject, signal } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Margins, PageOrientation, PageSize } from 'pdfmake/interfaces';
 import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { PaymentListComponent } from 'src/app/presentation/components/payment-list/payment-list.component';
@@ -27,7 +27,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
     selector: 'app-sales-invoice-view',
     templateUrl: './sales-invoice-view.component.html',
     styleUrls: ['./sales-invoice-view.component.css'],
-    imports: [MatDialogTitle, CdkDrag, CdkDragHandle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, MatTooltip, NgIf, MatIcon, MatDialogActions, MatDialogClose, DecimalPipe, DatePipe, TranslateModule]
+    imports: [MatDialogTitle, CdkDrag, CdkDragHandle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, MatTooltip, NgIf, MatIcon, MatDialogActions, MatDialogClose, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class SalesInvoiceViewComponent {
   constructor(

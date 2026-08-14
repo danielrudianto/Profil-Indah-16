@@ -8,13 +8,13 @@ import { CountUpDirective } from '../../../directives/count-up.directive';
 import { MatDivider } from '@angular/material/divider';
 import { NgFor, UpperCasePipe, DecimalPipe } from '@angular/common';
 import { CircleAvatarComponent } from '../../components/circle-avatar/circle-avatar.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-report-inventory',
     templateUrl: './report-inventory.component.html',
     styleUrls: ['./report-inventory.component.css'],
-    imports: [DynamicDialogComponent, DialogHeaderComponent, CountUpDirective, MatDivider, NgFor, CircleAvatarComponent, UpperCasePipe, DecimalPipe, TranslateModule]
+    imports: [DynamicDialogComponent, DialogHeaderComponent, CountUpDirective, MatDivider, NgFor, CircleAvatarComponent, UpperCasePipe, DecimalPipe, TranslatePipe]
 })
 export class ReportInventoryComponent {
   isOpened: boolean = false;

@@ -4,13 +4,13 @@ import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { NgIf, NgFor } from '@angular/common';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-transaction-header',
     templateUrl: './transaction-header.component.html',
     styleUrls: ['./transaction-header.component.css'],
-    imports: [MatIconButton, MatIcon, NgIf, MatMenuTrigger, MatMenu, NgFor, MatMenuItem, RouterLink, RouterLinkActive, TranslateModule]
+    imports: [MatIconButton, MatIcon, NgIf, MatMenuTrigger, MatMenu, NgFor, MatMenuItem, RouterLink, RouterLinkActive, TranslatePipe]
 })
 export class TransactionHeaderComponent {
   constructor(private router: Router) {}

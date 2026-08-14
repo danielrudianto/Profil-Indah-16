@@ -11,13 +11,13 @@ import { FeatureSearchComponent } from '../../components/feature-search/feature-
 import { NgIf, NgFor } from '@angular/common';
 import { EmptyTableComponent } from '../../components/empty-table/empty-table.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-payment-method',
     templateUrl: './payment-method.component.html',
     styleUrls: ['./payment-method.component.css'],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, EmptyTableComponent, MatProgressSpinner, MatPaginator, TranslateModule]
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, EmptyTableComponent, MatProgressSpinner, MatPaginator, TranslatePipe]
 })
 export class PaymentMethodComponent {
   constructor(

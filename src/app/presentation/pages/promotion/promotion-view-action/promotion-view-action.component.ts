@@ -10,7 +10,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { DatePipe, NgIf, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { panelAnimation } from 'src/app/animations/panel.animation';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { DynamicDialogComponent } from '../../../components/dynamic-dialog/dynamic-dialog.component';
 import { DialogHeaderComponent } from '../../../components/dialog-header/dialog-header.component';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
@@ -27,7 +27,7 @@ import { MatIcon } from '@angular/material/icon';
     templateUrl: './promotion-view-action.component.html',
     styleUrls: ['./promotion-view-action.component.css'],
     animations: [panelAnimation],
-    imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, AutocompleteSearchComponent, NgIf, EmptyTableComponent, NgFor, NgSwitch, NgSwitchCase, MatIconButton, MatIcon, MatButton, TranslateModule]
+    imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, AutocompleteSearchComponent, NgIf, EmptyTableComponent, NgFor, NgSwitch, NgSwitchCase, MatIconButton, MatIcon, MatButton, TranslatePipe]
 })
 export class PromotionViewActionComponent {
   constructor(

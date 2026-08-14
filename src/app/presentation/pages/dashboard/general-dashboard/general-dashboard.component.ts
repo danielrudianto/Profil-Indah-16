@@ -6,7 +6,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import * as xlsx from 'xlsx';
 import { saveAs } from 'file-saver';
 import { DatePipe, NgFor } from '@angular/common';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 import { StatCardComponent } from '../../../components/stat-card/stat-card.component';
@@ -17,7 +17,7 @@ import { GcpInfoComponent } from '../../../components/gcp-info/gcp-info.componen
     selector: 'app-general-dashboard',
     templateUrl: './general-dashboard.component.html',
     styleUrls: ['./general-dashboard.component.css'],
-    imports: [MatTooltip, RouterLink, MatGridList, NgFor, MatGridTile, StatCardComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, GcpInfoComponent, TranslateModule]
+    imports: [MatTooltip, RouterLink, MatGridList, NgFor, MatGridTile, StatCardComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, GcpInfoComponent, TranslatePipe]
 })
 export class GeneralDashboardComponent {
   constructor(

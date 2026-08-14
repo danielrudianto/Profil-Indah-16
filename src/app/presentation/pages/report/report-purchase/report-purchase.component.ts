@@ -5,7 +5,7 @@ import {
   MomentDateAdapter,
 } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatRipple } from '@angular/material/core';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { ApiService } from 'src/app/services/api.service';
 import moment, { Moment } from 'moment';
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
@@ -38,7 +38,7 @@ import { MatGridList, MatGridTile } from '@angular/material/grid-list';
         },
         { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
     ],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, PurchaseChartComponent, MatRipple, MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, MatButton, MatIcon, MatGridList, MatGridTile, DecimalPipe, TranslateModule]
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, PurchaseChartComponent, MatRipple, MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, MatButton, MatIcon, MatGridList, MatGridTile, DecimalPipe, TranslatePipe]
 })
 export class ReportPurchaseComponent {
   constructor(

@@ -14,14 +14,14 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatList } from '@angular/material/list';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-cashier-view-bill',
     templateUrl: './cashier-view-bill.component.html',
     styleUrls: ['./cashier-view-bill.component.css'],
     animations: [panelAnimation],
-    imports: [MatDialogTitle, MatIconButton, NgIf, MatIcon, NgFor, FormsModule, ReactiveFormsModule, NgxMaskDirective, MatFormField, MatLabel, MatInput, MatButton, MatList, DecimalPipe, DatePipe, TranslateModule]
+    imports: [MatDialogTitle, MatIconButton, NgIf, MatIcon, NgFor, FormsModule, ReactiveFormsModule, NgxMaskDirective, MatFormField, MatLabel, MatInput, MatButton, MatList, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class CashierViewBillComponent {
   constructor(

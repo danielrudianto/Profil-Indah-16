@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { DynamicComponentService } from '../../../../services/dynamic-component.service';
 import { ApiService } from '../../../../services/api.service';
 import { AlertService } from '../../../../services/alert.service';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import * as xlsx from 'xlsx';
@@ -23,7 +23,7 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
     selector: 'app-report-problematic',
     templateUrl: './report-problematic.component.html',
     styleUrls: ['./report-problematic.component.css'],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatPrefix, MatIcon, MatSuffix, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, TranslateModule]
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatPrefix, MatIcon, MatSuffix, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, TranslatePipe]
 })
 export class ReportProblematicComponent {
   constructor(

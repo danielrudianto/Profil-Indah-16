@@ -2,7 +2,7 @@ import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { availableBankSearch, IBank } from 'src/app/utils/bank';
@@ -18,7 +18,7 @@ import { MatButton } from '@angular/material/button';
     selector: 'app-deposit-delete-confirmation',
     templateUrl: './deposit-delete-confirmation.component.html',
     styleUrl: './deposit-delete-confirmation.component.css',
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatAutocompleteTrigger, MatAutocomplete, NgFor, NgIf, MatDialogActions, MatButton, MatDialogClose, TranslateModule]
+    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatAutocompleteTrigger, MatAutocomplete, NgFor, NgIf, MatDialogActions, MatButton, MatDialogClose, TranslatePipe]
 })
 export class DepositDeleteConfirmationComponent {
   constructor(

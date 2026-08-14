@@ -13,13 +13,13 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { AutocompleteSearchComponent } from '../../../../components/autocomplete-search/autocomplete-search.component';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatButton } from '@angular/material/button';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-receivable-payment-create',
     templateUrl: './receivable-payment-create.component.html',
     styleUrls: ['./receivable-payment-create.component.css'],
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgClass, NgxMaskDirective, AutocompleteSearchComponent, MatCheckbox, MatDialogActions, MatButton, TranslateModule]
+    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgClass, NgxMaskDirective, AutocompleteSearchComponent, MatCheckbox, MatDialogActions, MatButton, TranslatePipe]
 })
 export class ReceivablePaymentCreateComponent {
   constructor(

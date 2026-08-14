@@ -14,13 +14,13 @@ import { FeatureSearchComponent } from '../../components/feature-search/feature-
 import { NgIf, NgFor } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { EmptyTableComponent } from '../../components/empty-table/empty-table.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-expense-type',
     templateUrl: './expense-type.component.html',
     styleUrls: ['./expense-type.component.css'],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, MatProgressSpinner, NgFor, EmptyTableComponent, TranslateModule]
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, MatProgressSpinner, NgFor, EmptyTableComponent, TranslatePipe]
 })
 export class ExpenseTypeComponent {
   constructor(

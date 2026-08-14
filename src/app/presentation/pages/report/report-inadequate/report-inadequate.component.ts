@@ -8,7 +8,7 @@ import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { debounceTime } from 'rxjs';
 import * as xlsx from 'xlsx';
 import { saveAs } from 'file-saver';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
 import { FeatureHeaderComponent } from '../../../components/feature-header/feature-header.component';
 import { MatFormField, MatLabel, MatSuffix, MatPrefix } from '@angular/material/form-field';
@@ -23,7 +23,7 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
     selector: 'app-report-inadequate',
     templateUrl: './report-inadequate.component.html',
     styleUrls: ['./report-inadequate.component.css'],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatSuffix, MatIcon, MatPrefix, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, TranslateModule]
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatSuffix, MatIcon, MatPrefix, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, TranslatePipe]
 })
 export class ReportInadequateComponent {
   constructor(

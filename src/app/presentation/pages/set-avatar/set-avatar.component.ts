@@ -21,14 +21,14 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatSelect, MatOption } from '@angular/material/select';
 import { ColorPickerComponent } from '../../components/color-picker/color-picker.component';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-set-avatar',
     templateUrl: './set-avatar.component.html',
     styleUrls: ['./set-avatar.component.css'],
     animations: [panelAnimation],
-    imports: [MatDialogTitle, MatIconButton, MatIcon, AvatarComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, ColorPickerComponent, MatSlideToggle, TranslateModule]
+    imports: [MatDialogTitle, MatIconButton, MatIcon, AvatarComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, ColorPickerComponent, MatSlideToggle, TranslatePipe]
 })
 export class SetAvatarComponent {
   constructor(

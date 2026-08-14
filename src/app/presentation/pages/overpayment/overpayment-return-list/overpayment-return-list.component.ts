@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import moment from 'moment';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -17,7 +17,7 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
     selector: 'app-overpayment-return-list',
     templateUrl: './overpayment-return-list.component.html',
     styleUrl: './overpayment-return-list.component.css',
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, DecimalPipe, DatePipe, TranslateModule]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class OverpaymentReturnListComponent {
   constructor(

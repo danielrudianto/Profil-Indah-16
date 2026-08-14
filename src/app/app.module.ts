@@ -164,9 +164,9 @@ import { AdjustmentCaseArchiveFilterComponent } from './presentation/pages/adjus
 import { AdjustmentCaseViewComponent } from './presentation/pages/adjustment-case/adjustment-case-archive/adjustment-case-view/adjustment-case-view.component';
 import { PriceSalesUpdateComponent } from './presentation/pages/price/price-sales/price-sales-update/price-sales-update.component';
 import {
-  TranslateModule,
   TranslateLoader,
   TranslateService,
+  provideTranslateService,
 } from '@ngx-translate/core';
 import { CustomLoader } from './loader/translate.loader';
 import { LanguageSelectorComponent } from './presentation/components/topbar/language-selector/language-selector.component';
@@ -288,13 +288,6 @@ import { ReportMoneyDorComponent } from './presentation/pages/report/report-mone
         MatTabsModule,
         MatCheckboxModule,
         MatRadioModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useClass: CustomLoader,
-                deps: [HttpClient],
-            },
-        }),
         HotkeyModule.forRoot(),
         MatRippleModule,
         DragDropModule,
@@ -499,6 +492,18 @@ import { ReportMoneyDorComponent } from './presentation/pages/report/report-mone
             useClass: ErrorInterceptor,
             multi: true,
         },
+        /*
+          TranslateModule.forRoot() dihapus di @ngx-translate v18 dan digantikan
+          penyedia mandiri ini. Pemuat kustomnya tidak berubah — CustomLoader
+          tetap membaca /assets/i18n/<lang>.json lewat HttpClient.
+        */
+        provideTranslateService({
+            loader: {
+                provide: TranslateLoader,
+                useClass: CustomLoader,
+                deps: [HttpClient],
+            },
+        }),
         provideNgxMask(),
         DatePipe,
         DecimalPipe,

@@ -2,7 +2,7 @@ import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
 import { Component, Inject, signal } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -19,7 +19,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'app-adjustment-case-view',
     templateUrl: './adjustment-case-view.component.html',
     styleUrls: ['./adjustment-case-view.component.css'],
-    imports: [MatDialogTitle, CdkDrag, CdkDragHandle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, NgIf, MatIcon, MatDialogActions, MatDialogClose, DecimalPipe, TranslateModule]
+    imports: [MatDialogTitle, CdkDrag, CdkDragHandle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, NgIf, MatIcon, MatDialogActions, MatDialogClose, DecimalPipe, TranslatePipe]
 })
 export class AdjustmentCaseViewComponent {
   constructor(

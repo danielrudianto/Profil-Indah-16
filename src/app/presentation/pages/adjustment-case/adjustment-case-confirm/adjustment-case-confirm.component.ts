@@ -9,13 +9,13 @@ import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-adjustment-case-confirm',
     templateUrl: './adjustment-case-confirm.component.html',
     styleUrls: ['./adjustment-case-confirm.component.css'],
-    imports: [NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, AvatarComponent, MatPaginator, DatePipe, TranslateModule]
+    imports: [NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, AvatarComponent, MatPaginator, DatePipe, TranslatePipe]
 })
 export class AdjustmentCaseConfirmComponent {
   constructor(

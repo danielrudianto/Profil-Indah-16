@@ -1,7 +1,7 @@
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, Inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent } from '@angular/material/dialog';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import * as xlsx from 'xlsx';
@@ -22,7 +22,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'app-promotion-view',
     templateUrl: './promotion-view.component.html',
     styleUrls: ['./promotion-view.component.css'],
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatChipListbox, NgFor, MatChip, MatButton, NgIf, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, TranslateModule]
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatChipListbox, NgFor, MatChip, MatButton, NgIf, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, TranslatePipe]
 })
 export class PromotionViewComponent {
   constructor(

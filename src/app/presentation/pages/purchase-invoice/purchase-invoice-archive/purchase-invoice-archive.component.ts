@@ -15,14 +15,14 @@ import { MatIcon } from '@angular/material/icon';
 import { NgClass, NgIf, NgFor, DatePipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-purchase-invoice-archive',
     templateUrl: './purchase-invoice-archive.component.html',
     styleUrls: ['./purchase-invoice-archive.component.css'],
     animations: [slideInOutAnimation],
-    imports: [ArchivesComponent, ArchiveSearchComponent, MatIcon, NgClass, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DatePipe, TranslateModule]
+    imports: [ArchivesComponent, ArchiveSearchComponent, MatIcon, NgClass, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DatePipe, TranslatePipe]
 })
 export class PurchaseInvoiceArchiveComponent {
   constructor(

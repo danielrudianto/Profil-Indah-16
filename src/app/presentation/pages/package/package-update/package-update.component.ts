@@ -2,7 +2,7 @@ import { Location, NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -17,7 +17,7 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
     selector: 'app-package-update',
     templateUrl: './package-update.component.html',
     styleUrls: ['./package-update.component.css'],
-    imports: [NgIf, MatProgressSpinner, VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgxMaskDirective, NgFor, MatHint, EmptyTableComponent, DecimalPipe, TranslateModule]
+    imports: [NgIf, MatProgressSpinner, VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgxMaskDirective, NgFor, MatHint, EmptyTableComponent, DecimalPipe, TranslatePipe]
 })
 export class PackageUpdateComponent {
   constructor(

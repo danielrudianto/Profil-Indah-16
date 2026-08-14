@@ -9,14 +9,14 @@ import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { AvatarComponent } from '../../../../components/avatar/avatar.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-sales-return-create-view-sales-invoice',
     templateUrl: './sales-return-create-view-sales-invoice.component.html',
     styleUrls: ['./sales-return-create-view-sales-invoice.component.css'],
     animations: [panelAnimation],
-    imports: [MatDialogTitle, MatIconButton, NgIf, MatIcon, MatProgressSpinner, AvatarComponent, NgFor, DecimalPipe, DatePipe, TranslateModule]
+    imports: [MatDialogTitle, MatIconButton, NgIf, MatIcon, MatProgressSpinner, AvatarComponent, NgFor, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class SalesReturnCreateViewSalesInvoiceComponent {
   constructor(

@@ -4,7 +4,7 @@ import { ItemBrand } from 'src/app/models/item.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { ProductBrandUpdateComponent } from './product-brand-update/product-brand-update.component';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteConfirmationComponent } from '../../components/delete-confirmation/delete-confirmation.component';
 import { ApiService } from 'src/app/services/api.service';
@@ -22,7 +22,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     selector: 'app-product-brand',
     templateUrl: './product-brand.component.html',
     styleUrls: ['./product-brand.component.css'],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, EmptyTableComponent, MatProgressSpinner, MatPaginator, DatePipe, TranslateModule]
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, EmptyTableComponent, MatProgressSpinner, MatPaginator, DatePipe, TranslatePipe]
 })
 export class ProductBrandComponent {
   constructor(

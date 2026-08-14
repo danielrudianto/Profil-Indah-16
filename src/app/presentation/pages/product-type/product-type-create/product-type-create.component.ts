@@ -8,13 +8,13 @@ import { DialogHeaderComponent } from '../../../components/dialog-header/dialog-
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-product-type-create',
     templateUrl: './product-type-create.component.html',
     styleUrls: ['./product-type-create.component.css'],
-    imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatButton, TranslateModule]
+    imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatButton, TranslatePipe]
 })
 export class ProductTypeCreateComponent {
   constructor(

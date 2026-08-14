@@ -17,13 +17,13 @@ import { MatChipSet, MatChip } from '@angular/material/chips';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 import { MatIcon } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-promotion-create',
     templateUrl: './promotion-create.component.html',
     styleUrls: ['./promotion-create.component.css'],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, AutocompleteSearchComponent, NgIf, MatChipSet, NgFor, MatChip, MatButton, EmptyTableComponent, NgSwitch, NgSwitchCase, MatIconButton, MatIcon, TranslateModule]
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, AutocompleteSearchComponent, NgIf, MatChipSet, NgFor, MatChip, MatButton, EmptyTableComponent, NgSwitch, NgSwitchCase, MatIconButton, MatIcon, TranslatePipe]
 })
 export class PromotionCreateComponent {
   constructor(

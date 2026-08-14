@@ -1,13 +1,13 @@
 import { DecimalPipe, NgFor } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-sales-value-chart',
     templateUrl: './sales-value-chart.component.html',
     styleUrls: ['./sales-value-chart.component.css'],
-    imports: [NgFor, MatTooltip, TranslateModule]
+    imports: [NgFor, MatTooltip, TranslatePipe]
 })
 export class SalesValueChartComponent {
   constructor(

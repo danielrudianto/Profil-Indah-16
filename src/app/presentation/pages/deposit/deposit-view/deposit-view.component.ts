@@ -11,7 +11,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { DatePipe, DecimalPipe, NgIf, NgFor } from '@angular/common';
 import { Margins, PageOrientation, PageSize } from 'pdfmake/interfaces';
 import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DepositDeleteConfirmationComponent } from '../deposit-delete-confirmation/deposit-delete-confirmation.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
@@ -30,7 +30,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
     templateUrl: './deposit-view.component.html',
     styleUrls: ['./deposit-view.component.css'],
     animations: [panelAnimation],
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, NgIf, MatProgressSpinner, FormsModule, ReactiveFormsModule, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, MatTooltip, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, MatDialogActions, MatDialogClose, DecimalPipe, DatePipe, TranslateModule]
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, NgIf, MatProgressSpinner, FormsModule, ReactiveFormsModule, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, MatTooltip, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, MatDialogActions, MatDialogClose, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class DepositViewComponent {
   constructor(

@@ -3,13 +3,13 @@ import { Observable } from 'rxjs';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatTooltip } from '@angular/material/tooltip';
 import { AsyncPipe } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-dark-mode-selector',
     templateUrl: './dark-mode-selector.component.html',
     styleUrls: ['./dark-mode-selector.component.css'],
-    imports: [MatSlideToggle, MatTooltip, AsyncPipe, TranslateModule]
+    imports: [MatSlideToggle, MatTooltip, AsyncPipe, TranslatePipe]
 })
 export class DarkModeSelectorComponent {
   constructor() {} // private darkModeService: DarkModeService

@@ -4,7 +4,7 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Valida
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { Subject } from 'rxjs';
 import { CustomerModel } from 'src/app/models/customer.model';
@@ -31,7 +31,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'app-deposit-confirm',
     templateUrl: './deposit-confirm.component.html',
     styleUrls: ['./deposit-confirm.component.css'],
-    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, NgFor, EmptyTableComponent, NgxMaskDirective, MatPrefix, MatButton, MatIconButton, MatIcon, DecimalPipe, DatePipe, TranslateModule]
+    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, NgFor, EmptyTableComponent, NgxMaskDirective, MatPrefix, MatButton, MatIconButton, MatIcon, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class DepositConfirmComponent {
   constructor(

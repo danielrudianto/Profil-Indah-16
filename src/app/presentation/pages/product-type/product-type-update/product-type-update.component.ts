@@ -10,13 +10,13 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-product-type-update',
     templateUrl: './product-type-update.component.html',
     styleUrls: ['./product-type-update.component.css'],
-    imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, NgIf, MatProgressSpinner, MatFormField, MatLabel, MatInput, MatButton, TranslateModule]
+    imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, NgIf, MatProgressSpinner, MatFormField, MatLabel, MatInput, MatButton, TranslatePipe]
 })
 export class ProductTypeUpdateComponent {
   constructor(

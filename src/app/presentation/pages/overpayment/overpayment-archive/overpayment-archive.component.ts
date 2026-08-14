@@ -8,13 +8,13 @@ import { MatIcon } from '@angular/material/icon';
 import { NgClass, NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-overpayment-archive',
     templateUrl: './overpayment-archive.component.html',
     styleUrl: './overpayment-archive.component.css',
-    imports: [MatIcon, NgClass, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, DatePipe, TranslateModule]
+    imports: [MatIcon, NgClass, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class OverpaymentArchiveComponent {
   constructor(

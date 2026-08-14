@@ -10,14 +10,14 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatRipple } from '@angular/material/core';
 import { NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { EmptyTableComponent } from '../../../../components/empty-table/empty-table.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-type-sales-chart',
     templateUrl: './type-sales-chart.component.html',
     styleUrls: ['./type-sales-chart.component.css'],
     animations: [panelAnimation, sortSVGAnimation],
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatRipple, NgIf, EmptyTableComponent, NgFor, DecimalPipe, TranslateModule]
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatRipple, NgIf, EmptyTableComponent, NgFor, DecimalPipe, TranslatePipe]
 })
 export class TypeSalesChartComponent {
   constructor(

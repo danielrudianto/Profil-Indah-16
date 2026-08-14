@@ -6,7 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ReportFinanceComponent } from '../../report/report-finance/report-finance.component';
 import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -20,7 +20,7 @@ import { GcpInfoComponent } from '../../../components/gcp-info/gcp-info.componen
     selector: 'app-administrator-dashboard',
     templateUrl: './administrator-dashboard.component.html',
     styleUrls: ['./administrator-dashboard.component.css'],
-    imports: [MatTooltip, RouterLink, MatGridList, NgFor, MatGridTile, StatCardComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, GcpInfoComponent, TranslateModule]
+    imports: [MatTooltip, RouterLink, MatGridList, NgFor, MatGridTile, StatCardComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, GcpInfoComponent, TranslatePipe]
 })
 export class AdministratorDashboardComponent {
   constructor(

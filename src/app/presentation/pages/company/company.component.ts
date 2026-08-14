@@ -12,13 +12,13 @@ import { NgIf, NgFor } from '@angular/common';
 import { EmptyTableComponent } from '../../components/empty-table/empty-table.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NgxMaskPipe } from 'ngx-mask';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-company',
     templateUrl: './company.component.html',
     styleUrls: ['./company.component.css'],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, EmptyTableComponent, MatProgressSpinner, MatPaginator, NgxMaskPipe, TranslateModule]
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, EmptyTableComponent, MatProgressSpinner, MatPaginator, NgxMaskPipe, TranslatePipe]
 })
 export class CompanyComponent {
   constructor(private authService: AuthService, private dialog: MatDialog) {}

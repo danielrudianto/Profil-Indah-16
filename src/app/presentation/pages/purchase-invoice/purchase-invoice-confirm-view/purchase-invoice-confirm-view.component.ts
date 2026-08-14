@@ -4,7 +4,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { of, switchMap } from 'rxjs';
 import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 import { UpdateProductPurchasePriceComponent } from 'src/app/presentation/components/update-product-purchase-price/update-product-purchase-price.component';
@@ -23,7 +23,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     selector: 'app-purchase-invoice-confirm-view',
     templateUrl: './purchase-invoice-confirm-view.component.html',
     styleUrls: ['./purchase-invoice-confirm-view.component.css'],
-    imports: [NgIf, VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, MatHint, NgFor, MatTooltip, NgClass, MatProgressSpinner, DecimalPipe, TranslateModule]
+    imports: [NgIf, VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, MatHint, NgFor, MatTooltip, NgClass, MatProgressSpinner, DecimalPipe, TranslatePipe]
 })
 export class PurchaseInvoiceConfirmViewComponent {
   constructor(

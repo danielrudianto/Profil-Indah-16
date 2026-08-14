@@ -13,14 +13,14 @@ import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatList, MatListItem, MatListItemIcon, MatListItemTitle, MatListItemLine } from '@angular/material/list';
 import { NgFor } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-expense-type-view-children',
     templateUrl: './expense-type-view-children.component.html',
     styleUrls: ['./expense-type-view-children.component.css'],
     animations: [panelAnimation],
-    imports: [FormsModule, ReactiveFormsModule, MatIconButton, MatIcon, MatList, NgFor, MatListItem, MatListItemIcon, MatListItemTitle, MatListItemLine, TranslateModule]
+    imports: [FormsModule, ReactiveFormsModule, MatIconButton, MatIcon, MatList, NgFor, MatListItem, MatListItemIcon, MatListItemTitle, MatListItemLine, TranslatePipe]
 })
 export class ExpenseTypeViewChildrenComponent {
   constructor(

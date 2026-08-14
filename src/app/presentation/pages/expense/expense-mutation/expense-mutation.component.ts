@@ -24,7 +24,7 @@ import { MatInput } from '@angular/material/input';
 import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 const moment = _rollupMoment || _moment;
 
@@ -40,7 +40,7 @@ const moment = _rollupMoment || _moment;
         },
         { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
     ],
-    imports: [MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, DatePipe, TranslateModule]
+    imports: [MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class ExpenseMutationComponent {
   constructor(

@@ -13,14 +13,14 @@ import { MatSelect, MatOption } from '@angular/material/select';
 import { MatDivider } from '@angular/material/divider';
 import { NgxMaskDirective } from 'ngx-mask';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-stock-list-report',
     templateUrl: './stock-list-report.component.html',
     styleUrls: ['./stock-list-report.component.css'],
     animations: [panelAnimation],
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, MatDivider, NgxMaskDirective, NgIf, MatProgressSpinner, NgFor, DecimalPipe, DatePipe, TranslateModule]
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, MatDivider, NgxMaskDirective, NgIf, MatProgressSpinner, NgFor, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class StockListReportComponent {
   constructor(

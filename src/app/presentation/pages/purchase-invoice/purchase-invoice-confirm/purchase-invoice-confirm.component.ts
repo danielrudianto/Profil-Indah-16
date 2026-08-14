@@ -6,13 +6,13 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 import { RouterLink } from '@angular/router';
 import { AvatarComponent } from '../../../components/avatar/avatar.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-purchase-invoice-confirm',
     templateUrl: './purchase-invoice-confirm.component.html',
     styleUrls: ['./purchase-invoice-confirm.component.css'],
-    imports: [FeatureSearchComponent, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, RouterLink, AvatarComponent, MatPaginator, DatePipe, TranslateModule]
+    imports: [FeatureSearchComponent, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, RouterLink, AvatarComponent, MatPaginator, DatePipe, TranslatePipe]
 })
 export class PurchaseInvoiceConfirmComponent {
   dataSource: any[] = [];

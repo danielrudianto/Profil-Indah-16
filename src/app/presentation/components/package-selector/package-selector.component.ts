@@ -12,13 +12,13 @@ import { MatInput } from '@angular/material/input';
 import { NgIf, NgFor } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatPaginator } from '@angular/material/paginator';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-package-selector',
     templateUrl: './package-selector.component.html',
     styleUrls: ['./package-selector.component.css'],
-    imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatProgressSpinner, NgFor, MatPaginator, TranslateModule]
+    imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatProgressSpinner, NgFor, MatPaginator, TranslatePipe]
 })
 export class PackageSelectorComponent {
   constructor(

@@ -12,14 +12,14 @@ import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TopbarComponent } from '../../../components/topbar/topbar.component';
 import { AsyncPipe } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-administrator',
     templateUrl: './administrator.component.html',
     styleUrls: ['./administrator.component.css'],
     animations: [slideUpAnimation, slideUpDownAnimation],
-    imports: [MatDrawerContainer, MatDrawer, MatNavList, MatListSubheaderCssMatStyler, MatListItem, RouterLink, RouterLinkActive, MatIcon, MatListItemIcon, MatListItemTitle, MatDivider, MatMenuTrigger, MatMenu, MatMenuItem, MatDrawerContent, MatTooltip, TopbarComponent, RouterOutlet, AsyncPipe, TranslateModule]
+    imports: [MatDrawerContainer, MatDrawer, MatNavList, MatListSubheaderCssMatStyler, MatListItem, RouterLink, RouterLinkActive, MatIcon, MatListItemIcon, MatListItemTitle, MatDivider, MatMenuTrigger, MatMenu, MatMenuItem, MatDrawerContent, MatTooltip, TopbarComponent, RouterOutlet, AsyncPipe, TranslatePipe]
 })
 export class AdministratorComponent {
   constructor(private router: Router, private sideNavService: SideNavService) {}

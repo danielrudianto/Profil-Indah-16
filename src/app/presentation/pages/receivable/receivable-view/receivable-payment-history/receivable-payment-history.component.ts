@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -15,7 +15,7 @@ import { EmptyTableComponent } from '../../../../components/empty-table/empty-ta
     selector: 'app-receivable-payment-history',
     templateUrl: './receivable-payment-history.component.html',
     styleUrls: ['./receivable-payment-history.component.css'],
-    imports: [DynamicDialogComponent, DialogHeaderComponent, NgIf, MatProgressSpinner, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, EmptyTableComponent, DecimalPipe, TranslateModule]
+    imports: [DynamicDialogComponent, DialogHeaderComponent, NgIf, MatProgressSpinner, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, EmptyTableComponent, DecimalPipe, TranslatePipe]
 })
 export class ReceivablePaymentHistoryComponent {
   constructor(

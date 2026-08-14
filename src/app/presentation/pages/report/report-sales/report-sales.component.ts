@@ -5,7 +5,7 @@ import {
   MomentDateAdapter,
 } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatRipple } from '@angular/material/core';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { ApiService } from 'src/app/services/api.service';
 import moment, { Moment } from 'moment';
@@ -47,7 +47,7 @@ import { DecimalPipe } from '@angular/common';
         },
         { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
     ],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, SalesChartComponent, SalesValueChartComponent, MatRipple, MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, MatButton, MatIcon, MatDivider, MatRadioGroup, MatRadioButton, MatGridList, MatGridTile, MatTooltip, DecimalPipe, TranslateModule]
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, SalesChartComponent, SalesValueChartComponent, MatRipple, MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, MatButton, MatIcon, MatDivider, MatRadioGroup, MatRadioButton, MatGridList, MatGridTile, MatTooltip, DecimalPipe, TranslatePipe]
 })
 export class ReportSalesComponent {
   constructor(

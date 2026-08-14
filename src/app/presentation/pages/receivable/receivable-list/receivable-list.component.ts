@@ -7,13 +7,13 @@ import { FeatureHeaderComponent } from '../../../components/feature-header/featu
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { NgFor, DecimalPipe } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-receivable-list',
     templateUrl: './receivable-list.component.html',
     styleUrl: './receivable-list.component.css',
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, NgFor, DecimalPipe, TranslateModule]
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, NgFor, DecimalPipe, TranslatePipe]
 })
 export class ReceivableListComponent {
   constructor(

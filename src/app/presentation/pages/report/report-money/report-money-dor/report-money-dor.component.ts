@@ -9,13 +9,13 @@ import { FeatureHeaderComponent } from '../../../../components/feature-header/fe
 import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
 import { NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-report-money-dor',
     templateUrl: './report-money-dor.component.html',
     styleUrl: './report-money-dor.component.css',
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatDateRangeInput, FormsModule, ReactiveFormsModule, MatStartDate, MatEndDate, MatHint, MatDatepickerToggle, MatSuffix, MatDateRangePicker, NgIf, MatProgressSpinner, NgFor, DecimalPipe, TranslateModule]
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatDateRangeInput, FormsModule, ReactiveFormsModule, MatStartDate, MatEndDate, MatHint, MatDatepickerToggle, MatSuffix, MatDateRangePicker, NgIf, MatProgressSpinner, NgFor, DecimalPipe, TranslatePipe]
 })
 export class ReportMoneyDorComponent {
   constructor(

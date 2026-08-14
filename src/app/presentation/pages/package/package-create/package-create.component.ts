@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import {
   ProductSelectorComponent,
@@ -24,7 +24,7 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
     selector: 'app-package-create',
     templateUrl: './package-create.component.html',
     styleUrls: ['./package-create.component.css'],
-    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatButton, NgIf, NgFor, MatHint, MatIconButton, MatIcon, EmptyTableComponent, DecimalPipe, TranslateModule]
+    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatButton, NgIf, NgFor, MatHint, MatIconButton, MatIcon, EmptyTableComponent, DecimalPipe, TranslatePipe]
 })
 export class PackageCreateComponent {
   constructor(

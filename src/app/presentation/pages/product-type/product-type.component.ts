@@ -4,7 +4,7 @@ import { ItemType } from 'src/app/models/item.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { ProductTypeUpdateComponent } from './product-type-update/product-type-update.component';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -22,7 +22,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     selector: 'app-product-type',
     templateUrl: './product-type.component.html',
     styleUrls: ['./product-type.component.css'],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, EmptyTableComponent, MatProgressSpinner, MatPaginator, DatePipe, TranslateModule]
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, EmptyTableComponent, MatProgressSpinner, MatPaginator, DatePipe, TranslatePipe]
 })
 export class ProductTypeComponent {
   constructor(

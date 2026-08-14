@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { AlertService } from '../../../../../services/alert.service';
 import { DynamicComponentService } from '../../../../../services/dynamic-component.service';
@@ -18,7 +18,7 @@ import { MatDivider } from '@angular/material/divider';
     templateUrl: './report-problematic-filter.component.html',
     styleUrls: ['./report-problematic-filter.component.css'],
     animations: [panelAnimation],
-    imports: [MatDialogTitle, MatIconButton, MatIcon, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, NgIf, MatList, MatListSubheaderCssMatStyler, NgFor, MatListItem, MatListItemIcon, MatListItemTitle, MatDivider, TranslateModule]
+    imports: [MatDialogTitle, MatIconButton, MatIcon, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, NgIf, MatList, MatListSubheaderCssMatStyler, NgFor, MatListItem, MatListItemIcon, MatListItemTitle, MatDivider, TranslatePipe]
 })
 export class ReportProblematicFilterComponent {
   constructor(

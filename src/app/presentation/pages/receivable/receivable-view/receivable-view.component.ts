@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { panelAnimation } from 'src/app/animations/panel.animation';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -23,7 +23,7 @@ import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
     templateUrl: './receivable-view.component.html',
     styleUrls: ['./receivable-view.component.css'],
     animations: [panelAnimation],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatPaginator, DecimalPipe, DatePipe, TranslateModule]
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatPaginator, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class ReceivableViewComponent {
   constructor(

@@ -18,13 +18,13 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-stock-list',
     templateUrl: './stock-list.component.html',
     styleUrls: ['./stock-list.component.css'],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatIconButton, MatIcon, MatPaginator, DecimalPipe, TranslateModule]
+    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatIconButton, MatIcon, MatPaginator, DecimalPipe, TranslatePipe]
 })
 export class StockListComponent {
   constructor(

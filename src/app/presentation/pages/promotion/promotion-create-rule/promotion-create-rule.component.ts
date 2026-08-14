@@ -4,13 +4,13 @@ import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatSelect, MatOption } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-promotion-create-rule',
     templateUrl: './promotion-create-rule.component.html',
     styleUrls: ['./promotion-create-rule.component.css'],
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput, TranslateModule]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput, TranslatePipe]
 })
 export class PromotionCreateRuleComponent {
   constructor(

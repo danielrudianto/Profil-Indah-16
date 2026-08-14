@@ -1,7 +1,7 @@
 import { DatePipe, NgIf, NgFor, NgSwitch, NgSwitchCase, DecimalPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { Subject } from 'rxjs';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
@@ -31,7 +31,7 @@ import { MatSelect, MatOption } from '@angular/material/select';
     templateUrl: './sales-return-create.component.html',
     styleUrls: ['./sales-return-create.component.css'],
     animations: [slideInOutAnimation],
-    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, AutocompleteSearchComponent, MatButton, NgIf, NgFor, NgSwitch, NgSwitchCase, NgxMaskDirective, MatHint, MatIconButton, MatIcon, EmptyTableComponent, MatSelect, MatOption, DecimalPipe, DatePipe, TranslateModule]
+    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, AutocompleteSearchComponent, MatButton, NgIf, NgFor, NgSwitch, NgSwitchCase, NgxMaskDirective, MatHint, MatIconButton, MatIcon, EmptyTableComponent, MatSelect, MatOption, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class SalesReturnCreateComponent {
   constructor(

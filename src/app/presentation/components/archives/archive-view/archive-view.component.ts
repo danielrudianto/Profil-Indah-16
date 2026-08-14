@@ -18,7 +18,7 @@ import { MatDialogTitle } from '@angular/material/dialog';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -28,7 +28,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
     styleUrls: ['./archive-view.component.css'],
     animations: [panelAnimation],
     encapsulation: ViewEncapsulation.None,
-    imports: [MatDialogTitle, MatIconButton, NgIf, MatIcon, MatProgressSpinner, TranslateModule]
+    imports: [MatDialogTitle, MatIconButton, NgIf, MatIcon, MatProgressSpinner, TranslatePipe]
 })
 export class ArchiveViewComponent {
   constructor(

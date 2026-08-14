@@ -8,14 +8,14 @@ import { DialogHeaderComponent } from '../../../../components/dialog-header/dial
 import { MatRipple } from '@angular/material/core';
 import { NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { EmptyTableComponent } from '../../../../components/empty-table/empty-table.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-customer-sales-chart',
     templateUrl: './customer-sales-chart.component.html',
     styleUrls: ['./customer-sales-chart.component.css'],
     animations: [panelAnimation, sortSVGAnimation],
-    imports: [DynamicDialogComponent, DialogHeaderComponent, MatRipple, NgIf, EmptyTableComponent, NgFor, DecimalPipe, TranslateModule]
+    imports: [DynamicDialogComponent, DialogHeaderComponent, MatRipple, NgIf, EmptyTableComponent, NgFor, DecimalPipe, TranslatePipe]
 })
 export class CustomerSalesChartComponent {
   constructor(

@@ -3,7 +3,7 @@ import { StatCard } from '../dashboard.component';
 import { Router, RouterLink } from '@angular/router';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { ReportCompanyComponent } from '../../report/report-company/report-company.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -17,7 +17,7 @@ import { GcpInfoComponent } from '../../../components/gcp-info/gcp-info.componen
     selector: 'app-sales-dashboard',
     templateUrl: './sales-dashboard.component.html',
     styleUrls: ['./sales-dashboard.component.css'],
-    imports: [MatTooltip, RouterLink, MatGridList, NgFor, MatGridTile, StatCardComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, GcpInfoComponent, TranslateModule]
+    imports: [MatTooltip, RouterLink, MatGridList, NgFor, MatGridTile, StatCardComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, GcpInfoComponent, TranslatePipe]
 })
 export class SalesDashboardComponent {
   constructor(

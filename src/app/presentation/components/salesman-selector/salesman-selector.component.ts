@@ -10,13 +10,13 @@ import { NgIf, NgFor } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-salesman-selector',
     templateUrl: './salesman-selector.component.html',
     styleUrls: ['./salesman-selector.component.css'],
-    imports: [DynamicDialogComponent, DialogHeaderComponent, NgIf, MatProgressSpinner, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, TranslateModule]
+    imports: [DynamicDialogComponent, DialogHeaderComponent, NgIf, MatProgressSpinner, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, TranslatePipe]
 })
 export class SalesmanSelectorComponent {
   constructor(

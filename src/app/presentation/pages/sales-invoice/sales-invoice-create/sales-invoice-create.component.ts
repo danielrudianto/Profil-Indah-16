@@ -4,7 +4,7 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Valida
 import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Router } from '@angular/router';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { Subject, debounceTime, of, switchMap, tap } from 'rxjs';
 import { PackageSelectorComponent } from 'src/app/presentation/components/package-selector/package-selector.component';
@@ -39,7 +39,7 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
     selector: 'app-sales-invoice-create',
     templateUrl: './sales-invoice-create.component.html',
     styleUrls: ['./sales-invoice-create.component.css'],
-    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, MatAutocompleteTrigger, MatAutocomplete, NgFor, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, NgIf, NgSwitch, NgSwitchCase, MatDivider, NgxMaskDirective, MatHint, MatIconButton, MatTooltip, EmptyTableComponent, MatPrefix, DecimalPipe, TranslateModule]
+    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, MatAutocompleteTrigger, MatAutocomplete, NgFor, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, NgIf, NgSwitch, NgSwitchCase, MatDivider, NgxMaskDirective, MatHint, MatIconButton, MatTooltip, EmptyTableComponent, MatPrefix, DecimalPipe, TranslatePipe]
 })
 export class SalesInvoiceCreateComponent {
   constructor(

@@ -14,7 +14,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { v4 } from 'uuid';
 import { SubmitConfirmationComponent } from '../../../components/submit-confirmation/submit-confirmation.component';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { of, switchMap } from 'rxjs';
 import { VerticalDividerComponent } from '../../../components/vertical-divider/vertical-divider.component';
 import { BoxStepperComponent } from '../../../components/box-stepper/box-stepper.component';
@@ -33,7 +33,7 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
     selector: 'app-purchase-invoice-create',
     templateUrl: './purchase-invoice-create.component.html',
     styleUrls: ['./purchase-invoice-create.component.css'],
-    imports: [VerticalDividerComponent, BoxStepperComponent, AutocompleteSearchComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatDivider, MatButton, NgIf, NgFor, NgxMaskDirective, MatHint, MatIconButton, MatIcon, MatTooltip, EmptyTableComponent, MatPrefix, DecimalPipe, TranslateModule]
+    imports: [VerticalDividerComponent, BoxStepperComponent, AutocompleteSearchComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatDivider, MatButton, NgIf, NgFor, NgxMaskDirective, MatHint, MatIconButton, MatIcon, MatTooltip, EmptyTableComponent, MatPrefix, DecimalPipe, TranslatePipe]
 })
 export class PurchaseInvoiceCreateComponent {
   constructor(

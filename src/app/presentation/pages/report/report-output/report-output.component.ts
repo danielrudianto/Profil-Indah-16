@@ -29,7 +29,7 @@ import { DecimalPipe, NgIf, NgFor } from '@angular/common';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
 import { saveAs } from 'file-saver';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
 import { TransactionHeaderComponent } from '../../../components/transaction-header/transaction-header.component';
 import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
@@ -50,7 +50,7 @@ import { MatChipListbox, MatChip } from '@angular/material/chips';
         },
         { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
     ],
-    imports: [FeatureBackgroundComponent, TransactionHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, AutocompleteSearchComponent, NgIf, MatChipListbox, NgFor, MatChip, TranslateModule]
+    imports: [FeatureBackgroundComponent, TransactionHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, AutocompleteSearchComponent, NgIf, MatChipListbox, NgFor, MatChip, TranslatePipe]
 })
 export class ReportOutputComponent {
   constructor(
