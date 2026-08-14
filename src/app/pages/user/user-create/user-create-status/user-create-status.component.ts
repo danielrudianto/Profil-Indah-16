@@ -11,7 +11,6 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'app-user-create-status',
     templateUrl: './user-create-status.component.html',
-    styleUrls: ['./user-create-status.component.scss'],
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatDialogActions, MatButton, MatDialogClose]
 })
 export class UserCreateStatusComponent {

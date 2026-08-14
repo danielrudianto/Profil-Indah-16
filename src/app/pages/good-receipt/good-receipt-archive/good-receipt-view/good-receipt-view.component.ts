@@ -18,7 +18,6 @@ import { MatTooltip } from '@angular/material/tooltip';
 @Component({
     selector: 'app-good-receipt-view',
     templateUrl: './good-receipt-view.component.html',
-    styleUrl: './good-receipt-view.component.scss',
     imports: [MatDialogTitle, CdkDrag, CdkDragHandle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, MatTooltip, MatDialogActions, MatDialogClose, DecimalPipe, TranslatePipe]
 })
 export class GoodReceiptViewComponent {

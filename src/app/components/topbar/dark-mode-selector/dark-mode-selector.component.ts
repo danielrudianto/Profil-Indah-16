@@ -8,7 +8,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-dark-mode-selector',
     templateUrl: './dark-mode-selector.component.html',
-    styleUrls: ['./dark-mode-selector.component.scss'],
     imports: [MatSlideToggle, MatTooltip, AsyncPipe, TranslatePipe]
 })
 export class DarkModeSelectorComponent {

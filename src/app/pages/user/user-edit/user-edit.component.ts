@@ -23,7 +23,6 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-user-edit',
     templateUrl: './user-edit.component.html',
-    styleUrls: ['./user-edit.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatSelect, NgFor, MatOption, NgIf, AutocompleteSearchComponent, MatChipSet, MatChip, MatButton, MatIcon, MatDialogActions, MatDialogClose, TranslatePipe]
 })
 export class UserEditComponent {

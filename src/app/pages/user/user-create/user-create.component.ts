@@ -19,7 +19,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-user-create',
     templateUrl: './user-create.component.html',
-    styleUrls: ['./user-create.component.scss'],
     animations: [panelAnimation],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatSelect, NgFor, MatOption, NgIf, AutocompleteSearchComponent, MatChipSet, MatChip, MatDialogActions, MatButton, MatDialogClose, TranslatePipe]
 })

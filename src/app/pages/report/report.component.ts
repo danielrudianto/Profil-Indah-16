@@ -4,7 +4,6 @@ import { RouterOutlet } from '@angular/router';
 @Component({
     selector: 'app-report',
     templateUrl: './report.component.html',
-    styleUrls: ['./report.component.scss'],
     imports: [RouterOutlet]
 })
 export class ReportComponent {

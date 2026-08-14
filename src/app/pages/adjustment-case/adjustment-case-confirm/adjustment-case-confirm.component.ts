@@ -14,7 +14,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-adjustment-case-confirm',
     templateUrl: './adjustment-case-confirm.component.html',
-    styleUrls: ['./adjustment-case-confirm.component.scss'],
     imports: [NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, AvatarComponent, MatPaginator, DatePipe, TranslatePipe]
 })
 export class AdjustmentCaseConfirmComponent {

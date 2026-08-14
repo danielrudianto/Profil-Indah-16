@@ -15,7 +15,6 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'app-price-sales-update',
     templateUrl: './price-sales-update.component.html',
-    styleUrls: ['./price-sales-update.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, NgFor, NgIf, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatDialogActions, MatButton, TranslatePipe]
 })
 export class PriceSalesUpdateComponent {

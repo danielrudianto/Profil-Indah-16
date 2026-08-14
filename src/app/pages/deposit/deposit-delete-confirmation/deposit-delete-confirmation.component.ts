@@ -17,7 +17,6 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'app-deposit-delete-confirmation',
     templateUrl: './deposit-delete-confirmation.component.html',
-    styleUrl: './deposit-delete-confirmation.component.scss',
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatAutocompleteTrigger, MatAutocomplete, NgFor, NgIf, MatDialogActions, MatButton, MatDialogClose, TranslatePipe]
 })
 export class DepositDeleteConfirmationComponent {

@@ -19,7 +19,6 @@ import { GcpInfoComponent } from '../../../components/gcp-info/gcp-info.componen
 @Component({
     selector: 'app-administrator-dashboard',
     templateUrl: './administrator-dashboard.component.html',
-    styleUrls: ['./administrator-dashboard.component.scss'],
     imports: [MatTooltip, RouterLink, MatGridList, NgFor, MatGridTile, StatCardComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, GcpInfoComponent, TranslatePipe]
 })
 export class AdministratorDashboardComponent {

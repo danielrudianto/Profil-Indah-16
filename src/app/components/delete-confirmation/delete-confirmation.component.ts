@@ -8,7 +8,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-delete-confirmation',
     templateUrl: './delete-confirmation.component.html',
-    styleUrls: ['./delete-confirmation.component.scss'],
     imports: [MatDialogTitle, NgIf, CdkScrollable, MatDialogContent, MatDialogActions, MatButton, MatDialogClose, TranslatePipe]
 })
 export class DeleteConfirmationComponent {

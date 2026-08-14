@@ -12,7 +12,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-deposit-confirm-update-payment',
     templateUrl: './deposit-confirm-update-payment.component.html',
-    styleUrl: './deposit-confirm-update-payment.component.scss',
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, MatDialogActions, MatButton, TranslatePipe]
 })
 export class DepositConfirmUpdatePaymentComponent {

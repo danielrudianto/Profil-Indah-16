@@ -15,7 +15,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-overpayment-archive-view',
     templateUrl: './overpayment-archive-view.component.html',
-    styleUrl: './overpayment-archive-view.component.scss',
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatDivider, MatDialogActions, MatButton, MatDialogClose, TranslatePipe]
 })
 export class OverpaymentArchiveViewComponent {

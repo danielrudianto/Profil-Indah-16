@@ -46,7 +46,6 @@ import { MatChipListbox, MatChip } from '@angular/material/chips';
 @Component({
     selector: 'app-report-output',
     templateUrl: './report-output.component.html',
-    styleUrls: ['./report-output.component.scss'],
     providers: [
         {
             provide: DateAdapter,

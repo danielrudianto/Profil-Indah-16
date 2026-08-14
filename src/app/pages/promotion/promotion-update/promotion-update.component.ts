@@ -22,7 +22,6 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-promotion-update',
     templateUrl: './promotion-update.component.html',
-    styleUrl: './promotion-update.component.scss',
     imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, AutocompleteSearchComponent, NgIf, MatChipSet, NgFor, MatChip, MatButton, EmptyTableComponent, NgSwitch, NgSwitchCase, MatIconButton, MatIcon, TranslatePipe]
 })
 export class PromotionUpdateComponent {

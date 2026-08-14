@@ -7,7 +7,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-sales-invoice',
     templateUrl: './sales-invoice.component.html',
-    styleUrls: ['./sales-invoice.component.scss'],
     imports: [FeatureBackgroundComponent, TransactionHeaderComponent, RouterOutlet, TranslatePipe]
 })
 export class SalesInvoiceComponent {

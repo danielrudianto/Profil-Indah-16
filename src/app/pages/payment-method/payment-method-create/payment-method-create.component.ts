@@ -14,7 +14,6 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'app-payment-method-create',
     templateUrl: './payment-method-create.component.html',
-    styleUrls: ['./payment-method-create.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatDialogActions, MatButton, TranslatePipe]
 })
 export class PaymentMethodCreateComponent {

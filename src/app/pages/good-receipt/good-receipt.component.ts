@@ -7,7 +7,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-good-receipt',
     templateUrl: './good-receipt.component.html',
-    styleUrls: ['./good-receipt.component.scss'],
     imports: [FeatureBackgroundComponent, TransactionHeaderComponent, RouterOutlet, TranslatePipe]
 })
 export class GoodReceiptComponent {

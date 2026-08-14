@@ -6,7 +6,6 @@ import { RouterOutlet } from '@angular/router';
 @Component({
     selector: 'app-overpayment',
     templateUrl: './overpayment.component.html',
-    styleUrl: './overpayment.component.scss',
     imports: [FeatureBackgroundComponent, TransactionHeaderComponent, RouterOutlet, TranslatePipe]
 })
 export class OverpaymentComponent {

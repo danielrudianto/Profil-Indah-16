@@ -26,7 +26,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-set-avatar',
     templateUrl: './set-avatar.component.html',
-    styleUrls: ['./set-avatar.component.scss'],
     animations: [panelAnimation],
     imports: [MatDialogTitle, MatIconButton, MatIcon, AvatarComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, ColorPickerComponent, MatSlideToggle, TranslatePipe]
 })

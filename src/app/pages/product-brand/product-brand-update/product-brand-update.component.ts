@@ -13,7 +13,6 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'app-product-brand-update',
     templateUrl: './product-brand-update.component.html',
-    styleUrls: ['./product-brand-update.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatDialogActions, MatButton, TranslatePipe]
 })
 export class ProductBrandUpdateComponent {

@@ -14,7 +14,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-company-create',
     templateUrl: './company-create.component.html',
-    styleUrls: ['./company-create.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatDialogActions, MatButton, TranslatePipe]
 })
 export class CompanyCreateComponent {

@@ -13,7 +13,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-price-purchase',
     templateUrl: './price-purchase.component.html',
-    styleUrls: ['./price-purchase.component.scss'],
     imports: [TransactionHeaderComponent, FeatureSearchComponent, NgIf, NgFor, EmptyTableComponent, MatPaginator, DecimalPipe, TranslatePipe]
 })
 export class PricePurchaseComponent {

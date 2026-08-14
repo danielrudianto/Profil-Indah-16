@@ -17,7 +17,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-supplier',
     templateUrl: './supplier.component.html',
-    styleUrls: ['./supplier.component.scss'],
     imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, EmptyTableComponent, MatProgressSpinner, MatPaginator, NgxMaskPipe, TranslatePipe]
 })
 export class SupplierComponent {

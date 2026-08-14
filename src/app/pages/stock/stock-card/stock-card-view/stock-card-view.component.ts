@@ -12,7 +12,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-stock-card-view',
     templateUrl: './stock-card-view.component.html',
-    styleUrls: ['./stock-card-view.component.scss'],
     imports: [DynamicDialogComponent, DialogHeaderComponent, NgIf, MatProgressSpinner, NgFor, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class StockCardViewComponent {

@@ -7,7 +7,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-adjustment-case',
     templateUrl: './adjustment-case.component.html',
-    styleUrls: ['./adjustment-case.component.scss'],
     imports: [FeatureBackgroundComponent, TransactionHeaderComponent, RouterOutlet, TranslatePipe]
 })
 export class AdjustmentCaseComponent {

@@ -16,7 +16,6 @@ import { GcpInfoComponent } from '../../../components/gcp-info/gcp-info.componen
 @Component({
     selector: 'app-general-dashboard',
     templateUrl: './general-dashboard.component.html',
-    styleUrls: ['./general-dashboard.component.scss'],
     imports: [MatTooltip, RouterLink, MatGridList, NgFor, MatGridTile, StatCardComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, GcpInfoComponent, TranslatePipe]
 })
 export class GeneralDashboardComponent {

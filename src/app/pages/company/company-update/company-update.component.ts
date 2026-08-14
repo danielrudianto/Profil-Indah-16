@@ -16,7 +16,6 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-company-update',
     templateUrl: './company-update.component.html',
-    styleUrls: ['./company-update.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatButton, MatIcon, MatDialogActions, TranslatePipe]
 })
 export class CompanyUpdateComponent {

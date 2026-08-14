@@ -13,7 +13,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-product-type-create',
     templateUrl: './product-type-create.component.html',
-    styleUrls: ['./product-type-create.component.scss'],
     imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatButton, TranslatePipe]
 })
 export class ProductTypeCreateComponent {

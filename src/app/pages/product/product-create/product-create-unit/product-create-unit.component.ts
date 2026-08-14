@@ -11,7 +11,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-product-create-unit',
     templateUrl: './product-create-unit.component.html',
-    styleUrl: './product-create-unit.component.scss',
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatDialogActions, MatButton, TranslatePipe]
 })
 export class ProductCreateUnitComponent {

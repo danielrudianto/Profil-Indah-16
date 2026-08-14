@@ -16,7 +16,6 @@ import { GcpInfoComponent } from '../../../components/gcp-info/gcp-info.componen
 @Component({
     selector: 'app-sales-dashboard',
     templateUrl: './sales-dashboard.component.html',
-    styleUrls: ['./sales-dashboard.component.scss'],
     imports: [MatTooltip, RouterLink, MatGridList, NgFor, MatGridTile, StatCardComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, GcpInfoComponent, TranslatePipe]
 })
 export class SalesDashboardComponent {

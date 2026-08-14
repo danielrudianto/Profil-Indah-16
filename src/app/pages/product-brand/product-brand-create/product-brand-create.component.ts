@@ -13,7 +13,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-product-brand-create',
     templateUrl: './product-brand-create.component.html',
-    styleUrls: ['./product-brand-create.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatDialogActions, MatButton, TranslatePipe]
 })
 export class ProductBrandCreateComponent {

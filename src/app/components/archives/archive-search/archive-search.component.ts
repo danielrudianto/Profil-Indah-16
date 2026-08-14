@@ -10,7 +10,6 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'app-archive-search',
     templateUrl: './archive-search.component.html',
-    styleUrls: ['./archive-search.component.scss'],
     imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatIconButton, MatSuffix, MatIcon]
 })
 export class ArchiveSearchComponent {

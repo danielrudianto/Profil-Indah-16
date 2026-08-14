@@ -16,7 +16,6 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
 @Component({
     selector: 'app-package-update',
     templateUrl: './package-update.component.html',
-    styleUrls: ['./package-update.component.scss'],
     imports: [NgIf, MatProgressSpinner, VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgxMaskDirective, NgFor, MatHint, EmptyTableComponent, DecimalPipe, TranslatePipe]
 })
 export class PackageUpdateComponent {

@@ -11,7 +11,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-good-receipt-archive-filter',
     templateUrl: './good-receipt-archive-filter.component.html',
-    styleUrls: ['./good-receipt-archive-filter.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatDateRangeInput, MatStartDate, MatEndDate, MatHint, MatDatepickerToggle, MatSuffix, MatDateRangePicker, MatDivider, MatChipListbox, MatChipOption, MatDialogActions, TranslatePipe]
 })
 export class GoodReceiptArchiveFilterComponent {

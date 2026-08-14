@@ -19,7 +19,6 @@ import { MatIconButton } from '@angular/material/button';
 @Component({
     selector: 'app-autocomplete-search',
     templateUrl: './autocomplete-search.component.html',
-    styleUrls: ['./autocomplete-search.component.scss'],
     imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatAutocompleteTrigger, MatAutocomplete, NgIf, MatOption, NgFor, MatIcon, MatPrefix, MatIconButton, MatSuffix]
 })
 export class AutocompleteSearchComponent {

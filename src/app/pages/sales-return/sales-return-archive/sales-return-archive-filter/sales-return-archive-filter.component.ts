@@ -12,7 +12,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-sales-return-archive-filter',
     templateUrl: './sales-return-archive-filter.component.html',
-    styleUrls: ['./sales-return-archive-filter.component.scss'],
     imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatDateRangeInput, MatStartDate, MatEndDate, MatHint, MatDatepickerToggle, MatSuffix, MatDateRangePicker, MatDivider, MatChipListbox, MatChipOption, MatDialogActions, MatButton, TranslatePipe]
 })
 export class SalesReturnArchiveFilterComponent {

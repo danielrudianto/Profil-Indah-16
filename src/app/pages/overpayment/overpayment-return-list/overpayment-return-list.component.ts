@@ -16,7 +16,6 @@ import { EmptyTableComponent } from '../../../components/empty-table/empty-table
 @Component({
     selector: 'app-overpayment-return-list',
     templateUrl: './overpayment-return-list.component.html',
-    styleUrl: './overpayment-return-list.component.scss',
     imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, DecimalPipe, DatePipe, TranslatePipe]
 })
 export class OverpaymentReturnListComponent {

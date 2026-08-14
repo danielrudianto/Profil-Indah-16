@@ -5,7 +5,6 @@ import { RouterOutlet } from '@angular/router';
 @Component({
     selector: 'app-price',
     templateUrl: './price.component.html',
-    styleUrls: ['./price.component.scss'],
     imports: [FeatureBackgroundComponent, RouterOutlet]
 })
 export class PriceComponent {
