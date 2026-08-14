@@ -1255,5 +1255,339 @@
   "accent-selector__green": "Green",
   "accent-selector__rose": "Rose",
   "accent-selector__orange": "Orange",
-  "accent-selector__slate": "Slate"
+  "accent-selector__slate": "Slate",
+  "error": {
+    "auth": "Auth error",
+    "notFound": "Not found",
+    "unknown": "Unknown error",
+    "parameter": "Parameter error",
+    "delete": "Delete error",
+    "duplicate": "Duplicate error",
+    "internalServer": "Internal server error",
+    "unableToDelete": "Unable to delete",
+    "noChanges": "No changes"
+  },
+  "validation": {
+    "id": {
+      "required": "ID is required",
+      "numeric": "ID must be numeric",
+      "integer": "ID must be integer"
+    },
+    "uuid": {
+      "required": "UUID required"
+    },
+    "name": {
+      "required": "Name required"
+    },
+    "address": {
+      "required": "Address required"
+    },
+    "date": {
+      "required": "Date required"
+    },
+    "quantity": {
+      "required": "Quantity is required",
+      "numeric": "Quantity must be numeric"
+    },
+    "price": {
+      "required": "Price is required",
+      "numeric": "Price must be numeric"
+    },
+    "discount": {
+      "required": "Discount required",
+      "numeric": "Discount must be numeric",
+      "greaterThanPrice": "Discount > price"
+    },
+    "amount": {
+      "required": "Amount is required",
+      "numeric": "Amount must be numeric"
+    },
+    "keyword": {
+      "required": "Keyword is required"
+    },
+    "item": {
+      "required": "Item is required",
+      "idRequired": "Item ID required",
+      "idNumeric": "Item ID must be numeric"
+    },
+    "day": {
+      "required": "Day is required",
+      "numeric": "Day must be numeric"
+    },
+    "month": {
+      "required": "Month is required",
+      "numeric": "Month must be numeric"
+    },
+    "year": {
+      "required": "Year is required",
+      "numeric": "Year must be numeric"
+    },
+    "page": {
+      "required": "Page is required",
+      "numeric": "Page must be numeric"
+    },
+    "pageSize": {
+      "required": "Page size is required",
+      "numeric": "Page size must be numeric"
+    },
+    "sortBy": {
+      "required": "Sort by required"
+    },
+    "sortDirection": {
+      "invalid": "Sort direction only supports ascending or descending"
+    },
+    "archives": {
+      "parameter": "Archives parameter error"
+    },
+    "supplier": {
+      "nameTooLong": "Supplier name too long",
+      "npwpTooLong": "Supplier NPWP too long",
+      "idRequired": "Supplier ID is required",
+      "idNumeric": "Supplier ID must be numeric"
+    },
+    "customer": {
+      "nameTooLong": "Customer name too long",
+      "picTooLong": "Customer PIC too long",
+      "addressTooLong": "Customer address too long",
+      "nameRequired": "Customer name is required",
+      "picRequired": "Customer PIC is required",
+      "phoneRequired": "Customer phone number is required",
+      "addressRequired": "Customer address is required",
+      "npwpRequired": "Customer NPWP is required",
+      "idRequired": "Customer ID is required",
+      "idInteger": "CUstomer ID must be integer"
+    },
+    "company": {
+      "nameTooLong": "Company name too long",
+      "idRequired": "Company ID required"
+    },
+    "paymentMethod": {
+      "nameTooLong": "Payment method name too long",
+      "required": "Payment method required",
+      "numeric": "Payment method must be numeric"
+    },
+    "brand": {
+      "nameTooLong": "Brand name too long",
+      "required": "Brand is required",
+      "array": "Brand must be an array",
+      "integer": "Brand must be an integer"
+    },
+    "productType": {
+      "nameTooLong": "Product type name too long"
+    },
+    "expenseType": {
+      "nameTooLong": "Expense type name too long",
+      "nameRequired": "Expense type name is required",
+      "descriptionRequired": "Expense type description is required"
+    },
+    "product": {
+      "referenceTooLong": "Product reference too long",
+      "descriptionTooLong": "Product description too long",
+      "referenceRequired": "Product reference is required",
+      "descriptionRequired": "Product description is required",
+      "brandRequired": "Product brand is required",
+      "typeRequired": "Product type is required",
+      "unitRequired": "Product unit is required",
+      "minimumStockRequired": "Product minimum stock is required",
+      "idRequired": "Product ID is required",
+      "unitIdRequired": "Product unit ID is required",
+      "idNumeric": "Product ID must be numeric",
+      "unitArray": "Product unit must be an array"
+    },
+    "goodReceipt": {
+      "nameTooLong": "Good receipt name too long",
+      "required": "Good receipt required",
+      "idRequired": "Good receipt ID required",
+      "array": "Good receipt must be array"
+    },
+    "invoice": {
+      "nameTooLong": "Invoice name too long",
+      "nameRequired": "Invoice name required",
+      "taxRequired": "Tax invoice required"
+    },
+    "package": {
+      "nameTooLong": "Package name too long",
+      "descriptionTooLong": "Package description too long",
+      "itemIdRequired": "Package item id required",
+      "itemUnitIdRequired": "Package item unit id required",
+      "itemQuantityRequired": "Package item quantity required",
+      "itemPriceRequired": "Package item price required",
+      "itemDiscountRequired": "Package item discount required",
+      "idRequired": "Package ID is required",
+      "idNumeric": "Package ID must be numeric",
+      "nameRequired": "Package name required",
+      "descriptionRequired": "Package description required",
+      "itemsRequired": "Package items required"
+    },
+    "user": {
+      "nameTooLong": "User name too long",
+      "nikTooLong": "User NIK too long"
+    },
+    "username": {
+      "tooLong": "Username too long",
+      "required": "Username is required"
+    },
+    "password": {
+      "required": "Password is required"
+    },
+    "userRole": {
+      "required": "User role required"
+    },
+    "type": {
+      "required": "Type is required",
+      "array": "Type must be an array",
+      "integer": "Type must be an integer"
+    },
+    "salesman": {
+      "nameRequired": "Salesman name required"
+    },
+    "purchaseInvoice": {
+      "nameRequired": "Purchase invoice name required"
+    },
+    "paymentStatus": {
+      "required": "Payment status is required"
+    },
+    "payment": {
+      "required": "Payment is required",
+      "array": "Payment must be an array",
+      "dateRequired": "Payment date is required"
+    },
+    "delivery": {
+      "required": "Delivery required",
+      "numeric": "Delivery must be numeric"
+    },
+    "service": {
+      "required": "Service required",
+      "numeric": "Service must be numeric"
+    },
+    "salesInvoice": {
+      "itemArray": "Sales invoice item must be an array",
+      "idRequired": "Sales invoice ID is required",
+      "idNumeric": "Sales invoice ID must be numeric"
+    },
+    "salesReturn": {
+      "itemsRequired": "Sales return items required"
+    },
+    "adjustmentCase": {
+      "typeRequired": "Adjustment case type is required",
+      "companyIdRequired": "Adjustment case company ID is required",
+      "lostTypeBoolean": "Adjustment case lost type must be boolean",
+      "foundTypeBoolean": "Adjustment case found type must be boolean"
+    },
+    "promotion": {
+      "nameRequired": "Promotion name required",
+      "descriptionRequired": "Promotion description required",
+      "startDateRequired": "Promotion start date required",
+      "endDateRequired": "Promotion end date required",
+      "targetRequired": "Promotion target required",
+      "targetNumeric": "Promotion target must be numeric",
+      "brandRequired": "Promotion brand is required",
+      "brandArray": "Promotion brand must be an array"
+    },
+    "viewByMutation": {
+      "required": "View by mutation required",
+      "invalid": "View by mutation must be either document date or creation date"
+    },
+    "return": {
+      "dateRequired": "Return date is required",
+      "nameRequired": "Return name is required",
+      "paymentMethodRequired": "Return payment method is required",
+      "paymentMethodInvalid": "Return payment method must be either Cash or Transfer",
+      "paymentNameRequired": "Return payment name is required",
+      "paymentBankRequired": "Return payment bank is required",
+      "paymentNumberRequired": "Return payment number is required"
+    }
+  },
+  "user": {
+    "notActive": "User not active",
+    "notFound": "User not found",
+    "alreadyExists": "User already exist",
+    "roleNotFound": "Role not found"
+  },
+  "product": {
+    "notFound": "Product not found",
+    "unitNotFound": "Product unit not found",
+    "packageNotFound": "Product package not found",
+    "cannotBeDeleted": "Product cannot be deleted",
+    "referenceDuplicate": "Reference unique constraint"
+  },
+  "brand": {
+    "duplicate": "Brand unique constraint"
+  },
+  "type": {
+    "notFound": "Type not found"
+  },
+  "salesman": {
+    "alreadyExists": "Salesman already exists",
+    "notFound": "Salesman not found"
+  },
+  "customer": {
+    "notFound": "Customer not found"
+  },
+  "supplier": {
+    "hasBeenUsed": "Supplier has been used"
+  },
+  "invoice": {
+    "alreadyConfirmed": "Invoice already confirmed",
+    "alreadyDeleted": "Invoice already deleted",
+    "notFound": "Invoice not found",
+    "billExists": "Bill exists"
+  },
+  "purchaseInvoice": {
+    "notFound": "Purchase invoice not found",
+    "alreadyConfirmed": "Purchase invoice already confirmed",
+    "alreadyDeleted": "Purchase invoice already deleted"
+  },
+  "goodReceipt": {
+    "notFound": "Good receipt not found",
+    "alreadyConfirmed": "Good receipt already confirmed",
+    "alreadyDeleted": "Good receipt already deleted",
+    "notConfirmed": "Good receipt not confirmed",
+    "creationFailed": "Good receipt creation failed"
+  },
+  "salesInvoice": {
+    "documentCreationFailed": "Sales invoice creation faled",
+    "creationFailed": "Sales invoice creation failed",
+    "notFound": "Sales invoice not found",
+    "paymentExceedsValue": "Sales invoice payment is greater than value",
+    "paymentNotFound": "Sales invoice payment not found"
+  },
+  "receivable": {
+    "exceedsSalesInvoice": "Receivable exceed sales invoice"
+  },
+  "salesReturn": {
+    "alreadyExists": "Sales return exists",
+    "alreadyDeleted": "Sales return already deleted",
+    "creationFailed": "Sales return creation failed",
+    "exceedsPurchased": "Sales return insufficient",
+    "blocksInvoiceDeletion": "Delete bill sales return constraint"
+  },
+  "salesDeposit": {
+    "creationFailed": "Sales deposit creation failed",
+    "notFound": "Sales deposit not found",
+    "paymentExceedsValue": "Sales deposit payment is greater than value",
+    "alreadyConfirmed": "Deposit already confirmed"
+  },
+  "adjustmentCase": {
+    "notFound": "Adjustment case not found",
+    "notConfirmed": "Adjustment case has not been confirmed",
+    "alreadyConfirmed": "Adjustment case has been confirmed",
+    "alreadyDeleted": "Adjustment case has been deleted"
+  },
+  "expense": {
+    "notFound": "Expense not found"
+  },
+  "expenseType": {
+    "notFound": "Expense type not found",
+    "hasChild": "Expense type has child"
+  },
+  "promotion": {
+    "notFound": "Promotion not found"
+  },
+  "status": {
+    "invalidUpdate": "Invalid status update"
+  },
+  "report": {
+    "invalidGroup": "Invalid group report"
+  }
 }
