@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 @Component({
-  selector: 'app-overpayment',
-  templateUrl: './overpayment.component.html',
-  styleUrl: './overpayment.component.css',
+    selector: 'app-overpayment',
+    templateUrl: './overpayment.component.html',
+    styleUrl: './overpayment.component.css',
+    standalone: false
 })
 export class OverpaymentComponent {
   constructor(private translateService: TranslateService) {}

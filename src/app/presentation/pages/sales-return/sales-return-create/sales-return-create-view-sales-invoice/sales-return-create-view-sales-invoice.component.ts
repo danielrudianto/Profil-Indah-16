@@ -5,10 +5,11 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-sales-return-create-view-sales-invoice',
-  templateUrl: './sales-return-create-view-sales-invoice.component.html',
-  styleUrls: ['./sales-return-create-view-sales-invoice.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-sales-return-create-view-sales-invoice',
+    templateUrl: './sales-return-create-view-sales-invoice.component.html',
+    styleUrls: ['./sales-return-create-view-sales-invoice.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class SalesReturnCreateViewSalesInvoiceComponent {
   constructor(

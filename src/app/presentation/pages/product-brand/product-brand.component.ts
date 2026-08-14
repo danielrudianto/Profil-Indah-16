@@ -11,9 +11,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
-  selector: 'app-product-brand',
-  templateUrl: './product-brand.component.html',
-  styleUrls: ['./product-brand.component.css'],
+    selector: 'app-product-brand',
+    templateUrl: './product-brand.component.html',
+    styleUrls: ['./product-brand.component.css'],
+    standalone: false
 })
 export class ProductBrandComponent {
   constructor(

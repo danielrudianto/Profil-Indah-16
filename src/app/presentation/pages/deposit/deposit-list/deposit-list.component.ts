@@ -8,9 +8,10 @@ import { AlertService } from '../../../../services/alert.service';
 import { debounceTime } from 'rxjs';
 
 @Component({
-  selector: 'app-deposit-list',
-  templateUrl: './deposit-list.component.html',
-  styleUrls: ['./deposit-list.component.css'],
+    selector: 'app-deposit-list',
+    templateUrl: './deposit-list.component.html',
+    styleUrls: ['./deposit-list.component.css'],
+    standalone: false
 })
 export class DepositListComponent {
   constructor(

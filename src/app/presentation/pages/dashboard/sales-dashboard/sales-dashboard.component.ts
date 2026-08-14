@@ -8,9 +8,10 @@ import { ReportCompanyComponent } from '../../report/report-company/report-compa
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-sales-dashboard',
-  templateUrl: './sales-dashboard.component.html',
-  styleUrls: ['./sales-dashboard.component.css'],
+    selector: 'app-sales-dashboard',
+    templateUrl: './sales-dashboard.component.html',
+    styleUrls: ['./sales-dashboard.component.css'],
+    standalone: false
 })
 export class SalesDashboardComponent {
   constructor(

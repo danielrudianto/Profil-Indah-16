@@ -9,9 +9,10 @@ import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-general-dashboard',
-  templateUrl: './general-dashboard.component.html',
-  styleUrls: ['./general-dashboard.component.css'],
+    selector: 'app-general-dashboard',
+    templateUrl: './general-dashboard.component.html',
+    styleUrls: ['./general-dashboard.component.css'],
+    standalone: false
 })
 export class GeneralDashboardComponent {
   constructor(

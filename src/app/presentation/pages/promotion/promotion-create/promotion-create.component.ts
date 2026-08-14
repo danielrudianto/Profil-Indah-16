@@ -8,9 +8,10 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { PromotionCreateRuleComponent } from '../promotion-create-rule/promotion-create-rule.component';
 
 @Component({
-  selector: 'app-promotion-create',
-  templateUrl: './promotion-create.component.html',
-  styleUrls: ['./promotion-create.component.css'],
+    selector: 'app-promotion-create',
+    templateUrl: './promotion-create.component.html',
+    styleUrls: ['./promotion-create.component.css'],
+    standalone: false
 })
 export class PromotionCreateComponent {
   constructor(

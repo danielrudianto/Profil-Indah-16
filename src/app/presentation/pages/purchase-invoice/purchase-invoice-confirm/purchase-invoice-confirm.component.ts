@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-purchase-invoice-confirm',
-  templateUrl: './purchase-invoice-confirm.component.html',
-  styleUrls: ['./purchase-invoice-confirm.component.css'],
+    selector: 'app-purchase-invoice-confirm',
+    templateUrl: './purchase-invoice-confirm.component.html',
+    styleUrls: ['./purchase-invoice-confirm.component.css'],
+    standalone: false
 })
 export class PurchaseInvoiceConfirmComponent {
   dataSource: any[] = [];

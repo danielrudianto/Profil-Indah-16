@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-good-receipt',
-  templateUrl: './good-receipt.component.html',
-  styleUrls: ['./good-receipt.component.css'],
+    selector: 'app-good-receipt',
+    templateUrl: './good-receipt.component.html',
+    styleUrls: ['./good-receipt.component.css'],
+    standalone: false
 })
 export class GoodReceiptComponent {
   availbleMenus = [

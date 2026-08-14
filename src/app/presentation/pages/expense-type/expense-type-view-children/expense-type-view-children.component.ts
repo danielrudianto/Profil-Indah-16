@@ -17,10 +17,11 @@ import {
 import { ExpenseTypeCreateComponent } from '../expense-type-create/expense-type-create.component';
 
 @Component({
-  selector: 'app-expense-type-view-children',
-  templateUrl: './expense-type-view-children.component.html',
-  styleUrls: ['./expense-type-view-children.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-expense-type-view-children',
+    templateUrl: './expense-type-view-children.component.html',
+    styleUrls: ['./expense-type-view-children.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class ExpenseTypeViewChildrenComponent {
   constructor(

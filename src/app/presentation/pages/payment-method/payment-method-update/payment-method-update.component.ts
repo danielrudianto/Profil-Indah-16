@@ -12,9 +12,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-payment-method-update',
-  templateUrl: './payment-method-update.component.html',
-  styleUrls: ['./payment-method-update.component.css'],
+    selector: 'app-payment-method-update',
+    templateUrl: './payment-method-update.component.html',
+    styleUrls: ['./payment-method-update.component.css'],
+    standalone: false
 })
 export class PaymentMethodUpdateComponent {
   constructor(

@@ -3,9 +3,10 @@ import { Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-purchase-chart',
-  templateUrl: './purchase-chart.component.html',
-  styleUrls: ['./purchase-chart.component.css'],
+    selector: 'app-purchase-chart',
+    templateUrl: './purchase-chart.component.html',
+    styleUrls: ['./purchase-chart.component.css'],
+    standalone: false
 })
 export class PurchaseChartComponent {
   constructor(

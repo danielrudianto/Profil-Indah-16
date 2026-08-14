@@ -13,10 +13,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { SalesInvoiceViewComponent } from '../../sales-invoice/sales-invoice-archive/sales-invoice-view/sales-invoice-view.component';
 
 @Component({
-  selector: 'app-receivable-view',
-  templateUrl: './receivable-view.component.html',
-  styleUrls: ['./receivable-view.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-receivable-view',
+    templateUrl: './receivable-view.component.html',
+    styleUrls: ['./receivable-view.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class ReceivableViewComponent {
   constructor(

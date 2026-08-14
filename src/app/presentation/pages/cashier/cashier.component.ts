@@ -7,9 +7,10 @@ import { DynamicComponentService } from '../../../services/dynamic-component.ser
 import { CashierViewBillComponent } from './cashier-view-bill/cashier-view-bill.component';
 
 @Component({
-  selector: 'app-cashier',
-  templateUrl: './cashier.component.html',
-  styleUrls: ['./cashier.component.css'],
+    selector: 'app-cashier',
+    templateUrl: './cashier.component.html',
+    styleUrls: ['./cashier.component.css'],
+    standalone: false
 })
 export class CashierComponent {
   constructor(

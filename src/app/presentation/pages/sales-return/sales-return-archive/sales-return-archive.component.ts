@@ -13,10 +13,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { SalesReturnArchiveViewComponent } from './sales-return-archive-view/sales-return-archive-view.component';
 
 @Component({
-  selector: 'app-sales-return-archive',
-  templateUrl: './sales-return-archive.component.html',
-  styleUrls: ['./sales-return-archive.component.css'],
-  animations: [slideInOutAnimation],
+    selector: 'app-sales-return-archive',
+    templateUrl: './sales-return-archive.component.html',
+    styleUrls: ['./sales-return-archive.component.css'],
+    animations: [slideInOutAnimation],
+    standalone: false
 })
 export class SalesReturnArchiveComponent {
   constructor(

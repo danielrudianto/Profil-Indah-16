@@ -13,10 +13,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { GoodReceiptViewComponent } from './good-receipt-view/good-receipt-view.component';
 
 @Component({
-  selector: 'app-good-receipt-archive',
-  templateUrl: './good-receipt-archive.component.html',
-  styleUrls: ['./good-receipt-archive.component.css'],
-  animations: [slideInOutAnimation],
+    selector: 'app-good-receipt-archive',
+    templateUrl: './good-receipt-archive.component.html',
+    styleUrls: ['./good-receipt-archive.component.css'],
+    animations: [slideInOutAnimation],
+    standalone: false
 })
 export class GoodReceiptArchiveComponent {
   constructor(

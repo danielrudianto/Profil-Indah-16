@@ -11,10 +11,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { PurchaseInvoiceViewComponent } from './purchase-invoice-view/purchase-invoice-view.component';
 
 @Component({
-  selector: 'app-purchase-invoice-archive',
-  templateUrl: './purchase-invoice-archive.component.html',
-  styleUrls: ['./purchase-invoice-archive.component.css'],
-  animations: [slideInOutAnimation],
+    selector: 'app-purchase-invoice-archive',
+    templateUrl: './purchase-invoice-archive.component.html',
+    styleUrls: ['./purchase-invoice-archive.component.css'],
+    animations: [slideInOutAnimation],
+    standalone: false
 })
 export class PurchaseInvoiceArchiveComponent {
   constructor(

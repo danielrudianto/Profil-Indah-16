@@ -6,9 +6,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-company-create',
-  templateUrl: './company-create.component.html',
-  styleUrls: ['./company-create.component.css'],
+    selector: 'app-company-create',
+    templateUrl: './company-create.component.html',
+    styleUrls: ['./company-create.component.css'],
+    standalone: false
 })
 export class CompanyCreateComponent {
   constructor(

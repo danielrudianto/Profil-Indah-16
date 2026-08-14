@@ -11,9 +11,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { DeleteConfirmationComponent } from '../../components/delete-confirmation/delete-confirmation.component';
 
 @Component({
-  selector: 'app-product-type',
-  templateUrl: './product-type.component.html',
-  styleUrls: ['./product-type.component.css'],
+    selector: 'app-product-type',
+    templateUrl: './product-type.component.html',
+    styleUrls: ['./product-type.component.css'],
+    standalone: false
 })
 export class ProductTypeComponent {
   constructor(

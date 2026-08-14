@@ -8,9 +8,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-payment-method-create',
-  templateUrl: './payment-method-create.component.html',
-  styleUrls: ['./payment-method-create.component.css'],
+    selector: 'app-payment-method-create',
+    templateUrl: './payment-method-create.component.html',
+    styleUrls: ['./payment-method-create.component.css'],
+    standalone: false
 })
 export class PaymentMethodCreateComponent {
   constructor(

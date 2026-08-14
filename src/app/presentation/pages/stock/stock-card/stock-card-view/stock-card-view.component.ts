@@ -5,9 +5,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-stock-card-view',
-  templateUrl: './stock-card-view.component.html',
-  styleUrls: ['./stock-card-view.component.css'],
+    selector: 'app-stock-card-view',
+    templateUrl: './stock-card-view.component.html',
+    styleUrls: ['./stock-card-view.component.css'],
+    standalone: false
 })
 export class StockCardViewComponent {
   constructor(

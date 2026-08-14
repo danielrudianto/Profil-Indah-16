@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-expense',
-  templateUrl: './expense.component.html',
-  styleUrls: ['./expense.component.css'],
+    selector: 'app-expense',
+    templateUrl: './expense.component.html',
+    styleUrls: ['./expense.component.css'],
+    standalone: false
 })
 export class ExpenseComponent {
   availbleMenus = [

@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-stat-card',
-  templateUrl: './stat-card.component.html',
-  styleUrls: ['./stat-card.component.css'],
+    selector: 'app-stat-card',
+    templateUrl: './stat-card.component.html',
+    styleUrls: ['./stat-card.component.css'],
+    standalone: false
 })
 export class StatCardComponent {
   @Input('title') title!: string;

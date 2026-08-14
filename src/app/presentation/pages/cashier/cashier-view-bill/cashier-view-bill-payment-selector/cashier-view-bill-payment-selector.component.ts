@@ -5,9 +5,10 @@ import {
 } from '@angular/material/bottom-sheet';
 
 @Component({
-  selector: 'app-cashier-view-bill-payment-selector',
-  templateUrl: './cashier-view-bill-payment-selector.component.html',
-  styleUrls: ['./cashier-view-bill-payment-selector.component.css'],
+    selector: 'app-cashier-view-bill-payment-selector',
+    templateUrl: './cashier-view-bill-payment-selector.component.html',
+    styleUrls: ['./cashier-view-bill-payment-selector.component.css'],
+    standalone: false
 })
 export class CashierViewBillPaymentSelectorComponent {
   constructor(

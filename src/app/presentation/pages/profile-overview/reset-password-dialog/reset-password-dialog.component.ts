@@ -6,9 +6,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-reset-password-dialog',
-  templateUrl: './reset-password-dialog.component.html',
-  styleUrls: ['./reset-password-dialog.component.css'],
+    selector: 'app-reset-password-dialog',
+    templateUrl: './reset-password-dialog.component.html',
+    styleUrls: ['./reset-password-dialog.component.css'],
+    standalone: false
 })
 export class ResetPasswordDialogComponent {
   constructor(

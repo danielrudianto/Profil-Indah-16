@@ -7,9 +7,10 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { PaymentMethodUpdateComponent } from './payment-method-update/payment-method-update.component';
 
 @Component({
-  selector: 'app-payment-method',
-  templateUrl: './payment-method.component.html',
-  styleUrls: ['./payment-method.component.css'],
+    selector: 'app-payment-method',
+    templateUrl: './payment-method.component.html',
+    styleUrls: ['./payment-method.component.css'],
+    standalone: false
 })
 export class PaymentMethodComponent {
   constructor(

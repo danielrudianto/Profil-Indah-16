@@ -7,9 +7,10 @@ import { CustomerUpdateComponent } from './customer-update/customer-update.compo
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-customer',
-  templateUrl: './customer.component.html',
-  styleUrls: ['./customer.component.css'],
+    selector: 'app-customer',
+    templateUrl: './customer.component.html',
+    styleUrls: ['./customer.component.css'],
+    standalone: false
 })
 export class CustomerComponent {
   constructor(

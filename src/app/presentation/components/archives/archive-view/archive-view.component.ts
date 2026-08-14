@@ -18,11 +18,12 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
-  selector: 'app-archive-view',
-  templateUrl: './archive-view.component.html',
-  styleUrls: ['./archive-view.component.css'],
-  animations: [panelAnimation],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-archive-view',
+    templateUrl: './archive-view.component.html',
+    styleUrls: ['./archive-view.component.css'],
+    animations: [panelAnimation],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ArchiveViewComponent {
   constructor(

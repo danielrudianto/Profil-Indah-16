@@ -4,9 +4,10 @@ import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-topbar',
-  templateUrl: './topbar.component.html',
-  styleUrls: ['./topbar.component.css'],
+    selector: 'app-topbar',
+    templateUrl: './topbar.component.html',
+    styleUrls: ['./topbar.component.css'],
+    standalone: false
 })
 export class TopbarComponent {
   constructor(private router: Router, private authService: AuthService) {}

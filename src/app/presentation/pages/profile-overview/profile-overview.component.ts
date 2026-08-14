@@ -7,9 +7,10 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { SetAvatarComponent } from '../set-avatar/set-avatar.component';
 
 @Component({
-  selector: 'app-profile-overview',
-  templateUrl: './profile-overview.component.html',
-  styleUrls: ['./profile-overview.component.css'],
+    selector: 'app-profile-overview',
+    templateUrl: './profile-overview.component.html',
+    styleUrls: ['./profile-overview.component.css'],
+    standalone: false
 })
 export class ProfileOverviewComponent {
   constructor(

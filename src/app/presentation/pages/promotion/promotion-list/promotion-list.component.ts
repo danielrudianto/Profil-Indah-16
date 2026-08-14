@@ -11,9 +11,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { PromotionResultComponent } from '../promotion-result/promotion-result.component';
 
 @Component({
-  selector: 'app-promotion-list',
-  templateUrl: './promotion-list.component.html',
-  styleUrl: './promotion-list.component.css',
+    selector: 'app-promotion-list',
+    templateUrl: './promotion-list.component.html',
+    styleUrl: './promotion-list.component.css',
+    standalone: false
 })
 export class PromotionListComponent {
   constructor(

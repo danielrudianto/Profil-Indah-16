@@ -4,9 +4,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-report-inventory',
-  templateUrl: './report-inventory.component.html',
-  styleUrls: ['./report-inventory.component.css'],
+    selector: 'app-report-inventory',
+    templateUrl: './report-inventory.component.html',
+    styleUrls: ['./report-inventory.component.css'],
+    standalone: false
 })
 export class ReportInventoryComponent {
   isOpened: boolean = false;

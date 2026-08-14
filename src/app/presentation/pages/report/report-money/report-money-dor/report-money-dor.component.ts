@@ -9,9 +9,10 @@ import {
 } from '@angular/material/datepicker';
 
 @Component({
-  selector: 'app-report-money-dor',
-  templateUrl: './report-money-dor.component.html',
-  styleUrl: './report-money-dor.component.css',
+    selector: 'app-report-money-dor',
+    templateUrl: './report-money-dor.component.html',
+    styleUrl: './report-money-dor.component.css',
+    standalone: false
 })
 export class ReportMoneyDorComponent {
   constructor(

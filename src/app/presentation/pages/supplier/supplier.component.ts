@@ -7,9 +7,10 @@ import { SupplierUpdateComponent } from './supplier-update/supplier-update.compo
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-supplier',
-  templateUrl: './supplier.component.html',
-  styleUrls: ['./supplier.component.css'],
+    selector: 'app-supplier',
+    templateUrl: './supplier.component.html',
+    styleUrls: ['./supplier.component.css'],
+    standalone: false
 })
 export class SupplierComponent {
   constructor(

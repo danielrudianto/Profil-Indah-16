@@ -4,9 +4,10 @@ import { MatChipSelectionChange } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-good-receipt-archive-filter',
-  templateUrl: './good-receipt-archive-filter.component.html',
-  styleUrls: ['./good-receipt-archive-filter.component.css'],
+    selector: 'app-good-receipt-archive-filter',
+    templateUrl: './good-receipt-archive-filter.component.html',
+    styleUrls: ['./good-receipt-archive-filter.component.css'],
+    standalone: false
 })
 export class GoodReceiptArchiveFilterComponent {
   constructor(

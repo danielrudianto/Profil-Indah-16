@@ -5,10 +5,11 @@ import { sortSVGAnimation } from 'src/app/animations/sort-svg.animation';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-customer-sales-chart',
-  templateUrl: './customer-sales-chart.component.html',
-  styleUrls: ['./customer-sales-chart.component.css'],
-  animations: [panelAnimation, sortSVGAnimation],
+    selector: 'app-customer-sales-chart',
+    templateUrl: './customer-sales-chart.component.html',
+    styleUrls: ['./customer-sales-chart.component.css'],
+    animations: [panelAnimation, sortSVGAnimation],
+    standalone: false
 })
 export class CustomerSalesChartComponent {
   constructor(

@@ -7,9 +7,10 @@ import { CompanyUpdateComponent } from './company-update/company-update.componen
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-company',
-  templateUrl: './company.component.html',
-  styleUrls: ['./company.component.css'],
+    selector: 'app-company',
+    templateUrl: './company.component.html',
+    styleUrls: ['./company.component.css'],
+    standalone: false
 })
 export class CompanyComponent {
   constructor(private authService: AuthService, private dialog: MatDialog) {}

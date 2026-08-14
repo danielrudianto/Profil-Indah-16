@@ -27,9 +27,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-purchase-invoice-view',
-  templateUrl: './purchase-invoice-view.component.html',
-  styleUrls: ['./purchase-invoice-view.component.css'],
+    selector: 'app-purchase-invoice-view',
+    templateUrl: './purchase-invoice-view.component.html',
+    styleUrls: ['./purchase-invoice-view.component.css'],
+    standalone: false
 })
 export class PurchaseInvoiceViewComponent {
   constructor(

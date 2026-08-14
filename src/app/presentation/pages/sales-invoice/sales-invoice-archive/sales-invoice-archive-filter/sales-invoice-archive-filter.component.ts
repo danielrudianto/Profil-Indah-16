@@ -4,10 +4,11 @@ import { MatChipSelectionChange } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { panelAnimation } from 'src/app/animations/panel.animation';
 @Component({
-  selector: 'app-sales-invoice-archive-filter',
-  templateUrl: './sales-invoice-archive-filter.component.html',
-  styleUrls: ['./sales-invoice-archive-filter.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-sales-invoice-archive-filter',
+    templateUrl: './sales-invoice-archive-filter.component.html',
+    styleUrls: ['./sales-invoice-archive-filter.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class SalesInvoiceArchiveFilterComponent {
   constructor(

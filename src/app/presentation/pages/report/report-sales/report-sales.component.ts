@@ -26,18 +26,19 @@ import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-report-sales',
-  templateUrl: './report-sales.component.html',
-  styleUrls: ['./report-sales.component.css'],
-  animations: [slideInOutAnimation, slideInOutAnimation],
-  providers: [
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-    },
-    { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
-  ],
+    selector: 'app-report-sales',
+    templateUrl: './report-sales.component.html',
+    styleUrls: ['./report-sales.component.css'],
+    animations: [slideInOutAnimation, slideInOutAnimation],
+    providers: [
+        {
+            provide: DateAdapter,
+            useClass: MomentDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+        },
+        { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
+    ],
+    standalone: false
 })
 export class ReportSalesComponent {
   constructor(

@@ -4,9 +4,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-update-product-purchase-price',
-  templateUrl: './update-product-purchase-price.component.html',
-  styleUrls: ['./update-product-purchase-price.component.css'],
+    selector: 'app-update-product-purchase-price',
+    templateUrl: './update-product-purchase-price.component.html',
+    styleUrls: ['./update-product-purchase-price.component.css'],
+    standalone: false
 })
 export class UpdateProductPurchasePriceComponent {
   constructor(

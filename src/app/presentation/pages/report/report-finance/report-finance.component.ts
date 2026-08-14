@@ -24,9 +24,10 @@ import {
 import { DatePipe, DecimalPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-report-finance',
-  templateUrl: './report-finance.component.html',
-  styleUrls: ['./report-finance.component.css'],
+    selector: 'app-report-finance',
+    templateUrl: './report-finance.component.html',
+    styleUrls: ['./report-finance.component.css'],
+    standalone: false
 })
 export class ReportFinanceComponent {
   constructor(

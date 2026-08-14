@@ -18,9 +18,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
-  selector: 'app-purchase-invoice-confirm-view',
-  templateUrl: './purchase-invoice-confirm-view.component.html',
-  styleUrls: ['./purchase-invoice-confirm-view.component.css'],
+    selector: 'app-purchase-invoice-confirm-view',
+    templateUrl: './purchase-invoice-confirm-view.component.html',
+    styleUrls: ['./purchase-invoice-confirm-view.component.css'],
+    standalone: false
 })
 export class PurchaseInvoiceConfirmViewComponent {
   constructor(

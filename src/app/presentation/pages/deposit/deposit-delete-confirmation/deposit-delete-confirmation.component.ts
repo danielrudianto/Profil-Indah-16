@@ -14,9 +14,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { availableBankSearch, IBank } from 'src/app/utils/bank';
 
 @Component({
-  selector: 'app-deposit-delete-confirmation',
-  templateUrl: './deposit-delete-confirmation.component.html',
-  styleUrl: './deposit-delete-confirmation.component.css',
+    selector: 'app-deposit-delete-confirmation',
+    templateUrl: './deposit-delete-confirmation.component.html',
+    styleUrl: './deposit-delete-confirmation.component.css',
+    standalone: false
 })
 export class DepositDeleteConfirmationComponent {
   constructor(

@@ -23,17 +23,18 @@ import { MatDialog } from '@angular/material/dialog';
 const moment = _rollupMoment || _moment;
 
 @Component({
-  selector: 'app-expense-mutation',
-  templateUrl: './expense-mutation.component.html',
-  styleUrls: ['./expense-mutation.component.css'],
-  providers: [
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-    },
-    { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
-  ],
+    selector: 'app-expense-mutation',
+    templateUrl: './expense-mutation.component.html',
+    styleUrls: ['./expense-mutation.component.css'],
+    providers: [
+        {
+            provide: DateAdapter,
+            useClass: MomentDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+        },
+        { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
+    ],
+    standalone: false
 })
 export class ExpenseMutationComponent {
   constructor(

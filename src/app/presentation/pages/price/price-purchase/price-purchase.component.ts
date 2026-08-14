@@ -6,9 +6,10 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-price-purchase',
-  templateUrl: './price-purchase.component.html',
-  styleUrls: ['./price-purchase.component.css'],
+    selector: 'app-price-purchase',
+    templateUrl: './price-purchase.component.html',
+    styleUrls: ['./price-purchase.component.css'],
+    standalone: false
 })
 export class PricePurchaseComponent {
   constructor(private router: Router, private dialog: MatDialog) {}

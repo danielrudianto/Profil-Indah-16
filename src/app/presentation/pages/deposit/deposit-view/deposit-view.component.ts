@@ -27,10 +27,11 @@ import { DepositDeleteConfirmationComponent } from '../deposit-delete-confirmati
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
-  selector: 'app-deposit-view',
-  templateUrl: './deposit-view.component.html',
-  styleUrls: ['./deposit-view.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-deposit-view',
+    templateUrl: './deposit-view.component.html',
+    styleUrls: ['./deposit-view.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class DepositViewComponent {
   constructor(

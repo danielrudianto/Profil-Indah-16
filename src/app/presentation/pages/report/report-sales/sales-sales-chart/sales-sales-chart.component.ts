@@ -8,10 +8,11 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-sales-sales-chart',
-  templateUrl: './sales-sales-chart.component.html',
-  styleUrls: ['./sales-sales-chart.component.css'],
-  animations: [panelAnimation, sortSVGAnimation],
+    selector: 'app-sales-sales-chart',
+    templateUrl: './sales-sales-chart.component.html',
+    styleUrls: ['./sales-sales-chart.component.css'],
+    animations: [panelAnimation, sortSVGAnimation],
+    standalone: false
 })
 export class SalesSalesChartComponent {
   constructor(

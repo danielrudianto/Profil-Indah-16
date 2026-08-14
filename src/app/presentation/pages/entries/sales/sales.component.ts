@@ -5,10 +5,11 @@ import { slideUpDownAnimation } from 'src/app/animations/slide-up-down.animation
 import { SideNavService } from 'src/app/services/side-nav.service';
 
 @Component({
-  selector: 'app-sales',
-  templateUrl: './sales.component.html',
-  styleUrls: ['./sales.component.css'],
-  animations: [slideUpDownAnimation],
+    selector: 'app-sales',
+    templateUrl: './sales.component.html',
+    styleUrls: ['./sales.component.css'],
+    animations: [slideUpDownAnimation],
+    standalone: false
 })
 export class SalesComponent {
   constructor(

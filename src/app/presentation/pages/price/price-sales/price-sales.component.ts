@@ -7,9 +7,10 @@ import { PriceSalesUpdateComponent } from './price-sales-update/price-sales-upda
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-price-sales',
-  templateUrl: './price-sales.component.html',
-  styleUrls: ['./price-sales.component.css'],
+    selector: 'app-price-sales',
+    templateUrl: './price-sales.component.html',
+    styleUrls: ['./price-sales.component.css'],
+    standalone: false
 })
 export class PriceSalesComponent {
   constructor(private router: Router, private dialog: MatDialog) {}

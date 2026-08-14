@@ -24,9 +24,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { of, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-purchase-invoice-create',
-  templateUrl: './purchase-invoice-create.component.html',
-  styleUrls: ['./purchase-invoice-create.component.css'],
+    selector: 'app-purchase-invoice-create',
+    templateUrl: './purchase-invoice-create.component.html',
+    styleUrls: ['./purchase-invoice-create.component.css'],
+    standalone: false
 })
 export class PurchaseInvoiceCreateComponent {
   constructor(

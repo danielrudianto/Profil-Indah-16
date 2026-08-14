@@ -13,9 +13,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
-  selector: 'app-price-purchase-update',
-  templateUrl: './price-purchase-update.component.html',
-  styleUrls: ['./price-purchase-update.component.css'],
+    selector: 'app-price-purchase-update',
+    templateUrl: './price-purchase-update.component.html',
+    styleUrls: ['./price-purchase-update.component.css'],
+    standalone: false
 })
 export class PricePurchaseUpdateComponent {
   constructor(

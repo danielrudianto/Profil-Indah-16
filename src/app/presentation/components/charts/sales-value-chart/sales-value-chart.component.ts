@@ -3,9 +3,10 @@ import { Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-sales-value-chart',
-  templateUrl: './sales-value-chart.component.html',
-  styleUrls: ['./sales-value-chart.component.css'],
+    selector: 'app-sales-value-chart',
+    templateUrl: './sales-value-chart.component.html',
+    styleUrls: ['./sales-value-chart.component.css'],
+    standalone: false
 })
 export class SalesValueChartComponent {
   constructor(

@@ -5,10 +5,11 @@ import { slideUpDownAnimation } from 'src/app/animations/slide-up-down.animation
 import { SideNavService } from 'src/app/services/side-nav.service';
 
 @Component({
-  selector: 'app-purchasing',
-  templateUrl: './purchasing.component.html',
-  styleUrls: ['./purchasing.component.css'],
-  animations: [slideUpDownAnimation],
+    selector: 'app-purchasing',
+    templateUrl: './purchasing.component.html',
+    styleUrls: ['./purchasing.component.css'],
+    animations: [slideUpDownAnimation],
+    standalone: false
 })
 export class PurchasingComponent {
   constructor(private router: Router, private sideNavService: SideNavService) {}

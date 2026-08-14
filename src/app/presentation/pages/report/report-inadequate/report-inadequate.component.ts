@@ -11,9 +11,10 @@ import { saveAs } from 'file-saver';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-report-inadequate',
-  templateUrl: './report-inadequate.component.html',
-  styleUrls: ['./report-inadequate.component.css'],
+    selector: 'app-report-inadequate',
+    templateUrl: './report-inadequate.component.html',
+    styleUrls: ['./report-inadequate.component.css'],
+    standalone: false
 })
 export class ReportInadequateComponent {
   constructor(

@@ -4,8 +4,9 @@ import { Package } from 'src/app/models/item.model';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-package',
-  templateUrl: './package.component.html',
-  styleUrls: ['./package.component.css'],
+    selector: 'app-package',
+    templateUrl: './package.component.html',
+    styleUrls: ['./package.component.css'],
+    standalone: false
 })
 export class PackageComponent {}

@@ -16,10 +16,11 @@ import { ValueValidator } from 'src/app/validators/value.validator';
 import { ProductCreateUnitComponent } from './product-create-unit/product-create-unit.component';
 
 @Component({
-  selector: 'app-product-create',
-  templateUrl: './product-create.component.html',
-  styleUrls: ['./product-create.component.css'],
-  animations: [slideInOutAnimation],
+    selector: 'app-product-create',
+    templateUrl: './product-create.component.html',
+    styleUrls: ['./product-create.component.css'],
+    animations: [slideInOutAnimation],
+    standalone: false
 })
 export class ProductCreateComponent {
   constructor(

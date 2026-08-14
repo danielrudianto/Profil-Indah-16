@@ -6,9 +6,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { OverpaymentArchiveViewComponent } from './overpayment-archive-view/overpayment-archive-view.component';
 
 @Component({
-  selector: 'app-overpayment-archive',
-  templateUrl: './overpayment-archive.component.html',
-  styleUrl: './overpayment-archive.component.css',
+    selector: 'app-overpayment-archive',
+    templateUrl: './overpayment-archive.component.html',
+    styleUrl: './overpayment-archive.component.css',
+    standalone: false
 })
 export class OverpaymentArchiveComponent {
   constructor(

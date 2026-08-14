@@ -14,10 +14,11 @@ import { CashierViewBillPaymentSelectorComponent } from './cashier-view-bill-pay
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 
 @Component({
-  selector: 'app-cashier-view-bill',
-  templateUrl: './cashier-view-bill.component.html',
-  styleUrls: ['./cashier-view-bill.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-cashier-view-bill',
+    templateUrl: './cashier-view-bill.component.html',
+    styleUrls: ['./cashier-view-bill.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class CashierViewBillComponent {
   constructor(

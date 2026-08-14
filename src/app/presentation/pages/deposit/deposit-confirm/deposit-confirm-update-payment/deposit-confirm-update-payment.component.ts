@@ -3,9 +3,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-deposit-confirm-update-payment',
-  templateUrl: './deposit-confirm-update-payment.component.html',
-  styleUrl: './deposit-confirm-update-payment.component.css',
+    selector: 'app-deposit-confirm-update-payment',
+    templateUrl: './deposit-confirm-update-payment.component.html',
+    styleUrl: './deposit-confirm-update-payment.component.css',
+    standalone: false
 })
 export class DepositConfirmUpdatePaymentComponent {
   constructor(

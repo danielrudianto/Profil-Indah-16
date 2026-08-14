@@ -12,9 +12,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-expense-type-update',
-  templateUrl: './expense-type-update.component.html',
-  styleUrls: ['./expense-type-update.component.css'],
+    selector: 'app-expense-type-update',
+    templateUrl: './expense-type-update.component.html',
+    styleUrls: ['./expense-type-update.component.css'],
+    standalone: false
 })
 export class ExpenseTypeUpdateComponent {
   constructor(

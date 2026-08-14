@@ -10,9 +10,10 @@ import { debounceTime } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
-  selector: 'app-autocomplete-search',
-  templateUrl: './autocomplete-search.component.html',
-  styleUrls: ['./autocomplete-search.component.css'],
+    selector: 'app-autocomplete-search',
+    templateUrl: './autocomplete-search.component.html',
+    styleUrls: ['./autocomplete-search.component.css'],
+    standalone: false
 })
 export class AutocompleteSearchComponent {
   constructor(private apiService: ApiService) {}

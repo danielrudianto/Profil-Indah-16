@@ -32,17 +32,18 @@ import { saveAs } from 'file-saver';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-report-output',
-  templateUrl: './report-output.component.html',
-  styleUrls: ['./report-output.component.css'],
-  providers: [
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-    },
-    { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
-  ],
+    selector: 'app-report-output',
+    templateUrl: './report-output.component.html',
+    styleUrls: ['./report-output.component.css'],
+    providers: [
+        {
+            provide: DateAdapter,
+            useClass: MomentDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+        },
+        { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
+    ],
+    standalone: false
 })
 export class ReportOutputComponent {
   constructor(

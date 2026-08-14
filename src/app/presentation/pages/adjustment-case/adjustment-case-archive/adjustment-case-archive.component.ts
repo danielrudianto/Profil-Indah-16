@@ -11,10 +11,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { AdjustmentCaseViewComponent } from './adjustment-case-view/adjustment-case-view.component';
 
 @Component({
-  selector: 'app-adjustment-case-archive',
-  templateUrl: './adjustment-case-archive.component.html',
-  styleUrls: ['./adjustment-case-archive.component.css'],
-  animations: [slideInOutAnimation],
+    selector: 'app-adjustment-case-archive',
+    templateUrl: './adjustment-case-archive.component.html',
+    styleUrls: ['./adjustment-case-archive.component.css'],
+    animations: [slideInOutAnimation],
+    standalone: false
 })
 export class AdjustmentCaseArchiveComponent {
   constructor(

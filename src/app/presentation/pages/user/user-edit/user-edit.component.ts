@@ -25,9 +25,10 @@ import { DeleteConfirmationComponent } from 'src/app/presentation/components/del
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-user-edit',
-  templateUrl: './user-edit.component.html',
-  styleUrls: ['./user-edit.component.css'],
+    selector: 'app-user-edit',
+    templateUrl: './user-edit.component.html',
+    styleUrls: ['./user-edit.component.css'],
+    standalone: false
 })
 export class UserEditComponent {
   constructor(

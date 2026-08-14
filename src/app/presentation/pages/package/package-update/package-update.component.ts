@@ -13,9 +13,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
-  selector: 'app-package-update',
-  templateUrl: './package-update.component.html',
-  styleUrls: ['./package-update.component.css'],
+    selector: 'app-package-update',
+    templateUrl: './package-update.component.html',
+    styleUrls: ['./package-update.component.css'],
+    standalone: false
 })
 export class PackageUpdateComponent {
   constructor(

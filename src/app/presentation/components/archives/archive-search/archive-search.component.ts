@@ -3,9 +3,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 
 @Component({
-  selector: 'app-archive-search',
-  templateUrl: './archive-search.component.html',
-  styleUrls: ['./archive-search.component.css'],
+    selector: 'app-archive-search',
+    templateUrl: './archive-search.component.html',
+    styleUrls: ['./archive-search.component.css'],
+    standalone: false
 })
 export class ArchiveSearchComponent {
   @Input('isFilterAvailable') isFilterAvailable!: boolean;

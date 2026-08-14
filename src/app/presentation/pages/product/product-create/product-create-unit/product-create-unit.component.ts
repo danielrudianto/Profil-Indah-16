@@ -3,9 +3,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-product-create-unit',
-  templateUrl: './product-create-unit.component.html',
-  styleUrl: './product-create-unit.component.css',
+    selector: 'app-product-create-unit',
+    templateUrl: './product-create-unit.component.html',
+    styleUrl: './product-create-unit.component.css',
+    standalone: false
 })
 export class ProductCreateUnitComponent {
   constructor(private dialog: MatDialogRef<ProductCreateUnitComponent>) {}

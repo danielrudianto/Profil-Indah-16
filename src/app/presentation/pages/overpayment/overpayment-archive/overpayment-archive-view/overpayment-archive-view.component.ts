@@ -10,9 +10,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
-  selector: 'app-overpayment-archive-view',
-  templateUrl: './overpayment-archive-view.component.html',
-  styleUrl: './overpayment-archive-view.component.css',
+    selector: 'app-overpayment-archive-view',
+    templateUrl: './overpayment-archive-view.component.html',
+    styleUrl: './overpayment-archive-view.component.css',
+    standalone: false
 })
 export class OverpaymentArchiveViewComponent {
   constructor(

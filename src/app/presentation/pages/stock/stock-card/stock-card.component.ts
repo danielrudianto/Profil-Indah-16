@@ -13,10 +13,11 @@ import { GoodReceiptViewComponent } from '../../good-receipt/good-receipt-archiv
 import { AdjustmentCaseViewComponent } from '../../adjustment-case/adjustment-case-archive/adjustment-case-view/adjustment-case-view.component';
 
 @Component({
-  selector: 'app-stock-card',
-  templateUrl: './stock-card.component.html',
-  styleUrls: ['./stock-card.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-stock-card',
+    templateUrl: './stock-card.component.html',
+    styleUrls: ['./stock-card.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class StockCardComponent {
   constructor(

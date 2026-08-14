@@ -8,28 +8,29 @@ import {
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-profile-dialog',
-  templateUrl: './profile-dialog.component.html',
-  styleUrls: ['./profile-dialog.component.css'],
-  animations: [
-    // slide from left
-    trigger('slideFromLeft', [
-      // start state
-      state('closed', style({ transform: 'translateX(200%)' })),
-      // end state
-      state('open', style({ transform: 'translateX(0)' })),
-      // transition
-      transition('* => *', [animate('0.3s ease-in-out')]),
-    ]),
-    trigger('fadeInOut', [
-      // start state
-      state('hidden', style({ opacity: 0 })),
-      // end state
-      state('shown', style({ opacity: 0.2 })),
-      // transition
-      transition('* => *', [animate('0.3s ease-in-out')]),
-    ]),
-  ],
+    selector: 'app-profile-dialog',
+    templateUrl: './profile-dialog.component.html',
+    styleUrls: ['./profile-dialog.component.css'],
+    animations: [
+        // slide from left
+        trigger('slideFromLeft', [
+            // start state
+            state('closed', style({ transform: 'translateX(200%)' })),
+            // end state
+            state('open', style({ transform: 'translateX(0)' })),
+            // transition
+            transition('* => *', [animate('0.3s ease-in-out')]),
+        ]),
+        trigger('fadeInOut', [
+            // start state
+            state('hidden', style({ opacity: 0 })),
+            // end state
+            state('shown', style({ opacity: 0.2 })),
+            // transition
+            transition('* => *', [animate('0.3s ease-in-out')]),
+        ]),
+    ],
+    standalone: false
 })
 export class ProfileDialogComponent {
   @Output('onClose') onClose: EventEmitter<void> = new EventEmitter<void>();

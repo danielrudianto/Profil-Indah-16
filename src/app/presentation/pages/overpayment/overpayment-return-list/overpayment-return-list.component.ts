@@ -8,9 +8,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { OverpaymentArchiveViewComponent } from '../overpayment-archive/overpayment-archive-view/overpayment-archive-view.component';
 
 @Component({
-  selector: 'app-overpayment-return-list',
-  templateUrl: './overpayment-return-list.component.html',
-  styleUrl: './overpayment-return-list.component.css',
+    selector: 'app-overpayment-return-list',
+    templateUrl: './overpayment-return-list.component.html',
+    styleUrl: './overpayment-return-list.component.css',
+    standalone: false
 })
 export class OverpaymentReturnListComponent {
   constructor(

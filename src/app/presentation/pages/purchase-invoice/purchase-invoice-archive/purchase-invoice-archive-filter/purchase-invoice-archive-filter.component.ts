@@ -6,10 +6,11 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { panelAnimation } from 'src/app/animations/panel.animation';
 
 @Component({
-  selector: 'app-purchase-invoice-archive-filter',
-  templateUrl: './purchase-invoice-archive-filter.component.html',
-  styleUrls: ['./purchase-invoice-archive-filter.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-purchase-invoice-archive-filter',
+    templateUrl: './purchase-invoice-archive-filter.component.html',
+    styleUrls: ['./purchase-invoice-archive-filter.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class PurchaseInvoiceArchiveFilterComponent {
   constructor(

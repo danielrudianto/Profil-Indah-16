@@ -10,9 +10,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 
 @Component({
-  selector: 'app-expense-type',
-  templateUrl: './expense-type.component.html',
-  styleUrls: ['./expense-type.component.css'],
+    selector: 'app-expense-type',
+    templateUrl: './expense-type.component.html',
+    styleUrls: ['./expense-type.component.css'],
+    standalone: false
 })
 export class ExpenseTypeComponent {
   constructor(

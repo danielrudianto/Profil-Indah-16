@@ -9,9 +9,10 @@ import {
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-color-picker',
-  templateUrl: './color-picker.component.html',
-  styleUrls: ['./color-picker.component.css'],
+    selector: 'app-color-picker',
+    templateUrl: './color-picker.component.html',
+    styleUrls: ['./color-picker.component.css'],
+    standalone: false
 })
 export class ColorPickerComponent {
   @Input('selectedColor') selectedColor!: string;

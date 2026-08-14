@@ -13,10 +13,11 @@ import { panelAnimation } from 'src/app/animations/panel.animation';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-promotion-view-action',
-  templateUrl: './promotion-view-action.component.html',
-  styleUrls: ['./promotion-view-action.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-promotion-view-action',
+    templateUrl: './promotion-view-action.component.html',
+    styleUrls: ['./promotion-view-action.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class PromotionViewActionComponent {
   constructor(

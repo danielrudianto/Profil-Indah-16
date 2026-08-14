@@ -8,10 +8,11 @@ import { availableRoles, user } from 'src/app/models/user.model';
 import { panelAnimation } from 'src/app/animations/panel.animation';
 
 @Component({
-  selector: 'app-user-create',
-  templateUrl: './user-create.component.html',
-  styleUrls: ['./user-create.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-user-create',
+    templateUrl: './user-create.component.html',
+    styleUrls: ['./user-create.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class UserCreateComponent {
   constructor(

@@ -11,9 +11,10 @@ import { PageEvent } from '@angular/material/paginator';
 import { ReportProblematicFilterComponent } from './report-problematic-filter/report-problematic-filter.component';
 
 @Component({
-  selector: 'app-report-problematic',
-  templateUrl: './report-problematic.component.html',
-  styleUrls: ['./report-problematic.component.css'],
+    selector: 'app-report-problematic',
+    templateUrl: './report-problematic.component.html',
+    styleUrls: ['./report-problematic.component.css'],
+    standalone: false
 })
 export class ReportProblematicComponent {
   constructor(

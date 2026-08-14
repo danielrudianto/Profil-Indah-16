@@ -21,10 +21,11 @@ export enum ProductSelectorType {
   return,
 }
 @Component({
-  selector: 'app-product-selector',
-  templateUrl: './product-selector.component.html',
-  styleUrls: ['./product-selector.component.css'],
-  animations: [slideInOutAnimation],
+    selector: 'app-product-selector',
+    templateUrl: './product-selector.component.html',
+    styleUrls: ['./product-selector.component.css'],
+    animations: [slideInOutAnimation],
+    standalone: false
 })
 export class ProductSelectorComponent {
   constructor(

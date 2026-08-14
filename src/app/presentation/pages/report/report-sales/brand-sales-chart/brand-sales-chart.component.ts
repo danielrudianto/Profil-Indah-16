@@ -8,10 +8,11 @@ import { ApiService } from '../../../../../services/api.service';
 import { AlertService } from '../../../../../services/alert.service';
 
 @Component({
-  selector: 'app-brand-sales-chart',
-  templateUrl: './brand-sales-chart.component.html',
-  styleUrls: ['./brand-sales-chart.component.css'],
-  animations: [panelAnimation, sortSVGAnimation],
+    selector: 'app-brand-sales-chart',
+    templateUrl: './brand-sales-chart.component.html',
+    styleUrls: ['./brand-sales-chart.component.css'],
+    animations: [panelAnimation, sortSVGAnimation],
+    standalone: false
 })
 export class BrandSalesChartComponent {
   constructor(

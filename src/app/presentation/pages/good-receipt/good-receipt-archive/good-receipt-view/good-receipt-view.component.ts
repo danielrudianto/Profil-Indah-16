@@ -19,9 +19,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-good-receipt-view',
-  templateUrl: './good-receipt-view.component.html',
-  styleUrl: './good-receipt-view.component.css',
+    selector: 'app-good-receipt-view',
+    templateUrl: './good-receipt-view.component.html',
+    styleUrl: './good-receipt-view.component.css',
+    standalone: false
 })
 export class GoodReceiptViewComponent {
   constructor(

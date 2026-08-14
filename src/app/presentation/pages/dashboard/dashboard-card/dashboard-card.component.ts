@@ -2,9 +2,10 @@ import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-dashboard-card',
-  templateUrl: './dashboard-card.component.html',
-  styleUrls: ['./dashboard-card.component.css'],
+    selector: 'app-dashboard-card',
+    templateUrl: './dashboard-card.component.html',
+    styleUrls: ['./dashboard-card.component.css'],
+    standalone: false
 })
 export class DashboardCardComponent {
   constructor(private router: Router) {}

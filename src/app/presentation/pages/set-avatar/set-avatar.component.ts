@@ -15,10 +15,11 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-set-avatar',
-  templateUrl: './set-avatar.component.html',
-  styleUrls: ['./set-avatar.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-set-avatar',
+    templateUrl: './set-avatar.component.html',
+    styleUrls: ['./set-avatar.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class SetAvatarComponent {
   constructor(

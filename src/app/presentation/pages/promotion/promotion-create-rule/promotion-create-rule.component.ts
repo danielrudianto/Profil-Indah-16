@@ -3,9 +3,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 
 @Component({
-  selector: 'app-promotion-create-rule',
-  templateUrl: './promotion-create-rule.component.html',
-  styleUrls: ['./promotion-create-rule.component.css'],
+    selector: 'app-promotion-create-rule',
+    templateUrl: './promotion-create-rule.component.html',
+    styleUrls: ['./promotion-create-rule.component.css'],
+    standalone: false
 })
 export class PromotionCreateRuleComponent {
   constructor(

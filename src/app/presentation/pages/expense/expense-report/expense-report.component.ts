@@ -19,17 +19,18 @@ import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
 const moment = _rollupMoment || _moment;
 
 @Component({
-  selector: 'app-expense-report',
-  templateUrl: './expense-report.component.html',
-  styleUrls: ['./expense-report.component.css'],
-  providers: [
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-    },
-    { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
-  ],
+    selector: 'app-expense-report',
+    templateUrl: './expense-report.component.html',
+    styleUrls: ['./expense-report.component.css'],
+    providers: [
+        {
+            provide: DateAdapter,
+            useClass: MomentDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+        },
+        { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
+    ],
+    standalone: false
 })
 export class ExpenseReportComponent {
   constructor(

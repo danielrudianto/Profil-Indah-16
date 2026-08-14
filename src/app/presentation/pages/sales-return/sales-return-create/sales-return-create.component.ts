@@ -22,10 +22,11 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-sales-return-create',
-  templateUrl: './sales-return-create.component.html',
-  styleUrls: ['./sales-return-create.component.css'],
-  animations: [slideInOutAnimation],
+    selector: 'app-sales-return-create',
+    templateUrl: './sales-return-create.component.html',
+    styleUrls: ['./sales-return-create.component.css'],
+    animations: [slideInOutAnimation],
+    standalone: false
 })
 export class SalesReturnCreateComponent {
   constructor(

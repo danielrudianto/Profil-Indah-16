@@ -7,9 +7,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
-  selector: 'app-payment-selector',
-  templateUrl: './payment-selector.component.html',
-  styleUrls: ['./payment-selector.component.css'],
+    selector: 'app-payment-selector',
+    templateUrl: './payment-selector.component.html',
+    styleUrls: ['./payment-selector.component.css'],
+    standalone: false
 })
 export class PaymentSelectorComponent {
   constructor(

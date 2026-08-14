@@ -6,9 +6,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-receivable-payment-history',
-  templateUrl: './receivable-payment-history.component.html',
-  styleUrls: ['./receivable-payment-history.component.css'],
+    selector: 'app-receivable-payment-history',
+    templateUrl: './receivable-payment-history.component.html',
+    styleUrls: ['./receivable-payment-history.component.css'],
+    standalone: false
 })
 export class ReceivablePaymentHistoryComponent {
   constructor(

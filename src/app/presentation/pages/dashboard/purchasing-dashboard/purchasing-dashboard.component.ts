@@ -5,9 +5,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
-  selector: 'app-purchasing-dashboard',
-  templateUrl: './purchasing-dashboard.component.html',
-  styleUrls: ['./purchasing-dashboard.component.css'],
+    selector: 'app-purchasing-dashboard',
+    templateUrl: './purchasing-dashboard.component.html',
+    styleUrls: ['./purchasing-dashboard.component.css'],
+    standalone: false
 })
 export class PurchasingDashboardComponent {
   constructor(

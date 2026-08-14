@@ -16,9 +16,10 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-promotion-view',
-  templateUrl: './promotion-view.component.html',
-  styleUrls: ['./promotion-view.component.css'],
+    selector: 'app-promotion-view',
+    templateUrl: './promotion-view.component.html',
+    styleUrls: ['./promotion-view.component.css'],
+    standalone: false
 })
 export class PromotionViewComponent {
   constructor(

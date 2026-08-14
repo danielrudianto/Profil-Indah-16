@@ -5,9 +5,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-product-type-create',
-  templateUrl: './product-type-create.component.html',
-  styleUrls: ['./product-type-create.component.css'],
+    selector: 'app-product-type-create',
+    templateUrl: './product-type-create.component.html',
+    styleUrls: ['./product-type-create.component.css'],
+    standalone: false
 })
 export class ProductTypeCreateComponent {
   constructor(

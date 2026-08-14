@@ -7,10 +7,11 @@ import { AuthService } from 'src/app/services/auth.service';
 import { SideNavService } from 'src/app/services/side-nav.service';
 
 @Component({
-  selector: 'app-administrator',
-  templateUrl: './administrator.component.html',
-  styleUrls: ['./administrator.component.css'],
-  animations: [slideUpAnimation, slideUpDownAnimation],
+    selector: 'app-administrator',
+    templateUrl: './administrator.component.html',
+    styleUrls: ['./administrator.component.css'],
+    animations: [slideUpAnimation, slideUpDownAnimation],
+    standalone: false
 })
 export class AdministratorComponent {
   constructor(private router: Router, private sideNavService: SideNavService) {}

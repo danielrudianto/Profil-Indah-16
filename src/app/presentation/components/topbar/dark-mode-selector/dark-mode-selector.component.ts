@@ -2,9 +2,10 @@ import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-dark-mode-selector',
-  templateUrl: './dark-mode-selector.component.html',
-  styleUrls: ['./dark-mode-selector.component.css'],
+    selector: 'app-dark-mode-selector',
+    templateUrl: './dark-mode-selector.component.html',
+    styleUrls: ['./dark-mode-selector.component.css'],
+    standalone: false
 })
 export class DarkModeSelectorComponent {
   constructor() {} // private darkModeService: DarkModeService

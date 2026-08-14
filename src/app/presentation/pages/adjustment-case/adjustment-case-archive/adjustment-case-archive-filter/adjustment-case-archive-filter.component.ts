@@ -5,10 +5,11 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { panelAnimation } from 'src/app/animations/panel.animation';
 
 @Component({
-  selector: 'app-adjustment-case-archive-filter',
-  templateUrl: './adjustment-case-archive-filter.component.html',
-  styleUrls: ['./adjustment-case-archive-filter.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-adjustment-case-archive-filter',
+    templateUrl: './adjustment-case-archive-filter.component.html',
+    styleUrls: ['./adjustment-case-archive-filter.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class AdjustmentCaseArchiveFilterComponent {
   constructor(

@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-sales-invoice',
-  templateUrl: './sales-invoice.component.html',
-  styleUrls: ['./sales-invoice.component.css'],
+    selector: 'app-sales-invoice',
+    templateUrl: './sales-invoice.component.html',
+    styleUrls: ['./sales-invoice.component.css'],
+    standalone: false
 })
 export class SalesInvoiceComponent {
   constructor() {}

@@ -6,9 +6,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-salesman-selector',
-  templateUrl: './salesman-selector.component.html',
-  styleUrls: ['./salesman-selector.component.css'],
+    selector: 'app-salesman-selector',
+    templateUrl: './salesman-selector.component.html',
+    styleUrls: ['./salesman-selector.component.css'],
+    standalone: false
 })
 export class SalesmanSelectorComponent {
   constructor(

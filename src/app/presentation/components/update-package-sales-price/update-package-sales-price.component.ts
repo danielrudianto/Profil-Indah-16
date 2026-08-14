@@ -6,9 +6,10 @@ import {
 } from '@angular/material/bottom-sheet';
 
 @Component({
-  selector: 'app-update-package-sales-price',
-  templateUrl: './update-package-sales-price.component.html',
-  styleUrls: ['./update-package-sales-price.component.css'],
+    selector: 'app-update-package-sales-price',
+    templateUrl: './update-package-sales-price.component.html',
+    styleUrls: ['./update-package-sales-price.component.css'],
+    standalone: false
 })
 export class UpdatePackageSalesPriceComponent {
   constructor(

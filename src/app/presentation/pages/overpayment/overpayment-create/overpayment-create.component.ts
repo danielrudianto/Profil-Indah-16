@@ -14,9 +14,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { availableBankSearch, IBank } from 'src/app/utils/bank';
 
 @Component({
-  selector: 'app-overpayment-create',
-  templateUrl: './overpayment-create.component.html',
-  styleUrl: './overpayment-create.component.css',
+    selector: 'app-overpayment-create',
+    templateUrl: './overpayment-create.component.html',
+    styleUrl: './overpayment-create.component.css',
+    standalone: false
 })
 export class OverpaymentCreateComponent {
   constructor(

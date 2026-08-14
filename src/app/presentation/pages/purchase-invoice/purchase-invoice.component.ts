@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-purchase-invoice',
-  templateUrl: './purchase-invoice.component.html',
-  styleUrls: ['./purchase-invoice.component.css'],
+    selector: 'app-purchase-invoice',
+    templateUrl: './purchase-invoice.component.html',
+    styleUrls: ['./purchase-invoice.component.css'],
+    standalone: false
 })
 export class PurchaseInvoiceComponent {
   availbleMenus = [

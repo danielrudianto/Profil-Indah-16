@@ -7,9 +7,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 
 @Component({
-  selector: 'app-package-selector',
-  templateUrl: './package-selector.component.html',
-  styleUrls: ['./package-selector.component.css'],
+    selector: 'app-package-selector',
+    templateUrl: './package-selector.component.html',
+    styleUrls: ['./package-selector.component.css'],
+    standalone: false
 })
 export class PackageSelectorComponent {
   constructor(

@@ -15,9 +15,10 @@ import { ApiService } from 'src/app/services/api.service';
 import * as xlsx from 'xlsx';
 
 @Component({
-  selector: 'app-promotion-result',
-  templateUrl: './promotion-result.component.html',
-  styleUrl: './promotion-result.component.css',
+    selector: 'app-promotion-result',
+    templateUrl: './promotion-result.component.html',
+    styleUrl: './promotion-result.component.css',
+    standalone: false
 })
 export class PromotionResultComponent {
   constructor(

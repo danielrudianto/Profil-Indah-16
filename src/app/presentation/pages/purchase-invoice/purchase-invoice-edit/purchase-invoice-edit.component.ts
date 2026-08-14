@@ -24,9 +24,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-purchase-invoice-edit',
-  templateUrl: './purchase-invoice-edit.component.html',
-  styleUrls: ['./purchase-invoice-edit.component.css'],
+    selector: 'app-purchase-invoice-edit',
+    templateUrl: './purchase-invoice-edit.component.html',
+    styleUrls: ['./purchase-invoice-edit.component.css'],
+    standalone: false
 })
 export class PurchaseInvoiceEditComponent {
   constructor(

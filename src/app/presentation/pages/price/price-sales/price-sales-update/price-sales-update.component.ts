@@ -14,9 +14,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
-  selector: 'app-price-sales-update',
-  templateUrl: './price-sales-update.component.html',
-  styleUrls: ['./price-sales-update.component.css'],
+    selector: 'app-price-sales-update',
+    templateUrl: './price-sales-update.component.html',
+    styleUrls: ['./price-sales-update.component.css'],
+    standalone: false
 })
 export class PriceSalesUpdateComponent {
   constructor(

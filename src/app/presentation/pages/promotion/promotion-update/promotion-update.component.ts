@@ -15,9 +15,10 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-promotion-update',
-  templateUrl: './promotion-update.component.html',
-  styleUrl: './promotion-update.component.css',
+    selector: 'app-promotion-update',
+    templateUrl: './promotion-update.component.html',
+    styleUrl: './promotion-update.component.css',
+    standalone: false
 })
 export class PromotionUpdateComponent {
   constructor(

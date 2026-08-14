@@ -7,10 +7,11 @@ import { DynamicComponentService } from '../../../../../services/dynamic-compone
 import { panelAnimation } from '../../../../../animations/panel.animation';
 
 @Component({
-  selector: 'app-report-problematic-filter',
-  templateUrl: './report-problematic-filter.component.html',
-  styleUrls: ['./report-problematic-filter.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-report-problematic-filter',
+    templateUrl: './report-problematic-filter.component.html',
+    styleUrls: ['./report-problematic-filter.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class ReportProblematicFilterComponent {
   constructor(

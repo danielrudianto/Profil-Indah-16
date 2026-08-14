@@ -28,9 +28,10 @@ import { DepositConfirmUpdatePaymentComponent } from './deposit-confirm-update-p
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-deposit-confirm',
-  templateUrl: './deposit-confirm.component.html',
-  styleUrls: ['./deposit-confirm.component.css'],
+    selector: 'app-deposit-confirm',
+    templateUrl: './deposit-confirm.component.html',
+    styleUrls: ['./deposit-confirm.component.css'],
+    standalone: false
 })
 export class DepositConfirmComponent {
   constructor(

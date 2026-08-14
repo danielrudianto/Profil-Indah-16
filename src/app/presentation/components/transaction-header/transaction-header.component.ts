@@ -2,9 +2,10 @@ import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-transaction-header',
-  templateUrl: './transaction-header.component.html',
-  styleUrls: ['./transaction-header.component.css'],
+    selector: 'app-transaction-header',
+    templateUrl: './transaction-header.component.html',
+    styleUrls: ['./transaction-header.component.css'],
+    standalone: false
 })
 export class TransactionHeaderComponent {
   constructor(private router: Router) {}

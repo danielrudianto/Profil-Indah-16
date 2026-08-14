@@ -7,9 +7,10 @@ export interface CustomStepData {
 }
 
 @Component({
-  selector: 'app-custom-stepper',
-  templateUrl: './custom-stepper.component.html',
-  styleUrls: ['./custom-stepper.component.css'],
+    selector: 'app-custom-stepper',
+    templateUrl: './custom-stepper.component.html',
+    styleUrls: ['./custom-stepper.component.css'],
+    standalone: false
 })
 export class CustomStepperComponent {
   @Input('steps') steps: CustomStepData[] = [];

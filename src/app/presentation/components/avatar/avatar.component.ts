@@ -9,9 +9,10 @@ import {
 } from 'src/app/models/avatar.model';
 
 @Component({
-  selector: 'app-avatar',
-  templateUrl: './avatar.component.html',
-  styleUrls: ['./avatar.component.css'],
+    selector: 'app-avatar',
+    templateUrl: './avatar.component.html',
+    styleUrls: ['./avatar.component.css'],
+    standalone: false
 })
 export class AvatarComponent {
   constructor() {}

@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-product-unit',
-  templateUrl: './product-unit.component.html',
-  styleUrls: ['./product-unit.component.css']
+    selector: 'app-product-unit',
+    templateUrl: './product-unit.component.html',
+    styleUrls: ['./product-unit.component.css'],
+    standalone: false
 })
 export class ProductUnitComponent {
 

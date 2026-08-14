@@ -25,9 +25,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 @Component({
-  selector: 'app-feature-search',
-  templateUrl: './feature-search.component.html',
-  styleUrls: ['./feature-search.component.css'],
+    selector: 'app-feature-search',
+    templateUrl: './feature-search.component.html',
+    styleUrls: ['./feature-search.component.css'],
+    standalone: false
 })
 export class FeatureSearchComponent {
   constructor(

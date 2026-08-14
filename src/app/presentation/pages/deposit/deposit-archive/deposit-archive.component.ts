@@ -11,10 +11,11 @@ import { DepositViewComponent } from '../deposit-view/deposit-view.component';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 
 @Component({
-  selector: 'app-deposit-archive',
-  templateUrl: './deposit-archive.component.html',
-  styleUrls: ['./deposit-archive.component.css'],
-  animations: [slideInOutAnimation],
+    selector: 'app-deposit-archive',
+    templateUrl: './deposit-archive.component.html',
+    styleUrls: ['./deposit-archive.component.css'],
+    animations: [slideInOutAnimation],
+    standalone: false
 })
 export class DepositArchiveComponent {
   constructor(

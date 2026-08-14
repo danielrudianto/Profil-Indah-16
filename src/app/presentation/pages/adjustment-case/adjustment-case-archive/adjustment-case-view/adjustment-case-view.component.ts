@@ -13,9 +13,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-adjustment-case-view',
-  templateUrl: './adjustment-case-view.component.html',
-  styleUrls: ['./adjustment-case-view.component.css'],
+    selector: 'app-adjustment-case-view',
+    templateUrl: './adjustment-case-view.component.html',
+    styleUrls: ['./adjustment-case-view.component.css'],
+    standalone: false
 })
 export class AdjustmentCaseViewComponent {
   constructor(

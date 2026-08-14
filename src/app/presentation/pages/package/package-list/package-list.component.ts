@@ -10,9 +10,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-package-list',
-  templateUrl: './package-list.component.html',
-  styleUrls: ['./package-list.component.css'],
+    selector: 'app-package-list',
+    templateUrl: './package-list.component.html',
+    styleUrls: ['./package-list.component.css'],
+    standalone: false
 })
 export class PackageListComponent {
   constructor(

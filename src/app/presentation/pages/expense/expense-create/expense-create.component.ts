@@ -6,9 +6,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
-  selector: 'app-expense-create',
-  templateUrl: './expense-create.component.html',
-  styleUrls: ['./expense-create.component.css'],
+    selector: 'app-expense-create',
+    templateUrl: './expense-create.component.html',
+    styleUrls: ['./expense-create.component.css'],
+    standalone: false
 })
 export class ExpenseCreateComponent {
   constructor(

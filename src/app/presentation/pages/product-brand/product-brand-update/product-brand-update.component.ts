@@ -7,9 +7,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-product-brand-update',
-  templateUrl: './product-brand-update.component.html',
-  styleUrls: ['./product-brand-update.component.css'],
+    selector: 'app-product-brand-update',
+    templateUrl: './product-brand-update.component.html',
+    styleUrls: ['./product-brand-update.component.css'],
+    standalone: false
 })
 export class ProductBrandUpdateComponent {
   constructor(

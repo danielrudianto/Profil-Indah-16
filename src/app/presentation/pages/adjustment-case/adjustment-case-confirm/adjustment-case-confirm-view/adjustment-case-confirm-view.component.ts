@@ -22,10 +22,11 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { AuthService } from '../../../../../services/auth.service';
 
 @Component({
-  selector: 'app-adjustment-case-confirm-view',
-  templateUrl: './adjustment-case-confirm-view.component.html',
-  styleUrls: ['./adjustment-case-confirm-view.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-adjustment-case-confirm-view',
+    templateUrl: './adjustment-case-confirm-view.component.html',
+    styleUrls: ['./adjustment-case-confirm-view.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class AdjustmentCaseConfirmViewComponent {
   constructor(

@@ -11,9 +11,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 @Component({
-  selector: 'app-customer-update',
-  templateUrl: './customer-update.component.html',
-  styleUrls: ['./customer-update.component.css'],
+    selector: 'app-customer-update',
+    templateUrl: './customer-update.component.html',
+    styleUrls: ['./customer-update.component.css'],
+    standalone: false
 })
 export class CustomerUpdateComponent {
   constructor(

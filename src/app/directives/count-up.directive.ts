@@ -22,8 +22,9 @@ import { Destroy } from './destroy.directive';
 const easeOutQuad = (x: number): number => x * (2 - x);
 
 @Directive({
-  selector: '[countUp]',
-  providers: [Destroy, DecimalPipe],
+    selector: '[countUp]',
+    providers: [Destroy, DecimalPipe],
+    standalone: false
 })
 export class CountUpDirective implements OnInit {
   private readonly count$ = new BehaviorSubject(0);

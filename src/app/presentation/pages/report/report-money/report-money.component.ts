@@ -6,9 +6,10 @@ import { ApiService } from 'src/app/services/api.service';
 import * as XLSX from 'xlsx';
 
 @Component({
-  selector: 'app-report-money',
-  templateUrl: './report-money.component.html',
-  styleUrls: ['./report-money.component.css'],
+    selector: 'app-report-money',
+    templateUrl: './report-money.component.html',
+    styleUrls: ['./report-money.component.css'],
+    standalone: false
 })
 export class ReportMoneyComponent {
   constructor(

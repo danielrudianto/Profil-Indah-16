@@ -23,17 +23,18 @@ import { TypePurchaseChartComponent } from './type-purchase-chart/type-purchase-
 import { DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-report-purchase',
-  templateUrl: './report-purchase.component.html',
-  styleUrls: ['./report-purchase.component.css'],
-  providers: [
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-    },
-    { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
-  ],
+    selector: 'app-report-purchase',
+    templateUrl: './report-purchase.component.html',
+    styleUrls: ['./report-purchase.component.css'],
+    providers: [
+        {
+            provide: DateAdapter,
+            useClass: MomentDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+        },
+        { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
+    ],
+    standalone: false
 })
 export class ReportPurchaseComponent {
   constructor(

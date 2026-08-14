@@ -19,9 +19,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-adjustment-case-create',
-  templateUrl: './adjustment-case-create.component.html',
-  styleUrls: ['./adjustment-case-create.component.css'],
+    selector: 'app-adjustment-case-create',
+    templateUrl: './adjustment-case-create.component.html',
+    styleUrls: ['./adjustment-case-create.component.css'],
+    standalone: false
 })
 export class AdjustmentCaseCreateComponent {
   constructor(

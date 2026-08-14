@@ -8,9 +8,10 @@ export enum ArchiveMode {
 }
 
 @Component({
-  selector: 'app-archives',
-  templateUrl: './archives.component.html',
-  styleUrls: ['./archives.component.css'],
+    selector: 'app-archives',
+    templateUrl: './archives.component.html',
+    styleUrls: ['./archives.component.css'],
+    standalone: false
 })
 export class ArchivesComponent {
   @Output('onMonthSelected') onMonthSelected: EventEmitter<any> =

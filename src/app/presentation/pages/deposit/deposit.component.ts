@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-deposit',
-  templateUrl: './deposit.component.html',
-  styleUrls: ['./deposit.component.css'],
+    selector: 'app-deposit',
+    templateUrl: './deposit.component.html',
+    styleUrls: ['./deposit.component.css'],
+    standalone: false
 })
 export class DepositComponent {
   constructor() {}

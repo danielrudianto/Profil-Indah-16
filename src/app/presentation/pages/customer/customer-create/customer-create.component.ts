@@ -6,9 +6,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
-  selector: 'app-customer-create',
-  templateUrl: './customer-create.component.html',
-  styleUrls: ['./customer-create.component.css'],
+    selector: 'app-customer-create',
+    templateUrl: './customer-create.component.html',
+    styleUrls: ['./customer-create.component.css'],
+    standalone: false
 })
 export class CustomerCreateComponent {
   constructor(

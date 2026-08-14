@@ -5,10 +5,11 @@ import { slideUpDownAnimation } from 'src/app/animations/slide-up-down.animation
 import { SideNavService } from 'src/app/services/side-nav.service';
 
 @Component({
-  selector: 'app-general',
-  templateUrl: './general.component.html',
-  styleUrls: ['./general.component.css'],
-  animations: [slideUpDownAnimation],
+    selector: 'app-general',
+    templateUrl: './general.component.html',
+    styleUrls: ['./general.component.css'],
+    animations: [slideUpDownAnimation],
+    standalone: false
 })
 export class GeneralComponent {
   constructor(private router: Router, private sideNavService: SideNavService) {}

@@ -11,10 +11,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { SalesInvoiceViewComponent } from './sales-invoice-view/sales-invoice-view.component';
 
 @Component({
-  selector: 'app-sales-invoice-archive',
-  templateUrl: './sales-invoice-archive.component.html',
-  styleUrls: ['./sales-invoice-archive.component.css'],
-  animations: [slideInOutAnimation],
+    selector: 'app-sales-invoice-archive',
+    templateUrl: './sales-invoice-archive.component.html',
+    styleUrls: ['./sales-invoice-archive.component.css'],
+    animations: [slideInOutAnimation],
+    standalone: false
 })
 export class SalesInvoiceArchiveComponent {
   constructor(

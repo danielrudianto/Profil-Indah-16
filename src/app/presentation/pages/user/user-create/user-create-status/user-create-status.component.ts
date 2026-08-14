@@ -5,9 +5,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
-  selector: 'app-user-create-status',
-  templateUrl: './user-create-status.component.html',
-  styleUrls: ['./user-create-status.component.css'],
+    selector: 'app-user-create-status',
+    templateUrl: './user-create-status.component.html',
+    styleUrls: ['./user-create-status.component.css'],
+    standalone: false
 })
 export class UserCreateStatusComponent {
   roles: any[] = availableRoles;

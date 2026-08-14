@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-adjustment-case',
-  templateUrl: './adjustment-case.component.html',
-  styleUrls: ['./adjustment-case.component.css'],
+    selector: 'app-adjustment-case',
+    templateUrl: './adjustment-case.component.html',
+    styleUrls: ['./adjustment-case.component.css'],
+    standalone: false
 })
 export class AdjustmentCaseComponent {
   availbleMenus = [

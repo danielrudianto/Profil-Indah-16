@@ -17,10 +17,11 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
-  selector: 'app-stock-list-report',
-  templateUrl: './stock-list-report.component.html',
-  styleUrls: ['./stock-list-report.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-stock-list-report',
+    templateUrl: './stock-list-report.component.html',
+    styleUrls: ['./stock-list-report.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class StockListReportComponent {
   constructor(

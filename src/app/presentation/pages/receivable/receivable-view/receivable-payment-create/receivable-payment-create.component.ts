@@ -7,9 +7,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-receivable-payment-create',
-  templateUrl: './receivable-payment-create.component.html',
-  styleUrls: ['./receivable-payment-create.component.css'],
+    selector: 'app-receivable-payment-create',
+    templateUrl: './receivable-payment-create.component.html',
+    styleUrls: ['./receivable-payment-create.component.css'],
+    standalone: false
 })
 export class ReceivablePaymentCreateComponent {
   constructor(

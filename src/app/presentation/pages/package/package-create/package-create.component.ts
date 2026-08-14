@@ -18,9 +18,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-package-create',
-  templateUrl: './package-create.component.html',
-  styleUrls: ['./package-create.component.css'],
+    selector: 'app-package-create',
+    templateUrl: './package-create.component.html',
+    styleUrls: ['./package-create.component.css'],
+    standalone: false
 })
 export class PackageCreateComponent {
   constructor(

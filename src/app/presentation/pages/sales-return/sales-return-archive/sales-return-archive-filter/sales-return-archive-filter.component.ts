@@ -4,9 +4,10 @@ import { MatChipSelectionChange } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-sales-return-archive-filter',
-  templateUrl: './sales-return-archive-filter.component.html',
-  styleUrls: ['./sales-return-archive-filter.component.css'],
+    selector: 'app-sales-return-archive-filter',
+    templateUrl: './sales-return-archive-filter.component.html',
+    styleUrls: ['./sales-return-archive-filter.component.css'],
+    standalone: false
 })
 export class SalesReturnArchiveFilterComponent {
   constructor(

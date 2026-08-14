@@ -18,9 +18,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-update-product',
-  templateUrl: './update-product.component.html',
-  styleUrls: ['./update-product.component.css'],
+    selector: 'app-update-product',
+    templateUrl: './update-product.component.html',
+    styleUrls: ['./update-product.component.css'],
+    standalone: false
 })
 export class UpdateProductComponent {
   constructor(

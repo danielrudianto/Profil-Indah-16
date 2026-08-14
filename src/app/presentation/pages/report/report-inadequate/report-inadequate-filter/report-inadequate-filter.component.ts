@@ -7,10 +7,11 @@ import { AlertService } from 'src/app/services/alert.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-report-inadequate-filter',
-  templateUrl: './report-inadequate-filter.component.html',
-  styleUrls: ['./report-inadequate-filter.component.css'],
-  animations: [panelAnimation],
+    selector: 'app-report-inadequate-filter',
+    templateUrl: './report-inadequate-filter.component.html',
+    styleUrls: ['./report-inadequate-filter.component.css'],
+    animations: [panelAnimation],
+    standalone: false
 })
 export class ReportInadequateFilterComponent {
   constructor(

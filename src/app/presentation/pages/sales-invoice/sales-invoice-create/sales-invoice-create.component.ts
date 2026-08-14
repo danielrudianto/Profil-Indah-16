@@ -31,9 +31,10 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { v4 } from 'uuid';
 
 @Component({
-  selector: 'app-sales-invoice-create',
-  templateUrl: './sales-invoice-create.component.html',
-  styleUrls: ['./sales-invoice-create.component.css'],
+    selector: 'app-sales-invoice-create',
+    templateUrl: './sales-invoice-create.component.html',
+    styleUrls: ['./sales-invoice-create.component.css'],
+    standalone: false
 })
 export class SalesInvoiceCreateComponent {
   constructor(

@@ -5,10 +5,11 @@ import { sortSVGAnimation } from 'src/app/animations/sort-svg.animation';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-brand-purchase-chart',
-  templateUrl: './brand-purchase-chart.component.html',
-  styleUrls: ['./brand-purchase-chart.component.css'],
-  animations: [panelAnimation, sortSVGAnimation],
+    selector: 'app-brand-purchase-chart',
+    templateUrl: './brand-purchase-chart.component.html',
+    styleUrls: ['./brand-purchase-chart.component.css'],
+    animations: [panelAnimation, sortSVGAnimation],
+    standalone: false
 })
 export class BrandPurchaseChartComponent {
   constructor(

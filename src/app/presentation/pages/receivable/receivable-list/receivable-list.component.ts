@@ -4,9 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
-  selector: 'app-receivable-list',
-  templateUrl: './receivable-list.component.html',
-  styleUrl: './receivable-list.component.css',
+    selector: 'app-receivable-list',
+    templateUrl: './receivable-list.component.html',
+    styleUrl: './receivable-list.component.css',
+    standalone: false
 })
 export class ReceivableListComponent {
   constructor(

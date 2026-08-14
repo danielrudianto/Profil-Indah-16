@@ -12,9 +12,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-company-update',
-  templateUrl: './company-update.component.html',
-  styleUrls: ['./company-update.component.css'],
+    selector: 'app-company-update',
+    templateUrl: './company-update.component.html',
+    styleUrls: ['./company-update.component.css'],
+    standalone: false
 })
 export class CompanyUpdateComponent {
   constructor(

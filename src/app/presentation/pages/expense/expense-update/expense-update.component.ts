@@ -14,10 +14,11 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-expense-update',
-  templateUrl: './expense-update.component.html',
-  styleUrls: ['./expense-update.component.css'],
-  animations: [slideInOutAnimation],
+    selector: 'app-expense-update',
+    templateUrl: './expense-update.component.html',
+    styleUrls: ['./expense-update.component.css'],
+    animations: [slideInOutAnimation],
+    standalone: false
 })
 export class ExpenseUpdateComponent {
   constructor(

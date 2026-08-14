@@ -10,9 +10,10 @@ import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confi
 import { DatePipe, DecimalPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-payment-list',
-  templateUrl: './payment-list.component.html',
-  styleUrls: ['./payment-list.component.css'],
+    selector: 'app-payment-list',
+    templateUrl: './payment-list.component.html',
+    styleUrls: ['./payment-list.component.css'],
+    standalone: false
 })
 export class PaymentListComponent {
   constructor(

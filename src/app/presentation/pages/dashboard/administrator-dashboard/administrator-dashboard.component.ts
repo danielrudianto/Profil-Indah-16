@@ -11,9 +11,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-administrator-dashboard',
-  templateUrl: './administrator-dashboard.component.html',
-  styleUrls: ['./administrator-dashboard.component.css'],
+    selector: 'app-administrator-dashboard',
+    templateUrl: './administrator-dashboard.component.html',
+    styleUrls: ['./administrator-dashboard.component.css'],
+    standalone: false
 })
 export class AdministratorDashboardComponent {
   constructor(

@@ -6,9 +6,10 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
 @Component({
-  selector: 'app-product-brand-create',
-  templateUrl: './product-brand-create.component.html',
-  styleUrls: ['./product-brand-create.component.css'],
+    selector: 'app-product-brand-create',
+    templateUrl: './product-brand-create.component.html',
+    styleUrls: ['./product-brand-create.component.css'],
+    standalone: false
 })
 export class ProductBrandCreateComponent {
   constructor(

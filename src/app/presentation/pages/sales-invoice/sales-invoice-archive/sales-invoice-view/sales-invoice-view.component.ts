@@ -26,9 +26,10 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
-  selector: 'app-sales-invoice-view',
-  templateUrl: './sales-invoice-view.component.html',
-  styleUrls: ['./sales-invoice-view.component.css'],
+    selector: 'app-sales-invoice-view',
+    templateUrl: './sales-invoice-view.component.html',
+    styleUrls: ['./sales-invoice-view.component.css'],
+    standalone: false
 })
 export class SalesInvoiceViewComponent {
   constructor(

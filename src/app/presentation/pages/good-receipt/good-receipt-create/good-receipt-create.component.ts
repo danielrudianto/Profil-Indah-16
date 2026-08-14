@@ -22,9 +22,10 @@ import { DeleteConfirmationComponent } from '../../../components/delete-confirma
 import { SubmitConfirmationComponent } from '../../../components/submit-confirmation/submit-confirmation.component';
 
 @Component({
-  selector: 'app-good-receipt-create',
-  templateUrl: './good-receipt-create.component.html',
-  styleUrls: ['./good-receipt-create.component.css'],
+    selector: 'app-good-receipt-create',
+    templateUrl: './good-receipt-create.component.html',
+    styleUrls: ['./good-receipt-create.component.css'],
+    standalone: false
 })
 export class GoodReceiptCreateComponent {
   constructor(

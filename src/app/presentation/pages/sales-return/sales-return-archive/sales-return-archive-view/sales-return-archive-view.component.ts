@@ -19,9 +19,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { DeleteConfirmationComponent } from 'src/app/presentation/components/delete-confirmation/delete-confirmation.component';
 
 @Component({
-  selector: 'app-sales-return-archive-view',
-  templateUrl: './sales-return-archive-view.component.html',
-  styleUrls: ['./sales-return-archive-view.component.css'],
+    selector: 'app-sales-return-archive-view',
+    templateUrl: './sales-return-archive-view.component.html',
+    styleUrls: ['./sales-return-archive-view.component.css'],
+    standalone: false
 })
 export class SalesReturnArchiveViewComponent {
   constructor(

@@ -7,9 +7,10 @@ import { AdjustmentCaseConfirmViewComponent } from './adjustment-case-confirm-vi
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-adjustment-case-confirm',
-  templateUrl: './adjustment-case-confirm.component.html',
-  styleUrls: ['./adjustment-case-confirm.component.css'],
+    selector: 'app-adjustment-case-confirm',
+    templateUrl: './adjustment-case-confirm.component.html',
+    styleUrls: ['./adjustment-case-confirm.component.css'],
+    standalone: false
 })
 export class AdjustmentCaseConfirmComponent {
   constructor(
