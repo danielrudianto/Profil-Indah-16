@@ -14,9 +14,9 @@
 @import "@fontsource/roboto/400.css";
 @import "@fontsource/roboto/500.css";
 @import "@fontsource/material-icons/index.css";
-@import "@fontsource/plus-jakarta-sans/400.css";
-@import "@fontsource/plus-jakarta-sans/500.css";
-@import "@fontsource/plus-jakarta-sans/600.css";
+@import "@fontsource/montserrat/400.css";
+@import "@fontsource/montserrat/500.css";
+@import "@fontsource/montserrat/600.css";
 
 /*
   Tema Material 3.
@@ -101,7 +101,7 @@ html {
 
   height: 100%;
   color: var(--color-text);
-  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-family: "Montserrat", system-ui, sans-serif;
 }
 
 .shell__body {
@@ -157,7 +157,7 @@ html {
   padding: 0 14px;
   font: inherit;
   font-size: 14px;
-  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-family: "Montserrat", system-ui, sans-serif;
   color: var(--color-text);
   background: var(--color-bg);
   border: 1px solid var(--color-divider);
@@ -682,7 +682,7 @@ body {
   */
   background: var(--color-bg);
   color: var(--color-text);
-  font-family: "Plus Jakarta Sans", Roboto, "Helvetica Neue", sans-serif;
+  font-family: "Montserrat", Roboto, "Helvetica Neue", sans-serif;
 }
 
 app-root,
