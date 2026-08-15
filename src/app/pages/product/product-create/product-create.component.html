@@ -272,8 +272,9 @@
       <ul class="periksa">
         <li [class.periksa--ok]="referensiTerisi">
           <i
-            class="ph-fill"
+            [class.ph-fill]="referensiTerisi"
             [class.ph-check-circle]="referensiTerisi"
+            [class.ph]="!referensiTerisi"
             [class.ph-circle]="!referensiTerisi"
             aria-hidden="true"
           ></i>
@@ -287,8 +288,9 @@
 
         <li [class.periksa--ok]="merekTipeTerisi">
           <i
-            class="ph-fill"
+            [class.ph-fill]="merekTipeTerisi"
             [class.ph-check-circle]="merekTipeTerisi"
+            [class.ph]="!merekTipeTerisi"
             [class.ph-circle]="!merekTipeTerisi"
             aria-hidden="true"
           ></i>
@@ -297,8 +299,9 @@
 
         <li [class.periksa--ok]="satuanDasar">
           <i
-            class="ph-fill"
+            [class.ph-fill]="satuanDasar"
             [class.ph-check-circle]="satuanDasar"
+            [class.ph]="!satuanDasar"
             [class.ph-circle]="!satuanDasar"
             aria-hidden="true"
           ></i>

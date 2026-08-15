@@ -202,7 +202,15 @@ select.input {
   }
 }
 
-/* Yang sudah beres diberi warna aksen; sisanya tetap redup. */
+/*
+  Yang belum beres: LINGKARAN KOSONG bergaris (bobot regular Phosphor).
+  Yang sudah: lingkaran terisi penuh beraksen (bobot fill).
+
+  Keduanya harus berbeda BENTUK, bukan cuma warna — pada layar redup atau bagi
+  yang tidak membedakan warna, dua lingkaran padat berbeda warna terbaca sama
+  saja. Sebelumnya keduanya memakai bobot fill, jadi yang belum beres pun
+  tergambar sebagai bulatan padat.
+*/
 .periksa--ok {
   color: var(--color-text);
 

@@ -202,15 +202,33 @@
 
       <ul class="periksa">
         <li [class.periksa--ok]="metaFormGroup.valid">
-          <i class="ph-fill" [class.ph-check-circle]="metaFormGroup.valid" [class.ph-circle]="!metaFormGroup.valid" aria-hidden="true"></i>
+          <i
+            [class.ph-fill]="metaFormGroup.valid"
+            [class.ph-check-circle]="metaFormGroup.valid"
+            [class.ph]="!metaFormGroup.valid"
+            [class.ph-circle]="!metaFormGroup.valid"
+            aria-hidden="true"
+          ></i>
           <span>{{ "good-receipt__create__check-general" | translate }}</span>
         </li>
         <li [class.periksa--ok]="t.length > 0">
-          <i class="ph-fill" [class.ph-check-circle]="t.length > 0" [class.ph-circle]="t.length === 0" aria-hidden="true"></i>
+          <i
+            [class.ph-fill]="t.length > 0"
+            [class.ph-check-circle]="t.length > 0"
+            [class.ph]="t.length === 0"
+            [class.ph-circle]="t.length === 0"
+            aria-hidden="true"
+          ></i>
           <span>{{ t.length }} {{ "good-receipt__create__check-items" | translate }}</span>
         </li>
         <li [class.periksa--ok]="itemFormGroup.valid" *ngIf="t.length > 0">
-          <i class="ph-fill" [class.ph-check-circle]="itemFormGroup.valid" [class.ph-circle]="!itemFormGroup.valid" aria-hidden="true"></i>
+          <i
+            [class.ph-fill]="itemFormGroup.valid"
+            [class.ph-check-circle]="itemFormGroup.valid"
+            [class.ph]="!itemFormGroup.valid"
+            [class.ph-circle]="!itemFormGroup.valid"
+            aria-hidden="true"
+          ></i>
           <span>{{ "good-receipt__create__check-quantity" | translate }}</span>
         </li>
       </ul>
