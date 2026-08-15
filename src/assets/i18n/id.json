@@ -1751,5 +1751,8 @@
   "product-selector__lines": "baris",
   "product-selector__another-line": "Baris lagi",
   "product-selector__found": "barang ditemukan",
-  "accent__blurple": "Blurple"
+  "accent__blurple": "Blurple",
+  "good-receipt__archive__status": "Status",
+  "good-receipt__status__complete": "Lengkap",
+  "good-receipt__status__waiting": "Menunggu faktur"
 }

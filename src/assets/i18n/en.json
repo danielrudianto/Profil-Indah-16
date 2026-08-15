@@ -1745,5 +1745,8 @@
   "product-selector__lines": "lines",
   "product-selector__another-line": "Another line",
   "product-selector__found": "products found",
-  "accent__blurple": "Blurple"
+  "accent__blurple": "Blurple",
+  "good-receipt__archive__status": "Status",
+  "good-receipt__status__complete": "Complete",
+  "good-receipt__status__waiting": "Awaiting invoice"
 }

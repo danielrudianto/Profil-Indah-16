@@ -54,6 +54,7 @@
           <th>{{ 'good-receipt__archive__supplier' | translate }}</th>
           <th>{{ 'good-receipt__archive__company' | translate }}</th>
           <th>{{ 'good-receipt__archive__invoice-name' | translate }}</th>
+          <th>{{ 'good-receipt__archive__status' | translate }}</th>
           <th class="tabel__aksi-kepala">
             <span class="sr-only">{{ 'general__actions' | translate }}</span>
           </th>
@@ -67,6 +68,31 @@
           <td>{{ item.supplier?.name }}</td>
           <td>{{ item.company?.name }}</td>
           <td class="tabel__redup">{{ item.invoice_name ?? '—' }}</td>
+          <td>
+            <!--
+              Lengkap = fakturnya sudah masuk; menunggu = barangnya sudah
+              datang tetapi dokumennya belum final. Dibedakan warna DAN ikon,
+              bukan warna saja.
+            -->
+            <span
+              class="pill"
+              [class.pill--hijau]="item.is_confirm"
+              [class.pill--amber]="!item.is_confirm"
+            >
+              <i
+                class="ph-fill"
+                [class.ph-check-circle]="item.is_confirm"
+                [class.ph-clock]="!item.is_confirm"
+                aria-hidden="true"
+              ></i>
+              {{
+                (item.is_confirm
+                  ? 'good-receipt__status__complete'
+                  : 'good-receipt__status__waiting'
+                ) | translate
+              }}
+            </span>
+          </td>
           <td class="tabel__aksi">
             <button
               type="button"
@@ -83,7 +109,7 @@
 
       <tbody *ngIf="isLoading">
         <tr>
-          <td colspan="6" class="tabel__pesan">
+          <td colspan="7" class="tabel__pesan">
             {{ 'general__loading' | translate }}
           </td>
         </tr>
@@ -91,7 +117,7 @@
 
       <tbody *ngIf="!isLoading && dataSource.length === 0">
         <tr>
-          <td colspan="6" class="tabel__pesan">
+          <td colspan="7" class="tabel__pesan">
             {{ 'general__no-data' | translate }}
           </td>
         </tr>
