@@ -1858,5 +1858,15 @@
   "good-receipt__empty__title": "Belum ada penerimaan di bulan ini",
   "good-receipt__empty__desc": "Penerimaan barang yang dicatat bulan ini akan tampil di sini.",
   "overpayment__empty__title": "Belum ada kelebihan bayar",
-  "overpayment__empty__desc": "Uang pelanggan yang melebihi tagihan akan tercatat di sini."
+  "overpayment__empty__desc": "Uang pelanggan yang melebihi tagihan akan tercatat di sini.",
+  "company__lede": "Perusahaan yang menerbitkan dan menerima dokumen.",
+  "company__search": "Cari nama perusahaan…",
+  "company__add": "Tambah perusahaan",
+  "company__empty__title": "Belum ada perusahaan",
+  "company__empty__desc": "Perusahaan dipakai pada faktur dan penerimaan. Tambahkan lewat tombol di atas.",
+  "expense__lede": "Pengeluaran yang tercatat pada bulan terpilih.",
+  "expense__add": "Catat pengeluaran",
+  "expense__empty__title": "Belum ada pengeluaran di bulan ini",
+  "expense__empty__desc": "Pilih bulan lain lewat kapsul di atas, atau catat pengeluaran baru.",
+  "general__edit": "Ubah"
 }

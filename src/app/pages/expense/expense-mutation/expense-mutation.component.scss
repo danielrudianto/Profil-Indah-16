@@ -1,0 +1,63 @@
+/*
+  Kapsul bulan dan pemilihnya disalurkan ke slot aksi app-list-page lewat
+  ng-content, jadi gaya ini tetap berlaku: isi yang diproyeksikan memakai
+  lingkup gaya komponen yang MENULISKANNYA.
+*/
+
+/*
+  Bentuknya sama dengan chip pintas di daftar lain — kapsul 999px, tinggi 44px
+  — supaya "saringan yang sedang menyala" terbaca sebagai satu bahasa di
+  seluruh aplikasi. Bedanya ia selalu menyala dan warnanya aksen, sebab bulan
+  memang tidak pernah kosong di halaman ini.
+*/
+.chip-bulan {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--color-accent);
+  background: var(--color-accent-wash);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 55%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  i {
+    font-size: 15px;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.chip-bulan__panah {
+  font-size: 12px !important;
+  opacity: 0.7;
+}
+
+/*
+  Kolom asli datepicker-nya disembunyikan DARI PANDANGAN, bukan dari susunan.
+  Material menggantungkan panel kalendernya pada elemen ini; dengan display:
+  none panelnya kehilangan jangkar dan muncul di sudut kiri atas layar.
+*/
+.bulan-tersembunyi {
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}

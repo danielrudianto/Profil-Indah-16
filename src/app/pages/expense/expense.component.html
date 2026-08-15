@@ -1,14 +1,10 @@
-<app-feature-background />
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <app-transaction-header
-        [title]="'expense__title' | translate"
-        [availbleMenus]="availbleMenus"
-        route="Expense"
-        
-      />
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-</div>
+<!--
+  Shell pengeluaran.
+
+  app-feature-background dan app-transaction-header dilepas, sama seperti pada
+  penerimaan barang, faktur penjualan, dan kelebihan bayar: latar dekoratif
+  birunya menutupi seluruh halaman dan tidak ada hubungannya dengan token
+  Nocturne, sedangkan judulnya tergambar dua kali — sekali di sini dan sekali
+  oleh app-list-page.
+-->
+<router-outlet />

@@ -1,62 +1,132 @@
-<div class="dashboard-card">
-  <mat-form-field appearance="outline" style="min-width: 170px">
-    <mat-label>{{ "expense__mutation__month-year" | translate }}</mat-label>
-    <input matInput [matDatepicker]="dp" [formControl]="date" />
-    <mat-hint>MM/YYYY</mat-hint>
-    <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
-    <mat-datepicker
-      #dp
-      startView="multi-year"
-      (monthSelected)="setMonthAndYear($event, dp)"
-      panelClass="example-month-picker"
+<!--
+  Daftar pengeluaran — bagian `18a` berkas desain.
+
+  TANPA KOTAK PENCARIAN. Endpoint expense/mutation hanya menerima bulan, tahun,
+  dan nomor halaman; tidak ada kata kunci. Kotak yang menerima ketikan lalu
+  tidak mengubah apa pun membuat pengguna mengira daftarnya rusak — dan ia akan
+  mengetik ulang, lebih pelan, mengira dirinya yang salah.
+
+  Ukuran halamannya juga ditentukan server, jadi pilihan 10/25/50 dimatikan.
+-->
+<app-list-page
+  [heading]="'expense__title' | translate"
+  [lede]="'expense__lede' | translate"
+  [addLabel]="'expense__add' | translate"
+  [page]="page"
+  [pageSize]="pageSize"
+  [total]="dataCount"
+  [loading]="isLoading"
+  [showSearch]="false"
+  [showPageSize]="false"
+  (pageChange)="bukaHalaman($event)"
+  (add)="tambah()"
+  (refresh)="fetchReport()"
+>
+  <ng-container aksi>
+    <!--
+      Bulan yang sedang dilihat, sebagai kapsul saringan — bukan kolom isian
+      penuh. Ia satu-satunya saringan di halaman ini dan SELALU terisi: daftar
+      pengeluaran tanpa bulan tidak berarti apa-apa, jadi kapsulnya tidak punya
+      tombol lepas seperti kapsul saringan di daftar lain.
+
+      Pemilihnya tetap datepicker Material dalam mode bulan-tahun; ia memakai
+      adapter tanggal tersendiri yang dipasang di komponen ini.
+    -->
+    <button
+      type="button"
+      class="chip-bulan"
+      (click)="picker.open()"
+      [attr.aria-label]="'expense__mutation__month-year' | translate"
     >
-    </mat-datepicker>
-  </mat-form-field>
+      <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+      {{ labelBulan }}
+      <i class="ph ph-caret-down chip-bulan__panah" aria-hidden="true"></i>
+    </button>
 
-  <div class="table-responsive">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>{{ "expense__date" | translate }}</th>
-          <th>{{ "expense__description" | translate }}</th>
-          <th>{{ "expense__type" | translate }}</th>
-          <th>{{ "expense__company" | translate }}</th>
-          <th>{{ "expense__value" | translate }}</th>
-        </tr>
-      </thead>
-      <tbody *ngIf="isLoading">
-        <tr>
-          <td colspan="5">
-            <mat-spinner id="spinner"></mat-spinner>
-          </td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="!isLoading && dataSource.length == 0">
-        <tr>
-          <td colspan="5">
-            <empty-table />
-          </td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="!isLoading && dataSource.length > 0">
-        <tr
-          *ngFor="let item of dataSource; index as i"
-          (click)="openUpdateExpenseDialog(i)"
-        >
-          <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
-          <td>{{ item.description }}</td>
-          <td>{{ item.expense_type.name }}</td>
-          <td>{{ item.company.name }}</td>
-          <td>{{ item.value | number : "0.2-2" }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <!--
+      Kolom aslinya disembunyikan dari pandangan tetapi TIDAK dari susunan:
+      datepicker Material menggantungkan panelnya pada elemen ini, dan display:
+      none membuat panelnya muncul di sudut kiri atas layar.
+    -->
+    <mat-form-field class="bulan-tersembunyi">
+      <input
+        matInput
+        [matDatepicker]="picker"
+        [formControl]="date"
+        readonly
+      />
+      <mat-datepicker
+        #picker
+        startView="multi-year"
+        (monthSelected)="setMonthAndYear($event, picker)"
+        panelClass="bulan-panel"
+      />
+    </mat-form-field>
+  </ng-container>
 
-  <mat-paginator
-    pageSize="10"
-    [pageIndex]="page - 1"
-    [length]="dataCount"
-    (page)="changePage($event)"
-  ></mat-paginator>
-</div>
+  <table class="tabel">
+    <thead>
+      <tr>
+        <th>{{ 'expense__date' | translate }}</th>
+        <th>{{ 'expense__description' | translate }}</th>
+        <th>{{ 'expense__type' | translate }}</th>
+        <th>{{ 'expense__company' | translate }}</th>
+        <th class="tabel__nilai-kepala">{{ 'expense__value' | translate }}</th>
+        <th class="tabel__aksi-kepala">
+          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!isLoading && dataSource.length > 0">
+      <tr
+        *ngFor="let item of dataSource; index as i; trackBy: lacakPengeluaran"
+        class="tabel__baris-klik"
+        (click)="ubah(i)"
+      >
+        <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
+        <td class="tabel__utama">{{ item.description }}</td>
+        <td>
+          <span class="tag">{{ item.expense_type?.name }}</span>
+        </td>
+        <td class="tabel__redup">{{ item.company?.name }}</td>
+        <td class="tabel__nilai">Rp {{ item.value | number: '1.0-0' }}</td>
+        <td class="tabel__aksi" (click)="$event.stopPropagation()">
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="ubah(i)"
+            [title]="'general__edit' | translate"
+            [attr.aria-label]="'general__edit' | translate"
+          >
+            <i class="ph ph-pencil-simple" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="isLoading">
+      <tr>
+        <td colspan="6" class="tabel__pesan">
+          {{ 'general__loading' | translate }}
+        </td>
+      </tr>
+    </tbody>
+
+    <!--
+      Selalu varian "belum ada data": halaman ini tidak punya pencarian, jadi
+      kosong di sini tidak pernah berarti kata kunci yang tidak ketemu.
+    -->
+    <tbody *ngIf="!isLoading && dataSource.length === 0">
+      <tr>
+        <td colspan="6">
+          <app-tabel-kosong
+            ikon="ph-trend-down"
+            [judul]="'expense__empty__title' | translate"
+            [penjelasan]="'expense__empty__desc' | translate"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</app-list-page>

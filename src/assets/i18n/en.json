@@ -1852,5 +1852,15 @@
   "good-receipt__empty__title": "No receipts this month",
   "good-receipt__empty__desc": "Goods received this month will appear here.",
   "overpayment__empty__title": "No overpayments yet",
-  "overpayment__empty__desc": "Customer money exceeding the bill will be recorded here."
+  "overpayment__empty__desc": "Customer money exceeding the bill will be recorded here.",
+  "company__lede": "Companies that issue and receive documents.",
+  "company__search": "Search company name…",
+  "company__add": "Add company",
+  "company__empty__title": "No companies yet",
+  "company__empty__desc": "Companies are used on invoices and receipts. Add one with the button above.",
+  "expense__lede": "Expenses recorded in the selected month.",
+  "expense__add": "Record expense",
+  "expense__empty__title": "No expenses this month",
+  "expense__empty__desc": "Pick another month with the chip above, or record a new expense.",
+  "general__edit": "Edit"
 }

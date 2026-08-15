@@ -1,81 +1,88 @@
-<app-feature-background />
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <app-feature-header
-        [title]="'company__title' | translate"
-        [help]="'company__help' | translate"
-        [isBackAvailable]="true"
-      ></app-feature-header>
-      <div class="dashboard-card">
-        <app-feature-search
-          [addButton]="true"
-          route="company"
-          [page]="page"
-          [enable]="true"
-          (onChange)="onUpdateData($event)"
-          (onLoadingChange)="onUpdateLoadingStatus($event)"
-          (updatePage)="onUpdatePage()"
-          (onNewQuery)="page = 1"
-        ></app-feature-search>
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th class="text-center">{{ "company__name" | translate }}</th>
-                <th class="text-center">
-                  {{ "company__address" | translate }}
-                </th>
-                <th class="text-center">{{ "company__npwp" | translate }}</th>
-              </tr>
-            </thead>
-            <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr
-                *ngFor="let item of dataSource"
-                (click)="openDialog(item.id!)"
-              >
-                <td class="text-center">{{ item.name }}</td>
-                <td class="text-center">
-                  <span class="text-clamp-2">
-                    {{ item.address }}
-                  </span>
-                </td>
-                <td class="text-center">
-                  <span *ngIf="item.npwp != null">{{
-                    item.npwp | mask : "00.000.000.0-000.000"
-                  }}</span>
-                  <span *ngIf="item.npwp == null">N/A</span>
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length == 0">
-              <tr>
-                <td colspan="3">
-                  <empty-table />
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="isLoading">
-              <tr>
-                <td colspan="3" class="text-center">
-                  <mat-spinner id="spinner"></mat-spinner>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <mat-paginator
-          class="paginator"
-          [pageIndex]="page - 1"
-          [length]="dataCount"
-          [pageSize]="10"
-          (page)="changePage($event)"
-          aria-label="Select page"
-          hidePageSize="true"
-          *ngIf="!isLoading"
-        >
-        </mat-paginator>
-      </div>
-    </div>
-  </div>
-</div>
+<!--
+  Daftar perusahaan.
+
+  Ukuran halaman ditentukan server lewat process.env.LIMIT dan tidak bisa
+  diminta lain, jadi pilihan 10/25/50 dimatikan — menawarkan pilihan yang tidak
+  berpengaruh membuat pengguna mengira daftarnya rusak ketika ditekan dan tidak
+  terjadi apa-apa.
+-->
+<app-list-page
+  [heading]="'company__title' | translate"
+  [lede]="'company__lede' | translate"
+  [searchPlaceholder]="'company__search' | translate"
+  [addLabel]="'company__add' | translate"
+  [keyword]="keyword"
+  [page]="page"
+  [pageSize]="pageSize"
+  [total]="dataCount"
+  [loading]="isLoading"
+  [showPageSize]="false"
+  (search)="cari($event)"
+  (pageChange)="bukaHalaman($event)"
+  (add)="tambah()"
+  (refresh)="ambilData()"
+>
+  <table class="tabel">
+    <thead>
+      <tr>
+        <th>{{ 'company__name' | translate }}</th>
+        <th>{{ 'company__address' | translate }}</th>
+        <th>{{ 'company__npwp' | translate }}</th>
+        <th class="tabel__aksi-kepala">
+          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!isLoading && dataSource.length > 0">
+      <tr
+        *ngFor="let item of dataSource; trackBy: lacakPerusahaan"
+        class="tabel__baris-klik"
+        (click)="ubah(item)"
+      >
+        <td class="tabel__utama">{{ item.name }}</td>
+        <td class="tabel__redup">{{ item.address }}</td>
+        <!--
+          NPWP tanpa isi bukan kesalahan — tidak semua perusahaan punya, dan
+          em dash menyatakan itu lebih tenang daripada "N/A".
+        -->
+        <td>
+          {{ item.npwp ? (item.npwp | mask: '00.000.000.0-000.000') : '—' }}
+        </td>
+        <td class="tabel__aksi" (click)="$event.stopPropagation()">
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="ubah(item)"
+            [title]="'general__edit' | translate"
+            [attr.aria-label]="'general__edit' | translate"
+          >
+            <i class="ph ph-pencil-simple" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="isLoading">
+      <tr>
+        <td colspan="4" class="tabel__pesan">
+          {{ 'general__loading' | translate }}
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="!isLoading && dataSource.length === 0">
+      <tr>
+        <td colspan="4">
+          <app-tabel-kosong
+            ikon="ph-buildings"
+            [judul]="'company__empty__title' | translate"
+            [penjelasan]="'company__empty__desc' | translate"
+            [kataKunci]="keyword"
+            (reset)="resetPencarian()"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</app-list-page>

@@ -237,3 +237,12 @@
     margin-left: 0;
   }
 }
+
+/*
+  Pengganti kotak cari pada daftar yang tidak punya pencarian. Ia tidak
+  menggambar apa pun; tugasnya hanya mengambil sisa ruang supaya kelompok
+  tombol tetap berada di kanan, persis seperti ketika kotak carinya hadir.
+*/
+.cari-pengganti {
+  flex: 1;
+}

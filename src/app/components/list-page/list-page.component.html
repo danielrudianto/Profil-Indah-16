@@ -10,7 +10,7 @@
     sebelah kolom cari nanti tidak mengubah apa pun di sini.
   -->
   <div class="list-page__bar">
-    <div class="cari">
+    <div class="cari" *ngIf="showSearch">
       <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
       <input
         type="search"
@@ -19,6 +19,12 @@
         [attr.aria-label]="searchPlaceholder"
       />
     </div>
+
+    <!--
+      Tanpa kotak cari, kelompok tombol tetap harus terdorong ke kanan; kotak
+      inilah yang biasanya melakukannya.
+    -->
+    <span class="cari-pengganti" *ngIf="!showSearch"></span>
 
     <div class="list-page__aksi">
       <!-- Tombol tambahan milik halaman, diletakkan sebelum tombol bakunya. -->

@@ -90,6 +90,16 @@ export class ListPageComponent implements OnInit {
    */
   @Input() showPageSize = true;
 
+  /**
+   * Kotak pencarian.
+   *
+   * Dimatikan pada daftar yang endpoint-nya memang tidak menerima kata kunci.
+   * Alasannya sama dengan showPageSize: kotak yang menerima ketikan lalu tidak
+   * mengubah apa pun membuat pengguna mengira daftarnya rusak — dan ia akan
+   * mengetik ulang, lebih pelan, mengira dirinya yang salah.
+   */
+  @Input() showSearch = true;
+
   @Output() search = new EventEmitter<string>();
   @Output() pageChange = new EventEmitter<number>();
   @Output() pageSizeChange = new EventEmitter<number>();

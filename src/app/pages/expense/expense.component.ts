@@ -1,30 +1,15 @@
 import { Component } from '@angular/core';
-import { FeatureBackgroundComponent } from '../../components/feature-background/feature-background.component';
-import { TransactionHeaderComponent } from '../../components/transaction-header/transaction-header.component';
 import { RouterOutlet } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
 
+/**
+ * Shell pengeluaran — kini hanya penampung rute anaknya.
+ *
+ * Judul dan perpindahan antara daftar, laporan, dan formulir dipegang
+ * app-list-page di masing-masing halaman anak, sesuai berkas desain.
+ */
 @Component({
-    selector: 'app-expense',
-    templateUrl: './expense.component.html',
-    imports: [FeatureBackgroundComponent, TransactionHeaderComponent, RouterOutlet, TranslatePipe]
+  selector: 'app-expense',
+  templateUrl: './expense.component.html',
+  imports: [RouterOutlet],
 })
-export class ExpenseComponent {
-  availbleMenus = [
-    {
-      label: 'expense__report',
-      link: 'Report',
-      icon: 'report',
-    },
-    {
-      label: 'expense__mutation',
-      link: 'Mutation',
-      icon: 'list',
-    },
-    {
-      label: 'expense__create',
-      link: '',
-      icon: 'add',
-    },
-  ];
-}
+export class ExpenseComponent {}
