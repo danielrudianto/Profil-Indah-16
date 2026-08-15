@@ -1751,9 +1751,9 @@
   "good-receipt__status__waiting": "Awaiting invoice",
   "good-receipt__state": "Document state",
   "good-receipt__state__do": "Delivery note only",
-  "good-receipt__state__do__note": "Goods have arrived, the supplier invoice has not. Saved as awaiting invoice and must be completed later.",
+  "good-receipt__state__do__note": "The document stays Awaiting invoice until completed.",
   "good-receipt__state__full": "Complete document",
-  "good-receipt__state__full__note": "The supplier invoice is in hand. The document is final and enters payables.",
+  "good-receipt__state__full__note": "The document is final and enters supplier payables.",
   "good-receipt__invoice": "Supplier invoice",
   "good-receipt__invoice__name": "Supplier invoice no.",
   "good-receipt__invoice__tax": "Tax invoice no.",
@@ -1778,5 +1778,7 @@
   "good-receipt__admin-mode": "Administrator mode",
   "good-receipt__auto-number": "Number generated on save",
   "good-receipt__invoice__waiting-title": "Invoice fields pending",
-  "good-receipt__create__add-item-short": "Add product"
+  "good-receipt__create__add-item-short": "Add product",
+  "good-receipt__state__do__desk": "Goods have arrived, the supplier invoice has not.",
+  "good-receipt__state__full__desk": "The supplier invoice is in hand — fill it in now."
 }

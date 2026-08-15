@@ -1757,9 +1757,9 @@
   "good-receipt__status__waiting": "Menunggu faktur",
   "good-receipt__state": "Keadaan dokumen",
   "good-receipt__state__do": "Surat jalan saja",
-  "good-receipt__state__do__note": "Barang sudah datang, faktur supplier belum. Dokumen tersimpan sebagai menunggu faktur dan perlu dilengkapi nanti.",
+  "good-receipt__state__do__note": "Dokumen berstatus Menunggu faktur sampai dilengkapi.",
   "good-receipt__state__full": "Dokumen lengkap",
-  "good-receipt__state__full__note": "Faktur supplier sudah di tangan. Dokumen langsung final dan masuk hutang.",
+  "good-receipt__state__full__note": "Dokumen langsung final & masuk hutang supplier.",
   "good-receipt__invoice": "Faktur supplier",
   "good-receipt__invoice__name": "No. faktur supplier",
   "good-receipt__invoice__tax": "No. faktur pajak",
@@ -1784,5 +1784,7 @@
   "good-receipt__admin-mode": "Mode administrator",
   "good-receipt__auto-number": "Nomor dibuat otomatis saat simpan",
   "good-receipt__invoice__waiting-title": "Kolom faktur menunggu",
-  "good-receipt__create__add-item-short": "Tambah barang"
+  "good-receipt__create__add-item-short": "Tambah barang",
+  "good-receipt__state__do__desk": "Barang sudah datang, faktur supplier belum diterima.",
+  "good-receipt__state__full__desk": "Faktur supplier sudah di tangan — isi sekalian."
 }

@@ -40,6 +40,7 @@
         >
           <i class="ph ph-truck" aria-hidden="true"></i>
           <span class="keadaan__judul">{{ "good-receipt__state__do" | translate }}</span>
+          <span class="keadaan__desk">{{ "good-receipt__state__do__desk" | translate }}</span>
           <span class="keadaan__akibat">{{ "good-receipt__state__do__note" | translate }}</span>
         </button>
 
@@ -51,6 +52,7 @@
         >
           <i class="ph ph-receipt" aria-hidden="true"></i>
           <span class="keadaan__judul">{{ "good-receipt__state__full" | translate }}</span>
+          <span class="keadaan__desk">{{ "good-receipt__state__full__desk" | translate }}</span>
           <span class="keadaan__akibat">{{ "good-receipt__state__full__note" | translate }}</span>
         </button>
       </div>
@@ -114,8 +116,10 @@
       saat mode surat jalan, supaya menekan pilihannya tidak membuat sisa form
       melompat naik-turun.
     -->
-    <section class="kartu faktur" [formGroup]="metaFormGroup" *ngIf="bolehUbahHarga">
-      <h2 class="kartu__label">{{ "good-receipt__invoice" | translate }}</h2>
+    <section class="faktur" [formGroup]="metaFormGroup" *ngIf="bolehUbahHarga">
+      <h2 class="kartu__label" *ngIf="dokumenLengkap">
+        {{ "good-receipt__invoice" | translate }}
+      </h2>
 
       <div class="faktur__isi" [class.faktur__isi--aktif]="dokumenLengkap">
         <div class="kisi" *ngIf="dokumenLengkap">
@@ -188,9 +192,6 @@
               </th>
               <th class="ke-kanan" *ngIf="bolehUbahHarga">
                 {{ "good-receipt__create__line-total" | translate }}
-              </th>
-              <th *ngIf="bolehUbahHarga">
-                {{ "good-receipt__create__save-price" | translate }}
               </th>
               <th class="tabel__aksi-kepala">
                 <span class="sr-only">{{ "general__actions" | translate }}</span>
@@ -270,10 +271,11 @@
                 Rp {{ totalBaris(i) | number: "1.0-0" }}
               </td>
 
-              <td *ngIf="bolehUbahHarga">
+              <td class="tabel__aksi">
                 <button
                   type="button"
                   class="simpan-harga"
+                  *ngIf="bolehUbahHarga"
                   [class.simpan-harga--on]="itemForm.get('save_price')?.value"
                   (click)="itemForm.get('save_price')?.setValue(!itemForm.get('save_price')?.value)"
                   [attr.aria-pressed]="itemForm.get('save_price')?.value"

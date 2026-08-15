@@ -6,9 +6,15 @@
   keduanya bisa dibaca bergantian tanpa menerjemahkan ulang.
 */
 
+/*
+  Dua kolom yang DI-CENTER, bukan melebar penuh. Kolom formulir berhenti di
+  1080px; kolom kanan tetap 320px dan sejajar mulai dari atas formulir, bukan
+  menempel di pojok layar.
+*/
 .buat {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
+  grid-template-columns: minmax(0, 1080px) 320px;
+  justify-content: center;
   gap: 32px;
   align-items: start;
   font-family: "Plus Jakarta Sans", system-ui, sans-serif;
@@ -18,14 +24,14 @@
 .buat__utama {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
   min-width: 0;
 }
 
 .buat__samping {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
   position: sticky;
   top: 0;
 }
@@ -51,7 +57,7 @@
 /* ---------------------------------------------------------------- */
 
 .kartu {
-  padding: 20px 24px 24px;
+  padding: 12px 28px 16px;
   border: 1px solid var(--color-divider);
   border-radius: 12px;
   background: var(--color-surface);
@@ -63,7 +69,7 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  color: var(--color-text-faint);
 }
 
 /* ---------------------------------------------------------------- */
@@ -441,10 +447,16 @@ select.input {
   gap: 12px;
 }
 
+/*
+  Ikon di KIRI, teks di sampingnya — bukan ikon di atas. Kartu terpilih memakai
+  ground aktif berikut ring 1px, bukan isian terang.
+*/
 .keadaan__kartu {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  column-gap: 12px;
+  row-gap: 2px;
   padding: 14px 16px;
   font: inherit;
   text-align: left;
@@ -457,8 +469,9 @@ select.input {
     color 0.18s ease;
 
   i {
+    grid-row: 1 / span 3;
     font-size: 20px;
-    color: color-mix(in srgb, var(--color-text) 45%, transparent);
+    color: var(--color-text-faint);
     transition: color 0.18s ease;
   }
 
@@ -473,8 +486,9 @@ select.input {
 }
 
 .keadaan__kartu--on {
-  border-color: var(--color-accent);
+  border-color: transparent;
   background: var(--color-active);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
   color: var(--color-text);
 
   i {
@@ -487,10 +501,15 @@ select.input {
   font-weight: 500;
 }
 
-/* Konsekuensinya ditulis di kartunya, bukan disembunyikan di tooltip. */
+.keadaan__desk {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+/* Konsekuensinya beraksen — itu kalimat yang harus terbaca, bukan catatan kaki. */
 .keadaan__akibat {
-  font-size: 12.5px;
-  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  font-size: 12px;
+  color: var(--color-accent);
 }
 
 /* ---------------------------------------------------------------- */
@@ -502,13 +521,13 @@ select.input {
   melompat. 148px adalah tinggi kartu faktur yang terisi, sesuai berkas desain.
 */
 .faktur__isi {
-  min-height: 148px;
+  min-height: 128px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   border: 1px dashed var(--color-divider);
-  border-radius: 10px;
-  padding: 14px;
+  border-radius: 12px;
+  padding: 16px 22px;
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
@@ -533,8 +552,8 @@ select.input {
 
 .faktur__kosong {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   gap: 8px;
   margin: 0;
   font-size: 13px;
