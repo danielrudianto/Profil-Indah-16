@@ -40,9 +40,23 @@ export class SideNavService {
   }
 
   // Helper method to get initial state from localStorage
+  /*
+    Bawaannya TERBUKA pada layar lebar, bukan tertutup.
+
+    Sebelumnya selalu tertutup ketika belum ada pilihan tersimpan. Dulu itu
+    tidak fatal — menunya masih bisa dibuka lewat tombol, dan halaman launcher
+    menyediakan jalan lain. Sejak launcher dibuang, navigasi samping menjadi
+    satu-satunya jalan berpindah halaman, dan layar pertama yang menyembunyikannya
+    terbaca seperti aplikasi yang gagal dimuat.
+
+    Pada layar sempit tetap tertutup: di sana drawer menutupi seluruh isi.
+  */
   private getInitialState(): boolean {
     const storedState = this.getStoredState();
-    return storedState !== null ? storedState : false;
+    if (storedState !== null) {
+      return storedState;
+    }
+    return window.innerWidth >= 768;
   }
 
   // Helper method to get stored state from localStorage
