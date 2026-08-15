@@ -1,7 +1,24 @@
 <div class="buat">
   <div class="buat__utama">
     <header class="buat__head">
-      <h1 class="buat__title">{{ "good-receipt__create__title" | translate }}</h1>
+      <!--
+        Penanda mode. Halaman ini punya tiga wajah menurut peran, dan tanpa
+        penanda tidak ada cara membedakan "form ini memang begini" dari "kolom
+        harganya gagal muncul".
+      -->
+      <span class="mode" *ngIf="bolehUbahHarga">
+        <i class="ph ph-shield-check" aria-hidden="true"></i>
+        {{ "good-receipt__admin-mode" | translate }}
+      </span>
+
+      <h1 class="buat__title">
+        {{ "good-receipt__create__title" | translate }}
+        <!-- Nomor dokumennya dibuat server, bukan diketik. -->
+        <span class="tag-otomatis">
+          <i class="ph ph-sparkle" aria-hidden="true"></i>
+          {{ "good-receipt__auto-number" | translate }}
+        </span>
+      </h1>
       <p class="buat__lede">{{ "good-receipt__create__lede" | translate }}</p>
     </header>
 
@@ -126,16 +143,27 @@
           </div>
         </div>
 
-        <p class="faktur__kosong" *ngIf="!dokumenLengkap">
+        <div class="faktur__kosong" *ngIf="!dokumenLengkap">
           <i class="ph ph-clock" aria-hidden="true"></i>
-          {{ "good-receipt__invoice__waiting" | translate }}
-        </p>
+          <span>
+            <strong>{{ "good-receipt__invoice__waiting-title" | translate }}</strong>
+            <span>{{ "good-receipt__invoice__waiting" | translate }}</span>
+          </span>
+        </div>
       </div>
     </section>
 
     <!-- Barang diterima ------------------------------------------------ -->
     <section class="kartu">
-      <h2 class="kartu__label">{{ "good-receipt__create__items" | translate }}</h2>
+      <div class="kartu__baris">
+        <h2 class="kartu__label">
+          {{ "good-receipt__create__items" | translate }}
+        </h2>
+        <button type="button" class="tambah-atas" (click)="openItemSelector()">
+          <i class="ph ph-plus" aria-hidden="true"></i>
+          {{ "good-receipt__create__add-item-short" | translate }}
+        </button>
+      </div>
 
       <!--
         Banner ini hanya benar bagi yang memang tidak melihat harga. Untuk peran

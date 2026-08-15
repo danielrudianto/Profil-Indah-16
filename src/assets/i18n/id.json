@@ -1726,7 +1726,7 @@
   "general__view": "Lihat",
   "good-receipt__create__price-saved": "Harga beli tersimpan ke master barang.",
   "good-receipt__create__title": "Buat Penerimaan",
-  "good-receipt__create__lede": "Catat barang masuk dari surat jalan supplier.",
+  "good-receipt__create__lede": "Penerimaan & faktur pembelian adalah satu catatan — administrator melihat harga.",
   "good-receipt__create__general": "Data umum",
   "good-receipt__create__items": "Barang diterima",
   "good-receipt__create__delivery-order": "No. surat jalan",
@@ -1765,7 +1765,7 @@
   "good-receipt__invoice__tax": "No. faktur pajak",
   "good-receipt__invoice__discount": "Diskon dokumen",
   "good-receipt__invoice__discount__note": "Dalam Rupiah, di luar diskon tiap baris barang.",
-  "good-receipt__invoice__waiting": "Menunggu faktur supplier",
+  "good-receipt__invoice__waiting": "Nomor faktur supplier, faktur pajak & diskon dokumen diisi nanti — buka dari daftar penerimaan ber-status \"Menunggu faktur\".",
   "good-receipt__create__submit__waiting": "Simpan — menunggu faktur",
   "good-receipt__create__submit__final": "Simpan — dokumen final",
   "good-receipt__check__waiting": "Dokumen menunggu faktur",
@@ -1780,5 +1780,9 @@
   "good-receipt__summary__item-discount": "Diskon item",
   "good-receipt__summary__doc-discount": "Diskon dokumen",
   "good-receipt__summary__total": "Total",
-  "good-receipt__create__line-total": "Total"
+  "good-receipt__create__line-total": "Total",
+  "good-receipt__admin-mode": "Mode administrator",
+  "good-receipt__auto-number": "Nomor dibuat otomatis saat simpan",
+  "good-receipt__invoice__waiting-title": "Kolom faktur menunggu",
+  "good-receipt__create__add-item-short": "Tambah barang"
 }

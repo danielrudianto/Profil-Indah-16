@@ -1720,7 +1720,7 @@
   "general__view": "View",
   "good-receipt__create__price-saved": "Purchase price saved to the product master.",
   "good-receipt__create__title": "Create Goods Receipt",
-  "good-receipt__create__lede": "Record goods received from a supplier delivery note.",
+  "good-receipt__create__lede": "A goods receipt and a purchase invoice are one record — administrators see the prices.",
   "good-receipt__create__general": "General data",
   "good-receipt__create__items": "Goods received",
   "good-receipt__create__delivery-order": "Delivery note no.",
@@ -1759,7 +1759,7 @@
   "good-receipt__invoice__tax": "Tax invoice no.",
   "good-receipt__invoice__discount": "Document discount",
   "good-receipt__invoice__discount__note": "In Rupiah, on top of each line discount.",
-  "good-receipt__invoice__waiting": "Awaiting supplier invoice",
+  "good-receipt__invoice__waiting": "Supplier invoice no., tax invoice no. and document discount are filled in later — open it from the list of receipts marked \"Awaiting invoice\".",
   "good-receipt__create__submit__waiting": "Save — awaiting invoice",
   "good-receipt__create__submit__final": "Save — final document",
   "good-receipt__check__waiting": "Document awaiting invoice",
@@ -1774,5 +1774,9 @@
   "good-receipt__summary__item-discount": "Item discount",
   "good-receipt__summary__doc-discount": "Document discount",
   "good-receipt__summary__total": "Total",
-  "good-receipt__create__line-total": "Total"
+  "good-receipt__create__line-total": "Total",
+  "good-receipt__admin-mode": "Administrator mode",
+  "good-receipt__auto-number": "Number generated on save",
+  "good-receipt__invoice__waiting-title": "Invoice fields pending",
+  "good-receipt__create__add-item-short": "Add product"
 }

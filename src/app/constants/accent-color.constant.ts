@@ -33,17 +33,21 @@ export interface AccentColor {
 }
 
 export const ACCENT_COLORS: AccentColor[] = [
-  { label: 'accent__blurple', base: '#9184d9', tint: '#d2cefd', d800: '#423a6a', d900: '#2b2741' },
   { label: 'accent__blue', base: '#154dec', tint: '#b5d1ff', d800: '#223a70', d900: '#14244a' },
+  { label: 'accent__blurple', base: '#9184d9', tint: '#d2cefd', d800: '#423a6a', d900: '#2b2741' },
+
 
 
   /*
-    BLURPLE adalah aksen bawaan, diambil dari nocturne-styles.css — berkas
-    yang benar-benar memuat token desainnya, dan yang menandai warna ini
-    sebagai hasil putaran tinjauan ketujuh.
+    BIRU adalah aksen bawaan.
 
-    README serah-terima masih menulis #154dec; keduanya berselisih, dan yang
-    dipakai berkas tokennya. Biru tetap berdiri sebagai pilihan di bawah ini.
+    Sempat ditukar ke blurple karena nocturne-styles.css memuat #9184d9,
+    lalu dikembalikan: dua sumber lain menunjuk biru — README serah-terima
+    menulis #154dec, dan panel Tweaks pada pratinjau desainnya sendiri
+    tercentang biru. Blurple di berkas CSS itu nilai bawaan berkasnya, yang
+    memang ditimpa panel itu.
+
+    Blurple tetap berdiri sebagai pilihan di bawah ini.
   */
   { label: 'accent__forest', base: '#002b00', tint: '#bedabb', d800: '#2f442d', d900: '#1b2b1a' },
   { label: 'accent__violet', base: '#7160bd', tint: '#cfcaff', d800: '#3c365f', d900: '#262140' },
