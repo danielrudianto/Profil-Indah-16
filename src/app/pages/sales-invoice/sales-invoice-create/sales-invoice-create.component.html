@@ -1,666 +1,509 @@
-<div class="d-flex mt-4">
-  <div class="d-flex position-relative">
-    <app-vertical-divider></app-vertical-divider>
-    <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
+<!--
+  Buat faktur — bagian `5a` berkas desain.
+
+  TIDAK ADA INPUT NOMOR FAKTUR. Nomornya dibuat server saat faktur diterbitkan;
+  menyediakan kolomnya di sini berarti menawarkan sesuatu yang akan ditimpa.
+
+  Tidak ada simpan draf, dan tidak ada saklar "lunas". Pembayaran dicatat
+  sebagai baris tersendiri — sebuah faktur bisa dibayar sebagian, lewat lebih
+  dari satu metode, dan saklar tidak bisa menyatakan itu.
+-->
+<div class="buat">
+  <div class="buat__head">
+    <h1 class="buat__title">
+      {{ 'sales-invoice__create__title' | translate }}
+      <span class="tag-otomatis">
+        <i class="ph ph-sparkle" aria-hidden="true"></i>
+        {{ 'sales-invoice__create__auto-number' | translate }}
+      </span>
+    </h1>
+    <p class="buat__lede">
+      {{ 'sales-invoice__create__lede' | translate }}
+    </p>
   </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <h5>{{ "sales-invoice__create__general-data" | translate }}</h5>
-    <form [formGroup]="metaFormGroup">
-      <app-autocomplete-search
-        [label]="'sales-invoice__create__customer' | translate"
-        placeholder="Ex. Bing Jaya"
-        routeName="customer"
-        defaultValue="Retail customer"
-        [selected]="metaFormGroup.controls['customer_id'].valid"
-        (onSelectData)="onSelectCustomer($event)"
-        (onUnselectData)="onUnselectCustomer()"
-      ></app-autocomplete-search>
 
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{ "sales-invoice__create__date" | translate }}</mat-label>
-        <input
-          matInput
-          placeholder="Ex. 12/30/2023"
-          [matDatepicker]="picker"
-          formControlName="date"
-        />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
+  <div class="kisi">
+    <div class="buat__utama">
+      <!-- ---------------------------------------------------------- -->
+      <!-- Info faktur                                                 -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu" [formGroup]="metaFormGroup">
+        <h2 class="kartu__label">
+          {{ 'sales-invoice__create__info' | translate }}
+        </h2>
 
-      <!-- Select either sales / deposit -->
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{ "sales-invoice__create__type" | translate }}</mat-label>
-        <mat-select formControlName="type">
-          <mat-option [value]="'sales'">{{
-            "sales-invoice__create__type__sales" | translate
-          }}</mat-option>
-          <mat-option [value]="'deposit'">{{
-            "sales-invoice__create__type__deposit" | translate
-          }}</mat-option>
-          <mat-option [value]="'deposit-internal'">{{
-            "sales-invoice__create__type__internal-deposit" | translate
-          }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{
-          "sales-invoice__create__salesman" | translate
-        }}</mat-label>
-
-        <input
-          matInput
-          placeholder="Ex. John Doe"
-          formControlName="sales"
-          [matAutocomplete]="auto"
-          #trigger="matAutocompleteTrigger"
-          #input
-          oninput="this.value = this.value.toUpperCase()"
-        />
-
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option [value]="'INTERNAL'">INTERNAL</mat-option>
-          <mat-option *ngFor="let salesman of salesmen" [value]="salesman">
-            {{ salesman }}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-
-      <p (click)="viewSalesman()" style="text-align: right; cursor: pointer">
-        {{ "sales-invoice__create__view-salesman" | translate }}
-      </p>
-    </form>
-  </div>
-</div>
-<div class="d-flex">
-  <div class="d-flex position-relative">
-    <app-vertical-divider></app-vertical-divider>
-    <app-box-stepper step="2" [valid]="billFormGroup.valid"></app-box-stepper>
-  </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4 flex-grow-1">
-    <button
-      type="button"
-      mat-stroked-button
-      color="primary"
-      style="letter-spacing: 0"
-      [matMenuTriggerFor]="menu"
-    >
-      {{ "sales-invoice__create__add-item" | translate }}
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="openItemSelector()">
-        <mat-icon>list</mat-icon>
-        <span>{{ "sales-invoice__create__add-product" | translate }}</span>
-      </button>
-      <button mat-menu-item (click)="openPackageSelector()">
-        <mat-icon>inventory_2</mat-icon>
-        <span>{{ "sales-invoice__create__add-package" | translate }}</span>
-      </button>
-    </mat-menu>
-
-    <div class="table-responsive">
-      <form [formGroup]="billFormGroup">
-        <table class="table mb-2">
-          <thead>
-            <tr>
-              <th class="text-center" style="width: 300px">
-                {{ "sales-invoice__create__item" | translate }}
-              </th>
-              <th class="text-center" style="width: 150px">
-                {{ "sales-invoice__create__price" | translate }}
-              </th>
-              <th class="text-center" style="width: 150px">
-                {{ "sales-invoice__create__discount" | translate }}
-              </th>
-              <th class="text-center" style="width: 200px">
-                {{ "sales-invoice__create__quantity" | translate }}
-              </th>
-              <th class="text-center" style="width: 200px">
-                {{ "sales-invoice__create__total" | translate }}
-              </th>
-              <th class="text-center" style="width: 150px">
-                {{ "sales-invoice__create__action" | translate }}
-              </th>
-            </tr>
-          </thead>
-          <tbody *ngIf="t.controls.length > 0">
-            <tr
-              *ngFor="let itemForm of t.controls; index as i"
-              [formGroup]="getFormGroupAt(i)"
-            >
-              <ng-container
-                [ngSwitch]="itemForm.get('package_code_id') ? 1 : 2"
-              >
-                <ng-container *ngSwitchCase="2">
-                  <td>
-                    <p class="mb-0">{{ itemForm.get("reference")?.value }}</p>
-                    <div class="text-clamp-2 mb-2">
-                      {{ itemForm.get("description")?.value }}
-                    </div>
-                    <mat-divider></mat-divider>
-                    <p class="mt-2">
-                      Stock:
-                      {{
-                        itemForm.get("stock")?.value.stock | number : "0.0-2"
-                      }}
-                    </p>
-                  </td>
-                  <td class="text-center" (click)="updatePrice(i)">
-                    {{ itemForm.get("price")?.value | number : "0.2-2" }}
-                  </td>
-                  <td class="text-center" (click)="updatePrice(i)">
-                    {{ itemForm.get("discount")?.value | number : "0.2-2" }}
-                  </td>
-                  <td>
-                    <mat-form-field appearance="outline">
-                      <mat-label>{{
-                        "sales-invoice__create__quantity" | translate
-                      }}</mat-label>
-                      <input
-                        matInput
-                        type="text"
-                        class="text-center"
-                        mask="separator"
-                        thousandSeparator=" "
-                        formControlName="quantity"
-                        autocomplete="off"
-                        placeholder="Ex. 20"
-                        focusedInput
-                      />
-                      <mat-hint
-                        *ngIf="itemForm.get('conversion')?.value == 1"
-                        >{{ itemForm.get("unit")?.value }}</mat-hint
-                      >
-                      <mat-hint *ngIf="itemForm.get('conversion')?.value != 1"
-                        >{{ itemForm.get("unit")?.value }} -
-                        {{
-                          itemForm.get("quantity")?.value *
-                            itemForm.get("conversion")?.value | number : "0.0-2"
-                        }}
-                        {{ itemForm.get("default_unit")?.value }}</mat-hint
-                      >
-                    </mat-form-field>
-                  </td>
-                  <td class="text-center">
-                    {{
-                      itemForm.get("quantity")?.value *
-                        (itemForm.get("price")?.value -
-                          itemForm.get("discount")?.value) | number : "0.2-2"
-                    }}
-                  </td>
-                  <td>
-                    <div class="sales-invoice__action-wrapper">
-                      <button mat-icon-button (click)="deleteItem(i)">
-                        <mat-icon>delete</mat-icon>
-                      </button>
-                      <button
-                        class="sales-invoice__save-indicator"
-                        [matTooltip]="
-                          (itemForm.get('save_price')?.value
-                            ? 'sales-invoice__price__saved'
-                            : 'sales-invoice__price__discarded'
-                          ) | translate
-                        "
-                      >
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          *ngIf="itemForm.get('save_price')?.value"
-                        >
-                          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                          <g
-                            id="SVGRepo_tracerCarrier"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          ></g>
-                          <g id="SVGRepo_iconCarrier">
-                            <path
-                              opacity="0.4"
-                              d="M12.89 5.87988H5.10999C3.39999 5.87988 2 7.27987 2 8.98987V20.3499C2 21.7999 3.04 22.4199 4.31 21.7099L8.23999 19.5199C8.65999 19.2899 9.34 19.2899 9.75 19.5199L13.68 21.7099C14.95 22.4199 15.99 21.7999 15.99 20.3499V8.98987C16 7.27987 14.6 5.87988 12.89 5.87988Z"
-                              fill="#5985e1"
-                            ></path>
-                            <path
-                              d="M22 5.10999V16.47C22 17.92 20.96 18.53 19.69 17.83L16 15.77V8.98999C16 7.27999 14.6 5.88 12.89 5.88H8V5.10999C8 3.39999 9.39999 2 11.11 2H18.89C20.6 2 22 3.39999 22 5.10999Z"
-                              fill="#5985e1"
-                            ></path>
-                          </g>
-                        </svg>
-                        <svg
-                          *ngIf="!itemForm.get('save_price')?.value"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                        >
-                          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                          <g
-                            id="SVGRepo_tracerCarrier"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          ></g>
-                          <g id="SVGRepo_iconCarrier">
-                            <path
-                              opacity="0.4"
-                              d="M12.89 5.87988H5.10999C3.39999 5.87988 2 7.27987 2 8.98987V20.3499C2 21.7999 3.04 22.4199 4.31 21.7099L8.23999 19.5199C8.65999 19.2899 9.34 19.2899 9.75 19.5199L13.68 21.7099C14.95 22.4199 15.99 21.7999 15.99 20.3499V8.98987C16 7.27987 14.6 5.87988 12.89 5.87988Z"
-                              fill="#c7c7c7"
-                            ></path>
-                            <path
-                              d="M22 5.10999V16.47C22 17.92 20.96 18.53 19.69 17.83L16 15.77V8.98999C16 7.27999 14.6 5.88 12.89 5.88H8V5.10999C8 3.39999 9.39999 2 11.11 2H18.89C20.6 2 22 3.39999 22 5.10999Z"
-                              fill="#c7c7c7"
-                            ></path>
-                          </g>
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                </ng-container>
-                <ng-container *ngSwitchCase="1">
-                  <td>
-                    <p>{{ itemForm.get("name")?.value }}</p>
-                    <div class="text-clamp-2 mb-2">
-                      {{ itemForm.get("description")?.value }}
-                    </div>
-                    <ul>
-                      <li
-                        *ngFor="
-                          let content of itemForm.get('package_content')?.value
-                        "
-                      >
-                        <p class="mb-0">
-                          <b>{{ content.product.reference }}</b> ({{
-                            content.quantity | number : "0.0-2"
-                          }}
-                          {{
-                            content.product_unit == null
-                              ? content.product.unit
-                              : content.product_unit.unit
-                          }})
-                        </p>
-                        <p class="text-clamp-2">
-                          {{ content.product.description }}
-                        </p>
-                        <p class="mt-2">
-                          Stock:
-                          {{ content.stock | number : "0.0-2" }}
-                        </p>
-                      </li>
-                    </ul>
-                  </td>
-                  <td class="text-center" (click)="updatePackagePrice(i)">
-                    {{ itemForm.get("price")?.value | number : "0.2-2" }}
-                  </td>
-                  <td class="text-center" (click)="updatePackagePrice(i)">
-                    0.00
-                  </td>
-                  <td>
-                    <mat-form-field appearance="outline">
-                      <mat-label>{{
-                        "sales-invoice__create__quantity" | translate
-                      }}</mat-label>
-                      <input
-                        matInput
-                        type="text"
-                        class="text-center"
-                        mask="separator"
-                        thousandSeparator=" "
-                        formControlName="quantity"
-                        autocomplete="off"
-                        placeholder="Ex. 20"
-                        focusedInput
-                      />
-                    </mat-form-field>
-                  </td>
-                  <td class="text-center">
-                    {{
-                      itemForm.get("quantity")?.value *
-                        itemForm.get("price")?.value | number : "0.2-2"
-                    }}
-                  </td>
-                  <td>
-                    <div class="sales-invoice__action-wrapper">
-                      <button mat-icon-button (click)="deleteItem(i)">
-                        <mat-icon>delete</mat-icon>
-                      </button>
-                      <button
-                        class="sales-invoice__save-indicator"
-                        [matTooltip]="
-                          (itemForm.get('save_price')?.value
-                            ? 'sales-invoice__price__saved'
-                            : 'sales-invoice__price__discarded'
-                          ) | translate
-                        "
-                      >
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          *ngIf="itemForm.get('save_price')?.value"
-                        >
-                          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                          <g
-                            id="SVGRepo_tracerCarrier"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          ></g>
-                          <g id="SVGRepo_iconCarrier">
-                            <path
-                              opacity="0.4"
-                              d="M12.89 5.87988H5.10999C3.39999 5.87988 2 7.27987 2 8.98987V20.3499C2 21.7999 3.04 22.4199 4.31 21.7099L8.23999 19.5199C8.65999 19.2899 9.34 19.2899 9.75 19.5199L13.68 21.7099C14.95 22.4199 15.99 21.7999 15.99 20.3499V8.98987C16 7.27987 14.6 5.87988 12.89 5.87988Z"
-                              fill="#5985e1"
-                            ></path>
-                            <path
-                              d="M22 5.10999V16.47C22 17.92 20.96 18.53 19.69 17.83L16 15.77V8.98999C16 7.27999 14.6 5.88 12.89 5.88H8V5.10999C8 3.39999 9.39999 2 11.11 2H18.89C20.6 2 22 3.39999 22 5.10999Z"
-                              fill="#5985e1"
-                            ></path>
-                          </g>
-                        </svg>
-                        <svg
-                          *ngIf="!itemForm.get('save_price')?.value"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                        >
-                          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                          <g
-                            id="SVGRepo_tracerCarrier"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          ></g>
-                          <g id="SVGRepo_iconCarrier">
-                            <path
-                              opacity="0.4"
-                              d="M12.89 5.87988H5.10999C3.39999 5.87988 2 7.27987 2 8.98987V20.3499C2 21.7999 3.04 22.4199 4.31 21.7099L8.23999 19.5199C8.65999 19.2899 9.34 19.2899 9.75 19.5199L13.68 21.7099C14.95 22.4199 15.99 21.7999 15.99 20.3499V8.98987C16 7.27987 14.6 5.87988 12.89 5.87988Z"
-                              fill="#c7c7c7"
-                            ></path>
-                            <path
-                              d="M22 5.10999V16.47C22 17.92 20.96 18.53 19.69 17.83L16 15.77V8.98999C16 7.27999 14.6 5.88 12.89 5.88H8V5.10999C8 3.39999 9.39999 2 11.11 2H18.89C20.6 2 22 3.39999 22 5.10999Z"
-                              fill="#c7c7c7"
-                            ></path>
-                          </g>
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                </ng-container>
-              </ng-container>
-            </tr>
-          </tbody>
-          <tbody *ngIf="t.controls.length == 0">
-            <tr>
-              <td colspan="6">
-                <empty-table />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </form>
-    </div>
-  </div>
-</div>
-<div class="d-flex">
-  <div class="d-flex position-relative">
-    <app-vertical-divider></app-vertical-divider>
-    <app-box-stepper step="3" [valid]="valueFormGroup.valid"></app-box-stepper>
-  </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <h5>{{ "sales-invoice__create__bill-data" | translate }}</h5>
-    <form [formGroup]="valueFormGroup">
-      <mat-form-field class="w-100" appearance="outline">
-        <mat-label>{{ "sales-invoice__create__total" | translate }}</mat-label>
-        <input
-          readonly
-          matInput
-          mask="separator"
-          thousandSeparator=" "
-          formControlName="before"
-          placeholder="Ex. 8 000 000"
-        />
-        <div matTextPrefix>Rp.&nbsp;</div>
-      </mat-form-field>
-
-      <mat-form-field class="w-100" appearance="outline">
-        <mat-label>{{
-          "sales-invoice__create__discount" | translate
-        }}</mat-label>
-        <input
-          matInput
-          type="text"
-          mask="separator"
-          thousandSeparator=" "
-          formControlName="discount"
-          autocomplete="off"
-          placeholder="Ex. 800"
-        />
-        <div matTextPrefix>Rp.&nbsp;</div>
-      </mat-form-field>
-      <mat-form-field class="w-100" appearance="outline">
-        <mat-label>{{
-          "sales-invoice__create__service" | translate
-        }}</mat-label>
-        <input
-          matInput
-          type="text"
-          mask="separator"
-          thousandSeparator=" "
-          formControlName="service"
-          autocomplete="off"
-          placeholder="Ex. 80 000"
-        />
-        <div matTextPrefix>Rp.&nbsp;</div>
-      </mat-form-field>
-      <mat-form-field class="w-100" appearance="outline">
-        <mat-label>{{
-          "sales-invoice__create__delivery" | translate
-        }}</mat-label>
-        <input
-          matInput
-          type="text"
-          mask="separator"
-          thousandSeparator=" "
-          formControlName="delivery"
-          autocomplete="off"
-          placeholder="Ex. 50 000"
-        />
-        <div matTextPrefix>Rp.&nbsp;</div>
-      </mat-form-field>
-
-      <mat-form-field class="w-100" appearance="outline">
-        <mat-label>{{
-          "sales-invoice__create__subtotal" | translate
-        }}</mat-label>
-        <input
-          readonly
-          matInput
-          type="text"
-          mask="separator"
-          thousandSeparator=" "
-          formControlName="total"
-          autocomplete="off"
-          placeholder="Ex. 800"
-        />
-        <div matTextPrefix>Rp.&nbsp;</div>
-      </mat-form-field>
-
-      <mat-form-field class="w-100" appearance="outline">
-        <mat-label>{{ "sales-invoice__create__total" | translate }}</mat-label>
-        <input
-          readonly
-          matInput
-          type="text"
-          mask="separator"
-          thousandSeparator=" "
-          formControlName="grand_total"
-          autocomplete="off"
-          placeholder="Ex. 800"
-        />
-        <mat-icon matSuffix *ngIf="!valueFormGroup.get('grand_total')?.valid">
-          dangerous
-        </mat-icon>
-        <div matTextPrefix>Rp.&nbsp;</div>
-      </mat-form-field>
-    </form>
-  </div>
-</div>
-<div class="d-flex">
-  <div class="d-flex position-relative">
-    <app-box-stepper
-      step="4"
-      [valid]="paymentsFormGroup.valid"
-    ></app-box-stepper>
-  </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <h5>{{ "sales-invoice__create__payment-data" | translate }}</h5>
-    <form [formGroup]="paymentsFormGroup">
-      <div class="row">
-        <div class="col-12">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-select formControlName="method">
-              <mat-option
-                [value]="'paid'"
-                [disabled]="
-                  metaFormGroup.get('type')?.value === 'deposit-internal'
-                "
-                >{{
-                  "sales-invoice__create__paid-payment" | translate
-                }}</mat-option
-              >
-              <mat-option
-                [value]="'underpaid'"
-                [disabled]="
-                  metaFormGroup.get('type')?.value === 'deposit-internal'
-                "
-                >{{
-                  "sales-invoice__create__underpaid-payment" | translate
-                }}</mat-option
-              >
-              <mat-option [value]="'unpaid'">{{
-                "sales-invoice__create__unpaid-payment" | translate
-              }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div
-            *ngIf="paymentsFormGroup.errors?.['invalidPaymentStatus']"
-            class="mb-2"
-          >
-            {{ paymentsFormGroup.errors?.['invalidPaymentStatus'] }}
+        <div class="kartu__baris">
+          <div class="field">
+            <label for="tanggal">
+              {{ 'sales-invoice__create__date' | translate }}
+            </label>
+            <input
+              id="tanggal"
+              type="date"
+              class="input"
+              formControlName="date"
+            />
           </div>
 
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{
-              "sales-invoice__create__due-time" | translate
-            }}</mat-label>
-            <input
-              matInput
-              class="w-100"
-              formControlName="due_time"
-              type="number"
-              [disabled]="paymentsFormGroup.get('method')?.value === 'paid'"
+          <div class="field">
+            <label>{{ 'sales-invoice__create__customer' | translate }}</label>
+            <app-autocomplete-search
+              label=""
+              placeholder="Ex. Bing Jaya"
+              routeName="customer"
+              defaultValue="Retail"
+              [selected]="metaFormGroup.controls['customer_id'].valid"
+              (onSelectData)="onSelectCustomer($event)"
+              (onUnselectData)="onUnselectCustomer()"
             />
-          </mat-form-field>
+            <p class="field__bantu">
+              {{ 'sales-invoice__create__customer-hint' | translate }}
+              <button type="button" class="tautan" (click)="tambahPelanggan()">
+                {{ 'sales-invoice__create__customer-add' | translate }}
+              </button>
+            </p>
+          </div>
+        </div>
 
-          <button
-            mat-stroked-button
-            color="primary"
-            style="letter-spacing: 0"
-            type="button"
-            (click)="openPaymentSelector()"
-            [disabled]="paymentsFormGroup.get('method')?.value == 'unpaid'"
-          >
-            {{ "sales-invoice__create__item__payment-method__add" | translate }}
-          </button>
+        <div class="field">
+          <label for="sales">
+            {{ 'sales-invoice__create__salesman' | translate }}
+          </label>
+          <!--
+            Huruf besar dipaksakan lewat komponen, bukan atribut oninput pada
+            elemennya: yang kedua tidak pernah memberi tahu Angular bahwa
+            nilainya berubah, sehingga kontrol formulirnya menyimpan ejaan lama.
+          -->
+          <input
+            id="sales"
+            type="text"
+            class="input"
+            list="daftar-sales"
+            formControlName="sales"
+            autocomplete="off"
+            (input)="besarkanSales($event)"
+          />
+          <datalist id="daftar-sales">
+            <option value="INTERNAL"></option>
+            <option *ngFor="let s of salesmen" [value]="s"></option>
+          </datalist>
+        </div>
 
-          <table class="table mb-2">
+        <!--
+          Tipe transaksi sebagai tiga kartu pilihan. Ia menentukan bagaimana
+          faktur ini diperlakukan seluruhnya — termasuk metode pembayaran mana
+          yang boleh dipilih — jadi ia harus terbaca sekaligus, bukan
+          tersembunyi di dalam daftar pilih.
+        -->
+        <div class="field">
+          <label>{{ 'sales-invoice__create__type' | translate }}</label>
+          <div class="keadaan">
+            <button
+              type="button"
+              class="keadaan__kartu"
+              *ngFor="let t of tipeTransaksi"
+              [class.keadaan__kartu--on]="metaFormGroup.value.type === t.nilai"
+              (click)="pilihTipe(t.nilai)"
+            >
+              <i class="ph" [ngClass]="t.ikon" aria-hidden="true"></i>
+              <span class="keadaan__judul">{{ t.kunci | translate }}</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------------------------------------------------------- -->
+      <!-- Item                                                        -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu" [formGroup]="billFormGroup">
+        <div class="kartu__kepala">
+          <h2 class="kartu__label">
+            {{ 'sales-invoice__create__items' | translate }}
+          </h2>
+
+          <div class="kartu__kepala-aksi">
+            <button type="button" class="aksi-kecil" (click)="openItemSelector()">
+              <i class="ph ph-plus" aria-hidden="true"></i>
+              {{ 'sales-invoice__create__add-product' | translate }}
+            </button>
+            <button
+              type="button"
+              class="aksi-kecil"
+              (click)="openPackageSelector()"
+            >
+              <i class="ph ph-package" aria-hidden="true"></i>
+              {{ 'sales-invoice__create__add-package' | translate }}
+            </button>
+          </div>
+        </div>
+
+        <p class="petunjuk">
+          <i class="ph ph-info" aria-hidden="true"></i>
+          {{ 'sales-invoice__create__price-note' | translate }}
+        </p>
+
+        <div class="gulir">
+          <table class="tabel tabel--rapat">
             <thead>
               <tr>
-                <th class="text-center" style="width: 300px">
-                  {{
-                    "sales-invoice__create__item__payment-method" | translate
-                  }}
+                <th>{{ 'sales-invoice__create__item' | translate }}</th>
+                <th class="tabel__nilai-kepala">
+                  {{ 'sales-invoice__create__price' | translate }}
                 </th>
-                <th class="text-center" style="width: 150px">
-                  {{
-                    "sales-invoice__create__item__payment-method__amount"
-                      | translate
-                  }}
+                <th class="tabel__nilai-kepala">
+                  {{ 'sales-invoice__create__discount' | translate }}
                 </th>
-                <th class="text-center" style="width: 150px">
-                  {{
-                    "sales-invoice__create__item__payment-method__action"
-                      | translate
-                  }}
+                <th>{{ 'sales-invoice__create__quantity' | translate }}</th>
+                <th class="tabel__nilai-kepala">
+                  {{ 'sales-invoice__create__line-total' | translate }}
+                </th>
+                <th class="tabel__aksi-kepala">
+                  <span class="sr-only">
+                    {{ 'general__actions' | translate }}
+                  </span>
                 </th>
               </tr>
             </thead>
-            <tbody *ngIf="p.controls.length > 0">
-              <tr
-                *ngFor="let itemForm of p.controls; index as i"
-                [formGroup]="getFormGroupAtPayment(i)"
-              >
+
+            <tbody>
+              <tr *ngFor="let baris of t.controls; index as i">
                 <td>
-                  <p>
-                    <b>{{ itemForm.get("payment_name")?.value }}</b>
-                  </p>
-                  <p>{{ itemForm.get("payment_description")?.value }}</p>
+                  <div class="barang__ref">
+                    {{ namaBaris(i) }}
+                    <!--
+                      Barang yang sama boleh muncul lebih dari sekali — bonus
+                      supplier, atau harga berbeda dalam satu faktur. Karena itu
+                      ini PERINGATAN HALUS, bukan larangan.
+                    -->
+                    <span
+                      class="pill-duplikat"
+                      *ngIf="jumlahDuplikat(i) > 1"
+                      [title]="'sales-invoice__create__duplicate' | translate"
+                    >
+                      ×{{ jumlahDuplikat(i) }}
+                    </span>
+                  </div>
+                  <div class="barang__desc">{{ deskripsiBaris(i) }}</div>
+                  <div class="barang__stok" *ngIf="stokBaris(i) !== null">
+                    {{ 'sales-invoice__create__current-stock' | translate }}:
+                    {{ stokBaris(i) | number: '0.0-2' }}
+                  </div>
                 </td>
-                <td>
-                  <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>{{
-                      "sales-invoice__create__item__payment-method__amount"
-                        | translate
-                    }}</mat-label>
+
+                <!--
+                  Harga dan diskon dibuka lewat dialog, bukan diketik langsung
+                  di tabel: keduanya bisa disimpan kembali ke master barang, dan
+                  keputusan itu perlu ruang untuk dinyatakan.
+                -->
+                <td class="tabel__nilai">
+                  <button type="button" class="nilai-btn" (click)="ubahHarga(i)">
+                    Rp {{ nilaiBaris(i, 'price') | number: '1.0-0' }}
+                  </button>
+                </td>
+                <td class="tabel__nilai">
+                  <button type="button" class="nilai-btn" (click)="ubahHarga(i)">
+                    Rp {{ nilaiBaris(i, 'discount') | number: '1.0-0' }}
+                  </button>
+                </td>
+
+                <td [formGroup]="getFormGroupAt(i)">
+                  <div class="jumlah">
                     <input
-                      matInput
                       type="text"
-                      class="text-center"
+                      class="input input--sempit input--kanan"
                       mask="separator"
-                      thousandSeparator=" "
-                      formControlName="value"
+                      thousandSeparator="."
+                      formControlName="quantity"
                       autocomplete="off"
-                      placeholder="Ex. 800"
+                      placeholder="0"
                     />
-                  </mat-form-field>
+                    <span class="jumlah__satuan">{{ satuanBaris(i) }}</span>
+                  </div>
+                  <div class="jumlah__konversi" *ngIf="konversiBaris(i)">
+                    {{ konversiBaris(i) }}
+                  </div>
                 </td>
-                <td class="text-center">
+
+                <td class="tabel__nilai">
+                  Rp {{ totalBaris(i) | number: '1.0-0' }}
+                </td>
+
+                <td class="tabel__aksi">
+                  <!--
+                    Bookmark = harga baru ikut disimpan ke master barang untuk
+                    penjualan berikutnya. Terisi beraksen berarti disimpan,
+                    garis abu berarti hanya berlaku di faktur ini.
+                  -->
                   <button
-                    mat-icon-button
                     type="button"
-                    (click)="deletePayment(i)"
+                    class="tabel__aksi-btn"
+                    [class.simpan-harga--on]="simpanHarga(i)"
+                    (click)="toggleSimpanHarga(i)"
+                    [title]="
+                      (simpanHarga(i)
+                        ? 'sales-invoice__price__saved'
+                        : 'sales-invoice__price__discarded'
+                      ) | translate
+                    "
                   >
-                    <mat-icon>close</mat-icon>
+                    <i
+                      [class]="
+                        simpanHarga(i)
+                          ? 'ph-fill ph-bookmark-simple'
+                          : 'ph ph-bookmark-simple'
+                      "
+                      aria-hidden="true"
+                    ></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="tabel__aksi-btn"
+                    (click)="deleteItem(i)"
+                    [title]="'general__delete' | translate"
+                    [attr.aria-label]="'general__delete' | translate"
+                  >
+                    <i class="ph ph-trash" aria-hidden="true"></i>
                   </button>
                 </td>
               </tr>
             </tbody>
-            <tbody *ngIf="p.controls.length == 0">
+
+            <tbody *ngIf="t.controls.length === 0">
               <tr>
-                <td colspan="4">
-                  <empty-table />
+                <td colspan="6" class="tabel__pesan">
+                  {{ 'sales-invoice__create__no-item' | translate }}
                 </td>
               </tr>
             </tbody>
           </table>
-          <div *ngIf="paymentsFormGroup.errors?.['invalidInternalPayment']">
-            {{ paymentsFormGroup.errors?.['invalidInternalPayment'] }}
+        </div>
+      </section>
+
+      <!-- ---------------------------------------------------------- -->
+      <!-- Biaya lain                                                  -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu" [formGroup]="valueFormGroup">
+        <h2 class="kartu__label">
+          {{ 'sales-invoice__create__charges' | translate }}
+        </h2>
+
+        <div class="kartu__baris">
+          <div class="field">
+            <label for="diskon">
+              {{ 'sales-invoice__create__doc-discount' | translate }}
+            </label>
+            <input
+              id="diskon"
+              type="text"
+              class="input input--kanan"
+              mask="separator"
+              thousandSeparator="."
+              formControlName="discount"
+              autocomplete="off"
+              placeholder="0"
+            />
+          </div>
+
+          <div class="field">
+            <label for="ongkir">
+              {{ 'sales-invoice__create__delivery' | translate }}
+            </label>
+            <input
+              id="ongkir"
+              type="text"
+              class="input input--kanan"
+              mask="separator"
+              thousandSeparator="."
+              formControlName="delivery"
+              autocomplete="off"
+              placeholder="0"
+            />
+          </div>
+
+          <div class="field">
+            <label for="jasa">
+              {{ 'sales-invoice__create__service' | translate }}
+            </label>
+            <input
+              id="jasa"
+              type="text"
+              class="input input--kanan"
+              mask="separator"
+              thousandSeparator="."
+              formControlName="service"
+              autocomplete="off"
+              placeholder="0"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------------------------------------------------------- -->
+      <!-- Pembayaran                                                  -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu" [formGroup]="paymentsFormGroup">
+        <h2 class="kartu__label">
+          {{ 'sales-invoice__create__payment' | translate }}
+        </h2>
+
+        <div class="keadaan">
+          <button
+            type="button"
+            class="keadaan__kartu"
+            *ngFor="let m of metodePembayaran"
+            [class.keadaan__kartu--on]="paymentsFormGroup.value.method === m.nilai"
+            [disabled]="m.nilai !== 'unpaid' && depositInternal"
+            (click)="pilihMetodeBayar(m.nilai)"
+          >
+            <i class="ph" [ngClass]="m.ikon" aria-hidden="true"></i>
+            <span class="keadaan__judul">{{ m.kunci | translate }}</span>
+          </button>
+        </div>
+
+        <p class="galat" *ngIf="paymentsFormGroup.errors?.['invalidPaymentStatus']">
+          {{ paymentsFormGroup.errors?.['invalidPaymentStatus'] }}
+        </p>
+
+        <div class="field" *ngIf="paymentsFormGroup.value.method !== 'paid'">
+          <label for="tempo">
+            {{ 'sales-invoice__create__due-time' | translate }}
+          </label>
+          <input
+            id="tempo"
+            type="number"
+            class="input input--sempit"
+            formControlName="due_time"
+            min="0"
+          />
+        </div>
+
+        <ng-container *ngIf="paymentsFormGroup.value.method !== 'unpaid'">
+          <div class="bayar" *ngFor="let bayar of p.controls; index as i">
+            <div class="bayar__nama">
+              <strong>{{ namaBayar(i) }}</strong>
+              <span>{{ deskripsiBayar(i) }}</span>
+            </div>
+
+            <div class="bayar__nilai" [formGroup]="getFormGroupAtPayment(i)">
+              <input
+                type="text"
+                class="input input--kanan"
+                mask="separator"
+                thousandSeparator="."
+                formControlName="value"
+                autocomplete="off"
+                placeholder="0"
+              />
+            </div>
+
+            <button
+              type="button"
+              class="tabel__aksi-btn"
+              (click)="deletePayment(i)"
+              [title]="'general__delete' | translate"
+              [attr.aria-label]="'general__delete' | translate"
+            >
+              <i class="ph ph-x" aria-hidden="true"></i>
+            </button>
           </div>
 
           <button
-            [disabled]="!isValid || isSubmitting"
-            class="action-button"
-            (click)="submitForm()"
+            type="button"
+            class="tambah"
+            (click)="openPaymentSelector()"
           >
-            Submit
+            <i class="ph ph-plus" aria-hidden="true"></i>
+            {{ 'sales-invoice__create__item__payment-method__add' | translate }}
           </button>
-        </div>
-      </div>
-    </form>
+        </ng-container>
+
+        <p class="galat" *ngIf="paymentsFormGroup.errors?.['invalidInternalPayment']">
+          {{ paymentsFormGroup.errors?.['invalidInternalPayment'] }}
+        </p>
+      </section>
+    </div>
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- Ringkasan, checklist, aksi                                    -->
+    <!-- ------------------------------------------------------------ -->
+    <aside class="buat__samping">
+      <section class="kartu">
+        <h2 class="kartu__label">
+          {{ 'sales-invoice__create__summary' | translate }}
+        </h2>
+
+        <dl class="ringkas">
+          <dt>{{ 'sales-invoice__create__subtotal' | translate }}</dt>
+          <dd>Rp {{ subtotal | number: '1.0-0' }}</dd>
+
+          <ng-container *ngIf="diskonItem > 0">
+            <dt>{{ 'sales-invoice__create__item-discount' | translate }}</dt>
+            <dd class="ringkas__kurang">– Rp {{ diskonItem | number: '1.0-0' }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="valueFormGroup.value.discount > 0">
+            <dt>{{ 'sales-invoice__create__doc-discount' | translate }}</dt>
+            <dd class="ringkas__kurang">
+              – Rp {{ valueFormGroup.value.discount | number: '1.0-0' }}
+            </dd>
+          </ng-container>
+
+          <ng-container *ngIf="valueFormGroup.value.delivery > 0">
+            <dt>{{ 'sales-invoice__create__delivery' | translate }}</dt>
+            <dd>Rp {{ valueFormGroup.value.delivery | number: '1.0-0' }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="valueFormGroup.value.service > 0">
+            <dt>{{ 'sales-invoice__create__service' | translate }}</dt>
+            <dd>Rp {{ valueFormGroup.value.service | number: '1.0-0' }}</dd>
+          </ng-container>
+
+          <dt>{{ 'sales-invoice__create__total' | translate }}</dt>
+          <dd class="ringkas__total">
+            <strong>Rp {{ totalBill | number: '1.0-0' }}</strong>
+          </dd>
+        </dl>
+      </section>
+
+      <section class="kartu">
+        <h2 class="kartu__label">
+          {{ 'sales-invoice__create__before-issue' | translate }}
+        </h2>
+
+        <!--
+          Lingkaran kosong bergaris ketika belum terpenuhi, terisi beraksen
+          ketika sudah — bukan centang yang muncul dan hilang. Daftar ini
+          menjelaskan MENGAPA tombol terbitkan belum bisa ditekan.
+        -->
+        <ul class="periksa">
+          <li *ngFor="let c of checklist" [class.periksa--on]="c.selesai">
+            <span class="periksa__bulat" aria-hidden="true">
+              <i class="ph ph-check" *ngIf="c.selesai"></i>
+            </span>
+            {{ c.kunci | translate }}
+          </li>
+        </ul>
+      </section>
+
+      <section class="kartu">
+        <h2 class="kartu__label">
+          {{ 'sales-invoice__create__actions' | translate }}
+        </h2>
+
+        <button
+          type="button"
+          class="btn btn--primary btn--blok"
+          [disabled]="!isValid || isSubmitting"
+          (click)="submitForm()"
+        >
+          <i class="ph ph-check" aria-hidden="true"></i>
+          {{ 'sales-invoice__create__issue' | translate }}
+        </button>
+
+        <button type="button" class="btn btn--kedua btn--blok" (click)="batal()">
+          {{ 'general__cancel' | translate }}
+        </button>
+      </section>
+    </aside>
   </div>
 </div>

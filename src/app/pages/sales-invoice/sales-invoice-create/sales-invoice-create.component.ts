@@ -35,12 +35,30 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { MatTooltip } from '@angular/material/tooltip';
 import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 import { AuthService } from 'src/app/services/auth.service';
+import { CustomerCreateComponent } from 'src/app/pages/customer/customer-create/customer-create.component';
+import { MatDialog } from '@angular/material/dialog';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-sales-invoice-create',
     templateUrl: './sales-invoice-create.component.html',
     styleUrls: ['./sales-invoice-create.component.scss'],
-    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, MatAutocompleteTrigger, MatAutocomplete, NgFor, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, NgIf, NgSwitch, NgSwitchCase, MatDivider, NgxMaskDirective, MatHint, MatIconButton, MatTooltip, EmptyTableComponent, MatPrefix, DecimalPipe, TranslatePipe]
+    /*
+      Kerangka Material dilepas hampir seluruhnya. Yang tersisa hanya
+      NgxMaskDirective untuk pemisah ribuan dan app-autocomplete-search untuk
+      pemilih pelanggan; sisanya digambar sendiri lewat kelas Nocturne.
+    */
+    imports: [
+      FormsModule,
+      ReactiveFormsModule,
+      AutocompleteSearchComponent,
+      NgxMaskDirective,
+      NgIf,
+      NgFor,
+      NgClass,
+      DecimalPipe,
+      TranslatePipe,
+    ]
 })
 export class SalesInvoiceCreateComponent {
   constructor(
@@ -52,7 +70,8 @@ export class SalesInvoiceCreateComponent {
     private datePipe: DatePipe,
     private sheet: MatBottomSheet,
     private dynamicComponentService: DynamicComponentService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private dialog: MatDialog
   ) {
     this._hotkeysService.add([
       new Hotkey('alt+a', (event: KeyboardEvent): boolean => {
@@ -242,7 +261,15 @@ export class SalesInvoiceCreateComponent {
   }
 
   ngOnInit(): void {
+    this.perbaruiChecklist();
+
+    this.metaFormGroup.valueChanges.subscribe(() => this.perbaruiChecklist());
+    this.paymentsFormGroup.valueChanges.subscribe(() =>
+      this.perbaruiChecklist(),
+    );
+
     this.t.valueChanges.subscribe(() => {
+      this.perbaruiChecklist();
       this.valueFormGroup.patchValue({
         total: this.t.value.reduce((a: any, b: any) => {
           return a + b.quantity * (b.price - b.discount);
@@ -934,4 +961,229 @@ export class SalesInvoiceCreateComponent {
       return true;
     }
   }
+  /* ---------------------------------------------------------------- */
+  /* Pilihan berbentuk kartu                                           */
+  /* ---------------------------------------------------------------- */
+
+  readonly tipeTransaksi = [
+    { nilai: 'sales', kunci: 'sales-invoice__create__type__sales', ikon: 'ph-receipt' },
+    { nilai: 'deposit', kunci: 'sales-invoice__create__type__deposit', ikon: 'ph-hand-coins' },
+    {
+      nilai: 'deposit-internal',
+      kunci: 'sales-invoice__create__type__internal-deposit',
+      ikon: 'ph-arrows-left-right',
+    },
+  ];
+
+  readonly metodePembayaran = [
+    { nilai: 'paid', kunci: 'sales-invoice__create__paid-payment', ikon: 'ph-check-circle' },
+    { nilai: 'underpaid', kunci: 'sales-invoice__create__underpaid-payment', ikon: 'ph-percent' },
+    { nilai: 'unpaid', kunci: 'sales-invoice__create__unpaid-payment', ikon: 'ph-clock' },
+  ];
+
+  /** Deposit internal tidak boleh ditandai lunas maupun bayar sebagian. */
+  get depositInternal(): boolean {
+    return this.metaFormGroup.value.type === 'deposit-internal';
+  }
+
+  pilihTipe(nilai: string): void {
+    this.metaFormGroup.patchValue({ type: nilai });
+
+    /*
+      Deposit internal hanya boleh berstatus belum bayar. Membiarkan pilihan
+      lama bertahan membuat formulir tampak sah padahal validatornya menolak,
+      dan yang terlihat pengguna hanyalah tombol terbitkan yang mati tanpa
+      sebab.
+    */
+    if (nilai === 'deposit-internal') {
+      this.paymentsFormGroup.patchValue({ method: 'unpaid' });
+    }
+  }
+
+  pilihMetodeBayar(nilai: string): void {
+    if (nilai !== 'unpaid' && this.depositInternal) {
+      return;
+    }
+    this.paymentsFormGroup.patchValue({ method: nilai });
+  }
+
+  /*
+    Nama sales ditulis huruf besar. Dikerjakan lewat kontrol formulirnya, bukan
+    atribut oninput pada elemennya seperti sebelumnya: yang kedua mengubah isi
+    kotaknya tanpa memberi tahu Angular, sehingga yang tersimpan tetap ejaan
+    lama dan yang terkirim ke server bukan yang terbaca di layar.
+  */
+  besarkanSales(event: Event): void {
+    const nilai = (event.target as HTMLInputElement).value.toUpperCase();
+    this.metaFormGroup.controls['sales'].setValue(nilai, { emitEvent: true });
+  }
+
+  tambahPelanggan(): void {
+    this.dialog.open(CustomerCreateComponent, {
+      panelClass: 'nocturne-dialog',
+      backdropClass: 'nocturne-dialog-backdrop',
+    });
+  }
+
+  batal(): void {
+    this.router.navigate(['/Sales-invoice/Archive']);
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Pembacaan baris                                                   */
+  /* ---------------------------------------------------------------- */
+
+  private baris(i: number) {
+    return this.t.at(i) as FormGroup;
+  }
+
+  /** Paket memakai `name`, barang biasa memakai `reference`. */
+  namaBaris(i: number): string {
+    const b = this.baris(i).value;
+    return b.package_code_id ? b.name : b.reference;
+  }
+
+  deskripsiBaris(i: number): string {
+    return this.baris(i).value.description ?? '';
+  }
+
+  stokBaris(i: number): number | null {
+    const stok = this.baris(i).value.stock;
+    return stok == null ? null : Number(stok);
+  }
+
+  nilaiBaris(i: number, ruas: string): number {
+    return Number(this.baris(i).value[ruas] ?? 0);
+  }
+
+  satuanBaris(i: number): string {
+    return this.baris(i).value.unit ?? '';
+  }
+
+  /** "3 box = 300 pcs", atau kosong bila satuannya memang satuan dasar. */
+  konversiBaris(i: number): string {
+    const b = this.baris(i).value;
+    const konversi = Number(b.conversion ?? 1);
+    if (konversi === 1 || !b.quantity) {
+      return '';
+    }
+
+    const jumlah = Number(b.quantity) * konversi;
+    return `${b.quantity} ${b.unit} = ${jumlah} ${b.default_unit}`;
+  }
+
+  totalBaris(i: number): number {
+    const b = this.baris(i).value;
+    const harga = Number(b.price ?? 0);
+    const diskon = b.package_code_id ? 0 : Number(b.discount ?? 0);
+    return Number(b.quantity ?? 0) * (harga - diskon);
+  }
+
+  /**
+   * Berapa kali barang pada baris ini muncul di seluruh dokumen.
+   *
+   * Barang yang sama BOLEH muncul lebih dari sekali — bonus supplier, atau
+   * harga berbeda dalam satu faktur. Karena itu hasilnya dipakai sebagai
+   * peringatan halus, bukan larangan.
+   */
+  jumlahDuplikat(i: number): number {
+    const ini = this.baris(i).value;
+    const kunci = ini.package_code_id
+      ? `p${ini.package_code_id}`
+      : `b${ini.product_id}-${ini.product_unit_id ?? ''}`;
+
+    return this.t.controls.filter((c) => {
+      const v = (c as FormGroup).value;
+      const k = v.package_code_id
+        ? `p${v.package_code_id}`
+        : `b${v.product_id}-${v.product_unit_id ?? ''}`;
+      return k === kunci;
+    }).length;
+  }
+
+  simpanHarga(i: number): boolean {
+    return !!this.baris(i).value.save_price;
+  }
+
+  toggleSimpanHarga(i: number): void {
+    const kontrol = this.baris(i).controls['save_price'];
+    kontrol.setValue(!kontrol.value);
+  }
+
+  /** Paket dan barang biasa punya dialog harga yang berbeda. */
+  ubahHarga(i: number): void {
+    if (this.baris(i).value.package_code_id) {
+      this.updatePackagePrice(i);
+    } else {
+      this.updatePrice(i);
+    }
+  }
+
+  namaBayar(i: number): string {
+    return (this.p.at(i) as FormGroup).value.payment_name ?? '';
+  }
+
+  deskripsiBayar(i: number): string {
+    return (this.p.at(i) as FormGroup).value.payment_description ?? '';
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Ringkasan                                                         */
+  /* ---------------------------------------------------------------- */
+
+  get subtotal(): number {
+    return this.t.value.reduce(
+      (a: number, b: any) => a + Number(b.quantity ?? 0) * Number(b.price ?? 0),
+      0,
+    );
+  }
+
+  get diskonItem(): number {
+    return this.t.value.reduce(
+      (a: number, b: any) =>
+        a +
+        Number(b.quantity ?? 0) *
+          (b.package_code_id ? 0 : Number(b.discount ?? 0)),
+      0,
+    );
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Sebelum terbit                                                    */
+  /* ---------------------------------------------------------------- */
+
+  /**
+   * Daftar syarat sebelum faktur bisa diterbitkan.
+   *
+   * FIELD, BUKAN GETTER. Daftar ini dibaca dari *ngFor, dan getter yang
+   * mengembalikan larik baru setiap kali dipanggil membuat Angular melihat
+   * nilai yang berubah pada setiap pemeriksaan — NG0100 berulang, lalu halaman
+   * berhenti tergambar sama sekali. Itu sudah pernah terjadi di aplikasi ini.
+   */
+  checklist: { kunci: string; selesai: boolean }[] = [];
+
+  private perbaruiChecklist(): void {
+    const m = this.metaFormGroup.value;
+    const adaItem = this.t.controls.length > 0;
+    const jumlahTerisi =
+      adaItem && this.t.controls.every((c) => Number(c.value.quantity) > 0);
+
+    this.checklist = [
+      {
+        kunci: 'sales-invoice__create__check-customer',
+        selesai: this.metaFormGroup.controls['customer_id'].valid,
+      },
+      {
+        kunci: 'sales-invoice__create__check-salesman',
+        selesai: !!m.sales,
+      },
+      { kunci: 'sales-invoice__create__check-items', selesai: adaItem },
+      { kunci: 'sales-invoice__create__check-quantity', selesai: jumlahTerisi },
+      {
+        kunci: 'sales-invoice__create__check-payment',
+        selesai: this.paymentsFormGroup.valid,
+      },
+    ];
+  }
+
 }

@@ -1,32 +1,322 @@
-h5 {
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-size: 1.2rem;
-  color: #041e49;
-  margin-bottom: 2rem;
+/*
+  Kerangka formulirnya dipakai bersama dengan formulir buat lainnya; yang khas
+  halaman ini ditulis di bawah.
+*/
+@use "../../../styles/form-buat";
+
+/*
+  app-autocomplete-search membawa mat-form-field beserta tinggi dan jarak
+  bawaannya. Di dalam .field ia berdiri tepat di bawah label yang sudah
+  digambar sendiri, jadi label bawaannya dikosongkan lewat [label]="" dan sisa
+  jarak bawahnya dibuang — kalau tidak, kolom yang memakai autocomplete duduk
+  lebih rendah daripada kolom di sebelahnya.
+*/
+.field app-autocomplete-search {
+  display: block;
+
+  ::ng-deep .mat-mdc-form-field {
+    width: 100%;
+  }
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
 }
 
-.sales-invoice__action-wrapper {
+/* ---------------------------------------------------------------- */
+/* Kepala kartu dengan tombol di kanannya                            */
+/* ---------------------------------------------------------------- */
+
+.kartu__kepala {
   display: flex;
-  flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.sales-invoice__save-indicator {
-  color: #0b57d0;
+.kartu__kepala-aksi {
+  display: flex;
+  gap: 8px;
+}
+
+/* Tombol kecil bergaris — sama bentuknya dengan yang di daftar stok. */
+.aksi-kecil {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 10px;
+  font: inherit;
+  font-size: 12px;
   font-weight: 500;
-  outline: none;
-  border: none;
-  background-color: transparent;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--color-text) 68%, transparent);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  i {
+    font-size: 14px;
+  }
+
+  &:hover {
+    color: var(--color-text);
+    border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
 }
 
-.add-button {
-  outline: none;
-  border: none;
-  color: white;
-  font-weight: 400;
-  background-color: #005cbb;
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.25rem;
+/*
+  Banner keterangan beraksen. Ia menyatakan sesuatu yang mengubah arti angka di
+  bawahnya — harga bisa dihitung ulang saat terbit — jadi ia berwarna, bukan
+  abu seperti teks bantu biasa.
+*/
+.petunjuk {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--color-accent-wash);
+  color: var(--color-accent);
+  font-size: 12.5px;
+  line-height: 1.5;
+
+  i {
+    font-size: 15px;
+    flex: none;
+    margin-top: 1px;
+  }
+}
+
+/* Tabel item menggulung mendatar di dalam kartunya sendiri. */
+.gulir {
+  overflow-x: auto;
+}
+
+/* Baris item lebih rapat daripada tabel daftar: isinya kolom isian, bukan teks. */
+.tabel--rapat {
+  th,
+  td {
+    padding: 10px 12px;
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Sel barang                                                        */
+/* ---------------------------------------------------------------- */
+
+.barang__ref {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.barang__desc {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 52%, transparent);
+  white-space: normal;
+  max-width: 34ch;
+}
+
+.barang__stok {
+  margin-top: 4px;
+  font-size: 11.5px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+/*
+  Penanda barang yang muncul lebih dari sekali. Sengaja HALUS: pengulangan itu
+  sah — bonus supplier, atau harga berbeda dalam satu faktur — jadi ia
+  mengingatkan, bukan melarang.
+*/
+.pill-duplikat {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, #c98a00 16%, transparent);
+  color: #c98a00;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: help;
+}
+
+/* ---------------------------------------------------------------- */
+/* Nilai yang bisa ditekan                                           */
+/* ---------------------------------------------------------------- */
+
+/*
+  Harga dan diskon dibuka lewat dialog, bukan diketik di tabel — keduanya bisa
+  disimpan kembali ke master barang, dan keputusan itu perlu ruang. Bentuknya
+  tetap angka biasa sampai disentuh, supaya kolomnya terbaca sebagai nilai.
+*/
+.nilai-btn {
+  padding: 4px 8px;
+  font: inherit;
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+  color: inherit;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
   cursor: pointer;
+
+  &:hover {
+    border-color: var(--color-divider);
+    background: var(--color-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 1px;
+  }
+}
+
+.jumlah {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.jumlah__satuan {
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  white-space: nowrap;
+}
+
+.jumlah__konversi {
+  margin-top: 4px;
+  font-size: 11.5px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+.input--sempit {
+  width: 110px;
+}
+
+/* Bookmark simpan-harga dalam keadaan menyala. */
+.simpan-harga--on {
+  color: var(--color-accent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Pembayaran                                                        */
+/* ---------------------------------------------------------------- */
+
+.bayar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px 36px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--color-divider);
+}
+
+.bayar__nama {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  strong {
+    font-size: 13.5px;
+    font-weight: 500;
+  }
+
+  span {
+    font-size: 12px;
+    color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  }
+}
+
+/* Tombol tambah bergaris putus — menyatakan tempat yang masih bisa diisi. */
+.tambah {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 42px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-accent);
+  background: transparent;
+  border: 1px dashed color-mix(in srgb, var(--color-accent) 45%, transparent);
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-accent-wash);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.galat {
+  margin: 0;
+  font-size: 12.5px;
+  color: #e05260;
+}
+
+/* ---------------------------------------------------------------- */
+/* Sebelum terbit                                                    */
+/*                                                                   */
+/* Lingkaran kosong bergaris ketika belum terpenuhi, terisi beraksen  */
+/* ketika sudah — bukan centang yang muncul dan hilang. Bentuk yang   */
+/* tetap ada membuat daftar ini terbaca sebagai syarat, bukan sebagai */
+/* pesan yang kadang muncul.                                         */
+/* ---------------------------------------------------------------- */
+
+.periksa {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  }
+}
+
+.periksa__bulat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+  color: transparent;
+  font-size: 11px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.periksa--on {
+  color: var(--color-text);
+
+  .periksa__bulat {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #fff;
+  }
 }
