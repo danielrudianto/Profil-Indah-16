@@ -91,7 +91,6 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'nav__company', icon: 'ph ph-buildings', path: 'Company', group: 'administrator', roles: GENERAL },
   { label: 'nav__payment_method', icon: 'ph ph-credit-card', path: 'Payment-method', group: 'administrator', roles: GENERAL },
   { label: 'nav__expense_type', icon: 'ph ph-list-checks', path: 'Expense-type', group: 'administrator', roles: GENERAL },
-  { label: 'nav__activity', icon: 'ph ph-pulse', path: 'Activity', group: 'administrator', roles: ADMIN },
 ];
 
 /** Urutan tampil dan kunci i18n judul tiap grup. */
@@ -99,4 +98,43 @@ export const NAV_GROUPS: { key: NavGroup; label: string }[] = [
   { key: 'menu', label: 'nav__group_menu' },
   { key: 'master', label: 'nav__group_master' },
   { key: 'administrator', label: 'nav__group_administrator' },
+];
+
+/* ------------------------------------------------------------------ */
+/* Kaki navigasi                                                       */
+/* ------------------------------------------------------------------ */
+
+export interface NavFooterItem {
+  label: string;
+  icon: string;
+  /**
+   * Jalur PENUH, bukan potongan seperti pada NavItem.
+   *
+   * Isi kaki navigasi tidak tinggal di subpohon peran mana pun: pengaturan ada
+   * di akar, dan jejak aktivitas ada di bawah /Administrator apa pun peran yang
+   * sedang membukanya. Menambahkan awalan shell justru mengantar ke alamat yang
+   * tidak ada.
+   */
+  path: string;
+  roles: Role[];
+}
+
+/**
+ * Tautan yang MENETAP di dasar navigasi, tidak ikut menggulung bersama daftar
+ * menu.
+ *
+ * Isinya bukan tempat bekerja melainkan jalan keluar, dan jalan keluar harus
+ * selalu ada di tempat yang sama. Menaruhnya di ujung daftar yang panjang
+ * berarti pengguna menggulung sampai habis hanya untuk keluar.
+ *
+ * "Keluar" tidak ada di sini karena ia perbuatan, bukan alamat — lihat
+ * SidenavComponent.
+ *
+ * Jejak aktivitas dijaga AdministratorGuard di frontend dan
+ * administratorMiddleware di server, jadi daftar perannya mengikuti itu, bukan
+ * diperlebar supaya menunya terlihat ramai.
+ */
+export const NAV_FOOTER: NavFooterItem[] = [
+  { label: 'nav__settings', icon: 'ph ph-gear', path: '/Settings', roles: [...SEMUA_OPERASIONAL, Role.Warehouse] },
+  { label: 'nav__activity', icon: 'ph ph-pulse', path: '/Administrator/Activity', roles: ADMIN },
 ];

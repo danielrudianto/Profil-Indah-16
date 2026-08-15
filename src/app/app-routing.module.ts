@@ -24,6 +24,23 @@ const routes: Routes = [
           import('./pages/dashboard/dashboard.component').then(
             (m) => m.DashboardComponent
           ),
+        children: [
+          {
+            /*
+              Pengaturan tinggal DI DALAM dashboard, bukan sejajar dengannya.
+              Navigasi samping dan topbar dipasang oleh DashboardComponent;
+              menaruh halaman ini di luar berarti ia terbuka tanpa satu pun
+              jalan kembali selain tombol mundur peramban.
+
+              Induknya berjalur '', jadi alamatnya tetap /Settings.
+            */
+            path: 'Settings',
+            loadComponent: () =>
+              import('./pages/settings/settings.component').then(
+                (m) => m.SettingsComponent
+              ),
+          },
+        ],
       },
       {
         path: 'Profile',

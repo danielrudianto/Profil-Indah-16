@@ -1,0 +1,170 @@
+/*
+  Pengaturan tampilan — sistem desain Nocturne.
+
+  Seluruh warnanya dibaca dari token yang ditulis SettingsService, jadi halaman
+  ini ikut berubah seketika saat pilihannya ditekan. Itu bukan efek samping:
+  memperlihatkan akibat pilihan pada halaman pilihannya sendiri membuat
+  pratinjau terpisah tidak diperlukan.
+*/
+
+.settings {
+  max-width: 760px;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  color: var(--color-text);
+}
+
+.settings__head {
+  margin-bottom: 22px;
+}
+
+.settings__title {
+  font-size: 26px;
+  font-weight: 500;
+  margin: 0 0 4px;
+}
+
+.settings__lede {
+  margin: 0;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--color-text) 60%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Kartu                                                             */
+/*                                                                   */
+/* NAMANYA SENGAJA TIDAK `.card`. Bootstrap masih ikut termuat lewat  */
+/* styles.scss dan sudah memiliki `.card`, lengkap dengan warna teks  */
+/* terangnya sendiri. Judul kartu yang tidak menyebut warnanya akan   */
+/* mewarisi warna itu — hitam di atas ground gelap, terbaca seperti   */
+/* teks yang hilang.                                                 */
+/* ---------------------------------------------------------------- */
+
+.settings__card {
+  padding: 20px 22px;
+  margin-bottom: 16px;
+  border: 1px solid var(--color-divider);
+  border-radius: 12px;
+  background: var(--color-surface);
+}
+
+.settings__card-title {
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0 0 4px;
+}
+
+.settings__card-note {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Pilihan dua arah                                                  */
+/* ---------------------------------------------------------------- */
+
+.seg {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.seg__opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  font: inherit;
+  font-size: 13.5px;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  i {
+    font-size: 16px;
+  }
+
+  &:hover {
+    color: var(--color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.seg__opt--on {
+  background: var(--color-active);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Warna aksen                                                       */
+/* ---------------------------------------------------------------- */
+
+/*
+  Kisi yang menyesuaikan lebar, bukan jumlah kolom tetap. Empat belas warna
+  pada kolom tetap menyisakan baris terakhir yang timpang di hampir setiap
+  ukuran layar.
+*/
+.accents {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.accents__opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  color: color-mix(in srgb, var(--color-text) 76%, transparent);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    color: var(--color-text);
+    border-color: color-mix(in srgb, var(--color-text) 30%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+/*
+  Yang terpilih ditandai warna GARIS TEPI DAN TEKS AKSEN AKTIF, bukan warna
+  contohnya sendiri: warna yang sedang dilihat pengguna adalah yang sudah
+  terpasang di seluruh halaman, dan tanda pilih harus sepadan dengan itu.
+*/
+.accents__opt--on {
+  border-color: var(--color-accent);
+  background: var(--color-active);
+  color: var(--color-accent);
+}
+
+.accents__swatch {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--contoh);
+  border: 1px solid color-mix(in srgb, var(--color-text) 25%, transparent);
+}
+
+.accents__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

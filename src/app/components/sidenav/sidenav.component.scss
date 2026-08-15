@@ -105,8 +105,15 @@
 /* Daftar                                                            */
 /* ---------------------------------------------------------------- */
 
+/*
+  min-height: 0 WAJIB di sini. Bawaan sebuah butir flex adalah min-height:auto,
+  yang berarti ia menolak mengecil di bawah tinggi isinya — daftar menu yang
+  panjang lalu mendorong kaki navigasi keluar layar alih-alih menggulung di
+  dalam kotaknya sendiri.
+*/
 .sidenav__scroll {
   flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   width: 100%;
@@ -136,17 +143,73 @@
   background: color-mix(in srgb, var(--color-text) 8%, transparent);
 }
 
+/*
+  Baris pembungkus item. Tombol sematnya diletakkan di atas tautan, bukan di
+  sampingnya dalam aliran biasa: kalau ia ikut memakan lebar, label menu jadi
+  terpotong lebih cepat padahal tombolnya hampir selalu tidak terlihat.
+*/
+.sidenav__row {
+  position: relative;
+
+  &:hover .sidenav__pin,
+  .sidenav__pin:focus-visible {
+    opacity: 1;
+  }
+}
+
+.sidenav__pin {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: color-mix(in srgb, var(--color-text) 40%, transparent);
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.14s ease, color 0.14s ease;
+
+  &:hover {
+    color: var(--color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 1px;
+  }
+}
+
+/* Yang sudah disematkan tetap terlihat tanpa perlu disorot lebih dulu. */
+.sidenav__pin--on {
+  opacity: 1;
+  color: var(--color-accent);
+}
+
 .sidenav__item {
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
   min-height: 40px;
   padding: 0 10px;
   margin-bottom: 2px;
+  border: 0;
   border-radius: 8px;
+  background: transparent;
   color: inherit;
+  text-align: left;
   text-decoration: none;
+  font: inherit;
   font-size: 13.5px;
+  cursor: pointer;
   transition: background-color 0.14s ease;
 
   i {
@@ -194,4 +257,36 @@
   margin: 0;
   font-size: 13px;
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Kaki                                                             */
+/* ---------------------------------------------------------------- */
+
+/*
+  flex: none supaya kaki ini tidak ikut mengecil ketika daftar menunya panjang.
+  Garis pemisahnya ditarik penuh melewati padding sidenav, sehingga terbaca
+  sebagai pembatas kolom, bukan sebagai garis yang menggantung di tengah.
+*/
+.sidenav__foot {
+  flex: none;
+  width: 100%;
+  padding-top: 10px;
+  margin-top: 4px;
+  border-top: 1px solid var(--color-divider);
+}
+
+.sidenav--collapsed .sidenav__foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidenav__item--danger {
+  color: color-mix(in srgb, var(--color-text) 78%, transparent);
+
+  &:hover {
+    background: color-mix(in srgb, #e5484d 14%, transparent);
+    color: #e5484d;
+  }
 }

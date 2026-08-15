@@ -5,9 +5,12 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
+import { PinnedNavService } from 'src/app/services/pinned-nav.service';
 import {
+  NAV_FOOTER,
   NAV_GROUPS,
   NAV_ITEMS,
+  NavFooterItem,
   NavGroup,
   NavItem,
 } from 'src/app/constants/navigation.constant';
@@ -17,10 +20,11 @@ interface ItemTampil {
   item: NavItem;
   /** Sudah jadi, bukan dihitung ulang di template — lihat catatan di bawah. */
   jalur: string[];
+  tersemat: boolean;
 }
 
 interface GrupTampil {
-  key: NavGroup;
+  key: NavGroup | 'pinned';
   label: string;
   items: ItemTampil[];
 }
@@ -35,6 +39,11 @@ interface GrupTampil {
  * Menyembunyikan menu BUKAN penjagaan. Yang benar-benar menahan akses tetap
  * guard rute di frontend dan middleware di backend; komponen ini hanya
  * merapikan apa yang ditawarkan.
+ *
+ * Susunannya tiga lapis dan hanya lapis tengah yang menggulung: brand di atas,
+ * daftar menu di tengah, lalu pengaturan/aktivitas/keluar menetap di dasar.
+ * Jalan keluar harus selalu berada di tempat yang sama; menaruhnya di ujung
+ * daftar panjang berarti pengguna menggulung sampai habis hanya untuk keluar.
  *
  * ---------------------------------------------------------------------------
  * DAFTARNYA DISIMPAN, BUKAN DIHITUNG DI TEMPLATE.
@@ -55,9 +64,10 @@ interface GrupTampil {
  * semuanya hanya berputar.
  *
  * Karena itu daftarnya dihitung SEKALI, lalu diperbarui hanya ketika ada
- * alasan nyata: kata kunci pencarian berubah, bahasa berganti, atau awalan
- * shell berubah. trackBy dipasang sebagai lapis kedua supaya kekeliruan
- * serupa di kemudian hari tidak langsung berujung pada gejala yang sama.
+ * alasan nyata: kata kunci pencarian berubah, sematan berubah, bahasa
+ * berganti, atau awalan shell berubah. trackBy dipasang sebagai lapis kedua
+ * supaya kekeliruan serupa di kemudian hari tidak langsung berujung pada
+ * gejala yang sama.
  * ---------------------------------------------------------------------------
  */
 @Component({
@@ -76,6 +86,7 @@ interface GrupTampil {
 export class SidenavComponent implements OnInit {
   constructor(
     private authService: AuthService,
+    private pinnedNavService: PinnedNavService,
     private translateService: TranslateService,
   ) {}
 
@@ -107,6 +118,9 @@ export class SidenavComponent implements OnInit {
   /** Grup beserta isinya, sudah disaring peran dan kata kunci. */
   grup: GrupTampil[] = [];
 
+  /** Isi kaki navigasi yang boleh dilihat peran ini. */
+  kaki: NavFooterItem[] = [];
+
   ngOnInit(): void {
     this.cariControl.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -124,12 +138,31 @@ export class SidenavComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.hitungUlang());
 
+    this.pinnedNavService.pinned$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.hitungUlang());
+
+    const peran = this.authService.getUserInfo()?.role;
+    this.kaki = NAV_FOOTER.filter(
+      (item) => peran != null && item.roles.includes(peran),
+    );
+
     this.hitungUlang();
   }
 
   /** Identitas untuk NgFor — kunci grup dan jalur item tidak pernah berubah. */
   lacakGrup = (_: number, g: GrupTampil): string => g.key;
   lacakItem = (_: number, i: ItemTampil): string => i.item.path;
+  lacakKaki = (_: number, k: NavFooterItem): string => k.path;
+
+  togglePin(entri: ItemTampil): void {
+    this.pinnedNavService.toggle(entri.item.path);
+  }
+
+  keluar(): void {
+    /* logout() sendiri yang memindahkan halaman ke /Login. */
+    this.authService.logout();
+  }
 
   /**
    * Grup yang kosong tidak ikut ditampilkan — judul grup tanpa satu pun item
@@ -138,20 +171,43 @@ export class SidenavComponent implements OnInit {
   private hitungUlang(): void {
     const peran = this.authService.getUserInfo()?.role;
 
-    this.grup = NAV_GROUPS.map((g) => ({
+    const boleh = (item: NavItem): boolean =>
+      peran != null && item.roles.includes(peran) && this.cocokKataKunci(item);
+
+    const susun = (item: NavItem): ItemTampil => ({
+      item,
+      jalur: [`/${this._base}`, ...item.path.split('/')],
+      tersemat: this.pinnedNavService.isPinned(item.path),
+    });
+
+    /*
+      Menu yang disematkan naik ke satu grup tersendiri di paling atas, DAN
+      tetap berada di grup aslinya. Memindahkannya membuat daftar berubah
+      susunan setiap kali seseorang menyematkan sesuatu, sehingga letak menu
+      yang sudah dihafal ikut bergeser.
+    */
+    const tersemat = NAV_ITEMS.filter(
+      (item) => boleh(item) && this.pinnedNavService.isPinned(item.path),
+    ).map(susun);
+
+    const grupBiasa = NAV_GROUPS.map((g) => ({
       key: g.key,
       label: g.label,
       items: NAV_ITEMS.filter(
-        (item) =>
-          item.group === g.key &&
-          peran != null &&
-          item.roles.includes(peran) &&
-          this.cocokKataKunci(item),
-      ).map((item) => ({
-        item,
-        jalur: [`/${this._base}`, ...item.path.split('/')],
-      })),
+        (item) => item.group === g.key && boleh(item),
+      ).map(susun),
     })).filter((g) => g.items.length > 0);
+
+    this.grup = tersemat.length
+      ? [
+          {
+            key: 'pinned' as const,
+            label: 'nav__group_pinned',
+            items: tersemat,
+          },
+          ...grupBiasa,
+        ]
+      : grupBiasa;
   }
 
   /*

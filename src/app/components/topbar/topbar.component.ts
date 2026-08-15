@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
+import { PageTitleService } from 'src/app/services/page-title.service';
 import { SideNavService } from 'src/app/services/side-nav.service';
 import { DarkModeSelectorComponent } from './dark-mode-selector/dark-mode-selector.component';
-import { AccentSelectorComponent } from './accent-selector/accent-selector.component';
 import { LanguageSelectorComponent } from './language-selector/language-selector.component';
 import { CircleAvatarComponent } from '../circle-avatar/circle-avatar.component';
 import { AvatarComponent } from '../avatar/avatar.component';
@@ -19,6 +20,10 @@ import { ProfileDialogComponent } from '../profile-dialog/profile-dialog.compone
  * shell Sales yang menyambungkannya, sehingga tombol yang sama tidak berbuat
  * apa-apa di shell lain — perbedaan yang tidak pernah disengaja, hanya
  * terlewat ketika templatenya disalin.
+ *
+ * PEMILIH AKSEN TIDAK LAGI DI SINI. Tempatnya di halaman pengaturan bersama
+ * pilihan tampilan lain; baris atas ini dipakai sepanjang hari untuk bekerja,
+ * dan warna adalah sesuatu yang dipilih sekali lalu dilupakan.
  */
 @Component({
   selector: 'app-topbar',
@@ -28,7 +33,6 @@ import { ProfileDialogComponent } from '../profile-dialog/profile-dialog.compone
     NgIf,
     TranslatePipe,
     DarkModeSelectorComponent,
-    AccentSelectorComponent,
     LanguageSelectorComponent,
     CircleAvatarComponent,
     AvatarComponent,
@@ -40,7 +44,10 @@ export class TopbarComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private sideNavService: SideNavService,
+    private pageTitleService: PageTitleService,
   ) {}
+
+  private destroyRef = inject(DestroyRef);
 
   isProfileOpened: boolean = false;
   isAvatarAvailable: boolean = false;
@@ -48,7 +55,14 @@ export class TopbarComponent implements OnInit {
   name: string = '';
   roleText: string = '';
 
+  /** Kunci i18n judul halaman aktif, atau null bila alamatnya tidak dikenali. */
+  judulHalaman: string | null = null;
+
   ngOnInit(): void {
+    this.pageTitleService.judul$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((kunci) => (this.judulHalaman = kunci));
+
     const avatar = this.authService.getSelfAvatar();
     if (avatar != null) {
       this.isAvatarAvailable = true;

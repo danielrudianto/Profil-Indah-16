@@ -17,9 +17,19 @@
     <i class="ph ph-list" aria-hidden="true"></i>
   </button>
 
+  <!--
+    Tag halaman yang sedang terbuka. Judulnya diturunkan dari alamat oleh
+    PageTitleService, jadi halaman yang belum dikenali tidak memunculkan tag
+    sama sekali — lebih baik kosong daripada menampilkan judul halaman
+    sebelumnya.
+  -->
+  <span class="topbar__page" *ngIf="judulHalaman">
+    <i class="ph-fill ph-bookmark-simple" aria-hidden="true"></i>
+    {{ judulHalaman | translate }}
+  </span>
+
   <div class="topbar__utility">
     <app-dark-mode-selector />
-    <app-accent-selector />
     <app-language-selector />
 
     <!--

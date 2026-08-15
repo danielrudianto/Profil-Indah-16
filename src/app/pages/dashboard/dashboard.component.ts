@@ -50,6 +50,9 @@ export class DashboardComponent {
   navBase: string = ROLE_NAV_BASE_FALLBACK;
   nama: string = '';
 
+  /** Benar ketika sebuah halaman anak sedang terbuka di outlet, misal /Settings. */
+  adaAnak = false;
+
   ngOnInit(): void {
     const info = this.authService.getUserInfo();
     this.nama = info?.name ?? '';

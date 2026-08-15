@@ -16,19 +16,30 @@
     <app-topbar />
 
     <main class="dashboard__body">
-      <h1 class="dashboard__greeting">
-        {{ 'dashboard__greeting' | translate }}{{ nama ? ', ' + nama : '' }}
-      </h1>
-
       <!--
-        Peran tanpa subpohon sendiri diberi tahu apa adanya, bukan dibiarkan
-        menatap layar kosong yang terbaca seperti aplikasi gagal dimuat.
+        Sapaan hanya muncul ketika outlet-nya kosong, yaitu di dashboard itu
+        sendiri. Halaman anak seperti /Settings punya judulnya sendiri, dan
+        menumpuk sapaan di atasnya membuat halaman itu seperti sisipan, bukan
+        halaman utuh.
       -->
-      <p class="dashboard__empty" *ngIf="!punyaNavigasi">
-        {{ 'dashboard__no_access' | translate }}
-      </p>
+      <ng-container *ngIf="!adaAnak">
+        <h1 class="dashboard__greeting">
+          {{ 'dashboard__greeting' | translate }}{{ nama ? ', ' + nama : '' }}
+        </h1>
 
-      <router-outlet />
+        <!--
+          Peran tanpa subpohon sendiri diberi tahu apa adanya, bukan dibiarkan
+          menatap layar kosong yang terbaca seperti aplikasi gagal dimuat.
+        -->
+        <p class="dashboard__empty" *ngIf="!punyaNavigasi">
+          {{ 'dashboard__no_access' | translate }}
+        </p>
+      </ng-container>
+
+      <router-outlet
+        (activate)="adaAnak = true"
+        (deactivate)="adaAnak = false"
+      />
     </main>
   </mat-drawer-content>
 </mat-drawer-container>

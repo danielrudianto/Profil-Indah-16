@@ -44,6 +44,34 @@
   }
 }
 
+/*
+  Tag halaman aktif. Bentuknya sama dengan keadaan aktif di navigasi samping —
+  ground aktif, garis tepi dalam 1px, teks beraksen — supaya "halaman yang
+  sedang dibuka" terbaca sebagai satu bahasa visual di kedua tempat.
+*/
+.topbar__page {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--color-active);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  color: var(--color-accent);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  i {
+    font-size: 12px;
+    flex: none;
+  }
+}
+
 .topbar__utility {
   margin-left: auto;
   display: flex;

@@ -1,0 +1,83 @@
+<div class="settings">
+  <header class="settings__head">
+    <h1 class="settings__title">{{ 'settings__title' | translate }}</h1>
+    <p class="settings__lede">{{ 'settings__lede' | translate }}</p>
+  </header>
+
+  <!-- Mode tampilan --------------------------------------------------- -->
+  <section class="settings__card">
+    <h2 class="settings__card-title">{{ 'settings__mode' | translate }}</h2>
+    <p class="settings__card-note">{{ 'settings__mode_note' | translate }}</p>
+
+    <div class="seg" role="group">
+      <button
+        type="button"
+        class="seg__opt"
+        [class.seg__opt--on]="mode === 'light'"
+        [attr.aria-pressed]="mode === 'light'"
+        (click)="pilihMode('light')"
+      >
+        <i class="ph ph-sun" aria-hidden="true"></i>
+        {{ 'settings__mode_light' | translate }}
+      </button>
+      <button
+        type="button"
+        class="seg__opt"
+        [class.seg__opt--on]="mode === 'dark'"
+        [attr.aria-pressed]="mode === 'dark'"
+        (click)="pilihMode('dark')"
+      >
+        <i class="ph ph-moon" aria-hidden="true"></i>
+        {{ 'settings__mode_dark' | translate }}
+      </button>
+    </div>
+  </section>
+
+  <!-- Warna aksen ----------------------------------------------------- -->
+  <section class="settings__card">
+    <h2 class="settings__card-title">{{ 'settings__accent' | translate }}</h2>
+    <p class="settings__card-note">{{ 'settings__accent_note' | translate }}</p>
+
+    <div class="accents">
+      <button
+        type="button"
+        class="accents__opt"
+        *ngFor="let w of warna; trackBy: lacakWarna"
+        [class.accents__opt--on]="w.label === aksenSekarang.label"
+        [style.--contoh]="w.base"
+        [attr.aria-pressed]="w.label === aksenSekarang.label"
+        (click)="pilihAksen(w)"
+      >
+        <span class="accents__swatch" aria-hidden="true"></span>
+        <span class="accents__label">{{ w.label | translate }}</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Bahasa ---------------------------------------------------------- -->
+  <section class="settings__card">
+    <h2 class="settings__card-title">{{ 'settings__language' | translate }}</h2>
+    <p class="settings__card-note">{{ 'settings__language_note' | translate }}</p>
+
+    <div class="seg" role="group">
+      <button
+        type="button"
+        class="seg__opt"
+        [class.seg__opt--on]="bahasa === 'id'"
+        [attr.aria-pressed]="bahasa === 'id'"
+        (click)="pilihBahasa('id')"
+      >
+        {{ 'settings__language_id' | translate }}
+      </button>
+      <button
+        type="button"
+        class="seg__opt"
+        [class.seg__opt--on]="bahasa === 'en'"
+        [attr.aria-pressed]="bahasa === 'en'"
+        (click)="pilihBahasa('en')"
+      >
+        {{ 'settings__language_en' | translate }}
+      </button>
+    </div>
+  </section>
+</div>
