@@ -170,7 +170,21 @@
           <tbody *ngIf="t.length > 0">
             <tr *ngFor="let itemForm of t.controls; index as i" [formGroupName]="i">
               <td>
-                <span class="barang__ref">{{ itemForm.get("reference")?.value }}</span>
+                <span class="barang__ref">
+                  {{ itemForm.get("reference")?.value }}
+                  <!--
+                    Menandai baris berulang, tanpa menghalanginya. Barang yang
+                    sama memang boleh berkali-kali — bonus supplier dicatat
+                    begitu — tetapi yang tidak sengaja harus bisa melihatnya.
+                  -->
+                  <span
+                    class="ulang"
+                    *ngIf="jumlahBaris(itemForm.get('product_id')?.value) > 1"
+                    [title]="'good-receipt__create__duplicate' | translate"
+                  >
+                    ×{{ jumlahBaris(itemForm.get("product_id")?.value) }}
+                  </span>
+                </span>
                 <span class="barang__desc">{{ itemForm.get("description")?.value }}</span>
                 <span class="barang__stok" *ngIf="itemForm.get('stock')?.value as stok">
                   {{ "good-receipt__create__current-stock" | translate }}:

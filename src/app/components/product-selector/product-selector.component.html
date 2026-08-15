@@ -97,7 +97,15 @@
     </div>
 
     <div class="kaki" *ngIf="dataCount > 0">
-      <span>{{ dataCount }} {{ "product-selector__found" | translate }}</span>
+      <!--
+        Kata "dokumen", bukan "faktur": dialog ini dipakai faktur, penerimaan,
+        dan penyesuaian sekaligus.
+      -->
+      <span>
+        {{ totalBaris }} {{ "product-selector__lines-in-doc" | translate }}
+        · {{ "product-selector__from" | translate }} {{ dataCount }}
+        {{ "product-selector__items" | translate }}
+      </span>
       <span class="kaki__nav">
         <button
           type="button"

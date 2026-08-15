@@ -108,6 +108,11 @@ export class ProductSelectorComponent implements OnInit {
     this.searchBarInput?.nativeElement.focus();
   }
 
+  /** Seluruh baris yang sudah ada di dokumen pemanggil. */
+  get totalBaris(): number {
+    return (this.data?.barisSaatIni?.() ?? []).length;
+  }
+
   /** Baris dokumen milik barang ini, untuk lencana dan rinciannya. */
   barisUntuk(element: any): any[] {
     const semua = this.data?.barisSaatIni?.() ?? [];

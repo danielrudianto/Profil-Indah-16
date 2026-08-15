@@ -268,6 +268,20 @@ export class GoodReceiptCreateComponent {
     });
   }
 
+  /**
+   * Berapa baris yang memakai barang yang sama.
+   *
+   * Dipakai menandai baris berulang dengan pill "×N". MENANDAI, BUKAN
+   * MENGHALANGI: barang yang sama memang boleh berkali-kali — bonus supplier
+   * dicatat begitu — tetapi yang tidak sengaja menambahkannya dua kali harus
+   * bisa melihatnya tanpa menghitung sendiri.
+   */
+  jumlahBaris(productId: number): number {
+    return this.t.controls.filter(
+      (x) => x.get('product_id')?.value === productId,
+    ).length;
+  }
+
   deleteItem(i: number) {
     this.t.removeAt(i);
 

@@ -1769,5 +1769,9 @@
   "good-receipt__create__submit__waiting": "Simpan — menunggu faktur",
   "good-receipt__create__submit__final": "Simpan — dokumen final",
   "good-receipt__check__waiting": "Dokumen menunggu faktur",
-  "good-receipt__check__final": "Dokumen final, masuk hutang"
+  "good-receipt__check__final": "Dokumen final, masuk hutang",
+  "product-selector__lines-in-doc": "baris di dokumen",
+  "product-selector__from": "dari",
+  "product-selector__items": "barang",
+  "good-receipt__create__duplicate": "Barang yang sama ada di beberapa baris — sengaja? Misalnya bonus supplier."
 }

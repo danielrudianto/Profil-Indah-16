@@ -1763,5 +1763,9 @@
   "good-receipt__create__submit__waiting": "Save — awaiting invoice",
   "good-receipt__create__submit__final": "Save — final document",
   "good-receipt__check__waiting": "Document awaiting invoice",
-  "good-receipt__check__final": "Final document, enters payables"
+  "good-receipt__check__final": "Final document, enters payables",
+  "product-selector__lines-in-doc": "lines in document",
+  "product-selector__from": "from",
+  "product-selector__items": "products",
+  "good-receipt__create__duplicate": "The same product appears on several lines — intentional? A supplier bonus, for example."
 }
