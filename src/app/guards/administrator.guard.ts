@@ -1,31 +1,64 @@
 import { inject } from '@angular/core';
-import { CanActivateFn } from '@angular/router';
+import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { Role } from '../constants/role.constant';
 
-export const AdministratorGuard: CanActivateFn = (route, state) => {
+/**
+ * Penjaga peran.
+ *
+ * Semuanya mengembalikan UrlTree ketika menolak, bukan `false`.
+ *
+ * `false` membatalkan navigasi tanpa menggantinya dengan apa pun: alamatnya
+ * tetap di halaman sebelumnya, outlet-nya kosong, dan pengguna menatap layar
+ * kosong tanpa penjelasan. Penolakan yang benar mengembalikan pengguna ke
+ * halaman yang memang boleh dibukanya.
+ *
+ * Daftar perannya sengaja tetap ditulis di sini, bukan diambil dari
+ * navigation.constant.ts. Menu dan penjagaan menjawab dua pertanyaan berbeda —
+ * "apa yang ditawarkan" dan "apa yang diizinkan" — dan menyatukannya membuat
+ * kekeliruan pada salah satunya diam-diam melonggarkan yang lain.
+ */
+
+/** Tujuan penolakan: dashboard, yang menyesuaikan diri dengan peran pengguna. */
+function tolak(router: Router): UrlTree {
+  return router.parseUrl('/');
+}
+
+export const AdministratorGuard: CanActivateFn = (): boolean | UrlTree => {
   const authService = inject(AuthService);
-  return authService.isAdministrator();
+  return authService.isAdministrator() ? true : tolak(inject(Router));
 };
 
-export const SuperAdministratorGuard: CanActivateFn = (route, state) => {
+export const SuperAdministratorGuard: CanActivateFn = (): boolean | UrlTree => {
   const authService = inject(AuthService);
-  return authService.isSuperAdministrator();
+  return authService.isSuperAdministrator() ? true : tolak(inject(Router));
 };
 
-export const SalesGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
-  const userInfo = authService.getUserInfo();
-  return userInfo == null ? false : [2, 3, 5, 7].includes(userInfo.role);
-};
+function berdasarPeran(izin: Role[]): CanActivateFn {
+  return (): boolean | UrlTree => {
+    const authService = inject(AuthService);
+    const router = inject(Router);
+    const peran = authService.getUserInfo()?.role;
+    return peran != null && izin.includes(peran) ? true : tolak(router);
+  };
+}
 
-export const PurchasingGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
-  const userInfo = authService.getUserInfo();
-  return userInfo == null ? false : [1, 3, 5, 7].includes(userInfo.role);
-};
+export const SalesGuard = berdasarPeran([
+  Role.Sales,
+  Role.General,
+  Role.Administrator,
+  Role.Owner,
+]);
 
-export const GeneralGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
-  const userInfo = authService.getUserInfo();
-  return userInfo == null ? false : [3, 5, 7].includes(userInfo.role);
-};
+export const PurchasingGuard = berdasarPeran([
+  Role.Purchasing,
+  Role.General,
+  Role.Administrator,
+  Role.Owner,
+]);
+
+export const GeneralGuard = berdasarPeran([
+  Role.General,
+  Role.Administrator,
+  Role.Owner,
+]);
