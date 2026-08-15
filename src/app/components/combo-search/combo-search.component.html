@@ -1,18 +1,5 @@
 <div class="combo">
-  <input
-    class="input"
-    type="text"
-    autocomplete="off"
-    [id]="inputId"
-    [formControl]="control"
-    [attr.placeholder]="placeholder"
-    [attr.disabled]="disabled ? '' : null"
-    [attr.aria-expanded]="terbuka"
-    role="combobox"
-    aria-autocomplete="list"
-    (focus)="fokus()"
-    (keydown)="tombol($event)"
-  />
+  <mat-form-field appearance="outline"><input matInput type="text" autocomplete="off" [id]="inputId" [formControl]="control" [attr.placeholder]="placeholder" [attr.disabled]="disabled ? '' : null" [attr.aria-expanded]="terbuka" role="combobox" aria-autocomplete="list" (focus)="fokus()" (keydown)="tombol($event)" /></mat-form-field>
   <i class="ph ph-caret-down combo__caret" aria-hidden="true"></i>
 
   <ul class="combo__daftar" *ngIf="terbuka" role="listbox">

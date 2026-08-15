@@ -16,26 +16,17 @@
 
       <div class="kisi">
         <div class="field field--penuh">
-          <label for="p-ref">{{ "product__add__reference" | translate }}</label>
-          <input
-            id="p-ref"
-            class="input input--sempit input--angka"
-            type="text"
-            formControlName="reference"
-            placeholder="MLT-9-G"
-          />
+          <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ "product__add__reference" | translate }}</mat-label>
+              <input matInput type="text" formControlName="reference" placeholder="MLT-9-G" />
+            </mat-form-field>
         </div>
 
         <div class="field field--penuh">
           <label for="p-desc">
             {{ "product__add__description" | translate }}
           </label>
-          <textarea
-            id="p-desc"
-            class="input input--area"
-            formControlName="description"
-            placeholder="Multiplek 9mm Garuda"
-          ></textarea>
+          <mat-form-field appearance="outline" class="w-100"><textarea matInput formControlName="description" placeholder="Multiplek 9mm Garuda"></textarea></mat-form-field>
         </div>
 
         <div class="field">
@@ -80,17 +71,10 @@
         </div>
 
         <div class="field">
-          <label for="p-min">
-            {{ "product__add__minimum-stock" | translate }}
-          </label>
-          <input
-            id="p-min"
-            class="input input--kanan"
-            type="text"
-            formControlName="minimum_stock"
-            mask="separator.2"
-            thousandSeparator=" "
-          />
+          <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ "product__add__minimum-stock" | translate }}</mat-label>
+              <input matInput type="text" formControlName="minimum_stock" mask="separator.2" thousandSeparator=" " />
+            </mat-form-field>
         </div>
       </div>
     </section>
@@ -131,45 +115,22 @@
           bentuk kiriman ke server tidak berubah.
         -->
           <div class="satuan__baris">
-            <select class="input input--tengah" formControlName="unit">
-              <option value="" disabled>—</option>
-              <option *ngFor="let s of satuanTersedia" [value]="s.value">
-                {{ s.label }}
-              </option>
-            </select>
+            <mat-form-field appearance="outline" class="w-satuan">
+              <mat-select formControlName="unit">
+                <mat-option *ngFor="let s of satuanTersedia" [value]="s.value">
+                  {{ s.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
 
             <span class="satuan__dasar">
               {{ "product__create__base-unit" | translate }}
             </span>
 
-            <input
-              class="input input--kanan"
-              type="text"
-              formControlName="sales_price"
-              mask="separator.2"
-              thousandSeparator=" "
-            />
-            <input
-              class="input input--kanan"
-              type="text"
-              formControlName="sales_discount"
-              mask="separator.2"
-              thousandSeparator=" "
-            />
-            <input
-              class="input input--kanan"
-              type="text"
-              formControlName="purchase_price"
-              mask="separator.2"
-              thousandSeparator=" "
-            />
-            <input
-              class="input input--kanan"
-              type="text"
-              formControlName="purchase_discount"
-              mask="separator.2"
-              thousandSeparator=" "
-            />
+            <mat-form-field appearance="outline"><input matInput type="text" formControlName="sales_price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+            <mat-form-field appearance="outline"><input matInput type="text" formControlName="sales_discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+            <mat-form-field appearance="outline"><input matInput type="text" formControlName="purchase_price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+            <mat-form-field appearance="outline"><input matInput type="text" formControlName="purchase_discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
             <span></span>
           </div>
 
@@ -186,53 +147,24 @@
                 *ngFor="let baris of t.controls; index as i"
                 [formGroupName]="i"
               >
-                <select class="input input--tengah" formControlName="unit">
-                  <option value="" disabled>—</option>
-                  <option *ngFor="let s of satuanTersedia" [value]="s.value">
-                    {{ s.label }}
-                  </option>
-                </select>
+                <mat-form-field appearance="outline" class="w-satuan">
+                  <mat-select formControlName="unit">
+                    <mat-option *ngFor="let s of satuanTersedia" [value]="s.value">
+                      {{ s.label }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
 
                 <span class="satuan__konversi">
                   1 {{ getFormAt(i).get("unit")?.value || "…" }} =
-                  <input
-                    class="input input--kecil input--kanan"
-                    type="text"
-                    formControlName="conversion"
-                    mask="separator.2"
-                    thousandSeparator=" "
-                  />
+                  <mat-form-field appearance="outline" class="w-sempit"><input matInput type="text" formControlName="conversion" mask="separator.2" thousandSeparator=" " /></mat-form-field>
                   {{ satuanDiAtas(i) || "…" }}
                 </span>
 
-                <input
-                  class="input input--kanan"
-                  type="text"
-                  formControlName="sales_price"
-                  mask="separator.2"
-                  thousandSeparator=" "
-                />
-                <input
-                  class="input input--kanan"
-                  type="text"
-                  formControlName="sales_discount"
-                  mask="separator.2"
-                  thousandSeparator=" "
-                />
-                <input
-                  class="input input--kanan"
-                  type="text"
-                  formControlName="purchase_price"
-                  mask="separator.2"
-                  thousandSeparator=" "
-                />
-                <input
-                  class="input input--kanan"
-                  type="text"
-                  formControlName="purchase_discount"
-                  mask="separator.2"
-                  thousandSeparator=" "
-                />
+                <mat-form-field appearance="outline"><input matInput type="text" formControlName="sales_price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+                <mat-form-field appearance="outline"><input matInput type="text" formControlName="sales_discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+                <mat-form-field appearance="outline"><input matInput type="text" formControlName="purchase_price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+                <mat-form-field appearance="outline"><input matInput type="text" formControlName="purchase_discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
 
                 <button
                   type="button"

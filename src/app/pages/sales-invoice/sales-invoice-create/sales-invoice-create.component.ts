@@ -49,6 +49,9 @@ import { NgClass } from '@angular/common';
       pemilih pelanggan; sisanya digambar sendiri lewat kelas Nocturne.
     */
     imports: [
+    MatFormField,
+    MatLabel,
+    MatInput,
       FormsModule,
       ReactiveFormsModule,
       AutocompleteSearchComponent,

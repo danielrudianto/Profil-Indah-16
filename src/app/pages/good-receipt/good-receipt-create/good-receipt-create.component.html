@@ -61,19 +61,14 @@
             kartu Nocturne. Nilainya tetap "yyyy-MM-dd", bentuk yang sama yang
             dikirim ke server.
           -->
-          <input id="gr-date" class="input" type="date" formControlName="date" />
+          <mat-form-field appearance="outline"><input matInput type="date" formControlName="date" /></mat-form-field>
         </div>
 
         <div class="field">
-          <label for="gr-do">{{ "good-receipt__create__delivery-order" | translate }}</label>
-          <input
-            id="gr-do"
-            class="input input--angka"
-            type="text"
-            formControlName="delivery_order"
-            autocomplete="off"
-            [attr.placeholder]="'good-receipt__create__delivery-order__example' | translate"
-          />
+          <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ "good-receipt__create__delivery-order" | translate }}</mat-label>
+              <input matInput type="text" formControlName="delivery_order" autocomplete="off" [attr.placeholder]="'good-receipt__create__delivery-order__example' | translate" />
+            </mat-form-field>
         </div>
 
         <div class="field">
@@ -124,25 +119,24 @@
       <div class="faktur__isi" [class.faktur__isi--aktif]="dokumenLengkap">
         <div class="kisi" *ngIf="dokumenLengkap">
           <div class="field">
-            <label for="gr-inv">{{ "good-receipt__invoice__name" | translate }}</label>
-            <input id="gr-inv" class="input input--angka" type="text" formControlName="invoice_name" autocomplete="off" />
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ "good-receipt__invoice__name" | translate }}</mat-label>
+              <input matInput type="text" formControlName="invoice_name" autocomplete="off" />
+            </mat-form-field>
           </div>
 
           <div class="field">
-            <label for="gr-tax">{{ "good-receipt__invoice__tax" | translate }}</label>
-            <input id="gr-tax" class="input input--angka" type="text" formControlName="faktur" autocomplete="off" />
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ "good-receipt__invoice__tax" | translate }}</mat-label>
+              <input matInput type="text" formControlName="faktur" autocomplete="off" />
+            </mat-form-field>
           </div>
 
           <div class="field">
-            <label for="gr-disc">{{ "good-receipt__invoice__discount" | translate }}</label>
-            <input
-              id="gr-disc"
-              class="input input--kanan"
-              type="text"
-              formControlName="document_discount"
-              mask="separator.2"
-              thousandSeparator=" "
-            />
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ "good-receipt__invoice__discount" | translate }}</mat-label>
+              <input matInput type="text" formControlName="document_discount" mask="separator.2" thousandSeparator=" " />
+            </mat-form-field>
             <p class="field__bantu">{{ "good-receipt__invoice__discount__note" | translate }}</p>
           </div>
         </div>
@@ -235,13 +229,7 @@
 
               <td>
                 <div class="jumlah">
-                  <input
-                    class="input input--kanan"
-                    type="text"
-                    formControlName="quantity"
-                    mask="separator.2"
-                    thousandSeparator=" "
-                  />
+                  <mat-form-field appearance="outline"><input matInput type="text" formControlName="quantity" mask="separator.2" thousandSeparator=" " /></mat-form-field>
                   <span class="jumlah__satuan">{{ itemForm.get("unit")?.value }}</span>
                 </div>
                 <!--
@@ -256,23 +244,11 @@
               </td>
 
               <td *ngIf="bolehUbahHarga">
-                <input
-                  class="input input--kanan"
-                  type="text"
-                  formControlName="price"
-                  mask="separator.2"
-                  thousandSeparator=" "
-                />
+                <mat-form-field appearance="outline"><input matInput type="text" formControlName="price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
               </td>
 
               <td *ngIf="bolehUbahHarga">
-                <input
-                  class="input input--kanan"
-                  type="text"
-                  formControlName="discount"
-                  mask="separator.2"
-                  thousandSeparator=" "
-                />
+                <mat-form-field appearance="outline"><input matInput type="text" formControlName="discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
               </td>
 
               <td class="ke-kanan baris__total" *ngIf="bolehUbahHarga">

@@ -23,6 +23,9 @@ import {
   ComboItem,
   ComboSearchComponent,
 } from 'src/app/components/combo-search/combo-search.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatSelect, MatOption } from '@angular/material/select';
 
 /**
  * Tambah barang — sistem desain Nocturne.
@@ -48,6 +51,11 @@ import {
   templateUrl: './product-create.component.html',
   styleUrls: ['./product-create.component.scss'],
   imports: [
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatSelect,
+    MatOption,
     NgIf,
     NgFor,
     ReactiveFormsModule,

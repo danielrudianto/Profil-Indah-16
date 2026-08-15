@@ -34,15 +34,10 @@
 
         <div class="kartu__baris">
           <div class="field">
-            <label for="tanggal">
-              {{ 'sales-invoice__create__date' | translate }}
-            </label>
-            <input
-              id="tanggal"
-              type="date"
-              class="input"
-              formControlName="date"
-            />
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'sales-invoice__create__date' | translate }}</mat-label>
+              <input matInput type="date" formControlName="date" />
+            </mat-form-field>
           </div>
 
           <div class="field">
@@ -74,15 +69,7 @@
             elemennya: yang kedua tidak pernah memberi tahu Angular bahwa
             nilainya berubah, sehingga kontrol formulirnya menyimpan ejaan lama.
           -->
-          <input
-            id="sales"
-            type="text"
-            class="input"
-            list="daftar-sales"
-            formControlName="sales"
-            autocomplete="off"
-            (input)="besarkanSales($event)"
-          />
+          <mat-form-field appearance="outline"><input matInput type="text" list="daftar-sales" formControlName="sales" autocomplete="off" (input)="besarkanSales($event)" /></mat-form-field>
           <datalist id="daftar-sales">
             <option value="INTERNAL"></option>
             <option *ngFor="let s of salesmen" [value]="s"></option>
@@ -208,15 +195,7 @@
 
                 <td [formGroup]="getFormGroupAt(i)">
                   <div class="jumlah">
-                    <input
-                      type="text"
-                      class="input input--sempit input--kanan"
-                      mask="separator"
-                      thousandSeparator="."
-                      formControlName="quantity"
-                      autocomplete="off"
-                      placeholder="0"
-                    />
+                    <mat-form-field appearance="outline" class="w-sempit"><input matInput type="text" mask="separator" thousandSeparator="." formControlName="quantity" autocomplete="off" placeholder="0" /></mat-form-field>
                     <span class="jumlah__satuan">{{ satuanBaris(i) }}</span>
                   </div>
                   <div class="jumlah__konversi" *ngIf="konversiBaris(i)">
@@ -289,51 +268,24 @@
 
         <div class="kartu__baris">
           <div class="field">
-            <label for="diskon">
-              {{ 'sales-invoice__create__doc-discount' | translate }}
-            </label>
-            <input
-              id="diskon"
-              type="text"
-              class="input input--kanan"
-              mask="separator"
-              thousandSeparator="."
-              formControlName="discount"
-              autocomplete="off"
-              placeholder="0"
-            />
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'sales-invoice__create__doc-discount' | translate }}</mat-label>
+              <input matInput type="text" mask="separator" thousandSeparator="." formControlName="discount" autocomplete="off" placeholder="0" />
+            </mat-form-field>
           </div>
 
           <div class="field">
-            <label for="ongkir">
-              {{ 'sales-invoice__create__delivery' | translate }}
-            </label>
-            <input
-              id="ongkir"
-              type="text"
-              class="input input--kanan"
-              mask="separator"
-              thousandSeparator="."
-              formControlName="delivery"
-              autocomplete="off"
-              placeholder="0"
-            />
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'sales-invoice__create__delivery' | translate }}</mat-label>
+              <input matInput type="text" mask="separator" thousandSeparator="." formControlName="delivery" autocomplete="off" placeholder="0" />
+            </mat-form-field>
           </div>
 
           <div class="field">
-            <label for="jasa">
-              {{ 'sales-invoice__create__service' | translate }}
-            </label>
-            <input
-              id="jasa"
-              type="text"
-              class="input input--kanan"
-              mask="separator"
-              thousandSeparator="."
-              formControlName="service"
-              autocomplete="off"
-              placeholder="0"
-            />
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'sales-invoice__create__service' | translate }}</mat-label>
+              <input matInput type="text" mask="separator" thousandSeparator="." formControlName="service" autocomplete="off" placeholder="0" />
+            </mat-form-field>
           </div>
         </div>
       </section>
@@ -365,16 +317,10 @@
         </p>
 
         <div class="field" *ngIf="paymentsFormGroup.value.method !== 'paid'">
-          <label for="tempo">
-            {{ 'sales-invoice__create__due-time' | translate }}
-          </label>
-          <input
-            id="tempo"
-            type="number"
-            class="input input--sempit"
-            formControlName="due_time"
-            min="0"
-          />
+          <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'sales-invoice__create__due-time' | translate }}</mat-label>
+              <input matInput type="number" formControlName="due_time" min="0" />
+            </mat-form-field>
         </div>
 
         <ng-container *ngIf="paymentsFormGroup.value.method !== 'unpaid'">
@@ -385,15 +331,7 @@
             </div>
 
             <div class="bayar__nilai" [formGroup]="getFormGroupAtPayment(i)">
-              <input
-                type="text"
-                class="input input--kanan"
-                mask="separator"
-                thousandSeparator="."
-                formControlName="value"
-                autocomplete="off"
-                placeholder="0"
-              />
+              <mat-form-field appearance="outline"><input matInput type="text" mask="separator" thousandSeparator="." formControlName="value" autocomplete="off" placeholder="0" /></mat-form-field>
             </div>
 
             <button
