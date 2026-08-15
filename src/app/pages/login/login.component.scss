@@ -1,114 +1,357 @@
-.header__bar {
-  background: linear-gradient(
-    139deg,
-    #0d47a1,
-    #3772b2,
-    #7f8c8d,
-    #a14c9b,
-    #fb8817,
-    #ff4b01
-  );
-  width: 100%;
-  height: 10px;
-  margin-bottom: 30px;
+/*
+  Login — sistem desain Nocturne.
+
+  Seluruh warna dibaca dari token yang ditulis SettingsService ke elemen <html>,
+  tidak satu pun ditulis mentah di sini. Itu yang membuat halaman ini ikut
+  berubah ketika pengguna mengganti aksen atau mode, termasuk sebelum login —
+  AppComponent memasang preferensinya sejak aplikasi dijalankan.
+*/
+
+:host {
+  display: block;
+  height: 100%;
 }
 
-.avatar__wrapper__border {
-  width: 205px;
-  height: 205px;
-  background-color: #0d47a1;
+.login {
   position: relative;
-  border-radius: 50%;
-  margin-left: 50%;
-  transform: translateX(-50%);
-  cursor: pointer;
-}
-
-.avatar__wrapper {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background-color: aliceblue;
-  position: relative;
-  object-fit: contain;
-  margin-left: 50%;
-  margin-top: 50%;
-  transform: translateX(-50%) translateY(-50%);
-}
-
-.avatar__bear {
-  position: absolute;
-  height: 200px;
-  width: 200px;
+  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 56px;
   overflow: hidden;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+/* ---------------------------------------------------------------- */
+/* Lingkaran dekoratif                                               */
+/* ---------------------------------------------------------------- */
+
+.login__bloom {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+
+  span {
+    position: absolute;
+    border-radius: 50%;
+  }
+}
+
+.login__bloom-a {
+  top: -300px;
+  left: 8%;
+  width: 900px;
+  height: 900px;
+  background: radial-gradient(circle, var(--blob-a) 0%, transparent 70%);
+  opacity: 0.24;
+  filter: blur(190px);
+}
+
+.login__bloom-b {
+  bottom: -420px;
+  right: 4%;
+  width: 1100px;
+  height: 1100px;
+  background: radial-gradient(circle, var(--blob-b) 0%, transparent 70%);
+  opacity: 0.85;
+  filter: blur(210px);
+}
+
+.login__bloom-c {
+  top: 30%;
+  right: 30%;
+  width: 760px;
+  height: 760px;
+  background: radial-gradient(circle, var(--blob-c) 0%, transparent 70%);
+  opacity: 0.35;
+  filter: blur(200px);
+}
+
+/* ---------------------------------------------------------------- */
+/* Kartu                                                             */
+/* ---------------------------------------------------------------- */
+
+.login__card {
+  position: relative;
+  width: 430px;
+  max-width: calc(100vw - 32px);
+  padding: 34px 32px;
+  border-radius: 14px;
+  /* Sedikit tembus pandang agar lingkaran di belakangnya terbaca. */
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  box-shadow:
+    0 0 0 1px var(--color-divider),
+    0 16px 40px rgb(0 0 0 / 30%);
+}
+
+.login__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.login__logo {
+  width: 34px;
+  height: 34px;
+  display: block;
+}
+
+.login__brand-name {
+  font-weight: 500;
+  font-size: 19px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.15;
+}
+
+.login__brand-place {
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.login__title {
+  font-size: 32px;
+  font-weight: 500;
+  margin: 0 0 6px;
+}
+
+.login__subtitle {
+  font-size: 14px;
+  margin: 0 0 32px;
+  color: color-mix(in srgb, var(--color-text) 62%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Kolom isian                                                       */
+/* ---------------------------------------------------------------- */
+
+.field {
+  margin-bottom: 18px;
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: color-mix(in srgb, var(--color-text) 78%, transparent);
+  }
+}
+
+.field__wrap {
+  position: relative;
+}
+
+.field__icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  pointer-events: none;
+}
+
+.input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px 0 40px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  outline: none;
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--color-text) 38%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.input--with-action {
+  padding-right: 44px;
+}
+
+.field__action {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+  font-size: 17px;
+  cursor: pointer;
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-text) 6%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Tombol                                                            */
+/* ---------------------------------------------------------------- */
+
+/*
+  Tombol utama Nocturne memakai GARIS TEPI aksen, bukan isian penuh. Itu
+  keputusan desain, bukan kelalaian — lihat bagian Interactions pada berkas
+  serah-terima.
+*/
+.btn {
+  font: inherit;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn--primary {
+  color: var(--color-accent);
+  background: transparent;
+  border: 1px solid var(--color-accent);
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
+}
+
+.login__submit {
+  width: 100%;
+  min-height: 50px;
+  font-size: 15.5px;
+  margin-top: 10px;
+}
+
+/* ---------------------------------------------------------------- */
+/* Kaki kartu                                                        */
+/* ---------------------------------------------------------------- */
+
+.login__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.seg {
+  display: flex;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.seg__opt {
+  padding: 4px 9px;
+  font: inherit;
+  font-size: 11.5px;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.seg__opt--on {
+  color: var(--color-accent);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  border-radius: 4px;
+}
+
+/* ---------------------------------------------------------------- */
+/* Maskot                                                            */
+/* ---------------------------------------------------------------- */
+
+.login__mascot {
+  position: relative;
+  width: 340px;
+  height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.login__mascot-glow {
+  position: absolute;
+  width: 280px;
+  height: 280px;
   border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-accent) 35%, transparent) 0%,
+    transparent 70%
+  );
+  filter: blur(50px);
 }
 
-.avatar__wrapper .avatar__body {
-  position: absolute;
-  top: 55%;
-  left: 60%;
-  transform: translate(-50%, -50%);
-  width: 100%;
+.login__mascot-img {
+  position: relative;
+  width: 320px;
+  height: 320px;
   object-fit: contain;
+  filter: drop-shadow(0 24px 48px rgb(0 0 0 / 35%));
 }
 
-.avatar__wrapper .avatar__body img {
-  width: 80%;
-  margin-bottom: -70px;
-  animation-name: bodyAnimation;
-  animation-duration: 3s;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  object-fit: contain;
-}
-
-@keyframes bodyAnimation {
-  0% {
-    transform: rotate(-15deg);
-    transform-origin: bottom center;
-  }
-  50% {
-    transform: rotate(15deg);
-    transform-origin: bottom center;
-  }
-  100% {
-    transform: rotate(-15deg);
-    transform-origin: bottom center;
-  }
-}
-
-.avatar__wrapper .avatar__eyes {
+.login__mascot-caption {
   position: absolute;
-  top: 65%;
-  left: 35%;
-  width: 30%;
-  animation-name: eyesAnimation;
-  animation-duration: 3s;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-}
-
-.avatar__wrapper .avatar__eyes img {
+  bottom: 24px;
   width: 100%;
+  text-align: center;
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
-@keyframes eyesAnimation {
-  0% {
-    transform: rotate(-15deg);
-    transform-origin: center 130%;
+/*
+  Maskot disembunyikan pada layar sempit, bukan dikecilkan: pada lebar itu ia
+  mendorong kartu keluar dari tengah, dan kartu isian yang harus diutamakan.
+*/
+@media (max-width: 980px) {
+  .login {
+    gap: 0;
   }
-  50% {
-    transform: rotate(15deg);
-    transform-origin: center 130%;
-  }
-  100% {
-    transform: rotate(-15deg);
-    transform-origin: center 130%;
-  }
-}
 
-h1 {
-    font-family:'Courier New', Courier, monospace;
-    font-weight: 900;
+  .login__mascot {
+    display: none;
+  }
 }

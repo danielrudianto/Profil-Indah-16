@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import {
   ACCENT_COLORS,
+  ACCENT_DEFAULT,
   AccentColor,
 } from 'src/app/constants/accent-color.constant';
 
@@ -11,11 +12,10 @@ import {
  * Polanya mengikuti LanguageService — BehaviorSubject supaya komponen bisa
  * berlangganan, dan localStorage supaya pilihannya bertahan antar sesi.
  *
- * Keduanya bekerja lewat elemen <html>, bukan lewat pemuatan berkas tema
- * kedua. Tema Material di styles.scss dipasang dengan mat.theme() yang
- * memancarkan CSS custom property, jadi mengubah satu properti pada akar
- * dokumen sudah cukup untuk mengubah seluruh halaman — termasuk yang belum
- * dimuat, karena rutenya lazy.
+ * Keduanya bekerja lewat elemen <html>. Yang ditulis di sana adalah token
+ * Nocturne, dan seluruh gaya membacanya dari situ, sehingga satu penulisan
+ * cukup untuk mengubah seluruh halaman — termasuk yang belum dimuat karena
+ * rutenya lazy.
  *
  * Disuntik oleh AppComponent, bukan hanya oleh pemilih di topbar. Topbar baru
  * muncul setelah login, sedangkan providedIn: 'root' hanya membentuk instansnya
@@ -32,9 +32,6 @@ export class SettingsService {
   private static readonly KUNCI_MODE = 'settings__mode';
   private static readonly KUNCI_AKSEN = 'settings__accent';
 
-  /** Warna bawaan mengikuti palet azure yang dipasang di styles.scss. */
-  private static readonly AKSEN_BAWAAN = ACCENT_COLORS[0];
-
   public readonly mode: BehaviorSubject<ModeTampilan>;
   public readonly accent: BehaviorSubject<AccentColor>;
 
@@ -42,14 +39,13 @@ export class SettingsService {
     this.mode = new BehaviorSubject<ModeTampilan>(this.bacaMode());
     this.accent = new BehaviorSubject<AccentColor>(this.bacaAksen());
 
-    this.terapkanMode(this.mode.value);
-    this.terapkanAksen(this.accent.value);
+    this.terapkan();
   }
 
   setMode(mode: ModeTampilan): void {
-    this.terapkanMode(mode);
     localStorage.setItem(SettingsService.KUNCI_MODE, mode);
     this.mode.next(mode);
+    this.terapkan();
   }
 
   toggleMode(): void {
@@ -57,9 +53,9 @@ export class SettingsService {
   }
 
   setAccent(warna: AccentColor): void {
-    this.terapkanAksen(warna);
-    localStorage.setItem(SettingsService.KUNCI_AKSEN, warna.label);
+    localStorage.setItem(SettingsService.KUNCI_AKSEN, warna.base);
     this.accent.next(warna);
+    this.terapkan();
   }
 
   /**
@@ -79,34 +75,75 @@ export class SettingsService {
   }
 
   /*
-    Yang disimpan adalah label warnanya, bukan nilai heksadesimalnya, dan
-    pembacaannya dicocokkan kembali ke daftar. Dengan begitu nilai yang disunting
-    lewat peralatan pengembang tidak pernah sampai ke properti CSS, dan penyetelan
-    ulang palet di kemudian hari langsung berlaku pada pengguna lama tanpa perlu
-    membersihkan localStorage mereka.
+    Yang disimpan adalah nilai `base`-nya, lalu dicocokkan kembali ke daftar
+    saat dibaca. Dengan begitu nilai yang disunting lewat peralatan pengembang
+    tidak pernah sampai ke properti CSS, dan penyetelan ulang palet di kemudian
+    hari langsung berlaku pada pengguna lama tanpa perlu membersihkan
+    localStorage mereka.
   */
   private bacaAksen(): AccentColor {
     const tersimpan = localStorage.getItem(SettingsService.KUNCI_AKSEN);
-    return (
-      ACCENT_COLORS.find((w) => w.label === tersimpan) ??
-      SettingsService.AKSEN_BAWAAN
-    );
+    return ACCENT_COLORS.find((w) => w.base === tersimpan) ?? ACCENT_DEFAULT;
   }
 
-  private terapkanMode(mode: ModeTampilan): void {
-    document.documentElement.style.colorScheme = mode;
-  }
+  /**
+   * Menuliskan seluruh token yang bergantung pada tema dan aksen sekaligus.
+   *
+   * Ditulis dalam satu langkah, bukan terpisah per properti, karena keduanya
+   * saling terkait: latar mode gelap diambil dari `d900` milik aksen, sehingga
+   * mengganti aksen tanpa menulis ulang latarnya menghasilkan perpaduan yang
+   * tidak pernah dirancang.
+   */
+  private terapkan(): void {
+    const akar = document.documentElement;
+    const mode = this.mode.value;
+    const aksen = this.accent.value;
+    const gelap = mode === 'dark';
 
-  private terapkanAksen(warna: AccentColor): void {
+    akar.style.colorScheme = mode;
+    akar.setAttribute('data-theme', mode);
+
     /*
-      --mat-sys-primary adalah token yang dibaca komponen Material untuk warna
-      utamanya, dan Material menuliskannya sebagai light-dark(terang, gelap).
-      Bentuk itu dipertahankan di sini: menimpanya dengan satu warna akan
-      memaksa warna yang sama pada kedua mode.
+      Pada mode gelap aksennya DICERAHKAN dengan tint pasangannya. Desain
+      melarang memakai `base` mentah di sana: warna sepekat itu di atas ground
+      gelap nyaris tidak terbaca, dan tulisan di atasnya ikut hilang.
     */
-    document.documentElement.style.setProperty(
-      '--mat-sys-primary',
-      `light-dark(${warna.light}, ${warna.dark})`
-    );
+    const warnaAksen = gelap
+      ? `color-mix(in srgb, ${aksen.base} 62%, ${aksen.tint})`
+      : aksen.base;
+
+    const token: Record<string, string> = {
+      '--color-accent': warnaAksen,
+      '--color-accent-base': aksen.base,
+      '--color-accent-tint': aksen.tint,
+
+      '--color-bg': gelap
+        ? `color-mix(in srgb, ${aksen.d900} 45%, #161826)`
+        : `color-mix(in srgb, ${aksen.tint} 30%, #eef1fa)`,
+
+      '--color-surface': gelap
+        ? `color-mix(in srgb, ${aksen.d900} 28%, #232532)`
+        : `color-mix(in srgb, ${aksen.tint} 12%, #f8fafe)`,
+
+      '--color-text': gelap ? '#e9e9ed' : '#292b31',
+
+      '--color-divider': gelap
+        ? 'color-mix(in srgb, #e9e9ed 12%, transparent)'
+        : 'color-mix(in srgb, #292b31 12%, transparent)',
+
+      /* Ground keadaan aktif: menu terpilih, chip, tag halaman. */
+      '--color-active': gelap
+        ? `color-mix(in srgb, ${aksen.base} 16%, ${aksen.d900})`
+        : '#e7ecfb',
+
+      /* Lingkaran dekoratif di latar; dipakai halaman login. */
+      '--blob-a': warnaAksen,
+      '--blob-b': aksen.d900,
+      '--blob-c': aksen.d800,
+    };
+
+    for (const [nama, nilai] of Object.entries(token)) {
+      akar.style.setProperty(nama, nilai);
+    }
   }
 }

@@ -7,6 +7,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { SettingsService } from 'src/app/services/settings.service';
 import {
   ACCENT_COLORS,
+  ACCENT_DEFAULT,
   AccentColor,
 } from 'src/app/constants/accent-color.constant';
 
@@ -34,7 +35,7 @@ export class AccentSelectorComponent {
 
   readonly colors: AccentColor[] = ACCENT_COLORS;
 
-  currentAccent: AccentColor = ACCENT_COLORS[0];
+  currentAccent: AccentColor = ACCENT_DEFAULT;
 
   ngOnInit(): void {
     this.settingsService.accent.subscribe({

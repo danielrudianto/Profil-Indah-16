@@ -1,46 +1,75 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { NgIf } from '@angular/common';
-import { MatDivider } from '@angular/material/divider';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
+import { LanguageService } from 'src/app/services/language.service';
 
+/**
+ * Halaman masuk — sistem desain Nocturne.
+ *
+ * Logika autentikasinya tidak berubah dari sebelumnya; yang dirombak hanya
+ * tampilannya. Yang ditambahkan: pemilih bahasa di kaki kartu dan tombol
+ * perlihatkan-sandi yang kini benar-benar tombol, bukan ikon yang tidak bisa
+ * dicapai lewat papan ketik.
+ */
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    imports: [NgIf, MatDivider, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatIconButton, MatSuffix, MatIcon]
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  imports: [FormsModule, ReactiveFormsModule, TranslatePipe],
 })
 export class LoginComponent {
   constructor(
     private apiService: ApiService,
     private router: Router,
     private authService: AuthService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private languageService: LanguageService
   ) {}
 
-  isHovered: boolean = false;
   isSubmitting: boolean = false;
   isVisibilityOn: boolean = false;
+  currentLang: string = 'id';
 
   loginFormGroup: FormGroup = new FormGroup({
     username: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
   });
 
+  ngOnInit(): void {
+    this.languageService.currentLanguage.subscribe({
+      next: (bahasa) => {
+        this.currentLang = bahasa;
+      },
+    });
+  }
+
+  changeLanguage(bahasa: string): void {
+    this.languageService.switchLanguage(bahasa);
+  }
+
   /**
-   * Logs in the user by sending a POST request to the 'auth/login' endpoint with the username and password from the loginFormGroup.
-   * Sets the isSubmitting flag to true before sending the request and sets it back to false in the complete callback.
-   * If the request is successful, sets the token using the authService and navigates to the home page.
-   * If there is an error, logs the error to the console.
+   * Mengirim kredensial ke `auth/login`, menyimpan tokennya, lalu berpindah ke
+   * halaman utama.
+   *
+   * isSubmitting dikembalikan lewat .add() — dijalankan baik saat berhasil
+   * maupun gagal, sehingga tombolnya tidak tertinggal dalam keadaan nonaktif
+   * ketika login ditolak.
    */
   login() {
+    if (this.loginFormGroup.invalid || this.isSubmitting) {
+      return;
+    }
+
     this.isSubmitting = true;
     this.apiService
       .post('auth/login', {

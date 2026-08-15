@@ -1600,5 +1600,15 @@
   "activity__action": "Action",
   "activity__changes": "Changes",
   "activity__empty": "No activity recorded yet.",
-  "activity__system": "System"
+  "activity__system": "System",
+  "login__welcome": "Welcome",
+  "login__subtitle": "Sign in with your office account",
+  "login__username": "Username",
+  "login__password": "Password",
+  "login__submit": "Sign in",
+  "login__submitting": "Signing in…",
+  "login__forgot": "Forgot your password? Contact an administrator",
+  "login__caption": "Management System · v16",
+  "login__show_password": "Show password",
+  "login__hide_password": "Hide password"
 }

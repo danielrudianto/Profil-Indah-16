@@ -3,6 +3,18 @@
 @import "bootstrap/dist/css/bootstrap.css";
 
 /*
+  Nocturne: font tubuh dan ikon.
+
+  Keduanya dipasang lokal, bukan ditarik dari CDN Google seperti pada berkas
+  desain — repo ini memang sudah menyimpan fontnya sendiri (Nunito, Poppins),
+  dan menambahkan permintaan ke pihak ketiga hanya untuk font membuat layar
+  pertama bergantung pada jaringan luar.
+*/
+@import "@fontsource/plus-jakarta-sans/400.css";
+@import "@fontsource/plus-jakarta-sans/500.css";
+@import "@fontsource/plus-jakarta-sans/600.css";
+
+/*
   Tema Material 3.
 
   Menggantikan berkas prebuilt indigo-pink yang sebelumnya dimuat lewat
@@ -40,7 +52,15 @@ body {
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  /*
+    Latar dan warna teks diambil dari token Nocturne, bukan dibiarkan putih
+    bawaan peramban. Halaman memang menutupinya, tetapi celah mana pun yang
+    tidak tertutup — overscroll, halaman yang lebih pendek dari layar — akan
+    menyembulkan putih di tengah mode gelap.
+  */
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: "Plus Jakarta Sans", Roboto, "Helvetica Neue", sans-serif;
 }
 
 app-root,

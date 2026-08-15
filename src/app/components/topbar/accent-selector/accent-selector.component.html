@@ -3,7 +3,7 @@
   [matMenuTriggerFor]="accentMenu"
   [matTooltip]="'accent-selector__tooltip' | translate"
 >
-  <span class="accent__preview" [style.background]="currentAccent.light"></span>
+  <span class="accent__preview" [style.background]="currentAccent.base"></span>
 </button>
 
 <mat-menu #accentMenu="matMenu">
@@ -16,7 +16,7 @@
     <span
       class="accent__swatch"
       [class.accent__swatch--active]="color.label === currentAccent.label"
-      [style.background]="color.light"
+      [style.background]="color.base"
     ></span>
     {{ color.label | translate }}
   </button>

@@ -1606,5 +1606,15 @@
   "activity__action": "Tindakan",
   "activity__changes": "Perubahan",
   "activity__empty": "Belum ada aktivitas yang tercatat.",
-  "activity__system": "Sistem"
+  "activity__system": "Sistem",
+  "login__welcome": "Selamat datang",
+  "login__subtitle": "Masuk dengan akun kantor Anda",
+  "login__username": "Username",
+  "login__password": "Kata sandi",
+  "login__submit": "Masuk",
+  "login__submitting": "Memproses…",
+  "login__forgot": "Lupa sandi? Hubungi administrator",
+  "login__caption": "Sistem Manajemen · v16",
+  "login__show_password": "Perlihatkan kata sandi",
+  "login__hide_password": "Sembunyikan kata sandi"
 }
