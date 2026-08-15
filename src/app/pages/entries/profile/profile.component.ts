@@ -3,9 +3,9 @@ import { AuthService } from 'src/app/services/auth.service';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-    selector: 'app-profile',
-    templateUrl: './profile.component.html',
-    imports: [RouterOutlet]
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  imports: [RouterOutlet],
 })
 export class ProfileComponent {
   constructor(private authService: AuthService) {}

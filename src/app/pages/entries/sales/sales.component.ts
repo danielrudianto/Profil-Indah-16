@@ -1,11 +1,14 @@
 import { Component, HostListener } from '@angular/core';
-import { MatDrawerMode, MatDrawerContainer, MatDrawer, MatDrawerContent } from '@angular/material/sidenav';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  MatDrawerMode,
+  MatDrawerContainer,
+  MatDrawer,
+  MatDrawerContent,
+} from '@angular/material/sidenav';
+import { Router, RouterOutlet } from '@angular/router';
 import { slideUpDownAnimation } from 'src/app/animations/slide-up-down.animation';
 import { SideNavService } from 'src/app/services/side-nav.service';
-import { MatNavList, MatListSubheaderCssMatStyler, MatListItem, MatListItemIcon, MatListItemTitle } from '@angular/material/list';
-import { MatIcon } from '@angular/material/icon';
-import { MatDivider } from '@angular/material/divider';
+
 import { MatTooltip } from '@angular/material/tooltip';
 import { TopbarComponent } from '../../../components/topbar/topbar.component';
 import { SidenavComponent } from '../../../components/sidenav/sidenav.component';
@@ -13,17 +16,26 @@ import { AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-sales',
-    templateUrl: './sales.component.html',
-    styleUrls: ['./sales.component.scss'],
-    animations: [slideUpDownAnimation],
-    imports: [MatDrawerContainer, MatDrawer, MatNavList, MatListSubheaderCssMatStyler, MatListItem, RouterLink, RouterLinkActive, MatIcon, MatListItemIcon, MatListItemTitle, MatDivider, MatDrawerContent, MatTooltip, TopbarComponent,
-    SidenavComponent, RouterOutlet, AsyncPipe, TranslatePipe]
+  selector: 'app-sales',
+  templateUrl: './sales.component.html',
+  styleUrls: ['./sales.component.scss'],
+  animations: [slideUpDownAnimation],
+  imports: [
+    MatDrawerContainer,
+    MatDrawer,
+    MatDrawerContent,
+    MatTooltip,
+    TopbarComponent,
+    SidenavComponent,
+    RouterOutlet,
+    AsyncPipe,
+    TranslatePipe,
+  ],
 })
 export class SalesComponent {
   constructor(
     private router: Router,
-    private sideNavService: SideNavService
+    private sideNavService: SideNavService,
   ) {}
 
   isSideNavOpen$ = this.sideNavService.isOpen$;
