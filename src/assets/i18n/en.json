@@ -1767,5 +1767,6 @@
   "product-selector__lines-in-doc": "lines in document",
   "product-selector__from": "from",
   "product-selector__items": "products",
-  "good-receipt__create__duplicate": "The same product appears on several lines — intentional? A supplier bonus, for example."
+  "good-receipt__create__duplicate": "The same product appears on several lines — intentional? A supplier bonus, for example.",
+  "good-receipt__filter__clear": "Clear all"
 }

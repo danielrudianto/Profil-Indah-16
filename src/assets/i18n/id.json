@@ -1773,5 +1773,6 @@
   "product-selector__lines-in-doc": "baris di dokumen",
   "product-selector__from": "dari",
   "product-selector__items": "barang",
-  "good-receipt__create__duplicate": "Barang yang sama ada di beberapa baris — sengaja? Misalnya bonus supplier."
+  "good-receipt__create__duplicate": "Barang yang sama ada di beberapa baris — sengaja? Misalnya bonus supplier.",
+  "good-receipt__filter__clear": "Hapus semua"
 }

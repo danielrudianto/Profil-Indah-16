@@ -35,6 +35,17 @@
         {{ 'good-receipt__back-to-archive' | translate }}
       </button>
 
+      <!-- Pintas ke saringan yang paling sering dipakai. -->
+      <button
+        type="button"
+        class="chip-menunggu"
+        [class.chip-menunggu--on]="hanyaMenunggu"
+        (click)="toggleMenunggu()"
+      >
+        <i class="ph-fill ph-clock" aria-hidden="true"></i>
+        {{ 'good-receipt__status__waiting' | translate }}
+      </button>
+
       <button
         type="button"
         class="aksi-ikon"
@@ -45,6 +56,28 @@
         <i class="ph ph-funnel" aria-hidden="true"></i>
       </button>
     </ng-container>
+
+    <!--
+      Hasil saringan tampil DI DEPAN, bukan tersembunyi di dalam dialog. Baris
+      ini tidak digambar sama sekali ketika tidak ada saringan aktif, supaya
+      tata letaknya tidak menyisakan ruang kosong.
+    -->
+    <div class="saringan" *ngIf="kapsul.length > 0">
+      <span class="saringan__kapsul" *ngFor="let k of kapsul">
+        {{ k.teks }}
+        <button
+          type="button"
+          (click)="lepasKapsul(k.kunci)"
+          [attr.aria-label]="'general__delete' | translate"
+        >
+          <i class="ph ph-x" aria-hidden="true"></i>
+        </button>
+      </span>
+
+      <button type="button" class="saringan__bersih" (click)="hapusSemuaSaringan()">
+        {{ 'good-receipt__filter__clear' | translate }}
+      </button>
+    </div>
 
     <table class="tabel">
       <thead>
