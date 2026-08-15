@@ -60,6 +60,19 @@ html {
   */
   --lebar-sidenav: 260px;
   --mat-sidenav-container-width: var(--lebar-sidenav);
+
+  /*
+    Sudut drawer disikukan.
+
+    Material membulatkan kedua sudut kanan mat-drawer sebesar corner-large,
+    16px. Karena yang dibulatkan adalah pembungkusnya — bukan isinya —
+    lengkungan itu memotong warna kolom di ujung atas dan bawah, sehingga
+    kolomnya terbaca sebagai panel melayang yang tidak menyentuh tepi layar.
+
+    Nilainya token milik Material; menulis border-radius pada kelas global
+    tidak akan menang, karena CSS komponennya disuntikkan ke head belakangan.
+  */
+  --mat-sidenav-container-shape: 0;
 }
 
 /* ------------------------------------------------------------------ */

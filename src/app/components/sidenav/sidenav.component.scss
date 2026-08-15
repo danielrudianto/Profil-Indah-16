@@ -9,6 +9,19 @@
   bukan kelalaian — jangan dibulatkan lagi ketika menambah elemen baru di sini.
 */
 
+/*
+  Elemen <app-sidenav> sendiri harus block dan setinggi induknya.
+
+  Bawaannya inline, dan `height: 100%` pada .sidenav di dalamnya lalu diukur
+  terhadap kotak blok terdekat DI ATAS host — bukan terhadap host itu sendiri.
+  Selama drawer-nya kebetulan setinggi layar hasilnya sama saja, tetapi begitu
+  ada pembungkus lain di antaranya, kolomnya berhenti setinggi isinya.
+*/
+:host {
+  display: block;
+  height: 100%;
+}
+
 .sidenav {
   display: flex;
   flex-direction: column;
