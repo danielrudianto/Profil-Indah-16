@@ -165,6 +165,21 @@ export class SidenavComponent implements OnInit {
   }
 
   /**
+   * Shell yang dipakai untuk menyusun jalur item ini.
+   *
+   * Memakai shell pengguna bila rutenya memang ada di sana — sehingga
+   * berpindah halaman tidak keluar dari subpohon yang sedang dibuka. Kalau
+   * tidak ada, jatuh ke shell pertama yang benar-benar memuatnya.
+   *
+   * Tanpa ini, menu disusun dari awalan milik PERAN, dan peran 5 mendapat
+   * /Administrator/Good-receipt — alamat yang tidak pernah ada, karena rute
+   * itu hanya dibangun di bawah /Purchasing. Menunya diam saja ketika ditekan.
+   */
+  private shellUntuk(item: NavItem): string {
+    return item.shells.includes(this._base) ? this._base : item.shells[0];
+  }
+
+  /**
    * Grup yang kosong tidak ikut ditampilkan — judul grup tanpa satu pun item
    * di bawahnya hanya menyisakan ruang kosong yang terbaca seperti kesalahan.
    */
@@ -176,7 +191,7 @@ export class SidenavComponent implements OnInit {
 
     const susun = (item: NavItem): ItemTampil => ({
       item,
-      jalur: [`/${this._base}`, ...item.path.split('/')],
+      jalur: [`/${this.shellUntuk(item)}`, ...item.path.split('/')],
       tersemat: this.pinnedNavService.isPinned(item.path),
     });
 

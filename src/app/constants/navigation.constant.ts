@@ -35,6 +35,25 @@ export interface NavItem {
    * awalannya, bukan menulis ulang daftarnya.
    */
   path: string;
+  /**
+   * Shell yang BENAR-BENAR memuat rute ini, berurutan sesuai pilihan.
+   *
+   * Keempat subpohon peran dibangun satu per satu dan isinya tidak sama.
+   * /Purchasing punya Good-receipt, /Administrator tidak — padahal
+   * AdministratorGuard jelas mengizinkan peran 5 membukanya. Menyusun jalur
+   * dari awalan milik PERAN, seperti sebelumnya, menghasilkan
+   * /Administrator/Good-receipt: alamat yang tidak pernah ada, dan menunya
+   * diam saja ketika ditekan.
+   *
+   * Daftar ini menyatakan kenyataan rutenya. SidenavComponent memakai awalan
+   * shell pengguna bila rutenya memang ada di sana, dan kalau tidak, jatuh ke
+   * shell pertama di daftar ini — yang penjaganya selalu memuat setiap peran
+   * yang ditawari menu ini.
+   *
+   * Ketika keempat subpohon digabung menjadi satu pohon nanti, bidang ini
+   * ikut hilang bersama `base`.
+   */
+  shells: string[];
   group: NavGroup;
   roles: Role[];
 }
@@ -60,37 +79,37 @@ export const NAV_ITEMS: NavItem[] = [
   /* ---------------------------------------------------------------- */
   /* Transaksi                                                        */
   /* ---------------------------------------------------------------- */
-  { label: 'nav__sales_invoice', icon: 'ph ph-receipt', path: 'Sales-invoice', group: 'menu', roles: SALES },
-  { label: 'nav__purchase_invoice', icon: 'ph ph-file-text', path: 'Purchase-invoice', group: 'menu', roles: ADMIN },
-  { label: 'nav__good_receipt', icon: 'ph ph-package', path: 'Good-receipt', group: 'menu', roles: PURCHASING },
-  { label: 'nav__sales_return', icon: 'ph ph-arrow-u-up-left', path: 'Sales-return', group: 'menu', roles: SALES },
-  { label: 'nav__deposit', icon: 'ph ph-hand-coins', path: 'Deposit', group: 'menu', roles: SALES },
-  { label: 'nav__receivable', icon: 'ph ph-notebook', path: 'Receivable', group: 'menu', roles: SALES },
-  { label: 'nav__overpayment', icon: 'ph ph-arrows-counter-clockwise', path: 'Overpayment', group: 'menu', roles: SALES },
-  { label: 'nav__expense', icon: 'ph ph-trend-down', path: 'Expense', group: 'menu', roles: GENERAL },
-  { label: 'nav__adjustment_case', icon: 'ph ph-sliders', path: 'Adjustment-case', group: 'menu', roles: ADMIN },
+  { label: 'nav__sales_invoice', icon: 'ph ph-receipt', path: 'Sales-invoice', shells: ['Sales', 'Administrator'], group: 'menu', roles: SALES },
+  { label: 'nav__purchase_invoice', icon: 'ph ph-file-text', path: 'Purchase-invoice', shells: ['Administrator'], group: 'menu', roles: ADMIN },
+  { label: 'nav__good_receipt', icon: 'ph ph-package', path: 'Good-receipt', shells: ['Purchasing'], group: 'menu', roles: PURCHASING },
+  { label: 'nav__sales_return', icon: 'ph ph-arrow-u-up-left', path: 'Sales-return', shells: ['Sales', 'Administrator'], group: 'menu', roles: SALES },
+  { label: 'nav__deposit', icon: 'ph ph-hand-coins', path: 'Deposit', shells: ['Sales', 'Administrator'], group: 'menu', roles: SALES },
+  { label: 'nav__receivable', icon: 'ph ph-notebook', path: 'Receivable', shells: ['Sales', 'Administrator'], group: 'menu', roles: SALES },
+  { label: 'nav__overpayment', icon: 'ph ph-arrows-counter-clockwise', path: 'Overpayment', shells: ['Sales', 'General', 'Administrator'], group: 'menu', roles: SALES },
+  { label: 'nav__expense', icon: 'ph ph-trend-down', path: 'Expense', shells: ['General', 'Administrator'], group: 'menu', roles: GENERAL },
+  { label: 'nav__adjustment_case', icon: 'ph ph-sliders', path: 'Adjustment-case', shells: ['Administrator'], group: 'menu', roles: ADMIN },
 
   /* ---------------------------------------------------------------- */
   /* Master                                                            */
   /* ---------------------------------------------------------------- */
-  { label: 'nav__product', icon: 'ph ph-archive', path: 'Product', group: 'master', roles: PURCHASING },
-  { label: 'nav__product_brand', icon: 'ph ph-tag-simple', path: 'Product-brand', group: 'master', roles: PURCHASING },
-  { label: 'nav__product_type', icon: 'ph ph-squares-four', path: 'Product-type', group: 'master', roles: PURCHASING },
-  { label: 'nav__stock', icon: 'ph ph-stack', path: 'Stock', group: 'master', roles: SEMUA_OPERASIONAL },
-  { label: 'nav__package', icon: 'ph ph-shapes', path: 'Package', group: 'master', roles: SEMUA_OPERASIONAL },
-  { label: 'nav__price_sales', icon: 'ph ph-tag', path: 'Price/Sales', group: 'master', roles: SALES },
-  { label: 'nav__price_purchase', icon: 'ph ph-tag', path: 'Price/Purchase', group: 'master', roles: ADMIN },
-  { label: 'nav__promotion', icon: 'ph ph-megaphone', path: 'Promotion', group: 'master', roles: ADMIN },
-  { label: 'nav__customer', icon: 'ph ph-users', path: 'Customer', group: 'master', roles: SALES },
-  { label: 'nav__supplier', icon: 'ph ph-truck', path: 'Supplier', group: 'master', roles: PURCHASING },
+  { label: 'nav__product', icon: 'ph ph-archive', path: 'Product', shells: ['Purchasing', 'Administrator'], group: 'master', roles: PURCHASING },
+  { label: 'nav__product_brand', icon: 'ph ph-tag-simple', path: 'Product-brand', shells: ['Purchasing', 'Administrator'], group: 'master', roles: PURCHASING },
+  { label: 'nav__product_type', icon: 'ph ph-squares-four', path: 'Product-type', shells: ['Purchasing', 'Administrator'], group: 'master', roles: PURCHASING },
+  { label: 'nav__stock', icon: 'ph ph-stack', path: 'Stock', shells: ['Purchasing', 'Sales', 'General', 'Administrator'], group: 'master', roles: SEMUA_OPERASIONAL },
+  { label: 'nav__package', icon: 'ph ph-shapes', path: 'Package', shells: ['Purchasing', 'Sales', 'Administrator'], group: 'master', roles: SEMUA_OPERASIONAL },
+  { label: 'nav__price_sales', icon: 'ph ph-tag', path: 'Price/Sales', shells: ['Sales', 'Administrator'], group: 'master', roles: SALES },
+  { label: 'nav__price_purchase', icon: 'ph ph-tag', path: 'Price/Purchase', shells: ['Sales', 'Administrator'], group: 'master', roles: ADMIN },
+  { label: 'nav__promotion', icon: 'ph ph-megaphone', path: 'Promotion', shells: ['Administrator'], group: 'master', roles: ADMIN },
+  { label: 'nav__customer', icon: 'ph ph-users', path: 'Customer', shells: ['Sales', 'Administrator'], group: 'master', roles: SALES },
+  { label: 'nav__supplier', icon: 'ph ph-truck', path: 'Supplier', shells: ['Purchasing', 'Administrator'], group: 'master', roles: PURCHASING },
 
   /* ---------------------------------------------------------------- */
   /* Administrator                                                     */
   /* ---------------------------------------------------------------- */
-  { label: 'nav__user', icon: 'ph ph-users-three', path: 'User', group: 'administrator', roles: ADMIN },
-  { label: 'nav__company', icon: 'ph ph-buildings', path: 'Company', group: 'administrator', roles: GENERAL },
-  { label: 'nav__payment_method', icon: 'ph ph-credit-card', path: 'Payment-method', group: 'administrator', roles: GENERAL },
-  { label: 'nav__expense_type', icon: 'ph ph-list-checks', path: 'Expense-type', group: 'administrator', roles: GENERAL },
+  { label: 'nav__user', icon: 'ph ph-users-three', path: 'User', shells: ['Administrator'], group: 'administrator', roles: ADMIN },
+  { label: 'nav__company', icon: 'ph ph-buildings', path: 'Company', shells: ['General', 'Administrator'], group: 'administrator', roles: GENERAL },
+  { label: 'nav__payment_method', icon: 'ph ph-credit-card', path: 'Payment-method', shells: ['General', 'Administrator'], group: 'administrator', roles: GENERAL },
+  { label: 'nav__expense_type', icon: 'ph ph-list-checks', path: 'Expense-type', shells: ['General', 'Administrator'], group: 'administrator', roles: GENERAL },
 ];
 
 /** Urutan tampil dan kunci i18n judul tiap grup. */
