@@ -174,7 +174,13 @@
           </div>
 
           <ng-container [formGroup]="unitFormGroup">
-            <div formArrayName="item_units">
+            <!--
+              display: contents — lihat .satuan__larik di berkas gaya. Tanpa
+              itu, jarak antarbaris milik .satuan__daftar berhenti di
+              pembungkus ini, dan baris satuan tambahan menempel satu sama
+              lain sementara jaraknya ke satuan dasar tetap normal.
+            -->
+            <div class="satuan__larik" formArrayName="item_units">
               <div
                 class="satuan__baris"
                 *ngFor="let baris of t.controls; index as i"

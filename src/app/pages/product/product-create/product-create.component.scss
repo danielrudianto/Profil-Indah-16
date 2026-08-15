@@ -240,6 +240,19 @@ select.input {
   gap: 10px;
 }
 
+/*
+  Pembungkus FormArray. display: contents membuatnya lenyap dari tata letak,
+  sehingga baris satuan tambahan menjadi anak langsung .satuan__daftar dan ikut
+  memakai gap yang sama.
+
+  Tanpa ini, gap induknya hanya berlaku ANTARA satuan dasar dan pembungkus ini
+  — di dalamnya barisnya menempel rapat. Akibatnya jarak antarbaris tidak sama
+  dengan jarak dari satuan dasar ke baris pertama, dan itu langsung terlihat.
+*/
+.satuan__larik {
+  display: contents;
+}
+
 .satuan__dasar {
   font-size: 13px;
   color: color-mix(in srgb, var(--color-text) 55%, transparent);

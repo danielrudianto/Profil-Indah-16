@@ -1,5 +1,5 @@
 import { DatePipe, NgFor, NgIf, NgSwitch, NgSwitchCase, DecimalPipe } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -34,6 +34,7 @@ import { MatDivider } from '@angular/material/divider';
 import { NgxMaskDirective } from 'ngx-mask';
 import { MatTooltip } from '@angular/material/tooltip';
 import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
     selector: 'app-sales-invoice-create',
@@ -81,6 +82,15 @@ export class SalesInvoiceCreateComponent {
   salesmen: string[] = [];
   isSubmitting: boolean = false;
   isAdministrator: boolean = false;
+
+  /*
+    Berbeda dari isAdministrator di atas, yang diambil dari potongan ALAMAT
+    ("/Administrator/..."). Yang menentukan boleh-tidaknya menimpa harga master
+    adalah PERAN penggunanya, dan itu yang dijaga administratorMiddleware di
+    server. Mengirim baris save_price tanpa hak hanya menghasilkan 403 setelah
+    fakturnya terlanjur tersimpan.
+  */
+  bolehSimpanKeMaster = inject(AuthService).isAdministrator();
   customerOptions: any[] = [];
   paymentOptions: any[] = [];
   unit_selection: any[] = [];
@@ -761,6 +771,7 @@ export class SalesInvoiceCreateComponent {
           const itemsToSave = this.t.controls
             .filter(
               (x) =>
+                this.bolehSimpanKeMaster &&
                 x.get('package_code_id')?.value == null &&
                 x.get('save_price')?.value
             )
@@ -784,6 +795,7 @@ export class SalesInvoiceCreateComponent {
           const itemsToSave = this.t.controls
             .filter(
               (x) =>
+                this.bolehSimpanKeMaster &&
                 x.get('package_code_id')?.value != null &&
                 x.get('save_price')?.value
             )

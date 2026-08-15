@@ -17,8 +17,14 @@
   </mat-form-field>
 
   <!-- Slide toggle, disabled if initialPrice is same with price -->
+  <!--
+    Hanya administrator (peran 5) dan pemilik (peran 7) yang boleh menimpa
+    harga di master barang. Batas yang sama dijaga administratorMiddleware di
+    server; ini sekadar tidak menawarkan pilihan yang pasti ditolak.
+  -->
   <mat-slide-toggle
     class="w-100"
+    *ngIf="bolehSimpanKeMaster"
     formControlName="save_price"
     [disabled]="
       priceFormGroup.controls['initial_price'].value ===
