@@ -5,7 +5,7 @@ import {
   MatDrawer,
   MatDrawerContent,
 } from '@angular/material/sidenav';
-import { Router, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { slideUpDownAnimation } from 'src/app/animations/slide-up-down.animation';
 import { slideUpAnimation } from 'src/app/animations/slide-up.animation';
 
@@ -35,10 +35,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   ],
 })
 export class AdministratorComponent {
-  constructor(
-    private router: Router,
-    private sideNavService: SideNavService,
-  ) {}
+  constructor(private sideNavService: SideNavService) {}
 
   isSideNavOpen$ = this.sideNavService.isOpen$;
   drawerMode: MatDrawerMode = 'over';
@@ -71,10 +68,5 @@ export class AdministratorComponent {
 
   toggleSideNav() {
     this.sideNavService.toggle();
-  }
-
-  get isHidden(): boolean {
-    // If route is /Administrator then false
-    return this.router.url !== '/Administrator';
   }
 }

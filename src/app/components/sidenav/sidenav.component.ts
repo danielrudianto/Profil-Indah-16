@@ -76,7 +76,7 @@ interface GrupTampil {
 export class SidenavComponent implements OnInit {
   constructor(
     private authService: AuthService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
   ) {}
 
   private destroyRef = inject(DestroyRef);
@@ -146,7 +146,7 @@ export class SidenavComponent implements OnInit {
           item.group === g.key &&
           peran != null &&
           item.roles.includes(peran) &&
-          this.cocokKataKunci(item)
+          this.cocokKataKunci(item),
       ).map((item) => ({
         item,
         jalur: [`/${this._base}`, ...item.path.split('/')],

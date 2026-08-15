@@ -1,5 +1,10 @@
-<mat-slide-toggle
-  [checked]="darkMode$ | async"
-  (change)="toggleDarkMode()"
-  [matTooltip]="'dark-mode-selector__tooltip' | translate"
-></mat-slide-toggle>
+<button
+  type="button"
+  class="mode"
+  (click)="toggleDarkMode()"
+  [title]="'dark-mode-selector__tooltip' | translate"
+  [attr.aria-label]="'dark-mode-selector__tooltip' | translate"
+  [attr.aria-pressed]="gelap"
+>
+  <i class="ph" [class.ph-moon]="!gelap" [class.ph-sun]="gelap" aria-hidden="true"></i>
+</button>

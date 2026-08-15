@@ -1,7 +1,14 @@
+<!--
+  Pemicunya tombol biasa berukuran 34px, sama dengan tombol ikon lain di
+  topbar, bukan mat-icon-button — ukuran bawaan Material 40px membuat barisnya
+  tidak sejajar.
+-->
 <button
-  mat-icon-button
+  type="button"
+  class="accent"
   [matMenuTriggerFor]="accentMenu"
-  [matTooltip]="'accent-selector__tooltip' | translate"
+  [title]="'accent-selector__tooltip' | translate"
+  [attr.aria-label]="'accent-selector__tooltip' | translate"
 >
   <span class="accent__preview" [style.background]="currentAccent.base"></span>
 </button>

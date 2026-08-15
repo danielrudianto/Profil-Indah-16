@@ -27,6 +27,40 @@
 }
 
 /* ---------------------------------------------------------------- */
+/* Brand                                                            */
+/* ---------------------------------------------------------------- */
+
+.sidenav__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px 6px;
+  color: inherit;
+  text-decoration: none;
+  user-select: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+}
+
+.sidenav__logo {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  display: block;
+}
+
+.sidenav__brand-name {
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- */
 /* Pencarian                                                        */
 /* ---------------------------------------------------------------- */
 

@@ -51,7 +51,7 @@
         </g>
       </svg>
     </button>
-    <app-topbar [hidden]="isHidden" />
+    <app-topbar />
     <main [@routeAnimations]="prepareRoute(outlet)">
       <router-outlet #outlet="outlet" />
     </main>

@@ -1647,5 +1647,8 @@
   "nav__expense_type": "Jenis Pengeluaran",
   "nav__activity": "Aktivitas",
   "dashboard__greeting": "Selamat datang",
-  "dashboard__no_access": "Peran Anda belum memiliki halaman yang dapat dibuka. Hubungi administrator."
+  "dashboard__no_access": "Peran Anda belum memiliki halaman yang dapat dibuka. Hubungi administrator.",
+  "topbar__toggle_nav": "Buka atau tutup navigasi",
+  "topbar__profile": "Buka profil",
+  "language-selector__label": "Pilih bahasa"
 }

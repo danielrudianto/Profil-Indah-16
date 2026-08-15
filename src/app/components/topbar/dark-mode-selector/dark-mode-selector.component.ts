@@ -1,8 +1,5 @@
-import { Component } from '@angular/core';
-import { Observable, map } from 'rxjs';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
-import { MatTooltip } from '@angular/material/tooltip';
-import { AsyncPipe } from '@angular/common';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SettingsService } from 'src/app/services/settings.service';
 
@@ -11,18 +8,33 @@ import { SettingsService } from 'src/app/services/settings.service';
  * [disabled]="true", darkMode$ hanya Observable kosong yang tidak pernah
  * memancarkan apa pun, dan toggleDarkMode() berisi satu baris komentar. Kini
  * keduanya tersambung ke SettingsService.
+ *
+ * Bentuknya mengikuti Nocturne: satu ikon, bukan slide-toggle Material.
+ * Ikonnya menunjukkan TUJUAN, bukan keadaan sekarang — bulan berarti "ganti ke
+ * gelap", matahari berarti "ganti ke terang". Menampilkan keadaan sekarang
+ * membuat orang menekan ikon yang sudah menggambarkan tampilan di depannya.
+ *
+ * Keadaannya disimpan sebagai field, bukan dibaca lewat AsyncPipe dua kali.
+ * Dua `| async` pada satu Observable berarti dua langganan.
  */
 @Component({
   selector: 'app-dark-mode-selector',
   templateUrl: './dark-mode-selector.component.html',
-  imports: [MatSlideToggle, MatTooltip, AsyncPipe, TranslatePipe],
+  styleUrls: ['./dark-mode-selector.component.scss'],
+  imports: [TranslatePipe],
 })
-export class DarkModeSelectorComponent {
+export class DarkModeSelectorComponent implements OnInit {
   constructor(private settingsService: SettingsService) {}
 
-  darkMode$: Observable<boolean> = this.settingsService.mode.pipe(
-    map((mode) => mode === 'dark')
-  );
+  private destroyRef = inject(DestroyRef);
+
+  gelap = false;
+
+  ngOnInit(): void {
+    this.settingsService.mode
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((mode) => (this.gelap = mode === 'dark'));
+  }
 
   toggleDarkMode(): void {
     this.settingsService.toggleMode();

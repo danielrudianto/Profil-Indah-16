@@ -1,42 +1,61 @@
-<div class="top-navigation__wrapper" [ngClass]="{ white: isHidden }">
-  <div class="top-navigation__brand">
-    <img
-      (click)="navigate()"
-      src="/assets/images/logo.png"
-      width="30"
-      height="30"
-      alt="logo"
-      class="mr-2"
-    />
-    <p (click)="navigate()">Profil Indah</p>
-  </div>
-  <div class="top-navigation__utility">
+<!--
+  Topbar — sistem desain Nocturne.
+
+  TIDAK ADA BRAND DI SINI. Logo dan nama toko pindah ke kepala navigasi
+  samping, mengikuti desain: brand menandai aplikasinya, dan di Nocturne
+  aplikasinya diwakili kolom kiri. Menaruhnya di dua tempat membuat baris ini
+  penuh tanpa menambah keterangan apa pun.
+-->
+<header class="topbar">
+  <button
+    type="button"
+    class="topbar__toggle"
+    (click)="toggleSideNav()"
+    [title]="'topbar__toggle_nav' | translate"
+    [attr.aria-label]="'topbar__toggle_nav' | translate"
+  >
+    <i class="ph ph-list" aria-hidden="true"></i>
+  </button>
+
+  <div class="topbar__utility">
     <app-dark-mode-selector />
     <app-accent-selector />
     <app-language-selector />
-    <app-circle-avatar
-      *ngIf="!isAvatarAvailable"
-      [name]="name"
-      [size]="40"
-      [matTooltip]="'Logged in as ' + name"
+
+    <!--
+      Chip pengguna. Baris keduanya diisi PERAN, bukan surel seperti pada
+      desain: catatan pengguna di sistem ini tidak menyimpan surel, dan peran
+      justru keterangan yang berguna sejak menunya ikut menyesuaikan peran.
+    -->
+    <button
+      type="button"
+      class="topbar__user"
       (click)="isProfileOpened = true"
-    />
-    <app-avatar
-      *ngIf="isAvatarAvailable"
-      [width]="40"
-      [top]="avatar.top"
-      [accessories]="avatar.accessories"
-      [circle]="avatar.circle"
-      [color]="avatar.color"
-      [eyebrows]="avatar.eyebrows"
-      [eyes]="avatar.eyes"
-      [mouth]="avatar.mouth"
-      [clothes]="avatar.clothes"
-      [matTooltip]="'Logged in as ' + name"
-      (click)="isProfileOpened = true"
-    />
+      [attr.aria-label]="'topbar__profile' | translate"
+    >
+      <app-circle-avatar *ngIf="!isAvatarAvailable" [name]="name" [size]="30" />
+      <app-avatar
+        *ngIf="isAvatarAvailable"
+        [width]="30"
+        [top]="avatar.top"
+        [accessories]="avatar.accessories"
+        [circle]="avatar.circle"
+        [color]="avatar.color"
+        [eyebrows]="avatar.eyebrows"
+        [eyes]="avatar.eyes"
+        [mouth]="avatar.mouth"
+        [clothes]="avatar.clothes"
+      />
+
+      <span class="topbar__user-text">
+        <span class="topbar__user-name">{{ name }}</span>
+        <span class="topbar__user-role" *ngIf="roleText">{{ roleText }}</span>
+      </span>
+
+      <i class="ph ph-caret-down" aria-hidden="true"></i>
+    </button>
   </div>
-</div>
+</header>
 
 <app-profile-dialog
   [name]="name"

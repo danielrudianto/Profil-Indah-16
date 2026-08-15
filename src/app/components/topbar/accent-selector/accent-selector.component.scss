@@ -3,12 +3,36 @@
   aksen yang sedang aktif, jadi tombolnya sendiri yang memperlihatkan pilihan
   saat ini tanpa perlu label.
 */
+.accent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-text) 6%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
 .accent__preview {
   display: inline-block;
   width: 1.125rem;
   height: 1.125rem;
   border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  /* Cincin dibaca dari teks, bukan hitam pekat — agar terbaca di kedua mode. */
+  border: 1px solid color-mix(in srgb, var(--color-text) 25%, transparent);
 }
 
 .accent__menu-item {

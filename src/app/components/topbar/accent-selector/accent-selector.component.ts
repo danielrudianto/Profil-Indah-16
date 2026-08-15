@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { NgFor } from '@angular/common';
-import { MatIconButton } from '@angular/material/button';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SettingsService } from 'src/app/services/settings.service';
 import {
@@ -13,22 +11,14 @@ import {
 
 /**
  * Pemilih warna aksen di topbar, berdampingan dengan pemilih bahasa dan mode
- * gelap. Bentuknya mengikuti language-selector: satu tombol ikon yang membuka
- * mat-menu.
+ * gelap. Pemicunya satu tombol ikon 34px — sama dengan tombol ikon lain di topbar —
+ * yang membuka mat-menu berisi keempat belas warna.
  */
 @Component({
   selector: 'app-accent-selector',
   templateUrl: './accent-selector.component.html',
   styleUrls: ['./accent-selector.component.scss'],
-  imports: [
-    NgFor,
-    MatIconButton,
-    MatMenu,
-    MatMenuItem,
-    MatMenuTrigger,
-    MatTooltip,
-    TranslatePipe,
-  ],
+  imports: [NgFor, MatMenu, MatMenuItem, MatMenuTrigger, TranslatePipe],
 })
 export class AccentSelectorComponent {
   constructor(private settingsService: SettingsService) {}

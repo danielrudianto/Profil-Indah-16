@@ -1,0 +1,29 @@
+/*
+  Tombol ikon topbar — bentuk yang sama dipakai pemilih aksen. Ukurannya 34px
+  supaya sasaran sentuhnya tetap layak walau ikonnya hanya 19px.
+*/
+.mode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: color-mix(in srgb, var(--color-text) 62%, transparent);
+  font-size: 19px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-text) 6%, transparent);
+    color: var(--color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}

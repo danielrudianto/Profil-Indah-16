@@ -1,46 +1,122 @@
-.top-navigation__wrapper {
-  height: 60px;
-  width: 100%;
+/*
+  Topbar — sistem desain Nocturne.
+
+  Latarnya SENGAJA tembus pandang. Sebelumnya warnanya dipaku di styles.scss
+  (rgba(124, 172, 248, 0.8) biru muda, dan putih ketika .white), sehingga baris
+  ini tetap biru walau seluruh aplikasi sudah gelap. Di Nocturne pemisahnya
+  bukan warna latar melainkan satu garis tipis di bawahnya.
+*/
+.topbar {
+  height: 64px;
+  flex: none;
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem;
-  transition: 0.3s all ease;
+  gap: 18px;
+  padding: 0 28px;
+  border-bottom: 1px solid var(--color-divider);
+  color: var(--color-text);
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
-.top-navigation__wrapper.white {
-  box-shadow: none;
-}
-
-.top-navigation__brand {
+.topbar__toggle {
   display: flex;
-  flex-direction: row;
+  align-items: center;
   justify-content: center;
-  align-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: color-mix(in srgb, var(--color-text) 62%, transparent);
+  font-size: 20px;
   cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-text) 6%, transparent);
+    color: var(--color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
 }
 
-.top-navigation__brand p {
-  margin: 0;
-  margin-left: 0.5rem;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #35507d;
-  letter-spacing: -1px;
-  font-family: "Nunito";
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
-}
-
-.top-navigation__utility {
+.topbar__utility {
+  margin-left: auto;
   display: flex;
-  flex-direction: row;
   align-items: center;
+  gap: 14px;
+}
+
+/* ---------------------------------------------------------------- */
+/* Chip pengguna                                                     */
+/* ---------------------------------------------------------------- */
+
+.topbar__user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 10px 5px 6px;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
   cursor: pointer;
-  height: 40px;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 60%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  > .ph-caret-down {
+    font-size: 12px;
+    color: color-mix(in srgb, var(--color-text) 45%, transparent);
+  }
+}
+
+.topbar__user-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.topbar__user-name {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.topbar__user-role {
+  font-size: 11px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+/*
+  Pada layar sempit hanya avatarnya yang bertahan: nama dan peran memakan
+  hampir separuh lebar baris, sementara keduanya sudah tampil di dialog profil
+  yang terbuka saat chip ini ditekan.
+*/
+@media (max-width: 720px) {
+  .topbar {
+    padding: 0 14px;
+    gap: 10px;
+  }
+
+  .topbar__utility {
+    gap: 8px;
+  }
+
+  .topbar__user-text,
+  .topbar__user > .ph-caret-down {
+    display: none;
+  }
 }

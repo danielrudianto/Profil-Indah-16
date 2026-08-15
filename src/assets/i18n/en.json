@@ -1641,5 +1641,8 @@
   "nav__expense_type": "Expense Type",
   "nav__activity": "Activity",
   "dashboard__greeting": "Welcome",
-  "dashboard__no_access": "Your role has no pages available yet. Please contact an administrator."
+  "dashboard__no_access": "Your role has no pages available yet. Please contact an administrator.",
+  "topbar__toggle_nav": "Show or hide navigation",
+  "topbar__profile": "Open profile",
+  "language-selector__label": "Choose language"
 }

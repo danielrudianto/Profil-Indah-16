@@ -5,7 +5,7 @@ import {
   MatDrawer,
   MatDrawerContent,
 } from '@angular/material/sidenav';
-import { Router, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { slideUpDownAnimation } from 'src/app/animations/slide-up-down.animation';
 import { SideNavService } from 'src/app/services/side-nav.service';
 
@@ -33,10 +33,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   ],
 })
 export class SalesComponent {
-  constructor(
-    private router: Router,
-    private sideNavService: SideNavService,
-  ) {}
+  constructor(private sideNavService: SideNavService) {}
 
   isSideNavOpen$ = this.sideNavService.isOpen$;
   drawerMode: MatDrawerMode = 'over';
@@ -59,10 +56,6 @@ export class SalesComponent {
     } else {
       return 'side';
     }
-  }
-
-  get isHidden(): boolean {
-    return this.router.url !== '/Sales';
   }
 
   toggleSideNav() {

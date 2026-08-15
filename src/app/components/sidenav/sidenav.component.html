@@ -1,5 +1,33 @@
 <nav class="sidenav" [class.sidenav--collapsed]="collapsed">
   <!--
+    Brand ada di sini, bukan di topbar — mengikuti Nocturne. Sekaligus jalan
+    pulang ke dashboard, peran yang dulu dipegang logo di topbar.
+
+    Saat diciutkan hanya tanda gambarnya yang tersisa; namanya tidak muat pada
+    lebar 76px dan memotongnya hanya menyisakan potongan huruf.
+  -->
+  <a class="sidenav__brand" routerLink="/" [title]="'Profil Indah'">
+    <svg viewBox="0 0 48 48" class="sidenav__logo" aria-hidden="true">
+      <path
+        d="M7 41 V11 h18"
+        fill="none"
+        stroke="var(--color-accent)"
+        stroke-width="5"
+        stroke-linecap="round"
+      ></path>
+      <path
+        d="M19 41 V23 h18"
+        fill="none"
+        stroke="var(--color-accent-base)"
+        stroke-width="5"
+        stroke-linecap="round"
+      ></path>
+      <circle cx="39" cy="13" r="4" fill="var(--color-accent)"></circle>
+    </svg>
+    <span class="sidenav__brand-name" *ngIf="!collapsed">Profil Indah</span>
+  </a>
+
+  <!--
     Pencarian disembunyikan saat diciutkan: kolom teks selebar 76px tidak bisa
     dipakai, dan menyisakannya hanya menghabiskan tinggi.
   -->
