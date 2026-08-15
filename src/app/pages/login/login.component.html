@@ -60,33 +60,37 @@
     <h2 class="login__title">{{ 'login__welcome' | translate }}</h2>
     <p class="login__subtitle">{{ 'login__subtitle' | translate }}</p>
 
-    <div class="field">
-      <label for="l-user">{{ 'login__username' | translate }}</label>
-      <div class="field__wrap">
-        <i class="ph ph-user field__icon" aria-hidden="true"></i>
-        <input
-          id="l-user"
-          class="input"
-          type="text"
-          formControlName="username"
-          autocomplete="username"
-          placeholder="nama.pengguna"
-        />
-      </div>
-    </div>
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'login__username' | translate }}</mat-label>
+      <!--
+        Ikon dipasang lewat matPrefix, bukan menumpang di atas kolomnya:
+        Material yang mengatur ruang untuknya, jadi teksnya tidak perlu diberi
+        padding kiri yang ditebak sendiri.
 
-    <div class="field">
-      <label for="l-pass">{{ 'login__password' | translate }}</label>
-      <div class="field__wrap">
-        <i class="ph ph-lock-simple field__icon" aria-hidden="true"></i>
-        <input
-          id="l-pass"
-          class="input input--with-action"
-          [type]="isVisibilityOn ? 'text' : 'password'"
-          formControlName="password"
-          autocomplete="current-password"
-          placeholder="••••••••"
-        />
+        Keluarganya ikut Material, bukan Phosphor — di dalam mat-form-field,
+        ikon Phosphor berdiri dengan garis dan berat yang berbeda dari ikon
+        bawaan Material di sebelahnya, dan perbedaannya terbaca sebagai cacat.
+      -->
+      <mat-icon matPrefix>person</mat-icon>
+      <input
+        matInput
+        type="text"
+        formControlName="username"
+        autocomplete="username"
+        placeholder="nama.pengguna"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'login__password' | translate }}</mat-label>
+      <mat-icon matPrefix>lock</mat-icon>
+      <input
+        matInput
+        [type]="isVisibilityOn ? 'text' : 'password'"
+        formControlName="password"
+        autocomplete="current-password"
+        placeholder="••••••••"
+      />
         <!--
           Tombol, bukan ikon biasa: penekan tombol keyboard harus bisa
           mencapainya, dan pembaca layar perlu tahu keadaannya.
@@ -94,6 +98,7 @@
         <button
           type="button"
           class="field__action"
+          matSuffix
           [attr.aria-label]="
             (isVisibilityOn ? 'login__hide_password' : 'login__show_password')
               | translate
@@ -101,14 +106,9 @@
           [attr.aria-pressed]="isVisibilityOn"
           (click)="isVisibilityOn = !isVisibilityOn"
         >
-          <i
-            class="ph"
-            [class.ph-eye]="!isVisibilityOn"
-            [class.ph-eye-slash]="isVisibilityOn"
-          ></i>
+          <mat-icon>{{ isVisibilityOn ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
-      </div>
-    </div>
+    </mat-form-field>
 
     <!--
       Tombol dinonaktifkan saat formulir belum lengkap atau permintaan sedang

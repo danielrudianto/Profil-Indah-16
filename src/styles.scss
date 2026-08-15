@@ -14,6 +14,40 @@
 @import "@fontsource/roboto/400.css";
 @import "@fontsource/roboto/500.css";
 @import "@fontsource/material-icons/index.css";
+
+/*
+  Ikon Material.
+
+  @fontsource/material-icons HANYA mendeklarasikan @font-face; ia tidak
+  menyertakan kelas .material-icons yang biasa dibawa berkas dari CDN Google.
+  Angular Material sendiri tidak memasang font apa pun pada <mat-icon> — ia
+  mengandalkan kelas itu ada. Akibatnya setiap <mat-icon> di aplikasi ini
+  mewarisi Roboto dan tergambar sebagai TULISAN nama ikonnya: "close",
+  "person", "delete".
+
+  Aturan di bawah yang menyambungkan keduanya. Ditulis global karena
+  <mat-icon> tersebar di puluhan berkas, dan menambalnya satu per satu berarti
+  satu yang terlewat langsung mengembalikan gejalanya.
+
+  font-feature-settings: 'liga' yang mengubah rangkaian huruf menjadi glif —
+  itulah cara font ini bekerja.
+*/
+.mat-icon,
+.material-icons {
+  font-family: "Material Icons", sans-serif;
+  /* Ukuran rancangan fontnya; tanpa ini glifnya mengecil ke 16px warisan. */
+  font-size: 24px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+}
 @import "@fontsource/montserrat/400.css";
 @import "@fontsource/montserrat/500.css";
 @import "@fontsource/montserrat/600.css";

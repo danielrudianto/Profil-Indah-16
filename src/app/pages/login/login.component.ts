@@ -12,6 +12,9 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
+import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
 
 /**
  * Halaman masuk — sistem desain Nocturne.
@@ -25,7 +28,13 @@ import { LanguageService } from 'src/app/services/language.service';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  imports: [FormsModule, ReactiveFormsModule, TranslatePipe],
+  imports: [
+    MatIcon,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatPrefix,
+    MatSuffix,FormsModule, ReactiveFormsModule, TranslatePipe],
 })
 export class LoginComponent {
   constructor(
