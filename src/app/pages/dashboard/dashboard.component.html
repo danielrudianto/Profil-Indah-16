@@ -4,12 +4,7 @@
     [opened]="isSideNavOpen$ | async"
     class="dashboard__drawer"
   >
-    <!--
-      base ditentukan dari peran pengguna, bukan dari alamat halaman: dashboard
-      ini satu untuk semua peran, dan yang membedakan hanyalah menu yang
-      ditawarkan.
-    -->
-    <app-sidenav [base]="navBase" />
+    <app-sidenav />
   </mat-drawer>
 
   <mat-drawer-content>

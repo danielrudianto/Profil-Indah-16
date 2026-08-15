@@ -15,7 +15,7 @@ import {
   NavItem,
 } from 'src/app/constants/navigation.constant';
 
-/** Satu item yang siap digambar: jalurnya sudah digabung dengan awalan shell. */
+/** Satu item yang siap digambar. */
 interface ItemTampil {
   item: NavItem;
   /** Sudah jadi, bukan dihitung ulang di template — lihat catatan di bawah. */
@@ -64,8 +64,8 @@ interface GrupTampil {
  * semuanya hanya berputar.
  *
  * Karena itu daftarnya dihitung SEKALI, lalu diperbarui hanya ketika ada
- * alasan nyata: kata kunci pencarian berubah, sematan berubah, bahasa
- * berganti, atau awalan shell berubah. trackBy dipasang sebagai lapis kedua
+ * alasan nyata: kata kunci pencarian berubah, sematan berubah, atau bahasa
+ * berganti. trackBy dipasang sebagai lapis kedua
  * supaya kekeliruan serupa di kemudian hari tidak langsung berujung pada
  * gejala yang sama.
  * ---------------------------------------------------------------------------
@@ -91,23 +91,6 @@ export class SidenavComponent implements OnInit {
   ) {}
 
   private destroyRef = inject(DestroyRef);
-
-  /**
-   * Awalan jalur shell yang sedang dipakai, misalnya "Administrator".
-   *
-   * Diperlukan selama keempat subpohon peran masih berdiri sendiri. Ketika
-   * rutenya digabung menjadi satu pohon nanti, masukan ini cukup dikosongkan —
-   * daftar menunya sendiri tidak perlu disentuh.
-   */
-  @Input({ required: true })
-  set base(nilai: string) {
-    this._base = nilai;
-    this.hitungUlang();
-  }
-  get base(): string {
-    return this._base;
-  }
-  private _base = '';
 
   /** Diciutkan: hanya ikon yang tampil, lebar 76px. */
   @Input() collapsed = false;
@@ -165,21 +148,6 @@ export class SidenavComponent implements OnInit {
   }
 
   /**
-   * Shell yang dipakai untuk menyusun jalur item ini.
-   *
-   * Memakai shell pengguna bila rutenya memang ada di sana — sehingga
-   * berpindah halaman tidak keluar dari subpohon yang sedang dibuka. Kalau
-   * tidak ada, jatuh ke shell pertama yang benar-benar memuatnya.
-   *
-   * Tanpa ini, menu disusun dari awalan milik PERAN, dan peran 5 mendapat
-   * /Administrator/Good-receipt — alamat yang tidak pernah ada, karena rute
-   * itu hanya dibangun di bawah /Purchasing. Menunya diam saja ketika ditekan.
-   */
-  private shellUntuk(item: NavItem): string {
-    return item.shells.includes(this._base) ? this._base : item.shells[0];
-  }
-
-  /**
    * Grup yang kosong tidak ikut ditampilkan — judul grup tanpa satu pun item
    * di bawahnya hanya menyisakan ruang kosong yang terbaca seperti kesalahan.
    */
@@ -191,7 +159,7 @@ export class SidenavComponent implements OnInit {
 
     const susun = (item: NavItem): ItemTampil => ({
       item,
-      jalur: [`/${this.shellUntuk(item)}`, ...item.path.split('/')],
+      jalur: ['/', ...item.path.split('/')],
       tersemat: this.pinnedNavService.isPinned(item.path),
     });
 

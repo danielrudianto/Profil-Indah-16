@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject, Observable, filter, map, startWith } from 'rxjs';
 import { NAV_FOOTER, NAV_ITEMS } from 'src/app/constants/navigation.constant';
-import { ROLE_NAV_BASE } from 'src/app/constants/role-landing.constant';
 
 /**
  * Kunci i18n judul halaman yang sedang terbuka, untuk tag di topbar.
@@ -21,11 +20,6 @@ import { ROLE_NAV_BASE } from 'src/app/constants/role-landing.constant';
 })
 export class PageTitleService {
   private router = inject(Router);
-
-  /** Akar tiap shell peran; semuanya menampilkan dashboard. */
-  private readonly akarShell = new Set(
-    ['', ...Object.values(ROLE_NAV_BASE)].map((b) => `/${b}`),
-  );
 
   private judul = new BehaviorSubject<string | null>(null);
 
@@ -51,7 +45,8 @@ export class PageTitleService {
     /* Buang parameter dan fragmen; keduanya tidak menentukan halaman. */
     const jalur = alamat.split(/[?#]/)[0].replace(/\/$/, '') || '/';
 
-    if (this.akarShell.has(jalur) || jalur === '/') {
+    /* Satu-satunya akar sekarang; keempat subpohon peran sudah digabung. */
+    if (jalur === '/') {
       return 'nav__dashboard';
     }
 

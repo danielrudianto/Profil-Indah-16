@@ -7,10 +7,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { SideNavService } from 'src/app/services/side-nav.service';
 import { SidenavComponent } from 'src/app/components/sidenav/sidenav.component';
 import { TopbarComponent } from 'src/app/components/topbar/topbar.component';
-import {
-  ROLE_NAV_BASE,
-  ROLE_NAV_BASE_FALLBACK,
-} from 'src/app/constants/role-landing.constant';
+import { NAV_ITEMS } from 'src/app/constants/navigation.constant';
 
 /**
  * Dashboard utama — layar pertama setelah masuk.
@@ -47,7 +44,6 @@ export class DashboardComponent {
 
   isSideNavOpen$ = this.sideNavService.isOpen$;
   drawerMode: MatDrawerMode = 'side';
-  navBase: string = ROLE_NAV_BASE_FALLBACK;
   nama: string = '';
 
   /** Benar ketika sebuah halaman anak sedang terbuka di outlet, misal /Settings. */
@@ -57,21 +53,20 @@ export class DashboardComponent {
     const info = this.authService.getUserInfo();
     this.nama = info?.name ?? '';
 
-    /*
-      Peran yang belum punya subpohon — saat ini Gudang — mendapat awalan
-      kosong, sehingga navigasinya tampil kosong. Itu memang keadaan
-      sebenarnya; menampilkan menu milik peran lain hanya mengantar pengguna
-      ke halaman yang akan ditolak server.
-    */
-    this.navBase =
-      info?.role != null && ROLE_NAV_BASE[info.role]
-        ? ROLE_NAV_BASE[info.role]
-        : ROLE_NAV_BASE_FALLBACK;
 
     this.sideNavService.updateSideNavState(window.innerWidth);
   }
 
+  /**
+   * Benar bila peran ini punya setidaknya satu menu.
+   *
+   * Dulu diturunkan dari ada-tidaknya subpohon rute milik perannya. Sejak
+   * keempat subpohon digabung menjadi satu pohon, subpohon itu tidak ada lagi,
+   * dan yang menentukan tinggal daftar menunya sendiri — saat ini hanya Gudang
+   * yang kosong.
+   */
   get punyaNavigasi(): boolean {
-    return this.navBase !== '';
+    const peran = this.authService.getUserInfo()?.role;
+    return peran != null && NAV_ITEMS.some((item) => item.roles.includes(peran));
   }
 }
