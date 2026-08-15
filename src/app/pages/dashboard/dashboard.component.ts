@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { SideNavService } from 'src/app/services/side-nav.service';
 import { SidenavComponent } from 'src/app/components/sidenav/sidenav.component';
 import { TopbarComponent } from 'src/app/components/topbar/topbar.component';
+import { PageBloomComponent } from 'src/app/components/page-bloom/page-bloom.component';
 import { NAV_ITEMS } from 'src/app/constants/navigation.constant';
 
 /**
@@ -33,6 +34,7 @@ import { NAV_ITEMS } from 'src/app/constants/navigation.constant';
     RouterOutlet,
     SidenavComponent,
     TopbarComponent,
+    PageBloomComponent,
     TranslatePipe,
   ],
 })

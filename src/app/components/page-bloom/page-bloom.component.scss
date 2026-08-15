@@ -1,0 +1,62 @@
+/*
+  Lingkaran dekoratif.
+
+  CATATAN SOAL blur(): nilainya besar — 190px dan 210px pada lingkaran selebar
+  900-1100px. Awal pengerjaan, blur seperti ini sempat DICURIGAI sebagai
+  penyebab layar hitam, dan diganti gradien. Dugaan itu terbukti KELIRU;
+  penyebabnya putaran deteksi perubahan di navigasi samping, dan sudah
+  diperbaiki. Jadi blur di sini dipasang apa adanya sesuai berkas desain.
+
+  Yang tetap benar dari catatan lama: beban melukisnya nyata. Kalau suatu saat
+  ada mesin yang tersendat pada halaman mana pun, lapisan inilah yang pertama
+  dicurigai — dan gradien tanpa blur menghasilkan tampilan yang nyaris tidak
+  bisa dibedakan.
+*/
+.bloom {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bloom span {
+  position: absolute;
+  border-radius: 50%;
+  display: block;
+}
+
+.bloom__a {
+  top: -280px;
+  left: 30%;
+  width: 900px;
+  height: 900px;
+  background: radial-gradient(circle, #154dec 0%, transparent 70%);
+  opacity: 0.16;
+  filter: blur(190px);
+}
+
+.bloom__b {
+  bottom: -420px;
+  right: -240px;
+  width: 1100px;
+  height: 1100px;
+  background: radial-gradient(circle, #14244a 0%, transparent 70%);
+  opacity: 0.7;
+  filter: blur(210px);
+}
+
+/*
+  Mode terang memakai warna yang jauh lebih muda; warna gelap di atas ground
+  terang menghasilkan bercak kotor, bukan cahaya.
+*/
+:host-context(:root:not([data-theme='dark'])) {
+  .bloom__a {
+    background: radial-gradient(circle, #b5d1ff 0%, transparent 70%);
+    opacity: 0.24;
+  }
+
+  .bloom__b {
+    background: radial-gradient(circle, #cfd3e5 0%, transparent 70%);
+  }
+}
