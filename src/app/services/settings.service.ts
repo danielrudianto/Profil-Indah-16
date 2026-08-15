@@ -117,13 +117,19 @@ export class SettingsService {
       '--color-accent-base': aksen.base,
       '--color-accent-tint': aksen.tint,
 
-      '--color-bg': gelap
-        ? `color-mix(in srgb, ${aksen.d900} 45%, #161826)`
-        : `color-mix(in srgb, ${aksen.tint} 30%, #eef1fa)`,
+      /*
+        LATAR TIDAK IKUT DIWARNAI AKSEN. Nilainya diambil apa adanya dari
+        nocturne-styles.css — #161826 dan #232532 — bukan dicampur dengan
+        d900 aksennya seperti sebelumnya.
 
-      '--color-surface': gelap
-        ? `color-mix(in srgb, ${aksen.d900} 28%, #232532)`
-        : `color-mix(in srgb, ${aksen.tint} 12%, #f8fafe)`,
+        Bentuk lama membuat seluruh halaman ikut berubah rona setiap kali
+        pengguna mengganti aksen, dan yang dilihat bukan lagi ground Nocturne
+        melainkan campurannya. Ground-nya netral; yang berwarna hanya
+        aksennya.
+      */
+      '--color-bg': gelap ? '#161826' : '#f4f5fb',
+
+      '--color-surface': gelap ? '#232532' : '#ffffff',
 
       '--color-text': gelap ? '#e9e9ed' : '#292b31',
 
