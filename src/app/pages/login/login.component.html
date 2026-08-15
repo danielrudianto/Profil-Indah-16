@@ -8,6 +8,27 @@
     <span class="login__bloom-a"></span>
     <span class="login__bloom-b"></span>
     <span class="login__bloom-c"></span>
+
+    <!--
+      Lapis ornamen LATAR — pudar dan DIAM.
+
+      Sebagian sengaja terpotong tepi layar: itu yang membuat ornamennya
+      terbaca sebagai latar yang meluas keluar bingkai, bukan sebagai gambar
+      kecil yang ditempel di dalamnya.
+
+      Yang dirotasi dibungkus elemen tersendiri. Rotasinya ditulis di
+      pembungkus supaya, bila suatu saat lapisan ini ikut dianimasikan,
+      translateY tidak menimpa rotate — transform hanya punya satu nilai.
+    -->
+    <span class="orn-bg orn-bg--dome">
+      <img src="assets/images/orn-dome.png" alt="" />
+    </span>
+    <span class="orn-bg orn-bg--rock">
+      <img src="assets/images/orn-rock.png" alt="" />
+    </span>
+    <span class="orn-bg orn-bg--cone">
+      <img src="assets/images/orn-cone.png" alt="" />
+    </span>
   </div>
 
   <form class="login__card" [formGroup]="loginFormGroup" (ngSubmit)="login()">
@@ -127,12 +148,29 @@
 
   <div class="login__mascot">
     <div class="login__mascot-glow" aria-hidden="true"></div>
+
     <img
       src="assets/images/mascot-2d.png"
       alt=""
       aria-hidden="true"
       class="login__mascot-img"
     />
+
+    <!--
+      Lapis ornamen DEKAT MASKOT — jelas dan bergerak.
+
+      Keempatnya memakai animasi yang sama, tetapi durasi dan jeda awalnya
+      dibuat berbeda-beda. Kalau seragam, semuanya naik-turun serempak dan
+      hasilnya terbaca seperti satu gambar besar yang bergoyang, bukan
+      beberapa benda yang melayang sendiri-sendiri.
+    -->
+    <div class="orn-dekat" aria-hidden="true">
+      <img class="orn orn--graph" src="assets/images/orn-graph.png" alt="" />
+      <img class="orn orn--cone" src="assets/images/orn-cone.png" alt="" />
+      <img class="orn orn--dome" src="assets/images/orn-dome.png" alt="" />
+      <img class="orn orn--rock" src="assets/images/orn-rock.png" alt="" />
+    </div>
+
     <div class="login__mascot-caption">{{ 'login__caption' | translate }}</div>
   </div>
 </div>

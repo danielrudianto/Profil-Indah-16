@@ -327,8 +327,8 @@
 
 .login__mascot {
   position: relative;
-  width: 340px;
-  height: 420px;
+  width: 620px;
+  height: 620px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -337,23 +337,167 @@
 
 .login__mascot-glow {
   position: absolute;
-  width: 280px;
-  height: 280px;
+  width: 420px;
+  height: 420px;
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    color-mix(in srgb, var(--color-accent) 35%, transparent) 0%,
+    color-mix(in srgb, var(--color-accent) 28%, transparent) 0%,
     transparent 70%
   );
-  filter: blur(50px);
+  filter: blur(60px);
 }
 
 .login__mascot-img {
   position: relative;
-  width: 320px;
-  height: 320px;
+  width: 620px;
+  height: 620px;
   object-fit: contain;
-  filter: drop-shadow(0 24px 48px rgb(0 0 0 / 35%));
+  filter: drop-shadow(0 28px 56px rgb(0 0 0 / 35%));
+  animation: float-y 5s ease-in-out infinite;
+  /* Hiasan, bukan kendali — ia tidak boleh menangkap klik maupun seretan. */
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------- */
+/* Ornamen                                                           */
+/*                                                                   */
+/* HANYA di halaman masuk. Halaman kerja tidak diberi ornamen: yang  */
+/* dilihat sepanjang hari untuk bekerja tidak boleh berbagi          */
+/* perhatian dengan benda yang bergerak.                             */
+/*                                                                   */
+/* Dua lapis, dan sengaja TIDAK dicampur. Yang dekat maskot jelas    */
+/* dan bergerak; yang di latar pudar dan diam. Kalau keduanya sama   */
+/* terangnya, tidak ada lagi yang menjadi latar.                     */
+/* ---------------------------------------------------------------- */
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ---- Lapis dekat maskot: jelas, bergerak ---- */
+
+.orn-dekat {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.orn {
+  position: absolute;
+  object-fit: contain;
+  animation-name: float-y;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/*
+  Jeda awalnya NEGATIF, bukan positif: dengan jeda positif setiap ornamen diam
+  dulu selama beberapa detik ketika halaman dibuka, lalu baru bergerak. Jeda
+  negatif memulai animasinya di tengah jalan, jadi sejak piksel pertama
+  semuanya sudah bergerak — dan pada fase yang berbeda-beda.
+*/
+.orn--graph {
+  width: 120px;
+  top: 14%;
+  right: 10%;
+  opacity: 0.9;
+  animation-duration: 5s;
+  animation-delay: -1.2s;
+}
+
+.orn--cone {
+  width: 96px;
+  bottom: 12%;
+  right: 20%;
+  opacity: 0.85;
+  animation-duration: 6.5s;
+  animation-delay: -3.4s;
+}
+
+.orn--dome {
+  width: 92px;
+  top: 22%;
+  left: 8%;
+  opacity: 0.88;
+  animation-duration: 5.8s;
+  animation-delay: -2.1s;
+}
+
+.orn--rock {
+  width: 110px;
+  bottom: 18%;
+  left: 13%;
+  opacity: 0.85;
+  animation-duration: 6.2s;
+  animation-delay: -4.6s;
+}
+
+/* ---- Lapis latar: pudar, diam ---- */
+
+.orn-bg {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
+/*
+  Rotasinya ditulis di PEMBUNGKUS, bukan di gambarnya. transform hanya punya
+  satu nilai: begitu lapisan ini suatu saat ikut dianimasikan, translateY akan
+  menimpa rotate dan ornamennya melompat tegak.
+*/
+/*
+  Ketiganya menempel TEPI LAYAR, di luar jangkauan kartu isian.
+
+  Kartu itu sedikit tembus pandang supaya latarnya terbaca — jadi ornamen yang
+  kebetulan berdiri di belakangnya tidak tersembunyi, ia menyembul samar
+  menembus kartu dan mengganggu teks yang sedang dibaca. "Di belakang" bukan
+  berarti "tidak menutupi".
+*/
+.orn-bg--dome {
+  width: 200px;
+  top: -22px;
+  left: -70px;
+  opacity: 0.45;
+  transform: rotate(160deg);
+}
+
+.orn-bg--rock {
+  width: 220px;
+  bottom: -18px;
+  left: -34px;
+  opacity: 0.4;
+}
+
+.orn-bg--cone {
+  width: 180px;
+  top: 58%;
+  right: -40px;
+  opacity: 0.42;
+  transform: rotate(-15deg);
+}
+
+/*
+  Gerakan dimatikan bagi yang memintanya lewat setelan sistem — sama seperti
+  blok kosong tabel.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .login__mascot-img,
+  .orn {
+    animation: none;
+  }
 }
 
 .login__mascot-caption {
@@ -366,8 +510,76 @@
 }
 
 /*
+  Tablet — frame 3a, 1280×800.
+
+  Maskotnya mengecil dari 620px ke 320px, dan ornamen dekatnya tinggal DUA.
+  Keempatnya pada lebar ini akan saling bertindih dengan maskot yang sudah
+  menyusut; dua yang tersisa diletakkan menempel tepi maskot dengan posisi
+  negatif, jadi keduanya tetap terbaca sebagai benda terpisah.
+*/
+@media (max-width: 1400px) and (min-width: 981px) {
+  .login__mascot {
+    width: 360px;
+    height: 420px;
+  }
+
+  .login__mascot-img {
+    width: 320px;
+    height: 320px;
+  }
+
+  .login__mascot-glow {
+    width: 260px;
+    height: 260px;
+  }
+
+  /* Dua yang tersisa; sisanya disembunyikan, bukan dikecilkan. */
+  .orn--dome,
+  .orn--rock {
+    display: none;
+  }
+
+  .orn--graph {
+    width: 84px;
+    top: 12px;
+    right: -8px;
+    animation-duration: 5.5s;
+    animation-delay: -2s;
+  }
+
+  .orn--cone {
+    width: 68px;
+    bottom: 84px;
+    left: -18px;
+    right: auto;
+    animation-duration: 6s;
+    animation-delay: -4s;
+  }
+
+  .orn-bg--dome {
+    width: 110px;
+    top: -20px;
+  }
+
+  .orn-bg--rock {
+    width: 110px;
+    bottom: -24px;
+  }
+
+  .orn-bg--cone {
+    width: 96px;
+    top: auto;
+    bottom: 30%;
+    left: auto;
+    right: -26px;
+  }
+}
+
+/*
   Maskot disembunyikan pada layar sempit, bukan dikecilkan: pada lebar itu ia
   mendorong kartu keluar dari tengah, dan kartu isian yang harus diutamakan.
+  Ornamen latarnya ikut hilang — ruang yang tersisa terlalu sempit untuk
+  menampung apa pun selain formulirnya.
 */
 @media (max-width: 980px) {
   .login {
@@ -375,6 +587,10 @@
   }
 
   .login__mascot {
+    display: none;
+  }
+
+  .orn-bg {
     display: none;
   }
 }
