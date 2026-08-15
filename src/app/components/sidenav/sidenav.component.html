@@ -15,10 +15,17 @@
         stroke-width="5"
         stroke-linecap="round"
       ></path>
+      <!--
+        Goresan kedua adalah versi REDUP dari aksen yang sedang aktif, bukan
+        --color-accent-base. Pada mode gelap aksen aktif sudah dicerahkan
+        (base dicampur tint), sementara base masih warna pekat aslinya — dua
+        goresan yang seharusnya satu keluarga jadi terbaca sebagai dua warna
+        yang berbeda.
+      -->
       <path
         d="M19 41 V23 h18"
         fill="none"
-        stroke="var(--color-accent-base)"
+        stroke="color-mix(in srgb, var(--color-accent) 55%, transparent)"
         stroke-width="5"
         stroke-linecap="round"
       ></path>

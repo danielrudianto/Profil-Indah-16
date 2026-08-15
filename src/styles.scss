@@ -63,6 +63,45 @@ html {
 }
 
 /* ------------------------------------------------------------------ */
+/* Kerangka halaman peran                                              */
+/*                                                                     */
+/* mat-drawer-container membawa warna latarnya sendiri dari tema        */
+/* Material — pada mode gelap rgb(18, 19, 22), abu nyaris hitam yang    */
+/* tidak ada hubungannya dengan token Nocturne. Keempat shell peran     */
+/* tidak pernah menimpanya, jadi setiap halaman di bawahnya berdiri di  */
+/* atas latar yang berbeda dari dashboard.                              */
+/*                                                                     */
+/* Ditulis global karena keempat shell memakai susunan yang sama; kalau */
+/* ditulis di masing-masing berkas, satu yang terlewat langsung         */
+/* mengembalikan gejalanya.                                            */
+/* ------------------------------------------------------------------ */
+
+/*
+  Warnanya diberikan lewat TOKEN Material, bukan properti background biasa.
+  .mat-drawer-container membawa aturannya sendiri dari CSS komponen, dan CSS
+  itu disuntikkan ke head setelah lembar gaya global — pada spesifisitas yang
+  sama, yang belakangan menang. Menulis `background:` di sini terlihat benar di
+  berkas tetapi tidak pernah terpasang.
+*/
+.shell {
+  --mat-sidenav-content-background-color: var(--color-bg);
+
+  height: 100%;
+  color: var(--color-text);
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+.shell__body {
+  padding: 1.5rem 2rem;
+}
+
+@media (max-width: 720px) {
+  .shell__body {
+    padding: 1rem;
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /* Batang gulung                                                       */
 /*                                                                     */
 /* Bawaan peramban di Linux memakai jalur penuh, tepi, dan tombol panah */

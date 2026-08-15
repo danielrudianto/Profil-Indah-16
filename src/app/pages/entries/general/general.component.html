@@ -1,4 +1,4 @@
-<mat-drawer-container class="h-100">
+<mat-drawer-container class="shell h-100">
   <mat-drawer
     [mode]="drawerMode"
     [opened]="isSideNavOpen$ | async"
@@ -44,7 +44,7 @@
       </svg>
     </button>
     <app-topbar />
-    <main>
+    <main class="shell__body">
       <router-outlet #outlet="outlet" />
     </main>
   </mat-drawer-content>

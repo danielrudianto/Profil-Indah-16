@@ -40,13 +40,12 @@
 }
 
 /*
-  Kolom cari mendorong dirinya sendiri ke kanan lewat margin-left: auto,
-  bukan lewat elemen pengisi. Ketika keping saringan status ditambahkan nanti,
-  keping itu tinggal diletakkan di kiri tanpa mengubah apa pun di sini.
+  Cari di KIRI, tombol di KANAN. Yang mendorong ke kanan adalah tombol
+  pertamanya lewat margin-left: auto, bukan elemen pengisi — sehingga menambah
+  keping saringan di sebelah kolom cari nanti tidak mengubah apa pun di sini.
 */
 .cari {
   position: relative;
-  margin-left: auto;
   width: 320px;
   max-width: 100%;
 
@@ -118,6 +117,7 @@
 
 /* Tombol utama Nocturne memakai GARIS TEPI aksen, bukan isian penuh. */
 .btn--primary {
+  margin-left: auto;
   color: var(--color-accent);
   background: transparent;
   border: 1px solid var(--color-accent);
@@ -369,8 +369,11 @@
   }
 
   .cari {
-    order: -1;
     width: 100%;
+  }
+
+  /* Baris kedua dimulai dari kiri; auto di lebar ini hanya menyisakan celah. */
+  .btn--primary {
     margin-left: 0;
   }
 }
