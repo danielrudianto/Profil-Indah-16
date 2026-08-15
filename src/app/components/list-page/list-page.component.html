@@ -59,9 +59,9 @@
     </div>
 
     <div class="list-page__kaki">
-      <span>{{ 'general__per-page' | translate }}</span>
+      <span *ngIf="showPageSize">{{ 'general__per-page' | translate }}</span>
 
-      <div class="seg" role="group">
+      <div class="seg" role="group" *ngIf="showPageSize">
         <button
           type="button"
           class="seg__opt"

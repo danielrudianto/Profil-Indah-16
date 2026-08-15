@@ -62,6 +62,15 @@ export class ListPageComponent implements OnInit {
   @Input() total = 0;
   @Input() loading = false;
 
+  /**
+   * Pilihan jumlah baris per halaman.
+   *
+   * Dimatikan pada daftar yang ukuran halamannya ditentukan server dan tidak
+   * bisa diminta lain — menawarkan pilihan yang tidak berpengaruh membuat
+   * pengguna mengira daftarnya rusak ketika ditekan dan tidak terjadi apa-apa.
+   */
+  @Input() showPageSize = true;
+
   @Output() search = new EventEmitter<string>();
   @Output() pageChange = new EventEmitter<number>();
   @Output() pageSizeChange = new EventEmitter<number>();
