@@ -1645,5 +1645,7 @@
   "nav__company": "Perusahaan",
   "nav__payment_method": "Metode Pembayaran",
   "nav__expense_type": "Jenis Pengeluaran",
-  "nav__activity": "Aktivitas"
+  "nav__activity": "Aktivitas",
+  "dashboard__greeting": "Selamat datang",
+  "dashboard__no_access": "Peran Anda belum memiliki halaman yang dapat dibuka. Hubungi administrator."
 }

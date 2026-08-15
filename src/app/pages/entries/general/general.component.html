@@ -2,63 +2,10 @@
   <mat-drawer
     [mode]="drawerMode"
     [opened]="isSideNavOpen$ | async"
-    class="sidenav"
+    class="sidenav-shell"
   >
-    <mat-nav-list class="sidenav__menu-wrapper">
-      <div mat-subheader>{{ "side-nav__frequently-used" | translate }}</div>
-      <mat-list-item
-        [routerLink]="['/General/Stock']"
-        [routerLinkActive]="'active'"
-      >
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>{{ "side-nav__stock" | translate }}</div>
-      </mat-list-item>
-      <mat-list-item
-        [routerLink]="['/General/Expense']"
-        [routerLinkActive]="'active'"
-      >
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>{{ "side-nav__expense" | translate }}</div>
-      </mat-list-item>
-
-      <mat-list-item
-        [routerLink]="['/General/Overpayment']"
-        [routerLinkActive]="'active'"
-      >
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>{{ "side-nav__overpayment" | translate }}</div>
-      </mat-list-item>
-
-      <mat-divider></mat-divider>
-
-      <div mat-subheader>{{ "side-nav__master-data" | translate }}</div>
-      <mat-list-item
-        [routerLink]="['/General/Expense-type']"
-        [routerLinkActive]="'active'"
-      >
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>{{ "side-nav__expense-type" | translate }}</div>
-      </mat-list-item>
-      <mat-list-item
-        [routerLink]="['/General/Company']"
-        [routerLinkActive]="'active'"
-      >
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>{{ "side-nav__company" | translate }}</div>
-      </mat-list-item>
-      <mat-list-item
-        [routerLink]="['/General/Payment-method']"
-        [routerLinkActive]="'active'"
-      >
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>{{ "side-nav__payment-method" | translate }}</div>
-      </mat-list-item>
-      <mat-divider />
-      <mat-list-item (click)="toggleSideNav()">
-        <mat-icon matListItemIcon>minimize</mat-icon>
-        <div matListItemTitle>{{ "general__close__side-nav" | translate }}</div>
-      </mat-list-item>
-    </mat-nav-list>
+    <!-- Daftar menunya ada di navigation.constant.ts, disaring per peran. -->
+    <app-sidenav base="General" />
   </mat-drawer>
   <mat-drawer-content>
     <button

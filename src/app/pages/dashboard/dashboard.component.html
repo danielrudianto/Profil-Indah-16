@@ -1,3 +1,34 @@
-<app-topbar [hidden]="false" />
-<app-dashboard-top [dashboard]="enabledDashboards" />
-<!-- <app-dashboard-bottom /> -->
+<mat-drawer-container class="dashboard">
+  <mat-drawer
+    [mode]="drawerMode"
+    [opened]="isSideNavOpen$ | async"
+    class="dashboard__drawer"
+  >
+    <!--
+      base ditentukan dari peran pengguna, bukan dari alamat halaman: dashboard
+      ini satu untuk semua peran, dan yang membedakan hanyalah menu yang
+      ditawarkan.
+    -->
+    <app-sidenav [base]="navBase" />
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <app-topbar [hidden]="false" />
+
+    <main class="dashboard__body">
+      <h1 class="dashboard__greeting">
+        {{ 'dashboard__greeting' | translate }}{{ nama ? ', ' + nama : '' }}
+      </h1>
+
+      <!--
+        Peran tanpa subpohon sendiri diberi tahu apa adanya, bukan dibiarkan
+        menatap layar kosong yang terbaca seperti aplikasi gagal dimuat.
+      -->
+      <p class="dashboard__empty" *ngIf="!punyaNavigasi">
+        {{ 'dashboard__no_access' | translate }}
+      </p>
+
+      <router-outlet />
+    </main>
+  </mat-drawer-content>
+</mat-drawer-container>

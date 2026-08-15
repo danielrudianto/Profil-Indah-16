@@ -1,85 +1,74 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { MatDrawer, MatDrawerContainer, MatDrawerContent, MatDrawerMode } from '@angular/material/sidenav';
+import { RouterOutlet } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { TopbarComponent } from '../../components/topbar/topbar.component';
-import { DashboardTopComponent } from './dashboard-top/dashboard-top.component';
+import { SideNavService } from 'src/app/services/side-nav.service';
+import { SidenavComponent } from 'src/app/components/sidenav/sidenav.component';
+import { TopbarComponent } from 'src/app/components/topbar/topbar.component';
+import {
+  ROLE_NAV_BASE,
+  ROLE_NAV_BASE_FALLBACK,
+} from 'src/app/constants/role-landing.constant';
 
-export interface DashboardCard {
-  title: string;
-  route: string;
-}
-
-export interface StatCard {
-  title: string;
-  value: number;
-  previousValue?: number;
-  againstText?: string;
-}
-
+/**
+ * Dashboard utama — layar pertama setelah masuk.
+ *
+ * Sebelumnya halaman ini adalah LAUNCHER: empat kartu peran yang harus diklik
+ * lebih dulu sebelum pengguna sampai ke pekerjaannya. Desain meniadakannya.
+ *
+ * Yang menggantikannya bukan pengalihan, melainkan pemilihan: halaman ini
+ * menentukan NAVIGASI MANA yang ditampilkan berdasarkan peran, lalu pengguna
+ * bergerak dari situ. Alamatnya tetap '/', sehingga tidak ada lompatan alamat
+ * yang membingungkan tepat setelah masuk.
+ */
 @Component({
-    selector: 'app-dashboard',
-    templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    imports: [TopbarComponent, DashboardTopComponent]
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss'],
+  imports: [
+    NgIf,
+    AsyncPipe,
+    MatDrawerContainer,
+    MatDrawer,
+    MatDrawerContent,
+    RouterOutlet,
+    SidenavComponent,
+    TopbarComponent,
+    TranslatePipe,
+  ],
 })
-export class DashboardComponent implements OnInit {
-  constructor(private authService: AuthService) {}
+export class DashboardComponent {
+  constructor(
+    private authService: AuthService,
+    private sideNavService: SideNavService
+  ) {}
 
-  name: string = '';
-  availableDashboards: DashboardCard[] = [
-    {
-      title: 'Administrator',
-      route: '/Administrator',
-    },
-    {
-      title: 'Purchasing',
-      route: '/Purchasing',
-    },
-    {
-      title: 'Sales',
-      route: '/Sales',
-    },
-    {
-      title: 'General',
-      route: '/General',
-    },
-  ];
+  isSideNavOpen$ = this.sideNavService.isOpen$;
+  drawerMode: MatDrawerMode = 'side';
+  navBase: string = ROLE_NAV_BASE_FALLBACK;
+  nama: string = '';
 
-  enabledDashboards: DashboardCard[] = [];
   ngOnInit(): void {
-    this.name =
-      this.authService.getUserInfo() == null
-        ? ''
-        : this.authService.getUserInfo()!.name;
+    const info = this.authService.getUserInfo();
+    this.nama = info?.name ?? '';
 
-    switch (this.authService.getUserInfo()?.role) {
-      case 1:
-        this.enabledDashboards = this.availableDashboards.filter(
-          (x) => x.title == 'Purchasing'
-        );
-        break;
-      case 2:
-        this.enabledDashboards = this.availableDashboards.filter(
-          (x) => x.title == 'Sales'
-        );
-        break;
-      case 3:
-        this.enabledDashboards = this.availableDashboards.filter(
-          (x) =>
-            x.title == 'Sales' ||
-            x.title == 'General' ||
-            x.title == 'Purchasing'
-        );
-        break;
-      case 5:
-        this.enabledDashboards = this.availableDashboards;
-        break;
-      case 7:
-        this.enabledDashboards = this.availableDashboards;
-        break;
-      case 6:
-        this.enabledDashboards = [];
-        break;
-    }
+    /*
+      Peran yang belum punya subpohon — saat ini Gudang — mendapat awalan
+      kosong, sehingga navigasinya tampil kosong. Itu memang keadaan
+      sebenarnya; menampilkan menu milik peran lain hanya mengantar pengguna
+      ke halaman yang akan ditolak server.
+    */
+    this.navBase =
+      info?.role != null && ROLE_NAV_BASE[info.role]
+        ? ROLE_NAV_BASE[info.role]
+        : ROLE_NAV_BASE_FALLBACK;
+
+    this.sideNavService.updateSideNavState(window.innerWidth);
+  }
+
+  get punyaNavigasi(): boolean {
+    return this.navBase !== '';
   }
 }

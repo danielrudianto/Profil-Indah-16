@@ -2,83 +2,10 @@
   <mat-drawer
     [mode]="drawerMode"
     [opened]="isSideNavOpen$ | async"
-    class="sidenav"
+    class="sidenav-shell"
   >
-    <mat-nav-list class="sidenav__menu-wrapper">
-      <div mat-subheader>{{ "side-nav__frequently-used" | translate }}</div>
-      <mat-list-item
-        [routerLink]="['/Sales/Stock']"
-        [routerLinkActive]="'active'"
-      >
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>{{ "side-nav__stock" | translate }}</div>
-      </mat-list-item>
-      <mat-list-item
-        [routerLink]="['/Sales/Sales-invoice']"
-        [routerLinkActive]="'active'"
-      >
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>{{ "side-nav__sales" | translate }}</div>
-      </mat-list-item>
-      <mat-list-item
-        [routerLink]="['/Sales/Deposit']"
-        [routerLinkActive]="'active'"
-      >
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>{{ "side-nav__deposit" | translate }}</div>
-      </mat-list-item>
-      <mat-list-item
-        [routerLink]="['/Sales/Overpayment']"
-        [routerLinkActive]="'active'"
-      >
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>{{ "side-nav__overpayment" | translate }}</div>
-      </mat-list-item>
-      <mat-divider></mat-divider>
-      <div mat-subheader>{{ "side-nav__master-data" | translate }}</div>
-      <mat-list-item
-        [routerLink]="['/Sales/Customer']"
-        [routerLinkActive]="'active'"
-      >
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>{{ "side-nav__customer" | translate }}</div>
-      </mat-list-item>
-      <mat-list-item
-        [routerLink]="['/Sales/Package']"
-        [routerLinkActive]="'active'"
-      >
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>{{ "side-nav__package" | translate }}</div>
-      </mat-list-item>
-      <mat-list-item
-        [routerLink]="['/Sales/Price/Sales']"
-        [routerLinkActive]="'active'"
-      >
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>{{ "side-nav__price" | translate }}</div>
-      </mat-list-item>
-      <mat-divider></mat-divider>
-      <div mat-subheader>{{ "side-nav__implementation" | translate }}</div>
-      <mat-list-item
-        [routerLink]="['/Sales/Sales-return']"
-        [routerLinkActive]="'active'"
-      >
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>{{ "side-nav__sales-return" | translate }}</div>
-      </mat-list-item>
-      <mat-list-item
-        [routerLink]="['/Sales/Receivable']"
-        [routerLinkActive]="'active'"
-      >
-        <mat-icon matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>{{ "side-nav__receivable" | translate }}</div>
-      </mat-list-item>
-      <mat-divider />
-      <mat-list-item (click)="toggleSideNav()">
-        <mat-icon matListItemIcon>minimize</mat-icon>
-        <div matListItemTitle>{{ "general__close__side-nav" | translate }}</div>
-      </mat-list-item>
-    </mat-nav-list>
+    <!-- Daftar menunya ada di navigation.constant.ts, disaring per peran. -->
+    <app-sidenav base="Sales" />
   </mat-drawer>
   <mat-drawer-content>
     <button

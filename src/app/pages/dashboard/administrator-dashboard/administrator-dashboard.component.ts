@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { StatCard } from '../dashboard.component';
+import { StatCard } from 'src/app/models/stat-card.model';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { ReportInventoryComponent } from '../../report-inventory/report-inventory.component';
 import { Router, RouterLink } from '@angular/router';

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { StatCard } from '../dashboard.component';
+import { StatCard } from 'src/app/models/stat-card.model';
 import { Router, RouterLink } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';

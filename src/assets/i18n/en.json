@@ -1639,5 +1639,7 @@
   "nav__company": "Company",
   "nav__payment_method": "Payment Method",
   "nav__expense_type": "Expense Type",
-  "nav__activity": "Activity"
+  "nav__activity": "Activity",
+  "dashboard__greeting": "Welcome",
+  "dashboard__no_access": "Your role has no pages available yet. Please contact an administrator."
 }

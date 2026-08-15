@@ -8,6 +8,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/divider';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TopbarComponent } from '../../../components/topbar/topbar.component';
+import { SidenavComponent } from '../../../components/sidenav/sidenav.component';
 import { AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -16,7 +17,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './purchasing.component.html',
     styleUrls: ['./purchasing.component.scss'],
     animations: [slideUpDownAnimation],
-    imports: [MatDrawerContainer, MatDrawer, MatNavList, MatListSubheaderCssMatStyler, MatListItem, RouterLink, RouterLinkActive, MatIcon, MatListItemIcon, MatListItemTitle, MatDivider, MatDrawerContent, MatTooltip, TopbarComponent, RouterOutlet, AsyncPipe, TranslatePipe]
+    imports: [MatDrawerContainer, MatDrawer, MatNavList, MatListSubheaderCssMatStyler, MatListItem, RouterLink, RouterLinkActive, MatIcon, MatListItemIcon, MatListItemTitle, MatDivider, MatDrawerContent, MatTooltip, TopbarComponent,
+    SidenavComponent, RouterOutlet, AsyncPipe, TranslatePipe]
 })
 export class PurchasingComponent {
   constructor(private router: Router, private sideNavService: SideNavService) {}
