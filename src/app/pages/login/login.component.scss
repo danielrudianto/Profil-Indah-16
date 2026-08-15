@@ -26,9 +26,20 @@
   font-family: "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
-/* ---------------------------------------------------------------- */
-/* Lingkaran dekoratif                                               */
-/* ---------------------------------------------------------------- */
+/* ----------------------------------------------------------------- */
+/* Lingkaran dekoratif                                                */
+/*                                                                    */
+/* TANPA filter: blur(). Berkas desain memakai blur 190-210px pada    */
+/* lingkaran selebar 900-1100px, dan beban selebar itu membuat        */
+/* compositor sebagian driver GPU Linux menyerah — seluruh halaman    */
+/* tidak tergambar sama sekali, meskipun semua sumber daya termuat    */
+/* dan konsol bersih. Gejalanya sulit dilacak justru karena tidak ada */
+/* satu pun galat.                                                    */
+/*                                                                    */
+/* radial-gradient sudah melembut dengan sendirinya, jadi tepi        */
+/* transparannya cukup dimajukan dan opasitasnya diturunkan sedikit   */
+/* untuk mendapatkan kesan yang sama tanpa penyaring apa pun.         */
+/* ----------------------------------------------------------------- */
 
 .login__bloom {
   position: absolute;
@@ -47,9 +58,12 @@
   left: 8%;
   width: 900px;
   height: 900px;
-  background: radial-gradient(circle, var(--blob-a) 0%, transparent 70%);
-  opacity: 0.24;
-  filter: blur(190px);
+  background: radial-gradient(
+    circle,
+    var(--blob-a) 0%,
+    transparent 62%
+  );
+  opacity: 0.2;
 }
 
 .login__bloom-b {
@@ -57,9 +71,12 @@
   right: 4%;
   width: 1100px;
   height: 1100px;
-  background: radial-gradient(circle, var(--blob-b) 0%, transparent 70%);
-  opacity: 0.85;
-  filter: blur(210px);
+  background: radial-gradient(
+    circle,
+    var(--blob-b) 0%,
+    transparent 62%
+  );
+  opacity: 0.7;
 }
 
 .login__bloom-c {
@@ -67,9 +84,12 @@
   right: 30%;
   width: 760px;
   height: 760px;
-  background: radial-gradient(circle, var(--blob-c) 0%, transparent 70%);
-  opacity: 0.35;
-  filter: blur(200px);
+  background: radial-gradient(
+    circle,
+    var(--blob-c) 0%,
+    transparent 62%
+  );
+  opacity: 0.3;
 }
 
 /* ---------------------------------------------------------------- */
@@ -322,7 +342,6 @@
     color-mix(in srgb, var(--color-accent) 35%, transparent) 0%,
     transparent 70%
   );
-  filter: blur(50px);
 }
 
 .login__mascot-img {
