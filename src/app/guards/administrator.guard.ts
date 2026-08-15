@@ -62,3 +62,21 @@ export const GeneralGuard = berdasarPeran([
   Role.Administrator,
   Role.Owner,
 ]);
+
+/**
+ * Semua peran yang bekerja dengan barang: pembelian, penjualan, umum, admin,
+ * dan pemilik.
+ *
+ * Muncul ketika keempat subpohon peran digabung menjadi satu pohon. Halaman
+ * seperti Stok dan Paket dulu berdiri di bawah KEEMPAT shell sekaligus,
+ * sehingga hak aksesnya adalah gabungan keempat penjaga itu — dan tidak ada
+ * satu pun penjaga lama yang menyatakannya. Tanpa ini, menggabungkan rutenya
+ * akan diam-diam mempersempit siapa yang boleh membuka Stok.
+ */
+export const OperationalGuard = berdasarPeran([
+  Role.Purchasing,
+  Role.Sales,
+  Role.General,
+  Role.Administrator,
+  Role.Owner,
+]);
