@@ -122,55 +122,60 @@ export class GoodReceiptCreateComponent {
   }
 
   openItemSelector() {
-    const dialog = this.dynamicComponentService.createDynamicComponent(
+    /*
+      Dialognya TETAP TERBUKA. Tiap penekanan barang menambah satu baris lewat
+      onTambah, dan barisSaatIni dibaca dialog untuk menggambar lencana
+      "N baris" beserta rinciannya.
+    */
+    this.dynamicComponentService.createDynamicComponent(
       ProductSelectorComponent,
       {
         type: ProductSelectorType.purchase,
-      }
+        onTambah: (hasil: any) => this.tambahBaris(hasil),
+        barisSaatIni: () => this.t.value,
+      },
+    );
+  }
+
+  /**
+   * Menambah satu baris barang.
+   *
+   * BARANG YANG SAMA BOLEH BERULANG, satuan apa pun. Bonus dari supplier
+   * dicatat sebagai baris terpisah dengan harga sendiri — 10 box @150.000 dan
+   * 1 box @0 adalah dua baris dengan barang DAN satuan yang sama.
+   *
+   * Bentuk sebelumnya menolaknya lewat checkExisting, dan penolakannya bahkan
+   * bergantung urutan mengetik: satuan dasar ditolak bila barangnya sudah ada
+   * dalam satuan apa pun, sementara urutan sebaliknya lolos. Memisahkan
+   * barisnya juga lebih jujur bagi HPP — rata-rata tertimbang dari dua harga
+   * yang sebenarnya, bukan satu harga karangan.
+   */
+  private tambahBaris(hasil: any): void {
+    const data = hasil.data;
+    const sub = hasil.sub;
+
+    this.t.push(
+      this.formBuilder.group({
+        product_id: [data.id, Validators.required],
+        product_unit_id: [sub == null ? null : sub.id],
+        reference: [data.reference],
+        description: [data.description],
+        quantity: ['', [Validators.required, Validators.min(0.01)]],
+        unit: [sub == null ? data.unit : sub.unit],
+        conversion: [sub == null ? 1 : sub.conversion],
+        /* Harga beli, bukan harga jual — dari satuannya bila satuan dipilih. */
+        price: [sub == null ? data.purchase_price : sub.purchase_price],
+        discount: [
+          sub == null ? data.purchase_discount : sub.purchase_discount,
+        ],
+        default_unit: [data.unit],
+        stock: [data.stock ?? null],
+        save_price: [false],
+      }),
     );
 
-    dialog.subscribe((result) => {
-      if (result) {
-        const data = result.data;
-        const sub = result.sub;
-
-        const exists = this.checkExisting(data.id, sub == null ? null : sub.id);
-
-        if (exists) {
-          this.alertService.showError(
-            this.translateService.instant('general__item__exists')
-          );
-          return;
-        }
-
-        this.t.push(
-          this.formBuilder.group({
-            product_id: [data.id, Validators.required],
-            product_unit_id: [sub == null ? null : sub.id],
-            reference: [data.reference],
-            description: [data.description],
-            quantity: ['', [Validators.required, Validators.min(0.01)]],
-            unit: [sub == null ? data.unit : sub.unit],
-            conversion: [sub == null ? 1 : sub.conversion],
-            price: [sub == null ? data.purchase_price : sub.purchase_price],
-            discount: [
-              sub == null ? data.purchase_discount : sub.purchase_discount,
-            ],
-            default_unit: [data.unit],
-            stock: [data.stock ?? null],
-            /*
-              Menimpa harga di master hanya terjadi bila baris ini dicentang,
-              dan hanya untuk peran yang memang boleh. Prefill yang tidak
-              disentuh tidak boleh ikut menimpa apa pun.
-            */
-            save_price: [false],
-          })
-        );
-
-        this.itemFormGroup.patchValue({
-          number_of_items: this.t.length,
-        });
-      }
+    this.itemFormGroup.patchValue({
+      number_of_items: this.t.length,
     });
   }
 
@@ -218,20 +223,6 @@ export class GoodReceiptCreateComponent {
         */
         this.alertService.showError(error);
       },
-    });
-  }
-
-  private checkExisting(
-    productID: number,
-    productUnitID: number | null
-  ): boolean {
-    return this.t.controls.some((x) => {
-      const existingProductID = x.get('product_id')?.value;
-      const existingProductUnitID = x.get('product_unit_id')?.value;
-      return (
-        existingProductID === productID &&
-        (productUnitID === null || existingProductUnitID === productUnitID)
-      );
     });
   }
 

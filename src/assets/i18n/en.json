@@ -1740,5 +1740,9 @@
   "good-receipt__create__check-items": "products added",
   "good-receipt__create__check-quantity": "Quantity filled in for every product",
   "good-receipt__create__submit": "Save goods receipt",
-  "general__delete": "Delete"
+  "general__delete": "Delete",
+  "product-selector__lede": "Tap a product to add one line. The same product may be added repeatedly.",
+  "product-selector__lines": "lines",
+  "product-selector__another-line": "Another line",
+  "product-selector__found": "products found"
 }

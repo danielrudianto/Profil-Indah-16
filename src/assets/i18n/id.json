@@ -1746,5 +1746,9 @@
   "good-receipt__create__check-items": "barang ditambahkan",
   "good-receipt__create__check-quantity": "Jumlah tiap barang terisi",
   "good-receipt__create__submit": "Simpan penerimaan",
-  "general__delete": "Hapus"
+  "general__delete": "Hapus",
+  "product-selector__lede": "Tekan barang untuk menambah satu baris. Barang yang sama boleh berkali-kali.",
+  "product-selector__lines": "baris",
+  "product-selector__another-line": "Baris lagi",
+  "product-selector__found": "barang ditemukan"
 }

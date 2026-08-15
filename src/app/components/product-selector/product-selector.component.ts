@@ -2,25 +2,19 @@ import {
   Component,
   ElementRef,
   HostListener,
-  Inject,
   Input,
+  OnInit,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 import { debounceTime } from 'rxjs';
-import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { DynamicDialogComponent } from '../dynamic-dialog/dynamic-dialog.component';
-import { DialogHeaderComponent } from '../dialog-header/dialog-header.component';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { NgIf, NgFor, DecimalPipe } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MatPaginator } from '@angular/material/paginator';
-import { TranslatePipe } from '@ngx-translate/core';
+import { DialogShellComponent } from '../dialog-shell/dialog-shell.component';
 
 export enum ProductSelectorType {
   purchase,
@@ -28,54 +22,85 @@ export enum ProductSelectorType {
   plain,
   return,
 }
+
+/**
+ * Pilih produk — sistem desain Nocturne, frame 14a.
+ *
+ * DIALOGNYA TIDAK MENUTUP SETIAP KALI SATU BARANG DIPILIH. Menekan sebuah
+ * barang langsung menambahkan SATU BARIS ke dokumen pemanggil, dan dialognya
+ * tetap terbuka untuk barang berikutnya.
+ *
+ * Barang yang sama boleh dipilih berkali-kali. Itu bukan kelonggaran,
+ * melainkan syarat: bonus dari supplier dicatat sebagai baris terpisah dengan
+ * harga sendiri — 10 box @150.000 dan 1 box @0 adalah dua baris dengan barang
+ * DAN satuan yang sama. Bentuk sebelumnya menolaknya, dan penolakannya bahkan
+ * bergantung urutan mengetik: satuan dasar ditolak bila barangnya sudah ada
+ * dalam satuan apa pun, sementara urutan sebaliknya lolos.
+ *
+ * JUMLAH DAN HARGA TIDAK DIISI DI SINI, semuanya di tabel dokumen. Satu tempat
+ * mengetik angka, bukan dua.
+ *
+ * Dialog ini tidak tahu dokumen apa yang memanggilnya. Pemanggil menitipkan
+ * dua hal lewat `data`: cara menambah baris, dan cara membaca baris yang sudah
+ * ada — itu yang dipakai menggambar lencana "N baris".
+ */
 @Component({
-    selector: 'app-product-selector',
-    templateUrl: './product-selector.component.html',
-    styleUrls: ['./product-selector.component.scss'],
-    animations: [slideInOutAnimation],
-    imports: [DynamicDialogComponent, DialogHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatProgressSpinner, NgFor, MatPaginator, DecimalPipe, TranslatePipe]
+  selector: 'app-product-selector',
+  templateUrl: './product-selector.component.html',
+  styleUrls: ['./product-selector.component.scss'],
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    ReactiveFormsModule,
+    TranslatePipe,
+    DynamicDialogComponent,
+    DialogShellComponent,
+  ],
 })
-export class ProductSelectorComponent {
+export class ProductSelectorComponent implements OnInit {
   constructor(
-    private dataService: ApiService,
+    private apiService: ApiService,
     private alertService: AlertService,
     private dynamicComponentService: DynamicComponentService,
-    private _hotKeysService: HotkeysService
-  ) {
-    this._hotKeysService.add([
-      new Hotkey('esc', (event: KeyboardEvent): boolean => {
-        this.closeDialog();
-        return false; // Prevent bubbling
-      }),
-    ]);
-  }
+  ) {}
 
+  /**
+   * Titipan dari pemanggil:
+   *   type        — jenis harga yang relevan (pembelian/penjualan)
+   *   onTambah    — dipanggil sekali untuk tiap baris yang ditambahkan
+   *   barisSaatIni— mengembalikan baris dokumen, untuk lencana "N baris"
+   */
   @Input('data') data: any;
-  @ViewChild('searchBarInput') searchBarInput?: ElementRef;
+
+  @ViewChild('searchBarInput') searchBarInput?: ElementRef<HTMLInputElement>;
+
+  dataSource: any[] = [];
+  dataCount = 0;
+  page = 1;
+  isOpened = true;
+  isLoading = false;
+
+  /** Satuan terpilih per barang; menentukan satuan baris BERIKUTNYA. */
+  satuanDipilih: Record<number, number | null> = {};
+
+  /* Satu kolom saja; FormGroup hanya menambah lapisan tanpa guna di sini. */
+  cariControl = new FormControl<string>('');
+
   @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
+  tombol(event: KeyboardEvent) {
     if (event.key === 'Escape') {
       this.closeDialog();
     }
   }
 
-  dataSource: any[] = [];
-  dataCount: number = 0;
-  page: number = 1;
-  isOpened: boolean = true;
-  isLoading: boolean = false;
-
-  searchItemFormGroup: FormGroup = new FormGroup({
-    searchBar: new FormControl(''),
-  });
-
   ngOnInit(): void {
     this.fetchItems();
-    this.searchItemFormGroup.controls['searchBar'].valueChanges
-      .pipe(debounceTime(1000))
+    this.cariControl.valueChanges
+      .pipe(debounceTime(500))
       .subscribe((value) => {
         this.page = 1;
-        this.fetchItems(1, value);
+        this.fetchItems(1, value ?? '');
       });
   }
 
@@ -83,38 +108,82 @@ export class ProductSelectorComponent {
     this.searchBarInput?.nativeElement.focus();
   }
 
-  selectData(data: any) {
-    this.closeDialog(data);
+  /** Baris dokumen milik barang ini, untuk lencana dan rinciannya. */
+  barisUntuk(element: any): any[] {
+    const semua = this.data?.barisSaatIni?.() ?? [];
+    return semua.filter((b: any) => b.product_id === element.id);
   }
 
-  closeDialog(data?: any) {
+  satuanAktif(element: any): any | null {
+    const id = this.satuanDipilih[element.id];
+    if (id == null) {
+      return null;
+    }
+    return (element.product_unit ?? []).find((u: any) => u.id === id) ?? null;
+  }
+
+  pilihSatuan(element: any, sub: any | null): void {
+    this.satuanDipilih[element.id] = sub == null ? null : sub.id;
+  }
+
+  /**
+   * Menambah satu baris.
+   *
+   * DUA PERILAKU, dan itu disengaja. Pemanggil yang menitipkan onTambah —
+   * saat ini baru penerimaan barang — mendapat bentuk 14a: barisnya
+   * ditambahkan dan dialognya TETAP TERBUKA untuk barang berikutnya.
+   *
+   * Pemanggil lama yang tidak menitipkan apa pun tetap mendapat perilaku
+   * sebelumnya: dialog menutup sambil membawa satu pilihan. Ada empat belas
+   * halaman yang masih memakainya; mengubah kontraknya sekaligus berarti
+   * empat belas halaman berhenti bisa menambah barang dalam satu langkah,
+   * tanpa satu pun galat — `if (result)` mereka hanya menerima undefined dan
+   * diam. Jalur lama ini dilepas belakangan, halaman demi halaman.
+   */
+  tambahBaris(element: any): void {
+    const pilihan = { data: element, sub: this.satuanAktif(element) };
+
+    if (this.data?.onTambah) {
+      this.data.onTambah(pilihan);
+      return;
+    }
+
+    this.closeDialog(pilihan);
+  }
+
+  closeDialog(hasil?: any): void {
     this.isOpened = false;
     setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent(data);
+      this.dynamicComponentService.closeDynamicComponent(hasil);
     }, 300);
   }
 
-  changePage(event: any) {
-    this.page = event.pageIndex + 1;
-    this.fetchItems();
+  bukaHalaman(arah: -1 | 1): void {
+    const tujuan = this.page + arah;
+    if (tujuan >= 1 && tujuan <= this.halamanTerakhir) {
+      this.page = tujuan;
+      this.fetchItems();
+    }
+  }
+
+  get halamanTerakhir(): number {
+    const ukuran = this.dataSource.length || 10;
+    return Math.max(1, Math.ceil(this.dataCount / ukuran));
   }
 
   fetchItems(
     page: number = this.page,
-    keyword: string = this.searchItemFormGroup.controls['searchBar'].value
+    keyword: string = this.cariControl.value ?? '',
   ) {
     this.isLoading = true;
-    this.dataService
-      .get(`product/selector`, {
-        keyword: keyword,
-        page: page,
-      })
+    this.apiService
+      .get('product/selector', { keyword, page })
       .subscribe({
         next: (data: any) => {
           this.dataCount = data.count;
           this.dataSource = data.data;
         },
-        error: (error) => {
+        error: (error: any) => {
           this.alertService.showError(error);
         },
       })

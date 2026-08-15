@@ -1,120 +1,121 @@
 <app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
-  <div class="create-dialog">
-    <app-dialog-header
-      [title]="'product-selector__title' | translate"
-      (onDialogClose)="closeDialog()"
-    />
-    <div class="create-dialog__content">
-      <form [formGroup]="searchItemFormGroup">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>{{ "product-selector__search" | translate }}</mat-label>
-          <input
-            matInput
-            type="text"
-            placeholder="Ex. TH-001AA"
-            [readOnly]="isLoading"
-            formControlName="searchBar"
-            #searchBarInput
-          />
-        </mat-form-field>
-      </form>
+  <app-dialog-shell
+    class="pilih"
+    icon="ph ph-archive"
+    [heading]="'product-selector__title' | translate"
+    [lede]="'product-selector__lede' | translate"
+    [submitLabel]="'general__close' | translate"
+    [canSubmit]="true"
+    (submitted)="closeDialog()"
+    (close)="closeDialog()"
+  >
+    <div class="cari">
+      <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+      <input
+        #searchBarInput
+        class="cari__input"
+        type="search"
+        autocomplete="off"
+        [formControl]="cariControl"
+        [attr.placeholder]="'product-selector__search' | translate"
+      />
+    </div>
 
-      <div *ngIf="isLoading">
-        <mat-spinner id="spinner"></mat-spinner>
-      </div>
+    <p class="pesan" *ngIf="isLoading">{{ "general__loading" | translate }}</p>
+    <p class="pesan" *ngIf="!isLoading && dataSource.length === 0">
+      {{ "general__no-data" | translate }}
+    </p>
 
-      <div *ngIf="!isLoading" class="item-selector__wrapper">
+    <div class="daftar" *ngIf="!isLoading">
+      <div
+        class="baris"
+        *ngFor="let element of dataSource"
+        [class.baris--masuk]="barisUntuk(element).length > 0"
+      >
+        <!--
+          Menekan barisnya langsung menambah SATU baris ke dokumen. Tidak ada
+          tombol "Tambahkan" dan tidak ada keadaan mati: barang yang sama boleh
+          dipilih berkali-kali.
+        -->
+        <div class="baris__utama" (click)="tambahBaris(element)">
+          <div class="baris__teks">
+            <span class="baris__ref">{{ element.reference }}</span>
+            <span class="baris__desc">{{ element.description }}</span>
+
+            <!-- Rincian baris yang sudah masuk dokumen. -->
+            <span class="baris__rincian" *ngIf="barisUntuk(element).length > 0">
+              <span *ngFor="let b of barisUntuk(element); index as i">
+                {{ i > 0 ? " · " : "" }}{{ b.quantity || 0 | number: "0.0-2" }}
+                {{ b.unit }}
+              </span>
+            </span>
+          </div>
+
+          <span class="lencana" *ngIf="barisUntuk(element).length > 0">
+            {{ barisUntuk(element).length }}
+            {{ "product-selector__lines" | translate }}
+          </span>
+
+          <span class="baris__aksi">
+            <i class="ph ph-plus-circle" aria-hidden="true"></i>
+            <span *ngIf="barisUntuk(element).length > 0">
+              {{ "product-selector__another-line" | translate }}
+            </span>
+          </span>
+        </div>
+
+        <!--
+          Barang bersatuan lebih dari satu. Chip yang aktif menentukan satuan
+          baris BERIKUTNYA — bukan mengubah baris yang sudah masuk.
+        -->
         <div
-          class="item-selector__item-wrapper"
-          *ngFor="let element of dataSource"
+          class="satuan"
+          *ngIf="element.product_unit && element.product_unit.length > 0"
         >
-          <div class="item-selector__reference">{{ element.reference }}</div>
-          <div class="item-selector__description">
-            {{ element.description }}
-          </div>
-          <div class="item-selector__unit-wrapper">
-            <div
-              class="item-selector__unit"
-              (click)="selectData({ data: element, sub: null })"
-            >
-              <div class="item-selector__unit-icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                  <g
-                    id="SVGRepo_tracerCarrier"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></g>
-                  <g id="SVGRepo_iconCarrier">
-                    <path
-                      opacity="0.4"
-                      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                      fill="#5985e1"
-                    ></path>
-                    <path
-                      d="M16 11.25H12.75V8C12.75 7.59 12.41 7.25 12 7.25C11.59 7.25 11.25 7.59 11.25 8V11.25H8C7.59 11.25 7.25 11.59 7.25 12C7.25 12.41 7.59 12.75 8 12.75H11.25V16C11.25 16.41 11.59 16.75 12 16.75C12.41 16.75 12.75 16.41 12.75 16V12.75H16C16.41 12.75 16.75 12.41 16.75 12C16.75 11.59 16.41 11.25 16 11.25Z"
-                      fill="#5985e1"
-                    ></path>
-                  </g>
-                </svg>
-              </div>
-              <div class="item-selector__unit-text">{{ element.unit }}</div>
-            </div>
-            <div
-              (click)="selectData({ data: element, sub: data })"
-              class="item-selector__unit"
-              *ngFor="let data of element.product_unit"
-            >
-              <div class="item-selector__unit-icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                  <g
-                    id="SVGRepo_tracerCarrier"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></g>
-                  <g id="SVGRepo_iconCarrier">
-                    <path
-                      opacity="0.4"
-                      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                      fill="#5985e1"
-                    ></path>
-                    <path
-                      d="M16 11.25H12.75V8C12.75 7.59 12.41 7.25 12 7.25C11.59 7.25 11.25 7.59 11.25 8V11.25H8C7.59 11.25 7.25 11.59 7.25 12C7.25 12.41 7.59 12.75 8 12.75H11.25V16C11.25 16.41 11.59 16.75 12 16.75C12.41 16.75 12.75 16.41 12.75 16V12.75H16C16.41 12.75 16.75 12.41 16.75 12C16.75 11.59 16.41 11.25 16 11.25Z"
-                      fill="#5985e1"
-                    ></path>
-                  </g>
-                </svg>
-              </div>
-              <div class="item-selector__unit-text">
-                {{ data.unit }} ({{ data.conversion | number : "0.0-2" }}
-                {{ element.unit }})
-              </div>
-            </div>
-          </div>
+          <span
+            class="satuan__chip"
+            [class.satuan__chip--on]="satuanAktif(element) === null"
+            (click)="pilihSatuan(element, null)"
+          >
+            {{ element.unit }}
+          </span>
+          <span
+            class="satuan__chip"
+            *ngFor="let u of element.product_unit"
+            [class.satuan__chip--on]="satuanAktif(element)?.id === u.id"
+            (click)="pilihSatuan(element, u)"
+          >
+            {{ u.unit }}
+          </span>
+
+          <span class="satuan__konversi" *ngIf="satuanAktif(element) as aktif">
+            1 {{ aktif.unit }} = {{ aktif.conversion | number: "0.0-2" }}
+            {{ element.unit }}
+          </span>
         </div>
       </div>
     </div>
-    <div class="create-dialog__footer">
-      <mat-paginator
-        class="paginator"
-        [pageIndex]="page - 1"
-        [length]="dataCount"
-        [pageSize]="10"
-        (page)="changePage($event)"
-        aria-label="Select page"
-        hidePageSize="true"
-        *ngIf="!isLoading"
-      >
-      </mat-paginator>
+
+    <div class="kaki" *ngIf="dataCount > 0">
+      <span>{{ dataCount }} {{ "product-selector__found" | translate }}</span>
+      <span class="kaki__nav">
+        <button
+          type="button"
+          [disabled]="isLoading || page <= 1"
+          (click)="bukaHalaman(-1)"
+          [attr.aria-label]="'general__previous' | translate"
+        >
+          <i class="ph ph-caret-left" aria-hidden="true"></i>
+        </button>
+        <button
+          type="button"
+          [disabled]="isLoading || page >= halamanTerakhir"
+          (click)="bukaHalaman(1)"
+          [attr.aria-label]="'general__next' | translate"
+        >
+          <i class="ph ph-caret-right" aria-hidden="true"></i>
+        </button>
+      </span>
     </div>
-  </div>
+  </app-dialog-shell>
 </app-dynamic-dialog>
