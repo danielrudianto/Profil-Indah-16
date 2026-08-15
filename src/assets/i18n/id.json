@@ -1718,5 +1718,10 @@
   "product__type__add__example": "mis. Material",
   "product__brand__update__lede": "Perubahan nama langsung berlaku di seluruh barang yang memakainya.",
   "product__type__update__lede": "Perubahan nama langsung berlaku di seluruh barang yang memakainya.",
-  "product__type__update__submit": "Simpan perubahan"
+  "product__type__update__submit": "Simpan perubahan",
+  "good-receipt__lede": "Catatan barang masuk dari surat jalan supplier.",
+  "good-receipt__search": "Cari nomor, supplier, surat jalan…",
+  "good-receipt__back-to-archive": "Kembali ke arsip",
+  "general__filter": "Saring",
+  "general__view": "Lihat"
 }

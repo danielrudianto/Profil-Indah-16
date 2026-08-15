@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import moment from 'moment';
 import { ArchiveViewComponent } from 'src/app/components/archives/archive-view/archive-view.component';
 import { ArchiveMode } from 'src/app/components/archives/archives.component';
@@ -12,11 +11,9 @@ import { slideInOutAnimation } from '../../../animations/slide-in-out.animation'
 import { MatDialog } from '@angular/material/dialog';
 import { GoodReceiptViewComponent } from './good-receipt-view/good-receipt-view.component';
 import { ArchivesComponent } from '../../../components/archives/archives.component';
-import { ArchiveSearchComponent } from '../../../components/archives/archive-search/archive-search.component';
-import { MatIcon } from '@angular/material/icon';
-import { NgClass, NgIf, NgFor, DatePipe } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
+import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -24,20 +21,29 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './good-receipt-archive.component.html',
     styleUrls: ['./good-receipt-archive.component.scss'],
     animations: [slideInOutAnimation],
-    imports: [ArchivesComponent, ArchiveSearchComponent, MatIcon, NgClass, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DatePipe, TranslatePipe]
+    imports: [ArchivesComponent, NgIf, NgFor, DatePipe, TranslatePipe, ListPageComponent]
 })
 export class GoodReceiptArchiveComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
     private dynamicComponentService: DynamicComponentService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {}
 
   mode: ArchiveMode = ArchiveMode.year;
   dataSource: any[] = [];
   dataCount: number = 0;
   page: number = 1;
+  /*
+    Ukuran halaman ditentukan server lewat process.env.LIMIT dan tidak pernah
+    dikirim ke sini. Diturunkan dari banyaknya baris pada halaman pertama —
+    itu satu-satunya angka yang benar-benar diketahui peramban, dan dipakai
+    hanya untuk keterangan "1 – 10 dari 79" serta mematikan tombol maju di
+    halaman terakhir.
+  */
+  pageSize: number = 10;
   isLoading: boolean = false;
   month: number | null = null;
   year: number | null = null;
@@ -104,6 +110,9 @@ export class GoodReceiptArchiveComponent {
         next: (data: any) => {
           this.dataSource = data.data;
           this.dataCount = data.count;
+          if (this.page === 1 && data.data.length > 0) {
+            this.pageSize = data.data.length;
+          }
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -114,9 +123,16 @@ export class GoodReceiptArchiveComponent {
       });
   }
 
-  changePage(event: PageEvent) {
-    this.page = event.pageIndex + 1;
+  bukaHalaman(halaman: number) {
+    this.page = halaman;
     this.fetchSelectedMonth();
+  }
+
+  lacakPenerimaan = (_: number, item: any): number => item.id;
+
+  /* Formulir buat penerimaan adalah anak berjalur '' dari /Good-receipt. */
+  buatPenerimaan() {
+    this.router.navigate(['/Good-receipt']);
   }
 
   backToYear() {

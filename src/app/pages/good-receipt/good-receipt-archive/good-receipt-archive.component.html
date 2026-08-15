@@ -1,156 +1,101 @@
+<!--
+  Dua tahap, dan berkas desain hanya menggambar tahap keduanya: app-archives
+  memilih bulan lebih dulu, baru daftarnya muncul. Tahap pemilihan bulan
+  dipertahankan karena begitulah arsip bekerja di seluruh aplikasi ini.
+-->
 <app-archives
   [@slideInOutAnimation]="mode == 0 ? 'in' : 'out'"
   route="good-receipt"
   (onMonthSelected)="onMonthSelected($event)"
 />
 
-<div class="container" [@slideInOutAnimation]="mode == 1 ? 'in' : 'out'">
-  <div class="row">
-    <div class="col-12">
-      <div class="dashboard-card">
-        <app-archive-search
-          [isFilterAvailable]="true"
-          (onQueryChanged)="onQueryChanged($event)"
-          (onFilterButtonClicked)="openFilter()"
-        />
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th style="width: 250px" (click)="changeSortBy('date')">
-                  <div class="d-flex align-items-center">
-                    <span>{{ "good-receipt__archive__date" | translate }}</span>
-                    <mat-icon
-                      class="icon-display"
-                      [ngClass]="{
-                        asc: sortBy === 'date' && sortDirection === 'asc',
-                        desc: sortBy === 'date' && sortDirection === 'desc'
-                      }"
-                      >arrow_downward</mat-icon
-                    >
-                  </div>
-                </th>
-                <th style="width: 250px" (click)="changeSortBy('invoice-name')">
-                  <div class="d-flex align-items-center">
-                    <span>
-                      {{
-                        "good-receipt__archive__invoice-name" | translate
-                      }}</span
-                    >
-                    <mat-icon
-                      class="icon-display"
-                      [ngClass]="{
-                        asc:
-                          sortBy === 'invoice-name' && sortDirection === 'asc',
-                        desc:
-                          sortBy === 'invoice-name' && sortDirection === 'desc'
-                      }"
-                      >arrow_downward</mat-icon
-                    >
-                  </div>
-                </th>
-                <th style="width: 250px" (click)="changeSortBy('company')">
-                  <div class="d-flex align-items-center">
-                    <span>
-                      {{ "good-receipt__archive__company" | translate }}</span
-                    >
-                    <mat-icon
-                      class="icon-display"
-                      [ngClass]="{
-                        asc: sortBy === 'company' && sortDirection === 'asc',
-                        desc: sortBy === 'company' && sortDirection === 'desc'
-                      }"
-                      >arrow_downward</mat-icon
-                    >
-                  </div>
-                </th>
-                <th style="width: 250px" (click)="changeSortBy('name')">
-                  <div class="d-flex align-items-center">
-                    <span>
-                      {{ "good-receipt__archive__name" | translate }}</span
-                    >
-                    <mat-icon
-                      class="icon-display"
-                      [ngClass]="{
-                        asc: sortBy === 'name' && sortDirection === 'asc',
-                        desc: sortBy === 'name' && sortDirection === 'desc'
-                      }"
-                      >arrow_downward</mat-icon
-                    >
-                  </div>
-                </th>
-                <th style="width: 250px">
-                  {{ "good-receipt__archive__tax-invoice-name" | translate }}
-                </th>
-                <th style="width: 250px" (click)="changeSortBy('supplier')">
-                  <div class="d-flex align-items-center">
-                    <span>
-                      {{ "good-receipt__archive__supplier" | translate }}</span
-                    >
-                    <mat-icon
-                      class="icon-display"
-                      [ngClass]="{
-                        asc: sortBy === 'supplier' && sortDirection === 'asc',
-                        desc: sortBy === 'supplier' && sortDirection === 'desc'
-                      }"
-                      >arrow_downward</mat-icon
-                    >
-                  </div>
-                </th>
-                <th style="width: 100px">Status</th>
-              </tr>
-            </thead>
-            <tbody *ngIf="isLoading">
-              <tr>
-                <td colspan="6">
-                  <mat-spinner id="spinner"></mat-spinner>
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length == 0">
-              <tr>
-                <td colspan="6">
-                  <empty-table />
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr
-                *ngFor="let item of dataSource; index as i"
-                (click)="viewArchive(item.id)"
-              >
-                <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
-                <td>{{ item.invoice_name ?? "N/A" }}</td>
-                <td>{{ item.company.name }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.faktur == null ? "N/A" : item.faktur }}</td>
-                <td>{{ item.supplier.name }}</td>
-                <td>
-                  {{
-                    (item.is_delete
-                      ? "good-receipt__archive__status__deleted"
-                      : !item.is_confirm
-                      ? "good-receipt__archive__status__pending"
-                      : "good-receipt__archive__status__active"
-                    ) | translate
-                  }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="paginator__wrapper">
-          <button class="action-button p-relative" (click)="backToYear()">
-            {{ "general__archive__back-to-previous" | translate }}
-          </button>
-          <mat-paginator
-            [length]="dataCount"
-            [pageSize]="10"
-            [pageIndex]="page - 1"
-            (page)="changePage($event)"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
+<div [@slideInOutAnimation]="mode == 1 ? 'in' : 'out'">
+  <app-list-page
+    [heading]="'good-receipt__title' | translate"
+    [lede]="'good-receipt__lede' | translate"
+    [searchPlaceholder]="'good-receipt__search' | translate"
+    [addLabel]="'good-receipt__create' | translate"
+    [page]="page"
+    [pageSize]="pageSize"
+    [total]="dataCount"
+    [loading]="isLoading"
+    [showPageSize]="false"
+    (search)="onQueryChanged($event)"
+    (pageChange)="bukaHalaman($event)"
+    (add)="buatPenerimaan()"
+    (refresh)="fetchSelectedMonth()"
+  >
+    <!--
+      Kembali ke pilihan bulan dan penyaring diletakkan di slot aksi, sebelum
+      tombol bakunya — sesuai susunan pada berkas desain.
+    -->
+    <ng-container aksi>
+      <button type="button" class="aksi-hantu" (click)="backToYear()">
+        <i class="ph ph-arrow-u-up-left" aria-hidden="true"></i>
+        {{ 'good-receipt__back-to-archive' | translate }}
+      </button>
+
+      <button
+        type="button"
+        class="aksi-ikon"
+        (click)="openFilter()"
+        [title]="'general__filter' | translate"
+        [attr.aria-label]="'general__filter' | translate"
+      >
+        <i class="ph ph-funnel" aria-hidden="true"></i>
+      </button>
+    </ng-container>
+
+    <table class="tabel">
+      <thead>
+        <tr>
+          <th>{{ 'good-receipt__archive__date' | translate }}</th>
+          <th>{{ 'good-receipt__archive__name' | translate }}</th>
+          <th>{{ 'good-receipt__archive__supplier' | translate }}</th>
+          <th>{{ 'good-receipt__archive__company' | translate }}</th>
+          <th>{{ 'good-receipt__archive__invoice-name' | translate }}</th>
+          <th class="tabel__aksi-kepala">
+            <span class="sr-only">{{ 'general__actions' | translate }}</span>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody *ngIf="!isLoading && dataSource.length > 0">
+        <tr *ngFor="let item of dataSource; trackBy: lacakPenerimaan">
+          <td>{{ item.date | date: 'dd MMMM yyyy' }}</td>
+          <td class="tabel__utama">{{ item.name }}</td>
+          <td>{{ item.supplier?.name }}</td>
+          <td>{{ item.company?.name }}</td>
+          <td class="tabel__redup">{{ item.invoice_name ?? '—' }}</td>
+          <td class="tabel__aksi">
+            <button
+              type="button"
+              class="tabel__aksi-btn"
+              (click)="viewArchive(item.id)"
+              [title]="'general__view' | translate"
+              [attr.aria-label]="'general__view' | translate"
+            >
+              <i class="ph ph-eye" aria-hidden="true"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+
+      <tbody *ngIf="isLoading">
+        <tr>
+          <td colspan="6" class="tabel__pesan">
+            {{ 'general__loading' | translate }}
+          </td>
+        </tr>
+      </tbody>
+
+      <tbody *ngIf="!isLoading && dataSource.length === 0">
+        <tr>
+          <td colspan="6" class="tabel__pesan">
+            {{ 'general__no-data' | translate }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </app-list-page>
 </div>

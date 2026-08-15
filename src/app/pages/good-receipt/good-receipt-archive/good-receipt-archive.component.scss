@@ -1,35 +1,56 @@
-.table {
-  display: block;
-  overflow-x: auto;
-  white-space: nowrap;
-}
+/*
+  Tombol pada slot aksi app-list-page.
 
-tr {
-  cursor: pointer;
-}
+  Ditulis di sini, bukan di komponen daftarnya: isi yang disalurkan lewat
+  ng-content tetap memakai lingkup gaya komponen yang MENULISKANNYA, bukan
+  komponen yang menampungnya.
+*/
 
-.paginator__wrapper {
-  display: flex;
-  justify-content: space-between;
+.aksi-hantu,
+.aksi-ikon {
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  i {
+    font-size: 15px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
 }
 
-.action-button {
-  position: relative;
-  float: none;
+.aksi-hantu {
+  padding: 0 12px;
+  color: var(--color-accent);
+  background: transparent;
+  border: 0;
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
 }
 
-.icon-display {
-  transform: scale(0.75);
-  opacity: 0.2;
-}
+.aksi-ikon {
+  width: 44px;
+  padding: 0;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  background: transparent;
+  border: 1px solid var(--color-divider);
 
-.icon-display.asc {
-  transform: rotate(180deg) scale(0.75);
-  opacity: 1;
-}
-
-.icon-display.desc {
-  transform: rotate(0) scale(0.75);
-  opacity: 1;
+  &:hover {
+    color: var(--color-text);
+    border-color: color-mix(in srgb, var(--color-text) 30%, transparent);
+  }
 }

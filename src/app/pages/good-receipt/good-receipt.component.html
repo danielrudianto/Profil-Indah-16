@@ -1,14 +1,9 @@
-<app-feature-background />
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <app-transaction-header
-        [title]="'good-receipt__title' | translate"
-        [availbleMenus]="availbleMenus"
-        route="Good-receipt"
-        
-      />
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-</div>
+<!--
+  Shell penerimaan barang.
+
+  app-feature-background dan app-transaction-header dilepas: latar dekoratif
+  birunya menutupi seluruh halaman dan tidak ada hubungannya dengan token
+  Nocturne, sedangkan judul beserta pindah-halamannya kini dipegang
+  app-list-page di tiap halaman anak.
+-->
+<router-outlet />

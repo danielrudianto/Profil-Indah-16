@@ -1712,5 +1712,10 @@
   "product__type__add__example": "e.g. Material",
   "product__brand__update__lede": "Renaming applies at once to every product using it.",
   "product__type__update__lede": "Renaming applies at once to every product using it.",
-  "product__type__update__submit": "Save changes"
+  "product__type__update__submit": "Save changes",
+  "good-receipt__lede": "Goods received from supplier delivery notes.",
+  "good-receipt__search": "Search number, supplier, delivery note…",
+  "good-receipt__back-to-archive": "Back to archive",
+  "general__filter": "Filter",
+  "general__view": "View"
 }

@@ -1,25 +1,15 @@
 import { Component } from '@angular/core';
-import { FeatureBackgroundComponent } from '../../components/feature-background/feature-background.component';
-import { TransactionHeaderComponent } from '../../components/transaction-header/transaction-header.component';
 import { RouterOutlet } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
 
+/**
+ * Shell penerimaan barang — kini hanya penampung rute anaknya.
+ *
+ * Judul, pencarian, dan perpindahan antara daftar dan formulir dipegang
+ * app-list-page di masing-masing halaman anak, sesuai berkas desain.
+ */
 @Component({
-    selector: 'app-good-receipt',
-    templateUrl: './good-receipt.component.html',
-    imports: [FeatureBackgroundComponent, TransactionHeaderComponent, RouterOutlet, TranslatePipe]
+  selector: 'app-good-receipt',
+  templateUrl: './good-receipt.component.html',
+  imports: [RouterOutlet],
 })
-export class GoodReceiptComponent {
-  availbleMenus = [
-    {
-      label: 'good-receipt__archive',
-      link: 'Archive',
-      icon: 'folder',
-    },
-    {
-      label: 'good-receipt__create',
-      link: '',
-      icon: 'add',
-    },
-  ];
-}
+export class GoodReceiptComponent {}
