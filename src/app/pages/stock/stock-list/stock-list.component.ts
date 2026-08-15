@@ -1,39 +1,37 @@
-import { Component } from '@angular/core';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
-import { AuthService } from 'src/app/services/auth.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { Component, OnInit } from '@angular/core';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { StockListReportComponent } from '../stock-list-report/stock-list-report.component';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime } from 'rxjs';
-import { ApiService } from 'src/app/services/api.service';
-import { AlertService } from 'src/app/services/alert.service';
-import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
-import { FeatureHeaderComponent } from '../../../components/feature-header/feature-header.component';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { NgIf, NgFor, DecimalPipe } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
+import { StockListReportComponent } from '../stock-list-report/stock-list-report.component';
+
+/**
+ * Daftar stok.
+ *
+ * KEADAANNYA HIDUP DI QUERY PARAM, bukan di dalam komponen ini. Itu bukan
+ * kerumitan yang tersisa dari versi lama, melainkan yang membuat kartu stok
+ * bisa ditutup dan pengguna kembali ke halaman, kata kunci, dan nomor halaman
+ * yang sama persis. Maka setiap perubahan pencarian atau halaman menavigasi
+ * lebih dulu, dan pengambilan datanya dipicu oleh queryParams — bukan
+ * dipanggil langsung dari penanganan tombolnya.
+ */
 @Component({
-    selector: 'app-stock-list',
-    templateUrl: './stock-list.component.html',
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatIconButton, MatIcon, MatPaginator, DecimalPipe, TranslatePipe]
+  selector: 'app-stock-list',
+  templateUrl: './stock-list.component.html',
+  styleUrls: ['./stock-list.component.scss'],
+  imports: [ListPageComponent, NgIf, NgFor, DecimalPipe, TranslatePipe],
 })
-export class StockListComponent {
+export class StockListComponent implements OnInit {
   constructor(
-    private authService: AuthService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private dialog: MatDialog,
     private route: ActivatedRoute,
+    private dialog: MatDialog,
     private apiService: ApiService,
-    private alertService: AlertService
+    private alertService: AlertService,
   ) {}
 
   isLoading: boolean = true;
@@ -41,50 +39,73 @@ export class StockListComponent {
   dataCount: number = 0;
   page: number = 1;
   pageSize: number = 10;
-  previousRoute: string = '';
-  isAdministrator: boolean = false;
-
-  searchFormGroup: FormGroup = new FormGroup({
-    searchBar: new FormControl(''),
-  });
+  kataKunci: string = '';
 
   ngOnInit(): void {
-    this.isAdministrator = this.authService.isAdministrator();
-
-    this.activatedRoute.queryParams.subscribe(() => {
+    this.route.queryParams.subscribe(() => {
       this.fetchProducts();
     });
+  }
 
-    const page = this.route.snapshot.queryParams['page'] ?? 1;
-    const pageSize = this.route.snapshot.queryParams['pageSize'] ?? 10;
-    const keyword = this.route.snapshot.queryParams['keyword'] ?? '';
+  fetchProducts() {
+    this.isLoading = true;
 
-    this.searchFormGroup.patchValue(
-      {
-        searchBar: keyword,
-      },
-      {
-        emitEvent: false,
-      }
-    );
+    const q = this.route.snapshot.queryParams;
+    this.page = Number(q['page'] ?? 1);
+    this.pageSize = Number(q['pageSize'] ?? 10);
+    this.kataKunci = q['keyword'] ?? '';
 
-    this.page = page;
-    this.pageSize = pageSize;
-
-    this.searchFormGroup.controls['searchBar'].valueChanges
-      .pipe(debounceTime(500))
-      .subscribe(() => {
-        this.router.navigate([], {
-          relativeTo: this.activatedRoute,
-          queryParams: {
-            keyword: this.searchFormGroup.controls['searchBar'].value,
-            page: 1,
-            pageSize: this.pageSize,
-          },
-          queryParamsHandling: 'merge',
-        });
+    this.apiService
+      .get('product-stock', {
+        page: this.page,
+        pageSize: this.pageSize,
+        keyword: this.kataKunci,
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.dataSource = data.data;
+          this.dataCount = data.count;
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
       });
   }
+
+  cari(kata: string) {
+    this.navigasi({ keyword: kata, page: 1, pageSize: this.pageSize });
+  }
+
+  bukaHalaman(halaman: number) {
+    this.navigasi({
+      keyword: this.kataKunci,
+      page: halaman,
+      pageSize: this.pageSize,
+    });
+  }
+
+  gantiUkuran(ukuran: number) {
+    /* Kembali ke halaman satu: halaman 7 dari 10 baris tidak ada isinya lagi
+       ketika ukurannya menjadi 50. */
+    this.navigasi({ keyword: this.kataKunci, page: 1, pageSize: ukuran });
+  }
+
+  private navigasi(queryParams: {
+    keyword: string;
+    page: number;
+    pageSize: number;
+  }) {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  lacakBarang = (_: number, item: any): number => item.id;
 
   openDialog(dialogType: string, id: number) {
     if (dialogType == 'mutation') {
@@ -105,61 +126,5 @@ export class StockListComponent {
         },
       });
     }
-  }
-
-  changePage(event: PageEvent) {
-    if (event.pageSize == this.pageSize) {
-      this.page = event.pageIndex + 1;
-      this.router.navigate([], {
-        relativeTo: this.activatedRoute,
-        queryParams: {
-          keyword: this.searchFormGroup.controls['searchBar'].value,
-          page: event.pageIndex + 1,
-          pageSize: this.pageSize,
-        },
-        queryParamsHandling: 'merge',
-      });
-    } else {
-      this.pageSize = event.pageSize;
-      this.router.navigate([], {
-        relativeTo: this.activatedRoute,
-        queryParams: {
-          keyword: this.searchFormGroup.controls['searchBar'].value,
-          page: 1,
-          pageSize: this.pageSize,
-        },
-        queryParamsHandling: 'merge',
-      });
-    }
-  }
-
-  fetchProducts() {
-    this.isLoading = true;
-
-    const page = this.route.snapshot.queryParams['page'] ?? 1;
-    const pageSize = this.route.snapshot.queryParams['pageSize'] ?? 10;
-    const keyword = this.route.snapshot.queryParams['keyword'] ?? '';
-
-    this.page = page;
-    this.pageSize = pageSize;
-
-    this.apiService
-      .get('product-stock', {
-        page: Number(page),
-        pageSize: Number(pageSize),
-        keyword: keyword,
-      })
-      .subscribe({
-        next: (data: any) => {
-          this.dataSource = data.data;
-          this.dataCount = data.count;
-        },
-        error: (error) => {
-          this.alertService.showError(error);
-        },
-      })
-      .add(() => {
-        this.isLoading = false;
-      });
   }
 }

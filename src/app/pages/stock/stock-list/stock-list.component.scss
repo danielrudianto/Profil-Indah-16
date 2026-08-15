@@ -1,0 +1,16 @@
+/*
+  Tabelnya ditulis di sini lalu disalurkan ke app-list-page lewat ng-content,
+  jadi gaya ini tetap berlaku: isi yang diproyeksikan memakai lingkup gaya
+  komponen yang MENULISKANNYA, bukan komponen yang menampungnya.
+*/
+
+/*
+  Satuan diredupkan supaya angkanya yang terbaca lebih dulu. Ia tetap perlu
+  ada — "12" tanpa satuan bukan jawaban ketika satu barang bisa dihitung per
+  batang sekaligus per box.
+*/
+.stok__satuan {
+  margin-left: 4px;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+}

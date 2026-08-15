@@ -1,99 +1,90 @@
-<app-feature-background />
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <app-feature-header
-        [title]="'stock-list__title' | translate"
-        [help]="null"
-        [isBackAvailable]="true"
-      ></app-feature-header>
-      <div class="dashboard-card">
-        <form [formGroup]="searchFormGroup">
-          <div class="d-flex">
-            <mat-form-field class="w-100" appearance="outline">
-              <mat-label>{{ "general__search-bar" | translate }}</mat-label>
-              <input
-                matInput
-                #searchBar
-                placeholder="Search item by its reference or description"
-                formControlName="searchBar"
-                [readonly]="isLoading"
-              />
-            </mat-form-field>
-          </div>
-        </form>
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th class="text-center">
-                  {{ "product__reference" | translate }}
-                </th>
-                <th class="text-center">
-                  {{ "product__description" | translate }}
-                </th>
-                <th class="text-center">{{ "product__brand" | translate }}</th>
-                <th class="text-center">{{ "product__stock" | translate }}</th>
-                <th class="text-center">{{ "product__action" | translate }}</th>
-              </tr>
-            </thead>
-            <tbody *ngIf="isLoading">
-              <tr>
-                <td colspan="5">
-                  <div class="py-4">
-                    <mat-spinner id="spinner"></mat-spinner>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length == 0">
-              <tr>
-                <td colspan="5">
-                  <empty-table />
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr *ngFor="let item of dataSource">
-                <td class="text-center">{{ item.reference }}</td>
-                <td class="text-center">
-                  <div class="text-clamp-2">
-                    {{ item.description }}
-                  </div>
-                </td>
-                <td class="text-center">{{ item.product_brand.name }}</td>
-                <td class="text-center">
-                  {{ item.product_stock.stock | number : "0.0-2" }}&nbsp;{{
-                    item.unit
-                  }}
-                </td>
-                <td class="text-nowrap text-center">
-                  <button mat-icon-button (click)="openDialog('card', item.id)">
-                    <mat-icon>view_list</mat-icon>
-                  </button>
-                  <button
-                    mat-icon-button
-                    (click)="openDialog('mutation', item.id)"
-                  >
-                    <mat-icon>swap_horiz</mat-icon>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <mat-paginator
-          class="paginator"
-          [pageIndex]="page - 1"
-          [length]="dataCount"
-          [pageSize]="pageSize"
-          [pageSizeOptions]="[10, 25, 50]"
-          (page)="changePage($event)"
-          aria-label="Select page"
-          *ngIf="!isLoading"
-        >
-        </mat-paginator>
-      </div>
-    </div>
-  </div>
-</div>
+<!--
+  Daftar stok.
+
+  Tidak ada tombol tambah: baris di sini tidak dibuat orang, ia muncul sendiri
+  mengikuti barang yang ada. Yang bisa dilakukan hanya melihat kartu dan
+  mutasinya — maka addLabel sengaja tidak diisi, dan app-list-page tidak
+  menggambar tombolnya sama sekali.
+-->
+<app-list-page
+  [heading]="'stock-list__title' | translate"
+  [lede]="'stock-list__lede' | translate"
+  [searchPlaceholder]="'stock-list__search' | translate"
+  [keyword]="kataKunci"
+  [page]="page"
+  [pageSize]="pageSize"
+  [total]="dataCount"
+  [loading]="isLoading"
+  (search)="cari($event)"
+  (pageChange)="bukaHalaman($event)"
+  (pageSizeChange)="gantiUkuran($event)"
+  (refresh)="fetchProducts()"
+>
+  <table class="tabel">
+    <thead>
+      <tr>
+        <th>{{ 'product__reference' | translate }}</th>
+        <th>{{ 'product__description' | translate }}</th>
+        <th>{{ 'product__brand' | translate }}</th>
+        <th class="tabel__nilai-kepala">
+          {{ 'product__stock' | translate }}
+        </th>
+        <th class="tabel__aksi-kepala">
+          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!isLoading && dataSource.length > 0">
+      <tr *ngFor="let item of dataSource; trackBy: lacakBarang">
+        <td class="tabel__utama">{{ item.reference }}</td>
+        <td class="tabel__redup">{{ item.description }}</td>
+        <td>{{ item.product_brand?.name }}</td>
+        <td class="tabel__nilai">
+          {{ item.product_stock?.stock ?? 0 | number: '0.0-2' }}
+          <span class="stok__satuan">{{ item.unit }}</span>
+        </td>
+        <td class="tabel__aksi">
+          <!--
+            Dua tindakan saja, jadi ditulis berdampingan tanpa menu: menu
+            bertingkat untuk dua pilihan justru menambah satu ketukan.
+          -->
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="openDialog('card', item.id)"
+            [title]="'stock-list__card' | translate"
+            [attr.aria-label]="'stock-list__card' | translate"
+          >
+            <i class="ph ph-list-magnifying-glass" aria-hidden="true"></i>
+          </button>
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="openDialog('mutation', item.id)"
+            [title]="'stock-list__mutation' | translate"
+            [attr.aria-label]="'stock-list__mutation' | translate"
+          >
+            <i class="ph ph-arrows-left-right" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="isLoading">
+      <tr>
+        <td colspan="5" class="tabel__pesan">
+          {{ 'general__loading' | translate }}
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="!isLoading && dataSource.length === 0">
+      <tr>
+        <td colspan="5" class="tabel__pesan">
+          {{ 'general__no-data' | translate }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</app-list-page>

@@ -1797,5 +1797,9 @@
   "sales-invoice__status__active": "Aktif",
   "sales-invoice__status__deleted": "Dihapus",
   "sales-invoice__filter__clear": "Hapus semua",
-  "sales-invoice__retail": "Retail"
+  "sales-invoice__retail": "Retail",
+  "stock-list__lede": "Sisa stok tiap barang beserta kartu dan mutasinya.",
+  "stock-list__search": "Cari referensi atau deskripsi barang…",
+  "stock-list__card": "Kartu stok",
+  "stock-list__mutation": "Mutasi stok"
 }

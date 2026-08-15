@@ -1791,5 +1791,9 @@
   "sales-invoice__status__active": "Active",
   "sales-invoice__status__deleted": "Deleted",
   "sales-invoice__filter__clear": "Clear all",
-  "sales-invoice__retail": "Retail"
+  "sales-invoice__retail": "Retail",
+  "stock-list__lede": "Remaining stock per item, with its card and mutations.",
+  "stock-list__search": "Search item reference or description…",
+  "stock-list__card": "Stock card",
+  "stock-list__mutation": "Stock mutation"
 }

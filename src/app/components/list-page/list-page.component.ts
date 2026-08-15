@@ -57,6 +57,25 @@ export class ListPageComponent implements OnInit {
   /** Label tombol tambah. Kosong berarti halaman ini tidak punya tombol itu. */
   @Input() addLabel = '';
 
+  /**
+   * Kata kunci awal kotak pencarian.
+   *
+   * Dipakai daftar yang menyimpan pencariannya di query param: begitu halaman
+   * dibuka lewat tautan atau ditinggalkan lalu ditengok kembali, kotaknya harus
+   * menunjukkan kata kunci yang sedang menyaring daftarnya. Tanpa ini, kotaknya
+   * kosong sementara daftarnya tersaring — dan yang terbaca adalah data hilang.
+   *
+   * DITULIS TANPA MEMICU PERISTIWA. Kalau valueChanges ikut menyala, ia
+   * memancarkan search, halamannya menavigasi, query param-nya berubah, dan
+   * nilainya kembali ke sini — berputar tanpa henti.
+   */
+  @Input() set keyword(nilai: string | null | undefined) {
+    const baru = nilai ?? '';
+    if ((this.searchControl.value ?? '') !== baru) {
+      this.searchControl.setValue(baru, { emitEvent: false });
+    }
+  }
+
   @Input() page = 1;
   @Input() pageSize = 10;
   @Input() total = 0;
