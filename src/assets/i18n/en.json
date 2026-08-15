@@ -243,7 +243,7 @@
   "sales-invoice__title": "Sales Invoice / bill",
   "sales-invoice__archive": "Archive",
   "sales-invoice__archive__view__delete__title": "Are you sure to delete this sales invoice data?",
-  "sales-invoice__create": "Create",
+  "sales-invoice__create": "Create invoice",
   "sales-invoice__create__customer": "Customer",
   "sales-invoice__create__add-item": "Add item",
   "purchase-invoice__title": "Purchase Invoice",
@@ -1781,5 +1781,15 @@
   "good-receipt__create__add-item-short": "Add product",
   "good-receipt__state__do__desk": "Goods have arrived, the supplier invoice has not.",
   "good-receipt__state__full__desk": "The supplier invoice is in hand — fill it in now.",
-  "good-receipt__new": "New goods receipt"
+  "good-receipt__new": "New goods receipt",
+  "sales-invoice__lede": "Invoices with their customer, salesperson, and payment state.",
+  "sales-invoice__search": "Search invoice number, customer, or salesperson…",
+  "sales-invoice__back-to-archive": "Back to archive",
+  "sales-invoice__archive__total": "Total",
+  "sales-invoice__status__paid": "Paid",
+  "sales-invoice__status__unpaid": "Unpaid",
+  "sales-invoice__status__active": "Active",
+  "sales-invoice__status__deleted": "Deleted",
+  "sales-invoice__filter__clear": "Clear all",
+  "sales-invoice__retail": "Retail"
 }

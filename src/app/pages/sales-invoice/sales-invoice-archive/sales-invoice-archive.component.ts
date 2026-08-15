@@ -1,34 +1,48 @@
 import { Component } from '@angular/core';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
+import { FormControl, FormGroup } from '@angular/forms';
+import { NgIf, NgFor, NgClass, DatePipe, DecimalPipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
+import moment from 'moment';
+
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { ArchiveMode } from 'src/app/components/archives/archives.component';
+import { ArchivesComponent } from 'src/app/components/archives/archives.component';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { SalesInvoiceArchiveFilterComponent } from './sales-invoice-archive-filter/sales-invoice-archive-filter.component';
-import { FormControl, FormGroup } from '@angular/forms';
-import moment from 'moment';
-import { MatDialog } from '@angular/material/dialog';
 import { SalesInvoiceViewComponent } from './sales-invoice-view/sales-invoice-view.component';
-import { ArchivesComponent } from '../../../components/archives/archives.component';
-import { ArchiveSearchComponent } from '../../../components/archives/archive-search/archive-search.component';
-import { MatIcon } from '@angular/material/icon';
-import { NgClass, NgIf, NgFor, DatePipe } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { TranslatePipe } from '@ngx-translate/core';
 
+/**
+ * Daftar faktur penjualan — bagian `4a` berkas desain.
+ *
+ * Susunannya mengikuti daftar penerimaan barang: app-list-page memegang judul,
+ * pencarian, tombol buat, dan paginasi; yang khusus untuk halaman ini hanya
+ * disalurkan ke slot aksi dan badan tabelnya.
+ */
 @Component({
-    selector: 'app-sales-invoice-archive',
-    templateUrl: './sales-invoice-archive.component.html',
-    styleUrls: ['./sales-invoice-archive.component.scss'],
-    animations: [slideInOutAnimation],
-    imports: [ArchivesComponent, ArchiveSearchComponent, MatIcon, NgClass, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DatePipe, TranslatePipe]
+  selector: 'app-sales-invoice-archive',
+  templateUrl: './sales-invoice-archive.component.html',
+  animations: [slideInOutAnimation],
+  imports: [
+    ArchivesComponent,
+    ListPageComponent,
+    NgIf,
+    NgFor,
+    NgClass,
+    DatePipe,
+    DecimalPipe,
+    TranslatePipe,
+  ],
 })
 export class SalesInvoiceArchiveComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router,
   ) {}
 
   mode: ArchiveMode = ArchiveMode.year;
@@ -40,6 +54,7 @@ export class SalesInvoiceArchiveComponent {
   month: number | null = null;
   year: number | null = null;
   keyword: string = '';
+
   filterFormGroup: FormGroup = new FormGroup({
     startDate: new FormControl(''),
     endDate: new FormControl(''),
@@ -52,8 +67,6 @@ export class SalesInvoiceArchiveComponent {
   sortBy: string = 'date';
   sortDirection: 'asc' | 'desc' = 'desc';
 
-  ngOnInit(): void {}
-
   onMonthSelected(event: any) {
     this.mode = ArchiveMode.month;
     this.month = event.month;
@@ -62,8 +75,6 @@ export class SalesInvoiceArchiveComponent {
     this.pageSize = 10;
 
     this.filterFormGroup.patchValue({
-      // Start date from first day of the month till the end of month
-      // Fetch all payment status and document status
       startDate: new Date(this.year!, this.month! - 1, 1),
       endDate: new Date(this.year!, this.month!, 0),
       isPaid: true,
@@ -86,12 +97,11 @@ export class SalesInvoiceArchiveComponent {
         page: this.page,
         pageSize: this.pageSize,
         keyword: this.keyword,
-        // Convert to DD-MM-YYYY
         startDate: moment(
-          new Date(this.filterFormGroup.get('startDate')?.value)
+          new Date(this.filterFormGroup.get('startDate')?.value),
         ).format('YYYY-MM-DD'),
         endDate: moment(
-          new Date(this.filterFormGroup.get('endDate')?.value)
+          new Date(this.filterFormGroup.get('endDate')?.value),
         ).format('YYYY-MM-DD'),
         isPaid: this.filterFormGroup.get('isPaid')?.value,
         isUnpaid: this.filterFormGroup.get('isUnpaid')?.value,
@@ -114,14 +124,127 @@ export class SalesInvoiceArchiveComponent {
       });
   }
 
-  changePage(event: PageEvent) {
-    if (event.pageSize != this.pageSize) {
-      this.pageSize = event.pageSize;
-      this.fetchSelectedMonth(1);
-    } else {
-      this.page = event.pageIndex + 1;
-      this.fetchSelectedMonth();
+  /**
+   * Saringan yang sedang aktif, sebagai kapsul yang bisa dilepas satu-satu.
+   *
+   * SATU TEMPAT MENYATAKAN KEBENARAN. Chip "belum lunas" dan dialog saringan
+   * sama-sama menulis ke filterFormGroup, dan daftar ini dibaca dari sana —
+   * bukan dari keadaan tombolnya masing-masing. Tanpa itu, cepat atau lambat
+   * ada keadaan chip menyala sementara dialog menyatakan tidak ada saringan
+   * aktif, dan yang bingung pemakainya.
+   */
+  get kapsul(): { kunci: string; teks: string }[] {
+    const v = this.filterFormGroup.value;
+    const hasil: { kunci: string; teks: string }[] = [];
+
+    if (v.startDate && v.endDate) {
+      const dari = moment(new Date(v.startDate)).format('D MMM');
+      const sampai = moment(new Date(v.endDate)).format('D MMM YYYY');
+      hasil.push({ kunci: 'tanggal', teks: `${dari} – ${sampai}` });
     }
+
+    /*
+      Keduanya menyala berarti tidak ada yang disaring — itu keadaan bawaannya,
+      bukan pilihan, jadi tidak perlu dikapsulkan. Keadaan dokumen dan keadaan
+      pembayaran dinilai terpisah karena memang dua saringan yang berbeda.
+    */
+    if (!(v.isActive && v.isDelete)) {
+      if (v.isActive) hasil.push({ kunci: 'aktif', teks: 'Aktif' });
+      if (v.isDelete) hasil.push({ kunci: 'dihapus', teks: 'Dihapus' });
+    }
+
+    if (!(v.isPaid && v.isUnpaid)) {
+      if (v.isPaid) hasil.push({ kunci: 'lunas', teks: 'Lunas' });
+      if (v.isUnpaid) hasil.push({ kunci: 'belum-lunas', teks: 'Belum lunas' });
+    }
+
+    return hasil;
+  }
+
+  /** Benar bila daftar sedang tersaring hanya pada yang belum lunas. */
+  get hanyaBelumLunas(): boolean {
+    const v = this.filterFormGroup.value;
+    return !!v.isUnpaid && !v.isPaid;
+  }
+
+  /**
+   * Chip pintas. Menyalakannya menyaring ke yang belum lunas saja;
+   * mematikannya mengembalikan keduanya — bukan mengosongkan semuanya, karena
+   * kosong berarti tidak ada baris yang lolos.
+   */
+  toggleBelumLunas(): void {
+    const nyala = this.hanyaBelumLunas;
+    this.filterFormGroup.patchValue({
+      isPaid: nyala,
+      isUnpaid: true,
+    });
+    this.fetchSelectedMonth(1);
+  }
+
+  lepasKapsul(kunci: string): void {
+    if (kunci === 'tanggal') {
+      this.filterFormGroup.patchValue({
+        startDate: new Date(this.year!, this.month! - 1, 1),
+        endDate: new Date(this.year!, this.month!, 0),
+      });
+    } else if (kunci === 'aktif') {
+      this.filterFormGroup.patchValue({ isActive: false });
+    } else if (kunci === 'dihapus') {
+      this.filterFormGroup.patchValue({ isDelete: false });
+    } else if (kunci === 'lunas') {
+      this.filterFormGroup.patchValue({ isPaid: false });
+    } else if (kunci === 'belum-lunas') {
+      this.filterFormGroup.patchValue({ isUnpaid: false });
+    }
+
+    this.pastikanAdaYangLolos();
+    this.fetchSelectedMonth(1);
+  }
+
+  hapusSemuaSaringan(): void {
+    this.filterFormGroup.patchValue({
+      startDate: new Date(this.year!, this.month! - 1, 1),
+      endDate: new Date(this.year!, this.month!, 0),
+      isPaid: true,
+      isUnpaid: true,
+      isActive: true,
+      isDelete: true,
+    });
+    this.fetchSelectedMonth(1);
+  }
+
+  /*
+    Melepas kapsul terakhir bisa mematikan kedua sisi sebuah saringan, dan itu
+    berarti tidak ada satu pun baris yang lolos — daftar kosong yang terbaca
+    seperti data hilang. Tiap pasang dikembalikan sendiri-sendiri.
+  */
+  private pastikanAdaYangLolos(): void {
+    const v = this.filterFormGroup.value;
+
+    if (!v.isActive && !v.isDelete) {
+      this.filterFormGroup.patchValue({ isActive: true, isDelete: true });
+    }
+
+    if (!v.isPaid && !v.isUnpaid) {
+      this.filterFormGroup.patchValue({ isPaid: true, isUnpaid: true });
+    }
+  }
+
+  bukaHalaman(halaman: number) {
+    this.page = halaman;
+    this.fetchSelectedMonth();
+  }
+
+  ubahUkuranHalaman(ukuran: number) {
+    this.pageSize = ukuran;
+    this.fetchSelectedMonth(1);
+  }
+
+  lacakFaktur = (_: number, item: any): number => item.id;
+
+  /** Formulir buat faktur adalah anak berjalur '' dari /Sales-invoice. */
+  buatFaktur() {
+    this.router.navigate(['/Sales-invoice']);
   }
 
   backToYear() {
@@ -135,6 +258,20 @@ export class SalesInvoiceArchiveComponent {
     this.fetchSelectedMonth(1);
   }
 
+  /**
+   * Ikon arah urutan untuk sebuah kolom.
+   *
+   * Kolom yang tidak sedang mengurutkan tetap memakai ikon, hanya yang redup —
+   * itu yang memberi tahu kolomnya bisa diurutkan sebelum ditekan sekali pun.
+   */
+  ikonUrut(kolom: string): string {
+    if (this.sortBy !== kolom) {
+      return 'ph-caret-up-down tabel__urut-redup';
+    }
+
+    return this.sortDirection === 'asc' ? 'ph-caret-up' : 'ph-caret-down';
+  }
+
   openFilter() {
     this.dialog
       .open(SalesInvoiceArchiveFilterComponent, {
@@ -146,9 +283,16 @@ export class SalesInvoiceArchiveComponent {
       })
       .afterClosed()
       .subscribe((data) => {
-        // Check if it is the same
-        const change = this.checkChanges(data);
-        if (change) {
+        /*
+          Dialog yang ditutup lewat Batal atau tekan latar tidak mengembalikan
+          apa-apa. Tanpa penjagaan ini, checkChanges membaca properti dari
+          undefined dan saringannya ikut hangus.
+        */
+        if (data == null) {
+          return;
+        }
+
+        if (this.checkChanges(data)) {
           this.filterFormGroup.patchValue(data);
           this.fetchSelectedMonth(1);
         }
@@ -156,49 +300,19 @@ export class SalesInvoiceArchiveComponent {
   }
 
   private checkChanges(data: any) {
-    const isPaid = data.isPaid;
-    const isUnpaid = data.isUnpaid;
-    const isActive = data.isActive;
-    const isDelete = data.isDelete;
+    const lama = this.filterFormGroup.value;
 
-    const maxDate = data.endDate;
-    const minDate = data.startDate;
+    if (data.isPaid != lama.isPaid) return true;
+    if (data.isUnpaid != lama.isUnpaid) return true;
+    if (data.isActive != lama.isActive) return true;
+    if (data.isDelete != lama.isDelete) return true;
 
-    const existingIsPaid = this.filterFormGroup.value.isPaid;
-    const existingIsUnpaid = this.filterFormGroup.value.isUnpaid;
-    const existingIsActive = this.filterFormGroup.value.isActive;
-    const existingIsDelete = this.filterFormGroup.value.isDelete;
+    if (new Date(lama.startDate).getTime() != new Date(data.startDate).getTime())
+      return true;
+    if (new Date(lama.endDate).getTime() != new Date(data.endDate).getTime())
+      return true;
 
-    const existingMinDate = this.filterFormGroup.value.startDate;
-    const existingMaxDate = this.filterFormGroup.value.endDate;
-
-    let response = false;
-
-    if (isPaid != existingIsPaid) {
-      response = true;
-    }
-
-    if (isUnpaid != existingIsUnpaid) {
-      response = true;
-    }
-
-    if (isActive != existingIsActive) {
-      response = true;
-    }
-
-    if (isDelete != existingIsDelete) {
-      response = true;
-    }
-
-    if (existingMinDate.getTime() != minDate.getTime()) {
-      response = true;
-    }
-
-    if (existingMaxDate.getTime() != maxDate.getTime()) {
-      response = true;
-    }
-
-    return response;
+    return false;
   }
 
   changeSortBy(field: string) {
@@ -207,11 +321,7 @@ export class SalesInvoiceArchiveComponent {
     }
 
     if (this.sortBy == field) {
-      if (this.sortDirection == 'asc') {
-        this.sortDirection = 'desc';
-      } else {
-        this.sortDirection = 'asc';
-      }
+      this.sortDirection = this.sortDirection == 'asc' ? 'desc' : 'asc';
     } else {
       this.sortBy = field;
       this.sortDirection = 'asc';
@@ -231,10 +341,11 @@ export class SalesInvoiceArchiveComponent {
       })
       .afterClosed()
       .subscribe((data) => {
-        switch (data) {
-          case 'deleted':
-            const index = this.dataSource.findIndex((x) => x.id == id);
+        if (data === 'deleted') {
+          const index = this.dataSource.findIndex((x) => x.id == id);
+          if (index !== -1) {
             this.dataSource[index].isDelete = true;
+          }
         }
       });
   }

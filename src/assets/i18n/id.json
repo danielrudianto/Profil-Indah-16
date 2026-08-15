@@ -240,7 +240,7 @@
   "sales-invoice__title": "Faktur penjualan / nota",
   "sales-invoice__archive": "Arsip",
   "sales-invoice__archive__view__delete__title": "Apakah anda yakin untuk menghapus data nota ini?",
-  "sales-invoice__create": "Buat baru",
+  "sales-invoice__create": "Buat faktur",
   "sales-invoice__create__customer": "Konsumen",
   "sales-invoice__create__add-item": "Tambah barang",
   "purchase-invoice__title": "Faktur pembelian",
@@ -1787,5 +1787,15 @@
   "good-receipt__create__add-item-short": "Tambah barang",
   "good-receipt__state__do__desk": "Barang sudah datang, faktur supplier belum diterima.",
   "good-receipt__state__full__desk": "Faktur supplier sudah di tangan — isi sekalian.",
-  "good-receipt__new": "Penerimaan baru"
+  "good-receipt__new": "Penerimaan baru",
+  "sales-invoice__lede": "Daftar faktur beserta pelanggan, sales, dan keadaan pembayarannya.",
+  "sales-invoice__search": "Cari nomor faktur, pelanggan, atau sales…",
+  "sales-invoice__back-to-archive": "Kembali ke arsip",
+  "sales-invoice__archive__total": "Total",
+  "sales-invoice__status__paid": "Lunas",
+  "sales-invoice__status__unpaid": "Belum lunas",
+  "sales-invoice__status__active": "Aktif",
+  "sales-invoice__status__deleted": "Dihapus",
+  "sales-invoice__filter__clear": "Hapus semua",
+  "sales-invoice__retail": "Retail"
 }

@@ -1,27 +1,15 @@
 import { Component } from '@angular/core';
-import { FeatureBackgroundComponent } from '../../components/feature-background/feature-background.component';
-import { TransactionHeaderComponent } from '../../components/transaction-header/transaction-header.component';
 import { RouterOutlet } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
 
+/**
+ * Shell faktur penjualan — kini hanya penampung rute anaknya.
+ *
+ * Judul, pencarian, dan perpindahan antara daftar dan formulir dipegang
+ * app-list-page di masing-masing halaman anak, sesuai berkas desain.
+ */
 @Component({
-    selector: 'app-sales-invoice',
-    templateUrl: './sales-invoice.component.html',
-    imports: [FeatureBackgroundComponent, TransactionHeaderComponent, RouterOutlet, TranslatePipe]
+  selector: 'app-sales-invoice',
+  templateUrl: './sales-invoice.component.html',
+  imports: [RouterOutlet],
 })
-export class SalesInvoiceComponent {
-  constructor() {}
-
-  availbleMenus = [
-    {
-      label: 'sales-invoice__archive',
-      link: 'Archive',
-      icon: 'folder',
-    },
-    {
-      label: 'sales-invoice__create',
-      link: '',
-      icon: 'add',
-    },
-  ];
-}
+export class SalesInvoiceComponent {}

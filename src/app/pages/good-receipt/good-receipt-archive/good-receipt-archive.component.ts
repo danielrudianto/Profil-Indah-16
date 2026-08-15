@@ -19,7 +19,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-good-receipt-archive',
     templateUrl: './good-receipt-archive.component.html',
-    styleUrls: ['./good-receipt-archive.component.scss'],
     animations: [slideInOutAnimation],
     imports: [ArchivesComponent, NgIf, NgFor, DatePipe, TranslatePipe, ListPageComponent]
 })

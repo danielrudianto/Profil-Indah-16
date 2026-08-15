@@ -334,6 +334,280 @@ textarea.medan__input {
 }
 
 /* ------------------------------------------------------------------ */
+/* Perkakas daftar arsip                                               */
+/*                                                                     */
+/* Tombol slot aksi, pill status, chip pintas, dan kapsul hasil        */
+/* saringan. Semuanya DI SINI, bukan di komponen daftarnya, karena dua */
+/* alasan yang sama-sama mengikat:                                     */
+/*                                                                     */
+/* 1. Isi yang disalurkan lewat ng-content ke app-list-page tetap      */
+/*    memakai lingkup gaya komponen yang MENULISKANNYA. Ditulis di     */
+/*    komponen daftar, gayanya ikut tiap kali daftarnya disalin.       */
+/* 2. Berkas serah-terima menyatakan pola saringan ini berlaku untuk   */
+/*    SEMUA daftar arsip. Salinan kedua adalah salinan yang cepat atau */
+/*    lambat berbeda sendiri.                                          */
+/* ------------------------------------------------------------------ */
+
+.aksi-hantu,
+.aksi-ikon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  i {
+    font-size: 15px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.aksi-hantu {
+  padding: 0 12px;
+  color: var(--color-accent);
+  background: transparent;
+  border: 0;
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
+}
+
+.aksi-ikon {
+  width: 44px;
+  padding: 0;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+
+  &:hover {
+    color: var(--color-text);
+    border-color: color-mix(in srgb, var(--color-text) 30%, transparent);
+  }
+}
+
+/*
+  Pill status. Satu bahasa untuk seluruh aplikasi: kapsul radius 999px, ikon
+  15px, padding 4px 12px 4px 8px, 12.5px/600.
+
+  Warnanya ditulis mentah, bukan diambil dari aksen: ia menyatakan keadaan
+  dokumen, dan artinya tidak boleh ikut berubah ketika pengguna mengganti
+  warna aksennya.
+*/
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 4px 8px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  i {
+    font-size: 15px;
+  }
+}
+
+.pill--hijau {
+  color: #3fa45b;
+  background: color-mix(in srgb, #3fa45b 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, #3fa45b 40%, transparent);
+}
+
+.pill--amber {
+  color: #c98a00;
+  background: color-mix(in srgb, #c98a00 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, #c98a00 40%, transparent);
+}
+
+/* Belum lunas dan sejenisnya: garis tepi saja, sesuai berkas desain. */
+.pill--garis {
+  color: color-mix(in srgb, var(--color-text) 62%, transparent);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--color-divider);
+}
+
+/*
+  Chip pintas — satu saringan yang paling sering dipakai, ditarik keluar dari
+  dialog supaya bisa ditekan sekali. Keadaan matinya kapsul outline netral,
+  keadaan nyalanya amber, sewarna pill keadaan yang ia saring.
+*/
+.chip-pintas {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 0 14px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--color-text) 60%, transparent);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease,
+    background-color 0.15s ease;
+
+  i {
+    font-size: 15px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.chip-pintas--on {
+  color: #c98a00;
+  background: color-mix(in srgb, #c98a00 14%, transparent);
+  border-color: color-mix(in srgb, #c98a00 55%, transparent);
+}
+
+.saringan {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.saringan__kapsul {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 12px;
+  border-radius: 999px;
+  background: var(--color-active);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  color: var(--color-accent);
+  font-size: 12.5px;
+  font-weight: 600;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12px;
+
+    &:hover {
+      background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 1px;
+    }
+  }
+}
+
+.saringan__bersih {
+  padding: 4px 10px;
+  font: inherit;
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover {
+    color: var(--color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+/*
+  Kepala kolom yang bisa diurutkan.
+
+  Isinya <button>, bukan <th> yang diberi (click): hanya tombol yang bisa
+  dicapai lewat papan tik dan diumumkan pembaca layar sebagai sesuatu yang bisa
+  ditekan. Tombolnya dibuat setransparan mungkin supaya tetap terbaca sebagai
+  judul kolom, bukan sebagai tombol yang menumpang di sana.
+*/
+.tabel__urut {
+  padding: 0;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 12px 14px;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-text);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: -2px;
+    }
+  }
+
+  i {
+    font-size: 13px;
+    flex: none;
+  }
+}
+
+/*
+  Kolom yang tidak sedang mengurutkan tetap memakai ikon, hanya diredupkan:
+  itulah yang memberi tahu kolomnya bisa diurutkan sebelum ditekan sekali pun.
+*/
+.tabel__urut-redup {
+  opacity: 0.35;
+}
+
+/* Tanggal tidak boleh patah dua baris; kolomnya jadi ikut melebar percuma. */
+.tabel__tanggal {
+  white-space: nowrap;
+}
+
+/* Kolom nilai uang: rata kanan, angka selebar sama supaya digitnya sejajar. */
+.tabel__nilai {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tabel__nilai-kepala {
+  text-align: right;
+}
+
+/* ------------------------------------------------------------------ */
 /* Batang gulung                                                       */
 /*                                                                     */
 /* Bawaan peramban di Linux memakai jalur penuh, tepi, dan tombol panah */

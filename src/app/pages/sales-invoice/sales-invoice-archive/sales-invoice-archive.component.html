@@ -1,146 +1,232 @@
+<!--
+  Dua tahap, dan berkas desain hanya menggambar tahap keduanya: app-archives
+  memilih bulan lebih dulu, baru daftarnya muncul. Tahap pemilihan bulan
+  dipertahankan karena begitulah arsip bekerja di seluruh aplikasi ini.
+-->
 <app-archives
   [@slideInOutAnimation]="mode == 0 ? 'in' : 'out'"
   route="sales-invoice"
   (onMonthSelected)="onMonthSelected($event)"
 />
 
-<div
-  class="container boundary-container"
-  [@slideInOutAnimation]="mode == 1 ? 'in' : 'out'"
->
-  <div class="row">
-    <div class="col-12">
-      <div class="dashboard-card">
-        <app-archive-search
-          [isFilterAvailable]="true"
-          (onQueryChanged)="onQueryChanged($event)"
-          (onFilterButtonClicked)="openFilter()"
-        />
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th style="width: 250px" (click)="changeSortBy('date')">
-                  <div class="d-flex align-items-center">
-                    <span>{{
-                      "sales-invoice__archive__date" | translate
-                    }}</span>
-                    <mat-icon
-                      class="icon-display"
-                      [ngClass]="{
-                        asc: sortBy === 'date' && sortDirection === 'asc',
-                        desc: sortBy === 'date' && sortDirection === 'desc'
-                      }"
-                      >arrow_downward</mat-icon
-                    >
-                  </div>
-                </th>
-                <th style="width: 250px" (click)="changeSortBy('name')">
-                  <div class="d-flex align-items-center">
-                    <span>
-                      {{ "sales-invoice__archive__name" | translate }}</span
-                    >
-                    <mat-icon
-                      class="icon-display"
-                      [ngClass]="{
-                        asc: sortBy === 'name' && sortDirection === 'asc',
-                        desc: sortBy === 'name' && sortDirection === 'desc'
-                      }"
-                      >arrow_downward</mat-icon
-                    >
-                  </div>
-                </th>
-                <th style="width: 250px" (click)="changeSortBy('customer')">
-                  <div class="d-flex align-items-center">
-                    <span>
-                      {{ "sales-invoice__archive__customer" | translate }}</span
-                    >
-                    <mat-icon
-                      class="icon-display"
-                      [ngClass]="{
-                        asc: sortBy === 'customer' && sortDirection === 'asc',
-                        desc: sortBy === 'customer' && sortDirection === 'desc'
-                      }"
-                      >arrow_downward</mat-icon
-                    >
-                  </div>
-                </th>
-                <th style="width: 200px" (click)="changeSortBy('sales')">
-                  <div class="d-flex align-items-center">
-                    <span>
-                      {{ "sales-invoice__archive__sales" | translate }}</span
-                    >
-                    <mat-icon
-                      class="icon-display"
-                      [ngClass]="{
-                        asc: sortBy === 'sales' && sortDirection === 'asc',
-                        desc: sortBy === 'sales' && sortDirection === 'desc'
-                      }"
-                      >arrow_downward</mat-icon
-                    >
-                  </div>
-                </th>
-                <th style="width: 150px">
-                  <div class="d-flex align-items-center">
-                    <span>
-                      {{ "sales-invoice__archive__status" | translate }}</span
-                    >
-                  </div>
-                </th>
-                <th style="width: 150px">
-                  <div class="d-flex align-items-center">
-                    <span>{{
-                      "sales-invoice__archive__status" | translate
-                    }}</span>
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody *ngIf="isLoading">
-              <tr>
-                <td colspan="6">
-                  <mat-spinner id="spinner"></mat-spinner>
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length == 0">
-              <tr>
-                <td colspan="6">
-                  <empty-table />
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr
-                *ngFor="let item of dataSource; index as i"
-                (click)="viewArchive(item.id)"
-              >
-                <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
-                <td>{{ item.name }}</td>
-                <td>
-                  {{ item.customer == null ? "Retail" : item.customer.name }}
-                </td>
-                <td>{{ item.sales == null ? "N/A" : item.sales }}</td>
-                <td>{{ item.isDelete ? "Deleted" : "Active" }}</td>
-                <td>{{ item.isPaid ? "Paid" : "Unpaid" }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="paginator__wrapper">
-          <button class="action-button p-relative" (click)="backToYear()">
-            {{ "general__archive__back-to-previous" | translate }}
-          </button>
-          <mat-paginator
-            [length]="dataCount"
-            [pageSize]="pageSize"
-            [pageSizeOptions]="[10, 25, 50]"
-            [pageIndex]="page - 1"
-            [pageSizeOptions]="[10, 25, 50]"
-            (page)="changePage($event)"
-          />
-        </div>
-      </div>
+<div [@slideInOutAnimation]="mode == 1 ? 'in' : 'out'">
+  <app-list-page
+    [heading]="'sales-invoice__title' | translate"
+    [lede]="'sales-invoice__lede' | translate"
+    [searchPlaceholder]="'sales-invoice__search' | translate"
+    [addLabel]="'sales-invoice__create' | translate"
+    [page]="page"
+    [pageSize]="pageSize"
+    [total]="dataCount"
+    [loading]="isLoading"
+    (search)="onQueryChanged($event)"
+    (pageChange)="bukaHalaman($event)"
+    (pageSizeChange)="ubahUkuranHalaman($event)"
+    (add)="buatFaktur()"
+    (refresh)="fetchSelectedMonth()"
+  >
+    <ng-container aksi>
+      <button type="button" class="aksi-hantu" (click)="backToYear()">
+        <i class="ph ph-arrow-u-up-left" aria-hidden="true"></i>
+        {{ 'sales-invoice__back-to-archive' | translate }}
+      </button>
+
+      <!--
+        Pintas ke saringan yang paling sering dipakai. Pada faktur penjualan
+        itu "belum lunas": yang ditagih hari ini, bukan yang sudah selesai.
+      -->
+      <button
+        type="button"
+        class="chip-pintas"
+        [class.chip-pintas--on]="hanyaBelumLunas"
+        (click)="toggleBelumLunas()"
+      >
+        <i class="ph-fill ph-clock" aria-hidden="true"></i>
+        {{ 'sales-invoice__status__unpaid' | translate }}
+      </button>
+
+      <button
+        type="button"
+        class="aksi-ikon"
+        (click)="openFilter()"
+        [title]="'general__filter' | translate"
+        [attr.aria-label]="'general__filter' | translate"
+      >
+        <i class="ph ph-funnel" aria-hidden="true"></i>
+      </button>
+    </ng-container>
+
+    <!--
+      Hasil saringan tampil DI DEPAN, bukan tersembunyi di dalam dialog. Baris
+      ini tidak digambar sama sekali ketika tidak ada saringan aktif, supaya
+      tata letaknya tidak menyisakan ruang kosong.
+    -->
+    <div class="saringan" *ngIf="kapsul.length > 0">
+      <span class="saringan__kapsul" *ngFor="let k of kapsul">
+        {{ k.teks }}
+        <button
+          type="button"
+          (click)="lepasKapsul(k.kunci)"
+          [attr.aria-label]="'general__delete' | translate"
+        >
+          <i class="ph ph-x" aria-hidden="true"></i>
+        </button>
+      </span>
+
+      <button
+        type="button"
+        class="saringan__bersih"
+        (click)="hapusSemuaSaringan()"
+      >
+        {{ 'sales-invoice__filter__clear' | translate }}
+      </button>
     </div>
-  </div>
+
+    <table class="tabel">
+      <thead>
+        <tr>
+          <!--
+            Kepala kolom yang bisa diurutkan memakai <button>, bukan <th> yang
+            diberi (click): hanya tombol yang bisa dicapai lewat papan tik dan
+            diumumkan pembaca layar sebagai sesuatu yang bisa ditekan.
+          -->
+          <th class="tabel__urut">
+            <button type="button" (click)="changeSortBy('date')">
+              {{ 'sales-invoice__archive__date' | translate }}
+              <i class="ph" [ngClass]="ikonUrut('date')" aria-hidden="true"></i>
+            </button>
+          </th>
+          <th class="tabel__urut">
+            <button type="button" (click)="changeSortBy('name')">
+              {{ 'sales-invoice__archive__name' | translate }}
+              <i class="ph" [ngClass]="ikonUrut('name')" aria-hidden="true"></i>
+            </button>
+          </th>
+          <th class="tabel__urut">
+            <button type="button" (click)="changeSortBy('customer')">
+              {{ 'sales-invoice__archive__customer' | translate }}
+              <i
+                class="ph"
+                [ngClass]="ikonUrut('customer')"
+                aria-hidden="true"
+              ></i>
+            </button>
+          </th>
+          <th class="tabel__urut">
+            <button type="button" (click)="changeSortBy('sales')">
+              {{ 'sales-invoice__archive__sales' | translate }}
+              <i
+                class="ph"
+                [ngClass]="ikonUrut('sales')"
+                aria-hidden="true"
+              ></i>
+            </button>
+          </th>
+          <th class="tabel__nilai-kepala">
+            {{ 'sales-invoice__archive__total' | translate }}
+          </th>
+          <th>{{ 'sales-invoice__archive__status' | translate }}</th>
+          <th>{{ 'sales-invoice__archive__payment-status' | translate }}</th>
+          <th class="tabel__aksi-kepala">
+            <span class="sr-only">{{ 'general__actions' | translate }}</span>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody *ngIf="!isLoading && dataSource.length > 0">
+        <tr *ngFor="let item of dataSource; trackBy: lacakFaktur">
+          <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
+          <td class="tabel__utama">{{ item.name }}</td>
+          <!--
+            Faktur tanpa pelanggan bukan data yang hilang — itu penjualan
+            eceran, dan disebut demikian.
+          -->
+          <td>
+            {{
+              item.customer?.name ?? ('sales-invoice__retail' | translate)
+            }}
+          </td>
+          <td class="tabel__redup">{{ item.sales || '—' }}</td>
+          <!--
+            Total dihitung server dari baris fakturnya dan bisa saja tidak
+            ikut terkirim; em dash lebih jujur daripada Rp 0.
+          -->
+          <td class="tabel__nilai">
+            {{ item.total == null ? '—' : 'Rp ' + (item.total | number: '1.0-0') }}
+          </td>
+          <td>
+            <span
+              class="pill"
+              [class.pill--hijau]="!item.isDelete"
+              [class.pill--garis]="item.isDelete"
+            >
+              <i
+                class="ph-fill"
+                [class.ph-check-circle]="!item.isDelete"
+                [class.ph-trash]="item.isDelete"
+                aria-hidden="true"
+              ></i>
+              {{
+                (item.isDelete
+                  ? 'sales-invoice__status__deleted'
+                  : 'sales-invoice__status__active'
+                ) | translate
+              }}
+            </span>
+          </td>
+          <td>
+            <!--
+              Lunas hijau, belum lunas garis tepi saja — sesuai berkas desain.
+              Dibedakan warna DAN ikon, bukan warna saja.
+            -->
+            <span
+              class="pill"
+              [class.pill--hijau]="item.isPaid"
+              [class.pill--garis]="!item.isPaid"
+            >
+              <i
+                class="ph-fill"
+                [class.ph-check-circle]="item.isPaid"
+                [class.ph-clock]="!item.isPaid"
+                aria-hidden="true"
+              ></i>
+              {{
+                (item.isPaid
+                  ? 'sales-invoice__status__paid'
+                  : 'sales-invoice__status__unpaid'
+                ) | translate
+              }}
+            </span>
+          </td>
+          <td class="tabel__aksi">
+            <button
+              type="button"
+              class="tabel__aksi-btn"
+              (click)="viewArchive(item.id)"
+              [title]="'general__view' | translate"
+              [attr.aria-label]="'general__view' | translate"
+            >
+              <i class="ph ph-eye" aria-hidden="true"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+
+      <tbody *ngIf="isLoading">
+        <tr>
+          <td colspan="8" class="tabel__pesan">
+            {{ 'general__loading' | translate }}
+          </td>
+        </tr>
+      </tbody>
+
+      <tbody *ngIf="!isLoading && dataSource.length === 0">
+        <tr>
+          <td colspan="8" class="tabel__pesan">
+            {{ 'general__no-data' | translate }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </app-list-page>
 </div>
