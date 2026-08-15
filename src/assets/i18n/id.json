@@ -1786,5 +1786,6 @@
   "good-receipt__invoice__waiting-title": "Kolom faktur menunggu",
   "good-receipt__create__add-item-short": "Tambah barang",
   "good-receipt__state__do__desk": "Barang sudah datang, faktur supplier belum diterima.",
-  "good-receipt__state__full__desk": "Faktur supplier sudah di tangan — isi sekalian."
+  "good-receipt__state__full__desk": "Faktur supplier sudah di tangan — isi sekalian.",
+  "good-receipt__new": "Penerimaan baru"
 }

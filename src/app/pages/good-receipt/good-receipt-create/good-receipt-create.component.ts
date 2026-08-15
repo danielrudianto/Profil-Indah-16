@@ -10,6 +10,7 @@ import {
 } from 'src/app/components/product-selector/product-selector.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { PageTitleService } from 'src/app/services/page-title.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { v4 } from 'uuid';
@@ -125,7 +126,20 @@ export class GoodReceiptCreateComponent {
     return this.bolehUbahHarga && this.keadaan === 'lengkap';
   }
 
+  private pageTitleService = inject(PageTitleService);
+
   ngOnInit(): void {
+    /*
+      Tag topbar untuk halaman ini "Penerimaan baru", bukan nama menunya —
+      yang dilihat pengguna dokumen yang sedang dibuat, bukan daftar asalnya.
+    */
+    this.pageTitleService.pasangKonteks({
+      kembaliLabel: 'good-receipt__title',
+      kembaliJalur: '/Good-receipt/Archive',
+      tag: 'good-receipt__new',
+      mode: this.bolehUbahHarga ? 'good-receipt__admin-mode' : undefined,
+    });
+
     this.itemFormGroup.valueChanges.subscribe(() => {
       console.log(this.itemFormGroup.controls);
     });

@@ -1780,5 +1780,6 @@
   "good-receipt__invoice__waiting-title": "Invoice fields pending",
   "good-receipt__create__add-item-short": "Add product",
   "good-receipt__state__do__desk": "Goods have arrived, the supplier invoice has not.",
-  "good-receipt__state__full__desk": "The supplier invoice is in hand — fill it in now."
+  "good-receipt__state__full__desk": "The supplier invoice is in hand — fill it in now.",
+  "good-receipt__new": "New goods receipt"
 }

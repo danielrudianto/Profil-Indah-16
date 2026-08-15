@@ -1,10 +1,13 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { PageTitleService } from 'src/app/services/page-title.service';
+import {
+  KonteksHalaman,
+  PageTitleService,
+} from 'src/app/services/page-title.service';
 import { SideNavService } from 'src/app/services/side-nav.service';
 import { DarkModeSelectorComponent } from './dark-mode-selector/dark-mode-selector.component';
 import { LanguageSelectorComponent } from './language-selector/language-selector.component';
@@ -34,6 +37,7 @@ import { ProfileDialogComponent } from '../profile-dialog/profile-dialog.compone
     TranslatePipe,
     DarkModeSelectorComponent,
     LanguageSelectorComponent,
+    RouterLink,
     CircleAvatarComponent,
     AvatarComponent,
     ProfileDialogComponent,
@@ -58,10 +62,17 @@ export class TopbarComponent implements OnInit {
   /** Kunci i18n judul halaman aktif, atau null bila alamatnya tidak dikenali. */
   judulHalaman: string | null = null;
 
+  /** Jalan kembali, tag khusus, dan penanda mode yang dipasang halaman. */
+  konteks: KonteksHalaman | null = null;
+
   ngOnInit(): void {
     this.pageTitleService.judul$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((kunci) => (this.judulHalaman = kunci));
+
+    this.pageTitleService.konteks$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((k) => (this.konteks = k));
 
     const avatar = this.authService.getSelfAvatar();
     if (avatar != null) {

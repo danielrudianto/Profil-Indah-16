@@ -1,16 +1,6 @@
 <div class="buat">
   <div class="buat__utama">
     <header class="buat__head">
-      <!--
-        Penanda mode. Halaman ini punya tiga wajah menurut peran, dan tanpa
-        penanda tidak ada cara membedakan "form ini memang begini" dari "kolom
-        harganya gagal muncul".
-      -->
-      <span class="mode" *ngIf="bolehUbahHarga">
-        <i class="ph ph-shield-check" aria-hidden="true"></i>
-        {{ "good-receipt__admin-mode" | translate }}
-      </span>
-
       <h1 class="buat__title">
         {{ "good-receipt__create__title" | translate }}
         <!-- Nomor dokumennya dibuat server, bukan diketik. -->

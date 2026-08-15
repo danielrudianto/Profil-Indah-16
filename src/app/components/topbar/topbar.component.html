@@ -23,9 +23,24 @@
     sama sekali — lebih baik kosong daripada menampilkan judul halaman
     sebelumnya.
   -->
-  <span class="topbar__page" *ngIf="judulHalaman">
+  <a
+    class="topbar__kembali"
+    *ngIf="konteks?.kembaliLabel && konteks?.kembaliJalur"
+    [routerLink]="konteks?.kembaliJalur"
+  >
+    <i class="ph ph-arrow-left" aria-hidden="true"></i>
+    {{ konteks?.kembaliLabel! | translate }}
+  </a>
+
+  <span class="topbar__page" *ngIf="konteks?.tag || judulHalaman">
     <i class="ph-fill ph-bookmark-simple" aria-hidden="true"></i>
-    {{ judulHalaman | translate }}
+    {{ (konteks?.tag ?? judulHalaman)! | translate }}
+  </span>
+
+  <!-- Penanda mode di KANAN, bukan di atas judul halaman. -->
+  <span class="topbar__mode" *ngIf="konteks?.mode">
+    <i class="ph ph-shield-check" aria-hidden="true"></i>
+    {{ konteks?.mode! | translate }}
   </span>
 
   <div class="topbar__utility">
