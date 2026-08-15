@@ -158,6 +158,9 @@
               <th class="ke-kanan" *ngIf="bolehUbahHarga">
                 {{ "product__add__unit__purchase-discount" | translate }}
               </th>
+              <th class="ke-kanan" *ngIf="bolehUbahHarga">
+                {{ "good-receipt__create__line-total" | translate }}
+              </th>
               <th *ngIf="bolehUbahHarga">
                 {{ "good-receipt__create__save-price" | translate }}
               </th>
@@ -235,6 +238,10 @@
                 />
               </td>
 
+              <td class="ke-kanan baris__total" *ngIf="bolehUbahHarga">
+                Rp {{ totalBaris(i) | number: "1.0-0" }}
+              </td>
+
               <td *ngIf="bolehUbahHarga">
                 <button
                   type="button"
@@ -269,7 +276,7 @@
 
           <tbody *ngIf="t.length === 0">
             <tr>
-              <td [attr.colspan]="bolehUbahHarga ? 6 : 3" class="tabel__pesan">
+              <td [attr.colspan]="bolehUbahHarga ? 7 : 3" class="tabel__pesan">
                 {{ "good-receipt__create__no-item" | translate }}
               </td>
             </tr>
@@ -287,6 +294,34 @@
 
   <!-- Kolom kanan ------------------------------------------------------ -->
   <aside class="buat__samping">
+    <!--
+      Ringkasan uang. Hanya untuk yang boleh melihat harga — bagi peran
+      pembelian, kartu ini tidak punya isi yang boleh mereka lihat.
+    -->
+    <section class="kartu" *ngIf="bolehUbahHarga">
+      <h2 class="kartu__label">{{ "good-receipt__summary" | translate }}</h2>
+
+      <dl class="ringkas">
+        <div>
+          <dt>{{ "good-receipt__summary__subtotal" | translate }}</dt>
+          <dd>Rp {{ subtotal | number: "1.0-0" }}</dd>
+        </div>
+        <div>
+          <dt>{{ "good-receipt__summary__item-discount" | translate }}</dt>
+          <dd class="ringkas__kurang">– Rp {{ diskonItem | number: "1.0-0" }}</dd>
+        </div>
+        <div *ngIf="dokumenLengkap">
+          <dt>{{ "good-receipt__summary__doc-discount" | translate }}</dt>
+          <dd class="ringkas__kurang">– Rp {{ diskonDokumen | number: "1.0-0" }}</dd>
+        </div>
+      </dl>
+
+      <div class="ringkas__total">
+        <span>{{ "good-receipt__summary__total" | translate }}</span>
+        <strong>Rp {{ total | number: "1.0-0" }}</strong>
+      </div>
+    </section>
+
     <section class="kartu">
       <h2 class="kartu__label">{{ "product__create__before-save" | translate }}</h2>
 

@@ -276,6 +276,53 @@ export class GoodReceiptCreateComponent {
    * dicatat begitu — tetapi yang tidak sengaja menambahkannya dua kali harus
    * bisa melihatnya tanpa menghitung sendiri.
    */
+  /* ---------------------------------------------------------------- */
+  /* Ringkasan uang                                                    */
+  /*                                                                   */
+  /* Angka pada berkas desain TIDAK berjumlah dengan sendirinya:        */
+  /* Subtotal 199.128.800 dan Diskon item 214.600 di sana menjumlahkan  */
+  /* diskon PER SATUAN, bukan dikalikan jumlahnya. Yang dipakai di sini */
+  /* bentuk yang konsisten — semuanya dikali jumlah — dan hasilnya      */
+  /* justru mengeluarkan Total yang sama persis dengan desainnya,       */
+  /* 198.664.200. Jadi yang meleset di sana dua baris atasnya, bukan    */
+  /* totalnya.                                                          */
+  /* ---------------------------------------------------------------- */
+
+  private angka(x: any, kunci: string): number {
+    return Number(x.get(kunci)?.value ?? 0) || 0;
+  }
+
+  /** Harga sebelum diskon apa pun. */
+  get subtotal(): number {
+    return this.t.controls.reduce(
+      (jml, x) => jml + this.angka(x, 'price') * this.angka(x, 'quantity'),
+      0,
+    );
+  }
+
+  /** Jumlah diskon tiap baris, dikali jumlah barangnya. */
+  get diskonItem(): number {
+    return this.t.controls.reduce(
+      (jml, x) => jml + this.angka(x, 'discount') * this.angka(x, 'quantity'),
+      0,
+    );
+  }
+
+  get diskonDokumen(): number {
+    return Number(this.metaFormGroup.get('document_discount')?.value ?? 0) || 0;
+  }
+
+  get total(): number {
+    return this.subtotal - this.diskonItem - this.diskonDokumen;
+  }
+
+  /** Total satu baris, sesudah diskonnya sendiri. */
+  totalBaris(i: number): number {
+    const x = this.getFormGroupAt(i);
+    return (this.angka(x, 'price') - this.angka(x, 'discount')) *
+      this.angka(x, 'quantity');
+  }
+
   jumlahBaris(productId: number): number {
     return this.t.controls.filter(
       (x) => x.get('product_id')?.value === productId,

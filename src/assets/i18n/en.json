@@ -1768,5 +1768,11 @@
   "product-selector__from": "from",
   "product-selector__items": "products",
   "good-receipt__create__duplicate": "The same product appears on several lines — intentional? A supplier bonus, for example.",
-  "good-receipt__filter__clear": "Clear all"
+  "good-receipt__filter__clear": "Clear all",
+  "good-receipt__summary": "Summary",
+  "good-receipt__summary__subtotal": "Subtotal",
+  "good-receipt__summary__item-discount": "Item discount",
+  "good-receipt__summary__doc-discount": "Document discount",
+  "good-receipt__summary__total": "Total",
+  "good-receipt__create__line-total": "Total"
 }

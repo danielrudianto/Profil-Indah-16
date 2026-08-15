@@ -1774,5 +1774,11 @@
   "product-selector__from": "dari",
   "product-selector__items": "barang",
   "good-receipt__create__duplicate": "Barang yang sama ada di beberapa baris — sengaja? Misalnya bonus supplier.",
-  "good-receipt__filter__clear": "Hapus semua"
+  "good-receipt__filter__clear": "Hapus semua",
+  "good-receipt__summary": "Ringkasan",
+  "good-receipt__summary__subtotal": "Subtotal",
+  "good-receipt__summary__item-discount": "Diskon item",
+  "good-receipt__summary__doc-discount": "Diskon dokumen",
+  "good-receipt__summary__total": "Total",
+  "good-receipt__create__line-total": "Total"
 }
