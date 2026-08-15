@@ -15,22 +15,22 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { v4 } from 'uuid';
 import { DeleteConfirmationComponent } from '../../../components/delete-confirmation/delete-confirmation.component';
 import { SubmitConfirmationComponent } from '../../../components/submit-confirmation/submit-confirmation.component';
-import { VerticalDividerComponent } from '../../../components/vertical-divider/vertical-divider.component';
-import { BoxStepperComponent } from '../../../components/box-stepper/box-stepper.component';
-import { AutocompleteSearchComponent } from '../../../components/autocomplete-search/autocomplete-search.component';
-import { MatFormField, MatLabel, MatSuffix, MatHint } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
-import { MatButton, MatIconButton } from '@angular/material/button';
 import { NgxMaskDirective } from 'ngx-mask';
-import { MatIcon } from '@angular/material/icon';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
+import { ComboSearchComponent } from 'src/app/components/combo-search/combo-search.component';
 
 @Component({
     selector: 'app-good-receipt-create',
     templateUrl: './good-receipt-create.component.html',
     styleUrls: ['./good-receipt-create.component.scss'],
-    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatButton, NgIf, NgFor, NgxMaskDirective, MatHint, MatIconButton, MatIcon, EmptyTableComponent, DecimalPipe, TranslatePipe]
+    imports: [
+      ReactiveFormsModule,
+      NgIf,
+      NgFor,
+      DecimalPipe,
+      NgxMaskDirective,
+      TranslatePipe,
+      ComboSearchComponent,
+    ]
 })
 export class GoodReceiptCreateComponent {
   constructor(

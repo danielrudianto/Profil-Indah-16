@@ -1,162 +1,233 @@
-<div class="d-flex mt-4">
-  <div class="d-flex position-relative">
-    <app-vertical-divider></app-vertical-divider>
-    <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
-  </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <h5>{{ "purchase-invoice__create__general-data" | translate }}</h5>
-    <form [formGroup]="metaFormGroup">
-      <app-autocomplete-search
-        routeName="supplier"
-        [label]="'purchase-invoice__create__supplier' | translate"
-        placeholder="Ex. Bing Jaya"
-        [selected]="metaFormGroup.controls['supplier_id'].valid"
-        (onSelectData)="onSelectSupplier($event)"
-        (onUnselectData)="onUnselectSupplier()"
-      ></app-autocomplete-search>
+<div class="buat">
+  <div class="buat__utama">
+    <header class="buat__head">
+      <h1 class="buat__title">{{ "good-receipt__create__title" | translate }}</h1>
+      <p class="buat__lede">{{ "good-receipt__create__lede" | translate }}</p>
+    </header>
 
-      <app-autocomplete-search
-        routeName="company"
-        [label]="'purchase-invoice__create__company' | translate"
-        placeholder="Ex. Toko Profil Indah"
-        [selected]="metaFormGroup.controls['company_id'].valid"
-        (onSelectData)="onSelectCompany($event)"
-        (onUnselectData)="onUnselectCompany()"
-      ></app-autocomplete-search>
+    <!-- Data umum ------------------------------------------------------ -->
+    <section class="kartu" [formGroup]="metaFormGroup">
+      <h2 class="kartu__label">{{ "good-receipt__create__general" | translate }}</h2>
 
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{
-          "purchase-invoice__create__delivery-order-date" | translate
-        }}</mat-label>
-        <input
-          matInput
-          type="text"
-          placeholder="Ex. 30/12/2023"
-          [matDatepicker]="picker"
-          formControlName="date"
-          autocomplete="off"
-          (click)="picker.open()"
-        />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
+      <div class="kisi">
+        <div class="field">
+          <label for="gr-date">{{ "good-receipt__create__date" | translate }}</label>
+          <!--
+            Kolom tanggal bawaan peramban, bukan matDatepicker. Widget Material
+            membawa palet dan bentuknya sendiri, dan berdiri sendirian di tengah
+            kartu Nocturne. Nilainya tetap "yyyy-MM-dd", bentuk yang sama yang
+            dikirim ke server.
+          -->
+          <input id="gr-date" class="input" type="date" formControlName="date" />
+        </div>
 
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{ "good-receipt__create__name" | translate }}</mat-label>
-        <input
-          matInput
-          type="text"
-          placeholder="Ex. 123456"
-          formControlName="delivery_order"
-          autocomplete="off"
-        />
-      </mat-form-field>
-    </form>
-  </div>
-</div>
+        <div class="field">
+          <label for="gr-do">{{ "good-receipt__create__delivery-order" | translate }}</label>
+          <input
+            id="gr-do"
+            class="input input--angka"
+            type="text"
+            formControlName="delivery_order"
+            autocomplete="off"
+            [attr.placeholder]="'good-receipt__create__delivery-order__example' | translate"
+          />
+        </div>
 
-<div class="d-flex">
-  <div class="d-flex position-relative">
-    <app-box-stepper step="2" [valid]="itemFormGroup.valid"></app-box-stepper>
-  </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <button
-      mat-stroked-button
-      color="primary"
-      type="button"
-      style="letter-spacing: 0"
-      (click)="openItemSelector()"
-    >
-      {{ "purchase-invoice__create__add-item" | translate }}
-    </button>
+        <div class="field">
+          <label for="gr-supplier">{{ "good-receipt__create__supplier" | translate }}</label>
+          <app-combo-search
+            inputId="gr-supplier"
+            route="supplier"
+            [disabled]="isSubmitting"
+            (pick)="onSelectSupplier($event)"
+            (clear)="onUnselectSupplier()"
+          />
+        </div>
 
-    <form [formGroup]="itemFormGroup">
-      <table class="table w-100 mb-2">
-        <thead>
-          <tr>
-            <th style="width: 300px" class="text-center">
-              {{ "purchase-invoice__create__table__item" | translate }}
-            </th>
-            <th style="width: 200px" class="text-center">
-              {{ "purchase-invoice__create__table__quantity" | translate }}
-            </th>
-            <th style="width: 150px" class="text-center">
-              {{ "purchase-invoice__create__table__action" | translate }}
-            </th>
-          </tr>
-        </thead>
-        <tbody *ngIf="t.controls.length > 0">
-          <tr
-            *ngFor="let itemForm of t.controls; index as i"
-            [formGroup]="getFormGroupAt(i)"
-          >
-            <td>
-              <p>{{ itemForm.get("reference")?.value }}</p>
-              <div class="text-clamp-2">
-                {{ itemForm.get("description")?.value }}
-              </div>
-              <p class="mt-2">
-                {{
-                  "purchase-invoice__create__table__current-stock" | translate
-                }}:
-                {{ itemForm.get("stock")?.value.stock | number : "0.0-2" }}
-                {{ itemForm.get("default_unit")?.value }}
-              </p>
-            </td>
-            <td class="text-center">
-              <mat-form-field appearance="outline">
-                <mat-label>{{
-                  "purchase-invoice__create__table__quantity" | translate
-                }}</mat-label>
+        <div class="field">
+          <label for="gr-company">{{ "good-receipt__create__company" | translate }}</label>
+          <app-combo-search
+            inputId="gr-company"
+            route="company"
+            [disabled]="isSubmitting"
+            (pick)="onSelectCompany($event)"
+            (clear)="onUnselectCompany()"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Barang diterima ------------------------------------------------ -->
+    <section class="kartu">
+      <h2 class="kartu__label">{{ "good-receipt__create__items" | translate }}</h2>
+
+      <!--
+        Banner ini hanya benar bagi yang memang tidak melihat harga. Untuk peran
+        5 dan 7 kalimatnya justru berlawanan dengan yang ada di layarnya.
+      -->
+      <p class="petunjuk" *ngIf="!bolehUbahHarga">
+        <i class="ph ph-info" aria-hidden="true"></i>
+        <span>{{ "good-receipt__create__no-price-hint" | translate }}</span>
+      </p>
+
+      <div class="gulir" [formGroup]="itemFormGroup">
+        <table class="tabel" formArrayName="items">
+          <thead>
+            <tr>
+              <th>{{ "good-receipt__create__item" | translate }}</th>
+              <th>{{ "good-receipt__create__quantity" | translate }}</th>
+              <th class="ke-kanan" *ngIf="bolehUbahHarga">
+                {{ "product__add__unit__purchase-price" | translate }}
+              </th>
+              <th class="ke-kanan" *ngIf="bolehUbahHarga">
+                {{ "product__add__unit__purchase-discount" | translate }}
+              </th>
+              <th *ngIf="bolehUbahHarga">
+                {{ "good-receipt__create__save-price" | translate }}
+              </th>
+              <th class="tabel__aksi-kepala">
+                <span class="sr-only">{{ "general__actions" | translate }}</span>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="t.length > 0">
+            <tr *ngFor="let itemForm of t.controls; index as i" [formGroupName]="i">
+              <td>
+                <span class="barang__ref">{{ itemForm.get("reference")?.value }}</span>
+                <span class="barang__desc">{{ itemForm.get("description")?.value }}</span>
+                <span class="barang__stok" *ngIf="itemForm.get('stock')?.value as stok">
+                  {{ "good-receipt__create__current-stock" | translate }}:
+                  {{ stok.stock | number: "0.0-2" }}
+                  {{ itemForm.get("default_unit")?.value }}
+                </span>
+              </td>
+
+              <td>
+                <div class="jumlah">
+                  <input
+                    class="input input--kanan"
+                    type="text"
+                    formControlName="quantity"
+                    mask="separator.2"
+                    thousandSeparator=" "
+                  />
+                  <span class="jumlah__satuan">{{ itemForm.get("unit")?.value }}</span>
+                </div>
+                <!--
+                  Petunjuk konversi hanya muncul bila satuannya bukan satuan
+                  dasar — "3 box = 300 pcs". Pada satuan dasar kalimatnya
+                  mengulang apa yang sudah tertulis di sebelahnya.
+                -->
+                <span class="jumlah__konversi" *ngIf="itemForm.get('conversion')?.value != 1">
+                  {{ itemForm.get("quantity")?.value * itemForm.get("conversion")?.value | number: "0.0-2" }}
+                  {{ itemForm.get("default_unit")?.value }}
+                </span>
+              </td>
+
+              <td *ngIf="bolehUbahHarga">
                 <input
-                  matInput
+                  class="input input--kanan"
                   type="text"
-                  class="text-center"
-                  mask="separator"
+                  formControlName="price"
+                  mask="separator.2"
                   thousandSeparator=" "
-                  formControlName="quantity"
-                  autocomplete="off"
-                  placeholder="Ex. 20"
                 />
-                <mat-hint *ngIf="itemForm.get('conversion')?.value == 1">{{
-                  itemForm.get("unit")?.value
-                }}</mat-hint>
-                <mat-hint *ngIf="itemForm.get('conversion')?.value != 1"
-                  >{{ itemForm.get("unit")?.value }} -
-                  {{
-                    itemForm.get("quantity")?.value *
-                      itemForm.get("conversion")?.value | number : "0.0-2"
-                  }}
-                  {{ itemForm.get("default_unit")?.value }}</mat-hint
+              </td>
+
+              <td *ngIf="bolehUbahHarga">
+                <input
+                  class="input input--kanan"
+                  type="text"
+                  formControlName="discount"
+                  mask="separator.2"
+                  thousandSeparator=" "
+                />
+              </td>
+
+              <td *ngIf="bolehUbahHarga">
+                <button
+                  type="button"
+                  class="simpan-harga"
+                  [class.simpan-harga--on]="itemForm.get('save_price')?.value"
+                  (click)="itemForm.get('save_price')?.setValue(!itemForm.get('save_price')?.value)"
+                  [attr.aria-pressed]="itemForm.get('save_price')?.value"
+                  [title]="
+                    (itemForm.get('save_price')?.value
+                      ? 'good-receipt__create__save-price__on'
+                      : 'good-receipt__create__save-price__off'
+                    ) | translate
+                  "
                 >
-              </mat-form-field>
-            </td>
-            <td class="text-nowrap text-center">
-              <button mat-icon-button (click)="deleteItem(i)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-        <tbody *ngIf="t.controls.length == 0">
-          <tr>
-            <td colspan="7">
-              <empty-table />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                  <i class="ph-fill ph-bookmark-simple" aria-hidden="true"></i>
+                </button>
+              </td>
+
+              <td class="tabel__aksi">
+                <button
+                  type="button"
+                  class="tabel__aksi-btn"
+                  (click)="deleteItem(i)"
+                  [title]="'general__delete' | translate"
+                  [attr.aria-label]="'general__delete' | translate"
+                >
+                  <i class="ph ph-x" aria-hidden="true"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+
+          <tbody *ngIf="t.length === 0">
+            <tr>
+              <td [attr.colspan]="bolehUbahHarga ? 6 : 3" class="tabel__pesan">
+                {{ "good-receipt__create__no-item" | translate }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <button type="button" class="tambah" (click)="openItemSelector()">
+        <i class="ph ph-plus-circle" aria-hidden="true"></i>
+        <span>{{ "good-receipt__create__add-item" | translate }}</span>
+        <span class="tambah__kunci">Alt + A</span>
+      </button>
+    </section>
+  </div>
+
+  <!-- Kolom kanan ------------------------------------------------------ -->
+  <aside class="buat__samping">
+    <section class="kartu">
+      <h2 class="kartu__label">{{ "product__create__before-save" | translate }}</h2>
+
+      <ul class="periksa">
+        <li [class.periksa--ok]="metaFormGroup.valid">
+          <i class="ph-fill" [class.ph-check-circle]="metaFormGroup.valid" [class.ph-circle]="!metaFormGroup.valid" aria-hidden="true"></i>
+          <span>{{ "good-receipt__create__check-general" | translate }}</span>
+        </li>
+        <li [class.periksa--ok]="t.length > 0">
+          <i class="ph-fill" [class.ph-check-circle]="t.length > 0" [class.ph-circle]="t.length === 0" aria-hidden="true"></i>
+          <span>{{ t.length }} {{ "good-receipt__create__check-items" | translate }}</span>
+        </li>
+        <li [class.periksa--ok]="itemFormGroup.valid" *ngIf="t.length > 0">
+          <i class="ph-fill" [class.ph-check-circle]="itemFormGroup.valid" [class.ph-circle]="!itemFormGroup.valid" aria-hidden="true"></i>
+          <span>{{ "good-receipt__create__check-quantity" | translate }}</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="kartu">
+      <h2 class="kartu__label">{{ "general__actions" | translate }}</h2>
 
       <button
         type="button"
-        class="action-button"
+        class="btn btn--primary btn--blok"
         (click)="submitForm()"
-        [disabled]="
-          !metaFormGroup.valid || !itemFormGroup.valid || isSubmitting
-        "
+        [disabled]="!metaFormGroup.valid || !itemFormGroup.valid || isSubmitting"
       >
-        {{ "purchase-invoice__create__submit" | translate }}
+        <i class="ph ph-check" aria-hidden="true"></i>
+        {{ "good-receipt__create__submit" | translate }}
       </button>
-    </form>
-  </div>
+    </section>
+  </aside>
 </div>

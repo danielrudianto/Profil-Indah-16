@@ -1,32 +1,424 @@
-h5 {
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-size: 1.2rem;
-  color: #041e49;
-  margin-bottom: 2rem;
+/*
+  Buat penerimaan barang — sistem desain Nocturne.
+
+  Kosakata kelasnya sengaja sama dengan halaman Buat Barang: keduanya formulir
+  dua-kartu dengan kolom ringkasan di kanan, dan menyamakan namanya membuat
+  keduanya bisa dibaca bergantian tanpa menerjemahkan ulang.
+*/
+
+.buat {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 32px;
+  align-items: start;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  color: var(--color-text);
 }
 
-.add-button {
+.buat__utama {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+.buat__samping {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: sticky;
+  top: 0;
+}
+
+.buat__head {
+  margin-bottom: 2px;
+}
+
+.buat__title {
+  font-size: 28px;
+  font-weight: 500;
+  margin: 0 0 4px;
+}
+
+.buat__lede {
+  margin: 0;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Kartu                                                             */
+/* ---------------------------------------------------------------- */
+
+.kartu {
+  padding: 20px 24px 24px;
+  border: 1px solid var(--color-divider);
+  border-radius: 12px;
+  background: var(--color-surface);
+}
+
+.kartu__label {
+  margin: 0 0 16px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Kolom isian                                                       */
+/* ---------------------------------------------------------------- */
+
+.kisi {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--color-text) 78%, transparent);
+}
+
+.input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
   outline: none;
-  border: none;
-  color: white;
-  font-weight: 400;
-  background-color: #005cbb;
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.25rem;
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--color-text) 38%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+select.input {
+  appearance: none;
+  padding-right: 10px;
   cursor: pointer;
 }
 
-.purchase-invoice__action-wrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+.input--sempit {
+  max-width: 420px;
 }
 
-.purchase-invoice__save-indicator {
-  color: #0b57d0;
+.input--area {
+  min-height: 84px;
+  padding: 10px 14px;
+  resize: vertical;
+}
+
+.input--angka,
+.input--kanan {
+  font-variant-numeric: tabular-nums;
+}
+
+.input--kanan {
+  text-align: right;
+}
+
+.input--tengah {
+  text-align: center;
   font-weight: 500;
-  outline: none;
-  border: none;
-  background-color: transparent;
+}
+
+.input--kecil {
+  min-height: 38px;
+  font-size: 13px;
+}
+
+/* ---------------------------------------------------------------- */
+/* Petunjuk                                                          */
+/* ---------------------------------------------------------------- */
+
+.petunjuk {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--color-active);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  color: var(--color-accent);
+  font-size: 13px;
+
+  i {
+    font-size: 16px;
+    flex: none;
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Baris satuan                                                      */
+/* ---------------------------------------------------------------- */
+
+/*
+  Tujuh kolom isian tidak muat pada layar yang lebih sempit dari desainnya —
+  yang dibuat untuk 1920px. Alih-alih memampatkan tiap kotak sampai selebar
+  dua huruf, bagian ini menggulung mendatar di dalam kartunya sendiri, dengan
+  lebar terkecil yang sama untuk baris judul dan baris isian supaya keduanya
+  tidak pernah bergeser sendiri-sendiri.
+*/
+.periksa {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13.5px;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  }
+
+  i {
+    font-size: 17px;
+    flex: none;
+    line-height: 1.35;
+  }
+}
+
+/* Yang sudah beres diberi warna aksen; sisanya tetap redup. */
+.periksa--ok {
+  color: var(--color-text);
+
+  i {
+    color: var(--color-accent);
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+
+  i {
+    font-size: 16px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+.btn--blok {
+  width: 100%;
+
+  & + .btn--blok {
+    margin-top: 10px;
+  }
+}
+
+.btn--primary {
+  min-height: 48px;
+  font-size: 15px;
+  color: var(--color-accent);
+  background: transparent;
+  border: 1px solid var(--color-accent);
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
+}
+
+.btn--kedua {
+  min-height: 42px;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+
+  &:hover:not(:disabled) {
+    color: var(--color-text);
+    border-color: color-mix(in srgb, var(--color-text) 30%, transparent);
+  }
+}
+
+/*
+  Di bawah lebar ini kolom kanan turun ke bawah, dan baris satuannya berhenti
+  memakai kisi: tujuh kolom pada layar sempit membuat tiap kotak isian selebar
+  dua huruf.
+*/
+@media (max-width: 1100px) {
+  .buat {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .buat__samping {
+    position: static;
+  }
+}
+
+
+/* ---------------------------------------------------------------- */
+/* Tabel barang diterima                                             */
+/* ---------------------------------------------------------------- */
+
+.gulir {
+  overflow-x: auto;
+}
+
+.ke-kanan {
+  text-align: right;
+}
+
+.barang__ref {
+  display: block;
+  font-weight: 500;
+}
+
+.barang__desc {
+  display: block;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.barang__stok {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+.jumlah {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .input {
+    width: 110px;
+    min-height: 40px;
+  }
+}
+
+.jumlah__satuan {
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+/* "3 box = 300 pcs" — hanya muncul bila satuannya bukan satuan dasar. */
+.jumlah__konversi {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+.tabel .input {
+  min-height: 40px;
+}
+
+/*
+  Penanda simpan-harga. Bentuknya tanda buku, sama seperti pada faktur
+  penjualan, supaya artinya tidak perlu dipelajari dua kali.
+*/
+.simpan-harga {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  background: transparent;
+  color: color-mix(in srgb, var(--color-text) 40%, transparent);
+  font-size: 15px;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.simpan-harga--on {
+  background: var(--color-active);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.tambah {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 11px 14px;
+  font: inherit;
+  font-size: 13.5px;
+  text-align: left;
+  color: color-mix(in srgb, var(--color-text) 60%, transparent);
+  background: transparent;
+  border: 1px dashed var(--color-divider);
+  border-radius: 8px;
+  cursor: pointer;
+
+  i {
+    font-size: 18px;
+    color: var(--color-accent);
+  }
+
+  span:first-of-type {
+    flex: 1;
+  }
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 60%, transparent);
+    color: var(--color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.tambah__kunci {
+  padding: 2px 8px;
+  border: 1px solid var(--color-divider);
+  border-radius: 5px;
+  font-size: 11px;
 }
