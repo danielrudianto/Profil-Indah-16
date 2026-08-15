@@ -29,15 +29,10 @@
 
         <div class="kartu__baris">
           <div class="field">
-            <label for="tanggal">
-              {{ 'overpayment__create__date' | translate }}
-            </label>
-            <input
-              id="tanggal"
-              type="date"
-              class="input"
-              formControlName="date"
-            />
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'overpayment__create__date' | translate }}</mat-label>
+              <input matInput type="date" formControlName="date" />
+            </mat-form-field>
           </div>
 
           <div class="field">
@@ -79,19 +74,10 @@
           </div>
 
           <div class="field">
-            <label for="nominal">
-              {{ 'overpayment__create__value' | translate }}
-            </label>
-            <input
-              id="nominal"
-              type="text"
-              class="input input--kanan"
-              mask="separator"
-              thousandSeparator="."
-              formControlName="value"
-              autocomplete="off"
-              placeholder="0"
-            />
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'overpayment__create__value' | translate }}</mat-label>
+              <input matInput type="text" mask="separator" thousandSeparator="." formControlName="value" autocomplete="off" placeholder="0" />
+            </mat-form-field>
           </div>
         </div>
       </section>
@@ -105,15 +91,10 @@
         </h2>
 
         <div class="field">
-          <label for="tanggal-kembali">
-            {{ 'overpayment__create__return-plan-date' | translate }}
-          </label>
-          <input
-            id="tanggal-kembali"
-            type="date"
-            class="input"
-            formControlName="return_payment_date"
-          />
+          <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'overpayment__create__return-plan-date' | translate }}</mat-label>
+              <input matInput type="date" formControlName="return_payment_date" />
+            </mat-form-field>
         </div>
 
         <!--
@@ -151,17 +132,10 @@
         <!-- Transfer: bank, nama akun, nomor akun. -->
         <ng-container *ngIf="metode === 'Bank transfer'">
           <div class="field">
-            <label for="bank">
-              {{ 'overpayment__create__return-payment-bank' | translate }}
-            </label>
-            <input
-              id="bank"
-              type="text"
-              class="input"
-              list="daftar-bank"
-              formControlName="return_payment_bank"
-              autocomplete="off"
-            />
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'overpayment__create__return-payment-bank' | translate }}</mat-label>
+              <input matInput type="text" list="daftar-bank" formControlName="return_payment_bank" autocomplete="off" />
+            </mat-form-field>
             <datalist id="daftar-bank">
               <option *ngFor="let bank of banks" [value]="bank.name"></option>
             </datalist>
@@ -169,45 +143,27 @@
 
           <div class="kartu__baris">
             <div class="field">
-              <label for="nama-akun">
-                {{ 'overpayment__create__account-name' | translate }}
-              </label>
-              <input
-                id="nama-akun"
-                type="text"
-                class="input"
-                formControlName="return_payment_name"
-                autocomplete="off"
-              />
+              <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'overpayment__create__account-name' | translate }}</mat-label>
+              <input matInput type="text" formControlName="return_payment_name" autocomplete="off" />
+            </mat-form-field>
             </div>
 
             <div class="field">
-              <label for="nomor-akun">
-                {{ 'overpayment__create__return-payment-number' | translate }}
-              </label>
-              <input
-                id="nomor-akun"
-                type="text"
-                class="input"
-                formControlName="return_payment_number"
-                autocomplete="off"
-              />
+              <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'overpayment__create__return-payment-number' | translate }}</mat-label>
+              <input matInput type="text" formControlName="return_payment_number" autocomplete="off" />
+            </mat-form-field>
             </div>
           </div>
         </ng-container>
 
         <!-- Cash: cukup nama orang yang mengambil uangnya. -->
         <div class="field" *ngIf="metode === 'Cash'">
-          <label for="penerima">
-            {{ 'overpayment__create__receiver-name' | translate }}
-          </label>
-          <input
-            id="penerima"
-            type="text"
-            class="input"
-            formControlName="return_payment_name"
-            autocomplete="off"
-          />
+          <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'overpayment__create__receiver-name' | translate }}</mat-label>
+              <input matInput type="text" formControlName="return_payment_name" autocomplete="off" />
+            </mat-form-field>
           <p class="field__bantu">
             {{ 'overpayment__create__receiver-hint' | translate }}
           </p>

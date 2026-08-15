@@ -102,12 +102,22 @@
 
 
     <!--
-      Kartu faktur. Tingginya DIPESAN lewat placeholder bergaris putus-putus
-      saat mode surat jalan, supaya menekan pilihannya tidak membuat sisa form
-      melompat naik-turun.
+      Kartu faktur supplier.
+
+      SEBUAH KARTU PENUH, sama seperti Data umum dan Barang diterima. Sebelumnya
+      ia hanya <section class="faktur"> tanpa satu pun aturan gaya, sehingga
+      begitu dokumennya dinyatakan lengkap ketiga kolomnya berdiri di atas latar
+      polos — satu-satunya bagian formulir yang tidak berkartu.
+
+      Judulnya kini SELALU tergambar, juga saat masih menunggu faktur. Judul
+      yang ikut hilang membuat kartunya berubah menjadi kotak tanpa nama, dan
+      yang membacanya harus menebak sendiri tempat itu untuk apa.
+
+      Tingginya tetap DIPESAN lewat placeholder bergaris putus-putus saat mode
+      surat jalan, supaya menekan pilihannya tidak membuat sisa form melompat.
     -->
-    <section class="faktur" [formGroup]="metaFormGroup" *ngIf="bolehUbahHarga">
-      <h2 class="kartu__label" *ngIf="dokumenLengkap">
+    <section class="kartu" [formGroup]="metaFormGroup" *ngIf="bolehUbahHarga">
+      <h2 class="kartu__label">
         {{ "good-receipt__invoice" | translate }}
       </h2>
 

@@ -520,6 +520,10 @@ select.input {
   Tingginya dipesan supaya menekan pilihan keadaan tidak membuat sisa form
   melompat. 148px adalah tinggi kartu faktur yang terisi, sesuai berkas desain.
 */
+/*
+  Slot isi kartu faktur. Tingginya dipesan supaya berpindah antara "surat jalan
+  saja" dan "dokumen lengkap" tidak membuat kartu di bawahnya melompat.
+*/
 .faktur__isi {
   min-height: 128px;
   display: flex;
