@@ -57,6 +57,16 @@ export class GoodReceiptCreateComponent {
     company_id: new FormControl('', Validators.required),
     date: new FormControl('', Validators.required),
     delivery_order: new FormControl('', Validators.required),
+    /*
+      Kolom faktur. Ketiganya SUDAH ADA di tabel good_receipt_code sejak awal —
+      invoice_name, faktur, discount — dan selama ini dikirim kosong oleh form
+      ini lalu diisi belakangan lewat halaman Faktur Pembelian yang terpisah.
+      Faktur Pembelian memang bukan dokumen tersendiri: tidak ada tabelnya,
+      tidak ada controllernya, tidak ada rutenya di server.
+    */
+    invoice_name: new FormControl(''),
+    faktur: new FormControl(''),
+    document_discount: new FormControl(0),
     items: new FormArray([]),
   });
 
@@ -82,6 +92,38 @@ export class GoodReceiptCreateComponent {
    * pasti ditolak tidak ditawarkan lebih dulu.
    */
   bolehUbahHarga = inject(AuthService).isAdministrator();
+
+  /**
+   * Keadaan dokumen yang sedang dibuat.
+   *
+   * "surat-jalan" — barangnya datang, fakturnya belum. Catatannya tersimpan
+   * sebagai MENUNGGU FAKTUR dan harus dilengkapi belakangan.
+   * "lengkap" — faktur supplier sudah di tangan; dokumennya final.
+   *
+   * Hanya peran 5 dan 7 yang melihat pilihan ini. Peran pembelian selalu
+   * mencatat surat jalan saja, dan bahkan tidak melihat harganya.
+   */
+  keadaan: 'surat-jalan' | 'lengkap' = 'surat-jalan';
+
+  pilihKeadaan(nilai: 'surat-jalan' | 'lengkap'): void {
+    this.keadaan = nilai;
+
+    /*
+      Kolom faktur dikosongkan ketika kembali ke surat jalan. Membiarkannya
+      terisi berarti angka yang tidak terlihat lagi tetap ikut terkirim.
+    */
+    if (nilai === 'surat-jalan') {
+      this.metaFormGroup.patchValue({
+        invoice_name: '',
+        faktur: '',
+        document_discount: 0,
+      });
+    }
+  }
+
+  get dokumenLengkap(): boolean {
+    return this.bolehUbahHarga && this.keadaan === 'lengkap';
+  }
 
   ngOnInit(): void {
     this.itemFormGroup.valueChanges.subscribe(() => {
@@ -251,8 +293,12 @@ export class GoodReceiptCreateComponent {
               .post('good-receipt', {
                 uuid: this.metaFormGroup.get('uuid')?.value,
                 name: this.metaFormGroup.get('delivery_order')?.value,
-                invoice_name: '',
-                faktur: null,
+                invoice_name: this.metaFormGroup.get('invoice_name')?.value ?? '',
+                faktur: this.metaFormGroup.get('faktur')?.value || null,
+                discount: Number(
+                  this.metaFormGroup.get('document_discount')?.value ?? 0,
+                ),
+                is_confirm: this.dokumenLengkap,
                 date: this.datePipe.transform(
                   this.metaFormGroup.get('date')?.value,
                   'yyyy-MM-dd'
@@ -337,9 +383,13 @@ export class GoodReceiptCreateComponent {
                         discount: Number(x.get('discount')?.value),
                       };
                     }),
-                    invoice_name: '',
-                    faktur: null,
-                    discount: 0,
+                    invoice_name:
+                      this.metaFormGroup.get('invoice_name')?.value ?? '',
+                    faktur: this.metaFormGroup.get('faktur')?.value || null,
+                    discount: Number(
+                      this.metaFormGroup.get('document_discount')?.value ?? 0,
+                    ),
+                    is_confirm: this.dokumenLengkap,
                   })
                   .subscribe({
                     next: (_) => {

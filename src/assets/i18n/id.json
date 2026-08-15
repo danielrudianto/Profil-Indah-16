@@ -1754,5 +1754,20 @@
   "accent__blurple": "Blurple",
   "good-receipt__archive__status": "Status",
   "good-receipt__status__complete": "Lengkap",
-  "good-receipt__status__waiting": "Menunggu faktur"
+  "good-receipt__status__waiting": "Menunggu faktur",
+  "good-receipt__state": "Keadaan dokumen",
+  "good-receipt__state__do": "Surat jalan saja",
+  "good-receipt__state__do__note": "Barang sudah datang, faktur supplier belum. Dokumen tersimpan sebagai menunggu faktur dan perlu dilengkapi nanti.",
+  "good-receipt__state__full": "Dokumen lengkap",
+  "good-receipt__state__full__note": "Faktur supplier sudah di tangan. Dokumen langsung final dan masuk hutang.",
+  "good-receipt__invoice": "Faktur supplier",
+  "good-receipt__invoice__name": "No. faktur supplier",
+  "good-receipt__invoice__tax": "No. faktur pajak",
+  "good-receipt__invoice__discount": "Diskon dokumen",
+  "good-receipt__invoice__discount__note": "Dalam Rupiah, di luar diskon tiap baris barang.",
+  "good-receipt__invoice__waiting": "Menunggu faktur supplier",
+  "good-receipt__create__submit__waiting": "Simpan — menunggu faktur",
+  "good-receipt__create__submit__final": "Simpan — dokumen final",
+  "good-receipt__check__waiting": "Dokumen menunggu faktur",
+  "good-receipt__check__final": "Dokumen final, masuk hutang"
 }

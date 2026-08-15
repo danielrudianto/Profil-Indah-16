@@ -5,6 +5,40 @@
       <p class="buat__lede">{{ "good-receipt__create__lede" | translate }}</p>
     </header>
 
+
+    <!--
+      Keadaan dokumen — hanya peran 5 dan 7. Pilihannya bukan "form panjang vs
+      pendek": surat jalan saja berarti dokumen ini BELUM SELESAI dan menunggu
+      faktur supplier, dan konsekuensi itu ditulis di kartunya sendiri.
+    -->
+    <section class="kartu" *ngIf="bolehUbahHarga">
+      <h2 class="kartu__label">{{ "good-receipt__state" | translate }}</h2>
+
+      <div class="keadaan">
+        <button
+          type="button"
+          class="keadaan__kartu"
+          [class.keadaan__kartu--on]="keadaan === 'surat-jalan'"
+          (click)="pilihKeadaan('surat-jalan')"
+        >
+          <i class="ph ph-truck" aria-hidden="true"></i>
+          <span class="keadaan__judul">{{ "good-receipt__state__do" | translate }}</span>
+          <span class="keadaan__akibat">{{ "good-receipt__state__do__note" | translate }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="keadaan__kartu"
+          [class.keadaan__kartu--on]="keadaan === 'lengkap'"
+          (click)="pilihKeadaan('lengkap')"
+        >
+          <i class="ph ph-receipt" aria-hidden="true"></i>
+          <span class="keadaan__judul">{{ "good-receipt__state__full" | translate }}</span>
+          <span class="keadaan__akibat">{{ "good-receipt__state__full__note" | translate }}</span>
+        </button>
+      </div>
+    </section>
+
     <!-- Data umum ------------------------------------------------------ -->
     <section class="kartu" [formGroup]="metaFormGroup">
       <h2 class="kartu__label">{{ "good-receipt__create__general" | translate }}</h2>
@@ -54,6 +88,48 @@
             (clear)="onUnselectCompany()"
           />
         </div>
+      </div>
+    </section>
+
+
+    <!--
+      Kartu faktur. Tingginya DIPESAN lewat placeholder bergaris putus-putus
+      saat mode surat jalan, supaya menekan pilihannya tidak membuat sisa form
+      melompat naik-turun.
+    -->
+    <section class="kartu faktur" [formGroup]="metaFormGroup" *ngIf="bolehUbahHarga">
+      <h2 class="kartu__label">{{ "good-receipt__invoice" | translate }}</h2>
+
+      <div class="faktur__isi" [class.faktur__isi--aktif]="dokumenLengkap">
+        <div class="kisi" *ngIf="dokumenLengkap">
+          <div class="field">
+            <label for="gr-inv">{{ "good-receipt__invoice__name" | translate }}</label>
+            <input id="gr-inv" class="input input--angka" type="text" formControlName="invoice_name" autocomplete="off" />
+          </div>
+
+          <div class="field">
+            <label for="gr-tax">{{ "good-receipt__invoice__tax" | translate }}</label>
+            <input id="gr-tax" class="input input--angka" type="text" formControlName="faktur" autocomplete="off" />
+          </div>
+
+          <div class="field">
+            <label for="gr-disc">{{ "good-receipt__invoice__discount" | translate }}</label>
+            <input
+              id="gr-disc"
+              class="input input--kanan"
+              type="text"
+              formControlName="document_discount"
+              mask="separator.2"
+              thousandSeparator=" "
+            />
+            <p class="field__bantu">{{ "good-receipt__invoice__discount__note" | translate }}</p>
+          </div>
+        </div>
+
+        <p class="faktur__kosong" *ngIf="!dokumenLengkap">
+          <i class="ph ph-clock" aria-hidden="true"></i>
+          {{ "good-receipt__invoice__waiting" | translate }}
+        </p>
       </div>
     </section>
 
@@ -231,6 +307,23 @@
           ></i>
           <span>{{ "good-receipt__create__check-quantity" | translate }}</span>
         </li>
+        <li [class.periksa--ok]="dokumenLengkap" *ngIf="bolehUbahHarga">
+          <i
+            [class.ph-fill]="dokumenLengkap"
+            [class.ph-check-circle]="dokumenLengkap"
+            [class.ph]="!dokumenLengkap"
+            [class.ph-clock]="!dokumenLengkap"
+            aria-hidden="true"
+          ></i>
+          <span>
+            {{
+              (dokumenLengkap
+                ? "good-receipt__check__final"
+                : "good-receipt__check__waiting"
+              ) | translate
+            }}
+          </span>
+        </li>
       </ul>
     </section>
 
@@ -244,7 +337,14 @@
         [disabled]="!metaFormGroup.valid || !itemFormGroup.valid || isSubmitting"
       >
         <i class="ph ph-check" aria-hidden="true"></i>
-        {{ "good-receipt__create__submit" | translate }}
+        {{
+          (dokumenLengkap
+            ? "good-receipt__create__submit__final"
+            : bolehUbahHarga
+              ? "good-receipt__create__submit__waiting"
+              : "good-receipt__create__submit"
+          ) | translate
+        }}
       </button>
     </section>
   </aside>
