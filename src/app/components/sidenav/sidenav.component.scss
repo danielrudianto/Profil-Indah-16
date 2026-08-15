@@ -34,7 +34,7 @@
   height: 100%;
   padding: 16px 12px;
   gap: 12px;
-  background: var(--color-surface);
+  background: var(--color-sidebar);
   border-right: 1px solid var(--color-divider);
   font-family: "Plus Jakarta Sans", system-ui, sans-serif;
   color: var(--color-text);
@@ -238,7 +238,7 @@
   }
 
   &:hover {
-    background: color-mix(in srgb, var(--color-text) 6%, transparent);
+    background: var(--color-hover);
     color: inherit;
   }
 
@@ -249,13 +249,13 @@
 }
 
 /*
-  Keadaan aktif memakai pola yang sama di seluruh aplikasi: ground aktif,
-  garis tepi dalam setebal 1px, dan teks beraksen. Ditulis sebagai bayangan
-  dalam, bukan border, supaya tidak menggeser tata letaknya satu piksel pun.
+  TANPA RING. TOKENS.md menandai bagian ini "sering salah, baca pelan":
+  item aktif hanyalah wash aksen 12% dengan teks dan ikon beraksen — tidak ada
+  border, outline, maupun chip terang. Bentuk lama yang memakai chip #E7ECFB
+  berikut ring sudah dibuang di sisi desain.
 */
 .sidenav__item--on {
-  background: var(--color-active);
-  box-shadow: inset 0 0 0 1px var(--color-accent);
+  background: var(--color-accent-wash);
   color: var(--color-accent);
   font-weight: 500;
 }

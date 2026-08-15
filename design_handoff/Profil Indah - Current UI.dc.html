@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+@font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-Regular.ttf"); }
+@font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-Medium.ttf"); font-weight: 500; }
+@font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-SemiBold.ttf"); font-weight: 600; }
+@font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-Bold.ttf"); font-weight: bold; }
+@font-face { font-family: "Nunito"; src: url("assets/fonts/NunitoSans-Regular.ttf"); }
+@font-face { font-family: "Nunito"; src: url("assets/fonts/NunitoSans-SemiBold.ttf"); font-weight: 600; }
+@font-face { font-family: "Nunito"; src: url("assets/fonts/NunitoSans-Bold.ttf"); font-weight: bold; }
+@keyframes bodyAnimation { 0% { transform: rotate(-15deg); transform-origin: bottom center; } 50% { transform: rotate(15deg); transform-origin: bottom center; } 100% { transform: rotate(-15deg); transform-origin: bottom center; } }
+@keyframes eyesAnimation { 0% { transform: rotate(-15deg); transform-origin: center 130%; } 50% { transform: rotate(15deg); transform-origin: center 130%; } 100% { transform: rotate(-15deg); transform-origin: center 130%; } }
+body { margin: 0; background: #e8eaef; font-family: Roboto, "Helvetica Neue", sans-serif; }
+a { color: #3f51b5; } a:hover { color: #303f9f; }
+</style>
+</helmet>
+
+<section style="padding: 64px; display: flex; flex-direction: column; gap: 56px; align-items: flex-start">
+  <div style="font-family: Poppins, sans-serif; font-size: 15px; font-weight: 600; color: #35507d; letter-spacing: 0.04em; text-transform: uppercase">Recreation of the current app — Angular 16 source, 1920 × 1080</div>
+
+  <div id="1a" style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: center; gap: 12px">
+      <span style="font-family: Poppins, sans-serif; font-size: 12px; font-weight: 600; color: #fff; background: #35507d; border-radius: 4px; padding: 3px 8px">1a</span>
+      <span style="font-family: Poppins, sans-serif; font-size: 14px; color: #35507d">Login — login.component</span>
+    </div>
+    <div data-screen-label="Login (current)" style="width: 1920px; height: 1080px; background: #fff; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.18); position: relative">
+      <div style="width: 100%; height: 10px; margin-bottom: 30px; background: linear-gradient(139deg, #0d47a1, #3772b2, #7f8c8d, #a14c9b, #fb8817, #ff4b01)"></div>
+      <div style="width: 1320px; margin: 0 auto; padding: 0 12px; box-sizing: border-box">
+        <div style="display: flex; justify-content: center; margin: 0 -12px">
+          <div style="width: 440px; padding: 0 12px; box-sizing: border-box">
+            <h1 style="font-family: 'Courier New', Courier, monospace; font-weight: 900; font-size: 24px; line-height: 32px; margin: 0 0 16px; color: #000">Profil Indah</h1>
+            <div style="width: 100%; padding: 24px; box-sizing: border-box; background: #fff; border: 1px solid rgba(0,0,0,0.175); border-radius: 6px">
+              <div style="width: 205px; height: 205px; background: #0d47a1; position: relative; border-radius: 50%; margin-left: 50%; transform: translateX(-50%); cursor: pointer">
+                <div style="width: 200px; height: 200px; border-radius: 50%; background: aliceblue; position: relative; margin-left: 50%; margin-top: 50%; transform: translateX(-50%) translateY(-50%); overflow: hidden">
+                  <div style="position: absolute; height: 200px; width: 200px; overflow: hidden; border-radius: 50%">
+                    <div style="position: absolute; top: 55%; left: 60%; transform: translate(-50%, -50%); width: 100%; text-align: center">
+                      <img src="assets/images/bear-body.png" style="width: 80%; margin-bottom: -70px; animation: bodyAnimation 3s ease-in-out infinite; object-fit: contain">
+                    </div>
+                    <div style="position: absolute; top: 65%; left: 35%; width: 30%; animation: eyesAnimation 3s ease-in-out infinite">
+                      <img src="assets/images/bear-eye-open.png" style="width: 100%">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h2 style="font-size: 20px; line-height: 32px; font-weight: 500; margin: 16px 0 16px; color: #000">Sign in</h2>
+              <div style="border-top: 1px solid rgba(4,30,73,0.3); margin: 16px 0 16px"></div>
+              <div style="display: flex; flex-direction: column; gap: 0">
+                <div style="width: 100%; height: 56px; background: rgba(0,0,0,0.04); border-radius: 4px 4px 0 0; border-bottom: 1px solid rgba(0,0,0,0.42); padding: 8px 16px 0; box-sizing: border-box; margin-bottom: 16px">
+                  <div style="font-size: 12px; color: rgba(0,0,0,0.6); line-height: 16px">Username</div>
+                  <div style="font-size: 16px; color: rgba(0,0,0,0.87); line-height: 28px">&nbsp;</div>
+                </div>
+                <div style="position: relative; width: 100%; height: 56px; background: rgba(0,0,0,0.04); border-radius: 4px 4px 0 0; border-bottom: 1px solid rgba(0,0,0,0.42); padding: 8px 16px 0; box-sizing: border-box; margin-bottom: 24px">
+                  <div style="font-size: 12px; color: rgba(0,0,0,0.6); line-height: 16px">Password</div>
+                  <div style="font-size: 16px; color: rgba(0,0,0,0.87); line-height: 28px">&nbsp;</div>
+                  <span class="material-icons" style="position: absolute; right: 8px; top: 12px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: rgba(0,0,0,0.54); font-size: 24px">visibility</span>
+                </div>
+                <button style="width: 100%; border-radius: 0; background: #808080; padding: 12px 48px; color: #fff; border: none; outline: none; cursor: not-allowed; font-family: Roboto, sans-serif; font-size: 16px">Login</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="1b" style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: center; gap: 12px">
+      <span style="font-family: Poppins, sans-serif; font-size: 12px; font-weight: 600; color: #fff; background: #35507d; border-radius: 4px; padding: 3px 8px">1b</span>
+      <span style="font-family: Poppins, sans-serif; font-size: 14px; color: #35507d">Dashboard picker — dashboard.component + topbar + dashboard-top</span>
+    </div>
+    <div data-screen-label="Dashboard (current)" style="width: 1920px; height: 1080px; background: #fff; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.18); position: relative">
+      <div style="height: 60px; width: 100%; display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 8px; box-sizing: border-box; background: rgba(124,172,248,0.8); position: relative; z-index: 3">
+        <div style="display: flex; flex-direction: row; align-items: center; cursor: pointer">
+          <img src="assets/images/logo.png" width="30" height="30" alt="logo">
+          <p style="margin: 0 0 0 8px; font-size: 20px; font-weight: 600; color: #35507d; letter-spacing: -1px; font-family: Nunito, sans-serif">Profil Indah</p>
+        </div>
+        <div style="display: flex; flex-direction: row; align-items: center; height: 40px; gap: 8px">
+          <div style="width: 36px; height: 14px; border-radius: 7px; background: rgba(0,0,0,0.38); position: relative; opacity: 0.6; margin-right: 4px">
+            <div style="position: absolute; left: -2px; top: -3px; width: 20px; height: 20px; border-radius: 50%; background: #fafafa; box-shadow: 0 1px 3px rgba(0,0,0,0.4)"></div>
+          </div>
+          <div style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center">
+            <svg viewBox="0 0 64 64" style="width: 24px; height: 24px"><path d="M31.8 62c16.6 0 30-13.4 30-30h-60c0 16.6 13.4 30 30 30" fill="#f9f9f9"></path><path d="M31.8 2c-16.6 0-30 13.4-30 30h60c0-16.6-13.4-30-30-30" fill="#ed4c5c"></path></svg>
+          </div>
+          <div style="width: 40px; height: 40px; border-radius: 50%; padding: 10px; box-sizing: border-box; background: #0d47a1; color: #fff; display: flex; justify-content: center; align-items: center; font-weight: 400; font-size: 20px">A</div>
+        </div>
+      </div>
+      <div style="position: relative">
+        <div style="height: 308px; width: 100%; z-index: 1; position: absolute; top: 0; left: 0; background: rgba(124,172,248,0.8)">
+          <img src="assets/images/hero_left.png" style="position: absolute; height: 308px; bottom: 0; left: 0; display: block">
+          <img src="assets/images/hero_right.png" style="position: absolute; height: 308px; bottom: 0; right: 0; display: block">
+        </div>
+        <div style="position: relative; padding: 16px; z-index: 2; width: 1320px; margin: 0 auto; box-sizing: border-box">
+          <div style="display: flex; flex-wrap: wrap; margin: 0 -12px">
+            <div style="width: 100%; padding: 0 12px; box-sizing: border-box">
+              <h3 style="font-family: Poppins, sans-serif; font-weight: 600; font-size: 24px; color: #35507d; margin: 80px 0 32px">Available Dashboards</h3>
+            </div>
+            <sc-for list="{{ cards }}" as="card" hint-placeholder-count="4">
+              <div style="width: 25%; padding: 0 12px; box-sizing: border-box">
+                <div style="width: 100%; padding: 16px; box-sizing: border-box; aspect-ratio: 4/3; margin-top: 16px; cursor: pointer; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19); background: #fff; display: flex; flex-direction: column">
+                  <h4 style="font-size: 16px; font-weight: 600; margin: 0 0 8px; font-family: Poppins, sans-serif; color: #000">{{ card.title }}</h4>
+                  <div style="position: relative; display: flex; flex-grow: 1; font-family: Poppins, sans-serif; font-size: 12px; color: #354f7d38; overflow: hidden"></div>
+                  <button style="align-self: flex-start; height: 36px; padding: 0 16px; border: 1px solid rgba(0,0,0,0.12); border-radius: 4px; background: transparent; color: #3f51b5; font-family: Roboto, sans-serif; font-size: 14px; font-weight: 500; letter-spacing: 0; cursor: pointer">Navigate&nbsp;</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      cards: [
+        { title: "Administrator" },
+        { title: "Purchasing" },
+        { title: "Sales" },
+        { title: "General" },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -112,35 +112,60 @@ export class SettingsService {
       ? `color-mix(in srgb, ${aksen.base} 62%, ${aksen.tint})`
       : aksen.base;
 
+    /*
+      GROUND DIAMBIL APA ADANYA DARI design_handoff/TOKENS.md.
+
+      Berkas itu menyatakan dirinya satu-satunya sumber kebenaran warna dan
+      melarang menghitung ulang dari rumus color-mix — ia SUDAH hasil
+      hitungnya. Bentuk sebelumnya di sini justru menghitung sendiri, dan
+      mencampur ground dengan rona aksen; itu akar semua selisih warna yang
+      terjadi selama pengerjaan.
+
+      Akibatnya ground tidak lagi ikut berubah ketika pengguna mengganti
+      aksen. Itu memang maksud desainnya: yang berwarna hanya aksennya,
+      groundnya netral.
+    */
     const token: Record<string, string> = {
+      '--color-bg': gelap ? '#0d121d' : '#dde7fb',
+      '--color-surface': gelap ? '#161b29' : '#f0f5fe',
+      '--color-sidebar': gelap ? '#121724' : '#e8eefc',
+
+      '--color-text': gelap ? '#e9e9ed' : '#292b31',
+      '--color-text-muted': gelap ? '#8f93a3' : '#595d6c',
+      '--color-text-faint': gelap ? '#6b7080' : '#75798c',
+
+      '--color-divider': gelap
+        ? 'rgba(233, 233, 237, 0.12)'
+        : 'rgba(41, 43, 49, 0.14)',
+
+      '--color-hover': gelap
+        ? 'rgba(233, 233, 237, 0.06)'
+        : 'rgba(41, 43, 49, 0.05)',
+
+      /*
+        Aksen tetap dihitung — TOKENS.md hanya memuat nilai pasti untuk biru
+        (#527ff3 gelap, #154dec terang), sementara pengguna boleh memilih di
+        antara lima belas warna. Rumusnya disetel agar biru mendarat tepat di
+        angka itu.
+      */
       '--color-accent': warnaAksen,
       '--color-accent-base': aksen.base,
       '--color-accent-tint': aksen.tint,
 
-      /*
-        LATAR TIDAK IKUT DIWARNAI AKSEN. Nilainya diambil apa adanya dari
-        nocturne-styles.css — #161826 dan #232532 — bukan dicampur dengan
-        d900 aksennya seperti sebelumnya.
-
-        Bentuk lama membuat seluruh halaman ikut berubah rona setiap kali
-        pengguna mengganti aksen, dan yang dilihat bukan lagi ground Nocturne
-        melainkan campurannya. Ground-nya netral; yang berwarna hanya
-        aksennya.
-      */
-      '--color-bg': gelap ? '#161826' : '#f4f5fb',
-
-      '--color-surface': gelap ? '#232532' : '#ffffff',
-
-      '--color-text': gelap ? '#e9e9ed' : '#292b31',
-
-      '--color-divider': gelap
-        ? 'color-mix(in srgb, #e9e9ed 12%, transparent)'
-        : 'color-mix(in srgb, #292b31 12%, transparent)',
-
-      /* Ground keadaan aktif: menu terpilih, chip, tag halaman. */
+      /* Ground keadaan aktif: kartu pilihan, ikon dialog, avatar, banner. */
       '--color-active': gelap
-        ? `color-mix(in srgb, ${aksen.base} 16%, ${aksen.d900})`
-        : '#e7ecfb',
+        ? `color-mix(in srgb, ${aksen.base} 22%, #0d121d)`
+        : `color-mix(in srgb, ${aksen.tint} 45%, #ffffff)`,
+
+      /* Item sidebar aktif, tag halaman, chip saringan aktif. */
+      '--color-accent-wash': gelap
+        ? `color-mix(in srgb, ${warnaAksen} 12%, transparent)`
+        : `color-mix(in srgb, ${aksen.base} 10%, transparent)`,
+
+      /* Isi tombol utama — tipis, bukan isian penuh. */
+      '--color-accent-wash-lemah': gelap
+        ? `color-mix(in srgb, ${warnaAksen} 10%, transparent)`
+        : `color-mix(in srgb, ${aksen.base} 8%, transparent)`,
 
       /* Lingkaran dekoratif di latar; dipakai halaman login. */
       '--blob-a': warnaAksen,
