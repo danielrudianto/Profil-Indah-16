@@ -1,13 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { AsyncPipe, NgIf } from '@angular/common';
-import { MatDrawer, MatDrawerContainer, MatDrawerContent, MatDrawerMode } from '@angular/material/sidenav';
-import { RouterOutlet } from '@angular/router';
+import {
+  MatDrawer,
+  MatDrawerContainer,
+  MatDrawerContent,
+  MatDrawerMode,
+} from '@angular/material/sidenav';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { SideNavService } from 'src/app/services/side-nav.service';
 import { SidenavComponent } from 'src/app/components/sidenav/sidenav.component';
 import { TopbarComponent } from 'src/app/components/topbar/topbar.component';
 import { NAV_ITEMS } from 'src/app/constants/navigation.constant';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 /**
  * Dashboard utama — layar pertama setelah masuk.
@@ -39,20 +45,43 @@ import { NAV_ITEMS } from 'src/app/constants/navigation.constant';
 export class DashboardComponent {
   constructor(
     private authService: AuthService,
-    private sideNavService: SideNavService
+    private sideNavService: SideNavService,
+    private router: Router,
   ) {}
+
+  private destroyRef = inject(DestroyRef);
 
   isSideNavOpen$ = this.sideNavService.isOpen$;
   drawerMode: MatDrawerMode = 'side';
   nama: string = '';
 
-  /** Benar ketika sebuah halaman anak sedang terbuka di outlet, misal /Settings. */
+  /**
+   * Benar ketika sebuah halaman anak sedang terbuka di outlet.
+   *
+   * DITURUNKAN DARI ALAMAT, bukan dari peristiwa (activate) pada router-outlet.
+   * Peristiwa itu menyala DI TENGAH pemeriksaan perubahan — setelah *ngIf yang
+   * membacanya sudah diperiksa — sehingga Angular melemparkan NG0100 berulang
+   * kali dan halamannya berhenti tergambar sama sekali. Alamatnya sudah pasti
+   * sebelum pemeriksaan dimulai, jadi tidak ada nilai yang berubah di tengah
+   * jalan.
+   *
+   * Sejak keempat subpohon peran digabung, SEMUA halaman adalah anak dashboard;
+   * yang tidak punya anak hanyalah dashboard itu sendiri di alamat '/'.
+   */
   adaAnak = false;
 
   ngOnInit(): void {
     const info = this.authService.getUserInfo();
     this.nama = info?.name ?? '';
 
+    this.perbaruiAdaAnak(this.router.url);
+    this.router.events
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((peristiwa) => {
+        if (peristiwa instanceof NavigationEnd) {
+          this.perbaruiAdaAnak(peristiwa.urlAfterRedirects);
+        }
+      });
 
     this.sideNavService.updateSideNavState(window.innerWidth);
   }
@@ -65,8 +94,15 @@ export class DashboardComponent {
    * dan yang menentukan tinggal daftar menunya sendiri — saat ini hanya Gudang
    * yang kosong.
    */
+  private perbaruiAdaAnak(alamat: string): void {
+    const jalur = alamat.split(/[?#]/)[0].replace(/\/$/, '');
+    this.adaAnak = jalur !== '' && jalur !== '/';
+  }
+
   get punyaNavigasi(): boolean {
     const peran = this.authService.getUserInfo()?.role;
-    return peran != null && NAV_ITEMS.some((item) => item.roles.includes(peran));
+    return (
+      peran != null && NAV_ITEMS.some((item) => item.roles.includes(peran))
+    );
   }
 }
