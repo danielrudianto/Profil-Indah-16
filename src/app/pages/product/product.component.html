@@ -1,102 +1,189 @@
-<app-feature-background />
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <app-feature-header
-        [title]="'product__title' | translate"
-        [help]="'product__help' | translate"
-        [isBackAvailable]="true"
-      ></app-feature-header>
-      <div class="dashboard-card">
-        <app-feature-search
-          [addButton]="true"
-          route="product"
-          [page]="page"
-          [pageSize]="pageSize"
-          [enable]="true"
-          (onChange)="onUpdateData($event)"
-          (onLoadingChange)="onUpdateLoadingStatus($event)"
-          (updatePage)="onUpdatePage()"
-          (onNewQuery)="page = 1"
-        ></app-feature-search>
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th class="text-center">
-                  {{ "product__reference" | translate }}
-                </th>
-                <th class="text-center">
-                  {{ "product__description" | translate }}
-                </th>
-                <th class="text-center">{{ "product__brand" | translate }}</th>
-                <th class="text-center">{{ "product__type" | translate }}</th>
-                <th class="text-center">{{ "product__status" | translate }}</th>
-              </tr>
-            </thead>
-            <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr *ngFor="let item of dataSource" [matMenuTriggerFor]="menu">
-                <td>{{ item.reference }}</td>
-                <td>
-                  <span class="text-clamp-2">
-                    {{ item.description }}
-                  </span>
-                </td>
-                <td class="text-center">{{ item.product_brand.name }}</td>
-                <td class="text-center">{{ item.product_type.name }}</td>
-                <td class="text-center">
-                  <span *ngIf="item.is_active">{{
-                    "product__active" | translate
-                  }}</span>
-                  <span *ngIf="!item.is_active">{{
-                    "product__inactive" | translate
-                  }}</span>
-                </td>
-                <mat-menu #menu="matMenu">
-                  <button (click)="openDialog('edit', item.id)" mat-menu-item>
-                    <mat-icon>edit</mat-icon>
-                    <span>{{ "product__update" | translate }}</span>
-                  </button>
-                  <button mat-menu-item (click)="openDialog('active', item.id)">
-                    <mat-icon *ngIf="item.is_active">toggle_on</mat-icon>
-                    <mat-icon *ngIf="!item.is_active">toggle_off</mat-icon>
-                    <span *ngIf="item.is_active">{{
-                      "product__set-inactive" | translate
-                    }}</span>
+<div class="daftar">
+  <header class="daftar__head">
+    <h1 class="daftar__title">{{ 'product__title' | translate }}</h1>
+    <p class="daftar__lede">{{ 'product__lede' | translate }}</p>
+  </header>
 
-                    <span *ngIf="!item.is_active">{{
-                      "product__set-active" | translate
-                    }}</span>
-                  </button>
-                </mat-menu>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length == 0">
-              <tr>
-                <td colspan="5">
-                  <empty-table />
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="isLoading">
-              <tr>
-                <td colspan="5" class="text-center">
-                  <mat-spinner id="spinner"></mat-spinner>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <mat-paginator
+  <div class="daftar__bar">
+    <div class="cari">
+      <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+      <input
+        type="search"
+        [formControl]="cariControl"
+        [attr.placeholder]="'product__search' | translate"
+        [attr.aria-label]="'product__search' | translate"
+      />
+    </div>
+
+    <button type="button" class="btn btn--primary" (click)="tambah()">
+      <i class="ph ph-plus" aria-hidden="true"></i>
+      {{ 'product__add' | translate }}
+    </button>
+
+    <button
+      type="button"
+      class="btn btn--icon"
+      (click)="ambilData()"
+      [disabled]="isLoading"
+      [title]="'general__refresh' | translate"
+      [attr.aria-label]="'general__refresh' | translate"
+    >
+      <i class="ph ph-arrows-clockwise" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <div class="daftar__kartu">
+    <div class="daftar__gulir">
+      <table class="tabel">
+        <thead>
+          <tr>
+            <th>{{ 'product__reference' | translate }}</th>
+            <th>{{ 'product__description' | translate }}</th>
+            <th>{{ 'product__brand' | translate }}</th>
+            <th>{{ 'product__type' | translate }}</th>
+            <th>{{ 'product__status' | translate }}</th>
+            <th class="tabel__aksi-kepala">
+              <span class="sr-only">{{ 'general__actions' | translate }}</span>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody *ngIf="!isLoading && dataSource.length > 0">
+          <tr *ngFor="let item of dataSource; trackBy: lacakBarang">
+            <td class="tabel__utama">{{ item.reference }}</td>
+            <td class="tabel__redup">{{ item.description }}</td>
+            <td>{{ item.product_brand.name }}</td>
+            <td>
+              <span class="tag">{{ item.product_type.name }}</span>
+            </td>
+            <td>
+              <!--
+                Titik warna DITAMBAH tulisan, bukan titik saja. Warna sendirian
+                tidak terbaca oleh yang tidak membedakan warna, dan "hijau
+                berarti aktif" adalah kesepakatan yang harus dihafal lebih dulu.
+              -->
+              <span
+                class="status"
+                [class.status--on]="item.is_active"
+                [class.status--off]="!item.is_active"
+              >
+                <span class="status__titik" aria-hidden="true"></span>
+                {{
+                  (item.is_active ? 'product__active' : 'product__inactive')
+                    | translate
+                }}
+              </span>
+            </td>
+            <td class="tabel__aksi">
+              <button
+                type="button"
+                class="btn btn--hantu"
+                [matMenuTriggerFor]="menu"
+                [title]="'general__actions' | translate"
+                [attr.aria-label]="'general__actions' | translate"
+              >
+                <i class="ph ph-dots-three-outline" aria-hidden="true"></i>
+              </button>
+
+              <!--
+                Menunya milik BARIS INI. Bentuk sebelumnya memasang
+                [matMenuTriggerFor] pada <tr> dan menaruh satu <mat-menu> di
+                dalam baris itu juga — satu klik di mana pun pada baris membuka
+                menu, termasuk ketika pengguna hanya hendak menyorot teksnya.
+              -->
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item type="button" (click)="ubah(item)">
+                  <i class="ph ph-pencil-simple" aria-hidden="true"></i>
+                  <span>{{ 'product__update' | translate }}</span>
+                </button>
+                <button
+                  mat-menu-item
+                  type="button"
+                  (click)="gantiStatus(item)"
+                >
+                  <i
+                    class="ph"
+                    [class.ph-toggle-right]="item.is_active"
+                    [class.ph-toggle-left]="!item.is_active"
+                    aria-hidden="true"
+                  ></i>
+                  <span>
+                    {{
+                      (item.is_active
+                        ? 'product__set-inactive'
+                        : 'product__set-active'
+                      ) | translate
+                    }}
+                  </span>
+                </button>
+              </mat-menu>
+            </td>
+          </tr>
+        </tbody>
+
+        <tbody *ngIf="isLoading">
+          <tr>
+            <td colspan="6" class="tabel__pesan">
+              {{ 'general__loading' | translate }}
+            </td>
+          </tr>
+        </tbody>
+
+        <tbody *ngIf="!isLoading && dataSource.length === 0">
+          <tr>
+            <td colspan="6" class="tabel__pesan">
+              {{ 'general__no-data' | translate }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="daftar__kaki">
+      <span class="daftar__kaki-label">
+        {{ 'general__per-page' | translate }}
+      </span>
+
+      <div class="seg" role="group">
+        <button
+          type="button"
+          class="seg__opt"
+          *ngFor="let u of pilihanUkuran"
+          [class.seg__opt--on]="u === pageSize"
+          [attr.aria-pressed]="u === pageSize"
           [disabled]="isLoading"
-          [pageIndex]="page - 1"
-          [length]="dataCount"
-          [pageSize]="pageSize"
-          (page)="changePage($event)"
-          aria-label="Select page"
-          [pageSizeOptions]="[10, 25, 50]"
+          (click)="gantiUkuran(u)"
         >
-        </mat-paginator>
+          {{ u }}
+        </button>
+      </div>
+
+      <span class="daftar__kaki-jumlah">
+        {{ dari }} – {{ sampai }} {{ 'general__of' | translate }}
+        {{ dataCount }}
+      </span>
+
+      <div class="daftar__kaki-nav">
+        <button
+          type="button"
+          class="btn btn--icon btn--kecil"
+          [disabled]="isLoading || page <= 1"
+          (click)="pindahHalaman(-1)"
+          [title]="'general__previous' | translate"
+          [attr.aria-label]="'general__previous' | translate"
+        >
+          <i class="ph ph-caret-left" aria-hidden="true"></i>
+        </button>
+        <button
+          type="button"
+          class="btn btn--icon btn--kecil"
+          [disabled]="isLoading || page >= halamanTerakhir"
+          (click)="pindahHalaman(1)"
+          [title]="'general__next' | translate"
+          [attr.aria-label]="'general__next' | translate"
+        >
+          <i class="ph ph-caret-right" aria-hidden="true"></i>
+        </button>
       </div>
     </div>
   </div>

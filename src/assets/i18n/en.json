@@ -1676,5 +1676,13 @@
   "accent__magenta": "Magenta",
   "accent__purple": "Purple",
   "accent__violet": "Violet",
-  "accent__slate": "Slate"
+  "accent__slate": "Slate",
+  "product__lede": "Product catalogue with brands and types.",
+  "product__search": "Search reference or description…",
+  "product__add": "Add product",
+  "general__refresh": "Refresh",
+  "general__actions": "Actions",
+  "general__loading": "Loading…",
+  "general__per-page": "Items per page",
+  "general__of": "of"
 }

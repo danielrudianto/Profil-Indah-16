@@ -79,7 +79,7 @@
   "product__set-active": "Tetapkan aktif",
   "product__active": "Aktif",
   "product__inactive": "Tidak aktif",
-  "product__title": "Produk",
+  "product__title": "Barang",
   "product__title__create": "Tambah produk baru",
   "product__help": "Di sini Anda dapat mengelola data produk, membuat, memperbarui, dan menghapus.",
   "product__add__title": "Tambah produk baru",
@@ -1682,5 +1682,13 @@
   "accent__magenta": "Magenta",
   "accent__purple": "Ungu",
   "accent__violet": "Lembayung",
-  "accent__slate": "Abu batu"
+  "accent__slate": "Abu batu",
+  "product__lede": "Katalog barang beserta merek dan tipenya.",
+  "product__search": "Cari referensi atau deskripsi…",
+  "product__add": "Tambah barang",
+  "general__refresh": "Muat ulang",
+  "general__actions": "Tindakan",
+  "general__loading": "Memuat…",
+  "general__per-page": "Item per halaman",
+  "general__of": "dari"
 }

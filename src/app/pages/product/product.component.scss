@@ -1,0 +1,376 @@
+/*
+  Daftar barang — sistem desain Nocturne.
+
+  Nama kelasnya diawali .daftar dan .tabel, bukan .card atau .table. Bootstrap
+  masih ikut termuat lewat styles.scss dan memiliki keduanya lengkap dengan
+  warna teks terangnya sendiri; memakai nama yang sama membuat sel yang tidak
+  menyebut warnanya mewarisi hitam di atas ground gelap.
+*/
+
+.daftar {
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  color: var(--color-text);
+}
+
+.daftar__head {
+  margin-bottom: 22px;
+}
+
+.daftar__title {
+  font-size: 28px;
+  font-weight: 500;
+  margin: 0 0 4px;
+}
+
+.daftar__lede {
+  margin: 0;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Baris alat                                                        */
+/* ---------------------------------------------------------------- */
+
+.daftar__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+/*
+  Kolom cari mendorong dirinya sendiri ke kanan lewat margin-left: auto,
+  bukan lewat elemen pengisi. Ketika keping saringan status ditambahkan nanti,
+  keping itu tinggal diletakkan di kiri tanpa mengubah apa pun di sini.
+*/
+.cari {
+  position: relative;
+  margin-left: auto;
+  width: 320px;
+  max-width: 100%;
+
+  i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: color-mix(in srgb, var(--color-text) 45%, transparent);
+    pointer-events: none;
+  }
+
+  input {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 12px 0 38px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-divider);
+    border-radius: 8px;
+    outline: none;
+
+    &::placeholder {
+      color: color-mix(in srgb, var(--color-text) 38%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Tombol                                                            */
+/* ---------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+
+  i {
+    font-size: 15px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+/* Tombol utama Nocturne memakai GARIS TEPI aksen, bukan isian penuh. */
+.btn--primary {
+  color: var(--color-accent);
+  background: transparent;
+  border: 1px solid var(--color-accent);
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
+}
+
+.btn--icon {
+  width: 44px;
+  padding: 0;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+
+  &:hover:not(:disabled) {
+    color: var(--color-text);
+    border-color: color-mix(in srgb, var(--color-text) 30%, transparent);
+  }
+}
+
+.btn--kecil {
+  width: 32px;
+  min-height: 32px;
+
+  i {
+    font-size: 14px;
+  }
+}
+
+.btn--hantu {
+  width: 32px;
+  min-height: 32px;
+  padding: 0;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+  background: transparent;
+  border: 0;
+
+  i {
+    font-size: 16px;
+  }
+
+  &:hover:not(:disabled) {
+    color: var(--color-text);
+    background: color-mix(in srgb, var(--color-text) 6%, transparent);
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Kartu tabel                                                       */
+/* ---------------------------------------------------------------- */
+
+.daftar__kartu {
+  border: 1px solid var(--color-divider);
+  border-radius: 12px;
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+/*
+  Tabelnya menggulung MENDATAR di dalam kotaknya sendiri, bukan mendorong
+  seluruh halaman melebar. Pada layar sempit tanpa ini, seluruh shell —
+  termasuk navigasi samping — ikut bergeser ketika tabel lebih lebar dari
+  layar.
+*/
+.daftar__gulir {
+  overflow-x: auto;
+}
+
+.tabel {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  white-space: nowrap;
+
+  th {
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-text) 50%, transparent);
+    border-bottom: 1px solid var(--color-divider);
+  }
+
+  td {
+    padding: 13px 20px;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-divider) 60%, transparent);
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  tbody tr:hover td {
+    background: color-mix(in srgb, var(--color-text) 4%, transparent);
+  }
+}
+
+.tabel__utama {
+  font-weight: 500;
+}
+
+/*
+  Deskripsi dibiarkan memanjang dan dipotong dengan elipsis, bukan dibungkus
+  ke baris kedua: tinggi baris yang berubah-ubah membuat mata kehilangan
+  jejak ketika menyusuri kolom di sebelahnya.
+*/
+.tabel__redup {
+  max-width: 340px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+.tabel__aksi,
+.tabel__aksi-kepala {
+  width: 1%;
+  text-align: right;
+}
+
+.tabel__pesan {
+  padding: 34px 20px;
+  text-align: center;
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+}
+
+/* Judul kolom aksi tetap ada untuk pembaca layar, hanya tidak tergambar. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------------------------------------------------------------- */
+/* Penanda                                                           */
+/* ---------------------------------------------------------------- */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--color-active);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  color: var(--color-accent);
+  font-size: 12px;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+}
+
+.status__titik {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/*
+  Hijau dan merah ditulis mentah, bukan diambil dari aksen: keduanya menyatakan
+  keadaan barang, dan artinya tidak boleh ikut berubah ketika pengguna
+  mengganti warna aksennya.
+*/
+.status--on {
+  color: #3fa45b;
+}
+
+.status--off {
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Kaki tabel                                                        */
+/* ---------------------------------------------------------------- */
+
+.daftar__kaki {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--color-divider);
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+.daftar__kaki-jumlah {
+  font-variant-numeric: tabular-nums;
+}
+
+.daftar__kaki-nav {
+  display: flex;
+  gap: 6px;
+}
+
+.seg {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.seg__opt {
+  min-width: 32px;
+  padding: 4px 8px;
+  font: inherit;
+  font-size: 12.5px;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-text) 6%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.seg__opt--on {
+  color: var(--color-accent);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+}
+
+@media (max-width: 720px) {
+  .daftar__bar {
+    flex-wrap: wrap;
+  }
+
+  .cari {
+    order: -1;
+    width: 100%;
+    margin-left: 0;
+  }
+}

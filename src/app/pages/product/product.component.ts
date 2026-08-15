@@ -1,154 +1,185 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NgFor, NgIf } from '@angular/common';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { debounceTime } from 'rxjs';
 import { Item } from 'src/app/models/item.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { DeleteConfirmationComponent } from '../../components/delete-confirmation/delete-confirmation.component';
-import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { ApiService } from 'src/app/services/api.service';
 import { UpdateProductComponent } from './update-product/update-product.component';
-import { FeatureBackgroundComponent } from '../../components/feature-background/feature-background.component';
-import { FeatureHeaderComponent } from '../../components/feature-header/feature-header.component';
-import { FeatureSearchComponent } from '../../components/feature-search/feature-search.component';
-import { NgIf, NgFor } from '@angular/common';
-import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
-import { MatIcon } from '@angular/material/icon';
-import { EmptyTableComponent } from '../../components/empty-table/empty-table.component';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
+/**
+ * Daftar barang — sistem desain Nocturne.
+ *
+ * TIDAK LAGI MEMAKAI app-feature-search. Komponen itu bukan sekadar kolom
+ * pencarian: ia juga yang mengambil datanya dan yang memutuskan dialog mana
+ * yang dibuka tombol tambah, lewat satu switch berisi sebelas halaman.
+ * Akibatnya tata letak baris pencarian tidak bisa diubah untuk satu halaman
+ * tanpa ikut mengubah sepuluh halaman lain yang belum disentuh desain.
+ *
+ * Halaman ini kini mengambil datanya sendiri. Parameternya sama persis dengan
+ * yang dikirim komponen lama — keyword, page, pageSize, content, mode —
+ * sehingga tidak ada perubahan apa pun di sisi server.
+ *
+ * CATATAN: keping saringan status yang ada di berkas desain belum dipasang.
+ * Endpoint daftar barang hanya menerima page, keyword, dan pageSize; menyaring
+ * di sisi peramban hanya akan menyaring SATU HALAMAN hasil, sehingga "Nonaktif"
+ * menampilkan sebagian saja dan terbaca seperti data yang hilang.
+ */
 @Component({
-    selector: 'app-product',
-    templateUrl: './product.component.html',
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, EmptyTableComponent, MatProgressSpinner, MatPaginator, TranslatePipe]
+  selector: 'app-product',
+  templateUrl: './product.component.html',
+  styleUrls: ['./product.component.scss'],
+  imports: [
+    NgIf,
+    NgFor,
+    ReactiveFormsModule,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+    TranslatePipe,
+  ],
 })
-export class ProductComponent {
+export class ProductComponent implements OnInit {
   constructor(
-    private authService: AuthService,
-    private dynamicComponentService: DynamicComponentService,
-    private dialog: MatDialog,
     private apiService: ApiService,
     private alertService: AlertService,
-    private translate: TranslateService
+    private dialog: MatDialog,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private translate: TranslateService,
   ) {}
 
-  isLoading: boolean = true;
-  isSubmitting: boolean = false;
+  private destroyRef = inject(DestroyRef);
+
+  readonly pilihanUkuran = [10, 25, 50];
+
+  cariControl = new FormControl<string>('');
+
+  isLoading = true;
   dataSource: Item[] = [];
-  dataCount: number = 0;
-  page: number = 1;
-  pageSize: number = 10;
-  previousRoute: string = '';
-  isAdministrator: boolean = false;
+  dataCount = 0;
+  page = 1;
+  pageSize = 10;
 
   ngOnInit(): void {
-    this.isAdministrator = this.authService.isAdministrator();
+    /*
+      Jeda satu detik sama dengan bentuk sebelumnya. Tanpa jeda, setiap huruf
+      yang diketik menjadi satu permintaan ke server.
+    */
+    this.cariControl.valueChanges
+      .pipe(debounceTime(1000), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.page = 1;
+        this.ambilData();
+      });
+
+    this.ambilData();
   }
 
-  openDialog(dialogType: string, id: number) {
-    if (dialogType == 'edit') {
-      this.dialog
-        .open(UpdateProductComponent, {
-          data: {
-            id: id,
-          },
-        })
-        .afterClosed()
-        .subscribe((data) => {
-          if (data) {
-            const index = this.dataSource.findIndex((x) => x.id == id);
-            if (index != -1) {
-              this.dataSource[index].reference = data.reference;
-              this.dataSource[index].description = data.description;
-              this.dataSource[index].product_brand = data.product_brand;
-              this.dataSource[index].product_type = data.product_type;
-              this.dataSource[index].is_active = data.is_active;
-            }
-          }
-        });
-    } else if (dialogType == 'delete') {
-      const index = this.dataSource.findIndex((x) => x.id == id);
-      if (index != -1) {
-        const dialog = this.dialog.open(DeleteConfirmationComponent, {
-          data: {
-            title: this.translate.instant('product__delete__title'),
-            document: `${this.dataSource[index].reference} - ${this.dataSource[index].description}`,
-          },
-        });
+  /** Nomor urut pertama dan terakhir yang sedang tampil, untuk keterangan kaki. */
+  get dari(): number {
+    return this.dataCount === 0 ? 0 : (this.page - 1) * this.pageSize + 1;
+  }
 
-        dialog.afterClosed().subscribe((data) => {
-          if (data == true) {
-            this.apiService.delete(`product/${id}`).subscribe({
-              next: (_) => {
-                this.dataSource.splice(index, 1);
-                this.dataCount = this.dataCount - 1;
-                this.alertService.showSuccess(
-                  this.translate.instant('product__deleted-successfully')
-                );
-              },
-              error: (error) => {
-                this.alertService.showError(error);
-              },
-            });
-          }
-        });
-      }
-    } else if (dialogType == 'active') {
-      const index = this.dataSource.findIndex((x) => x.id == id);
-      if (index != -1) {
-        this.isSubmitting = true;
-        this.apiService
-          .put('product/active', {
-            id: id,
-          })
-          .subscribe({
-            next: (data: any) => {
-              this.dataSource[index].is_active =
-                !this.dataSource[index].is_active;
-              this.translate
-                .get('general__updated-successfully')
-                .subscribe((translation) => {
-                  this.alertService.showSuccess(
-                    `${data.reference} ${translation}`
-                  );
-                });
-            },
-            error: (error) => {
-              this.alertService.showError(error);
-            },
-          })
-          .add(() => {
-            this.isSubmitting = false;
-          });
-      }
+  get sampai(): number {
+    return Math.min(this.page * this.pageSize, this.dataCount);
+  }
+
+  get halamanTerakhir(): number {
+    return Math.max(1, Math.ceil(this.dataCount / this.pageSize));
+  }
+
+  lacakBarang = (_: number, item: Item): number => item.id;
+
+  ambilData(): void {
+    this.isLoading = true;
+
+    this.apiService
+      .get('product', {
+        keyword: this.cariControl.value ?? '',
+        page: this.page,
+        pageSize: this.pageSize,
+        content: 'false',
+        mode: 'default',
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.dataCount = data.count;
+          this.dataSource = data.data;
+        },
+        error: (error: any) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
+  }
+
+  gantiUkuran(ukuran: number): void {
+    if (ukuran === this.pageSize) {
+      return;
     }
-  }
 
-  changePage(event: PageEvent) {
-    if (this.pageSize != event.pageSize) {
-      this.pageSize = event.pageSize;
-      this.fetchProducts(1);
-    } else {
-      this.page = event.pageIndex + 1;
-      this.fetchProducts(this.page);
-    }
-  }
-
-  fetchProducts(page: number) {
-    this.page = page;
-  }
-
-  onUpdatePage() {
+    this.pageSize = ukuran;
+    /* Kembali ke halaman satu: nomor halaman lama menunjuk potongan lain. */
     this.page = 1;
+    this.ambilData();
   }
 
-  onUpdateData(data: any) {
-    this.dataCount = data.count;
-    this.dataSource = data.data;
+  pindahHalaman(arah: -1 | 1): void {
+    const tujuan = this.page + arah;
+    if (tujuan < 1 || tujuan > this.halamanTerakhir) {
+      return;
+    }
+
+    this.page = tujuan;
+    this.ambilData();
   }
 
-  onUpdateLoadingStatus(data: any) {
-    this.isLoading = data;
+  tambah(): void {
+    this.router.navigate(['Create'], { relativeTo: this.activatedRoute });
+  }
+
+  ubah(item: Item): void {
+    this.dialog
+      .open(UpdateProductComponent, { data: { id: item.id } })
+      .afterClosed()
+      .subscribe((data) => {
+        if (!data) {
+          return;
+        }
+
+        const index = this.dataSource.findIndex((x) => x.id === item.id);
+        if (index !== -1) {
+          this.dataSource[index] = { ...this.dataSource[index], ...data };
+        }
+      });
+  }
+
+  gantiStatus(item: Item): void {
+    const index = this.dataSource.findIndex((x) => x.id === item.id);
+    if (index === -1) {
+      return;
+    }
+
+    this.apiService.put('product/active', { id: item.id }).subscribe({
+      next: (data: any) => {
+        this.dataSource[index].is_active = !this.dataSource[index].is_active;
+        this.alertService.showSuccess(
+          `${data.reference} ${this.translate.instant(
+            'general__updated-successfully',
+          )}`,
+        );
+      },
+      error: (error: any) => {
+        this.alertService.showError(error);
+      },
+    });
   }
 }
