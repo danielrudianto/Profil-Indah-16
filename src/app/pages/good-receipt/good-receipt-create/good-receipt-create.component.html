@@ -168,6 +168,14 @@
         <span>{{ "good-receipt__create__no-price-hint" | translate }}</span>
       </p>
 
+      <!--
+        URUTAN KOLOM DISENGAJA: Barang, Jumlah, lalu harga dan diskon.
+
+        Berkas desain menaruh harga sebelum jumlah, dan koreksi 10c meminta
+        urutan itu. Pemiliknya memilih sebaliknya setelah melihat keduanya
+        berdampingan. Jangan ditukar tanpa bertanya lebih dulu — ini keputusan,
+        bukan kelalaian.
+      -->
       <div class="gulir" [formGroup]="itemFormGroup">
         <table class="tabel" formArrayName="items">
           <thead>
