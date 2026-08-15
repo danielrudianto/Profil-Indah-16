@@ -33,16 +33,19 @@ export interface AccentColor {
 }
 
 export const ACCENT_COLORS: AccentColor[] = [
-  /*
-    Aksen bawaan Nocturne. Sejak putaran tinjauan ketujuh berkas desain
-    memindahkannya dari biru ke blurple; nilai tint, d800, dan d900 diambil
-    apa adanya dari ramp accent-300, accent-800, dan accent-900 pada
-    nocturne-styles.css, jadi tidak ada satu pun angka yang dikarang di sini.
-
-    Biru tetap ada sebagai pilihan, hanya tidak lagi yang pertama.
-  */
-  { label: 'accent__blurple', base: '#9184d9', tint: '#d2cefd', d800: '#423a6a', d900: '#2b2741' },
   { label: 'accent__blue', base: '#154dec', tint: '#b5d1ff', d800: '#223a70', d900: '#14244a' },
+  { label: 'accent__blurple', base: '#9184d9', tint: '#d2cefd', d800: '#423a6a', d900: '#2b2741' },
+
+  /*
+    BIRU adalah aksen bawaan, sesuai README serah-terima yang menandai dirinya
+    "v2, final".
+
+    nocturne-styles.css menyebut blurple #9184d9 sebagai hasil putaran tinjauan
+    ketujuh, dan keduanya berselisih. Warnanya memang cuma variabel dan bisa
+    ditukar kapan saja — blurple tetap berdiri sebagai pilihan di bawah ini,
+    dengan nilai ramp yang diambil apa adanya dari berkas itu — jadi menukar
+    bawaannya nanti cukup memindahkan barisnya.
+  */
   { label: 'accent__forest', base: '#002b00', tint: '#bedabb', d800: '#2f442d', d900: '#1b2b1a' },
   { label: 'accent__violet', base: '#7160bd', tint: '#cfcaff', d800: '#3c365f', d900: '#262140' },
   { label: 'accent__azure', base: '#1f74bf', tint: '#acd5ff', d800: '#1e3f60', d900: '#0e2841' },
