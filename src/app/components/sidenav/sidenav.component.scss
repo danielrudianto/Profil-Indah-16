@@ -9,7 +9,12 @@
 .sidenav {
   display: flex;
   flex-direction: column;
-  width: 260px;
+  /*
+    Nilainya sama dengan yang dipakai mat-drawer lewat
+    --mat-sidenav-container-width; lihat catatannya di styles.scss. Menuliskan
+    260px lagi di sini berarti keduanya bisa berselisih tanpa ketahuan.
+  */
+  width: var(--lebar-sidenav);
   height: 100%;
   padding: 16px 12px;
   gap: 12px;
