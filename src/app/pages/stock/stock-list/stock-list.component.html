@@ -1,5 +1,5 @@
 <!--
-  Daftar stok.
+  Daftar stok — bagian `15a` berkas desain.
 
   Tidak ada tombol tambah: baris di sini tidak dibuat orang, ia muncul sendiri
   mengikuti barang yang ada. Yang bisa dilakukan hanya melihat kartu dan
@@ -20,15 +20,44 @@
   (pageSizeChange)="gantiUkuran($event)"
   (refresh)="fetchProducts()"
 >
+  <!--
+    Dua chip ringkasan yang sekaligus menyaring. Angkanya menyatakan keadaan
+    SELURUH katalog dan tidak ikut mengecil ketika saringannya sendiri menyala.
+  -->
+  <ng-container aksi>
+    <button
+      type="button"
+      class="chip-pintas"
+      [class.chip-pintas--on]="kondisi === 'low'"
+      (click)="toggleKondisi('low')"
+    >
+      <i class="ph-fill ph-warning" aria-hidden="true"></i>
+      {{ ringkasan.low }} {{ 'stock-list__chip__low' | translate }}
+    </button>
+
+    <button
+      type="button"
+      class="chip-pintas chip-pintas--merah"
+      [class.chip-pintas--on]="kondisi === 'negative'"
+      (click)="toggleKondisi('negative')"
+    >
+      <i class="ph-fill ph-arrow-down" aria-hidden="true"></i>
+      {{ ringkasan.negative }} {{ 'stock-list__chip__negative' | translate }}
+    </button>
+  </ng-container>
+
   <table class="tabel">
     <thead>
       <tr>
-        <th>{{ 'product__reference' | translate }}</th>
-        <th>{{ 'product__description' | translate }}</th>
+        <!--
+          Referensi dan deskripsi menempati SATU kolom. Keduanya menyebut
+          barang yang sama, dan memisahnya membuat mata berpindah dua kali
+          untuk satu jawaban.
+        -->
+        <th>{{ 'stock-list__item' | translate }}</th>
         <th>{{ 'product__brand' | translate }}</th>
-        <th class="tabel__nilai-kepala">
-          {{ 'product__stock' | translate }}
-        </th>
+        <th class="tabel__nilai-kepala">{{ 'product__stock' | translate }}</th>
+        <th>{{ 'stock-list__condition' | translate }}</th>
         <th class="tabel__aksi-kepala">
           <span class="sr-only">{{ 'general__actions' | translate }}</span>
         </th>
@@ -37,35 +66,54 @@
 
     <tbody *ngIf="!isLoading && dataSource.length > 0">
       <tr *ngFor="let item of dataSource; trackBy: lacakBarang">
-        <td class="tabel__utama">{{ item.reference }}</td>
-        <td class="tabel__redup">{{ item.description }}</td>
+        <td>
+          <div class="barang__ref">{{ item.reference }}</div>
+          <div class="barang__desc">{{ item.description }}</div>
+        </td>
         <td>{{ item.product_brand?.name }}</td>
-        <td class="tabel__nilai">
-          {{ item.product_stock?.stock ?? 0 | number: '0.0-2' }}
+        <!--
+          Stok minus ditulis MERAH. Ia bukan sekadar angka kecil: stok di bawah
+          nol berarti catatannya sudah tidak mungkin benar, dan itu harus
+          terbaca sebelum barisnya sempat dilewati.
+        -->
+        <td class="tabel__nilai" [class.stok--minus]="stok(item) < 0">
+          {{ stok(item) | number: '0.0-2' }}
           <span class="stok__satuan">{{ item.unit }}</span>
+        </td>
+        <td>
+          <!--
+            Barang yang stoknya cukup tidak diberi pill sama sekali. Pill
+            "aman" pada setiap baris membuat yang bermasalah justru tenggelam.
+          -->
+          <span
+            class="pill"
+            [ngClass]="kelasPill(item)"
+            *ngIf="kondisiBaris(item)"
+          >
+            <i class="ph-fill" [ngClass]="ikonPill(item)" aria-hidden="true"></i>
+            {{ kunciKondisi(item) | translate }}
+          </span>
         </td>
         <td class="tabel__aksi">
           <!--
-            Dua tindakan saja, jadi ditulis berdampingan tanpa menu: menu
-            bertingkat untuk dua pilihan justru menambah satu ketukan.
+            Dua tindakan BERTULISAN, bukan ikon telanjang: keduanya jarang
+            dipakai dan namanya tidak bisa ditebak dari gambarnya saja.
           -->
           <button
             type="button"
-            class="tabel__aksi-btn"
+            class="aksi-kecil"
             (click)="openDialog('card', item.id)"
-            [title]="'stock-list__card' | translate"
-            [attr.aria-label]="'stock-list__card' | translate"
           >
             <i class="ph ph-list-magnifying-glass" aria-hidden="true"></i>
+            {{ 'stock-list__card' | translate }}
           </button>
           <button
             type="button"
-            class="tabel__aksi-btn"
+            class="aksi-kecil"
             (click)="openDialog('mutation', item.id)"
-            [title]="'stock-list__mutation' | translate"
-            [attr.aria-label]="'stock-list__mutation' | translate"
           >
             <i class="ph ph-arrows-left-right" aria-hidden="true"></i>
+            {{ 'stock-list__mutation' | translate }}
           </button>
         </td>
       </tr>

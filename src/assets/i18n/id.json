@@ -1798,7 +1798,7 @@
   "sales-invoice__status__deleted": "Dihapus",
   "sales-invoice__filter__clear": "Hapus semua",
   "sales-invoice__retail": "Retail",
-  "stock-list__lede": "Sisa stok tiap barang beserta kartu dan mutasinya.",
+  "stock-list__lede": "Posisi stok per barang · satuan dasar",
   "stock-list__search": "Cari referensi atau deskripsi barang…",
   "stock-list__card": "Kartu stok",
   "stock-list__mutation": "Mutasi stok",
@@ -1868,5 +1868,11 @@
   "expense__add": "Catat pengeluaran",
   "expense__empty__title": "Belum ada pengeluaran di bulan ini",
   "expense__empty__desc": "Pilih bulan lain lewat kapsul di atas, atau catat pengeluaran baru.",
-  "general__edit": "Ubah"
+  "general__edit": "Ubah",
+  "stock-list__item": "Barang",
+  "stock-list__condition": "Kondisi",
+  "stock-list__chip__low": "menipis",
+  "stock-list__chip__negative": "minus",
+  "stock-list__status__low": "Menipis",
+  "stock-list__status__negative": "Minus"
 }

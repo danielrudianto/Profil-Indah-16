@@ -14,3 +14,73 @@
   font-size: 12px;
   color: color-mix(in srgb, var(--color-text) 50%, transparent);
 }
+
+/*
+  Referensi dan deskripsi dalam satu sel: referensi yang dibaca lebih dulu,
+  deskripsi meredup di bawahnya sebagai keterangan.
+*/
+.barang__ref {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.barang__desc {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 52%, transparent);
+  white-space: normal;
+  max-width: 42ch;
+}
+
+/*
+  Stok di bawah nol. Warnanya ditulis mentah, sama dengan pill merah: ia
+  menyatakan keadaan barang, dan artinya tidak boleh ikut berubah ketika
+  pengguna mengganti warna aksennya.
+*/
+.stok--minus {
+  color: #e05260;
+  font-weight: 600;
+
+  .stok__satuan {
+    color: inherit;
+    opacity: 0.75;
+  }
+}
+
+/* Tindakan bertulisan di kolom aksi — kecil, garis tepi, bukan tombol utama. */
+.aksi-kecil {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 10px;
+  margin-left: 6px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--color-text) 68%, transparent);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  i {
+    font-size: 14px;
+  }
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &:hover {
+    color: var(--color-text);
+    border-color: color-mix(in srgb, var(--color-text) 30%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}

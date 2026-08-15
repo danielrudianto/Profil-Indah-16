@@ -1862,5 +1862,11 @@
   "expense__add": "Record expense",
   "expense__empty__title": "No expenses this month",
   "expense__empty__desc": "Pick another month with the chip above, or record a new expense.",
-  "general__edit": "Edit"
+  "general__edit": "Edit",
+  "stock-list__item": "Item",
+  "stock-list__condition": "Condition",
+  "stock-list__chip__low": "low",
+  "stock-list__chip__negative": "negative",
+  "stock-list__status__low": "Low",
+  "stock-list__status__negative": "Negative"
 }
