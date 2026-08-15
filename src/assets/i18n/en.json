@@ -139,9 +139,9 @@
   "product__brand__delete": "Delete",
   "product__brand__add__title": "Add brand",
   "product__brand__add__submit": "Save brand",
-  "product__brand__update__title": "Update product brand data",
-  "product__brand__update__submit": "Update",
-  "product__brand__update__success": "updated successfully.",
+  "product__brand__update__title": "Edit brand",
+  "product__brand__update__submit": "Save changes",
+  "product__brand__update__success": "updated successfully",
   "general__delete-confirmation__title": "Delete confirmation",
   "general__delete-confirmation": "Are you sure you want to delete this data?",
   "general__delete-successfully": "deleted successfully",
@@ -157,7 +157,7 @@
   "product__type__delete": "Delete",
   "product__type__add__title": "Add type",
   "product__type__add__submit": "Save type",
-  "product__type__update__title": "Update product type data",
+  "product__type__update__title": "Edit type",
   "supplier__title": "Supplier",
   "supplier__help": "Here you can manage your suppliers data, create, update, and delete.",
   "supplier__name": "Name",
@@ -1711,5 +1711,8 @@
   "product__brand__add__lede": "A new brand can be used in the product form right away.",
   "product__brand__add__example": "e.g. Krakatau Steel",
   "product__type__add__lede": "A new type can be used in the product form right away.",
-  "product__type__add__example": "e.g. Material"
+  "product__type__add__example": "e.g. Material",
+  "product__brand__update__lede": "Renaming applies at once to every product using it.",
+  "product__type__update__lede": "Renaming applies at once to every product using it.",
+  "product__type__update__submit": "Save changes"
 }

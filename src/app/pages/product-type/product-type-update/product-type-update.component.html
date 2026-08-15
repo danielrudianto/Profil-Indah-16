@@ -1,32 +1,29 @@
 <app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
-  <div class="create-dialog">
-    <app-dialog-header
-      [title]="'product__type__update__title' | translate"
-      (onDialogClose)="closeDialog()"
-    >
-    </app-dialog-header>
-    <form [formGroup]="typeFormGroup" (ngSubmit)="submitForm()">
-      <div class="create-dialog__content">
-        <div *ngIf="isLoading">
-          <mat-spinner id="spinner" />
-        </div>
-
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>{{ "product__type__name" | translate }}</mat-label>
-          <input matInput type="text" formControlName="name" #input />
-        </mat-form-field>
-      </div>
-      <div class="create-dialog__footer">
-        <button
-          type="submit"
-          mat-stroked-button
-          style="letter-spacing: 0"
-          color="primary"
-          [disabled]="isLoading || isSubmitting || !typeFormGroup.valid"
-        >
-          {{ "product__type__add__submit" | translate }}
-        </button>
-      </div>
-    </form>
-  </div>
+  <app-dialog-shell
+    icon="ph ph-squares-four"
+    [heading]="'product__type__update__title' | translate"
+    [lede]="'product__type__update__lede' | translate"
+    [submitLabel]="'product__type__update__submit' | translate"
+    [submitting]="isSubmitting"
+    [canSubmit]="!isLoading && typeFormGroup.valid"
+    (submitted)="submitForm()"
+    (close)="closeDialog()"
+  >
+    <div class="medan" [formGroup]="typeFormGroup">
+      <label for="ut-name">{{ 'product__type__name' | translate }}</label>
+      <input
+        #input
+        id="ut-name"
+        class="medan__input"
+        type="text"
+        formControlName="name"
+        autocomplete="off"
+        [attr.disabled]="isLoading ? '' : null"
+        [attr.placeholder]="
+          (isLoading ? 'general__loading' : 'product__type__add__example')
+            | translate
+        "
+      />
+    </div>
+  </app-dialog-shell>
 </app-dynamic-dialog>

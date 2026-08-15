@@ -117,7 +117,11 @@ export class ProductBrandComponent implements OnInit {
 
   ubah(item: ItemBrand): void {
     this.dialog
-      .open(ProductBrandUpdateComponent, { data: { id: item.id } })
+      .open(ProductBrandUpdateComponent, {
+        data: { id: item.id },
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
+      })
       .afterClosed()
       .subscribe((data) => {
         if (!data) {

@@ -1,34 +1,44 @@
-import { Component, Inject, Input } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
+import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
 
+/**
+ * Dialog ubah merek barang — sistem desain Nocturne.
+ *
+ * Kembar dengan dialog tambahnya, dan memakai kerangka yang sama. Bedanya
+ * hanya satu: isinya diambil lebih dulu dari server, sehingga selama
+ * pengambilan itu berlangsung kolomnya belum boleh diisi.
+ */
 @Component({
-    selector: 'app-product-brand-update',
-    templateUrl: './product-brand-update.component.html',
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatDialogActions, MatButton, TranslatePipe]
+  selector: 'app-product-brand-update',
+  templateUrl: './product-brand-update.component.html',
+  imports: [ReactiveFormsModule, TranslatePipe, DialogShellComponent],
 })
-export class ProductBrandUpdateComponent {
+export class ProductBrandUpdateComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { id: number },
     private apiService: ApiService,
     private alertService: AlertService,
-    private dialog: MatDialogRef<ProductBrandUpdateComponent>,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private dialogRef: MatDialogRef<ProductBrandUpdateComponent>,
   ) {}
 
-  isLoading: boolean = true;
-  isSubmitting: boolean = false;
+  isLoading = true;
+  isSubmitting = false;
+
   brandFormGroup: FormGroup = new FormGroup({
     id: new FormControl('', Validators.required),
-    name: new FormControl('', Validators.required),
+    /* 45 huruf mengikuti lebar kolom name di tabel product_brand. */
+    name: new FormControl('', [Validators.required, Validators.maxLength(45)]),
   });
 
   ngOnInit(): void {
@@ -39,10 +49,10 @@ export class ProductBrandUpdateComponent {
     this.apiService
       .get(`product-brand/${this.data.id}`)
       .subscribe({
-        next: (data) => {
+        next: (data: any) => {
           this.brandFormGroup.patchValue(data);
         },
-        error: (error) => {
+        error: (error: any) => {
           this.alertService.showError(error);
           this.closeDialog();
         },
@@ -53,23 +63,37 @@ export class ProductBrandUpdateComponent {
   }
 
   submitForm(): void {
+    if (this.isSubmitting || this.isLoading || !this.brandFormGroup.valid) {
+      return;
+    }
+
     this.isSubmitting = true;
-    this.apiService.put('product-brand', this.brandFormGroup.value).subscribe({
-      next: (data: any) => {
-        this.translateService
-          .get('product__brand__update__success')
-          .subscribe((translation) => {
-            this.alertService.showSuccess(`${data.name} ${translation}`);
-            this.closeDialog(data);
-          });
-      },
-      error: (error) => {
-        this.alertService.showError(error);
-      },
-    });
+
+    this.apiService
+      .put('product-brand', this.brandFormGroup.value)
+      .subscribe({
+        next: (data: any) => {
+          this.alertService.showSuccess(
+            `${data.name} ${this.translateService.instant(
+              'product__brand__update__success',
+            )}`,
+          );
+          this.closeDialog(data);
+        },
+        error: (error: any) => {
+          this.alertService.showError(error);
+        },
+      })
+      /*
+        Dulu isSubmitting tidak pernah dikembalikan ketika kirimannya gagal,
+        sehingga satu kegagalan mematikan tombol simpannya selamanya.
+      */
+      .add(() => {
+        this.isSubmitting = false;
+      });
   }
 
   closeDialog(data: any = undefined): void {
-    this.dialog.close(data);
+    this.dialogRef.close(data);
   }
 }

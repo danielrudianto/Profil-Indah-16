@@ -1,20 +1,26 @@
-<h2 mat-dialog-title>{{ "product__brand__update__title" | translate }}</h2>
-<form [formGroup]="brandFormGroup" (ngSubmit)="submitForm()">
-  <mat-dialog-content>
-    <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ "product__brand__name" | translate }}</mat-label>
-      <input matInput type="text" formControlName="name" />
-    </mat-form-field>
-  </mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <button
-      type="submit"
-      mat-stroked-button
-      style="letter-spacing: 0"
-      color="primary"
-      [disabled]="isSubmitting || !brandFormGroup.valid"
-    >
-      {{ "product__brand__update__submit" | translate }}
-    </button>
-  </mat-dialog-actions>
-</form>
+<app-dialog-shell
+  icon="ph ph-tag-simple"
+  [heading]="'product__brand__update__title' | translate"
+  [lede]="'product__brand__update__lede' | translate"
+  [submitLabel]="'product__brand__update__submit' | translate"
+  [submitting]="isSubmitting"
+  [canSubmit]="!isLoading && brandFormGroup.valid"
+  (submitted)="submitForm()"
+  (close)="closeDialog()"
+>
+  <div class="medan" [formGroup]="brandFormGroup">
+    <label for="ub-name">{{ 'product__brand__name' | translate }}</label>
+    <input
+      id="ub-name"
+      class="medan__input"
+      type="text"
+      formControlName="name"
+      autocomplete="off"
+      [attr.disabled]="isLoading ? '' : null"
+      [attr.placeholder]="
+        (isLoading ? 'general__loading' : 'product__brand__add__example')
+          | translate
+      "
+    />
+  </div>
+</app-dialog-shell>

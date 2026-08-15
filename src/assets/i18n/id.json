@@ -136,9 +136,9 @@
   "product__brand__delete": "Hapus",
   "product__brand__add__title": "Tambah merek",
   "product__brand__add__submit": "Simpan merek",
-  "product__brand__update__title": "Perbarui data merek produk",
-  "product__brand__update__submit": "Perbaharui",
-  "product__brand__update__success": "berhasil diperbaharui.",
+  "product__brand__update__title": "Ubah merek",
+  "product__brand__update__submit": "Simpan perubahan",
+  "product__brand__update__success": "berhasil diperbarui",
   "general__delete-confirmation__title": "Konfirmasi penghapusan",
   "general__delete-confirmation": "Apakah Anda yakin ingin menghapus data ini?",
   "general__delete-successfully": "berhasil dihapus",
@@ -154,7 +154,7 @@
   "product__type__delete": "Hapus",
   "product__type__add__title": "Tambah tipe",
   "product__type__add__submit": "Simpan tipe",
-  "product__type__update__title": "Perbarui data tipe produk",
+  "product__type__update__title": "Ubah tipe",
   "supplier__title": "Supplier",
   "supplier__help": "Di sini Anda dapat mengelola data supplier, membuat, memperbarui, dan menghapus.",
   "supplier__name": "Nama",
@@ -1717,5 +1717,8 @@
   "product__brand__add__lede": "Merek baru langsung bisa dipakai di formulir barang.",
   "product__brand__add__example": "mis. Krakatau Steel",
   "product__type__add__lede": "Tipe baru langsung bisa dipakai di formulir barang.",
-  "product__type__add__example": "mis. Material"
+  "product__type__add__example": "mis. Material",
+  "product__brand__update__lede": "Perubahan nama langsung berlaku di seluruh barang yang memakainya.",
+  "product__type__update__lede": "Perubahan nama langsung berlaku di seluruh barang yang memakainya.",
+  "product__type__update__submit": "Simpan perubahan"
 }
