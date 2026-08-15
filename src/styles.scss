@@ -432,6 +432,17 @@ textarea.medan__input {
   box-shadow: inset 0 0 0 1px color-mix(in srgb, #c98a00 40%, transparent);
 }
 
+/*
+  Merah dipakai HANYA untuk keadaan yang menuntut tindakan hari itu juga —
+  lewat jatuh tempo, stok minus. Amber untuk yang menunggu, hijau untuk yang
+  selesai. Kalau merah dipakai untuk hal biasa, ia berhenti berarti apa pun.
+*/
+.pill--merah {
+  color: #e05260;
+  background: color-mix(in srgb, #e05260 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, #e05260 40%, transparent);
+}
+
 /* Belum lunas dan sejenisnya: garis tepi saja, sesuai berkas desain. */
 .pill--garis {
   color: color-mix(in srgb, var(--color-text) 62%, transparent);
@@ -476,6 +487,43 @@ textarea.medan__input {
   color: #c98a00;
   background: color-mix(in srgb, #c98a00 14%, transparent);
   border-color: color-mix(in srgb, #c98a00 55%, transparent);
+}
+
+/*
+  Varian merah, sewarna pill yang ia saring. Ikonnya diberi warna bahkan
+  ketika chip-nya mati — itu yang membuat "lewat jatuh tempo" terbaca sebagai
+  hal yang mendesak sebelum ditekan, sama seperti chip menunggu faktur.
+*/
+.chip-pintas--merah {
+  i {
+    color: #e05260;
+  }
+
+  &.chip-pintas--on {
+    color: #e05260;
+    background: color-mix(in srgb, #e05260 14%, transparent);
+    border-color: color-mix(in srgb, #e05260 55%, transparent);
+  }
+}
+
+/* Baris yang seluruhnya membuka detail. */
+.tabel__baris-klik {
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-hover);
+  }
+}
+
+/* Butir menu yang menyatakan tindakan utama, bukan sekadar salah satu pilihan. */
+.menu-aksen {
+  color: var(--color-accent) !important;
+  font-weight: 500;
+}
+
+/* Kepala kolom nilai: tombol urutnya ikut rata kanan. */
+.tabel__urut button.ke-kanan {
+  justify-content: flex-end;
 }
 
 .saringan {

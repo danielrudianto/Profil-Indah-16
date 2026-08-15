@@ -1,146 +1,275 @@
-<div class="d-flex mt-4">
-  <div class="d-flex position-relative">
-    <app-vertical-divider />
-    <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
+<!--
+  Catat kelebihan bayar — bagian `16a`/`16b` berkas desain.
+
+  Satu formulir, dua wajah: pengembalian lewat transfer meminta bank, nama
+  akun, dan nomor akun; lewat cash hanya meminta nama orang yang mengambil
+  uangnya. Wajahnya ditentukan kartu pilihan di kartu Pengembalian.
+-->
+<div class="buat">
+  <div class="buat__head">
+    <h1 class="buat__title">
+      {{ 'overpayment__create__title' | translate }}
+      <span class="tag-otomatis">
+        <i class="ph ph-sparkle" aria-hidden="true"></i>
+        {{ 'overpayment__create__auto-number' | translate }}
+      </span>
+    </h1>
+    <p class="buat__lede">{{ 'overpayment__create__lede' | translate }}</p>
   </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <h5>{{ "overpayment__create__general-data" | translate }}</h5>
-    <form [formGroup]="metaFormGroup">
-      <app-autocomplete-search
-        [label]="'overpayment__create__customer' | translate"
-        placeholder="Ex. Bing Jaya"
-        routeName="customer"
-        [defaultValue]="'Retail customer'"
-        [selected]="metaFormGroup.controls['customer_id'].valid"
-        (onSelectData)="onSelectCustomer($event)"
-        (onUnselectData)="onUnselectCustomer()"
-      ></app-autocomplete-search>
 
-      <app-autocomplete-search
-        [label]="'overpayment__create__payment-method' | translate"
-        placeholder="Ex. Cash"
-        routeName="payment-method#no-dor"
-        [selected]="metaFormGroup.controls['payment_method_id'].valid"
-        (onSelectData)="onSelectPaymentMethod($event)"
-        (onUnselectData)="onUnselectPaymentMethod()"
-      ></app-autocomplete-search>
+  <div class="kisi">
+    <div class="buat__utama">
+      <!-- ---------------------------------------------------------- -->
+      <!-- Penerimaan                                                  -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu" [formGroup]="metaFormGroup">
+        <h2 class="kartu__label">
+          {{ 'overpayment__create__receipt' | translate }}
+        </h2>
 
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{ "overpayment__create__date" | translate }}</mat-label>
-        <input
-          matInput
-          type="text"
-          placeholder="Ex. 30/12/2023"
-          [matDatepicker]="picker"
-          formControlName="date"
-          autocomplete="off"
-          (click)="picker.open()"
-        />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
+        <div class="kartu__baris">
+          <div class="field">
+            <label for="tanggal">
+              {{ 'overpayment__create__date' | translate }}
+            </label>
+            <input
+              id="tanggal"
+              type="date"
+              class="input"
+              formControlName="date"
+            />
+          </div>
 
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label> {{ "overpayment__create__value" | translate }}</mat-label>
-        <input
-          type="text"
-          matInput
-          type="text"
-          mask="separator.2"
-          thousandSeparator=" "
-          formControlName="value"
-          placeholder="Ex. 8 000"
-        />
-      </mat-form-field>
-    </form>
-  </div>
-</div>
-<div class="d-flex">
-  <div class="d-flex position-relative">
-    <app-box-stepper step="2" [valid]="returnFormGroup.valid"></app-box-stepper>
-  </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <h5>{{ "overpayment__create__return-data" | translate }}</h5>
-    <form [formGroup]="returnFormGroup">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{
-          "overpayment__create__return-date" | translate
-        }}</mat-label>
+          <div class="field">
+            <label>{{ 'overpayment__create__customer' | translate }}</label>
+            <app-autocomplete-search
+              label=""
+              placeholder="Ex. Bing Jaya"
+              routeName="customer"
+              defaultValue="Retail"
+              [selected]="metaFormGroup.controls['customer_id'].valid"
+              (onSelectData)="onSelectCustomer($event)"
+              (onUnselectData)="onUnselectCustomer()"
+            />
+            <p class="field__bantu">
+              {{ 'overpayment__create__customer-hint' | translate }}
+              <button type="button" class="tautan" (click)="tambahPelanggan()">
+                {{ 'overpayment__create__customer-add' | translate }}
+              </button>
+            </p>
+          </div>
+        </div>
 
-        <input
-          matInput
-          type="text"
-          placeholder="Ex. 30/12/2023"
-          [matDatepicker]="returnPicker"
-          formControlName="return_payment_date"
-          autocomplete="off"
-          (click)="returnPicker.open()"
-        />
-        <mat-datepicker-toggle
-          matSuffix
-          [for]="returnPicker"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #returnPicker></mat-datepicker>
-      </mat-form-field>
+        <div class="kartu__baris">
+          <div class="field">
+            <label>
+              {{ 'overpayment__create__payment-method' | translate }}
+            </label>
+            <app-autocomplete-search
+              label=""
+              placeholder="Ex. Cash"
+              routeName="payment-method#no-dor"
+              [selected]="metaFormGroup.controls['payment_method_id'].valid"
+              (onSelectData)="onSelectPaymentMethod($event)"
+              (onUnselectData)="onUnselectPaymentMethod()"
+            />
+            <p class="field__bantu">
+              {{ 'overpayment__create__payment-method-hint' | translate }}
+            </p>
+          </div>
 
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{
-          "overpayment__create__return-payment-method" | translate
-        }}</mat-label>
-        <mat-select formControlName="return_payment_method">
-          <mat-option [value]="'Cash'">Cash</mat-option>
-          <mat-option [value]="'Bank transfer'">Transfer</mat-option>
-        </mat-select>
-      </mat-form-field>
+          <div class="field">
+            <label for="nominal">
+              {{ 'overpayment__create__value' | translate }}
+            </label>
+            <input
+              id="nominal"
+              type="text"
+              class="input input--kanan"
+              mask="separator"
+              thousandSeparator="."
+              formControlName="value"
+              autocomplete="off"
+              placeholder="0"
+            />
+          </div>
+        </div>
+      </section>
 
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{
-          "overpayment__create__return-payment-name" | translate
-        }}</mat-label>
-        <input matInput formControlName="return_payment_name" />
-      </mat-form-field>
+      <!-- ---------------------------------------------------------- -->
+      <!-- Pengembalian                                                -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu" [formGroup]="returnFormGroup">
+        <h2 class="kartu__label">
+          {{ 'overpayment__create__return' | translate }}
+        </h2>
 
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{
-          "overpayment__create__return-payment-bank" | translate
-        }}</mat-label>
-        <input
-          matInput
-          [matAutocomplete]="auto"
-          formControlName="return_payment_bank"
-        />
-        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-          <mat-option
-            *ngFor="let bank of banks; track: bank"
-            [value]="bank.name"
-            >{{ bank.name }}</mat-option
+        <div class="field">
+          <label for="tanggal-kembali">
+            {{ 'overpayment__create__return-plan-date' | translate }}
+          </label>
+          <input
+            id="tanggal-kembali"
+            type="date"
+            class="input"
+            formControlName="return_payment_date"
+          />
+        </div>
+
+        <!--
+          Dua kartu pilihan, bukan daftar pilih. Metodenya menentukan kolom
+          mana yang muncul di bawahnya, dan pilihan yang mengubah bentuk
+          formulir lebih baik terlihat sekaligus daripada tersembunyi sampai
+          daftarnya dibuka.
+        -->
+        <div class="keadaan">
+          <button
+            type="button"
+            class="keadaan__kartu"
+            [class.keadaan__kartu--on]="metode === 'Cash'"
+            (click)="pilihMetode('Cash')"
           >
-        </mat-autocomplete>
-      </mat-form-field>
+            <i class="ph ph-money" aria-hidden="true"></i>
+            <span class="keadaan__judul">
+              {{ 'overpayment__create__method-cash' | translate }}
+            </span>
+          </button>
 
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{
-          "overpayment__create__return-payment-number" | translate
-        }}</mat-label>
-        <input matInput formControlName="return_payment_number" />
-      </mat-form-field>
-      <div
-        *ngIf="metaFormGroup.errors?.['bankOrNumberRequired']"
-        class="error-message"
-      >
-        {{ "overpayment__create__bank-error" | translate }}
-      </div>
+          <button
+            type="button"
+            class="keadaan__kartu"
+            [class.keadaan__kartu--on]="metode === 'Bank transfer'"
+            (click)="pilihMetode('Bank transfer')"
+          >
+            <i class="ph ph-bank" aria-hidden="true"></i>
+            <span class="keadaan__judul">
+              {{ 'overpayment__create__method-transfer' | translate }}
+            </span>
+          </button>
+        </div>
 
-      <button
-        type="button"
-        class="action-button"
-        (click)="submitForm()"
-        [disabled]="
-          !metaFormGroup.valid || !returnFormGroup.valid || isSubmitting
-        "
-      >
-        {{ "purchase-invoice__create__submit" | translate }}
-      </button>
-    </form>
+        <!-- Transfer: bank, nama akun, nomor akun. -->
+        <ng-container *ngIf="metode === 'Bank transfer'">
+          <div class="field">
+            <label for="bank">
+              {{ 'overpayment__create__return-payment-bank' | translate }}
+            </label>
+            <input
+              id="bank"
+              type="text"
+              class="input"
+              list="daftar-bank"
+              formControlName="return_payment_bank"
+              autocomplete="off"
+            />
+            <datalist id="daftar-bank">
+              <option *ngFor="let bank of banks" [value]="bank.name"></option>
+            </datalist>
+          </div>
+
+          <div class="kartu__baris">
+            <div class="field">
+              <label for="nama-akun">
+                {{ 'overpayment__create__account-name' | translate }}
+              </label>
+              <input
+                id="nama-akun"
+                type="text"
+                class="input"
+                formControlName="return_payment_name"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="field">
+              <label for="nomor-akun">
+                {{ 'overpayment__create__return-payment-number' | translate }}
+              </label>
+              <input
+                id="nomor-akun"
+                type="text"
+                class="input"
+                formControlName="return_payment_number"
+                autocomplete="off"
+              />
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Cash: cukup nama orang yang mengambil uangnya. -->
+        <div class="field" *ngIf="metode === 'Cash'">
+          <label for="penerima">
+            {{ 'overpayment__create__receiver-name' | translate }}
+          </label>
+          <input
+            id="penerima"
+            type="text"
+            class="input"
+            formControlName="return_payment_name"
+            autocomplete="off"
+          />
+          <p class="field__bantu">
+            {{ 'overpayment__create__receiver-hint' | translate }}
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- Ringkasan dan aksi                                            -->
+    <!-- ------------------------------------------------------------ -->
+    <aside class="buat__samping">
+      <section class="kartu">
+        <h2 class="kartu__label">
+          {{ 'overpayment__create__summary' | translate }}
+        </h2>
+
+        <dl class="ringkas">
+          <dt>{{ 'overpayment__create__summary-value' | translate }}</dt>
+          <dd class="ringkas__total">
+            <strong>Rp {{ nominal | number: '1.0-0' }}</strong>
+          </dd>
+
+          <ng-container *ngIf="metode">
+            <dt>{{ 'overpayment__create__summary-returned' | translate }}</dt>
+            <dd>{{ ringkasPengembalian }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="metode === 'Bank transfer' && tujuanTransfer">
+            <dt>{{ 'overpayment__create__summary-target' | translate }}</dt>
+            <dd>{{ tujuanTransfer }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="metode === 'Cash' && namaPenerima">
+            <dt>{{ 'overpayment__create__summary-receiver' | translate }}</dt>
+            <dd>{{ namaPenerima }}</dd>
+          </ng-container>
+        </dl>
+      </section>
+
+      <section class="kartu">
+        <h2 class="kartu__label">
+          {{ 'overpayment__create__actions' | translate }}
+        </h2>
+
+        <button
+          type="button"
+          class="btn btn--primary btn--blok"
+          [disabled]="!bolehSimpan"
+          (click)="submitForm()"
+        >
+          <i class="ph ph-check" aria-hidden="true"></i>
+          {{ 'overpayment__create__save' | translate }}
+        </button>
+
+        <button
+          type="button"
+          class="btn btn--kedua btn--blok"
+          (click)="batal()"
+        >
+          {{ 'overpayment__create__cancel' | translate }}
+        </button>
+      </section>
+    </aside>
   </div>
 </div>

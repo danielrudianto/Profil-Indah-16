@@ -1,96 +1,151 @@
-<div class="dashboard-card">
-  <table class="table">
+<app-list-page
+  [heading]="'overpayment__title' | translate"
+  [lede]="'overpayment__lede' | translate"
+  [searchPlaceholder]="'overpayment__search' | translate"
+  [addLabel]="'overpayment__create' | translate"
+  [page]="page"
+  [pageSize]="pageSize"
+  [total]="dataCount"
+  [loading]="isLoading"
+  (pageChange)="bukaHalaman($event)"
+  (pageSizeChange)="gantiUkuran($event)"
+  (add)="catatBaru()"
+  (refresh)="fetch()"
+>
+  <!--
+    Dua chip ringkasan sekaligus penyaring. Angkanya datang dari server dan
+    menyatakan keadaan SELURUH daftar — bukan halaman yang sedang tampil, dan
+    tidak ikut mengecil ketika saringannya sendiri menyala.
+  -->
+  <ng-container aksi>
+    <button
+      type="button"
+      class="chip-pintas"
+      [class.chip-pintas--on]="status === 'waiting'"
+      (click)="toggleStatus('waiting')"
+    >
+      <i class="ph-fill ph-clock" aria-hidden="true"></i>
+      {{ ringkasan.waiting }} {{ 'overpayment__chip__waiting' | translate }}
+    </button>
+
+    <button
+      type="button"
+      class="chip-pintas chip-pintas--merah"
+      [class.chip-pintas--on]="status === 'overdue'"
+      (click)="toggleStatus('overdue')"
+    >
+      <i class="ph-fill ph-warning-circle" aria-hidden="true"></i>
+      {{ ringkasan.overdue }} {{ 'overpayment__chip__overdue' | translate }}
+    </button>
+  </ng-container>
+
+  <table class="tabel">
     <thead>
       <tr>
-        <th>
-          <div class="d-flex align-items center" (click)="changeSortBy('date')">
-            <span>{{ "overpayment__archive__date" | translate }}</span>
-            <mat-icon
-              class="icon-display"
-              [ngClass]="{
-                asc: sortBy === 'date' && sortDirection === 'asc',
-                desc: sortBy === 'date' && sortDirection === 'desc'
-              }"
-              >arrow_downward</mat-icon
-            >
-          </div>
+        <th class="tabel__urut">
+          <button type="button" (click)="changeSortBy('date')">
+            {{ 'overpayment__archive__date' | translate }}
+            <i class="ph" [ngClass]="ikonUrut('date')" aria-hidden="true"></i>
+          </button>
         </th>
-        <th>{{ "overpayment__archive__payment-method" | translate }}</th>
-        <th>
-          <div
-            class="d-flex align-items center"
-            (click)="changeSortBy('value')"
-          >
-            <span>{{ "overpayment__archive__value" | translate }}</span>
-            <mat-icon
-              class="icon-display"
-              [ngClass]="{
-                asc: sortBy === 'value' && sortDirection === 'asc',
-                desc: sortBy === 'value' && sortDirection === 'desc'
-              }"
-              >arrow_downward</mat-icon
-            >
-          </div>
+        <th>{{ 'overpayment__archive__number' | translate }}</th>
+        <th>{{ 'overpayment__archive__customer' | translate }}</th>
+        <th class="tabel__nilai-kepala tabel__urut">
+          <button type="button" class="ke-kanan" (click)="changeSortBy('value')">
+            {{ 'overpayment__archive__value' | translate }}
+            <i class="ph" [ngClass]="ikonUrut('value')" aria-hidden="true"></i>
+          </button>
         </th>
-        <th>
-          <div
-            class="d-flex align-items center"
-            (click)="changeSortBy('return')"
-          >
-            <span>{{ "overpayment__archive__return-date" | translate }}</span>
-            <mat-icon
-              class="icon-display"
-              [ngClass]="{
-                asc: sortBy === 'return' && sortDirection === 'asc',
-                desc: sortBy === 'return' && sortDirection === 'desc'
-              }"
-              >arrow_downward</mat-icon
-            >
-          </div>
+        <th class="tabel__urut">
+          <button type="button" (click)="changeSortBy('return')">
+            {{ 'overpayment__archive__due' | translate }}
+            <i class="ph" [ngClass]="ikonUrut('return')" aria-hidden="true"></i>
+          </button>
+        </th>
+        <th>{{ 'overpayment__archive__method' | translate }}</th>
+        <th>{{ 'overpayment__archive__status' | translate }}</th>
+        <th class="tabel__aksi-kepala">
+          <span class="sr-only">{{ 'general__actions' | translate }}</span>
         </th>
       </tr>
     </thead>
+
+    <tbody *ngIf="!isLoading && dataSource.length > 0">
+      <!--
+        Seluruh baris membuka detailnya. Menu titik-tiga di ujung kanan
+        menghentikan rambatan klik sendiri, jadi menekan menu tidak sekaligus
+        membuka dialog di belakangnya.
+      -->
+      <tr
+        *ngFor="let item of dataSource; trackBy: lacakItem"
+        class="tabel__baris-klik"
+        (click)="openViewOverpayment(item.id)"
+      >
+        <td class="tabel__tanggal">{{ item.date | date: 'dd MMM yyyy' }}</td>
+        <td class="tabel__utama">{{ nomor(item) }}</td>
+        <td>
+          {{ item.customer?.name ?? ('sales-invoice__retail' | translate) }}
+        </td>
+        <td class="tabel__nilai">Rp {{ item.value | number: '1.0-0' }}</td>
+        <td class="tabel__tanggal">
+          {{ item.return_payment_date | date: 'dd MMM yyyy' }}
+        </td>
+        <td class="tabel__redup">{{ item.return_payment_method }}</td>
+        <td>
+          <span class="pill" [ngClass]="kelasPill(item)">
+            <i class="ph-fill" [ngClass]="ikonPill(item)" aria-hidden="true"></i>
+            {{ kunciStatus(item) | translate }}
+          </span>
+        </td>
+        <td class="tabel__aksi" (click)="$event.stopPropagation()">
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            [matMenuTriggerFor]="menu"
+            [title]="'general__actions' | translate"
+            [attr.aria-label]="'general__actions' | translate"
+          >
+            <i class="ph ph-dots-three-vertical" aria-hidden="true"></i>
+          </button>
+
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="openViewOverpayment(item.id)">
+              {{ 'overpayment__action__view' | translate }}
+            </button>
+            <button mat-menu-item (click)="ubah(item.id)">
+              {{ 'overpayment__action__update' | translate }}
+            </button>
+            <!--
+              Hanya muncul bila belum dikembalikan: menawarkan tindakan yang
+              pasti ditolak server dengan 409 hanya membuat orang menekannya.
+            -->
+            <button
+              mat-menu-item
+              class="menu-aksen"
+              *ngIf="!item.is_resolved"
+              (click)="tandaiDikembalikan(item)"
+            >
+              {{ 'overpayment__action__resolve' | translate }}
+            </button>
+          </mat-menu>
+        </td>
+      </tr>
+    </tbody>
+
     <tbody *ngIf="isLoading">
       <tr>
-        <td colspan="5">
-          <mat-spinner id="spinner"></mat-spinner>
+        <td colspan="8" class="tabel__pesan">
+          {{ 'general__loading' | translate }}
         </td>
       </tr>
     </tbody>
-    <tbody *ngIf="!isLoading && dataSource.length == 0">
+
+    <tbody *ngIf="!isLoading && dataSource.length === 0">
       <tr>
-        <td colspan="5">
-          <empty-table />
-        </td>
-      </tr>
-    </tbody>
-    <tbody *ngIf="!isLoading && dataSource.length > 0">
-      <tr
-        *ngFor="let data of dataSource"
-        (click)="openViewOverpayment(data.id)"
-      >
-        <td>{{ data.date | date : "dd MMMM YYYY" }}</td>
-        <td>
-          {{ data.payment_method == null ? "Cash" : data.payment_method.name }}
-        </td>
-        <td>
-          {{ data.value | number : "0.2-2" }}
-        </td>
-        <td>
-          {{ data.return_payment_date | date : "dd MMMM YYYY" }}
+        <td colspan="8" class="tabel__pesan">
+          {{ 'general__no-data' | translate }}
         </td>
       </tr>
     </tbody>
   </table>
-  <mat-paginator
-    class="paginator"
-    [pageIndex]="page - 1"
-    [length]="dataCount"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="[10, 25, 50]"
-    (page)="changePage($event)"
-    aria-label="Select page"
-    *ngIf="!isLoading"
-  >
-  </mat-paginator>
-</div>
+</app-list-page>

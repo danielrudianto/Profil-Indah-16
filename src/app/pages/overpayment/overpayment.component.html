@@ -1,13 +1,12 @@
-<app-feature-background />
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <app-transaction-header
-        [title]="'overpayment__title' | translate"
-        [availbleMenus]="availbleMenus"
-        route="Good-receipt"
-      />
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-</div>
+<!--
+  Shell kelebihan bayar.
+
+  app-feature-background dan app-transaction-header dilepas, sama seperti pada
+  penerimaan barang dan faktur penjualan: latar dekoratif birunya menutupi
+  seluruh halaman dan tidak ada hubungannya dengan token Nocturne, sedangkan
+  judulnya digambar dua kali — sekali di sini dan sekali oleh app-list-page.
+
+  Header itu juga membawa route="Good-receipt", salah tempel yang membuat
+  tombol pindah halamannya mengarah ke penerimaan barang.
+-->
+<router-outlet />

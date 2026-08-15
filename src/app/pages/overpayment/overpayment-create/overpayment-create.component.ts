@@ -1,192 +1,239 @@
-import { Component } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { Component, OnInit } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { NgFor, NgIf, DecimalPipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { NgxMaskDirective } from 'ngx-mask';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import moment from 'moment';
+
+import { AutocompleteSearchComponent } from 'src/app/components/autocomplete-search/autocomplete-search.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { availableBankSearch, IBank } from 'src/app/utils/bank';
-import { VerticalDividerComponent } from '../../../components/vertical-divider/vertical-divider.component';
-import { BoxStepperComponent } from '../../../components/box-stepper/box-stepper.component';
-import { AutocompleteSearchComponent } from '../../../components/autocomplete-search/autocomplete-search.component';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
-import { NgxMaskDirective } from 'ngx-mask';
-import { MatSelect, MatOption } from '@angular/material/select';
-import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
-import { NgFor, NgIf } from '@angular/common';
+import { CustomerCreateComponent } from 'src/app/pages/customer/customer-create/customer-create.component';
 
+/**
+ * Catat kelebihan bayar — bagian `16a`/`16b` berkas desain.
+ *
+ * METODE PENGEMBALIAN ADALAH SATU NILAI, DIBACA DARI SATU TEMPAT. Versi
+ * sebelumnya menyimpannya di kontrol formulir sekaligus memeriksanya di dua
+ * tempat dengan ejaan berbeda: daftar pilihannya mengirim 'Bank transfer',
+ * sementara bankValidator memeriksa 'transfer'. Validator itu karena itu tidak
+ * pernah menyala sekali pun — dan pesan galatnya dibaca dari metaFormGroup
+ * padahal validatornya dipasang pada returnFormGroup, jadi seandainya menyala
+ * pun pesannya tidak akan muncul.
+ *
+ * Sekarang metodenya dipegang satu ruas, dan kolom mana yang wajib diisi
+ * ditentukan sekali ketika metodenya berubah.
+ */
 @Component({
-    selector: 'app-overpayment-create',
-    templateUrl: './overpayment-create.component.html',
-    styleUrl: './overpayment-create.component.scss',
-    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, AutocompleteSearchComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, MatSelect, MatOption, MatAutocompleteTrigger, MatAutocomplete, NgFor, NgIf, TranslatePipe]
+  selector: 'app-overpayment-create',
+  templateUrl: './overpayment-create.component.html',
+  styleUrl: './overpayment-create.component.scss',
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    AutocompleteSearchComponent,
+    NgxMaskDirective,
+    NgFor,
+    NgIf,
+    DecimalPipe,
+    TranslatePipe,
+  ],
 })
-export class OverpaymentCreateComponent {
+export class OverpaymentCreateComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private dialog: MatDialog,
+    private router: Router,
   ) {}
 
-  paymentMethods = [];
-  banks: IBank[] = availableBankSearch.search('').splice(0, 5);
+  banks: IBank[] = availableBankSearch.search('').splice(0, 8);
   isSubmitting: boolean = false;
-
-  bankValidator(control: AbstractControl): ValidationErrors | null {
-    const returnPaymentMethod = control.get('return_payment_method')?.value;
-    const returnPaymentBank = control.get('return_payment_bank')?.value;
-    const returnPaymentNumber = control.get('return_payment_number')?.value;
-    if (returnPaymentMethod === 'transfer') {
-      const bankRequired =
-        !returnPaymentBank || returnPaymentBank.trim() === '';
-      const numberRequired =
-        !returnPaymentNumber || returnPaymentNumber.trim() === '';
-      return bankRequired || numberRequired
-        ? { bankOrNumberRequired: true }
-        : null;
-    }
-    return null; // No errors
-  }
 
   metaFormGroup: FormGroup = new FormGroup({
     customer_id: new FormControl(0, Validators.required),
     date: new FormControl('', Validators.required),
     payment_method_id: new FormControl('', Validators.required),
-    value: new FormControl(0, [Validators.required, Validators.min(0)]),
+    value: new FormControl(0, [Validators.required, Validators.min(1)]),
   });
 
-  returnFormGroup: FormGroup = new FormGroup(
-    {
-      return_payment_date: new FormControl('', Validators.required),
-      return_payment_method: new FormControl('', Validators.required),
-      return_payment_name: new FormControl('', Validators.required),
-      return_payment_bank: new FormControl(''),
-      return_payment_number: new FormControl(''),
-    },
-    {
-      validators: this.bankValidator,
-    }
-  );
+  returnFormGroup: FormGroup = new FormGroup({
+    return_payment_date: new FormControl('', Validators.required),
+    return_payment_name: new FormControl('', Validators.required),
+    return_payment_bank: new FormControl(''),
+    return_payment_number: new FormControl(''),
+  });
+
+  /**
+   * Metode pengembalian: '' (belum dipilih), 'Cash', atau 'Bank transfer'.
+   *
+   * Ejaannya sama persis dengan yang dikirim ke server dan yang tersimpan di
+   * kolom return_payment_method, jadi tidak ada penerjemahan di tengah jalan
+   * yang bisa meleset.
+   */
+  metode: string = '';
 
   ngOnInit(): void {
-    this.fetchPaymentMethods();
-    this.returnFormGroup.controls[
-      'return_payment_bank'
-    ]?.valueChanges.subscribe((data) => {
-      this.banks = availableBankSearch.search(data).splice(0, 5);
-    });
-
-    this.returnFormGroup.controls[
-      'return_payment_method'
-    ].valueChanges.subscribe(() => {
-      this.onPaymentMethodChange();
-    });
+    this.returnFormGroup.controls['return_payment_bank'].valueChanges.subscribe(
+      (data) => {
+        this.banks = availableBankSearch.search(data ?? '').splice(0, 8);
+      },
+    );
   }
 
-  fetchPaymentMethods() {
-    this.apiService.get('payment-method/all', {}).subscribe({
-      next: (data: any) => {
-        this.paymentMethods = data;
-      },
-      error: (error) => {
-        this.alertService.showError(error);
-      },
-    });
+  /**
+   * Memilih metode pengembalian, sekaligus menentukan kolom mana yang wajib.
+   *
+   * Kolom bank dan nomor akun DIKOSONGKAN ketika berpindah ke cash. Kalau
+   * dibiarkan, isian yang sudah terlanjur diketik ikut terkirim pada catatan
+   * yang metodenya cash — dan yang membacanya nanti melihat nomor rekening
+   * pada pengembalian yang diambil tunai.
+   */
+  pilihMetode(pilihan: string) {
+    this.metode = pilihan;
+
+    const bank = this.returnFormGroup.controls['return_payment_bank'];
+    const nomor = this.returnFormGroup.controls['return_payment_number'];
+
+    if (pilihan === 'Bank transfer') {
+      bank.setValidators(Validators.required);
+      nomor.setValidators(Validators.required);
+    } else {
+      bank.clearValidators();
+      nomor.clearValidators();
+      bank.setValue('');
+      nomor.setValue('');
+    }
+
+    bank.updateValueAndValidity();
+    nomor.updateValueAndValidity();
   }
 
   onSelectCustomer(data: any) {
-    this.metaFormGroup.patchValue({
-      customer_id: data.id,
-    });
+    this.metaFormGroup.patchValue({ customer_id: data.id });
   }
 
   onUnselectCustomer() {
-    this.metaFormGroup.patchValue({
-      customer_id: null,
-    });
+    this.metaFormGroup.patchValue({ customer_id: null });
   }
 
   onSelectPaymentMethod(data: any) {
-    this.metaFormGroup.patchValue({
-      payment_method_id: data.id,
-    });
+    this.metaFormGroup.patchValue({ payment_method_id: data.id });
   }
 
   onUnselectPaymentMethod() {
-    this.metaFormGroup.patchValue({
-      payment_method_id: null,
+    this.metaFormGroup.patchValue({ payment_method_id: null });
+  }
+
+  tambahPelanggan() {
+    this.dialog.open(CustomerCreateComponent, {
+      panelClass: 'nocturne-dialog',
+      backdropClass: 'nocturne-dialog-backdrop',
     });
   }
 
-  onPaymentMethodChange() {
-    const method = this.returnFormGroup.get('return_payment_method')?.value;
-    const bankControl = this.returnFormGroup.get('return_payment_bank');
-    const numberControl = this.returnFormGroup.get('return_payment_number');
-    if (method === 'Cash') {
-      bankControl?.disable();
-      numberControl?.disable();
-      bankControl?.setValue('');
-      numberControl?.setValue('');
-      bankControl?.clearValidators();
-      numberControl?.clearValidators();
-    } else if (method === 'Bank transfer') {
-      bankControl?.enable();
-      numberControl?.enable();
-      bankControl?.setValidators(Validators.required);
-      numberControl?.setValidators(Validators.required);
-    } else {
-      bankControl?.disable();
-      numberControl?.disable();
-      bankControl?.clearValidators();
-      numberControl?.clearValidators();
+  /* ---------------------------------------------------------------- */
+  /* Ringkasan                                                         */
+  /* ---------------------------------------------------------------- */
+
+  get nominal(): number {
+    return Number(this.metaFormGroup.controls['value'].value) || 0;
+  }
+
+  get namaPenerima(): string {
+    return this.returnFormGroup.controls['return_payment_name'].value ?? '';
+  }
+
+  /** "22/08/2026 · Transfer", atau tanggalnya saja bila belum diisi. */
+  get ringkasPengembalian(): string {
+    const tanggal = this.returnFormGroup.controls['return_payment_date'].value;
+    const label =
+      this.metode === 'Cash'
+        ? this.translateService.instant('overpayment__create__method-cash')
+        : this.translateService.instant('overpayment__create__method-transfer');
+
+    if (!tanggal) {
+      return label;
     }
-    bankControl?.updateValueAndValidity();
-    numberControl?.updateValueAndValidity();
+
+    return `${moment(new Date(tanggal)).format('DD/MM/YYYY')} · ${label}`;
+  }
+
+  /** "BCA · Sinar Abadi PT", kosong bila banknya belum dipilih. */
+  get tujuanTransfer(): string {
+    const bank = this.returnFormGroup.controls['return_payment_bank'].value;
+    if (!bank) {
+      return '';
+    }
+
+    const nama = this.namaPenerima;
+    return nama ? `${bank} · ${nama}` : bank;
+  }
+
+  get bolehSimpan(): boolean {
+    return (
+      this.metaFormGroup.valid &&
+      this.returnFormGroup.valid &&
+      this.metode !== '' &&
+      !this.isSubmitting
+    );
+  }
+
+  batal() {
+    this.router.navigate(['/Overpayment/Archive']);
   }
 
   submitForm() {
-    if (!this.metaFormGroup.valid) return;
-    if (!this.returnFormGroup.valid) return;
+    if (!this.bolehSimpan) {
+      return;
+    }
 
     this.isSubmitting = true;
     const customerID = this.metaFormGroup.get('customer_id')?.value;
+    const paymentMethodID = this.metaFormGroup.get('payment_method_id')?.value;
+    const transfer = this.metode === 'Bank transfer';
 
     this.apiService
       .post('overpayment', {
         customer_id: customerID == 0 ? null : customerID,
-        payment_method_id:
-          this.metaFormGroup.get('payment_method_id')?.value == -1
-            ? null
-            : this.metaFormGroup.get('payment_method_id')?.value,
+        payment_method_id: paymentMethodID == -1 ? null : paymentMethodID,
         date: moment(new Date(this.metaFormGroup.get('date')?.value)).format(
-          'YYYY-MM-DD'
+          'YYYY-MM-DD',
         ),
         return_payment_date: moment(
-          new Date(this.returnFormGroup.get('return_payment_date')?.value)
+          new Date(this.returnFormGroup.get('return_payment_date')?.value),
         ).format('YYYY-MM-DD'),
-        return_payment_name: this.returnFormGroup.get('return_payment_name')
-          ?.value,
-        return_payment_bank:
-          this.returnFormGroup.get('return_payment_method')?.value == 'Cash'
-            ? null
-            : this.returnFormGroup.get('return_payment_bank')?.value,
-        return_payment_method: this.returnFormGroup.get('return_payment_method')
-          ?.value,
-        return_payment_number:
-          this.returnFormGroup.get('return_payment_method')?.value == 'Cash'
-            ? null
-            : this.returnFormGroup.get('return_payment_number')?.value,
-        value: this.metaFormGroup.controls['value']?.value,
+        return_payment_method: this.metode,
+        return_payment_name: this.namaPenerima,
+        /* Cash tidak punya bank maupun nomor akun; dikirim null, bukan ''. */
+        return_payment_bank: transfer
+          ? this.returnFormGroup.get('return_payment_bank')?.value
+          : null,
+        return_payment_number: transfer
+          ? this.returnFormGroup.get('return_payment_number')?.value
+          : null,
+        value: this.nominal,
         sales_deposit_code_id: null,
       })
       .subscribe({
-        next: (data) => {
+        next: () => {
           this.alertService.showSuccess(
-            this.translateService.instant('overpayment__create__success')
+            this.translateService.instant('overpayment__create__success'),
           );
           this.metaFormGroup.reset();
           this.returnFormGroup.reset();
+          this.metode = '';
+          this.router.navigate(['/Overpayment/Archive']);
         },
         error: (error) => {
           this.alertService.showError(error);

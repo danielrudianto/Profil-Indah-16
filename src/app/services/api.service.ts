@@ -16,6 +16,19 @@ export class ApiService {
     return this.http.put(environment.url + url, body, { headers: headers });
   }
 
+  /**
+   * Mengubah sebagian ruas pada catatan yang sudah ada.
+   *
+   * Dibedakan dari put(): put menggantikan seluruh catatan, sedangkan yang
+   * dipakai di sini menyentuh satu keadaan saja — misalnya menandai kelebihan
+   * bayar sudah dikembalikan. Memakai put untuk itu berarti mengirim kembali
+   * seluruh isi catatan hanya demi mengubah satu boolean, dan setiap ruas yang
+   * lupa disertakan akan terhapus.
+   */
+  patch(url: string, body: any, headers?: any) {
+    return this.http.patch(environment.url + url, body, { headers: headers });
+  }
+
   get(url: string, queryParams?: any, headers?: any) {
     return this.http.get(environment.url + url, {
       params: queryParams,

@@ -1,0 +1,333 @@
+/*
+  Kerangka formulir "buat" — sistem desain Nocturne.
+
+  DIPAKAI LEWAT @use OLEH KOMPONENNYA, bukan ditulis global. Isian formulir
+  tidak disalurkan lewat ng-content seperti tabel daftar, jadi enkapsulasi
+  gayanya masih berlaku dan tidak ada alasan menaikkannya ke lingkup global —
+  di sana ia hanya menambah nama yang bisa bertabrakan dengan Bootstrap.
+
+  Yang ada di sini hanya bagian yang MEMANG TIDAK BOLEH berbeda antar formulir:
+  susunan dua kolom, kartu, kolom isian, kartu pilihan, ringkasan, dan tombol.
+  Yang khas satu formulir tetap ditulis di berkas komponennya sendiri.
+*/
+
+.buat {
+  padding-bottom: 32px;
+}
+
+.buat__head {
+  margin-bottom: 20px;
+}
+
+.buat__title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 0 6px;
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.buat__lede {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-muted, color-mix(in srgb, var(--color-text) 62%, transparent));
+}
+
+/* Tag "nomor dibuat otomatis": keterangan, bukan tombol — jadi tidak bisa ditekan. */
+.tag-otomatis {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--color-accent-wash);
+  color: var(--color-accent);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+
+  i {
+    font-size: 13px;
+  }
+}
+
+/*
+  Dua kolom: isian di kiri, ringkasan dan aksi di kanan. Kolom kanan menyempit
+  lebih dulu dan hilang di bawah 1080px — ringkasan yang terjepit lebih buruk
+  daripada ringkasan yang pindah ke bawah.
+*/
+.kisi {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 16px;
+  align-items: start;
+}
+
+.buat__utama,
+.buat__samping {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+@media (max-width: 1080px) {
+  .kisi {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Kartu                                                             */
+/* ---------------------------------------------------------------- */
+
+.kartu {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 12px 28px 16px;
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1px var(--color-divider);
+}
+
+.kartu__label {
+  margin: 4px 0 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+/* Dua kolom isian bersebelahan; menumpuk sendiri ketika sempit. */
+.kartu__baris {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+/* ---------------------------------------------------------------- */
+/* Kolom isian                                                       */
+/* ---------------------------------------------------------------- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  label {
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: color-mix(in srgb, var(--color-text) 78%, transparent);
+  }
+}
+
+.field__bantu {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 52%, transparent);
+}
+
+.input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  font: inherit;
+  font-size: 14px;
+  font-family: "Montserrat", system-ui, sans-serif;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  outline: none;
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--color-text) 38%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+/* Nilai uang rata kanan, angkanya selebar sama supaya digitnya sejajar. */
+.input--kanan {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tautan dalam teks bantu — tampak tautan, tetapi tetap sebuah tombol. */
+.tautan {
+  padding: 0;
+  font: inherit;
+  font-size: inherit;
+  color: var(--color-accent);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Kartu pilihan                                                     */
+/*                                                                   */
+/* Untuk pilihan yang MENGUBAH BENTUK formulir di bawahnya. Pilihan  */
+/* seperti itu lebih baik terlihat seluruhnya sekaligus daripada     */
+/* tersembunyi sampai daftarnya dibuka.                              */
+/* ---------------------------------------------------------------- */
+
+.keadaan {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.keadaan__kartu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  font: inherit;
+  text-align: left;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-divider);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+
+  i {
+    font-size: 20px;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  }
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.keadaan__kartu--on {
+  background: var(--color-accent-wash);
+  border-color: var(--color-accent);
+
+  i,
+  .keadaan__judul {
+    color: var(--color-accent);
+  }
+}
+
+.keadaan__judul {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ---------------------------------------------------------------- */
+/* Ringkasan                                                         */
+/* ---------------------------------------------------------------- */
+
+.ringkas {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 16px;
+  margin: 0;
+  font-size: 13px;
+
+  dt {
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  }
+
+  dd {
+    margin: 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+}
+
+.ringkas__total strong {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Tombol                                                            */
+/*                                                                   */
+/* Tombol utama Nocturne memakai GARIS TEPI aksen, bukan isian penuh */
+/* — keputusan desain, bukan kelalaian.                              */
+/* ---------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+
+  i {
+    font-size: 16px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn--primary {
+  color: var(--color-accent);
+  background: transparent;
+  border: 1px solid var(--color-accent);
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
+}
+
+.btn--kedua {
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+
+  &:hover:not(:disabled) {
+    color: var(--color-text);
+    border-color: color-mix(in srgb, var(--color-text) 30%, transparent);
+  }
+}
+
+.btn--blok {
+  width: 100%;
+}
