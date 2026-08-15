@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { BehaviorSubject, Observable, filter, map, startWith } from 'rxjs';
 import { NAV_FOOTER, NAV_ITEMS } from 'src/app/constants/navigation.constant';
 
@@ -51,8 +51,18 @@ export class PageTitleService {
     return this.konteksSubject.asObservable();
   }
 
+  /**
+   * Dipasang halaman dari ngOnInit-nya.
+   *
+   * Pancarannya DITUNDA satu putaran. Halaman memanggil ini di tengah
+   * pemeriksaan perubahan, sementara topbar — saudaranya, bukan anaknya —
+   * sudah diperiksa lebih dulu pada putaran yang sama. Memancarkannya
+   * seketika membuat nilai topbar berubah setelah ia dinyatakan selesai
+   * diperiksa, dan Angular melemparkan NG0100 berulang kali sampai
+   * halamannya tidak tergambar sama sekali.
+   */
   pasangKonteks(konteks: KonteksHalaman): void {
-    this.konteksSubject.next(konteks);
+    setTimeout(() => this.konteksSubject.next(konteks));
   }
 
   get judul$(): Observable<string | null> {
@@ -70,10 +80,18 @@ export class PageTitleService {
         startWith(this.router.url),
         map((alamat) => this.cocokkan(alamat)),
       )
-      .subscribe((kunci) => {
-        this.konteksSubject.next(null);
-        this.judul.next(kunci);
-      });
+      .subscribe((kunci) => this.judul.next(kunci));
+
+    /*
+      Konteks dikosongkan saat perpindahan DIMULAI, bukan ketika selesai.
+
+      NavigationEnd terjadi SETELAH komponen tujuan dibuat dan ngOnInit-nya
+      berjalan — jadi mengosongkannya di sana justru menghapus konteks yang
+      baru saja dipasang halaman itu, dan tidak ada yang pernah tampil.
+    */
+    this.router.events
+      .pipe(filter((e): e is NavigationStart => e instanceof NavigationStart))
+      .subscribe(() => this.konteksSubject.next(null));
   }
 
   private cocokkan(alamat: string): string | null {
