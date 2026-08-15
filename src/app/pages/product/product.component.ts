@@ -1,29 +1,27 @@
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, OnInit } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { debounceTime } from 'rxjs';
 import { Item } from 'src/app/models/item.model';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { UpdateProductComponent } from './update-product/update-product.component';
 
 /**
  * Daftar barang — sistem desain Nocturne.
  *
+ * Kerangka halamannya — judul, baris alat, kartu, kaki — datang dari
+ * app-list-page. Yang tinggal di sini hanya yang memang berbeda antar halaman:
+ * kolom tabelnya, menu tindakannya, dan cara mengambil datanya.
+ *
  * TIDAK LAGI MEMAKAI app-feature-search. Komponen itu bukan sekadar kolom
  * pencarian: ia juga yang mengambil datanya dan yang memutuskan dialog mana
  * yang dibuka tombol tambah, lewat satu switch berisi sebelas halaman.
- * Akibatnya tata letak baris pencarian tidak bisa diubah untuk satu halaman
- * tanpa ikut mengubah sepuluh halaman lain yang belum disentuh desain.
- *
- * Halaman ini kini mengambil datanya sendiri. Parameternya sama persis dengan
- * yang dikirim komponen lama — keyword, page, pageSize, content, mode —
- * sehingga tidak ada perubahan apa pun di sisi server.
+ * Parameter yang dikirim di sini sama persis dengan miliknya — keyword, page,
+ * pageSize, content, mode — sehingga tidak ada perubahan di sisi server.
  *
  * CATATAN: keping saringan status yang ada di berkas desain belum dipasang.
  * Endpoint daftar barang hanya menerima page, keyword, dan pageSize; menyaring
@@ -33,15 +31,14 @@ import { UpdateProductComponent } from './update-product/update-product.componen
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
-  styleUrls: ['./product.component.scss'],
   imports: [
     NgIf,
     NgFor,
-    ReactiveFormsModule,
     MatMenu,
     MatMenuItem,
     MatMenuTrigger,
     TranslatePipe,
+    ListPageComponent,
   ],
 })
 export class ProductComponent implements OnInit {
@@ -54,44 +51,15 @@ export class ProductComponent implements OnInit {
     private translate: TranslateService,
   ) {}
 
-  private destroyRef = inject(DestroyRef);
-
-  readonly pilihanUkuran = [10, 25, 50];
-
-  cariControl = new FormControl<string>('');
-
   isLoading = true;
   dataSource: Item[] = [];
   dataCount = 0;
   page = 1;
   pageSize = 10;
+  keyword = '';
 
   ngOnInit(): void {
-    /*
-      Jeda satu detik sama dengan bentuk sebelumnya. Tanpa jeda, setiap huruf
-      yang diketik menjadi satu permintaan ke server.
-    */
-    this.cariControl.valueChanges
-      .pipe(debounceTime(1000), takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.page = 1;
-        this.ambilData();
-      });
-
     this.ambilData();
-  }
-
-  /** Nomor urut pertama dan terakhir yang sedang tampil, untuk keterangan kaki. */
-  get dari(): number {
-    return this.dataCount === 0 ? 0 : (this.page - 1) * this.pageSize + 1;
-  }
-
-  get sampai(): number {
-    return Math.min(this.page * this.pageSize, this.dataCount);
-  }
-
-  get halamanTerakhir(): number {
-    return Math.max(1, Math.ceil(this.dataCount / this.pageSize));
   }
 
   lacakBarang = (_: number, item: Item): number => item.id;
@@ -101,7 +69,7 @@ export class ProductComponent implements OnInit {
 
     this.apiService
       .get('product', {
-        keyword: this.cariControl.value ?? '',
+        keyword: this.keyword,
         page: this.page,
         pageSize: this.pageSize,
         content: 'false',
@@ -121,24 +89,22 @@ export class ProductComponent implements OnInit {
       });
   }
 
-  gantiUkuran(ukuran: number): void {
-    if (ukuran === this.pageSize) {
-      return;
-    }
-
-    this.pageSize = ukuran;
-    /* Kembali ke halaman satu: nomor halaman lama menunjuk potongan lain. */
+  cari(kataKunci: string): void {
+    this.keyword = kataKunci;
+    /* Kata kunci baru berarti kumpulan hasil yang baru pula. */
     this.page = 1;
     this.ambilData();
   }
 
-  pindahHalaman(arah: -1 | 1): void {
-    const tujuan = this.page + arah;
-    if (tujuan < 1 || tujuan > this.halamanTerakhir) {
-      return;
-    }
+  bukaHalaman(halaman: number): void {
+    this.page = halaman;
+    this.ambilData();
+  }
 
-    this.page = tujuan;
+  gantiUkuran(ukuran: number): void {
+    this.pageSize = ukuran;
+    /* Kembali ke halaman satu: nomor halaman lama menunjuk potongan lain. */
+    this.page = 1;
     this.ambilData();
   }
 

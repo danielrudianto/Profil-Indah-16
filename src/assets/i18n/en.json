@@ -129,7 +129,7 @@
   "general__toggle-full-screen": "Toggle full screen",
   "general__reload": "Reload",
   "general__print": "Print",
-  "product__brand__title": "Product brand",
+  "product__brand__title": "Product Brand",
   "product__brand__help": "Here you can manage your product brands data, create, update, and delete.",
   "product__brand__name": "Brand name",
   "product__brand__created-by": "Created by",
@@ -147,7 +147,7 @@
   "general__delete-successfully": "deleted successfully",
   "general__delete-confirmation__submit": "Yes, I am sure",
   "general__delete-confirmation__close": "Cancel",
-  "product__type__title": "Product type",
+  "product__type__title": "Product Type",
   "product__type__help": "Here you can manage your product types data, create, update, and delete.",
   "product__type__name": "Product type",
   "product__type__created-by": "Created by",
@@ -1684,5 +1684,11 @@
   "general__actions": "Actions",
   "general__loading": "Loading…",
   "general__per-page": "Items per page",
-  "general__of": "of"
+  "general__of": "of",
+  "product__type__lede": "Product grouping by kind.",
+  "product__type__search": "Search product type…",
+  "product__type__add": "Add type",
+  "product__brand__lede": "Brands of the products sold.",
+  "product__brand__search": "Search product brand…",
+  "product__brand__add": "Add brand"
 }

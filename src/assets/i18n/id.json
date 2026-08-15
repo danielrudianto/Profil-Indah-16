@@ -126,7 +126,7 @@
   "general__toggle-full-screen": "Layar penuh",
   "general__reload": "Muat ulang",
   "general__print": "Cetak",
-  "product__brand__title": "Merek Produk",
+  "product__brand__title": "Merek Barang",
   "product__brand__help": "Di sini Anda dapat mengelola data merek produk, membuat, memperbarui, dan menghapus.",
   "product__brand__name": "Merek produk",
   "product__brand__created-by": "Dibuat oleh",
@@ -144,7 +144,7 @@
   "general__delete-successfully": "berhasil dihapus",
   "general__delete-confirmation__submit": "Ya, saya yakin",
   "general__delete-confirmation__close": "Batal",
-  "product__type__title": "Tipe Produk",
+  "product__type__title": "Tipe Barang",
   "product__type__help": "Di sini Anda dapat mengelola data tipe produk, membuat, memperbarui, dan menghapus.",
   "product__type__name": "Tipe produk",
   "product__type__created-by": "Dibuat oleh",
@@ -1690,5 +1690,11 @@
   "general__actions": "Tindakan",
   "general__loading": "Memuat…",
   "general__per-page": "Item per halaman",
-  "general__of": "dari"
+  "general__of": "dari",
+  "product__type__lede": "Pengelompokan barang menurut jenisnya.",
+  "product__type__search": "Cari tipe barang…",
+  "product__type__add": "Tambah tipe",
+  "product__brand__lede": "Daftar merek barang yang dijual.",
+  "product__brand__search": "Cari merek barang…",
+  "product__brand__add": "Tambah merek"
 }

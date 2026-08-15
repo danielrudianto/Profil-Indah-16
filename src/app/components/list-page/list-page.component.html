@@ -1,0 +1,106 @@
+<div class="list-page">
+  <header class="list-page__head">
+    <h1 class="list-page__title">{{ heading }}</h1>
+    <p class="list-page__lede" *ngIf="lede">{{ lede }}</p>
+  </header>
+
+  <!--
+    Cari di KIRI, tombol di KANAN. Yang mendorong ke kanan adalah kotak
+    tombolnya, bukan kolom carinya — sehingga menyisipkan keping saringan di
+    sebelah kolom cari nanti tidak mengubah apa pun di sini.
+  -->
+  <div class="list-page__bar">
+    <div class="cari">
+      <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+      <input
+        type="search"
+        [formControl]="searchControl"
+        [attr.placeholder]="searchPlaceholder"
+        [attr.aria-label]="searchPlaceholder"
+      />
+    </div>
+
+    <div class="list-page__aksi">
+      <!-- Tombol tambahan milik halaman, diletakkan sebelum tombol bakunya. -->
+      <ng-content select="[aksi]"></ng-content>
+
+      <button
+        type="button"
+        class="btn btn--primary"
+        *ngIf="addLabel"
+        (click)="add.emit()"
+      >
+        <i class="ph ph-plus" aria-hidden="true"></i>
+        {{ addLabel }}
+      </button>
+
+      <button
+        type="button"
+        class="btn btn--icon"
+        [disabled]="loading"
+        (click)="refresh.emit()"
+        [title]="'general__refresh' | translate"
+        [attr.aria-label]="'general__refresh' | translate"
+      >
+        <i class="ph ph-arrows-clockwise" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="list-page__kartu">
+    <!--
+      Tabelnya menggulung MENDATAR di dalam kotaknya sendiri, bukan mendorong
+      seluruh halaman melebar. Tanpa ini, pada layar sempit seluruh shell —
+      termasuk navigasi samping — ikut bergeser ketika tabel lebih lebar dari
+      layar.
+    -->
+    <div class="list-page__gulir">
+      <ng-content></ng-content>
+    </div>
+
+    <div class="list-page__kaki">
+      <span>{{ 'general__per-page' | translate }}</span>
+
+      <div class="seg" role="group">
+        <button
+          type="button"
+          class="seg__opt"
+          *ngFor="let u of pilihanUkuran"
+          [class.seg__opt--on]="u === pageSize"
+          [attr.aria-pressed]="u === pageSize"
+          [disabled]="loading"
+          (click)="gantiUkuran(u)"
+        >
+          {{ u }}
+        </button>
+      </div>
+
+      <span class="list-page__jumlah">
+        {{ dari }} – {{ sampai }} {{ 'general__of' | translate }} {{ total }}
+      </span>
+
+      <div class="list-page__nav">
+        <button
+          type="button"
+          class="btn btn--icon btn--kecil"
+          [disabled]="loading || page <= 1"
+          (click)="pindahHalaman(-1)"
+          [title]="'general__previous' | translate"
+          [attr.aria-label]="'general__previous' | translate"
+        >
+          <i class="ph ph-caret-left" aria-hidden="true"></i>
+        </button>
+        <button
+          type="button"
+          class="btn btn--icon btn--kecil"
+          [disabled]="loading || page >= halamanTerakhir"
+          (click)="pindahHalaman(1)"
+          [title]="'general__next' | translate"
+          [attr.aria-label]="'general__next' | translate"
+        >
+          <i class="ph ph-caret-right" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,136 +1,164 @@
-import { Component } from '@angular/core';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
-import { ItemBrand } from 'src/app/models/item.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { ProductBrandUpdateComponent } from './product-brand-update/product-brand-update.component';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { Component, OnInit } from '@angular/core';
+import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { DeleteConfirmationComponent } from '../../components/delete-confirmation/delete-confirmation.component';
-import { ApiService } from 'src/app/services/api.service';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ItemBrand } from 'src/app/models/item.model';
 import { AlertService } from 'src/app/services/alert.service';
-import { FeatureBackgroundComponent } from '../../components/feature-background/feature-background.component';
-import { FeatureHeaderComponent } from '../../components/feature-header/feature-header.component';
-import { FeatureSearchComponent } from '../../components/feature-search/feature-search.component';
-import { NgIf, NgFor, DatePipe } from '@angular/common';
-import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
-import { MatIcon } from '@angular/material/icon';
-import { EmptyTableComponent } from '../../components/empty-table/empty-table.component';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ApiService } from 'src/app/services/api.service';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
+import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
+import { ProductBrandCreateComponent } from './product-brand-create/product-brand-create.component';
+import { ProductBrandUpdateComponent } from './product-brand-update/product-brand-update.component';
 
+/**
+ * Daftar merek barang — sistem desain Nocturne.
+ *
+ * Kembar dengan daftar tipe barang; yang berbeda hanya nama kolom pembuatnya
+ * di sisi server (`user` di sini, `user_item_type_created_byTouser` di sana)
+ * dan jalan yang dipakai membuka dialognya.
+ */
 @Component({
-    selector: 'app-product-brand',
-    templateUrl: './product-brand.component.html',
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, EmptyTableComponent, MatProgressSpinner, MatPaginator, DatePipe, TranslatePipe]
+  selector: 'app-product-brand',
+  templateUrl: './product-brand.component.html',
+  imports: [
+    NgIf,
+    NgFor,
+    DatePipe,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+    TranslatePipe,
+    ListPageComponent,
+  ],
 })
-export class ProductBrandComponent {
+export class ProductBrandComponent implements OnInit {
   constructor(
-    private authService: AuthService,
-    private dynamicComponentService: DynamicComponentService,
-    private translateService: TranslateService,
-    private dialog: MatDialog,
     private apiService: ApiService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialog: MatDialog,
+    private translateService: TranslateService,
   ) {}
 
-  isLoading: boolean = true;
-  isSubmitting: boolean = false;
+  isLoading = true;
   dataSource: ItemBrand[] = [];
-  dataCount: number = 0;
-  page: number = 1;
-  pageSize: number = 10;
-  previousRoute: string = '';
-  isAdministrator: boolean = false;
+  dataCount = 0;
+  page = 1;
+  pageSize = 10;
+  keyword = '';
 
   ngOnInit(): void {
-    this.isAdministrator = this.authService.isAdministrator();
+    this.ambilData();
   }
 
-  openDialog(dialogType: string, id: number) {
-    if (dialogType == 'edit') {
-      this.dialog
-        .open(ProductBrandUpdateComponent, {
-          data: {
-            id: id,
-          },
-        })
-        .afterClosed()
-        .subscribe((data) => {
-          console.log(data);
-          if (data) {
-            const index = this.dataSource.findIndex((x) => x.id == data.id);
-            if (index != -1) {
-              this.dataSource[index].name = data.name;
-            }
-          }
-        });
+  lacakMerek = (_: number, item: ItemBrand): number => item.id;
+
+  ambilData(): void {
+    this.isLoading = true;
+
+    this.apiService
+      .get('product-brand', {
+        keyword: this.keyword,
+        page: this.page,
+        pageSize: this.pageSize,
+        content: 'false',
+        mode: 'default',
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.dataCount = data.count;
+          this.dataSource = data.data;
+        },
+        error: (error: any) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
+  }
+
+  cari(kataKunci: string): void {
+    this.keyword = kataKunci;
+    this.page = 1;
+    this.ambilData();
+  }
+
+  bukaHalaman(halaman: number): void {
+    this.page = halaman;
+    this.ambilData();
+  }
+
+  gantiUkuran(ukuran: number): void {
+    this.pageSize = ukuran;
+    this.page = 1;
+    this.ambilData();
+  }
+
+  tambah(): void {
+    this.dialog
+      .open(ProductBrandCreateComponent, {})
+      .afterClosed()
+      .subscribe((data) => {
+        /* Data baru masuk di halaman pertama, jadi daftarnya diambil ulang. */
+        if (data) {
+          this.page = 1;
+          this.ambilData();
+        }
+      });
+  }
+
+  ubah(item: ItemBrand): void {
+    this.dialog
+      .open(ProductBrandUpdateComponent, { data: { id: item.id } })
+      .afterClosed()
+      .subscribe((data) => {
+        if (!data) {
+          return;
+        }
+
+        const index = this.dataSource.findIndex((x) => x.id === data.id);
+        if (index !== -1) {
+          this.dataSource[index].name = data.name;
+        }
+      });
+  }
+
+  hapus(item: ItemBrand): void {
+    const index = this.dataSource.findIndex((x) => x.id === item.id);
+    if (index === -1) {
+      return;
     }
 
-    if (dialogType == 'delete') {
-      const index = this.dataSource.findIndex((x) => x.id == id);
-      if (index != -1) {
-        this.translateService
-          .get(['general__delete-confirmation', 'general__delete-successfully'])
-          .subscribe((data) => {
-            const translation_1 = data['general__delete-confirmation'];
-            const translation_2 = data['general__delete-successfully'];
-            const dialog = this.dialog.open(DeleteConfirmationComponent, {
-              data: {
-                title: translation_1,
-                document: `${this.dataSource[index].name}`,
+    this.translateService
+      .get(['general__delete-confirmation', 'general__delete-successfully'])
+      .subscribe((teks) => {
+        this.dialog
+          .open(DeleteConfirmationComponent, {
+            data: {
+              title: teks['general__delete-confirmation'],
+              document: item.name,
+            },
+          })
+          .afterClosed()
+          .subscribe((setuju) => {
+            if (setuju !== true) {
+              return;
+            }
+
+            this.apiService.delete(`product-brand/${item.id}`).subscribe({
+              next: (data: any) => {
+                this.dataSource.splice(index, 1);
+                this.dataCount = this.dataCount - 1;
+                this.alertService.showSuccess(
+                  `${data.name} ${teks['general__delete-successfully']}`,
+                );
+              },
+              error: (error: any) => {
+                this.alertService.showError(error);
               },
             });
-
-            dialog.afterClosed().subscribe((result) => {
-              if (result == true) {
-                this.isSubmitting = true;
-                this.apiService
-                  .delete(`product-brand/${id}`)
-                  .subscribe({
-                    next: (data: any) => {
-                      this.dataSource.splice(index, 1);
-                      this.alertService.showSuccess(
-                        `${data.name} ${translation_2}`
-                      );
-                    },
-                    error: (error) => {
-                      this.alertService.showError(error);
-                    },
-                  })
-                  .add(() => {
-                    this.isSubmitting = false;
-                  });
-              }
-            });
           });
-      }
-    }
-  }
-
-  changePage(event: PageEvent) {
-    if (this.pageSize != event.pageSize) {
-      this.pageSize = event.pageSize;
-      this.fetchProducts(1);
-    } else {
-      this.page = event.pageIndex + 1;
-      this.fetchProducts(this.page);
-    }
-  }
-
-  fetchProducts(page: number) {
-    this.page = page;
-  }
-
-  onUpdatePage() {
-    this.page = 1;
-  }
-
-  onUpdateData(data: any) {
-    this.dataCount = data.count;
-    this.dataSource = data.data;
-  }
-
-  onUpdateLoadingStatus(data: any) {
-    this.isLoading = data;
+      });
   }
 }
