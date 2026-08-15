@@ -1,0 +1,54 @@
+<div class="dialog">
+  <header class="dialog__head">
+    <span class="dialog__ikon" aria-hidden="true">
+      <i class="{{ icon }}"></i>
+    </span>
+
+    <span class="dialog__teks">
+      <span class="dialog__judul">{{ heading }}</span>
+      <span class="dialog__lede" *ngIf="lede">{{ lede }}</span>
+    </span>
+
+    <button
+      type="button"
+      class="dialog__tutup"
+      (click)="close.emit()"
+      [title]="'general__close' | translate"
+      [attr.aria-label]="'general__close' | translate"
+    >
+      <i class="ph ph-x" aria-hidden="true"></i>
+    </button>
+  </header>
+
+  <!--
+    Formulirnya dibungkus di sini, bukan di halaman pemanggil: tombol utama di
+    kaki dialog harus bertipe submit agar menekan Enter di dalam kolom isian
+    ikut mengirimkan — perilaku yang hilang kalau tombolnya berada di luar
+    <form>.
+  -->
+  <form (ngSubmit)="submitted.emit()" novalidate>
+    <div class="dialog__isi">
+      <ng-content></ng-content>
+    </div>
+
+    <div class="dialog__kaki">
+      <button
+        type="button"
+        class="btn btn--kedua"
+        (click)="close.emit()"
+        [disabled]="submitting"
+      >
+        {{ 'general__cancel' | translate }}
+      </button>
+
+      <button
+        type="submit"
+        class="btn btn--primary"
+        [disabled]="submitting || !canSubmit"
+      >
+        <i class="ph ph-check" aria-hidden="true"></i>
+        {{ submitLabel }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,170 @@
+/*
+  Kerangka dialog — Nocturne.
+
+  Komponen ini yang melukis permukaan dialognya sendiri: ground, garis tepi,
+  sudut, dan bayangannya. Wadah bawaan Material dibuat tembus pandang lewat
+  kelas panel .nocturne-dialog di styles.scss, karena permukaan Material
+  membawa warna dan sudutnya sendiri yang tidak bisa dijangkau dari sini.
+*/
+
+:host {
+  display: block;
+}
+
+.dialog {
+  width: 520px;
+  max-width: calc(100vw - 32px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--color-divider);
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: 0 24px 60px rgb(0 0 0 / 40%);
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  color: var(--color-text);
+}
+
+/* ---------------------------------------------------------------- */
+/* Kepala                                                            */
+/* ---------------------------------------------------------------- */
+
+.dialog__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--color-divider);
+  /* Sedikit lebih dalam daripada badan, seperti pada berkas desain. */
+  background: color-mix(in srgb, var(--color-bg) 40%, transparent);
+}
+
+.dialog__ikon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 8px;
+  background: var(--color-active);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  color: var(--color-accent);
+  font-size: 20px;
+}
+
+.dialog__teks {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.3;
+  min-width: 0;
+}
+
+.dialog__judul {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.dialog__lede {
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.dialog__tutup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  font-size: 18px;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-text);
+    background: color-mix(in srgb, var(--color-text) 6%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Badan dan kaki                                                    */
+/* ---------------------------------------------------------------- */
+
+.dialog__isi {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  max-height: min(60vh, 520px);
+  overflow-y: auto;
+}
+
+.dialog__kaki {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 24px 24px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 20px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+
+  i {
+    font-size: 15px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+.btn--primary {
+  color: var(--color-accent);
+  background: transparent;
+  border: 1px solid var(--color-accent);
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
+}
+
+.btn--kedua {
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+
+  &:hover:not(:disabled) {
+    color: var(--color-text);
+    border-color: color-mix(in srgb, var(--color-text) 30%, transparent);
+  }
+}

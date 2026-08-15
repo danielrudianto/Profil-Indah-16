@@ -1,21 +1,45 @@
+/*
+  Pembungkus dialog dinamis.
+
+  PENEMPATAN DI TENGAH SEKARANG DILAKUKAN DI SINI. Sebelumnya pembungkus ini
+  hanya menumpuk dua elemen dalam aliran biasa: latar setinggi layar penuh,
+  lalu isinya TEPAT DI BAWAHNYA — yaitu satu layar penuh di bawah lipatan, dan
+  tidak terlihat sama sekali. Yang menyelamatkannya selama ini adalah kelas
+  global .create-dialog, yang dipasang sendiri oleh tiap halaman dan membawa
+  position: absolute berikut top/left 50%.
+
+  Artinya setiap dialog baru harus ingat memakai kelas itu, dan yang lupa akan
+  menggambar dialognya di luar layar tanpa satu pun galat. Menaruh penempatannya
+  di pembungkus membuat kewajiban itu hilang.
+
+  Halaman yang masih memakai .create-dialog tidak terpengaruh: elemennya
+  position: absolute, jadi ia keluar dari aliran flex ini dan tetap ditempatkan
+  oleh top/left miliknya sendiri terhadap pembungkus yang sama.
+*/
 .dynamic__wrapper {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0;
 }
 
 .dynamic__background {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   background-color: black;
   opacity: 0.5;
 }
 
+/*
+  Lebarnya mengikuti isinya, bukan dipaku 300px: dialog yang menentukan sendiri
+  lebarnya — seperti app-dialog-shell — jadi tidak perlu menembus pembungkus.
+*/
 .dynamic__content {
+  position: relative;
   z-index: 21;
-  width: 300px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 32px);
 }

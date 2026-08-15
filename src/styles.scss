@@ -115,6 +115,77 @@ html {
 }
 
 /* ------------------------------------------------------------------ */
+/* Dialog Nocturne                                                     */
+/*                                                                     */
+/* app-dialog-shell melukis permukaan dialognya sendiri. Wadah bawaan   */
+/* Material membawa ground, sudut, bayangan, dan padding sendiri yang   */
+/* akan terlihat sebagai kotak kedua di belakangnya — jadi wadah itu    */
+/* dikosongkan. Dipasang lewat panelClass: 'nocturne-dialog'.           */
+/* ------------------------------------------------------------------ */
+
+.nocturne-dialog .mat-mdc-dialog-surface {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+.nocturne-dialog-backdrop {
+  background: color-mix(in srgb, var(--color-bg) 55%, transparent);
+  backdrop-filter: blur(3px);
+}
+
+/* ------------------------------------------------------------------ */
+/* Kolom isian di dalam dialog                                         */
+/*                                                                     */
+/* Disalurkan lewat ng-content, jadi gaya milik app-dialog-shell tidak  */
+/* menjangkaunya — sama alasannya dengan .tabel di bawah.               */
+/* ------------------------------------------------------------------ */
+
+.medan label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--color-text) 78%, transparent);
+}
+
+.medan__input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  font: inherit;
+  font-size: 14px;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  outline: none;
+}
+
+.medan__input::placeholder {
+  color: color-mix(in srgb, var(--color-text) 38%, transparent);
+}
+
+.medan__input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.medan__input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+textarea.medan__input {
+  min-height: 72px;
+  padding: 10px 14px;
+  resize: vertical;
+}
+
+/* ------------------------------------------------------------------ */
 /* Tabel Nocturne                                                      */
 /*                                                                     */
 /* Ditulis global karena tabelnya DISALURKAN halaman ke dalam           */

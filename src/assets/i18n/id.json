@@ -134,8 +134,8 @@
   "product__brand__action": "Tindakan",
   "product__brand__update": "Perbarui",
   "product__brand__delete": "Hapus",
-  "product__brand__add__title": "Tambah merek produk baru",
-  "product__brand__add__submit": "Kirim",
+  "product__brand__add__title": "Tambah merek",
+  "product__brand__add__submit": "Simpan merek",
   "product__brand__update__title": "Perbarui data merek produk",
   "product__brand__update__submit": "Perbaharui",
   "product__brand__update__success": "berhasil diperbaharui.",
@@ -152,8 +152,8 @@
   "product__type__action": "Tindakan",
   "product__type__update": "Perbarui",
   "product__type__delete": "Hapus",
-  "product__type__add__title": "Tambah tipe produk baru",
-  "product__type__add__submit": "Kirim",
+  "product__type__add__title": "Tambah tipe",
+  "product__type__add__submit": "Simpan tipe",
   "product__type__update__title": "Perbarui data tipe produk",
   "supplier__title": "Supplier",
   "supplier__help": "Di sini Anda dapat mengelola data supplier, membuat, memperbarui, dan menghapus.",
@@ -1713,5 +1713,9 @@
   "product__create__before-save": "Sebelum simpan",
   "product__create__check-brand-type": "Merek & tipe terisi",
   "product__create__check-unit": "Satuan dasar",
-  "product__create__extra-units": "satuan tambahan"
+  "product__create__extra-units": "satuan tambahan",
+  "product__brand__add__lede": "Merek baru langsung bisa dipakai di formulir barang.",
+  "product__brand__add__example": "mis. Krakatau Steel",
+  "product__type__add__lede": "Tipe baru langsung bisa dipakai di formulir barang.",
+  "product__type__add__example": "mis. Material"
 }

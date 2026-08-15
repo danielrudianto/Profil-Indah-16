@@ -97,7 +97,14 @@ export class ProductBrandComponent implements OnInit {
 
   tambah(): void {
     this.dialog
-      .open(ProductBrandCreateComponent, {})
+      /*
+        panelClass mengosongkan permukaan bawaan Material; dialognya sendiri
+        yang melukis ground dan sudutnya — lihat catatan di styles.scss.
+      */
+      .open(ProductBrandCreateComponent, {
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
+      })
       .afterClosed()
       .subscribe((data) => {
         /* Data baru masuk di halaman pertama, jadi daftarnya diambil ulang. */

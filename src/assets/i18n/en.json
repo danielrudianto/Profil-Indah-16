@@ -137,8 +137,8 @@
   "product__brand__action": "Action",
   "product__brand__update": "Update",
   "product__brand__delete": "Delete",
-  "product__brand__add__title": "Add new product brand",
-  "product__brand__add__submit": "Submit",
+  "product__brand__add__title": "Add brand",
+  "product__brand__add__submit": "Save brand",
   "product__brand__update__title": "Update product brand data",
   "product__brand__update__submit": "Update",
   "product__brand__update__success": "updated successfully.",
@@ -155,8 +155,8 @@
   "product__type__action": "Action",
   "product__type__update": "Update",
   "product__type__delete": "Delete",
-  "product__type__add__title": "Add new product type",
-  "product__type__add__submit": "Submit",
+  "product__type__add__title": "Add type",
+  "product__type__add__submit": "Save type",
   "product__type__update__title": "Update product type data",
   "supplier__title": "Supplier",
   "supplier__help": "Here you can manage your suppliers data, create, update, and delete.",
@@ -1707,5 +1707,9 @@
   "product__create__before-save": "Before saving",
   "product__create__check-brand-type": "Brand & type filled in",
   "product__create__check-unit": "Base unit",
-  "product__create__extra-units": "extra units"
+  "product__create__extra-units": "extra units",
+  "product__brand__add__lede": "A new brand can be used in the product form right away.",
+  "product__brand__add__example": "e.g. Krakatau Steel",
+  "product__type__add__lede": "A new type can be used in the product form right away.",
+  "product__type__add__example": "e.g. Material"
 }
