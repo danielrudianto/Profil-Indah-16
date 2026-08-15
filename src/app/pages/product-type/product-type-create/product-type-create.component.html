@@ -9,17 +9,11 @@
     (submitted)="submitForm()"
     (close)="closeDialog()"
   >
-    <div class="medan" [formGroup]="typeFormGroup">
-      <label for="nt-name">{{ 'product__type__name' | translate }}</label>
-      <input
-        #input
-        id="nt-name"
-        class="medan__input"
-        type="text"
-        formControlName="name"
-        autocomplete="off"
-        [attr.placeholder]="'product__type__add__example' | translate"
-      />
-    </div>
+    <div [formGroup]="typeFormGroup">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'product__type__name' | translate }}</mat-label>
+      <input matInput #input type="text" formControlName="name" autocomplete="off" [attr.placeholder]="'product__type__add__example' | translate" />
+    </mat-form-field>
+  </div>
   </app-dialog-shell>
 </app-dynamic-dialog>

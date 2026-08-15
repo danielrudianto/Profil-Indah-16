@@ -10,6 +10,8 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 /**
  * Dialog tambah merek barang — sistem desain Nocturne.
@@ -37,7 +39,7 @@ import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-she
 @Component({
   selector: 'app-product-brand-create',
   templateUrl: './product-brand-create.component.html',
-  imports: [ReactiveFormsModule, TranslatePipe, DialogShellComponent],
+  imports: [MatFormField, MatLabel, MatInput, ReactiveFormsModule, TranslatePipe, DialogShellComponent],
 })
 export class ProductBrandCreateComponent {
   constructor(

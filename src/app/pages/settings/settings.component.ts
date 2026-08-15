@@ -1,6 +1,6 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
   ModeTampilan,
@@ -12,6 +12,11 @@ import {
   ACCENT_DEFAULT,
   AccentColor,
 } from 'src/app/constants/accent-color.constant';
+import { AuthService } from 'src/app/services/auth.service';
+import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { AvatarComponent } from 'src/app/components/avatar/avatar.component';
+import { CircleAvatarComponent } from 'src/app/components/circle-avatar/circle-avatar.component';
+import { SetAvatarComponent } from 'src/app/pages/set-avatar/set-avatar.component';
 
 /**
  * Halaman pengaturan tampilan.
@@ -29,13 +34,37 @@ import {
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
-  imports: [NgFor, TranslatePipe],
+  imports: [NgFor, NgIf, TranslatePipe, AvatarComponent, CircleAvatarComponent],
 })
 export class SettingsComponent implements OnInit {
   constructor(
     private settingsService: SettingsService,
     private languageService: LanguageService,
+    private authService: AuthService,
+    private dynamicComponentService: DynamicComponentService,
   ) {}
+
+  /** Avatar pengguna, atau null bila ia belum pernah mengaturnya. */
+  avatar: any = null;
+
+  /** Dipakai lingkaran inisial ketika avatarnya belum ada. */
+  nama = '';
+
+  /**
+   * Membuka pengatur avatar.
+   *
+   * Dialognya SAMA dengan yang dipakai halaman profil, bukan salinan baru:
+   * dua pengatur untuk satu hal adalah dua yang cepat atau lambat berbeda.
+   * Sesudah ditutup, pratinjaunya dibaca ulang supaya perubahannya langsung
+   * terlihat tanpa perlu memuat ulang halaman.
+   */
+  aturAvatar(): void {
+    this.dynamicComponentService
+      .createDynamicComponent(SetAvatarComponent, {})
+      .subscribe(() => {
+        this.avatar = this.authService.getSelfAvatar();
+      });
+  }
 
   private destroyRef = inject(DestroyRef);
 
@@ -46,6 +75,9 @@ export class SettingsComponent implements OnInit {
   bahasa: string = '';
 
   ngOnInit(): void {
+    this.avatar = this.authService.getSelfAvatar();
+    this.nama = this.authService.getUserInfo()?.name ?? '';
+
     this.settingsService.accent
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((warna) => (this.aksenSekarang = warna));

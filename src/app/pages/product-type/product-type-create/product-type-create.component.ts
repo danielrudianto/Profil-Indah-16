@@ -11,6 +11,8 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { DynamicDialogComponent } from 'src/app/components/dynamic-dialog/dynamic-dialog.component';
 import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 /**
  * Dialog tambah tipe barang — sistem desain Nocturne.
@@ -31,7 +33,7 @@ import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-she
 @Component({
   selector: 'app-product-type-create',
   templateUrl: './product-type-create.component.html',
-  imports: [
+  imports: [MatFormField, MatLabel, MatInput, 
     ReactiveFormsModule,
     TranslatePipe,
     DynamicDialogComponent,

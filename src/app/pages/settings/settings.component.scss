@@ -8,9 +8,31 @@
 */
 
 .settings {
+  /*
+    Ditengahkan, bukan menempel kiri. Halaman ini isinya satu kolom pilihan
+    yang sempit; dibiarkan rata kiri, sisa ruang di kanannya jadi bidang
+    kosong selebar setengah layar dan halamannya terbaca seperti belum selesai
+    dimuat.
+  */
   max-width: 760px;
+  margin: 0 auto;
   font-family: "Montserrat", system-ui, sans-serif;
   color: var(--color-text);
+}
+
+/* ---------------------------------------------------------------- */
+/* Avatar                                                            */
+/* ---------------------------------------------------------------- */
+
+.avatar-baris {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.avatar-baris__pratinjau {
+  flex: none;
 }
 
 .settings__head {

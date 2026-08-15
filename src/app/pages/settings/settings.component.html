@@ -5,6 +5,39 @@
   </header>
 
   <!-- Mode tampilan --------------------------------------------------- -->
+  <!--
+    Avatar. Pengaturnya BUKAN ditulis ulang di sini — ia dialog yang sudah
+    dipakai halaman profil, dan dua salinan pengatur yang sama adalah dua
+    salinan yang cepat atau lambat berbeda.
+  -->
+  <section class="settings__card">
+    <h2 class="settings__card-title">{{ 'settings__avatar' | translate }}</h2>
+    <p class="settings__card-note">{{ 'settings__avatar_note' | translate }}</p>
+
+    <div class="avatar-baris">
+      <div class="avatar-baris__pratinjau">
+        <app-avatar
+          *ngIf="avatar"
+          [width]="64"
+          [top]="avatar.top"
+          [accessories]="avatar.accessories"
+          [circle]="avatar.circle"
+          [color]="avatar.color"
+          [eyebrows]="avatar.eyebrows"
+          [eyes]="avatar.eyes"
+          [mouth]="avatar.mouth"
+          [clothes]="avatar.clothes"
+        />
+        <app-circle-avatar *ngIf="!avatar" [name]="nama" [size]="64" />
+      </div>
+
+      <button type="button" class="seg__opt seg__opt--tombol" (click)="aturAvatar()">
+        <i class="ph ph-pencil-simple" aria-hidden="true"></i>
+        {{ 'settings__avatar_edit' | translate }}
+      </button>
+    </div>
+  </section>
+
   <section class="settings__card">
     <h2 class="settings__card-title">{{ 'settings__mode' | translate }}</h2>
     <p class="settings__card-note">{{ 'settings__mode_note' | translate }}</p>

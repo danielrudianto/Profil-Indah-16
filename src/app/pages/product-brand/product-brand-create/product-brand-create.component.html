@@ -8,15 +8,10 @@
   (submitted)="submitForm()"
   (close)="closeDialog()"
 >
-  <div class="medan" [formGroup]="brandFormGroup">
-    <label for="nb-name">{{ 'product__brand__name' | translate }}</label>
-    <input
-      id="nb-name"
-      class="medan__input"
-      type="text"
-      formControlName="name"
-      autocomplete="off"
-      [attr.placeholder]="'product__brand__add__example' | translate"
-    />
+  <div [formGroup]="brandFormGroup">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'product__brand__name' | translate }}</mat-label>
+      <input matInput type="text" formControlName="name" autocomplete="off" [attr.placeholder]="'product__brand__add__example' | translate" />
+    </mat-form-field>
   </div>
 </app-dialog-shell>

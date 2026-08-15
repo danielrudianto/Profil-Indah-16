@@ -1898,5 +1898,8 @@
   "sales-invoice__create__check-quantity": "Jumlah tiap item terisi",
   "sales-invoice__create__check-payment": "Pembayaran sah",
   "sales-invoice__create__actions": "Aksi",
-  "sales-invoice__create__issue": "Terbitkan faktur"
+  "sales-invoice__create__issue": "Terbitkan faktur",
+  "settings__avatar": "Avatar",
+  "settings__avatar_note": "Gambar diri yang tampil di baris atas dan pada catatan yang Anda buat.",
+  "settings__avatar_edit": "Atur avatar"
 }
