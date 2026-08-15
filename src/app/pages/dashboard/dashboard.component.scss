@@ -28,11 +28,17 @@
 }
 
 /*
-  Seluruh isi shell berada di atas lapisan dekoratif. Drawer dan isinya diberi
-  lapis 1; lapisan bloom sendiri di lapis 0.
+  JANGAN menimpa `position` pada mat-drawer maupun mat-drawer-content.
+
+  Aturan di sini pernah memasang `position: relative` pada keduanya demi
+  menaikkan lapisannya di atas lapisan dekoratif. Akibatnya drawer keluar dari
+  penempatan absolut yang dipakai Material dan MASUK KE ALIRAN NORMAL, sehingga
+  tingginya sendiri (1352px) mendorong seluruh isi shell ke bawah wadah yang
+  cuma setinggi layar dan ber-overflow: hidden. Hasilnya: DOM lengkap dengan
+  ukuran yang benar, tapi tidak satu piksel pun terlihat — persis gejala yang
+  paling sulit dilacak, karena tidak ada yang gagal dan tidak ada yang kosong.
+
+  Bila lapisan dekoratif dipasang lagi, urutannya diatur lewat z-index saja
+  pada lapisan itu (nilai negatif atau 0), bukan dengan menyentuh position
+  milik Material.
 */
-.dashboard > mat-drawer,
-.dashboard > mat-drawer-content {
-  position: relative;
-  z-index: 1;
-}

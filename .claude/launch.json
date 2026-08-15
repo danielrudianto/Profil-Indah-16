@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "profil-indah-16",
+      "port": 2100,
+      "url": "http://localhost:2100",
+      "autoPort": false
+    }
+  ]
+}
