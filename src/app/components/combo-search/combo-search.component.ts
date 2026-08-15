@@ -14,7 +14,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatSuffix, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 
 export interface ComboItem {
@@ -40,7 +40,13 @@ export interface ComboItem {
   styleUrls: ['./combo-search.component.scss'],
   imports: [
     MatFormField,
-    MatInput,NgIf, NgFor, ReactiveFormsModule],
+    MatLabel,
+    MatInput,
+    MatSuffix,
+    NgIf,
+    NgFor,
+    ReactiveFormsModule,
+  ],
 })
 export class ComboSearchComponent implements OnInit {
   constructor(
@@ -52,6 +58,9 @@ export class ComboSearchComponent implements OnInit {
 
   /** Nama rute tanpa akhiran, misalnya "product-brand". */
   @Input({ required: true }) route!: string;
+
+  /** Judul kolom. Kosong berarti kolomnya memang tidak berjudul. */
+  @Input() label = '';
 
   @Input() inputId = '';
   @Input() placeholder = '';

@@ -54,14 +54,14 @@
 
       <div class="kisi">
         <div class="field">
-          <label for="gr-date">{{ "good-receipt__create__date" | translate }}</label>
           <!--
             Kolom tanggal bawaan peramban, bukan matDatepicker. Widget Material
             membawa palet dan bentuknya sendiri, dan berdiri sendirian di tengah
             kartu Nocturne. Nilainya tetap "yyyy-MM-dd", bentuk yang sama yang
             dikirim ke server.
           -->
-          <mat-form-field appearance="outline"><input matInput type="date" formControlName="date" /></mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ "good-receipt__create__date" | translate }}</mat-label><input matInput type="date" formControlName="date" /></mat-form-field>
         </div>
 
         <div class="field">
@@ -72,8 +72,8 @@
         </div>
 
         <div class="field">
-          <label for="gr-supplier">{{ "good-receipt__create__supplier" | translate }}</label>
           <app-combo-search
+            [label]="'good-receipt__create__supplier' | translate"
             inputId="gr-supplier"
             route="supplier"
             [disabled]="isSubmitting"
@@ -83,8 +83,8 @@
         </div>
 
         <div class="field">
-          <label for="gr-company">{{ "good-receipt__create__company" | translate }}</label>
           <app-combo-search
+            [label]="'good-receipt__create__company' | translate"
             inputId="gr-company"
             route="company"
             [disabled]="isSubmitting"
@@ -229,7 +229,7 @@
 
               <td>
                 <div class="jumlah">
-                  <mat-form-field appearance="outline"><input matInput type="text" formControlName="quantity" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+                  <mat-form-field appearance="outline" class="w-100"><input matInput type="text" formControlName="quantity" mask="separator.2" thousandSeparator=" " /></mat-form-field>
                   <span class="jumlah__satuan">{{ itemForm.get("unit")?.value }}</span>
                 </div>
                 <!--
@@ -244,11 +244,11 @@
               </td>
 
               <td *ngIf="bolehUbahHarga">
-                <mat-form-field appearance="outline"><input matInput type="text" formControlName="price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+                <mat-form-field appearance="outline" class="w-100"><input matInput type="text" formControlName="price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
               </td>
 
               <td *ngIf="bolehUbahHarga">
-                <mat-form-field appearance="outline"><input matInput type="text" formControlName="discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+                <mat-form-field appearance="outline" class="w-100"><input matInput type="text" formControlName="discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
               </td>
 
               <td class="ke-kanan baris__total" *ngIf="bolehUbahHarga">

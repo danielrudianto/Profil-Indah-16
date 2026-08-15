@@ -1,6 +1,15 @@
 <div class="combo">
-  <mat-form-field appearance="outline"><input matInput type="text" autocomplete="off" [id]="inputId" [formControl]="control" [attr.placeholder]="placeholder" [attr.disabled]="disabled ? '' : null" [attr.aria-expanded]="terbuka" role="combobox" aria-autocomplete="list" (focus)="fokus()" (keydown)="tombol($event)" /></mat-form-field>
-  <i class="ph ph-caret-down combo__caret" aria-hidden="true"></i>
+  <mat-form-field appearance="outline" class="w-100">
+    <!--
+      TANPA *ngIf. mat-form-field membaca labelnya lewat ContentChild saat
+      inisialisasi; label yang baru muncul belakangan tidak pernah terpasang ke
+      takik kolomnya, dan yang terlihat hanyalah kolom tanpa judul. Ketika
+      label kosong, elemen ini tetap ada dan takiknya sekadar kosong.
+    -->
+    <mat-label>{{ label }}</mat-label>
+    <input matInput type="text" autocomplete="off" [id]="inputId" [formControl]="control" [attr.placeholder]="placeholder" [attr.disabled]="disabled ? '' : null" [attr.aria-expanded]="terbuka" role="combobox" aria-autocomplete="list" (focus)="fokus()" (keydown)="tombol($event)" />
+    <i class="ph ph-caret-down" matSuffix aria-hidden="true"></i>
+  </mat-form-field>
 
   <ul class="combo__daftar" *ngIf="terbuka" role="listbox">
     <li

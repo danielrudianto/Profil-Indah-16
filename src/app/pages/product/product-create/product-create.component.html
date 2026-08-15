@@ -23,15 +23,13 @@
         </div>
 
         <div class="field field--penuh">
-          <label for="p-desc">
-            {{ "product__add__description" | translate }}
-          </label>
-          <mat-form-field appearance="outline" class="w-100"><textarea matInput formControlName="description" placeholder="Multiplek 9mm Garuda"></textarea></mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ "product__add__description" | translate }}</mat-label><textarea matInput formControlName="description" placeholder="Multiplek 9mm Garuda"></textarea></mat-form-field>
         </div>
 
         <div class="field">
-          <label for="p-brand">{{ "product__add__brand" | translate }}</label>
           <app-combo-search
+            [label]="'product__add__brand' | translate"
             #comboBrand
             inputId="p-brand"
             route="product-brand"
@@ -53,8 +51,8 @@
         </div>
 
         <div class="field">
-          <label for="p-type">{{ "product__add__type" | translate }}</label>
           <app-combo-search
+            [label]="'product__add__type' | translate"
             #comboType
             inputId="p-type"
             route="product-type"
@@ -127,10 +125,10 @@
               {{ "product__create__base-unit" | translate }}
             </span>
 
-            <mat-form-field appearance="outline"><input matInput type="text" formControlName="sales_price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
-            <mat-form-field appearance="outline"><input matInput type="text" formControlName="sales_discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
-            <mat-form-field appearance="outline"><input matInput type="text" formControlName="purchase_price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
-            <mat-form-field appearance="outline"><input matInput type="text" formControlName="purchase_discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+            <mat-form-field appearance="outline" class="w-100"><input matInput type="text" formControlName="sales_price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+            <mat-form-field appearance="outline" class="w-100"><input matInput type="text" formControlName="sales_discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+            <mat-form-field appearance="outline" class="w-100"><input matInput type="text" formControlName="purchase_price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+            <mat-form-field appearance="outline" class="w-100"><input matInput type="text" formControlName="purchase_discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
             <span></span>
           </div>
 
@@ -161,10 +159,10 @@
                   {{ satuanDiAtas(i) || "…" }}
                 </span>
 
-                <mat-form-field appearance="outline"><input matInput type="text" formControlName="sales_price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
-                <mat-form-field appearance="outline"><input matInput type="text" formControlName="sales_discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
-                <mat-form-field appearance="outline"><input matInput type="text" formControlName="purchase_price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
-                <mat-form-field appearance="outline"><input matInput type="text" formControlName="purchase_discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+                <mat-form-field appearance="outline" class="w-100"><input matInput type="text" formControlName="sales_price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+                <mat-form-field appearance="outline" class="w-100"><input matInput type="text" formControlName="sales_discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+                <mat-form-field appearance="outline" class="w-100"><input matInput type="text" formControlName="purchase_price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+                <mat-form-field appearance="outline" class="w-100"><input matInput type="text" formControlName="purchase_discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
 
                 <button
                   type="button"

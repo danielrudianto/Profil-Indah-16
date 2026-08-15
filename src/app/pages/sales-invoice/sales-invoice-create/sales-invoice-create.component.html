@@ -61,15 +61,13 @@
         </div>
 
         <div class="field">
-          <label for="sales">
-            {{ 'sales-invoice__create__salesman' | translate }}
-          </label>
           <!--
             Huruf besar dipaksakan lewat komponen, bukan atribut oninput pada
             elemennya: yang kedua tidak pernah memberi tahu Angular bahwa
             nilainya berubah, sehingga kontrol formulirnya menyimpan ejaan lama.
           -->
-          <mat-form-field appearance="outline"><input matInput type="text" list="daftar-sales" formControlName="sales" autocomplete="off" (input)="besarkanSales($event)" /></mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ 'sales-invoice__create__salesman' | translate }}</mat-label><input matInput type="text" list="daftar-sales" formControlName="sales" autocomplete="off" (input)="besarkanSales($event)" /></mat-form-field>
           <datalist id="daftar-sales">
             <option value="INTERNAL"></option>
             <option *ngFor="let s of salesmen" [value]="s"></option>
@@ -331,7 +329,7 @@
             </div>
 
             <div class="bayar__nilai" [formGroup]="getFormGroupAtPayment(i)">
-              <mat-form-field appearance="outline"><input matInput type="text" mask="separator" thousandSeparator="." formControlName="value" autocomplete="off" placeholder="0" /></mat-form-field>
+              <mat-form-field appearance="outline" class="w-100"><input matInput type="text" mask="separator" thousandSeparator="." formControlName="value" autocomplete="off" placeholder="0" /></mat-form-field>
             </div>
 
             <button

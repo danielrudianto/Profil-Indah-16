@@ -1158,3 +1158,32 @@ label {
 .cdk-overlay-container {
   z-index: 1500 !important;
 }
+
+/* ------------------------------------------------------------------ */
+/* Lebar kolom Material                                                */
+/*                                                                     */
+/* w-100 datang dari Bootstrap yang masih ikut termuat; dua di bawah   */
+/* ini untuk kolom yang memang harus sempit — konversi satuan dan      */
+/* jumlah di dalam sel tabel, yang kalau selebar penuh mendorong       */
+/* kolom lain keluar layar.                                            */
+/* ------------------------------------------------------------------ */
+
+.mat-mdc-form-field.w-sempit {
+  width: 120px;
+}
+
+.mat-mdc-form-field.w-satuan {
+  width: 150px;
+}
+
+/*
+  Kolom Material di dalam .field.
+
+  .field disusun untuk isian bergaya lama yang memakai <label> tersendiri di
+  atasnya. Setelah seluruh isian pindah ke Material, labelnya ikut masuk ke
+  dalam kolom — sehingga aturan label lama tidak lagi punya sasaran, dan yang
+  tersisa hanya perlu memastikan kolomnya memakai lebar penuh induknya.
+*/
+.field .mat-mdc-form-field {
+  width: 100%;
+}
