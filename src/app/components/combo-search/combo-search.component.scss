@@ -1,0 +1,87 @@
+/*
+  Kolom isian dengan saran — Nocturne.
+
+  Bentuk kotaknya sengaja SAMA PERSIS dengan .input pada formulir, termasuk
+  tingginya: begitu kolom bersaran terlihat berbeda dari kolom di sebelahnya,
+  ia terbaca sebagai tempelan, bukan bagian dari formulir yang sama.
+*/
+
+:host {
+  display: block;
+}
+
+.combo {
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 40px 0 14px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  outline: none;
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--color-text) 38%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+.combo__caret {
+  position: absolute;
+  right: 13px;
+  top: 22px;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+  pointer-events: none;
+}
+
+/*
+  Daftar sarannya melayang di atas isi lain. z-index-nya ditulis di sini —
+  tanpa itu ia tertutup kartu berikutnya, dan pengguna melihat daftar yang
+  terpotong separuh.
+*/
+.combo__daftar {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  box-shadow: 0 12px 28px rgb(0 0 0 / 28%);
+}
+
+.combo__opt {
+  padding: 9px 10px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.combo__opt--sorot {
+  background: var(--color-active);
+  color: var(--color-accent);
+}

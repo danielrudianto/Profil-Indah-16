@@ -1,299 +1,346 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-12">
-      <h2>
-        {{ "product__title" | translate }} /
-        {{ "product__title__create" | translate }}
-      </h2>
-      <mat-stepper #stepper>
-        <mat-step [stepControl]="itemFormGroup">
-          <ng-template matStepLabel>General </ng-template>
+<form
+  class="buat"
+  [formGroup]="itemFormGroup"
+  (ngSubmit)="submitForm()"
+  novalidate
+>
+  <div class="buat__utama">
+    <header class="buat__head">
+      <h1 class="buat__title">{{ "product__title__create" | translate }}</h1>
+      <p class="buat__lede">{{ "product__create__lede" | translate }}</p>
+    </header>
 
-          <form [formGroup]="itemFormGroup" class="pt-3">
-            <mat-form-field class="w-100" appearance="outline">
-              <mat-label>{{ "product__add__reference" | translate }}</mat-label>
-              <input
-                [disabled]="isSubmitting"
-                matInput
-                placeholder="Ex. MLT-9-G"
-                type="text"
-                formControlName="reference"
-              />
-            </mat-form-field>
-            <mat-form-field class="w-100" appearance="outline">
-              <mat-label>{{
-                "product__add__description" | translate
-              }}</mat-label>
-              <textarea
-                [disabled]="isSubmitting"
-                matInput
-                placeholder="Ex. Multiplek 9mm Garuda"
-                type="text"
-                formControlName="description"
-              ></textarea>
-            </mat-form-field>
-            <app-autocomplete-search
-              [label]="'product__add__brand' | translate"
-              routeName="product-brand"
-              (onSelectData)="onSelectBrand($event)"
-              (onUnselectData)="onUnselectBrand()"
-              [selected]="itemFormGroup.controls['product_brand_id'].valid"
-            ></app-autocomplete-search>
+    <!-- Info barang ---------------------------------------------------- -->
+    <section class="kartu">
+      <h2 class="kartu__label">{{ "product__create__info" | translate }}</h2>
 
-            <app-autocomplete-search
-              [label]="'product__add__type' | translate"
-              routeName="product-type"
-              (onSelectData)="onSelectType($event)"
-              (onUnselectData)="onUnselectType()"
-              [selected]="itemFormGroup.controls['product_type_id'].valid"
-            ></app-autocomplete-search>
+      <div class="kisi">
+        <div class="field field--penuh">
+          <label for="p-ref">{{ "product__add__reference" | translate }}</label>
+          <input
+            id="p-ref"
+            class="input input--sempit input--angka"
+            type="text"
+            formControlName="reference"
+            placeholder="MLT-9-G"
+          />
+        </div>
 
-            <mat-form-field class="w-100" appearance="outline">
-              <mat-label>{{
-                "product__add__minimum-stock" | translate
-              }}</mat-label>
-              <input
-                [disabled]="isSubmitting"
-                matInput
-                placeholder="Ex. 200"
-                type="text"
-                mask="separator.2"
-                thousandSeparator=" "
-                formControlName="minimum_stock"
-              />
-            </mat-form-field>
+        <div class="field field--penuh">
+          <label for="p-desc">
+            {{ "product__add__description" | translate }}
+          </label>
+          <textarea
+            id="p-desc"
+            class="input input--area"
+            formControlName="description"
+            placeholder="Multiplek 9mm Garuda"
+          ></textarea>
+        </div>
 
-            <mat-form-field class="w-100" appearance="outline">
-              <mat-label>{{ "product__add__unit" | translate }}</mat-label>
-              <mat-select formControlName="unit">
-                <mat-option value="PCS">PCS</mat-option>
-                <mat-option value="SET">SET</mat-option>
-                <mat-option value="BOX">BOX</mat-option>
-                <mat-option value="LEMBAR">LEMBAR</mat-option>
-                <mat-option value="BATANG">BATANG</mat-option>
-                <mat-option value="KALENG">KALENG</mat-option>
-                <mat-option value="GALON">GALON</mat-option>
-                <mat-option value="BLEK">BLEK</mat-option>
-                <mat-option value="METER">METER</mat-option>
-                <mat-option value="ROLL">ROLL</mat-option>
-                <mat-option value="TUBE">TUBE</mat-option>
-                <mat-option value="PASANG">PASANG</mat-option>
-                <mat-option value="M2"
-                  >M<sup>2</sup> (METER PERSEGI)</mat-option
-                >
-
-                <mat-option value="KG">KG</mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <label class="mb-3">{{
-              "product__add__create__unit__sales-price__title" | translate
-            }}</label>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "product__add__create__unit__sales-price" | translate
-              }}</mat-label>
-              <input
-                [disabled]="isSubmitting"
-                matInput
-                type="text"
-                formControlName="sales_price"
-                placeholder="Ex. 200"
-                mask="separator.2"
-                thousandSeparator=" "
-              />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "product__add__create__unit__sales-discount" | translate
-              }}</mat-label>
-              <input
-                [disabled]="isSubmitting"
-                matInput
-                type="text"
-                formControlName="sales_discount"
-                placeholder="Ex. 200"
-                mask="separator.2"
-                thousandSeparator=" "
-              />
-            </mat-form-field>
-
-            <label class="mb-3">{{
-              "product__add__create__unit__purchase-price__title" | translate
-            }}</label>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "product__add__create__unit__purchase-price" | translate
-              }}</mat-label>
-              <input
-                [disabled]="isSubmitting"
-                matInput
-                type="text"
-                formControlName="purchase_price"
-                placeholder="Ex. 200"
-                mask="separator.2"
-                thousandSeparator=" "
-              />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "product__add__create__unit__purchase-discount" | translate
-              }}</mat-label>
-              <input
-                [disabled]="isSubmitting"
-                matInput
-                type="text"
-                formControlName="purchase_discount"
-                placeholder="Ex. 200"
-                mask="separator.2"
-                thousandSeparator=" "
-              />
-            </mat-form-field>
-
+        <div class="field">
+          <label for="p-brand">{{ "product__add__brand" | translate }}</label>
+          <app-combo-search
+            #comboBrand
+            inputId="p-brand"
+            route="product-brand"
+            [disabled]="isSubmitting"
+            (pick)="pilihMerek($event)"
+            (clear)="lepasMerek()"
+          />
+          <p class="field__bantu">
+            {{ "product__create__not-found" | translate }}
             <button
-              mat-stroked-button
-              color="primary"
-              style="letter-spacing: 0"
-              matStepperNext
-              [disabled]="itemFormGroup.invalid || isSubmitting"
+              type="button"
+              class="tautan"
+              (click)="buatMerek(inputMerek.value)"
             >
-              {{ "product__add__next" | translate }}
+              {{ "product__create__add-brand" | translate }}
             </button>
-          </form>
-        </mat-step>
+          </p>
+          <!--
+            Nama untuk merek baru diambil dari kolom terpisah, bukan dari kotak
+            pencarian. Kotak itu memantulkan apa yang sedang dipilih; memakainya
+            sekaligus sebagai isian merek baru membuat satu kotak punya dua arti.
+          -->
+          <input
+            #inputMerek
+            class="input input--kecil"
+            type="text"
+            [attr.placeholder]="'product__create__new-brand' | translate"
+            [attr.aria-label]="'product__create__add-brand' | translate"
+          />
+        </div>
 
-        <mat-step [stepControl]="unitFormGroup">
-          <ng-template matStepLabel>Purchase </ng-template>
+        <div class="field">
+          <label for="p-type">{{ "product__add__type" | translate }}</label>
+          <app-combo-search
+            #comboType
+            inputId="p-type"
+            route="product-type"
+            [disabled]="isSubmitting"
+            (pick)="pilihTipe($event)"
+            (clear)="lepasTipe()"
+          />
+          <p class="field__bantu">
+            {{ "product__create__not-found" | translate }}
+            <button
+              type="button"
+              class="tautan"
+              (click)="buatTipe(inputTipe.value)"
+            >
+              {{ "product__create__add-type" | translate }}
+            </button>
+          </p>
+          <input
+            #inputTipe
+            class="input input--kecil"
+            type="text"
+            [attr.placeholder]="'product__create__new-type' | translate"
+            [attr.aria-label]="'product__create__add-type' | translate"
+          />
+        </div>
 
-          <button
-            mat-stroked-button
-            color="primary"
-            class="mb-2"
-            type="button"
-            style="letter-spacing: 0"
-            (click)="addUnit()"
-          >
-            Add unit
+        <div class="field">
+          <label for="p-min">
+            {{ "product__add__minimum-stock" | translate }}
+          </label>
+          <input
+            id="p-min"
+            class="input input--kanan"
+            type="text"
+            formControlName="minimum_stock"
+            mask="separator.2"
+            thousandSeparator=" "
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Satuan & harga ------------------------------------------------- -->
+    <section class="kartu">
+      <h2 class="kartu__label">{{ "product__create__units" | translate }}</h2>
+
+      <p class="petunjuk">
+        <i class="ph ph-info" aria-hidden="true"></i>
+        <span>{{ "product__create__units-hint" | translate }}</span>
+      </p>
+
+      <div class="satuan">
+        <div class="satuan__kepala" aria-hidden="true">
+          <span>{{ "product__add__unit" | translate }}</span>
+          <span>{{ "product__add__unit__conversion" | translate }}</span>
+          <span class="ke-kanan">
+            {{ "product__add__unit__sales-price" | translate }}
+          </span>
+          <span class="ke-kanan">
+            {{ "product__add__unit__sales-discount" | translate }}
+          </span>
+          <span class="ke-kanan">
+            {{ "product__add__unit__purchase-price" | translate }}
+          </span>
+          <span class="ke-kanan">
+            {{ "product__add__unit__purchase-discount" | translate }}
+          </span>
+          <span></span>
+        </div>
+
+        <div class="satuan__daftar">
+          <!--
+          Baris pertama adalah SATUAN DASAR, dan nilainya tinggal di
+          itemFormGroup — bukan di FormArray. Letaknya disatukan di sini supaya
+          harganya bisa dibandingkan langsung dengan satuan turunannya, tetapi
+          bentuk kiriman ke server tidak berubah.
+        -->
+          <div class="satuan__baris">
+            <select class="input input--tengah" formControlName="unit">
+              <option value="" disabled>—</option>
+              <option *ngFor="let s of satuanTersedia" [value]="s.value">
+                {{ s.label }}
+              </option>
+            </select>
+
+            <span class="satuan__dasar">
+              {{ "product__create__base-unit" | translate }}
+            </span>
+
+            <input
+              class="input input--kanan"
+              type="text"
+              formControlName="sales_price"
+              mask="separator.2"
+              thousandSeparator=" "
+            />
+            <input
+              class="input input--kanan"
+              type="text"
+              formControlName="sales_discount"
+              mask="separator.2"
+              thousandSeparator=" "
+            />
+            <input
+              class="input input--kanan"
+              type="text"
+              formControlName="purchase_price"
+              mask="separator.2"
+              thousandSeparator=" "
+            />
+            <input
+              class="input input--kanan"
+              type="text"
+              formControlName="purchase_discount"
+              mask="separator.2"
+              thousandSeparator=" "
+            />
+            <span></span>
+          </div>
+
+          <ng-container [formGroup]="unitFormGroup">
+            <div formArrayName="item_units">
+              <div
+                class="satuan__baris"
+                *ngFor="let baris of t.controls; index as i"
+                [formGroupName]="i"
+              >
+                <select class="input input--tengah" formControlName="unit">
+                  <option value="" disabled>—</option>
+                  <option *ngFor="let s of satuanTersedia" [value]="s.value">
+                    {{ s.label }}
+                  </option>
+                </select>
+
+                <span class="satuan__konversi">
+                  1 {{ getFormAt(i).get("unit")?.value || "…" }} =
+                  <input
+                    class="input input--kecil input--kanan"
+                    type="text"
+                    formControlName="conversion"
+                    mask="separator.2"
+                    thousandSeparator=" "
+                  />
+                  {{ satuanDiAtas(i) || "…" }}
+                </span>
+
+                <input
+                  class="input input--kanan"
+                  type="text"
+                  formControlName="sales_price"
+                  mask="separator.2"
+                  thousandSeparator=" "
+                />
+                <input
+                  class="input input--kanan"
+                  type="text"
+                  formControlName="sales_discount"
+                  mask="separator.2"
+                  thousandSeparator=" "
+                />
+                <input
+                  class="input input--kanan"
+                  type="text"
+                  formControlName="purchase_price"
+                  mask="separator.2"
+                  thousandSeparator=" "
+                />
+                <input
+                  class="input input--kanan"
+                  type="text"
+                  formControlName="purchase_discount"
+                  mask="separator.2"
+                  thousandSeparator=" "
+                />
+
+                <button
+                  type="button"
+                  class="satuan__buang"
+                  (click)="hapusSatuan(i)"
+                  [title]="'product__create__remove-unit' | translate"
+                  [attr.aria-label]="'product__create__remove-unit' | translate"
+                >
+                  <i class="ph ph-x" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+          </ng-container>
+
+          <button type="button" class="satuan__tambah" (click)="tambahSatuan()">
+            <i class="ph ph-plus-circle" aria-hidden="true"></i>
+            <span>{{ "product__create__add-unit" | translate }}</span>
           </button>
-
-          <form [formGroup]="unitFormGroup" (ngSubmit)="submitForm()">
-            <table class="table w-100 mb-2">
-              <thead>
-                <tr>
-                  <th>{{ "product__add__unit" | translate }}</th>
-                  <th>{{ "product__add__unit__conversion" | translate }}</th>
-                  <th>{{ "product__add__unit__sales-price" | translate }}</th>
-                  <th>
-                    {{ "product__add__unit__sales-discount" | translate }}
-                  </th>
-                  <th>
-                    {{ "product__add__unit__purchase-price" | translate }}
-                  </th>
-                  <th>
-                    {{ "product__add__unit__purchase-discount" | translate }}
-                  </th>
-                  <th>
-                    {{ "product__create__estimated-margin" | translate }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{{ itemFormGroup.get("unit")?.value }}</td>
-                  <td>1</td>
-                  <td>
-                    Rp.
-                    {{
-                      itemFormGroup.get("sales_price")?.value | number : "1.0-2"
-                    }}
-                  </td>
-                  <td>
-                    Rp.
-                    {{
-                      itemFormGroup.get("sales_discount")?.value
-                        | number : "1.0-2"
-                    }}
-                  </td>
-                  <td>
-                    Rp.
-                    {{
-                      itemFormGroup.get("purchase_price")?.value
-                        | number : "1.0-2"
-                    }}
-                  </td>
-                  <td>
-                    Rp.
-                    {{
-                      itemFormGroup.get("purchase_discount")?.value
-                        | number : "1.0-2"
-                    }}
-                  </td>
-                  <td>
-                    {{
-                      ((itemFormGroup.get("sales_price")?.value -
-                        itemFormGroup.get("sales_discount")?.value -
-                        itemFormGroup.get("purchase_price")?.value +
-                        itemFormGroup.get("purchase_discount")?.value) /
-                        (itemFormGroup.get("sales_price")?.value -
-                          itemFormGroup.get("sales_discount")?.value)) *
-                        100 | number : "1.0-2"
-                    }}%
-                  </td>
-                </tr>
-                <tr
-                  [formGroup]="getFormAt(i)"
-                  *ngFor="let item of t.controls; index as i"
-                >
-                  <td class="align-middle">
-                    {{ item.get("unit")?.value }}
-                  </td>
-                  <td class="align-middle">
-                    {{ item.get("conversion")?.value ?? 0 | number : "0.0-2" }}
-                  </td>
-                  <td class="align-middle">
-                    Rp. {{ item.get("sales_price")?.value | number : "1.0-2" }}
-                  </td>
-                  <td>
-                    Rp.
-                    {{ item.get("sales_discount")?.value | number : "1.0-2" }}
-                  </td>
-                  <td class="align-middle">
-                    Rp.
-                    {{ item.get("purchase_price")?.value | number : "1.0-2" }}
-                  </td>
-                  <td class="align-middle">
-                    Rp.
-                    {{
-                      item.get("purchase_discount")?.value | number : "1.0-2"
-                    }}
-                  </td>
-                  <td class="align-middle">
-                    {{
-                      ((item.get("sales_price")?.value -
-                        item.get("sales_discount")?.value -
-                        item.get("purchase_price")?.value +
-                        item.get("purchase_discount")?.value) /
-                        (item.get("sales_price")?.value -
-                          item.get("sales_discount")?.value)) *
-                        100 | number : "1.0-2"
-                    }}%
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <button
-              mat-stroked-button
-              color="primary"
-              type="submit"
-              [disabled]="
-                isSubmitting || !unitFormGroup.valid || !itemFormGroup.valid
-              "
-            >
-              {{ "product__add__submit" | translate }}
-            </button>
-          </form>
-        </mat-step>
-      </mat-stepper>
-    </div>
+        </div>
+      </div>
+    </section>
   </div>
-</div>
+
+  <!-- Kolom kanan ------------------------------------------------------ -->
+  <aside class="buat__samping">
+    <section class="kartu">
+      <h2 class="kartu__label">
+        {{ "product__create__before-save" | translate }}
+      </h2>
+
+      <ul class="periksa">
+        <li [class.periksa--ok]="referensiTerisi">
+          <i
+            class="ph-fill"
+            [class.ph-check-circle]="referensiTerisi"
+            [class.ph-circle]="!referensiTerisi"
+            aria-hidden="true"
+          ></i>
+          <span>
+            {{ "product__add__reference" | translate }}
+            <ng-container *ngIf="referensiTerisi">
+              : {{ itemFormGroup.get("reference")?.value }}
+            </ng-container>
+          </span>
+        </li>
+
+        <li [class.periksa--ok]="merekTipeTerisi">
+          <i
+            class="ph-fill"
+            [class.ph-check-circle]="merekTipeTerisi"
+            [class.ph-circle]="!merekTipeTerisi"
+            aria-hidden="true"
+          ></i>
+          <span>{{ "product__create__check-brand-type" | translate }}</span>
+        </li>
+
+        <li [class.periksa--ok]="satuanDasar">
+          <i
+            class="ph-fill"
+            [class.ph-check-circle]="satuanDasar"
+            [class.ph-circle]="!satuanDasar"
+            aria-hidden="true"
+          ></i>
+          <span>
+            {{ "product__create__check-unit" | translate }}:
+            {{ satuanDasar || "—" }} · {{ t.length }}
+            {{ "product__create__extra-units" | translate }}
+          </span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="kartu">
+      <h2 class="kartu__label">{{ "general__actions" | translate }}</h2>
+
+      <button
+        type="submit"
+        class="btn btn--primary btn--blok"
+        [disabled]="!bisaSimpan"
+      >
+        <i class="ph ph-check" aria-hidden="true"></i>
+        {{ "product__add__submit" | translate }}
+      </button>
+
+      <button
+        type="button"
+        class="btn btn--kedua btn--blok"
+        (click)="batal()"
+        [disabled]="isSubmitting"
+      >
+        {{ "general__cancel" | translate }}
+      </button>
+    </section>
+  </aside>
+</form>

@@ -1,0 +1,31 @@
+<div class="combo">
+  <input
+    class="input"
+    type="text"
+    autocomplete="off"
+    [id]="inputId"
+    [formControl]="control"
+    [attr.placeholder]="placeholder"
+    [attr.disabled]="disabled ? '' : null"
+    [attr.aria-expanded]="terbuka"
+    role="combobox"
+    aria-autocomplete="list"
+    (focus)="fokus()"
+    (keydown)="tombol($event)"
+  />
+  <i class="ph ph-caret-down combo__caret" aria-hidden="true"></i>
+
+  <ul class="combo__daftar" *ngIf="terbuka" role="listbox">
+    <li
+      *ngFor="let item of items; index as i"
+      role="option"
+      [attr.aria-selected]="i === sorot"
+      [class.combo__opt--sorot]="i === sorot"
+      class="combo__opt"
+      (mousedown)="pilih(item)"
+      (mouseenter)="sorot = i"
+    >
+      {{ item.name }}
+    </li>
+  </ul>
+</div>

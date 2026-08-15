@@ -1,27 +1,56 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { MatStepper, MatStep, MatStepLabel, MatStepperNext } from '@angular/material/stepper';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
+import { NgFor, NgIf } from '@angular/common';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Location } from '@angular/common';
+import { NgxMaskDirective } from 'ngx-mask';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { ValueValidator } from 'src/app/validators/value.validator';
-import { ProductCreateUnitComponent } from './product-create-unit/product-create-unit.component';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { AutocompleteSearchComponent } from '../../../components/autocomplete-search/autocomplete-search.component';
-import { NgxMaskDirective } from 'ngx-mask';
-import { MatSelect, MatOption } from '@angular/material/select';
-import { MatButton } from '@angular/material/button';
-import { NgFor, DecimalPipe } from '@angular/common';
+import { PRODUCT_UNITS } from 'src/app/constants/unit.constant';
+import {
+  ComboItem,
+  ComboSearchComponent,
+} from 'src/app/components/combo-search/combo-search.component';
 
+/**
+ * Tambah barang — sistem desain Nocturne.
+ *
+ * STEPPER-NYA DIBUANG. Bentuk sebelumnya membagi formulir menjadi dua langkah
+ * Material: keterangan barang di langkah pertama, satuan di langkah kedua.
+ * Pembagian itu menyembunyikan setengah formulir dari pandangan, padahal harga
+ * pada satuan dasar dan harga pada satuan turunan justru perlu dilihat
+ * bersamaan untuk dibandingkan. Desainnya menggantinya dengan satu halaman:
+ * dua kartu di kiri, ringkasan dan tombol di kanan.
+ *
+ * SATUAN DASAR KINI MENJADI BARIS PERTAMA TABEL, bukan sekumpulan kolom isian
+ * terpisah di kartu atas. Nilainya tetap disimpan di itemFormGroup seperti
+ * sebelumnya — bentuk kirimannya ke server tidak berubah sedikit pun — hanya
+ * letaknya di layar yang disatukan dengan satuan turunannya.
+ *
+ * Menambah satuan juga tidak lagi lewat dialog. Dialognya memaksa pengguna
+ * mengisi enam kolom tanpa bisa melihat baris yang sudah ada, padahal angka
+ * yang diisi hampir selalu diturunkan dari baris di atasnya.
+ */
 @Component({
-    selector: 'app-product-create',
-    templateUrl: './product-create.component.html',
-    styleUrls: ['./product-create.component.scss'],
-    animations: [slideInOutAnimation],
-    imports: [MatStepper, MatStep, MatStepLabel, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, AutocompleteSearchComponent, NgxMaskDirective, MatSelect, MatOption, MatButton, MatStepperNext, NgFor, DecimalPipe, TranslatePipe]
+  selector: 'app-product-create',
+  templateUrl: './product-create.component.html',
+  styleUrls: ['./product-create.component.scss'],
+  imports: [
+    NgIf,
+    NgFor,
+    ReactiveFormsModule,
+    NgxMaskDirective,
+    TranslatePipe,
+    ComboSearchComponent,
+  ],
 })
 export class ProductCreateComponent {
   constructor(
@@ -29,16 +58,15 @@ export class ProductCreateComponent {
     private apiService: ApiService,
     private alertService: AlertService,
     private translateService: TranslateService,
-    private dialog: MatDialog
+    private location: Location,
   ) {}
 
-  @ViewChild('stepper') stepper!: MatStepper;
-  isSubmitting: boolean = false;
-  isLoading: boolean = false;
-  isLoadingType: boolean = false;
-  item_brands: any[] = [];
-  item_types: any[] = [];
-  isOpened: boolean = true;
+  @ViewChild('comboBrand') comboBrand?: ComboSearchComponent;
+  @ViewChild('comboType') comboType?: ComboSearchComponent;
+
+  readonly satuanTersedia = PRODUCT_UNITS;
+
+  isSubmitting = false;
 
   itemFormGroup: FormGroup = new FormGroup({
     reference: new FormControl('', [
@@ -57,10 +85,7 @@ export class ProductCreateComponent {
     unit: new FormControl('', Validators.required),
     minimum_stock: new FormControl(0, [Validators.required, Validators.min(0)]),
     sales_price: new FormControl(0, [Validators.required, Validators.min(0)]),
-    sales_discount: new FormControl(0, [
-      Validators.required,
-      Validators.min(0),
-    ]),
+    sales_discount: new FormControl(0, [Validators.required, Validators.min(0)]),
     purchase_price: new FormControl(0, [
       Validators.required,
       Validators.min(0),
@@ -75,174 +100,177 @@ export class ProductCreateComponent {
     item_units: new FormArray([]),
   });
 
-  ngOnInit(): void {}
-
-  get f() {
-    return this.unitFormGroup.controls;
-  }
-  get t() {
-    return this.f['item_units'] as FormArray;
+  get t(): FormArray {
+    return this.unitFormGroup.controls['item_units'] as FormArray;
   }
 
-  getFormAt(i: number) {
+  getFormAt(i: number): FormGroup {
     return this.t.at(i) as FormGroup;
   }
 
-  onSelectBrand(data: any) {
-    this.itemFormGroup.patchValue({
-      product_brand_id: data.id,
+  /* ---------------------------------------------------------------- */
+  /* Ringkasan sebelum simpan                                          */
+  /* ---------------------------------------------------------------- */
+
+  get referensiTerisi(): boolean {
+    return this.itemFormGroup.controls['reference'].valid;
+  }
+
+  get merekTipeTerisi(): boolean {
+    return (
+      this.itemFormGroup.controls['product_brand_id'].valid &&
+      this.itemFormGroup.controls['product_type_id'].valid
+    );
+  }
+
+  get satuanDasar(): string {
+    return this.itemFormGroup.get('unit')?.value ?? '';
+  }
+
+  get bisaSimpan(): boolean {
+    return (
+      !this.isSubmitting && this.itemFormGroup.valid && this.unitFormGroup.valid
+    );
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Merek dan tipe                                                    */
+  /* ---------------------------------------------------------------- */
+
+  pilihMerek(item: ComboItem): void {
+    this.itemFormGroup.patchValue({ product_brand_id: item.id });
+  }
+
+  lepasMerek(): void {
+    this.itemFormGroup.patchValue({ product_brand_id: '' });
+  }
+
+  pilihTipe(item: ComboItem): void {
+    this.itemFormGroup.patchValue({ product_type_id: item.id });
+  }
+
+  lepasTipe(): void {
+    this.itemFormGroup.patchValue({ product_type_id: '' });
+  }
+
+  /**
+   * Membuat merek baru dari dalam formulir ini, lalu langsung memilihnya.
+   *
+   * Bentuk sebelumnya menyimpan hasilnya ke kolom `brand` dan
+   * `brand_search_bar` — dua nama yang TIDAK ADA di itemFormGroup. patchValue
+   * mengabaikan kunci yang tidak dikenalnya tanpa mengeluh, jadi menekan
+   * tombol itu tampak berhasil sementara product_brand_id tetap kosong dan
+   * formulirnya tetap tidak bisa disimpan.
+   */
+  buatMerek(nama: string): void {
+    if (!nama.trim()) {
+      return;
+    }
+
+    this.apiService.post('product-brand', { name: nama.trim() }).subscribe({
+      next: (data: any) => {
+        this.itemFormGroup.patchValue({ product_brand_id: data.id });
+        this.comboBrand?.setSelected({ id: data.id, name: data.name });
+      },
+      error: (error: any) => {
+        this.alertService.showError(error);
+      },
     });
   }
 
-  onUnselectBrand() {
-    this.itemFormGroup.patchValue({
-      product_brand_id: '',
+  buatTipe(nama: string): void {
+    if (!nama.trim()) {
+      return;
+    }
+
+    this.apiService.post('product-type', { name: nama.trim() }).subscribe({
+      next: (data: any) => {
+        this.itemFormGroup.patchValue({ product_type_id: data.id });
+        this.comboType?.setSelected({ id: data.id, name: data.name });
+      },
+      error: (error: any) => {
+        this.alertService.showError(error);
+      },
     });
   }
 
-  onSelectType(data: any) {
-    this.itemFormGroup.patchValue({
-      product_type_id: data.id,
-    });
+  /* ---------------------------------------------------------------- */
+  /* Satuan                                                            */
+  /* ---------------------------------------------------------------- */
+
+  tambahSatuan(): void {
+    this.t.push(
+      this.formBuilder.group({
+        unit: ['', [Validators.required, ValueValidator(1)]],
+        conversion: [1, [Validators.required, Validators.min(1)]],
+        sales_price: [0, [Validators.required, Validators.min(0)]],
+        sales_discount: [0, [Validators.required, Validators.min(0)]],
+        purchase_price: [0, [Validators.required, Validators.min(0)]],
+        purchase_discount: [0, [Validators.required, Validators.min(0)]],
+      }),
+    );
   }
 
-  onUnselectType() {
-    this.itemFormGroup.patchValue({
-      product_type_id: '',
-    });
+  hapusSatuan(i: number): void {
+    this.t.removeAt(i);
   }
 
-  submitForm() {
+  /** Satuan yang berada tepat di atas baris ke-i, acuan konversinya. */
+  satuanDiAtas(i: number): string {
+    return i === 0
+      ? this.satuanDasar
+      : (this.getFormAt(i - 1).get('unit')?.value ?? '');
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Kirim                                                             */
+  /* ---------------------------------------------------------------- */
+
+  batal(): void {
+    this.location.back();
+  }
+
+  submitForm(): void {
+    if (!this.bisaSimpan) {
+      return;
+    }
+
     this.isSubmitting = true;
 
     this.apiService
       .post('product', {
         ...this.itemFormGroup.value,
-        units: this.t.controls.map((x) => {
-          return {
-            conversion: Number(x.get('conversion')?.value ?? '0'),
-            unit: x.get('unit')?.value,
-            sales_price: Number(x.get('sales_price')?.value ?? '0'),
-            sales_discount: Number(x.get('sales_discount')?.value ?? '0'),
-            purchase_price: Number(x.get('purchase_price')?.value ?? '0'),
-            purchase_discount: Number(x.get('purchase_discount')?.value ?? '0'),
-          };
-        }),
+        units: this.t.controls.map((x) => ({
+          conversion: Number(x.get('conversion')?.value ?? '0'),
+          unit: x.get('unit')?.value,
+          sales_price: Number(x.get('sales_price')?.value ?? '0'),
+          sales_discount: Number(x.get('sales_discount')?.value ?? '0'),
+          purchase_price: Number(x.get('purchase_price')?.value ?? '0'),
+          purchase_discount: Number(x.get('purchase_discount')?.value ?? '0'),
+        })),
       })
       .subscribe({
         next: (data: any) => {
           this.translateService
             .get('general__created-successfully')
-            .subscribe((translation) => {
-              this.alertService.showSuccess(`${data.reference} ${translation}`);
-              this.itemFormGroup.reset();
-              this.unitFormGroup.reset();
+            .subscribe((teks) => {
+              this.alertService.showSuccess(`${data.reference} ${teks}`);
+              this.itemFormGroup.reset({
+                minimum_stock: 0,
+                sales_price: 0,
+                sales_discount: 0,
+                purchase_price: 0,
+                purchase_discount: 0,
+              });
               this.t.clear();
-
-              this.stepper.selectedIndex = 0;
             });
         },
-        error: (error) => {
+        error: (error: any) => {
           this.alertService.showError(error);
         },
       })
       .add(() => {
         this.isSubmitting = false;
       });
-  }
-
-  selectBrand(event: any) {
-    this.itemFormGroup.patchValue({
-      brand: event.option.value.id,
-      brand_search_bar: event.option.value.name,
-    });
-  }
-
-  selectType(event: any) {
-    this.itemFormGroup.patchValue({
-      type: event.option.value.id,
-      type_search_bar: event.option.value.name,
-    });
-  }
-
-  addBrand(brandName: string) {
-    this.isLoading = true;
-    this.apiService
-      .post('product-brand', {
-        name: brandName,
-      })
-      .subscribe({
-        next: (data: any) => {
-          var itemBrand = data as any;
-          this.itemFormGroup.patchValue({
-            brand: itemBrand,
-            brand_search_bar: itemBrand.name,
-          });
-        },
-        error: (error: any) => {},
-      })
-      .add(() => {
-        this.isLoading = false;
-      });
-  }
-
-  addType(typeName: string) {
-    this.isLoadingType = true;
-    this.apiService
-      .post('product-type', {
-        name: typeName,
-      })
-      .subscribe({
-        next: (data: any) => {
-          var itemType = data as any;
-          this.itemFormGroup.patchValue({
-            type: itemType,
-            type_search_bar: itemType.name,
-          });
-        },
-        error: (error: any) => {},
-      })
-      .add(() => {
-        this.isLoadingType = false;
-      });
-  }
-
-  addUnit() {
-    this.dialog
-      .open(ProductCreateUnitComponent, {})
-      .afterClosed()
-      .subscribe((data) => {
-        if (data) {
-          this.t.push(
-            this.formBuilder.group({
-              unit: [data.unit, [Validators.required, ValueValidator(1)]],
-              conversion: [
-                data.conversion,
-                [Validators.required, Validators.min(1)],
-              ],
-              sales_price: [
-                data.sales_price,
-                [Validators.required, Validators.min(0)],
-              ],
-              sales_discount: [
-                data.sales_discount,
-                [Validators.required, Validators.min(0)],
-              ],
-              purchase_price: [
-                data.purchase_price,
-                [Validators.required, Validators.min(0)],
-              ],
-              purchase_discount: [
-                data.purchase_discount,
-                [Validators.required, Validators.min(0)],
-              ],
-            })
-          );
-        }
-      });
-  }
-
-  removeUnit(i: number) {
-    this.t.removeAt(i);
   }
 }
