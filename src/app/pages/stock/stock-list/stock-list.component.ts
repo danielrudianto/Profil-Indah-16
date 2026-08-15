@@ -199,6 +199,11 @@ export class StockListComponent implements OnInit {
       : 'ph-warning';
   }
 
+  /** Huruf pertama referensi, untuk avatar bundar pada kolom Barang. */
+  inisial(referensi: string): string {
+    return (referensi ?? '?').trim().charAt(0).toUpperCase() || '?';
+  }
+
   lacakBarang = (_: number, item: any): number => item.id;
 
   openDialog(dialogType: string, id: number) {

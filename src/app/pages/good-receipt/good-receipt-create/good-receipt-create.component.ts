@@ -142,7 +142,6 @@ export class GoodReceiptCreateComponent {
       kembaliLabel: 'good-receipt__title',
       kembaliJalur: '/Good-receipt/Archive',
       tag: 'good-receipt__new',
-      mode: this.bolehUbahHarga ? 'good-receipt__admin-mode' : undefined,
     });
 
     this.itemFormGroup.valueChanges.subscribe(() => {

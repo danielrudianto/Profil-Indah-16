@@ -1187,3 +1187,74 @@ label {
 .field .mat-mdc-form-field {
   width: 100%;
 }
+
+/* ------------------------------------------------------------------ */
+/* Gaya tabel penuh — push #15/#16                                     */
+/*                                                                     */
+/* Berlaku untuk SEMUA daftar, jadi ditulis di sini. Sel entitas berisi */
+/* avatar inisial + nilai utama tebal + baris kedua kecil; brand dan    */
+/* tipe berupa pill netral, bukan avatar.                              */
+/* ------------------------------------------------------------------ */
+
+.sel-entitas {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+/*
+  Avatar inisial. Warnanya netral, BUKAN aksen: ia penanda posisi, bukan
+  sesuatu yang perlu ditekan atau diperhatikan lebih dulu daripada namanya.
+*/
+.avatar-inisial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-text) 10%, transparent);
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.sel-entitas__teks {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sel-entitas__utama {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/*
+  Baris kedua dipotong ellipsis, bukan dibiarkan membungkus. Deskripsi barang
+  panjangnya sangat berbeda-beda; dibiarkan membungkus, tinggi barisnya ikut
+  berbeda-beda dan tabelnya berhenti terbaca sebagai kisi.
+*/
+.sel-entitas__sub {
+  max-width: 38ch;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Pill netral untuk brand dan tipe — penggolong, bukan keadaan. */
+.tag-netral {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-text) 8%, transparent);
+  color: color-mix(in srgb, var(--color-text) 72%, transparent);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}

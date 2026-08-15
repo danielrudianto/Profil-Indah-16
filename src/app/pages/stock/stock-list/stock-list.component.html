@@ -56,6 +56,7 @@
         -->
         <th>{{ 'stock-list__item' | translate }}</th>
         <th>{{ 'product__brand' | translate }}</th>
+        <th>{{ 'product__type' | translate }}</th>
         <th class="tabel__nilai-kepala">{{ 'product__stock' | translate }}</th>
         <th>{{ 'stock-list__condition' | translate }}</th>
         <th class="tabel__aksi-kepala">
@@ -67,10 +68,22 @@
     <tbody *ngIf="!isLoading && dataSource.length > 0">
       <tr *ngFor="let item of dataSource; trackBy: lacakBarang">
         <td>
-          <div class="barang__ref">{{ item.reference }}</div>
-          <div class="barang__desc">{{ item.description }}</div>
+          <!--
+            Sel dua baris berpendamping avatar: huruf pertama REFERENSI, bukan
+            deskripsi — referensi itulah yang dicari orang di daftar ini.
+          -->
+          <div class="sel-entitas">
+            <span class="avatar-inisial" aria-hidden="true">
+              {{ inisial(item.reference) }}
+            </span>
+            <span class="sel-entitas__teks">
+              <span class="sel-entitas__utama">{{ item.reference }}</span>
+              <span class="sel-entitas__sub">{{ item.description }}</span>
+            </span>
+          </div>
         </td>
-        <td>{{ item.product_brand?.name }}</td>
+        <td><span class="tag-netral">{{ item.product_brand?.name }}</span></td>
+        <td><span class="tag-netral">{{ item.product_type?.name }}</span></td>
         <!--
           Stok minus ditulis MERAH. Ia bukan sekadar angka kecil: stok di bawah
           nol berarti catatannya sudah tidak mungkin benar, dan itu harus
@@ -121,7 +134,7 @@
 
     <tbody *ngIf="isLoading">
       <tr>
-        <td colspan="5" class="tabel__pesan">
+        <td colspan="6" class="tabel__pesan">
           {{ 'general__loading' | translate }}
         </td>
       </tr>
@@ -129,7 +142,7 @@
 
     <tbody *ngIf="!isLoading && dataSource.length === 0">
       <tr>
-        <td colspan="5">
+        <td colspan="6">
           <app-tabel-kosong
             ikon="ph-stack"
             [judul]="'stock-list__empty__title' | translate"

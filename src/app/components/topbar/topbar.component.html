@@ -37,13 +37,7 @@
     {{ (konteks?.tag ?? judulHalaman)! | translate }}
   </span>
 
-  <!-- Penanda mode di KANAN, bukan di atas judul halaman. -->
-  <span class="topbar__mode" *ngIf="konteks?.mode">
-    <i class="ph ph-shield-check" aria-hidden="true"></i>
-    {{ konteks?.mode! | translate }}
-  </span>
-
-  <div class="topbar__utility">
+<div class="topbar__utility">
     <app-dark-mode-selector />
     <app-language-selector />
 
@@ -74,7 +68,7 @@
 
       <span class="topbar__user-text">
         <span class="topbar__user-name">{{ name }}</span>
-        <span class="topbar__user-role" *ngIf="roleText">{{ roleText }}</span>
+        <span class="topbar__user-sub" *ngIf="subJudul">{{ subJudul }}</span>
       </span>
 
       <i class="ph ph-caret-down" aria-hidden="true"></i>

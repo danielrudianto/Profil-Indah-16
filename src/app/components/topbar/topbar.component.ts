@@ -57,7 +57,16 @@ export class TopbarComponent implements OnInit {
   isAvatarAvailable: boolean = false;
   avatar: any = null;
   name: string = '';
-  roleText: string = '';
+
+  /**
+   * Baris kedua kartu profil.
+   *
+   * Berkas desain meminta SUREL di sini. Catatan pengguna di sistem ini tidak
+   * menyimpan surel — tabel user hanya punya name dan username — jadi yang
+   * ditampilkan username, data terdekat yang benar-benar ada. Bukan peran:
+   * push #16 justru melepas pengumuman peran dari baris atas.
+   */
+  subJudul: string = '';
 
   /** Kunci i18n judul halaman aktif, atau null bila alamatnya tidak dikenali. */
   judulHalaman: string | null = null;
@@ -82,7 +91,7 @@ export class TopbarComponent implements OnInit {
 
     const userInfo = this.authService.getUserInfo();
     this.name = userInfo?.name ?? '';
-    this.roleText = userInfo?.roleText ?? '';
+    this.subJudul = userInfo?.username ?? '';
   }
 
   toggleSideNav(): void {
