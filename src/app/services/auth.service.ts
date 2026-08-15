@@ -69,17 +69,39 @@ export class AuthService {
   /**
    * Retrieves the user information from the local storage.
    * @return {AuthUser | null} The user information if it exists in the local storage, otherwise null.
+   *
+   * TIDAK PERNAH MELEMPAR, sekalipun isinya tidak bisa dibaca.
+   *
+   * Bentuk sebelumnya langsung mem-parse hasil dekripsi. Ketika hasil itu bukan
+   * JSON yang sah — dan itu terjadi setiap kali data tersimpan dengan
+   * environment.key yang berbeda, misalnya sesi lama dari build produksi lalu
+   * aplikasinya dijalankan dengan `ng serve` yang memakai kunci pengembangan —
+   * dekripsi mengembalikan string kosong dan JSON.parse melempar.
+   *
+   * Lemparan itu terjadi di dalam ngOnInit dashboard, membatalkan seluruh
+   * penggambaran, dan yang tersisa hanyalah layar kosong. Menganggap sesi yang
+   * tidak terbaca sebagai "tidak ada sesi" mengembalikan pengguna ke halaman
+   * masuk, yang memang jalan keluar yang benar.
    */
   getUserInfo(): AuthUser | null {
     const user = localStorage.getItem('user');
     if (user == null || user == '') {
       return null;
-    } else {
-      return JSON.parse(
-        CryptoJS.AES.decrypt(user.toString(), environment.key).toString(
-          CryptoJS.enc.Utf8
-        )
-      ) as AuthUser;
+    }
+
+    try {
+      const isi = CryptoJS.AES.decrypt(
+        user.toString(),
+        environment.key
+      ).toString(CryptoJS.enc.Utf8);
+
+      if (isi === '') {
+        return null;
+      }
+
+      return JSON.parse(isi) as AuthUser;
+    } catch {
+      return null;
     }
   }
 
@@ -88,33 +110,12 @@ export class AuthService {
    * @return {boolean} Returns true if the user is an administrator, false otherwise.
    */
   isAdministrator(): boolean {
-    const user = localStorage.getItem('user');
-    if (user == null || user == '') {
-      return false;
-    } else {
-      const parsedUser = JSON.parse(
-        CryptoJS.AES.decrypt(user.toString(), environment.key).toString(
-          CryptoJS.enc.Utf8
-        )
-      ) as AuthUser;
-
-      return parsedUser.role == 5 || parsedUser.role == 7;
-    }
+    const role = this.getUserInfo()?.role;
+    return role == 5 || role == 7;
   }
 
   isSuperAdministrator(): boolean {
-    const user = localStorage.getItem('user');
-    if (user == null || user == '') {
-      return false;
-    } else {
-      const parsedUser = JSON.parse(
-        CryptoJS.AES.decrypt(user.toString(), environment.key).toString(
-          CryptoJS.enc.Utf8
-        )
-      ) as AuthUser;
-
-      return parsedUser.role == 7;
-    }
+    return this.getUserInfo()?.role == 7;
   }
 
   /**
@@ -122,12 +123,32 @@ export class AuthService {
    * @return {number | null} The expiry time of the token in milliseconds, or null if the token does not exist.
    */
   getTokenExpiryTime(): number | null {
-    const token = localStorage.getItem('token');
-    if (token == null) {
+    return this.bacaKedaluwarsa(localStorage.getItem('token'));
+  }
+
+  /**
+   * Membaca waktu kedaluwarsa dari sebuah JWT, dalam milidetik.
+   *
+   * Mengembalikan null jika tokennya tidak ada atau bentuknya tidak utuh, alih-
+   * alih melempar. Token yang rusak harus berakhir sebagai "sesi tidak sah" —
+   * yang mengantar pengguna ke halaman masuk — bukan sebagai lemparan di dalam
+   * guard, yang membatalkan navigasi dan meninggalkan layar kosong.
+   */
+  private bacaKedaluwarsa(token: string | null): number | null {
+    if (token == null || token === '') {
       return null;
-    } else {
-      const expiry = JSON.parse(atob(token.split('.')[1])).exp * 1000;
-      return expiry;
+    }
+
+    try {
+      const muatan = token.split('.')[1];
+      if (muatan == null) {
+        return null;
+      }
+
+      const exp = JSON.parse(atob(muatan))?.exp;
+      return typeof exp === 'number' ? exp * 1000 : null;
+    } catch {
+      return null;
     }
   }
 
@@ -136,31 +157,33 @@ export class AuthService {
    * @return {boolean} Returns true if the token exists, false otherwise.
    */
   validateToken(): boolean {
-    const token = localStorage.getItem('token');
-    if (token == null) {
+    const expiry = this.bacaKedaluwarsa(localStorage.getItem('token'));
+
+    // Token tidak ada atau bentuknya rusak — perlakukan sebagai belum masuk.
+    if (expiry == null) {
       return false;
     }
 
-    // If not null, check the expiration date
-    const expiry = JSON.parse(atob(token.split('.')[1])).exp * 1000;
     const now = new Date().getTime();
-    if (now > expiry) {
-      // Check for the refresh token
-      const refreshToken = localStorage.getItem('refreshToken');
-      const refreshTokenExpiry =
-        JSON.parse(atob(refreshToken!.split('.')[1])).exp * 1000;
-
-      // If refresh token is already expired logout
-      if (now > refreshTokenExpiry) {
-        this.logout();
-        return false;
-      } else {
-        // Refresh token is not expired
-        return true;
-      }
-    } else {
+    if (now <= expiry) {
       return true;
     }
+
+    /*
+      Token akses sudah lewat; sesi masih sah selama refresh token-nya belum.
+      Refresh token yang hilang atau rusak dulu membuat baris ini melempar
+      (`refreshToken!`), padahal keadaannya sederhana: sesinya habis.
+    */
+    const refreshExpiry = this.bacaKedaluwarsa(
+      localStorage.getItem('refreshToken')
+    );
+
+    if (refreshExpiry == null || now > refreshExpiry) {
+      this.logout();
+      return false;
+    }
+
+    return true;
   }
 
   /**

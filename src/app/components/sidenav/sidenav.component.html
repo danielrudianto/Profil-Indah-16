@@ -13,8 +13,16 @@
     />
   </div>
 
+  <!--
+    grup adalah FIELD, bukan getter. Memanggil getter dari sini membuat
+    daftarnya dibangun ulang pada setiap pemeriksaan perubahan — lihat catatan
+    panjang di sidenav.component.ts.
+  -->
   <div class="sidenav__scroll">
-    <div class="sidenav__group" *ngFor="let g of grup">
+    <div
+      class="sidenav__group"
+      *ngFor="let g of grup; trackBy: lacakGrup"
+    >
       <div class="sidenav__group-head" *ngIf="!collapsed">
         <span>{{ g.label | translate }}</span>
         <span class="sidenav__count">{{ g.items.length }}</span>
@@ -22,14 +30,14 @@
 
       <a
         class="sidenav__item"
-        *ngFor="let item of g.items"
-        [routerLink]="jalur(item)"
+        *ngFor="let entri of g.items; trackBy: lacakItem"
+        [routerLink]="entri.jalur"
         routerLinkActive="sidenav__item--on"
-        [title]="collapsed ? (item.label | translate) : ''"
+        [title]="collapsed ? (entri.item.label | translate) : ''"
       >
-        <i class="{{ item.icon }}" aria-hidden="true"></i>
+        <i class="{{ entri.item.icon }}" aria-hidden="true"></i>
         <span class="sidenav__label" *ngIf="!collapsed">
-          {{ item.label | translate }}
+          {{ entri.item.label | translate }}
         </span>
       </a>
     </div>

@@ -29,16 +29,16 @@
 /* ----------------------------------------------------------------- */
 /* Lingkaran dekoratif                                                */
 /*                                                                    */
-/* TANPA filter: blur(). Berkas desain memakai blur 190-210px pada    */
-/* lingkaran selebar 900-1100px, dan beban selebar itu membuat        */
-/* compositor sebagian driver GPU Linux menyerah — seluruh halaman    */
-/* tidak tergambar sama sekali, meskipun semua sumber daya termuat    */
-/* dan konsol bersih. Gejalanya sulit dilacak justru karena tidak ada */
-/* satu pun galat.                                                    */
+/* Berkas desain memakai filter: blur(190-210px) pada lingkaran       */
+/* selebar 900-1100px. Di sini blur-nya ditiadakan dan diganti tepi   */
+/* transparan yang dimajukan (70% -> 62%) dengan opasitas sedikit     */
+/* diturunkan. Perbandingan tangkapan layar berdampingan tidak        */
+/* menunjukkan perbedaan yang terlihat, sementara beban melukisnya    */
+/* jauh lebih ringan.                                                 */
 /*                                                                    */
-/* radial-gradient sudah melembut dengan sendirinya, jadi tepi        */
-/* transparannya cukup dimajukan dan opasitasnya diturunkan sedikit   */
-/* untuk mendapatkan kesan yang sama tanpa penyaring apa pun.         */
+/* Catatan, supaya tidak salah dibaca di kemudian hari: perubahan ini */
+/* BUKAN perbaikan atas layar hitam yang sempat muncul. Penyebab layar */
+/* hitam itu ada di SidenavComponent, dan sudah diperbaiki di sana.    */
 /* ----------------------------------------------------------------- */
 
 .login__bloom {
