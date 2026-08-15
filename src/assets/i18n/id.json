@@ -1723,5 +1723,6 @@
   "good-receipt__search": "Cari nomor, supplier, surat jalan…",
   "good-receipt__back-to-archive": "Kembali ke arsip",
   "general__filter": "Saring",
-  "general__view": "Lihat"
+  "general__view": "Lihat",
+  "good-receipt__create__price-saved": "Harga beli tersimpan ke master barang."
 }

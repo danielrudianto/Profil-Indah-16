@@ -1,5 +1,5 @@
 import { DatePipe, NgIf, NgFor, DecimalPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
@@ -9,6 +9,7 @@ import {
   ProductSelectorType,
 } from 'src/app/components/product-selector/product-selector.component';
 import { AlertService } from 'src/app/services/alert.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { v4 } from 'uuid';
@@ -68,6 +69,19 @@ export class GoodReceiptCreateComponent {
   });
 
   isSubmitting: boolean = false;
+
+  /**
+   * Peran 5 dan 7 boleh melihat DAN mengubah harga beli di sini; peran
+   * pembelian hanya mencatat jumlah barang masuk.
+   *
+   * Dibaca dari peran penggunanya, bukan dari potongan alamat — sejak keempat
+   * subpohon peran digabung, awalan /Administrator sudah tidak ada.
+   *
+   * Batas yang sama dijaga administratorMiddleware pada PUT
+   * /product/price-purchase di server; yang di sini hanya supaya kolom yang
+   * pasti ditolak tidak ditawarkan lebih dulu.
+   */
+  bolehUbahHarga = inject(AuthService).isAdministrator();
 
   ngOnInit(): void {
     this.itemFormGroup.valueChanges.subscribe(() => {
@@ -143,6 +157,13 @@ export class GoodReceiptCreateComponent {
               sub == null ? data.purchase_discount : sub.purchase_discount,
             ],
             default_unit: [data.unit],
+            stock: [data.stock ?? null],
+            /*
+              Menimpa harga di master hanya terjadi bila baris ini dicentang,
+              dan hanya untuk peran yang memang boleh. Prefill yang tidak
+              disentuh tidak boleh ikut menimpa apa pun.
+            */
+            save_price: [false],
           })
         );
 
@@ -150,6 +171,53 @@ export class GoodReceiptCreateComponent {
           number_of_items: this.t.length,
         });
       }
+    });
+  }
+
+
+  /**
+   * Menimpa harga beli di master untuk baris yang dicentang.
+   *
+   * Dijalankan SETELAH penerimaannya tersimpan, bukan saat kolomnya diketik:
+   * penerimaan yang akhirnya dibatalkan tidak boleh meninggalkan harga master
+   * yang terlanjur berubah.
+   *
+   * Nilainya masuk ke purchase_price dan purchase_discount — endpoint ini yang
+   * mengurusnya, termasuk memilih product_unit bila satuannya dipilih.
+   * Meilisearch ikut diperbarui sendiri lewat antrean "product-updated".
+   */
+  private simpanHargaMaster(): void {
+    if (!this.bolehUbahHarga) {
+      return;
+    }
+
+    const items = this.t.controls
+      .filter((x) => x.get('save_price')?.value)
+      .map((x) => ({
+        product_id: x.get('product_id')?.value,
+        product_unit_id: x.get('product_unit_id')?.value,
+        price: Number(x.get('price')?.value ?? 0),
+        discount: Number(x.get('discount')?.value ?? 0),
+      }));
+
+    if (items.length === 0) {
+      return;
+    }
+
+    this.apiService.put('product/price-purchase', { items }).subscribe({
+      next: () => {
+        this.alertService.showSuccess(
+          this.translateService.instant('good-receipt__create__price-saved'),
+        );
+      },
+      error: (error: any) => {
+        /*
+          Penerimaannya sendiri sudah tersimpan. Kegagalan di sini hanya berarti
+          harga master tidak ikut berubah, jadi yang dilaporkan itu — bukan
+          kegagalan penyimpanan penerimaannya.
+        */
+        this.alertService.showError(error);
+      },
     });
   }
 
@@ -212,6 +280,9 @@ export class GoodReceiptCreateComponent {
               })
               .subscribe({
                 next: (_) => {
+                  /* Harus sebelum t.clear(): barisnyalah yang dibaca. */
+                  this.simpanHargaMaster();
+
                   this.t.clear();
                   this.metaFormGroup.reset();
                   this.onUnselectCompany();
@@ -281,6 +352,9 @@ export class GoodReceiptCreateComponent {
                   })
                   .subscribe({
                     next: (_) => {
+                      /* Harus sebelum t.clear(): barisnyalah yang dibaca. */
+                      this.simpanHargaMaster();
+
                       this.t.clear();
                       this.metaFormGroup.reset();
                       this.onUnselectCompany();

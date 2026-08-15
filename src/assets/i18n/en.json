@@ -1717,5 +1717,6 @@
   "good-receipt__search": "Search number, supplier, delivery note…",
   "good-receipt__back-to-archive": "Back to archive",
   "general__filter": "Filter",
-  "general__view": "View"
+  "general__view": "View",
+  "good-receipt__create__price-saved": "Purchase price saved to the product master."
 }
