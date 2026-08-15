@@ -1835,5 +1835,22 @@
   "overpayment__create__summary-receiver": "Receiver",
   "overpayment__create__actions": "Actions",
   "overpayment__create__save": "Save",
-  "overpayment__create__cancel": "Cancel"
+  "overpayment__create__cancel": "Cancel",
+  "empty__search__title": "No results for",
+  "empty__search__desc": "Try another keyword, or check the spelling.",
+  "empty__search__reset": "Reset search",
+  "product__empty__title": "No items yet",
+  "product__empty__desc": "The catalogue is empty. Add one with the Add item button above.",
+  "product-brand__empty__title": "No brands yet",
+  "product-brand__empty__desc": "Brands group the catalogue. Add one with the button above.",
+  "product-type__empty__title": "No types yet",
+  "product-type__empty__desc": "Types group the catalogue. Add one with the button above.",
+  "stock-list__empty__title": "No stock recorded yet",
+  "stock-list__empty__desc": "Stock appears once items are received or adjusted.",
+  "sales-invoice__empty__title": "No invoices this month",
+  "sales-invoice__empty__desc": "Invoices issued this month will appear here.",
+  "good-receipt__empty__title": "No receipts this month",
+  "good-receipt__empty__desc": "Goods received this month will appear here.",
+  "overpayment__empty__title": "No overpayments yet",
+  "overpayment__empty__desc": "Customer money exceeding the bill will be recorded here."
 }

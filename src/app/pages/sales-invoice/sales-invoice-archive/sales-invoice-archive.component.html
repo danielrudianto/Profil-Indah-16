@@ -14,6 +14,7 @@
     [heading]="'sales-invoice__title' | translate"
     [lede]="'sales-invoice__lede' | translate"
     [searchPlaceholder]="'sales-invoice__search' | translate"
+    [keyword]="keyword"
     [addLabel]="'sales-invoice__create' | translate"
     [page]="page"
     [pageSize]="pageSize"
@@ -222,9 +223,15 @@
 
       <tbody *ngIf="!isLoading && dataSource.length === 0">
         <tr>
-          <td colspan="8" class="tabel__pesan">
-            {{ 'general__no-data' | translate }}
-          </td>
+          <td colspan="8">
+          <app-tabel-kosong
+            ikon="ph-receipt"
+            [judul]="'sales-invoice__empty__title' | translate"
+            [penjelasan]="'sales-invoice__empty__desc' | translate"
+            [kataKunci]="keyword"
+            (reset)="resetPencarian()"
+          />
+        </td>
         </tr>
       </tbody>
     </table>

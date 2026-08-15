@@ -2,6 +2,7 @@
   [heading]="'product__type__title' | translate"
   [lede]="'product__type__lede' | translate"
   [searchPlaceholder]="'product__type__search' | translate"
+  [keyword]="keyword"
   [addLabel]="'product__type__add' | translate"
   [page]="page"
   [pageSize]="pageSize"
@@ -77,8 +78,14 @@
 
     <tbody *ngIf="!isLoading && dataSource.length === 0">
       <tr>
-        <td colspan="4" class="tabel__pesan">
-          {{ 'general__no-data' | translate }}
+        <td colspan="4">
+          <app-tabel-kosong
+            ikon="ph-squares-four"
+            [judul]="'product-type__empty__title' | translate"
+            [penjelasan]="'product-type__empty__desc' | translate"
+            [kataKunci]="keyword"
+            (reset)="resetPencarian()"
+          />
         </td>
       </tr>
     </tbody>

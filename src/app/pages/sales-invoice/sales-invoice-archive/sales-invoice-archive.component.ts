@@ -14,6 +14,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { SalesInvoiceArchiveFilterComponent } from './sales-invoice-archive-filter/sales-invoice-archive-filter.component';
 import { SalesInvoiceViewComponent } from './sales-invoice-view/sales-invoice-view.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
 /**
  * Daftar faktur penjualan — bagian `4a` berkas desain.
@@ -26,7 +27,7 @@ import { SalesInvoiceViewComponent } from './sales-invoice-view/sales-invoice-vi
   selector: 'app-sales-invoice-archive',
   templateUrl: './sales-invoice-archive.component.html',
   animations: [slideInOutAnimation],
-  imports: [
+  imports: [TabelKosongComponent, 
     ArchivesComponent,
     ListPageComponent,
     NgIf,
@@ -348,5 +349,16 @@ export class SalesInvoiceArchiveComponent {
           }
         }
       });
+  }
+
+  /**
+   * Membatalkan pencarian dari blok kosong.
+   *
+   * Ruasnya dikosongkan DAN diteruskan ke pengambilan data lewat jalur yang
+   * sama dengan mengetik di kotak pencarian, supaya kotak, daftar, dan
+   * alamat tidak bisa menyatakan tiga hal berbeda.
+   */
+  resetPencarian(): void {
+    this.onQueryChanged('');
   }
 }

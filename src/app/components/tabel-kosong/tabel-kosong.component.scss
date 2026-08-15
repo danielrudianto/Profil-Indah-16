@@ -1,0 +1,146 @@
+/*
+  Blok kosong tabel — pola `19a`.
+
+  Ukuran, warna, dan kedua animasinya diambil apa adanya dari berkas desain;
+  tidak ada animasi ketiga. Yang bergerak hanya dua: kotak ikonnya naik-turun,
+  dan cincin putus-putusnya bernapas.
+*/
+
+.kosong {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 56px 24px 60px;
+  text-align: center;
+  white-space: normal;
+}
+
+/* ---------------------------------------------------------------- */
+/* Ilustrasi                                                         */
+/* ---------------------------------------------------------------- */
+
+.kosong__ilus {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+}
+
+.kosong__cincin {
+  position: absolute;
+  inset: 16px;
+  border-radius: 50%;
+  border: 1px dashed color-mix(in srgb, var(--color-accent) 35%, transparent);
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+.kosong__kotak {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--color-accent-wash);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  color: var(--color-accent);
+  animation: float-y 4s ease-in-out infinite;
+
+  i {
+    font-size: 26px;
+  }
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+/*
+  Gerakan dimatikan bagi yang memintanya lewat setelan sistem. Blok ini tampil
+  pada halaman yang sedang dibaca, dan dua animasi tanpa henti di tengah layar
+  adalah persis yang membuat setelan itu ada.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .kosong__cincin,
+  .kosong__kotak {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Teks                                                              */
+/* ---------------------------------------------------------------- */
+
+.kosong__judul {
+  margin: 0;
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.kosong__desk {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Tombol reset — HANYA pada varian hasil pencarian kosong           */
+/* ---------------------------------------------------------------- */
+
+.kosong__reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  margin-top: 8px;
+  padding: 0 16px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  i {
+    font-size: 15px;
+  }
+
+  &:hover {
+    color: var(--color-text);
+    border-color: color-mix(in srgb, var(--color-text) 30%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}

@@ -9,6 +9,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { UpdateProductComponent } from './update-product/update-product.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
 /**
  * Daftar barang — sistem desain Nocturne.
@@ -31,7 +32,7 @@ import { UpdateProductComponent } from './update-product/update-product.componen
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
-  imports: [
+  imports: [TabelKosongComponent, 
     NgIf,
     NgFor,
     MatMenu,
@@ -147,5 +148,16 @@ export class ProductComponent implements OnInit {
         this.alertService.showError(error);
       },
     });
+  }
+
+  /**
+   * Membatalkan pencarian dari blok kosong.
+   *
+   * Ruasnya dikosongkan DAN diteruskan ke pengambilan data lewat jalur yang
+   * sama dengan mengetik di kotak pencarian, supaya kotak, daftar, dan
+   * alamat tidak bisa menyatakan tiga hal berbeda.
+   */
+  resetPencarian(): void {
+    this.cari('');
   }
 }

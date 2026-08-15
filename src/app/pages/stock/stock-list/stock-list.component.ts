@@ -8,6 +8,7 @@ import { ListPageComponent } from 'src/app/components/list-page/list-page.compon
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { StockListReportComponent } from '../stock-list-report/stock-list-report.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
 /**
  * Daftar stok.
@@ -23,7 +24,7 @@ import { StockListReportComponent } from '../stock-list-report/stock-list-report
   selector: 'app-stock-list',
   templateUrl: './stock-list.component.html',
   styleUrls: ['./stock-list.component.scss'],
-  imports: [ListPageComponent, NgIf, NgFor, DecimalPipe, TranslatePipe],
+  imports: [TabelKosongComponent, ListPageComponent, NgIf, NgFor, DecimalPipe, TranslatePipe],
 })
 export class StockListComponent implements OnInit {
   constructor(
@@ -126,5 +127,16 @@ export class StockListComponent implements OnInit {
         },
       });
     }
+  }
+
+  /**
+   * Membatalkan pencarian dari blok kosong.
+   *
+   * Ruasnya dikosongkan DAN diteruskan ke pengambilan data lewat jalur yang
+   * sama dengan mengetik di kotak pencarian, supaya kotak, daftar, dan
+   * alamat tidak bisa menyatakan tiga hal berbeda.
+   */
+  resetPencarian(): void {
+    this.cari('');
   }
 }

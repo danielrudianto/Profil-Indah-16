@@ -11,6 +11,7 @@ import { ListPageComponent } from 'src/app/components/list-page/list-page.compon
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
 import { ProductTypeCreateComponent } from './product-type-create/product-type-create.component';
 import { ProductTypeUpdateComponent } from './product-type-update/product-type-update.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
 /**
  * Daftar tipe barang — sistem desain Nocturne.
@@ -26,7 +27,7 @@ import { ProductTypeUpdateComponent } from './product-type-update/product-type-u
 @Component({
   selector: 'app-product-type',
   templateUrl: './product-type.component.html',
-  imports: [
+  imports: [TabelKosongComponent, 
     NgIf,
     NgFor,
     DatePipe,
@@ -168,5 +169,16 @@ export class ProductTypeComponent implements OnInit {
             });
           });
       });
+  }
+
+  /**
+   * Membatalkan pencarian dari blok kosong.
+   *
+   * Ruasnya dikosongkan DAN diteruskan ke pengambilan data lewat jalur yang
+   * sama dengan mengetik di kotak pencarian, supaya kotak, daftar, dan
+   * alamat tidak bisa menyatakan tiga hal berbeda.
+   */
+  resetPencarian(): void {
+    this.cari('');
   }
 }

@@ -15,12 +15,13 @@ import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
 @Component({
     selector: 'app-good-receipt-archive',
     templateUrl: './good-receipt-archive.component.html',
     animations: [slideInOutAnimation],
-    imports: [ArchivesComponent, NgIf, NgFor, DatePipe, TranslatePipe, ListPageComponent]
+    imports: [TabelKosongComponent, ArchivesComponent, NgIf, NgFor, DatePipe, TranslatePipe, ListPageComponent]
 })
 export class GoodReceiptArchiveComponent {
   constructor(
@@ -332,5 +333,16 @@ export class GoodReceiptArchiveComponent {
         id: id,
       },
     });
+  }
+
+  /**
+   * Membatalkan pencarian dari blok kosong.
+   *
+   * Ruasnya dikosongkan DAN diteruskan ke pengambilan data lewat jalur yang
+   * sama dengan mengetik di kotak pencarian, supaya kotak, daftar, dan
+   * alamat tidak bisa menyatakan tiga hal berbeda.
+   */
+  resetPencarian(): void {
+    this.onQueryChanged('');
   }
 }

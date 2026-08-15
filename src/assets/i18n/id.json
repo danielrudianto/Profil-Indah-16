@@ -1841,5 +1841,22 @@
   "overpayment__create__summary-receiver": "Penerima",
   "overpayment__create__actions": "Aksi",
   "overpayment__create__save": "Simpan",
-  "overpayment__create__cancel": "Batal"
+  "overpayment__create__cancel": "Batal",
+  "empty__search__title": "Tidak ada hasil untuk",
+  "empty__search__desc": "Coba kata kunci lain, atau periksa ejaannya.",
+  "empty__search__reset": "Reset pencarian",
+  "product__empty__title": "Belum ada barang",
+  "product__empty__desc": "Katalog masih kosong. Tambahkan lewat tombol Tambah barang di atas.",
+  "product-brand__empty__title": "Belum ada merek barang",
+  "product-brand__empty__desc": "Merek dipakai mengelompokkan katalog. Tambahkan lewat tombol di atas.",
+  "product-type__empty__title": "Belum ada tipe barang",
+  "product-type__empty__desc": "Tipe dipakai mengelompokkan katalog. Tambahkan lewat tombol di atas.",
+  "stock-list__empty__title": "Belum ada stok tercatat",
+  "stock-list__empty__desc": "Stok muncul sendiri begitu ada barang yang diterima atau disesuaikan.",
+  "sales-invoice__empty__title": "Belum ada faktur di bulan ini",
+  "sales-invoice__empty__desc": "Faktur yang diterbitkan bulan ini akan tampil di sini.",
+  "good-receipt__empty__title": "Belum ada penerimaan di bulan ini",
+  "good-receipt__empty__desc": "Penerimaan barang yang dicatat bulan ini akan tampil di sini.",
+  "overpayment__empty__title": "Belum ada kelebihan bayar",
+  "overpayment__empty__desc": "Uang pelanggan yang melebihi tagihan akan tercatat di sini."
 }

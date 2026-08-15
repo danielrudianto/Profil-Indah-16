@@ -81,8 +81,14 @@
 
     <tbody *ngIf="!isLoading && dataSource.length === 0">
       <tr>
-        <td colspan="5" class="tabel__pesan">
-          {{ 'general__no-data' | translate }}
+        <td colspan="5">
+          <app-tabel-kosong
+            ikon="ph-stack"
+            [judul]="'stock-list__empty__title' | translate"
+            [penjelasan]="'stock-list__empty__desc' | translate"
+            [kataKunci]="kataKunci"
+            (reset)="resetPencarian()"
+          />
         </td>
       </tr>
     </tbody>

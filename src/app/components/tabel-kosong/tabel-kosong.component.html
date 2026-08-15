@@ -1,0 +1,42 @@
+<!--
+  Blok kosong tabel — pola `19a`, berlaku untuk SEMUA daftar.
+
+  Yang TIDAK dilakukan di sini sama pentingnya dengan yang dilakukan:
+
+  - Tidak ada tombol tambah. Menambah data lewat tombol yang sudah berdiri di
+    baris alat; tombol kedua yang mengerjakan hal sama membuat orang menghafal
+    dua jalan untuk satu perbuatan.
+  - Tidak ada tautan "hapus semua saringan". Kapsul saringan punya tombolnya
+    sendiri di atas tabel, dan tetap tergambar meski tabelnya kosong.
+  - Tidak ada gambar, maskot, atau foto.
+-->
+<div class="kosong">
+  <div class="kosong__ilus" aria-hidden="true">
+    <span class="kosong__cincin"></span>
+    <span class="kosong__kotak">
+      <i class="ph" [ngClass]="ikon"></i>
+    </span>
+  </div>
+
+  <!--
+    Dua varian, dan hanya dua. Pencarian yang tidak membuahkan hasil bukan
+    keadaan "belum ada data": yang pertama bisa diperbaiki pengguna saat itu
+    juga, yang kedua tidak.
+  -->
+  <ng-container *ngIf="kataKunci; else belumAda">
+    <h3 class="kosong__judul">
+      {{ 'empty__search__title' | translate }} “{{ kataKunci }}”
+    </h3>
+    <p class="kosong__desk">{{ 'empty__search__desc' | translate }}</p>
+
+    <button type="button" class="kosong__reset" (click)="reset.emit()">
+      <i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i>
+      {{ 'empty__search__reset' | translate }}
+    </button>
+  </ng-container>
+
+  <ng-template #belumAda>
+    <h3 class="kosong__judul">{{ judul }}</h3>
+    <p class="kosong__desk">{{ penjelasan }}</p>
+  </ng-template>
+</div>

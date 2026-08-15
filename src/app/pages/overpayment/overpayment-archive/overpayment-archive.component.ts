@@ -9,6 +9,7 @@ import { ListPageComponent } from 'src/app/components/list-page/list-page.compon
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { OverpaymentArchiveViewComponent } from './overpayment-archive-view/overpayment-archive-view.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
 /**
  * Daftar kelebihan bayar — bagian `16c` berkas desain.
@@ -23,6 +24,7 @@ import { OverpaymentArchiveViewComponent } from './overpayment-archive-view/over
   templateUrl: './overpayment-archive.component.html',
   imports: [
     ListPageComponent,
+    TabelKosongComponent,
     NgIf,
     NgFor,
     NgClass,
@@ -54,6 +56,9 @@ export class OverpaymentArchiveComponent implements OnInit {
   /** Kosong berarti seluruhnya; diisi 'waiting' atau 'overdue' oleh chip. */
   status: string = '';
 
+  /** Dicocokkan server ke nama pelanggan. */
+  keyword: string = '';
+
   /** Penghitung untuk chip, datang dari server. */
   ringkasan: { waiting: number; overdue: number } = { waiting: 0, overdue: 0 };
 
@@ -72,6 +77,7 @@ export class OverpaymentArchiveComponent implements OnInit {
         sortBy: this.sortBy,
         sortDirection: this.sortDirection,
         status: this.status,
+        keyword: this.keyword,
       })
       .subscribe({
         next: (data: any) => {
@@ -97,6 +103,21 @@ export class OverpaymentArchiveComponent implements OnInit {
   toggleStatus(pilihan: string) {
     this.status = this.status === pilihan ? '' : pilihan;
     this.fetch(1);
+  }
+
+  cari(kata: string) {
+    this.keyword = kata;
+    this.fetch(1);
+  }
+
+  /**
+   * Membatalkan pencarian dari blok kosong.
+   *
+   * Lewat jalur yang sama dengan mengetik di kotak pencarian, supaya kotak dan
+   * daftarnya tidak bisa menyatakan dua hal berbeda.
+   */
+  resetPencarian(): void {
+    this.cari('');
   }
 
   bukaHalaman(halaman: number) {
