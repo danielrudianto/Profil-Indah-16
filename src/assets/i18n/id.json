@@ -1750,5 +1750,6 @@
   "product-selector__lede": "Tekan barang untuk menambah satu baris. Barang yang sama boleh berkali-kali.",
   "product-selector__lines": "baris",
   "product-selector__another-line": "Baris lagi",
-  "product-selector__found": "barang ditemukan"
+  "product-selector__found": "barang ditemukan",
+  "accent__blurple": "Blurple"
 }

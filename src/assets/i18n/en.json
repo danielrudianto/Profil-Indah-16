@@ -1744,5 +1744,6 @@
   "product-selector__lede": "Tap a product to add one line. The same product may be added repeatedly.",
   "product-selector__lines": "lines",
   "product-selector__another-line": "Another line",
-  "product-selector__found": "products found"
+  "product-selector__found": "products found",
+  "accent__blurple": "Blurple"
 }
