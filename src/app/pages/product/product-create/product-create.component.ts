@@ -9,10 +9,14 @@ import {
   Validators,
 } from '@angular/forms';
 import { Location } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
 import { NgxMaskDirective } from 'ngx-mask';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { ProductBrandCreateComponent } from 'src/app/pages/product-brand/product-brand-create/product-brand-create.component';
+import { ProductTypeCreateComponent } from 'src/app/pages/product-type/product-type-create/product-type-create.component';
 import { ValueValidator } from 'src/app/validators/value.validator';
 import { PRODUCT_UNITS } from 'src/app/constants/unit.constant';
 import {
@@ -59,6 +63,8 @@ export class ProductCreateComponent {
     private alertService: AlertService,
     private translateService: TranslateService,
     private location: Location,
+    private dialog: MatDialog,
+    private dynamicComponentService: DynamicComponentService,
   ) {}
 
   @ViewChild('comboBrand') comboBrand?: ComboSearchComponent;
@@ -154,7 +160,12 @@ export class ProductCreateComponent {
   }
 
   /**
-   * Membuat merek baru dari dalam formulir ini, lalu langsung memilihnya.
+   * Membuka dialog tambah merek, lalu langsung memilih hasilnya.
+   *
+   * Memakai DIALOG YANG SAMA dengan halaman daftar merek, bukan kolom isian
+   * tersendiri di formulir ini. Dua tempat membuat merek berarti dua aturan
+   * yang harus dijaga tetap sama — panjang nama, pesan galat, perilaku ketika
+   * namanya sudah dipakai — dan yang satu pasti tertinggal.
    *
    * Bentuk sebelumnya menyimpan hasilnya ke kolom `brand` dan
    * `brand_search_bar` — dua nama yang TIDAK ADA di itemFormGroup. patchValue
@@ -162,36 +173,36 @@ export class ProductCreateComponent {
    * tombol itu tampak berhasil sementara product_brand_id tetap kosong dan
    * formulirnya tetap tidak bisa disimpan.
    */
-  buatMerek(nama: string): void {
-    if (!nama.trim()) {
-      return;
-    }
+  buatMerek(): void {
+    this.dialog
+      .open(ProductBrandCreateComponent, {
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
+      })
+      .afterClosed()
+      .subscribe((data: any) => {
+        if (!data) {
+          return;
+        }
 
-    this.apiService.post('product-brand', { name: nama.trim() }).subscribe({
-      next: (data: any) => {
         this.itemFormGroup.patchValue({ product_brand_id: data.id });
         this.comboBrand?.setSelected({ id: data.id, name: data.name });
-      },
-      error: (error: any) => {
-        this.alertService.showError(error);
-      },
-    });
+      });
   }
 
-  buatTipe(nama: string): void {
-    if (!nama.trim()) {
-      return;
-    }
+  /* Tipe barang dibuka lewat DynamicComponentService — lihat catatan di
+     halaman daftar tipe soal dua mekanisme dialog yang masih berdampingan. */
+  buatTipe(): void {
+    this.dynamicComponentService
+      .createDynamicComponent(ProductTypeCreateComponent, {})
+      .subscribe((data: any) => {
+        if (!data) {
+          return;
+        }
 
-    this.apiService.post('product-type', { name: nama.trim() }).subscribe({
-      next: (data: any) => {
         this.itemFormGroup.patchValue({ product_type_id: data.id });
         this.comboType?.setSelected({ id: data.id, name: data.name });
-      },
-      error: (error: any) => {
-        this.alertService.showError(error);
-      },
-    });
+      });
   }
 
   /* ---------------------------------------------------------------- */

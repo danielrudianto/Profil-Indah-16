@@ -283,11 +283,16 @@ select.input {
   }
 }
 
+/*
+  Berada di luar .satuan, jadi lebarnya mengikuti kartu — bukan lebar terkecil
+  baris satuan — dan ia tidak ikut bergeser ketika barisnya digulung ke samping.
+*/
 .satuan__tambah {
   display: flex;
   align-items: center;
   gap: 12px;
   width: 100%;
+  margin-top: 10px;
   padding: 11px 14px;
   font: inherit;
   font-size: 13.5px;
@@ -430,9 +435,5 @@ select.input {
 @media (max-width: 820px) {
   .kisi {
     grid-template-columns: 1fr;
-  }
-
-  .satuan__tambah {
-    min-width: 0;
   }
 }

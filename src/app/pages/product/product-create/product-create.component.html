@@ -48,28 +48,17 @@
             (pick)="pilihMerek($event)"
             (clear)="lepasMerek()"
           />
+          <!--
+            Membuka DIALOG YANG SAMA dengan halaman daftar merek, bukan kolom
+            isian tersendiri. Dua tempat membuat merek berarti dua aturan yang
+            harus dijaga tetap sama, dan yang satu pasti tertinggal.
+          -->
           <p class="field__bantu">
             {{ "product__create__not-found" | translate }}
-            <button
-              type="button"
-              class="tautan"
-              (click)="buatMerek(inputMerek.value)"
-            >
+            <button type="button" class="tautan" (click)="buatMerek()">
               {{ "product__create__add-brand" | translate }}
             </button>
           </p>
-          <!--
-            Nama untuk merek baru diambil dari kolom terpisah, bukan dari kotak
-            pencarian. Kotak itu memantulkan apa yang sedang dipilih; memakainya
-            sekaligus sebagai isian merek baru membuat satu kotak punya dua arti.
-          -->
-          <input
-            #inputMerek
-            class="input input--kecil"
-            type="text"
-            [attr.placeholder]="'product__create__new-brand' | translate"
-            [attr.aria-label]="'product__create__add-brand' | translate"
-          />
         </div>
 
         <div class="field">
@@ -84,21 +73,10 @@
           />
           <p class="field__bantu">
             {{ "product__create__not-found" | translate }}
-            <button
-              type="button"
-              class="tautan"
-              (click)="buatTipe(inputTipe.value)"
-            >
+            <button type="button" class="tautan" (click)="buatTipe()">
               {{ "product__create__add-type" | translate }}
             </button>
           </p>
-          <input
-            #inputTipe
-            class="input input--kecil"
-            type="text"
-            [attr.placeholder]="'product__create__new-type' | translate"
-            [attr.aria-label]="'product__create__add-type' | translate"
-          />
         </div>
 
         <div class="field">
@@ -262,13 +240,19 @@
               </div>
             </div>
           </ng-container>
-
-          <button type="button" class="satuan__tambah" (click)="tambahSatuan()">
-            <i class="ph ph-plus-circle" aria-hidden="true"></i>
-            <span>{{ "product__create__add-unit" | translate }}</span>
-          </button>
         </div>
       </div>
+
+      <!--
+        Tombol ini DI LUAR kotak yang menggulung. Kalau ikut di dalamnya, ia
+        ikut bergeser setiap kali baris satuan digulung ke samping — padahal ia
+        bukan bagian dari barisnya, melainkan perintah untuk menambah baris
+        baru.
+      -->
+      <button type="button" class="satuan__tambah" (click)="tambahSatuan()">
+        <i class="ph ph-plus-circle" aria-hidden="true"></i>
+        <span>{{ "product__create__add-unit" | translate }}</span>
+      </button>
     </section>
   </div>
 

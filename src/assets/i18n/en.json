@@ -1702,8 +1702,6 @@
   "product__create__not-found": "Not there?",
   "product__create__add-brand": "Add a new brand",
   "product__create__add-type": "Add a new type",
-  "product__create__new-brand": "New brand name",
-  "product__create__new-type": "New type name",
   "product__create__before-save": "Before saving",
   "product__create__check-brand-type": "Brand & type filled in",
   "product__create__check-unit": "Base unit",

@@ -1708,8 +1708,6 @@
   "product__create__not-found": "Tidak ketemu?",
   "product__create__add-brand": "Tambah merek baru",
   "product__create__add-type": "Tambah tipe baru",
-  "product__create__new-brand": "Nama merek baru",
-  "product__create__new-type": "Nama tipe baru",
   "product__create__before-save": "Sebelum simpan",
   "product__create__check-brand-type": "Merek & tipe terisi",
   "product__create__check-unit": "Satuan dasar",
