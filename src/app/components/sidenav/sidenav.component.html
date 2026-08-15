@@ -1,0 +1,45 @@
+<nav class="sidenav" [class.sidenav--collapsed]="collapsed">
+  <!--
+    Pencarian disembunyikan saat diciutkan: kolom teks selebar 76px tidak bisa
+    dipakai, dan menyisakannya hanya menghabiskan tinggi.
+  -->
+  <div class="sidenav__search" *ngIf="!collapsed">
+    <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+    <input
+      type="search"
+      [formControl]="cariControl"
+      [attr.placeholder]="'nav__search' | translate"
+      [attr.aria-label]="'nav__search' | translate"
+    />
+  </div>
+
+  <div class="sidenav__scroll">
+    <div class="sidenav__group" *ngFor="let g of grup">
+      <div class="sidenav__group-head" *ngIf="!collapsed">
+        <span>{{ g.label | translate }}</span>
+        <span class="sidenav__count">{{ g.items.length }}</span>
+      </div>
+
+      <a
+        class="sidenav__item"
+        *ngFor="let item of g.items"
+        [routerLink]="jalur(item)"
+        routerLinkActive="sidenav__item--on"
+        [title]="collapsed ? (item.label | translate) : ''"
+      >
+        <i class="{{ item.icon }}" aria-hidden="true"></i>
+        <span class="sidenav__label" *ngIf="!collapsed">
+          {{ item.label | translate }}
+        </span>
+      </a>
+    </div>
+
+    <!--
+      Terjadi ketika pencarian tidak menemukan apa pun. Tanpa pesan ini
+      daftarnya hanya kosong, dan itu terbaca seperti menu yang gagal dimuat.
+    -->
+    <p class="sidenav__empty" *ngIf="grup.length === 0 && !collapsed">
+      {{ 'nav__empty' | translate }}
+    </p>
+  </div>
+</nav>

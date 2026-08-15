@@ -1,0 +1,163 @@
+/*
+  Navigasi samping — Nocturne.
+
+  Seluruh warnanya dibaca dari token yang ditulis SettingsService, sehingga
+  sidebar ikut berubah ketika pengguna mengganti aksen atau mode tanpa satu pun
+  nilai ditulis ulang di sini.
+*/
+
+.sidenav {
+  display: flex;
+  flex-direction: column;
+  width: 260px;
+  height: 100%;
+  padding: 16px 12px;
+  gap: 12px;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-divider);
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  color: var(--color-text);
+  transition: width 0.18s ease;
+}
+
+.sidenav--collapsed {
+  width: 76px;
+  padding-inline: 10px;
+  align-items: center;
+}
+
+/* ---------------------------------------------------------------- */
+/* Pencarian                                                        */
+/* ---------------------------------------------------------------- */
+
+.sidenav__search {
+  position: relative;
+  flex: 0 0 auto;
+
+  i {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    color: color-mix(in srgb, var(--color-text) 45%, transparent);
+    pointer-events: none;
+  }
+
+  input {
+    width: 100%;
+    min-height: 38px;
+    padding: 0 10px 0 34px;
+    font: inherit;
+    font-size: 13.5px;
+    color: var(--color-text);
+    background: var(--color-bg);
+    border: 1px solid var(--color-divider);
+    border-radius: 8px;
+    outline: none;
+
+    &::placeholder {
+      color: color-mix(in srgb, var(--color-text) 38%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Daftar                                                            */
+/* ---------------------------------------------------------------- */
+
+.sidenav__scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.sidenav__group + .sidenav__group {
+  margin-top: 18px;
+}
+
+.sidenav__group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+.sidenav__count {
+  font-size: 10.5px;
+  font-weight: 500;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+
+.sidenav__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 10px;
+  margin-bottom: 2px;
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+  font-size: 13.5px;
+  transition: background-color 0.14s ease;
+
+  i {
+    font-size: 17px;
+    flex: 0 0 auto;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-text) 6%, transparent);
+    color: inherit;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+  }
+}
+
+/*
+  Keadaan aktif memakai pola yang sama di seluruh aplikasi: ground aktif,
+  garis tepi dalam setebal 1px, dan teks beraksen. Ditulis sebagai bayangan
+  dalam, bukan border, supaya tidak menggeser tata letaknya satu piksel pun.
+*/
+.sidenav__item--on {
+  background: var(--color-active);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+.sidenav--collapsed .sidenav__item {
+  justify-content: center;
+  padding: 0;
+  width: 44px;
+}
+
+.sidenav__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidenav__empty {
+  padding: 12px 10px;
+  margin: 0;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
