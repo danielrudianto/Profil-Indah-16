@@ -1919,5 +1919,17 @@
   "set-avatar__group__eyes": "Eyes",
   "set-avatar__group__eyebrows": "Eyebrows",
   "set-avatar__group__mouth": "Mouth",
-  "overpayment__create__currency": "Rupiah"
+  "overpayment__create__currency": "Rupiah",
+  "promotion__lede": "Supplier programmes with their target and achievement.",
+  "promotion__search": "Search promotion name or description…",
+  "promotion__add-btn": "Create promotion",
+  "promotion__period": "Period",
+  "promotion__continuous": "Ongoing",
+  "promotion__achievement": "Achievement",
+  "promotion__status__running": "Running",
+  "promotion__status__upcoming": "Upcoming",
+  "promotion__status__finished": "Finished",
+  "promotion__status__deleted": "Deleted",
+  "promotion__empty__title": "No promotions yet",
+  "promotion__empty__desc": "Supplier programmes will appear here. Create one with the button above."
 }

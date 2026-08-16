@@ -1925,5 +1925,17 @@
   "set-avatar__group__eyes": "Mata",
   "set-avatar__group__eyebrows": "Alis",
   "set-avatar__group__mouth": "Mulut",
-  "overpayment__create__currency": "Rupiah"
+  "overpayment__create__currency": "Rupiah",
+  "promotion__lede": "Program penjualan per pemasok beserta target dan capaiannya.",
+  "promotion__search": "Cari nama atau deskripsi promosi…",
+  "promotion__add-btn": "Buat promosi",
+  "promotion__period": "Periode",
+  "promotion__continuous": "Berjalan terus",
+  "promotion__achievement": "Capaian",
+  "promotion__status__running": "Berjalan",
+  "promotion__status__upcoming": "Akan datang",
+  "promotion__status__finished": "Selesai",
+  "promotion__status__deleted": "Dihapus",
+  "promotion__empty__title": "Belum ada promosi",
+  "promotion__empty__desc": "Program promosi pemasok akan tampil di sini. Buat lewat tombol di atas."
 }

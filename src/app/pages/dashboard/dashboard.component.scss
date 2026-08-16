@@ -52,3 +52,36 @@
   pada lapisan itu (nilai negatif atau 0), bukan dengan menyentuh position
   milik Material.
 */
+
+
+/* ---------------------------------------------------------------- */
+/* Perpindahan halaman                                               */
+/*                                                                   */
+/* Satu gerakan untuk SEMUA halaman: naik 6px sambil muncul, 220ms.  */
+/* Komponen halaman selalu menjadi saudara router-outlet di dalam    */
+/* main, jadi satu aturan di sini menjangkau semuanya — tidak ada    */
+/* halaman yang bisa lupa diberi animasi, dan tidak ada dua halaman  */
+/* yang gerakannya beda.                                             */
+/* ---------------------------------------------------------------- */
+
+@keyframes halaman-masuk {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.dashboard__body > ::ng-deep *:not(router-outlet) {
+  display: block;
+  animation: halaman-masuk 0.22s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard__body > ::ng-deep *:not(router-outlet) {
+    animation: none;
+  }
+}
