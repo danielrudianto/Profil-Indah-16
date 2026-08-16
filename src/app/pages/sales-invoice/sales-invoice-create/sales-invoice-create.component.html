@@ -25,6 +25,34 @@
   <div class="kisi">
     <div class="buat__utama">
       <!-- ---------------------------------------------------------- -->
+      <!-- Jenis faktur — kartu PERTAMA, persis keadaan dokumen di     -->
+      <!-- penerimaan barang: pilihan yang menentukan seluruh formulir -->
+      <!-- diputuskan sebelum satu kolom pun diisi.                    -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu">
+        <h2 class="kartu__label">{{ 'sales-invoice__create__type' | translate }}</h2>
+        <div class="keadaan">
+            <!--
+              Anatomi yang sama dengan "Keadaan dokumen" di penerimaan barang:
+              judul, deskripsi, lalu AKIBATNYA beraksen — sebab ketiganya
+              berlaku sangat berbeda terhadap uang dan stok.
+            -->
+            <button
+              type="button"
+              class="keadaan__kartu"
+              *ngFor="let t of tipeTransaksi"
+              [class.keadaan__kartu--on]="metaFormGroup.value.type === t.nilai"
+              (click)="pilihTipe(t.nilai)"
+            >
+              <i class="ph" [ngClass]="t.ikon" aria-hidden="true"></i>
+              <span class="keadaan__judul">{{ t.kunci | translate }}</span>
+              <span class="keadaan__desk">{{ t.desk | translate }}</span>
+              <span class="keadaan__akibat">{{ t.note | translate }}</span>
+            </button>
+        </div>
+      </section>
+
+      <!-- ---------------------------------------------------------- -->
       <!-- Info faktur                                                 -->
       <!-- ---------------------------------------------------------- -->
       <section class="kartu" [formGroup]="metaFormGroup">
@@ -83,34 +111,6 @@
           </datalist>
         </div>
 
-        <!--
-          Tipe transaksi sebagai tiga kartu pilihan. Ia menentukan bagaimana
-          faktur ini diperlakukan seluruhnya — termasuk metode pembayaran mana
-          yang boleh dipilih — jadi ia harus terbaca sekaligus, bukan
-          tersembunyi di dalam daftar pilih.
-        -->
-        <div class="field">
-          <label>{{ 'sales-invoice__create__type' | translate }}</label>
-          <div class="keadaan">
-            <!--
-              Anatomi yang sama dengan "Keadaan dokumen" di penerimaan barang:
-              judul, deskripsi, lalu AKIBATNYA beraksen — sebab ketiganya
-              berlaku sangat berbeda terhadap uang dan stok.
-            -->
-            <button
-              type="button"
-              class="keadaan__kartu"
-              *ngFor="let t of tipeTransaksi"
-              [class.keadaan__kartu--on]="metaFormGroup.value.type === t.nilai"
-              (click)="pilihTipe(t.nilai)"
-            >
-              <i class="ph" [ngClass]="t.ikon" aria-hidden="true"></i>
-              <span class="keadaan__judul">{{ t.kunci | translate }}</span>
-              <span class="keadaan__desk">{{ t.desk | translate }}</span>
-              <span class="keadaan__akibat">{{ t.note | translate }}</span>
-            </button>
-          </div>
-        </div>
       </section>
 
       <!-- ---------------------------------------------------------- -->
