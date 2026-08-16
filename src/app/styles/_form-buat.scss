@@ -461,3 +461,53 @@
   justify-content: center;
   min-height: 56px;
 }
+
+/* ---------------------------------------------------------------- */
+/* Sebelum terbit                                                    */
+/*                                                                   */
+/* Lingkaran kosong bergaris ketika belum terpenuhi, terisi beraksen  */
+/* ketika sudah — bukan centang yang muncul dan hilang. Bentuk yang   */
+/* tetap ada membuat daftar ini terbaca sebagai syarat, bukan sebagai */
+/* pesan yang kadang muncul.                                         */
+/* ---------------------------------------------------------------- */
+
+.periksa {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  }
+}
+
+.periksa__bulat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+  color: transparent;
+  font-size: 11px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.periksa--on {
+  color: var(--color-text);
+
+  .periksa__bulat {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #fff;
+  }
+}

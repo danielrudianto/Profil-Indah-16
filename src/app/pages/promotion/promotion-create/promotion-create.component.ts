@@ -12,7 +12,6 @@ import { MatInput } from '@angular/material/input';
 import { MatSelect, MatOption } from '@angular/material/select';
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { ComboSearchComponent } from 'src/app/components/combo-search/combo-search.component';
 
 import { NgxMaskDirective } from 'ngx-mask';
@@ -23,7 +22,6 @@ import { NgxMaskDirective } from 'ngx-mask';
     styleUrls: ['./promotion-create.component.scss'],
     imports: [
     MatSuffix,
-    MatSlideToggle,
     FormsModule,
     ReactiveFormsModule,
     NgIf,
@@ -56,14 +54,18 @@ export class PromotionCreateComponent {
     description: new FormControl('', Validators.required),
     start_date: new FormControl(new Date(), [Validators.required]),
     end_date: new FormControl(''),
-    target: new FormControl('', [Validators.required, Validators.min(0)]),
+    /* Opsional — kosong berarti tanpa target; basis data menyimpan 0. */
+    target: new FormControl('', [Validators.min(0)]),
     supplier: new FormControl('', Validators.required),
     rules: new FormArray([]),
   });
 
   brands: any[] = [];
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.perbaruiChecklist();
+    this.promotionFormGroup.valueChanges.subscribe(() => this.perbaruiChecklist());
+  }
 
   get f() {
     return this.promotionFormGroup.controls;
@@ -86,24 +88,22 @@ export class PromotionCreateComponent {
     this.t.removeAt(i);
   }
 
-  /** Promosi tanpa tanggal akhir — end_date dikirim null. */
-  berjalanTerus = false;
+  /**
+   * Daftar syarat sebelum simpan. FIELD yang diperbarui pada perubahan
+   * formulir, BUKAN getter: getter yang mengembalikan larik baru dibaca
+   * *ngFor sebagai nilai yang selalu berubah — NG0100 berulang sampai
+   * halamannya berhenti tergambar. Sudah pernah terjadi di aplikasi ini.
+   */
+  checklist: { kunci: string; selesai: boolean }[] = [];
 
-  /** Backend menyimpan target NOT NULL; tanpa target dikirim 0. */
-  tanpaTarget = false;
-
-  setBerjalanTerus(nyala: boolean) {
-    this.berjalanTerus = nyala;
-    const c = this.promotionFormGroup.controls['end_date'];
-    if (nyala) { c.setValue(''); }
-  }
-
-  setTanpaTarget(nyala: boolean) {
-    this.tanpaTarget = nyala;
-    const c = this.promotionFormGroup.controls['target'];
-    if (nyala) { c.setValue(0); c.clearValidators(); }
-    else { c.setValidators([Validators.required, Validators.min(0)]); }
-    c.updateValueAndValidity();
+  perbaruiChecklist(): void {
+    const v = this.promotionFormGroup.value;
+    this.checklist = [
+      { kunci: 'promotion__create__check-info', selesai: !!v.name && !!v.description },
+      { kunci: 'promotion__create__check-supplier', selesai: !!v.supplier },
+      { kunci: 'promotion__create__check-brand', selesai: this.brands.length > 0 },
+      { kunci: 'promotion__create__check-start', selesai: !!v.start_date },
+    ];
   }
 
   ruleAt(i: number) {
@@ -122,6 +122,7 @@ export class PromotionCreateComponent {
     if (!this.brands.some((x) => x.id === item.id)) {
       this.brands.push(item);
     }
+    this.perbaruiChecklist();
   }
 
   /*
@@ -131,6 +132,7 @@ export class PromotionCreateComponent {
   */
   removeBrand(i: number) {
     this.brands.splice(i, 1);
+    this.perbaruiChecklist();
   }
 
   batal() {
@@ -152,7 +154,7 @@ export class PromotionCreateComponent {
                 this.promotionFormGroup.value.end_date,
                 'dd-MM-YYYY'
               ),
-        target: Number(this.promotionFormGroup.value.target),
+        target: Number(this.promotionFormGroup.value.target) || 0,
         start_date: this.datePipe.transform(
           this.promotionFormGroup.value.start_date,
           'dd-MM-YYYY'

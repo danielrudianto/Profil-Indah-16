@@ -36,12 +36,7 @@
           </mat-form-field>
         </div>
 
-        <!--
-          Tiga sel SEJAJAR: mulai, berakhir, saklar. Ketika saklarnya menyala,
-          kolom berakhir diganti sel kosong — bukan dihilangkan dari kisi —
-          supaya saklarnya tidak melompat ke kiri.
-        -->
-        <div class="kartu__baris kartu__baris--tiga">
+        <div class="kartu__baris">
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ 'promotion__add__start-date' | translate }}</mat-label>
@@ -55,7 +50,7 @@
           </div>
 
           <div class="field">
-            <mat-form-field appearance="outline" class="w-100" *ngIf="!berjalanTerus">
+            <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ 'promotion__add__end-date' | translate }}</mat-label>
               <input matInput [matDatepicker]="pAkhir" formControlName="end_date" (click)="pAkhir.open()" />
               <button type="button" matSuffix class="buka-kalender" (click)="pAkhir.open()"
@@ -65,29 +60,28 @@
               <mat-datepicker #pAkhir></mat-datepicker>
             </mat-form-field>
           </div>
-
-          <div class="field saklar-sejajar">
-            <mat-slide-toggle [checked]="berjalanTerus" (change)="setBerjalanTerus($event.checked)">
-              {{ 'promotion__create__no-end' | translate }}
-            </mat-slide-toggle>
-          </div>
         </div>
 
         <div class="kartu__baris">
           <div class="field">
-            <mat-form-field appearance="outline" class="w-100" *ngIf="!tanpaTarget">
+            <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ 'promotion__add__target' | translate }}</mat-label>
               <input matInput type="text" class="input--kanan" mask="separator" thousandSeparator="." formControlName="target" autocomplete="off" />
               <span matTextPrefix>Rp&nbsp;</span>
             </mat-form-field>
           </div>
-
-          <div class="field saklar-sejajar">
-            <mat-slide-toggle [checked]="tanpaTarget" (change)="setTanpaTarget($event.checked)">
-              {{ 'promotion__create__no-target' | translate }}
-            </mat-slide-toggle>
-          </div>
+          <div class="field"></div>
         </div>
+
+        <!--
+          SATU banner untuk dua kolom opsional — bukan dua saklar mode. Kolom
+          kosong yang artinya dijelaskan sekali lebih sederhana daripada saklar
+          yang harus dinyalakan hanya untuk boleh mengosongkan.
+        -->
+        <p class="petunjuk">
+          <i class="ph ph-info" aria-hidden="true"></i>
+          {{ 'promotion__create__optional-note' | translate }}
+        </p>
       </section>
 
       <!-- Merek peserta: autocomplete + chip ✕ -->
@@ -161,6 +155,18 @@
     </div>
 
     <aside class="buat__samping">
+      <section class="kartu">
+        <h2 class="kartu__label">{{ 'promotion__create__before-save' | translate }}</h2>
+        <ul class="periksa">
+          <li *ngFor="let c of checklist" [class.periksa--on]="c.selesai">
+            <span class="periksa__bulat" aria-hidden="true">
+              <i class="ph ph-check" *ngIf="c.selesai"></i>
+            </span>
+            {{ c.kunci | translate }}
+          </li>
+        </ul>
+      </section>
+
       <section class="kartu">
         <h2 class="kartu__label">{{ 'promotion__create__actions' | translate }}</h2>
         <button type="button" class="btn btn--primary btn--blok"

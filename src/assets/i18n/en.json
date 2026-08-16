@@ -1947,5 +1947,11 @@
   "promotion__create__saved": "Promotion saved.",
   "promotion__create__no-end": "No end date (ongoing)",
   "promotion__create__no-target": "No specific target",
-  "general__pick-date": "Pick a date"
+  "general__pick-date": "Pick a date",
+  "promotion__create__optional-note": "End date and target may be left empty when not applicable — the promotion is treated as ongoing and without a specific target.",
+  "promotion__create__before-save": "Before saving",
+  "promotion__create__check-info": "Name & description filled in",
+  "promotion__create__check-supplier": "Supplier selected",
+  "promotion__create__check-brand": "At least one participating brand",
+  "promotion__create__check-start": "Start date filled in"
 }

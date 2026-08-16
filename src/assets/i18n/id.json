@@ -1953,5 +1953,11 @@
   "promotion__create__saved": "Promosi tersimpan.",
   "promotion__create__no-end": "Tidak ada akhirnya (berjalan terus)",
   "promotion__create__no-target": "Tidak ada target tertentu",
-  "general__pick-date": "Pilih tanggal"
+  "general__pick-date": "Pilih tanggal",
+  "promotion__create__optional-note": "Tanggal berakhir dan target boleh dikosongkan bila tidak berlaku — promosi dianggap berjalan terus dan tanpa target tertentu.",
+  "promotion__create__before-save": "Sebelum simpan",
+  "promotion__create__check-info": "Nama & deskripsi terisi",
+  "promotion__create__check-supplier": "Pemasok dipilih",
+  "promotion__create__check-brand": "Minimal satu merek peserta",
+  "promotion__create__check-start": "Tanggal mulai terisi"
 }
