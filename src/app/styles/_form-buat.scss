@@ -451,3 +451,13 @@
     color: var(--color-text);
   }
 }
+
+/*
+  Saklar yang duduk sebaris dengan kolom isian. Tanpa ini ia menempel ke atap
+  selnya, sejajar dengan LABEL kolom sebelah alih-alih dengan isiannya.
+  56px = tinggi kolom outline Material tanpa subscript.
+*/
+.saklar-sejajar {
+  justify-content: center;
+  min-height: 56px;
+}

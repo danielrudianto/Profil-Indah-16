@@ -36,16 +36,16 @@
           </mat-form-field>
         </div>
 
-        <div class="kartu__baris">
+        <!--
+          Tiga sel SEJAJAR: mulai, berakhir, saklar. Ketika saklarnya menyala,
+          kolom berakhir diganti sel kosong — bukan dihilangkan dari kisi —
+          supaya saklarnya tidak melompat ke kiri.
+        -->
+        <div class="kartu__baris kartu__baris--tiga">
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ 'promotion__add__start-date' | translate }}</mat-label>
               <input matInput [matDatepicker]="pMulai" formControlName="start_date" (click)="pMulai.open()" />
-              <!--
-                Tombol kalender manual, bukan mat-datepicker-toggle: elemen toggle itu
-                hilang tanpa jejak pada pipeline dev meski utuh di bundel produksi,
-                dan tombol biasa yang memanggil open() berperilaku sama di keduanya.
-              -->
               <button type="button" matSuffix class="buka-kalender" (click)="pMulai.open()"
                 [attr.aria-label]="'general__pick-date' | translate">
                 <i class="ph ph-calendar-blank" aria-hidden="true"></i>
@@ -53,25 +53,20 @@
               <mat-datepicker #pMulai></mat-datepicker>
             </mat-form-field>
           </div>
+
           <div class="field">
             <mat-form-field appearance="outline" class="w-100" *ngIf="!berjalanTerus">
               <mat-label>{{ 'promotion__add__end-date' | translate }}</mat-label>
               <input matInput [matDatepicker]="pAkhir" formControlName="end_date" (click)="pAkhir.open()" />
-              <!--
-                Tombol kalender manual, bukan mat-datepicker-toggle: elemen toggle itu
-                hilang tanpa jejak pada pipeline dev meski utuh di bundel produksi,
-                dan tombol biasa yang memanggil open() berperilaku sama di keduanya.
-              -->
               <button type="button" matSuffix class="buka-kalender" (click)="pAkhir.open()"
                 [attr.aria-label]="'general__pick-date' | translate">
                 <i class="ph ph-calendar-blank" aria-hidden="true"></i>
               </button>
               <mat-datepicker #pAkhir></mat-datepicker>
             </mat-form-field>
-            <!--
-              Saklar menggantikan kolomnya, bukan sekadar menonaktifkan:
-              kolom mati yang tetap tergambar mengundang orang mengetuknya.
-            -->
+          </div>
+
+          <div class="field saklar-sejajar">
             <mat-slide-toggle [checked]="berjalanTerus" (change)="setBerjalanTerus($event.checked)">
               {{ 'promotion__create__no-end' | translate }}
             </mat-slide-toggle>
@@ -85,11 +80,13 @@
               <input matInput type="text" class="input--kanan" mask="separator" thousandSeparator="." formControlName="target" autocomplete="off" />
               <span matTextPrefix>Rp&nbsp;</span>
             </mat-form-field>
+          </div>
+
+          <div class="field saklar-sejajar">
             <mat-slide-toggle [checked]="tanpaTarget" (change)="setTanpaTarget($event.checked)">
               {{ 'promotion__create__no-target' | translate }}
             </mat-slide-toggle>
           </div>
-          <div class="field"></div>
         </div>
       </section>
 
