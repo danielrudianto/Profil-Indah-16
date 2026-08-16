@@ -2149,5 +2149,7 @@
   "supplier-report__value": "Value",
   "supplier-report__top-products": "Most frequently bought items",
   "supplier-report__product": "Item",
-  "supplier-report__empty": "No purchases in this range yet."
+  "supplier-report__empty": "No purchases in this range yet.",
+  "product__update__lede": "Edit the product identity. Prices are changed on the Price pages.",
+  "product__update__price-note": "Prices are not edited here — use the Sales Price or Purchase Price menu."
 }

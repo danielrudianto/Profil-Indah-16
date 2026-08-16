@@ -1,0 +1,92 @@
+<app-dialog-shell
+  icon="ph ph-package"
+  [heading]="'product__update__title' | translate"
+  [lede]="'product__update__lede' | translate"
+  [submitLabel]="'general__submit' | translate"
+  [submitting]="isSubmitting || isLoading"
+  [canSubmit]="itemFormGroup.valid"
+  (submitted)="submitForm()"
+  (close)="closeDialog()"
+>
+  <div [formGroup]="itemFormGroup">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'product__add__reference' | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="reference"
+        placeholder="MLT-9-G"
+        autocomplete="off"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'product__add__description' | translate }}</mat-label>
+      <textarea
+        matInput
+        rows="2"
+        formControlName="description"
+        placeholder="Multiplek 9mm Garuda"
+      ></textarea>
+    </mat-form-field>
+
+    <app-combo-search
+      #comboBrand
+      [label]="'product__add__brand' | translate"
+      inputId="pu-brand"
+      route="product-brand"
+      [initial]="namaMerek"
+      [disabled]="isSubmitting"
+      (pick)="pilihMerek($event)"
+      (clear)="lepasMerek()"
+    />
+
+    <app-combo-search
+      #comboType
+      [label]="'product__add__type' | translate"
+      inputId="pu-type"
+      route="product-type"
+      [initial]="namaTipe"
+      [disabled]="isSubmitting"
+      (pick)="pilihTipe($event)"
+      (clear)="lepasTipe()"
+    />
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'product__add__unit' | translate }}</mat-label>
+      <mat-select formControlName="unit">
+        <mat-option *ngFor="let s of satuanTersedia" [value]="s.value">
+          {{ s.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'product__add__minimum-stock' | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="minimum_stock"
+        mask="separator.2"
+        thousandSeparator=" "
+      />
+    </mat-form-field>
+
+    <!-- Harga tidak diubah dari sini — arahkan ke halaman Harga. -->
+    <p class="petunjuk">
+      <i class="ph ph-info" aria-hidden="true"></i>
+      <span>{{ 'product__update__price-note' | translate }}</span>
+    </p>
+
+    <!-- Dua penjaga: peran administrator dan can_delete dari server. -->
+    <button
+      type="button"
+      class="btn btn--bahaya btn--blok"
+      [disabled]="!isAdministrator || !itemFormGroup.get('can_delete')?.value"
+      (click)="delete()"
+    >
+      <i class="ph ph-trash" aria-hidden="true"></i>
+      {{ 'product__update__delete' | translate }}
+    </button>
+  </div>
+</app-dialog-shell>

@@ -8,7 +8,7 @@ import { Item } from 'src/app/models/item.model';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
-import { UpdateProductComponent } from './update-product/update-product.component';
+import { ProductUpdateComponent } from './product-update/product-update.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
 /**
@@ -115,7 +115,11 @@ export class ProductComponent implements OnInit {
 
   ubah(item: Item): void {
     this.dialog
-      .open(UpdateProductComponent, { data: { id: item.id } })
+      .open(ProductUpdateComponent, {
+        data: { id: item.id },
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
+      })
       .afterClosed()
       .subscribe((data) => {
         if (!data) {
@@ -123,9 +127,19 @@ export class ProductComponent implements OnInit {
         }
 
         const index = this.dataSource.findIndex((x) => x.id === item.id);
-        if (index !== -1) {
-          this.dataSource[index] = { ...this.dataSource[index], ...data };
+        if (index === -1) {
+          return;
         }
+
+        /* Dulu hasil hapus ikut jalur gabung, jadi barang yang sudah
+           dihapus tetap nongkrong di daftar sampai halaman dimuat ulang. */
+        if (data === 'deleted') {
+          this.dataSource.splice(index, 1);
+          this.dataCount = this.dataCount - 1;
+          return;
+        }
+
+        this.dataSource[index] = { ...this.dataSource[index], ...data };
       });
   }
 

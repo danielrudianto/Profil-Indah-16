@@ -2149,5 +2149,7 @@
   "supplier-report__value": "Nilai",
   "supplier-report__top-products": "Barang paling sering dibeli",
   "supplier-report__product": "Barang",
-  "supplier-report__empty": "Belum ada pembelian pada rentang ini."
+  "supplier-report__empty": "Belum ada pembelian pada rentang ini.",
+  "product__update__lede": "Ubah identitas barang. Harga jual dan beli diubah lewat halaman Harga.",
+  "product__update__price-note": "Harga tidak diubah dari sini — pakai menu Harga Jual atau Harga Beli."
 }
