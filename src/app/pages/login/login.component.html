@@ -20,9 +20,6 @@
       pembungkus supaya, bila suatu saat lapisan ini ikut dianimasikan,
       translateY tidak menimpa rotate — transform hanya punya satu nilai.
     -->
-    <span class="orn-bg orn-bg--dome">
-      <img src="assets/images/orn-dome.png" alt="" />
-    </span>
     <span class="orn-bg orn-bg--rock">
       <img src="assets/images/orn-rock.png" alt="" />
     </span>
@@ -31,9 +28,6 @@
     </span>
     <span class="orn-bg orn-bg--cone">
       <img src="assets/images/orn-cone.png" alt="" />
-    </span>
-    <span class="orn-bg orn-bg--batu-kecil">
-      <img src="assets/images/orn-rock.png" alt="" />
     </span>
   </div>
 
@@ -47,6 +41,10 @@
       lewat persentase lebar viewport.
     -->
     <span class="login__sphere" aria-hidden="true">
+      <img src="assets/images/orn-dome.png" alt="" />
+    </span>
+    <!-- Kembaran kecilnya menyembul di tepi kanan kartu, setinggi isian. -->
+    <span class="login__sphere login__sphere--kanan" aria-hidden="true">
       <img src="assets/images/orn-dome.png" alt="" />
     </span>
     <div class="login__brand">
@@ -174,22 +172,11 @@
     />
 
     <!--
-      Lapis ornamen DEKAT MASKOT — jelas dan bergerak.
-
-      Keempatnya memakai animasi yang sama, tetapi durasi dan jeda awalnya
-      dibuat berbeda-beda. Kalau seragam, semuanya naik-turun serempak dan
-      hasilnya terbaca seperti satu gambar besar yang bergoyang, bukan
-      beberapa benda yang melayang sendiri-sendiri.
+      TANPA ornamen di sekeliling maskot — permintaan pemilik: gajahnya tidak
+      boleh ditimpa apa pun. Percikan yang tampak di sekitarnya bagian dari
+      gambar maskotnya sendiri. Semua ornamen halaman ada di lapis latar
+      (.orn-bg) dan di balik kartu isian (.login__sphere).
     -->
-    <div class="orn-dekat" aria-hidden="true">
-      <!--
-        Hanya dua yang tersisa di dekat maskot — kerucut dan batu abstraknya
-        dilepas atas permintaan pemilik: terlalu ramai mengelilingi gajahnya.
-      -->
-      <img class="orn orn--graph" src="assets/images/orn-graph.png" alt="" />
-      <img class="orn orn--dome" src="assets/images/orn-dome.png" alt="" />
-    </div>
-
     <div class="login__mascot-caption">{{ 'login__caption' | translate }}</div>
   </div>
 </div>

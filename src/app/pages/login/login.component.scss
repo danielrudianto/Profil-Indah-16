@@ -397,63 +397,11 @@
   }
 }
 
-/* ---- Lapis dekat maskot: jelas, bergerak ---- */
-
-.orn-dekat {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.orn {
-  position: absolute;
-  object-fit: contain;
-  animation-name: float-y;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-}
-
 /*
-  Jeda awalnya NEGATIF, bukan positif: dengan jeda positif setiap ornamen diam
-  dulu selama beberapa detik ketika halaman dibuka, lalu baru bergerak. Jeda
-  negatif memulai animasinya di tengah jalan, jadi sejak piksel pertama
-  semuanya sudah bergerak — dan pada fase yang berbeda-beda.
+  Lapis dekat maskot DIHAPUS seluruhnya — gajahnya tidak boleh ditimpa
+  ornamen. Yang tersisa hanya lapis latar di tepi halaman dan sepasang
+  setengah bola di balik kartu isian.
 */
-.orn--graph {
-  width: 120px;
-  top: 14%;
-  right: 10%;
-  opacity: 0.9;
-  animation-duration: 5s;
-  animation-delay: -1.2s;
-}
-
-.orn--cone {
-  width: 96px;
-  bottom: 12%;
-  right: 20%;
-  opacity: 0.85;
-  animation-duration: 6.5s;
-  animation-delay: -3.4s;
-}
-
-.orn--dome {
-  width: 92px;
-  top: 22%;
-  left: 8%;
-  opacity: 0.88;
-  animation-duration: 5.8s;
-  animation-delay: -2.1s;
-}
-
-.orn--rock {
-  width: 110px;
-  bottom: 18%;
-  left: 13%;
-  opacity: 0.85;
-  animation-duration: 6.2s;
-  animation-delay: -4.6s;
-}
 
 /* ---- Lapis latar: pudar, diam ---- */
 
@@ -475,20 +423,12 @@
   menimpa rotate dan ornamennya melompat tegak.
 */
 /*
-  Tersebar ke SELURUH layar, menjauhi gajahnya: kubah memegang pojok
-  kiri-atas, batu dan grafik berbagi kanan-atas, kerucut turun ke pojok
-  kanan-bawah, batu kecil menjaga kiri-bawah. Semua di luar jangkauan kartu
-  isian; setengah bolanya sendiri menempel di belakang kartu, lihat
-  .login__sphere.
+  Tiga benda di TEPI halaman, jauh dari gajah maupun kartu — mengikuti
+  susunan halaman login Terra Bot yang ditunjukkan pemilik: batu di pojok
+  kanan-atas, cincin grafik terpotong tepi kanan setinggi tengah, kerucut
+  terpotong tepi bawah di tengah lebar. Sebagian sengaja keluar bingkai:
+  itu yang membuatnya terbaca sebagai latar yang meluas, bukan stiker.
 */
-.orn-bg--dome {
-  width: 200px;
-  top: -22px;
-  left: -70px;
-  opacity: 0.45;
-  transform: rotate(160deg);
-}
-
 .orn-bg--rock {
   width: 190px;
   top: -26px;
@@ -497,27 +437,19 @@
 }
 
 .orn-bg--graph {
-  width: 150px;
-  top: 60px;
-  right: 34px;
-  opacity: 0.38;
+  width: 170px;
+  top: 46%;
+  right: -56px;
+  opacity: 0.45;
   transform: rotate(8deg);
 }
 
 .orn-bg--cone {
-  width: 180px;
-  bottom: -40px;
-  right: -44px;
+  width: 190px;
+  bottom: -64px;
+  left: 46%;
   opacity: 0.4;
   transform: rotate(-15deg);
-}
-
-.orn-bg--batu-kecil {
-  width: 120px;
-  bottom: -20px;
-  left: -30px;
-  opacity: 0.3;
-  transform: rotate(115deg);
 }
 
 /*
@@ -530,12 +462,12 @@
 */
 .login__sphere {
   position: absolute;
-  top: -48px;
-  right: -58px;
+  top: -46px;
+  left: -54px;
   width: 170px;
   z-index: -1;
   opacity: 0.55;
-  transform: rotate(160deg);
+  transform: rotate(20deg);
   pointer-events: none;
 
   img {
@@ -545,13 +477,22 @@
   }
 }
 
+/* Kembaran kecil di tepi kanan kartu, setinggi isian sandi. */
+.login__sphere--kanan {
+  top: 52%;
+  left: auto;
+  right: -38px;
+  width: 90px;
+  opacity: 0.5;
+  transform: rotate(200deg);
+}
+
 /*
   Gerakan dimatikan bagi yang memintanya lewat setelan sistem — sama seperti
   blok kosong tabel.
 */
 @media (prefers-reduced-motion: reduce) {
-  .login__mascot-img,
-  .orn {
+  .login__mascot-img {
     animation: none;
   }
 }
@@ -589,44 +530,30 @@
     height: 260px;
   }
 
-  /* Satu yang tersisa di dekat maskot; kubahnya disembunyikan. */
-  .orn--dome {
-    display: none;
-  }
-
-  .orn--graph {
-    width: 84px;
-    top: 12px;
-    right: -8px;
-    animation-duration: 5.5s;
-    animation-delay: -2s;
-  }
-
-  .orn-bg--dome {
-    width: 110px;
-    top: -20px;
-  }
-
   .orn-bg--rock {
     width: 110px;
     top: -18px;
   }
 
   .orn-bg--graph {
-    width: 100px;
-    top: 44px;
-    right: 20px;
+    width: 110px;
+    right: -40px;
   }
 
   .orn-bg--cone {
-    width: 110px;
-    bottom: -26px;
+    width: 120px;
+    bottom: -44px;
   }
 
   .login__sphere {
     width: 130px;
-    top: -38px;
-    right: -44px;
+    top: -36px;
+    left: -42px;
+  }
+
+  .login__sphere--kanan {
+    width: 70px;
+    right: -30px;
   }
 
   /* Layar menyempit — yang kecil pergi lebih dulu supaya tidak berdesakan. */
