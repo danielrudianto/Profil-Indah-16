@@ -1,16 +1,19 @@
 <app-list-page
   [heading]="'expense-type__title' | translate"
   [lede]="'expense-type__lede' | translate"
-  [total]="dataSource.length"
-  [pageSize]="dataSource.length || 1"
+  [addLabel]="'expense-type__add' | translate"
+  [total]="jumlahAnak"
+  [pageSize]="jumlahAnak || 1"
   [loading]="isLoading"
   [showSearch]="false"
   [showPageSize]="false"
+  (add)="tambah()"
   (refresh)="ambilData()"
 >
   <!--
-    Banner, bukan teks bantu: kalimat ini menjelaskan mengapa TIDAK ADA tombol
-    tambah — tanpa itu, daftar tanpa tombol terbaca seperti fitur yang rusak.
+    Banner, bukan teks bantu: kalimat ini menjelaskan mengapa baris induk
+    tidak bisa disentuh — tanpa itu, kelompok tanpa tombol ubah terbaca
+    seperti fitur yang rusak.
   -->
   <p class="petunjuk">
     <i class="ph ph-info" aria-hidden="true"></i>
@@ -22,25 +25,74 @@
       <tr>
         <th>{{ 'expense-type__name' | translate }}</th>
         <th>{{ 'expense-type__description' | translate }}</th>
+        <th class="tabel__aksi-kepala">
+          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+        </th>
       </tr>
     </thead>
 
-    <tbody *ngIf="!isLoading && dataSource.length > 0">
-      <tr *ngFor="let item of dataSource; trackBy: lacakTipe">
-        <td class="tabel__utama">{{ item.name }}</td>
-        <td class="tabel__redup">{{ item.description }}</td>
-      </tr>
-    </tbody>
+    <ng-container *ngIf="!isLoading && dataSource.length > 0">
+      <tbody *ngFor="let induk of dataSource; trackBy: lacakTipe">
+        <!-- Baris induk: kategori baku, tanpa aksi ubah. -->
+        <tr class="induk">
+          <td class="tabel__utama">
+            {{ induk.name }}
+            <span class="tag-otomatis">
+              <i class="ph ph-lock-simple" aria-hidden="true"></i>
+              {{ 'expense-type__baku' | translate }}
+            </span>
+          </td>
+          <td class="tabel__redup">{{ induk.description }}</td>
+          <td class="tabel__aksi">
+            <button
+              type="button"
+              class="tabel__aksi-btn"
+              (click)="tambah(induk)"
+              [title]="'expense-type__add' | translate"
+              [attr.aria-label]="'expense-type__add' | translate"
+            >
+              <i class="ph ph-plus" aria-hidden="true"></i>
+            </button>
+          </td>
+        </tr>
+
+        <tr
+          *ngFor="let anak of induk.children; trackBy: lacakTipe"
+          class="anak tabel__baris-klik"
+          (click)="ubah(anak, induk)"
+        >
+          <td class="anak__nama">{{ anak.name }}</td>
+          <td class="tabel__redup">{{ anak.description }}</td>
+          <td class="tabel__aksi" (click)="$event.stopPropagation()">
+            <button
+              type="button"
+              class="tabel__aksi-btn"
+              (click)="ubah(anak, induk)"
+              [title]="'general__edit' | translate"
+              [attr.aria-label]="'general__edit' | translate"
+            >
+              <i class="ph ph-pencil-simple" aria-hidden="true"></i>
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="!induk.children?.length" class="anak">
+          <td colspan="3" class="anak__kosong">
+            {{ 'expense-type__no-children' | translate }}
+          </td>
+        </tr>
+      </tbody>
+    </ng-container>
 
     <tbody *ngIf="isLoading">
       <tr>
-        <td colspan="2" class="tabel__pesan">{{ 'general__loading' | translate }}</td>
+        <td colspan="3" class="tabel__pesan">{{ 'general__loading' | translate }}</td>
       </tr>
     </tbody>
 
     <tbody *ngIf="!isLoading && dataSource.length === 0">
       <tr>
-        <td colspan="2">
+        <td colspan="3">
           <app-tabel-kosong
             ikon="ph-tag"
             [judul]="'expense-type__empty__title' | translate"

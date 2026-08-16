@@ -95,14 +95,23 @@ export class ExpenseReportComponent {
           }
 
           /*
-            Tipe pengeluaran kini DATAR — nilainya dijumlah langsung per tipe,
-            tanpa menggulung anak ke induk seperti dulu.
+            Pengeluaran dicatat ke ANAK; nilai induk baku adalah gulungan
+            seluruh anaknya.
           */
           for (let i = 0; i < this.types.length; i++) {
-            const value = data.result.filter(
-              (x: any) => x.expense_type_id === this.types[i].id
-            );
-            this.types[i].value = value.reduce(
+            const anak = this.types[i].children ?? [];
+
+            for (let j = 0; j < anak.length; j++) {
+              const value = data.result.filter(
+                (x: any) => x.expense_type_id === anak[j].id
+              );
+              anak[j].value = value.reduce(
+                (a: number, b: any) => a + b.value,
+                0
+              );
+            }
+
+            this.types[i].value = anak.reduce(
               (a: number, b: any) => a + b.value,
               0
             );

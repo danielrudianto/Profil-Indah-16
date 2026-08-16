@@ -1,0 +1,31 @@
+<app-dialog-shell
+  icon="ph ph-tag"
+  [heading]="'expense-type__create__title' | translate"
+  [lede]="'expense-type__create__lede' | translate"
+  [submitLabel]="'expense-type__create__submit' | translate"
+  [submitting]="isSubmitting"
+  [canSubmit]="expenseTypeFormGroup.valid"
+  (submitted)="submitForm()"
+  (close)="closeDialog()"
+>
+  <div [formGroup]="expenseTypeFormGroup">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'expense-type__create__parent' | translate }}</mat-label>
+      <mat-select formControlName="parent_id">
+        <mat-option *ngFor="let induk of data.parents" [value]="induk.id">
+          {{ induk.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'expense-type__create__name' | translate }}</mat-label>
+      <input matInput type="text" formControlName="name" autocomplete="off" maxlength="100" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'expense-type__create__description' | translate }}</mat-label>
+      <textarea matInput rows="2" formControlName="description"></textarea>
+    </mat-form-field>
+  </div>
+</app-dialog-shell>

@@ -65,11 +65,17 @@
                 <th>{{ "expense__report__value" | translate }}</th>
               </tr>
             </thead>
-            <!-- Tipe datar: satu baris per tipe, tanpa gulungan induk-anak. -->
-            <tbody>
-              <tr *ngFor="let type of types">
+            <!-- Induk baku dicetak tebal sebagai gulungan seluruh anaknya. -->
+            <tbody *ngFor="let type of types">
+              <tr>
                 <td>{{ type.name }}</td>
-                <td>{{ type.value | number : "0.2-2" }}</td>
+                <td>
+                  <b>{{ type.value | number : "0.2-2" }}</b>
+                </td>
+              </tr>
+              <tr *ngFor="let child of type.children">
+                <td class="ps-5">{{ child.name }}</td>
+                <td>{{ child.value | number : "0.2-2" }}</td>
               </tr>
             </tbody>
           </table>
