@@ -2052,5 +2052,6 @@
   "adjustment-case__approve__yes": "Yes, approve",
   "adjustment-case__approve__items": "Items",
   "adjustment-case__approve__rows": "rows",
-  "adjustment-case__approve__note": "Once approved, the adjustment is applied to stock immediately and enters the accounting journal. This action cannot be undone."
+  "adjustment-case__approve__note": "Once approved, the adjustment is applied to stock immediately and enters the accounting journal. This action cannot be undone.",
+  "general__network-error": "Cannot reach the server. Check whether the backend is running."
 }

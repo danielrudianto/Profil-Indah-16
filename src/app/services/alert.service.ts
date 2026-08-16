@@ -41,6 +41,16 @@ export class AlertService {
   private terjemahkanGalat(error: any): string {
     const badan = error?.error;
 
+    /*
+      Galat JARINGAN, bukan galat server: permintaan tidak pernah sampai —
+      backend mati, alamat salah, atau sambungan putus. HttpClient menaruh
+      ProgressEvent pada error.error dan status 0, dan tanpa pemeriksaan ini
+      yang tampil di snackbar adalah "[object ProgressEvent]".
+    */
+    if (error?.status === 0 || badan instanceof ProgressEvent) {
+      return this.translateService.instant('general__network-error');
+    }
+
     if (badan == null || badan === '') {
       return error?.statusText ?? '';
     }

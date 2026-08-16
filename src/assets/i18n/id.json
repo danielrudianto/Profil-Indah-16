@@ -2052,5 +2052,6 @@
   "adjustment-case__approve__yes": "Ya, setujui",
   "adjustment-case__approve__items": "Barang",
   "adjustment-case__approve__rows": "baris",
-  "adjustment-case__approve__note": "Setelah disetujui, penyesuaian langsung masuk ke stok dan ikut perhitungan jurnal akuntansi. Tindakan ini tidak bisa dibatalkan."
+  "adjustment-case__approve__note": "Setelah disetujui, penyesuaian langsung masuk ke stok dan ikut perhitungan jurnal akuntansi. Tindakan ini tidak bisa dibatalkan.",
+  "general__network-error": "Server tidak dapat dihubungi. Periksa apakah backend berjalan."
 }
