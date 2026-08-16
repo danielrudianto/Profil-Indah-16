@@ -249,15 +249,3 @@
   flex-direction: column;
   min-width: 0;
 }
-
-.keadaan__desk {
-  margin-top: 2px;
-  font-size: 12px;
-  line-height: 1.45;
-  color: color-mix(in srgb, var(--color-text) 55%, transparent);
-  white-space: normal;
-}
-
-.keadaan__kartu--on .keadaan__desk {
-  color: color-mix(in srgb, var(--color-accent) 78%, transparent);
-}

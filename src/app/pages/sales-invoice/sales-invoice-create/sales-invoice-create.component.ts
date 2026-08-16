@@ -1003,12 +1003,26 @@ export class SalesInvoiceCreateComponent {
   /* ---------------------------------------------------------------- */
 
   readonly tipeTransaksi = [
-    { nilai: 'sales', kunci: 'sales-invoice__create__type__sales', ikon: 'ph-receipt' },
-    { nilai: 'deposit', kunci: 'sales-invoice__create__type__deposit', ikon: 'ph-hand-coins' },
+    {
+      nilai: 'sales',
+      kunci: 'sales-invoice__create__type__sales',
+      desk: 'sales-invoice__type__sales__desk',
+      note: 'sales-invoice__type__sales__note',
+      ikon: 'ph-receipt',
+    },
+    {
+      nilai: 'deposit',
+      kunci: 'sales-invoice__create__type__deposit',
+      desk: 'sales-invoice__type__deposit__desk',
+      note: 'sales-invoice__type__deposit__note',
+      ikon: 'ph-hand-coins',
+    },
     {
       nilai: 'deposit-internal',
       kunci: 'sales-invoice__create__type__internal-deposit',
-      ikon: 'ph-arrows-left-right',
+      desk: 'sales-invoice__type__internal__desk',
+      note: 'sales-invoice__type__internal__note',
+      ikon: 'ph-lock-key',
     },
   ];
 

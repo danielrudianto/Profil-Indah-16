@@ -92,6 +92,11 @@
         <div class="field">
           <label>{{ 'sales-invoice__create__type' | translate }}</label>
           <div class="keadaan">
+            <!--
+              Anatomi yang sama dengan "Keadaan dokumen" di penerimaan barang:
+              judul, deskripsi, lalu AKIBATNYA beraksen — sebab ketiganya
+              berlaku sangat berbeda terhadap uang dan stok.
+            -->
             <button
               type="button"
               class="keadaan__kartu"
@@ -101,6 +106,8 @@
             >
               <i class="ph" [ngClass]="t.ikon" aria-hidden="true"></i>
               <span class="keadaan__judul">{{ t.kunci | translate }}</span>
+              <span class="keadaan__desk">{{ t.desk | translate }}</span>
+              <span class="keadaan__akibat">{{ t.note | translate }}</span>
             </button>
           </div>
         </div>

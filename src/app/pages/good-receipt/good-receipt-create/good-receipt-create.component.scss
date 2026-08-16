@@ -313,66 +313,6 @@ select.input {
   Ikon di KIRI, teks di sampingnya — bukan ikon di atas. Kartu terpilih memakai
   ground aktif berikut ring 1px, bukan isian terang.
 */
-.keadaan__kartu {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: start;
-  column-gap: 12px;
-  row-gap: 2px;
-  padding: 14px 16px;
-  font: inherit;
-  text-align: left;
-  color: color-mix(in srgb, var(--color-text) 70%, transparent);
-  background: transparent;
-  border: 1px solid var(--color-divider);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: border-color 0.18s ease, background-color 0.18s ease,
-    color 0.18s ease;
-
-  i {
-    grid-row: 1 / span 3;
-    font-size: 20px;
-    color: var(--color-text-faint);
-    transition: color 0.18s ease;
-  }
-
-  &:hover {
-    border-color: color-mix(in srgb, var(--color-accent) 50%, transparent);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-  }
-}
-
-.keadaan__kartu--on {
-  border-color: transparent;
-  background: var(--color-active);
-  box-shadow: inset 0 0 0 1px var(--color-accent);
-  color: var(--color-text);
-
-  i {
-    color: var(--color-accent);
-  }
-}
-
-.keadaan__judul {
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.keadaan__desk {
-  font-size: 12px;
-  color: var(--color-text-muted);
-}
-
-/* Konsekuensinya beraksen — itu kalimat yang harus terbaca, bukan catatan kaki. */
-.keadaan__akibat {
-  font-size: 12px;
-  color: var(--color-accent);
-}
 
 /* ---------------------------------------------------------------- */
 /* Kartu faktur                                                      */

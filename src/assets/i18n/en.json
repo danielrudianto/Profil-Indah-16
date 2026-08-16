@@ -1952,5 +1952,11 @@
   "promotion__create__check-supplier": "Supplier selected",
   "promotion__create__check-brand": "At least one participating brand",
   "promotion__create__check-start": "Start date filled in",
-  "customer__add__lede": "A new customer can be picked on invoices right away."
+  "customer__add__lede": "A new customer can be picked on invoices right away.",
+  "sales-invoice__type__sales__desk": "The buyer comes, goods go out right away.",
+  "sales-invoice__type__sales__note": "Paid on the spot, or recorded as receivable.",
+  "sales-invoice__type__deposit__desk": "Money held for goods that have not arrived.",
+  "sales-invoice__type__deposit__note": "The money is recorded; the goods follow.",
+  "sales-invoice__type__internal__desk": "Goods set aside so they are not sold.",
+  "sales-invoice__type__internal__note": "Stock is held — no money comes in."
 }
