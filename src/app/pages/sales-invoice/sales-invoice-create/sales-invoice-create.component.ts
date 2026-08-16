@@ -97,7 +97,7 @@ export class SalesInvoiceCreateComponent {
           this.submitForm();
         } else {
           console.error(`[error]: ${this.metaFormGroup.errors}`);
-          this.alertService.showSuccess('Please check your input.');
+          this.alertService.showSuccess(this.translateService.instant('general__check-input'));
         }
         return false;
       }),
@@ -663,7 +663,7 @@ export class SalesInvoiceCreateComponent {
   submitForm() {
     if (!this.isValid) {
       console.error(`[errror]: ${this.metaFormGroup.errors}`);
-      this.alertService.showSuccess('Please check your input.');
+      this.alertService.showSuccess(this.translateService.instant('general__check-input'));
       return;
     }
 

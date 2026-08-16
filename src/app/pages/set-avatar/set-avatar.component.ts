@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 
 import { panelAnimation } from 'src/app/animations/panel.animation';
 import {
@@ -70,6 +70,7 @@ export class SetAvatarComponent implements OnInit {
     private authService: AuthService,
     private alertService: AlertService,
     private dynamicComponentService: DynamicComponentService,
+    private translateService: TranslateService,
   ) {}
 
   panelState: string = 'closed';
@@ -192,7 +193,7 @@ export class SetAvatarComponent implements OnInit {
       next: (data) => {
         this.authService.setSelfAvatar(data);
         this.alertService.showSuccess(
-          'set-avatar__saved',
+          this.translateService.instant('set-avatar__saved'),
         );
         this.close();
       },

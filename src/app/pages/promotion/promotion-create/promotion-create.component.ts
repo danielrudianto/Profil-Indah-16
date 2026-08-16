@@ -4,7 +4,7 @@ import { FormArray, FormControl, FormGroup, Validators, FormsModule, ReactiveFor
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { NgIf, NgFor } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
@@ -44,7 +44,8 @@ export class PromotionCreateComponent {
     private apiService: ApiService,
     private alertService: AlertService,
     private datePipe: DatePipe,
-    private router: Router
+    private router: Router,
+    private translateService: TranslateService
   ) {}
 
   isSubmitting: boolean = false;
@@ -169,7 +170,7 @@ export class PromotionCreateComponent {
       .subscribe({
         next: (data: any) => {
           this.alertService.showSuccess(
-            `Promotion ${data.name} created successfully`
+            `${data.name} ${this.translateService.instant('promotion__create__success')}`
           );
 
           this.promotionFormGroup.reset();

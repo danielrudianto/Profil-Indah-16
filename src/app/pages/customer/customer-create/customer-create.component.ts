@@ -55,7 +55,7 @@ export class CustomerCreateComponent {
           this.translateService
             .get('customer__create__success')
             .subscribe((message: string) => {
-              this.alertService.showSuccess(`Customer ${data.name} ${message}`);
+              this.alertService.showSuccess(`${data.name} ${message}`);
               /* Bawa datanya pulang: pemanggil bisa langsung memilihnya. */
               this.dialog.close(data);
             });

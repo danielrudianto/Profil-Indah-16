@@ -10,7 +10,7 @@ import { MatInput } from '@angular/material/input';
 import { NgxMaskDirective } from 'ngx-mask';
 import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
 import { MatButton } from '@angular/material/button';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-company-create',
@@ -30,7 +30,8 @@ export class CompanyCreateComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dialog: MatDialogRef<CompanyCreateComponent>
+    private dialog: MatDialogRef<CompanyCreateComponent>,
+    private translateService: TranslateService
   ) {}
 
   isOpened: boolean = false;
@@ -54,7 +55,7 @@ export class CompanyCreateComponent {
     this.apiService.post('company', this.companyFormGroup.value).subscribe({
       next: (data: any) => {
         this.alertService.showSuccess(
-          `Company ${data.name} created successfully`
+          `${data.name} ${this.translateService.instant('company__create__success')}`
         );
         /* Bawa datanya pulang: daftar bisa langsung menampilkannya. */
         this.dialog.close(data);
