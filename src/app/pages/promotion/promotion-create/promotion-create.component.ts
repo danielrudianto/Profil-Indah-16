@@ -7,7 +7,7 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { NgIf, NgFor } from '@angular/common';
 import { Router } from '@angular/router';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatFormField, MatLabel, MatSuffix, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatSelect, MatOption } from '@angular/material/select';
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
@@ -30,6 +30,7 @@ import { NgxMaskDirective } from 'ngx-mask';
     NgxMaskDirective,
     MatFormField,
     MatLabel,
+    MatPrefix,
     MatInput,
     MatSelect,
     MatOption,

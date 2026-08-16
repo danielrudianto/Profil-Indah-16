@@ -19,7 +19,6 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatDialog } from '@angular/material/dialog';
 import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
-import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ApiService } from 'src/app/services/api.service';
@@ -28,6 +27,7 @@ import { ListPageComponent } from 'src/app/components/list-page/list-page.compon
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
 import { ExpenseUpdateComponent } from '../expense-update/expense-update.component';
+import { ExpenseCreateComponent } from '../expense-create/expense-create.component';
 
 const moment = _rollupMoment || _moment;
 
@@ -76,7 +76,6 @@ export class ExpenseMutationComponent implements OnInit {
     private apiService: ApiService,
     private alertService: AlertService,
     private dialog: MatDialog,
-    private router: Router,
   ) {}
 
   date = new FormControl(moment());
@@ -154,9 +153,23 @@ export class ExpenseMutationComponent implements OnInit {
     this.fetchReport(halaman);
   }
 
-  /* Formulir catat pengeluaran adalah anak berjalur '' dari /Expense. */
+  /*
+    Formulir catat = DIALOG 560px (18b), bukan halaman. Formulirnya lima
+    isian pendek; membuka halaman penuh untuk itu membuang konteks daftarnya.
+  */
   tambah() {
-    this.router.navigate(['/Expense']);
+    this.dialog
+      .open(ExpenseCreateComponent, {
+        width: '560px',
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data) {
+          this.fetchReport();
+        }
+      });
   }
 
   ubah(i: number) {
@@ -165,6 +178,9 @@ export class ExpenseMutationComponent implements OnInit {
         data: {
           id: this.dataSource[i].id,
         },
+        width: '560px',
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
       })
       .afterClosed()
       .subscribe((data) => {

@@ -2065,5 +2065,10 @@
   "purchase-price__empty__desc": "Barang muncul di sini setelah dibuat dari halaman produk.",
   "purchase-price__update__lede": "Satu baris per satuan. Diskon dalam Rupiah, dipakai saat penerimaan barang.",
   "price__base-unit": "Satuan dasar",
-  "price__discount-too-high": "Diskon melebihi harganya sendiri."
+  "price__discount-too-high": "Diskon melebihi harganya sendiri.",
+  "expense__add__title": "Catat pengeluaran",
+  "expense__add__lede": "Pengeluaran langsung masuk daftar bulan berjalan.",
+  "expense__add__submit": "Simpan pengeluaran",
+  "expense__create__type": "Tipe pengeluaran",
+  "expense__update__lede": "Ubah datanya, atau hapus bila salah catat."
 }

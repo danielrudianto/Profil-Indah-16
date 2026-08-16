@@ -1,40 +1,60 @@
-import { DatePipe } from '@angular/common';
-import { Component, Inject, Input } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
+import { NgIf } from '@angular/common';
+import { MatFormField, MatLabel, MatSuffix, MatPrefix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDatepicker, MatDatepickerInput } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { NgxMaskDirective } from 'ngx-mask';
+
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import { MatFormField, MatLabel, MatSuffix, MatPrefix } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
-import { NgxMaskDirective } from 'ngx-mask';
-import { AutocompleteSearchComponent } from '../../../components/autocomplete-search/autocomplete-search.component';
-import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
+import { AuthService } from 'src/app/services/auth.service';
+import { ComboSearchComponent } from 'src/app/components/combo-search/combo-search.component';
+import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
 
+/**
+ * Dialog ubah pengeluaran — kembaran dialog catat (18b), ditambah tombol
+ * hapus. Nama tipe dan perusahaan yang tersimpan tampil lewat masukan
+ * `initial` milik combo-search, tanpa memancing pencarian.
+ */
 @Component({
-    selector: 'app-expense-update',
-    templateUrl: './expense-update.component.html',
-    styleUrls: ['./expense-update.component.scss'],
-    animations: [slideInOutAnimation],
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, MatPrefix, AutocompleteSearchComponent, MatButton, MatIcon, MatDialogActions, TranslatePipe]
+  providers: [provideNativeDateAdapter()],
+  selector: 'app-expense-update',
+  templateUrl: './expense-update.component.html',
+  imports: [
+    DialogShellComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    NgIf,
+    ComboSearchComponent,
+    MatFormField,
+    MatLabel,
+    MatPrefix,
+    MatInput,
+    MatSuffix,
+    MatDatepicker,
+    MatDatepickerInput,
+    NgxMaskDirective,
+    TranslatePipe,
+  ],
 })
-export class ExpenseUpdateComponent {
+export class ExpenseUpdateComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { id: number },
     private apiService: ApiService,
     private alertService: AlertService,
     private translateService: TranslateService,
+    private authService: AuthService,
     private dialog: MatDialog,
-    private datePipe: DatePipe,
-    private dialogRef: MatDialogRef<ExpenseUpdateComponent>
+    private dialogRef: MatDialogRef<ExpenseUpdateComponent>,
   ) {}
 
+  isAdministrator: boolean = false;
+  isLoading: boolean = true;
   isSubmitting: boolean = false;
   expenseFormGroup: FormGroup = new FormGroup({
     id: new FormControl('', Validators.required),
@@ -43,37 +63,44 @@ export class ExpenseUpdateComponent {
     expense_type: new FormControl('', Validators.required),
     company: new FormControl('', Validators.required),
     value: new FormControl('', [Validators.required, Validators.min(1)]),
-    expense_type_name: new FormControl('', Validators.required),
-    company_name: new FormControl('', Validators.required),
+    expense_type_name: new FormControl(''),
+    company_name: new FormControl(''),
   });
 
   ngOnInit(): void {
     this.fetchByID();
+    this.isAdministrator = this.authService.isAdministrator();
   }
 
   fetchByID(): void {
-    this.apiService.get(`expense/${this.data.id}`).subscribe({
-      next: (data: any) => {
-        this.expenseFormGroup.patchValue({
-          id: this.data.id,
-          date: new Date(data.date),
-          description: data.description,
-          expense_type: data.expense_type_id,
-          company: data.company_id,
-          value: data.value,
-          expense_type_name: data.expense_type.name,
-          company_name: data.company.name,
-        });
-      },
-      error: (error) => {
-        this.alertService.showError(error);
-        this.closeDialog();
-      },
-    });
+    this.isLoading = true;
+    this.apiService
+      .get(`expense/${this.data.id}`)
+      .subscribe({
+        next: (data: any) => {
+          this.expenseFormGroup.patchValue({
+            id: this.data.id,
+            date: new Date(data.date),
+            description: data.description,
+            expense_type: data.expense_type_id,
+            company: data.company_id,
+            value: data.value,
+            expense_type_name: data.expense_type.name,
+            company_name: data.company.name,
+          });
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+          this.dialogRef.close();
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
   }
 
-  closeDialog(data: any = undefined) {
-    this.dialogRef.close(data);
+  closeDialog() {
+    this.dialogRef.close();
   }
 
   onSelectCompany(event: any) {
@@ -83,6 +110,10 @@ export class ExpenseUpdateComponent {
     });
   }
 
+  onUnselectCompany() {
+    this.expenseFormGroup.patchValue({ company: '', company_name: '' });
+  }
+
   onSelectExpenseType(event: any) {
     this.expenseFormGroup.patchValue({
       expense_type: event.id,
@@ -90,18 +121,8 @@ export class ExpenseUpdateComponent {
     });
   }
 
-  onUnselectCompany() {
-    this.expenseFormGroup.patchValue({
-      company: '',
-      company_name: '',
-    });
-  }
-
   onUnselectExpenseType() {
-    this.expenseFormGroup.patchValue({
-      expense_type: '',
-      expense_type_name: '',
-    });
+    this.expenseFormGroup.patchValue({ expense_type: '', expense_type_name: '' });
   }
 
   submitForm() {
@@ -117,28 +138,23 @@ export class ExpenseUpdateComponent {
       })
       .subscribe({
         next: () => {
-          this.translateService
-            .get('expense__update__success')
-            .subscribe((translation) => {
-              this.alertService.showSuccess(translation);
-              this.closeDialog({
-                id: this.data.id,
-                date: new Date(this.expenseFormGroup.controls['date'].value),
-                description:
-                  this.expenseFormGroup.controls['description'].value,
-                expense_type_id:
-                  this.expenseFormGroup.controls['expense_type'].value,
-                company_id: this.expenseFormGroup.controls['company'].value,
-                value: this.expenseFormGroup.controls['value'].value,
-                company: {
-                  name: this.expenseFormGroup.controls['company_name'].value,
-                },
-                expense_type: {
-                  name: this.expenseFormGroup.controls['expense_type_name']
-                    .value,
-                },
-              });
-            });
+          this.alertService.showSuccess(
+            this.translateService.instant('expense__update__success'),
+          );
+          this.dialogRef.close({
+            id: this.data.id,
+            date: new Date(this.expenseFormGroup.controls['date'].value),
+            description: this.expenseFormGroup.controls['description'].value,
+            expense_type_id: this.expenseFormGroup.controls['expense_type'].value,
+            company_id: this.expenseFormGroup.controls['company'].value,
+            value: this.expenseFormGroup.controls['value'].value,
+            company: {
+              name: this.expenseFormGroup.controls['company_name'].value,
+            },
+            expense_type: {
+              name: this.expenseFormGroup.controls['expense_type_name'].value,
+            },
+          });
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -150,6 +166,7 @@ export class ExpenseUpdateComponent {
   }
 
   delete() {
+    this.isSubmitting = true;
     this.dialog
       .open(DeleteConfirmationComponent, {
         data: {
@@ -157,26 +174,29 @@ export class ExpenseUpdateComponent {
         },
       })
       .afterClosed()
-      .subscribe((result) => {
-        if (result == true) {
-          this.isSubmitting = true;
-          this.apiService
-            .delete(`expense/${this.data.id}`)
-            .subscribe({
-              next: () => {
-                this.alertService.showSuccess(
-                  this.translateService.instant('expense__delete__success')
-                );
-                this.closeDialog('deleted');
-              },
-              error: (error) => {
-                this.alertService.showError(error);
-              },
-            })
-            .add(() => {
-              this.isSubmitting = false;
-            });
+      .subscribe((hasil) => {
+        /*
+          Konfirmasi menutup dengan `true` HANYA lewat tombol hapus; menekan
+          batal (atau backdrop) mengirim undefined. Tanpa pemeriksaan ini,
+          membatalkan konfirmasi tetap menghapus datanya.
+        */
+        if (hasil !== true) {
+          this.isSubmitting = false;
+          return;
         }
+
+        this.apiService.delete(`expense/${this.data.id}`).subscribe({
+          next: () => {
+            this.alertService.showSuccess(
+              this.translateService.instant('expense__delete__success'),
+            );
+            this.dialogRef.close('deleted');
+          },
+          error: (error) => {
+            this.alertService.showError(error);
+            this.isSubmitting = false;
+          },
+        });
       });
   }
 }

@@ -1,71 +1,64 @@
-<h2 mat-dialog-title>
-  {{ "expense__update__title" | translate }}
-</h2>
-
-<form [formGroup]="expenseFormGroup" (ngSubmit)="submitForm()">
-  <mat-dialog-content>
+<app-dialog-shell
+  icon="ph ph-receipt-x"
+  [heading]="'expense__update__title' | translate"
+  [lede]="'expense__update__lede' | translate"
+  [submitLabel]="'general__submit' | translate"
+  [submitting]="isSubmitting"
+  [canSubmit]="!isLoading && expenseFormGroup.valid"
+  (submitted)="submitForm()"
+  (close)="closeDialog()"
+>
+  <div [formGroup]="expenseFormGroup" *ngIf="!isLoading">
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ "expense__update__date" | translate }}</mat-label>
-      <input matInput formControlName="date" [matDatepicker]="date" />
-      <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
-      <mat-datepicker #date></mat-datepicker>
+      <mat-label>{{ 'expense__create__date' | translate }}</mat-label>
+      <input matInput [matDatepicker]="expPicker" formControlName="date" (click)="expPicker.open()" />
+      <button type="button" matSuffix class="buka-kalender" (click)="expPicker.open()"
+        [attr.aria-label]="'general__pick-date' | translate">
+        <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+      </button>
+      <mat-datepicker #expPicker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ "expense__update__value" | translate }}</mat-label>
-      <input
-        matInput
-        formControlName="value"
-        type="text"
-        mask="separator"
-        thousandSeparator=" "
-      />
-      <div matTextPrefix>Rp.&nbsp;</div>
-    </mat-form-field>
+    <app-combo-search
+      [label]="'expense__create__type' | translate"
+      inputId="exp-up-type"
+      route="expense-type"
+      [initial]="expenseFormGroup.get('expense_type_name')?.value"
+      [disabled]="isSubmitting"
+      (pick)="onSelectExpenseType($event)"
+      (clear)="onUnselectExpenseType()"
+    />
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ "expense__update__description" | translate }}</mat-label>
-      <textarea matInput formControlName="description" type="text"></textarea>
+      <mat-label>{{ 'expense__create__description' | translate }}</mat-label>
+      <textarea matInput rows="2" formControlName="description"></textarea>
     </mat-form-field>
 
-    <app-autocomplete-search
-      routeName="company"
-      [selected]="expenseFormGroup.controls['company'].valid"
-      [label]="'expense__update__company' | translate"
-      placeholder="Ex. Toko Profil Indah"
-      (onSelectData)="onSelectCompany($event)"
-      (onUnselectData)="onUnselectCompany()"
-    ></app-autocomplete-search>
+    <app-combo-search
+      [label]="'expense__create__company' | translate"
+      inputId="exp-up-company"
+      route="company"
+      [initial]="expenseFormGroup.get('company_name')?.value"
+      [disabled]="isSubmitting"
+      (pick)="onSelectCompany($event)"
+      (clear)="onUnselectCompany()"
+    />
 
-    <app-autocomplete-search
-      routeName="expense-type"
-      [selected]="expenseFormGroup.controls['expense_type'].valid"
-      [label]="'expense__update__type' | translate"
-      placeholder="Ex. Toko Profil Indah"
-      (onSelectData)="onSelectExpenseType($event)"
-      (onUnselectData)="onUnselectExpenseType()"
-    ></app-autocomplete-search>
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'expense__create__value' | translate }}</mat-label>
+      <input matInput type="text" class="input--kanan" mask="separator" thousandSeparator=" " formControlName="value" autocomplete="off" />
+      <span matTextPrefix>Rp&nbsp;</span>
+    </mat-form-field>
 
+    <!-- Penghapusan hanya untuk administrator. -->
     <button
-      mat-stroked-button
-      color="warn"
-      style="letter-spacing: 0"
       type="button"
+      class="btn btn--bahaya btn--blok"
+      [disabled]="!isAdministrator"
       (click)="delete()"
     >
-      <mat-icon>warning</mat-icon>
-      <span>{{ "expense__update__delete" | translate }}</span>
+      <i class="ph ph-trash" aria-hidden="true"></i>
+      {{ 'expense__update__delete' | translate }}
     </button>
-  </mat-dialog-content>
-
-  <mat-dialog-actions align="end">
-    <button
-      type="button"
-      class="next-button"
-      type="submit"
-      [disabled]="isSubmitting || !expenseFormGroup.valid"
-    >
-      {{ "expense__update__submit" | translate }}
-    </button>
-  </mat-dialog-actions>
-</form>
+  </div>
+</app-dialog-shell>

@@ -12,7 +12,7 @@ import {
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { NgFor, NgIf } from '@angular/common';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { NgxMaskDirective } from 'ngx-mask';
 
@@ -36,6 +36,7 @@ import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-she
     NgIf,
     MatFormField,
     MatLabel,
+    MatPrefix,
     MatInput,
     NgxMaskDirective,
     TranslatePipe,

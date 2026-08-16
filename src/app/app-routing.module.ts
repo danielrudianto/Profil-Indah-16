@@ -444,13 +444,14 @@ const routes: Routes = [
                 (m) => m.ExpenseComponent,
               ),
             children: [
+              /*
+                Formulir catat kini DIALOG yang dibuka dari daftar (18b),
+                bukan halaman — alamat kosongnya jatuh ke daftar mutasi.
+              */
               {
                 path: '',
-                canActivate: [GeneralGuard],
-                loadComponent: () =>
-                  import('./pages/expense/expense-create/expense-create.component').then(
-                    (m) => m.ExpenseCreateComponent,
-                  ),
+                redirectTo: 'Mutation',
+                pathMatch: 'full',
               },
               {
                 path: 'Mutation',

@@ -2065,5 +2065,10 @@
   "purchase-price__empty__desc": "Products appear here once created from the product page.",
   "purchase-price__update__lede": "One row per unit. Discounts are in Rupiah and apply on good receipts.",
   "price__base-unit": "Base unit",
-  "price__discount-too-high": "The discount exceeds the price itself."
+  "price__discount-too-high": "The discount exceeds the price itself.",
+  "expense__add__title": "Record expense",
+  "expense__add__lede": "The expense goes straight into the current month list.",
+  "expense__add__submit": "Save expense",
+  "expense__create__type": "Expense type",
+  "expense__update__lede": "Edit the details, or delete if recorded by mistake."
 }

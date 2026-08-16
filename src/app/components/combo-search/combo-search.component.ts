@@ -66,6 +66,21 @@ export class ComboSearchComponent implements OnInit {
   @Input() placeholder = '';
   @Input() disabled = false;
 
+  /**
+   * Nilai awal untuk formulir UBAH: nama yang sudah tersimpan tampil di kolom
+   * tanpa memancing pencarian maupun peristiwa pick/clear — pemanggil sudah
+   * memegang id-nya. Mengetik di atasnya berlaku normal: mengubah teksnya
+   * membatalkan pilihan lama dan mencari yang baru.
+   */
+  @Input() set initial(nama: string | null | undefined) {
+    if (nama == null || nama === '') {
+      return;
+    }
+
+    this.terpilih = nama;
+    this.control.setValue(nama, { emitEvent: false });
+  }
+
   @Output() pick = new EventEmitter<ComboItem>();
   @Output() clear = new EventEmitter<void>();
 
