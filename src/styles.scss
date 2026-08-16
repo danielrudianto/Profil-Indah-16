@@ -1369,3 +1369,34 @@ label {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
+
+/*
+  Banner petunjuk dan kumpulan chip — disalin VERBATIM dari partial
+  form-buat, karena keduanya juga dipakai ISI DIALOG (pengguna, pengeluaran)
+  yang menempel di overlay, di luar jangkauan gaya ter-scope. Bila mengubah
+  salah satunya, ubah keduanya.
+*/
+.petunjuk {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--color-active);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  color: var(--color-accent);
+  font-size: 13px;
+
+  i {
+    font-size: 16px;
+    flex: none;
+  }
+}
+
+.chip-kumpul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}

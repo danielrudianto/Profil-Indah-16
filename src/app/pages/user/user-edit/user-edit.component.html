@@ -1,147 +1,72 @@
-<h2 mat-dialog-title>{{ "user__edit__title" | translate }}</h2>
-<form [formGroup]="userFormGroup" (ngSubmit)="submitForm()">
-  <mat-dialog-content>
-    <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ "user__edit__name" | translate }}</mat-label>
-      <input
-        [disabled]="isSubmitting"
-        matInput
-        placeholder="Ex. Abdul"
-        type="text"
-        formControlName="name"
-      />
+<app-dialog-shell
+  icon="ph ph-user-gear"
+  [heading]="'user__edit__title' | translate"
+  [lede]="'user__edit__lede' | translate"
+  [submitLabel]="'general__submit' | translate"
+  [submitting]="isSubmitting"
+  [canSubmit]="bolehSimpan"
+  (submitted)="submitForm()"
+  (close)="closeDialog()"
+>
+  <div [formGroup]="userFormGroup" *ngIf="!isLoading">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'user__edit__name' | translate }}</mat-label>
+      <input matInput type="text" formControlName="name" autocomplete="off" />
     </mat-form-field>
-    <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ "user__edit__username" | translate }}</mat-label>
-      <input
-        [disabled]="isSubmitting"
-        matInput
-        placeholder="Ex. abdul"
-        type="text"
-        formControlName="username"
-      />
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'user__edit__nik' | translate }}</mat-label>
+      <input matInput type="text" mask="0000000000000000" formControlName="nik" autocomplete="off" inputmode="numeric" />
     </mat-form-field>
-    <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ "user__edit__nik" | translate }}</mat-label>
-      <input
-        [disabled]="isSubmitting"
-        matInput
-        placeholder="Ex. XXXXXXXXXXXXXXXX"
-        type="text"
-        formControlName="nik"
-        minlength="16"
-        maxlength="16"
-      />
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'user__edit__username' | translate }}</mat-label>
+      <input matInput type="text" formControlName="username" autocomplete="off" />
     </mat-form-field>
-    <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ "user__edit__role" | translate }}</mat-label>
-      <mat-select
-        [disabled]="isLoading"
-        placeholder="Ex. Administrator"
-        type="text"
-        formControlName="role"
-      >
-        <mat-option *ngFor="let role of roles" [value]="role.id">
-          {{ role.name }}
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'user__edit__role' | translate }}</mat-label>
+      <mat-select formControlName="role">
+        <mat-option *ngFor="let peran of roles" [value]="peran.id">
+          {{ peran.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
-    <div *ngIf="userFormGroup.get('role')?.value == 6" class="w-100">
-      <app-autocomplete-search
-        label="Add type"
-        placeholder="Select from our product types collection"
-        [selected]="false"
-        routeName="product-type"
-        [reset]="true"
-        (onSelectData)="onSelectType($event)"
-      ></app-autocomplete-search>
-      <mat-chip-set class="mt-0 mb-3 w-50">
-        <mat-chip
-          selected
-          *ngFor="let item of t.controls; index as i"
-          (click)="onRemoveType(i)"
-          >{{ item.get("product_type_name")?.value }}</mat-chip
-        >
-      </mat-chip-set>
-      <div *ngIf="userFormGroup.errors?.['userSalesRequired']">
-        {{ "user__edit__role__error" | translate }}
-      </div>
-    </div>
+    <!-- Khusus Gudang: minimal satu tipe produk. -->
+    <ng-container *ngIf="peranGudang">
+      <p class="petunjuk">
+        <i class="ph ph-info" aria-hidden="true"></i>
+        {{ 'user__edit__role__error' | translate }}
+      </p>
 
+      <app-combo-search
+        [label]="'user__create__types' | translate"
+        inputId="user-edit-types"
+        route="product-type"
+        [disabled]="isSubmitting"
+        (pick)="onSelectType($event)"
+      />
+
+      <div class="chip-kumpul" *ngIf="tipeTerpilih.length > 0">
+        <span class="saringan__kapsul" *ngFor="let tipe of tipeTerpilih; index as i">
+          {{ tipe.name }}
+          <button type="button" (click)="onRemoveType(i)" [attr.aria-label]="'general__delete' | translate">
+            <i class="ph ph-x" aria-hidden="true"></i>
+          </button>
+        </span>
+      </div>
+    </ng-container>
+
+    <!-- Penghapusan hanya untuk administrator. -->
     <button
-      mat-stroked-button
       type="button"
-      color="warn"
-      style="letter-spacing: 0"
+      class="btn btn--bahaya btn--blok"
+      [disabled]="!isAdministrator || isSubmitting"
       (click)="delete()"
-      [disabled]="!isAdministrator || isSubmitting || isLoading"
     >
-      <mat-icon>warning</mat-icon>
-      <span>{{ "user__edit__delete" | translate }}</span>
+      <i class="ph ph-trash" aria-hidden="true"></i>
+      {{ 'user__edit__delete' | translate }}
     </button>
-  </mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <button mat-stroked-button color="warn" type="button" mat-dialog-close>
-      {{ "general__close" | translate }}
-    </button>
-    <button
-      mat-stroked-button
-      color="primary"
-      type="submit"
-      [disabled]="!userFormGroup.valid || isSubmitting"
-    >
-      {{ "general__submit" | translate }}
-    </button>
-  </mat-dialog-actions>
-</form>
-
-<!-- <div class="view-panel-wrapper">
-  <div class="view-panel-backdrop" (click)="close()"></div>
-  <div class="view-panel" [@panelAnimation]="panelState">
-    <div class="row-action">
-      <h2 mat-dialog-title>Create user</h2>
-      <div class="d-flex">
-        <button mat-icon-button (click)="enlarge()">
-          <mat-icon *ngIf="panelState != 'enlarged'">open_in_full</mat-icon>
-          <mat-icon *ngIf="panelState == 'enlarged'">close_fullscreen</mat-icon>
-        </button>
-        <button mat-icon-button (click)="close()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-    </div>
-    <div class="view-panel-content" id="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <form [formGroup]="userFormGroup" (ngSubmit)="submitForm()"></form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="shortcuts">
-      <div class="shortcut-key">
-        <span class="shortcut-key-label">ESC</span>
-        <span class="shortcut-key-function">{{
-          "general__back" | translate
-        }}</span>
-      </div>
-      <div class="shortcut-key">
-        <span class="shortcut-key-label">F</span>
-        <span class="shortcut-key-function">{{
-          "general__toggle-full-screen" | translate
-        }}</span>
-      </div>
-    </div>
-    <div class="actions">
-      <button
-        class="action-button mx-1"
-        (click)="submitForm()"
-        [disabled]="!userFormGroup.valid || isSubmitting"
-      >
-        Save
-      </button>
-    </div>
   </div>
-</div> -->
+</app-dialog-shell>

@@ -1,90 +1,134 @@
-import { Component } from '@angular/core';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
-import { AuthService } from 'src/app/services/auth.service';
-import { DynamicComponentService } from '../../services/dynamic-component.service';
-import { DeleteConfirmationComponent } from '../../components/delete-confirmation/delete-confirmation.component';
+import { Component, OnInit } from '@angular/core';
+import { NgFor, NgIf } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { ApiService } from '../../services/api.service';
-import { UserEditComponent } from './user-edit/user-edit.component';
-import { FeatureBackgroundComponent } from '../../components/feature-background/feature-background.component';
-import { FeatureHeaderComponent } from '../../components/feature-header/feature-header.component';
-import { FeatureSearchComponent } from '../../components/feature-search/feature-search.component';
-import { NgIf, NgFor } from '@angular/common';
-import { EmptyTableComponent } from '../../components/empty-table/empty-table.component';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
+import { UserCreateComponent } from './user-create/user-create.component';
+import { UserEditComponent } from './user-edit/user-edit.component';
+
+/**
+ * Daftar pengguna — mengikuti susunan daftar pelanggan. Ukuran halaman
+ * ditentukan server lewat process.env.LIMIT, jadi pilihan 10/25/50
+ * dimatikan; kata kuncinya hidup.
+ */
 @Component({
-    selector: 'app-user',
-    templateUrl: './user.component.html',
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, EmptyTableComponent, MatProgressSpinner, MatPaginator, TranslatePipe]
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  imports: [
+    ListPageComponent,
+    TabelKosongComponent,
+    NgIf,
+    NgFor,
+    TranslatePipe,
+  ],
 })
-export class UserComponent {
+export class UserComponent implements OnInit {
   constructor(
-    private authService: AuthService,
+    private apiService: ApiService,
+    private alertService: AlertService,
     private dialog: MatDialog,
-    private dynamicComponentService: DynamicComponentService,
-    private apiService: ApiService
   ) {}
 
-  isLoading: boolean = true;
+  isLoading = true;
   dataSource: any[] = [];
-  dataCount: number = 0;
-  page: number = 1;
-  previousRoute: string = '';
-  isAdministrator: boolean = false;
+  dataCount = 0;
+  page = 1;
+  pageSize = 10;
+  keyword = '';
 
   ngOnInit(): void {
-    this.isAdministrator = this.authService.isAdministrator();
+    this.ambilData();
   }
 
-  openDialog(id: number) {
-    this.dialog
-      .open(UserEditComponent, {
-        data: {
-          id: id,
+  lacakPengguna = (_: number, item: any): number => item.id;
+
+  ambilData(): void {
+    this.isLoading = true;
+
+    this.apiService
+      .get('user', {
+        keyword: this.keyword,
+        page: this.page,
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.dataCount = data.count;
+          this.dataSource = data.data;
         },
+        error: (error: any) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
+  }
+
+  cari(kataKunci: string): void {
+    this.keyword = kataKunci;
+    this.page = 1;
+    this.ambilData();
+  }
+
+  resetPencarian(): void {
+    this.cari('');
+  }
+
+  bukaHalaman(halaman: number): void {
+    this.page = halaman;
+    this.ambilData();
+  }
+
+  tambah(): void {
+    this.dialog
+      .open(UserCreateComponent, {
+        width: '560px',
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
       })
       .afterClosed()
       .subscribe((data) => {
-        if (data === 'deleted') {
-          const index = this.dataSource.findIndex((x) => x.id === id);
-          if (index != -1) {
-            this.dataSource.splice(index, 1);
-          }
-
-          this.dataCount--;
-          return;
-        } else if (data) {
-          const index = this.dataSource.findIndex((x) => x.id === id);
-          if (index != -1) {
-            this.dataSource[index].name = data.name;
-            this.dataSource[index].nik = data.nik;
-            this.dataSource[index].username = data.username;
-            this.dataSource[index].role = data.role;
-          }
+        if (data) {
+          this.page = 1;
+          this.ambilData();
         }
       });
   }
 
-  changePage(event: PageEvent) {
-    this.page = event.pageIndex + 1;
-  }
+  ubah(item: any): void {
+    this.dialog
+      .open(UserEditComponent, {
+        data: { id: item.id },
+        width: '560px',
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (!data) {
+          return;
+        }
 
-  fetchProducts(page: number) {
-    this.page = page;
-  }
+        const index = this.dataSource.findIndex((x) => x.id === item.id);
+        if (index === -1) {
+          return;
+        }
 
-  onUpdatePage() {
-    this.page = 1;
-  }
+        if (data === 'deleted') {
+          this.dataSource.splice(index, 1);
+          this.dataCount = this.dataCount - 1;
+          return;
+        }
 
-  onUpdateData(data: any) {
-    this.dataCount = data.count;
-    this.dataSource = data.data;
-  }
-
-  onUpdateLoadingStatus(data: any) {
-    this.isLoading = data;
+        /*
+          Diubah: barisnya diambil ulang dari server — roleText dihitung di
+          sana, dan menebaknya di sini berarti dua sumber untuk satu label.
+        */
+        this.ambilData();
+      });
   }
 }

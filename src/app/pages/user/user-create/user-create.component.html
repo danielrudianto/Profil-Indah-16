@@ -1,83 +1,61 @@
-<h2 mat-dialog-title>{{ "user__create__title" | translate }}</h2>
-
-<form [formGroup]="userFormGroup" (ngSubmit)="onSubmit()">
-  <mat-dialog-content>
+<app-dialog-shell
+  icon="ph ph-user-plus"
+  [heading]="'user__create__title' | translate"
+  [lede]="'user__create__lede' | translate"
+  [submitLabel]="'user__create__submit' | translate"
+  [submitting]="isSubmitting"
+  [canSubmit]="bolehSimpan"
+  (submitted)="submitForm()"
+  (close)="closeDialog()"
+>
+  <div [formGroup]="userFormGroup">
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ "user__create__name" | translate }}</mat-label>
-      <input matInput formControlName="name" placeholder="Ex. John Doe" />
+      <mat-label>{{ 'user__create__name' | translate }}</mat-label>
+      <input matInput type="text" formControlName="name" autocomplete="off" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ "user__create__username" | translate }}</mat-label>
-      <input matInput formControlName="username" placeholder="Ex. johndoe" />
+      <mat-label>{{ 'user__create__nik' | translate }}</mat-label>
+      <input matInput type="text" mask="0000000000000000" formControlName="nik" autocomplete="off" inputmode="numeric" />
     </mat-form-field>
 
-    <mat-form-field class="w-100" appearance="outline">
-      <mat-label>NIK</mat-label>
-      <input
-        [disabled]="isSubmitting"
-        matInput
-        placeholder="Ex. XXXXXXXXXXXXXXXX"
-        type="text"
-        formControlName="nik"
-        minlength="16"
-        maxlength="16"
-      />
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'user__create__username' | translate }}</mat-label>
+      <input matInput type="text" formControlName="username" autocomplete="off" />
     </mat-form-field>
-    <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ "user__create__role" | translate }}</mat-label>
-      <mat-select
-        [disabled]="isLoading"
-        placeholder="Ex. Administrator"
-        type="text"
-        formControlName="role"
-      >
-        <mat-option *ngFor="let role of roles" [value]="role.id">
-          {{ role.name }}
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'user__create__role' | translate }}</mat-label>
+      <mat-select formControlName="role">
+        <mat-option *ngFor="let peran of roles" [value]="peran.id">
+          {{ peran.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
-    <div *ngIf="userFormGroup.get('role')?.value == 6" class="w-100">
-      <app-autocomplete-search
-        label="Add type"
-        placeholder="Select from our product types collection"
-        [selected]="false"
-        routeName="product-type"
-        [reset]="true"
-        (onSelectData)="onSelectType($event)"
-      ></app-autocomplete-search>
-      <mat-chip-set class="mt-0 mb-3 w-50">
-        <mat-chip
-          selected
-          *ngFor="let item of selectedTypes"
-          (click)="onRemoveType(item)"
-          >{{ item.name }}</mat-chip
-        >
-      </mat-chip-set>
-    </div>
-    <p class="mt-4">
-      {{ "user__create__help" | translate }}
-    </p>
-  </mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <button
-      type="button"
-      mat-stroked-button
-      color="primary"
-      style="letter-spacing: 0"
-      mat-dialog-close=""
-    >
-      {{ "general__close" | translate }}
-    </button>
-    <button
-      type="submit"
-      mat-stroked-button
-      color="primary"
-      style="letter-spacing: 0"
-      [disabled]="isSubmitting || !userFormGroup.valid"
-    >
-      {{ "general__submit" | translate }}
-    </button>
-  </mat-dialog-actions>
-</form>
+    <!-- Khusus Gudang: tipe produk yang boleh dijualnya. -->
+    <ng-container *ngIf="peranGudang">
+      <p class="petunjuk">
+        <i class="ph ph-info" aria-hidden="true"></i>
+        {{ 'user__create__types-note' | translate }}
+      </p>
+
+      <app-combo-search
+        [label]="'user__create__types' | translate"
+        inputId="user-types"
+        route="product-type"
+        [disabled]="isSubmitting"
+        (pick)="onSelectType($event)"
+      />
+
+      <div class="chip-kumpul" *ngIf="tipeTerpilih.length > 0">
+        <span class="saringan__kapsul" *ngFor="let tipe of tipeTerpilih; index as i">
+          {{ tipe.name }}
+          <button type="button" (click)="onRemoveType(i)" [attr.aria-label]="'general__delete' | translate">
+            <i class="ph ph-x" aria-hidden="true"></i>
+          </button>
+        </span>
+      </div>
+    </ng-container>
+  </div>
+</app-dialog-shell>

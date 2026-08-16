@@ -2114,5 +2114,22 @@
   "package-selector__title": "Pilih paket",
   "package-selector__lede": "Menekan baris menambahkan paketnya ke dokumen — satu paket satu baris.",
   "package-selector__in-doc": "Sudah di dokumen",
-  "package-selector__packages": "paket"
+  "package-selector__packages": "paket",
+  "user__lede": "Akun yang bisa masuk ke sistem, beserta jabatannya.",
+  "user__search": "Cari nama atau username…",
+  "user__add": "Tambah pengguna",
+  "user__empty__title": "Belum ada pengguna",
+  "user__empty__desc": "Pengguna baru mendapat kata sandi buatan sistem yang ditunjukkan sekali. Tambahkan lewat tombol di atas.",
+  "user__create__lede": "Kata sandinya dibuat sistem dan ditunjukkan SEKALI setelah tersimpan.",
+  "user__create__nik": "NIK",
+  "user__create__types": "Tipe produk yang dijual",
+  "user__create__types-note": "Khusus jabatan Gudang: pilih tipe produk yang boleh dijualnya.",
+  "user__create__submit": "Simpan pengguna",
+  "user__edit__lede": "Ubah datanya, atau hapus bila tidak lagi bekerja di sini.",
+  "user__status__title": "Pengguna tersimpan",
+  "user__status__lede": "Catat kata sandinya SEKARANG — demi keamanan, ia tidak akan pernah ditampilkan lagi.",
+  "user__status__password": "Kata sandi",
+  "user__status__copy": "Salin semua",
+  "user__status__copied": "Data pengguna tersalin ke papan klip.",
+  "user__status__done": "Sudah kucatat"
 }

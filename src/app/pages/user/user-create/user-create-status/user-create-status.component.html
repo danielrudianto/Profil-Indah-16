@@ -1,35 +1,27 @@
-<h2 mat-dialog-title>Create user status</h2>
-<div mat-dialog-content>
-  <mat-form-field appearance="outline" class="w-100 mt-2">
-    <mat-label>Name</mat-label>
-    <input matInput [value]="data.name" readonly />
-  </mat-form-field>
-  <mat-form-field appearance="outline" class="w-100">
-    <mat-label>Username</mat-label>
-    <input matInput [value]="data.username" readonly />
-  </mat-form-field>
+<app-dialog-shell
+  icon="ph ph-key"
+  [heading]="'user__status__title' | translate"
+  [lede]="'user__status__lede' | translate"
+  [submitLabel]="'user__status__done' | translate"
+  [canSubmit]="true"
+  (submitted)="selesai()"
+  (close)="selesai()"
+>
+  <dl class="ringkas">
+    <div *ngFor="let b of baris">
+      <dt>{{ b.kunci | translate }}</dt>
+      <dd>{{ b.nilai }}</dd>
+    </div>
+  </dl>
 
-  <mat-form-field class="w-100" appearance="outline">
-    <mat-label>NIK</mat-label>
-    <input
-      matInput
-      type="text"
-      minlength="16"
-      maxlength="16"
-      [value]="data.nik"
-    />
-  </mat-form-field>
-  <mat-form-field class="w-100" appearance="outline">
-    <mat-label>Role</mat-label>
-    <input matInput [value]="data.role" readonly />
-  </mat-form-field>
+  <!-- Kata sandinya MENCOLOK — inilah alasan dialog ini ada. -->
+  <div class="sandi">
+    <span class="sandi__label">{{ 'user__status__password' | translate }}</span>
+    <code class="sandi__nilai">{{ data?.password }}</code>
+  </div>
 
-  <mat-form-field class="w-100" appearance="outline">
-    <mat-label>Password</mat-label>
-    <input matInput [value]="data.password" readonly />
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="copyUserInfo()">Copy</button>
-  <button mat-button mat-dialog-close>Close</button>
-</div>
+  <button type="button" class="btn btn--kedua btn--blok" (click)="salin()">
+    <i class="ph ph-copy" aria-hidden="true"></i>
+    {{ 'user__status__copy' | translate }}
+  </button>
+</app-dialog-shell>
