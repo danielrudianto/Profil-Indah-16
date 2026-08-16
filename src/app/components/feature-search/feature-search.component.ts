@@ -11,7 +11,6 @@ import { debounceTime } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { UserCreateComponent } from '../../pages/user/user-create/user-create.component';
-import { ExpenseTypeCreateComponent } from '../../pages/expense-type/expense-type-create/expense-type-create.component';
 import { ProductBrandCreateComponent } from '../../pages/product-brand/product-brand-create/product-brand-create.component';
 import { ProductCreateComponent } from '../../pages/product/product-create/product-create.component';
 import { ProductTypeCreateComponent } from '../../pages/product-type/product-type-create/product-type-create.component';
@@ -100,15 +99,10 @@ export class FeatureSearchComponent {
       case 'user':
         this.dialog.open(UserCreateComponent, {});
         break;
-      case 'expense-type':
-        this.dialog.open(ExpenseTypeCreateComponent, {
-          data: {
-            parentId: null,
-            parentName: null,
-            parentDescription: null,
-          },
-        });
-        break;
+      /*
+        'expense-type' sengaja TIDAK ada di sini lagi: tipe pengeluaran kini
+        daftar baku yang diisi lewat seeder, tanpa formulir tambah.
+      */
       case 'company':
         this.dialog.open(CompanyCreateComponent, {});
         break;

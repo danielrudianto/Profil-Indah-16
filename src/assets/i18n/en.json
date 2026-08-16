@@ -2070,5 +2070,9 @@
   "expense__add__lede": "The expense goes straight into the current month list.",
   "expense__add__submit": "Save expense",
   "expense__create__type": "Expense type",
-  "expense__update__lede": "Edit the details, or delete if recorded by mistake."
+  "expense__update__lede": "Edit the details, or delete if recorded by mistake.",
+  "expense-type__lede": "The fixed list of types used to record expenses.",
+  "expense-type__baku-note": "This list is fixed so reports stay uniform — there is no add button. Changes are made by the system administrator through the seeder.",
+  "expense-type__empty__title": "Type list not seeded yet",
+  "expense-type__empty__desc": "Run the expense type seeder on the server to fill the fixed list."
 }

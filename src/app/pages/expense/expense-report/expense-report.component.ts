@@ -94,18 +94,15 @@ export class ExpenseReportComponent {
             );
           }
 
+          /*
+            Tipe pengeluaran kini DATAR — nilainya dijumlah langsung per tipe,
+            tanpa menggulung anak ke induk seperti dulu.
+          */
           for (let i = 0; i < this.types.length; i++) {
-            for (let j = 0; j < this.types[i].children.length; j++) {
-              const value = data.result.filter(
-                (x: any) => x.expense_type_id === this.types[i].children[j].id
-              );
-              this.types[i].children[j].value = value.reduce(
-                (a: number, b: any) => a + b.value,
-                0
-              );
-            }
-
-            this.types[i].value = this.types[i].children.reduce(
+            const value = data.result.filter(
+              (x: any) => x.expense_type_id === this.types[i].id
+            );
+            this.types[i].value = value.reduce(
               (a: number, b: any) => a + b.value,
               0
             );

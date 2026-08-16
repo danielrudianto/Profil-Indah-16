@@ -1,83 +1,63 @@
-import { Component } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
-import { AuthService } from 'src/app/services/auth.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { ExpenseTypeViewChildrenComponent } from './expense-type-view-children/expense-type-view-children.component';
-import { MatDialog } from '@angular/material/dialog';
-import { ExpenseTypeUpdateComponent } from './expense-type-update/expense-type-update.component';
-import { DeleteConfirmationComponent } from '../../components/delete-confirmation/delete-confirmation.component';
-import { ApiService } from 'src/app/services/api.service';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { FeatureBackgroundComponent } from '../../components/feature-background/feature-background.component';
-import { FeatureHeaderComponent } from '../../components/feature-header/feature-header.component';
-import { FeatureSearchComponent } from '../../components/feature-search/feature-search.component';
-import { NgIf, NgFor } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { EmptyTableComponent } from '../../components/empty-table/empty-table.component';
+import { Component, OnInit } from '@angular/core';
+import { NgFor, NgIf } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
+
+/**
+ * Tipe pengeluaran — daftar BAKU, baca-saja.
+ *
+ * Hirarki induk-anak dan formulir tambah/ubahnya dibuang atas keputusan
+ * pemilik: tipenya datar dan terkendali supaya laporan tidak beranak-pinak.
+ * Isi daftarnya dijaga seeder di backend; halaman ini tinggal jendela untuk
+ * melihat tipe apa saja yang tersedia. Endpoint-nya mengembalikan seluruh
+ * daftar sekaligus — tanpa halaman, tanpa kata kunci.
+ */
 @Component({
-    selector: 'app-expense-type',
-    templateUrl: './expense-type.component.html',
-    styleUrls: ['./expense-type.component.scss'],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, MatProgressSpinner, NgFor, EmptyTableComponent, TranslatePipe]
+  selector: 'app-expense-type',
+  templateUrl: './expense-type.component.html',
+  styleUrls: ['./expense-type.component.scss'],
+  imports: [
+    ListPageComponent,
+    TabelKosongComponent,
+    NgIf,
+    NgFor,
+    TranslatePipe,
+  ],
 })
-export class ExpenseTypeComponent {
+export class ExpenseTypeComponent implements OnInit {
   constructor(
-    private authService: AuthService,
-    private sheet: MatBottomSheet
+    private apiService: ApiService,
+    private alertService: AlertService,
   ) {}
 
-  isLoading: boolean = true;
+  isLoading = true;
   dataSource: any[] = [];
-  dataCount: number = 0;
-
-  page: number = 1;
-  isAdministrator: boolean = false;
-  isSubmitting: boolean = false;
 
   ngOnInit(): void {
-    this.isAdministrator = this.authService.isAdministrator();
+    this.ambilData();
   }
 
-  openDialog(id: number) {
-    this.sheet
-      .open(ExpenseTypeViewChildrenComponent, {
-        data: {
-          id: id,
+  lacakTipe = (_: number, item: any): number => item.id;
+
+  ambilData(): void {
+    this.isLoading = true;
+
+    this.apiService
+      .get('expense-type')
+      .subscribe({
+        next: (data: any) => {
+          this.dataSource = Array.isArray(data) ? data : [];
+        },
+        error: (error: any) => {
+          this.alertService.showError(error);
         },
       })
-      .afterDismissed()
-      .subscribe((data) => {
-        if (data === 'deleted') {
-          const index = this.dataSource.findIndex((x) => x.id == id);
-          if (index != -1) {
-            this.dataSource.splice(index, 1);
-            this.dataCount -= 1;
-          }
-        } else {
-          this.fetchProducts();
-        }
+      .add(() => {
+        this.isLoading = false;
       });
-  }
-
-  changePage(event: PageEvent) {
-    this.page = event.pageIndex + 1;
-  }
-
-  fetchProducts(page: number = this.page) {
-    this.page = page;
-  }
-
-  onUpdatePage() {
-    this.page = 1;
-  }
-
-  onUpdateData(data: any) {
-    this.dataSource = data;
-  }
-
-  onUpdateLoadingStatus(data: any) {
-    this.isLoading = data;
   }
 }

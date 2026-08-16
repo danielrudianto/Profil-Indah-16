@@ -2070,5 +2070,9 @@
   "expense__add__lede": "Pengeluaran langsung masuk daftar bulan berjalan.",
   "expense__add__submit": "Simpan pengeluaran",
   "expense__create__type": "Tipe pengeluaran",
-  "expense__update__lede": "Ubah datanya, atau hapus bila salah catat."
+  "expense__update__lede": "Ubah datanya, atau hapus bila salah catat.",
+  "expense-type__lede": "Daftar baku tipe untuk mencatat pengeluaran.",
+  "expense-type__baku-note": "Daftar ini baku supaya laporan tetap seragam — tidak ada tombol tambah. Perubahan daftarnya dilakukan administrator sistem lewat seeder.",
+  "expense-type__empty__title": "Daftar tipe belum diisi",
+  "expense-type__empty__desc": "Jalankan seeder tipe pengeluaran di server untuk mengisi daftar bakunya."
 }

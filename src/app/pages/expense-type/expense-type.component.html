@@ -1,58 +1,53 @@
-<app-feature-background />
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <app-feature-header
-        [title]="'expense-type__title' | translate"
-        [help]="'expense-type__help' | translate"
-        [isBackAvailable]="true"
-      ></app-feature-header>
-      <div class="dashboard-card">
-        <app-feature-search
-          [addButton]="true"
-          route="expense-type"
-          [page]="page"
-          [enable]="false"
-          (onChange)="onUpdateData($event)"
-          (onLoadingChange)="onUpdateLoadingStatus($event)"
-          (updatePage)="onUpdatePage()"
-          (onNewQuery)="page = 1"
-        ></app-feature-search>
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>{{ "expense-type__table__name" | translate }}</th>
-                <th>{{ "expense-type__table__description" | translate }}</th>
-              </tr>
-            </thead>
-            <tbody *ngIf="isLoading">
-              <tr>
-                <td colspan="3">
-                  <mat-spinner id="spinner"></mat-spinner>
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr *ngFor="let item of dataSource" (click)="openDialog(item.id)">
-                <td>
-                  {{ item.name }}
-                </td>
-                <td>
-                  {{ item.description }}
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length == 0">
-              <tr>
-                <td colspan="3">
-                  <empty-table />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<app-list-page
+  [heading]="'expense-type__title' | translate"
+  [lede]="'expense-type__lede' | translate"
+  [total]="dataSource.length"
+  [pageSize]="dataSource.length || 1"
+  [loading]="isLoading"
+  [showSearch]="false"
+  [showPageSize]="false"
+  (refresh)="ambilData()"
+>
+  <!--
+    Banner, bukan teks bantu: kalimat ini menjelaskan mengapa TIDAK ADA tombol
+    tambah — tanpa itu, daftar tanpa tombol terbaca seperti fitur yang rusak.
+  -->
+  <p class="petunjuk">
+    <i class="ph ph-info" aria-hidden="true"></i>
+    {{ 'expense-type__baku-note' | translate }}
+  </p>
+
+  <table class="tabel">
+    <thead>
+      <tr>
+        <th>{{ 'expense-type__name' | translate }}</th>
+        <th>{{ 'expense-type__description' | translate }}</th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!isLoading && dataSource.length > 0">
+      <tr *ngFor="let item of dataSource; trackBy: lacakTipe">
+        <td class="tabel__utama">{{ item.name }}</td>
+        <td class="tabel__redup">{{ item.description }}</td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="isLoading">
+      <tr>
+        <td colspan="2" class="tabel__pesan">{{ 'general__loading' | translate }}</td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="!isLoading && dataSource.length === 0">
+      <tr>
+        <td colspan="2">
+          <app-tabel-kosong
+            ikon="ph-tag"
+            [judul]="'expense-type__empty__title' | translate"
+            [penjelasan]="'expense-type__empty__desc' | translate"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</app-list-page>
