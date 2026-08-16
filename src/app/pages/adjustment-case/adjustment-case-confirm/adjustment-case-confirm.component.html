@@ -1,93 +1,112 @@
-<div class="dashboard-card">
-  <div class="table-responsive">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>{{ "adjustment-case__confirm__date" | translate }}</th>
-          <th>{{ "adjustment-case__confirm__name" | translate }}</th>
-          <th>{{ "adjustment-case__confirm__created-by" | translate }}</th>
-          <th>{{ "adjustment-case__confirm__company" | translate }}</th>
-          <th>{{ "adjustment-case__confirm__type" | translate }}</th>
-        </tr>
-      </thead>
-      <tbody *ngIf="isLoading">
-        <tr>
-          <td colspan="5">
-            <mat-spinner id="spinner"></mat-spinner>
-          </td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="!isLoading && dataSource.length == 0">
-        <tr>
-          <td colspan="5">
-            <empty-table />
-          </td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="!isLoading && dataSource.length > 0">
-        <tr
-          class="data-row"
-          *ngFor="let item of dataSource"
-          (click)="viewAdjustmentCase(item.id)"
-        >
-          <td>{{ item.date | date : "dd/MM/YYYY" }}</td>
-          <td>{{ item.name }}</td>
-          <td>
+<app-list-page
+  [heading]="'adjustment-case__confirm__title' | translate"
+  [lede]="'adjustment-case__confirm__lede' | translate"
+  [addLabel]="'adjustment-case__create' | translate"
+  [page]="page"
+  [pageSize]="pageSize"
+  [total]="dataCount"
+  [loading]="isLoading"
+  [showSearch]="false"
+  [showPageSize]="false"
+  (pageChange)="bukaHalaman($event)"
+  (add)="buatPenyesuaian()"
+  (refresh)="ambilData()"
+>
+  <table class="tabel">
+    <thead>
+      <tr>
+        <th>{{ 'adjustment-case__confirm__date' | translate }}</th>
+        <th>{{ 'adjustment-case__confirm__name' | translate }}</th>
+        <th>{{ 'adjustment-case__confirm__created-by' | translate }}</th>
+        <th>{{ 'adjustment-case__confirm__type' | translate }}</th>
+        <th>{{ 'adjustment-case__confirm__company' | translate }}</th>
+        <th class="tabel__aksi-kepala">
+          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!isLoading && dataSource.length > 0">
+      <tr *ngFor="let item of dataSource; trackBy: lacakKasus">
+        <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
+        <td class="tabel__utama">{{ item.name }}</td>
+        <td>
+          <span class="pembuat">
             <app-avatar
+              *ngIf="item.user_adjustment_case_code_created_byTouser?.user_avatar as av"
               [width]="25"
-              *ngIf="
-                item.user_adjustment_case_code_created_byTouser.user_avatar
-              "
-              [top]="
-                item.user_adjustment_case_code_created_byTouser.user_avatar.top
-              "
-              [accessories]="
-                item.user_adjustment_case_code_created_byTouser.user_avatar
-                  .accessories
-              "
-              [clothes]="
-                item.user_adjustment_case_code_created_byTouser.user_avatar
-                  .clothes
-              "
-              [circle]="
-                item.user_adjustment_case_code_created_byTouser.user_avatar
-                  .circle
-              "
-              [eyes]="
-                item.user_adjustment_case_code_created_byTouser.user_avatar.eyes
-              "
-              [mouth]="
-                item.user_adjustment_case_code_created_byTouser.user_avatar
-                  .mouth
-              "
-              [eyebrows]="
-                item.user_adjustment_case_code_created_byTouser.user_avatar
-                  .eyebrows
-              "
-              [color]="
-                item.user_adjustment_case_code_created_byTouser.user_avatar
-                  .color
-              "
+              [top]="av.top"
+              [accessories]="av.accessories"
+              [clothes]="av.clothes"
+              [circle]="av.circle"
+              [eyes]="av.eyes"
+              [mouth]="av.mouth"
+              [eyebrows]="av.eyebrows"
+              [color]="av.color"
             />
-            {{ item.user_adjustment_case_code_created_byTouser.name }}
-          </td>
-          <td>{{ item.company == null ? "N/A" : item.company.name }}</td>
-          <td>
+            {{ item.user_adjustment_case_code_created_byTouser?.name ?? '—' }}
+          </span>
+        </td>
+        <td>
+          <span
+            class="pill"
+            [class.pill--hijau]="item.company != null"
+            [class.pill--garis]="item.company == null"
+          >
+            <i
+              class="ph-fill"
+              [class.ph-arrow-circle-up]="item.company != null"
+              [class.ph-arrow-circle-down]="item.company == null"
+              aria-hidden="true"
+            ></i>
             {{
               (item.company != null
-                ? "adjustment-case__confirm__type__found"
-                : "adjustment-case__confirm__type__lost"
+                ? 'adjustment-case__confirm__type__found'
+                : 'adjustment-case__confirm__type__lost'
               ) | translate
             }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <mat-paginator
-    [length]="dataCount"
-    [pageSize]="10"
-    [pageIndex]="page - 1"
-    (page)="changePage($event)"
-  ></mat-paginator>
-</div>
+          </span>
+        </td>
+        <td class="tabel__redup">{{ item.company?.name ?? '—' }}</td>
+        <td class="tabel__aksi">
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="lihat(item)"
+            [title]="'general__view' | translate"
+            [attr.aria-label]="'general__view' | translate"
+          >
+            <i class="ph ph-eye" aria-hidden="true"></i>
+          </button>
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="setujui(item)"
+            [title]="'adjustment-case__confirm__approve' | translate"
+            [attr.aria-label]="'adjustment-case__confirm__approve' | translate"
+          >
+            <i class="ph ph-seal-check" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="isLoading">
+      <tr>
+        <td colspan="6" class="tabel__pesan">{{ 'general__loading' | translate }}</td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="!isLoading && dataSource.length === 0">
+      <tr>
+        <td colspan="6">
+          <app-tabel-kosong
+            ikon="ph-seal-check"
+            [judul]="'adjustment-case__confirm__empty__title' | translate"
+            [penjelasan]="'adjustment-case__confirm__empty__desc' | translate"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</app-list-page>

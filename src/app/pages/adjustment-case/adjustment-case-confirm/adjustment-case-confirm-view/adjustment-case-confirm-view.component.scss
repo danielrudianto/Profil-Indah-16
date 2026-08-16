@@ -1,17 +1,19 @@
-.adjustment-case-confirm-view__wrapper {
-  height: 100vh;
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 100;
-  background-color: white;
+@use "../../../../styles/form-buat";
+
+.setujui__memuat {
+  margin: 0;
+  padding: 24px 0;
+  text-align: center;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
-.adjustment-case__action-wrapper {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-top: 1rem;
-  gap: 1rem;
+/* Tabel barang di dalam dialog: lebih rapat daripada tabel halaman. */
+.tabel--ringkas {
+  width: 100%;
+  margin-bottom: 14px;
+
+  th,
+  td {
+    padding: 8px 10px;
+  }
 }

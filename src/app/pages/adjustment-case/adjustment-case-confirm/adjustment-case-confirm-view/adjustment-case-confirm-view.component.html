@@ -1,286 +1,96 @@
-<h2
-  mat-dialog-title
-  cdkDrag
-  cdkDragRootElement=".cdk-overlay-pane"
-  cdkDragHandle
-  cdkDragBoundary="body"
+<app-dialog-shell
+  icon="ph ph-seal-check"
+  [heading]="'adjustment-case__approve__title' | translate"
+  [lede]="'adjustment-case__approve__lede' | translate"
+  [submitLabel]="'adjustment-case__approve__yes' | translate"
+  [submitting]="isSubmitting"
+  [canSubmit]="!isLoading && kasus != null"
+  (submitted)="setujui()"
+  (close)="closeDialog()"
 >
-  {{ "adjustment-case__archive__view__title" | translate }}
-</h2>
+  <p class="setujui__memuat" *ngIf="isLoading">{{ 'general__loading' | translate }}</p>
 
-<mat-dialog-content>
-  <form [formGroup]="adjustmentCaseFormGroup">
-    <mat-accordion>
-      <mat-expansion-panel
-        disabled
-        class="mat-elevation-z0"
-        hideToggle
-        [expanded]="step() === 0"
-        (opened)="setStep(0)"
-      >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            {{ "adjustment-case__archive__view__general__title" | translate }}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
+  <ng-container *ngIf="!isLoading && kasus">
+    <!-- Ringkasan kasus: apa yang sedang disetujui. -->
+    <dl class="ringkas">
+      <div>
+        <dt>{{ 'adjustment-case__archive__name' | translate }}</dt>
+        <dd>{{ kasus.name }}</dd>
+      </div>
+      <div>
+        <dt>{{ 'adjustment-case__archive__date' | translate }}</dt>
+        <dd>{{ tanggal }}</dd>
+      </div>
+      <div>
+        <dt>{{ 'adjustment-case__archive__type' | translate }}</dt>
+        <dd>
+          <span
+            class="pill"
+            [class.pill--hijau]="kasus.company != null"
+            [class.pill--garis]="kasus.company == null"
+          >
+            <i
+              class="ph-fill"
+              [class.ph-arrow-circle-up]="kasus.company != null"
+              [class.ph-arrow-circle-down]="kasus.company == null"
+              aria-hidden="true"
+            ></i>
+            {{
+              (kasus.company != null
+                ? 'adjustment-case__confirm__type__found'
+                : 'adjustment-case__confirm__type__lost'
+              ) | translate
+            }}
+          </span>
+        </dd>
+      </div>
+      <div *ngIf="kasus.company != null">
+        <dt>{{ 'adjustment-case__archive__company' | translate }}</dt>
+        <dd>{{ kasus.company.name }}</dd>
+      </div>
+      <div>
+        <dt>{{ 'adjustment-case__archive__created-by' | translate }}</dt>
+        <dd>{{ kasus.user_adjustment_case_code_created_byTouser?.name ?? '—' }}</dd>
+      </div>
+      <div>
+        <dt>{{ 'adjustment-case__approve__items' | translate }}</dt>
+        <dd>
+          {{ jumlahBaris }} {{ 'adjustment-case__approve__rows' | translate }}
+          · {{ totalJumlah | number: '0.0-2' }}
+        </dd>
+      </div>
+    </dl>
 
-        <div class="row">
-          <div class="col-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "adjustment-case__archive__view__date" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="date" />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "adjustment-case__archive__view__name" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="name" />
-            </mat-form-field>
+    <!-- Barangnya sendiri, supaya yang menyetujui tahu persis apa isinya. -->
+    <table class="tabel tabel--ringkas">
+      <thead>
+        <tr>
+          <th>{{ 'adjustment-case__table__item' | translate }}</th>
+          <th class="ke-kanan">{{ 'adjustment-case__table__quantity' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let baris of kasus.adjustment_case">
+          <td>
+            <span class="barang__ref">{{ baris.product?.reference }}</span>
+            <span class="barang__desc">{{ baris.product?.description }}</span>
+          </td>
+          <td class="ke-kanan">
+            {{ baris.quantity | number: '0.0-2' }}
+            {{ baris.product_unit == null ? baris.product?.unit : baris.product_unit.unit }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "adjustment-case__archive__view__created-by" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="createdBy" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "adjustment-case__archive__view__created-at" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="createdAt" />
-            </mat-form-field>
-
-            <button
-              mat-stroked-button
-              color="primary"
-              style="letter-spacing: 0"
-              (click)="nextStep()"
-            >
-              {{ "general__next" | translate }}
-            </button>
-          </div>
-          <div class="col-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "adjustment-case__archive__view__company" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="company" />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "adjustment-case__archive__view__type" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="type" />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "adjustment-case__archive__view__status" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="status" />
-            </mat-form-field>
-          </div>
-        </div>
-      </mat-expansion-panel>
-      <mat-expansion-panel
-        disabled
-        class="mat-elevation-z0"
-        hideToggle
-        [expanded]="step() === 1"
-        (opened)="setStep(1)"
-      >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            {{ "adjustment-case__archive__view__item__title" | translate }}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <div class="row">
-          <div class="col-12">
-            <div class="table-responsive">
-              <table class="table data-table">
-                <thead>
-                  <tr>
-                    <th class="text-center" style="width: 200px">
-                      {{
-                        "adjustment-case__archive__view__items__product"
-                          | translate
-                      }}
-                    </th>
-                    <th class="text-center" style="width: 200px">
-                      {{
-                        "adjustment-case__archive__view__items__quantity"
-                          | translate
-                      }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of t.controls">
-                    <td>
-                      <p class="mb-0">{{ item.get("reference")?.value }}</p>
-                      <p class="text-clamp-1 mb-0">
-                        {{ item.get("description")?.value }}
-                      </p>
-                    </td>
-                    <td class="text-center">
-                      {{ item.get("quantity")?.value | number : "0.0-2" }}
-                      {{ item.get("unit")?.value }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="d-flex">
-              <button
-                type="button"
-                mat-stroked-button
-                color="warn"
-                class="me-3"
-                style="letter-spacing: 0"
-                (click)="prevStep()"
-              >
-                {{ "general__previous" | translate }}
-              </button>
-
-              <button
-                type="button"
-                mat-stroked-button
-                color="primary"
-                style="letter-spacing: 0"
-                [disabled]="!isAdministrator || isSubmitting"
-                [matMenuTriggerFor]="menu"
-              >
-                {{ "adjustment-case__archive__view__action" | translate }}
-                <mat-icon>warning</mat-icon>
-              </button>
-              <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="confirmAdjustmentCase()">
-                  <mat-icon>check</mat-icon>
-                  <span>{{
-                    "adjustment-case__archive__view__action__confirm"
-                      | translate
-                  }}</span>
-                </button>
-                <button mat-menu-item (click)="rejectAdjustmentCase()">
-                  <mat-icon>close</mat-icon>
-                  <span>{{
-                    "adjustment-case__archive__view__action__reject" | translate
-                  }}</span>
-                </button>
-              </mat-menu>
-            </div>
-          </div>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </form>
-</mat-dialog-content>
-
-<mat-dialog-actions align="end">
-  <button
-    mat-stroked-button
-    color="primary"
-    style="letter-spacing: 0"
-    type="button"
-    mat-dialog-close
-  >
-    {{ "general__close" | translate }}</button
-  >"
-</mat-dialog-actions>
-<!-- 
-<label>Date</label>
-<p>{{ data.date | date : "dd MMMM YYYY" }}</p>
-
-<label>Name</label>
-<p>{{ data.name }}</p>
-
-<label>Type</label>
-<p>{{ data.type == 0 ? "Found" : "Lost" }}</p>
-
-<label>Company</label>
-<p>{{ data.company_name == null ? "N/A" : data.company_name }}</p>
-
-<label>Status</label>
-<p>
-  {{ data.is_delete ? "Deleted" : data.is_confirm ? "Confirmed" : "Pending" }}
-</p>
-
-<label>Created by</label>
-<div class="created-by__wrapper">
-  <p>
-    {{ data.user_adjustment_case_code_created_byTouser.name }}&nbsp;<app-avatar
-      *ngIf="
-        data.user_adjustment_case_code_created_byTouser.user_avatar != null
-      "
-      [top]="data.user_adjustment_case_code_created_byTouser.user_avatar.top"
-      [accessories]="
-        data.user_adjustment_case_code_created_byTouser.user_avatar.accessories
-      "
-      [eyes]="data.user_adjustment_case_code_created_byTouser.user_avatar.eyes"
-      [mouth]="
-        data.user_adjustment_case_code_created_byTouser.user_avatar.mouth
-      "
-      [clothes]="
-        data.user_adjustment_case_code_created_byTouser.user_avatar.clothes
-      "
-      [eyebrows]="
-        data.user_adjustment_case_code_created_byTouser.user_avatar.eyebrows
-      "
-      [circle]="
-        data.user_adjustment_case_code_created_byTouser.user_avatar.circle
-      "
-      [color]="
-        data.user_adjustment_case_code_created_byTouser.user_avatar.color
-      "
-      [width]="25"
-    />
-  </p>
-</div>
-
-<label>Created at</label>
-<p>{{ data.created_at | date : "dd MMMM YY H:m:s" }}</p>
-
-<div class="table-responsive">
-  <table class="table" id="my-table">
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th class="text-center">Quantity</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of data.adjustment_case">
-        <td>
-          <p>{{ item.product.reference }}</p>
-          <p class="text-clamp-1">{{ item.product.description }}</p>
-        </td>
-        <td class="text-center">
-          {{ item.quantity | number : "0.0-2" }}
-          {{
-            item.product_unit == null
-              ? item.product.unit
-              : item.product_unit.unit
-          }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<label>Actions</label>
-<div *ngIf="!isAdministrator">There is no other action available.</div>
-<div class="adjustment-case__action-wrapper" *ngIf="isAdministrator">
-  <button
-    type="button"
-    class="adjustment-case__action"
-    (click)="openDeleteConfirmation()"
-    [disabled]="data.is_delete"
-  >
-    <mat-icon>delete</mat-icon>
-    Delete
-  </button>
-</div> -->
+    <!--
+      Banner akibat, bukan teks bantu: setelah disetujui, penyesuaian langsung
+      masuk ke stok dan ikut perhitungan jurnal akuntansi — tanpa bisa
+      dibatalkan.
+    -->
+    <p class="petunjuk">
+      <i class="ph ph-info" aria-hidden="true"></i>
+      {{ 'adjustment-case__approve__note' | translate }}
+    </p>
+  </ng-container>
+</app-dialog-shell>

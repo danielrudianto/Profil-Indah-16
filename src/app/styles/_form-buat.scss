@@ -563,3 +563,130 @@
     border-color: #e05260;
   }
 }
+
+/* ---------------------------------------------------------------- */
+/* Kepala kartu: label di kiri, aksi/tag di kanan                    */
+/* ---------------------------------------------------------------- */
+
+.kartu__kepala {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* ---------------------------------------------------------------- */
+/* Tabel barang di dalam formulir                                    */
+/*                                                                   */
+/* Diangkat dari penerimaan barang, yang jadi kanonnya. Halaman lama */
+/* (penerimaan, faktur penjualan) masih membawa salinan lokalnya     */
+/* sendiri; halaman baru cukup memakai yang di sini.                 */
+/* ---------------------------------------------------------------- */
+
+.gulir {
+  overflow-x: auto;
+}
+
+.ke-kanan {
+  text-align: right;
+}
+
+.barang__ref {
+  display: block;
+  font-weight: 500;
+}
+
+.barang__desc {
+  display: block;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.barang__stok {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+.jumlah {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .input {
+    width: 110px;
+    min-height: 40px;
+  }
+}
+
+.jumlah__satuan {
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+/* "3 box = 300 pcs" — hanya muncul bila satuannya bukan satuan dasar. */
+.jumlah__konversi {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+.tabel .input {
+  min-height: 40px;
+}
+
+/*
+  Pill "×N" pada baris yang barangnya berulang.
+
+  Abu, bukan merah atau amber: ini BUKAN peringatan. Barang yang sama memang
+  boleh berkali-kali. cursor: help menandakan ada keterangan bila disentuh.
+*/
+.ulang {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--color-divider);
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: help;
+}
+
+/* Tombol tambah kecil di kepala kartu, kembaran baris .tambah di bawah. */
+.tambah-atas {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 16px;
+  padding: 7px 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  cursor: pointer;
+
+  i {
+    font-size: 14px;
+  }
+
+  &:hover {
+    color: var(--color-text);
+    border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}

@@ -1,18 +1,1 @@
-h5 {
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-size: 1.2rem;
-  color: #041e49;
-  margin-bottom: 2rem;
-}
-
-.add-button {
-  outline: none;
-  border: none;
-  color: white;
-  font-weight: 400;
-  background-color: #005cbb;
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.25rem;
-  cursor: pointer;
-}
+@use "../../../styles/form-buat";
