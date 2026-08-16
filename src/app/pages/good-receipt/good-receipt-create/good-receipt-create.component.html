@@ -128,7 +128,22 @@
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ "good-receipt__invoice__tax" | translate }}</mat-label>
-              <input matInput type="text" formControlName="faktur" autocomplete="off" />
+              <!--
+                TANPA tanda hubung dan titik. Nomornya memang 16 digit; format
+                bertitik yang dulu dipakai membuat yang menyalin dari faktur
+                kertas harus menghapus tanda baca lebih dulu, dan yang tersimpan
+                jadi berbeda-beda bentuknya antar catatan.
+              -->
+              <input
+                matInput
+                type="text"
+                inputmode="numeric"
+                maxlength="16"
+                formControlName="faktur"
+                autocomplete="off"
+                [attr.placeholder]="'tax-invoice__placeholder' | translate"
+              />
+              <mat-hint>{{ 'tax-invoice__hint' | translate }}</mat-hint>
             </mat-form-field>
           </div>
 

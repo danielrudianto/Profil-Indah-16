@@ -18,7 +18,7 @@ import { DeleteConfirmationComponent } from '../../../components/delete-confirma
 import { SubmitConfirmationComponent } from '../../../components/submit-confirmation/submit-confirmation.component';
 import { NgxMaskDirective } from 'ngx-mask';
 import { ComboSearchComponent } from 'src/app/components/combo-search/combo-search.component';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 
 @Component({
@@ -26,6 +26,7 @@ import { MatInput } from '@angular/material/input';
     templateUrl: './good-receipt-create.component.html',
     styleUrls: ['./good-receipt-create.component.scss'],
     imports: [
+    MatHint,
     MatFormField,
     MatLabel,
     MatInput,

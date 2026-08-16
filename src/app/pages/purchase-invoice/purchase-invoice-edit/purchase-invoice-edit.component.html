@@ -88,9 +88,10 @@
         <input
           matInput
           type="text"
-          placeholder="Ex. XXX.XXX-XX.XXXXXXXX"
           formControlName="faktur"
-          mask="000.000-00.00000000"
+          inputmode="numeric"
+          maxlength="16"
+          [attr.placeholder]="'tax-invoice__placeholder' | translate"
           autocomplete="off"
         />
       </mat-form-field>
