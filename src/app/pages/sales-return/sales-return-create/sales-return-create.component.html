@@ -1,367 +1,402 @@
-<div class="d-flex mt-4">
-  <div class="d-flex position-relative">
-    <app-vertical-divider></app-vertical-divider>
-    <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
+<!--
+  Buat retur penjualan — kerangka form-buat 5a.
+
+  Nomor dokumen dibuat server; tidak ada kolomnya di sini. Harga retur ikut
+  baris faktur asal yang dipilih, bukan ketikan bebas.
+-->
+<div class="buat">
+  <div class="buat__head">
+    <h1 class="buat__title">
+      {{ 'sales-return__title' | translate }}
+      <span class="tag-otomatis">
+        <i class="ph ph-sparkle" aria-hidden="true"></i>
+        {{ 'sales-return__create__auto-number' | translate }}
+      </span>
+    </h1>
+    <p class="buat__lede">{{ 'sales-return__create__description' | translate }}</p>
   </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <h5>{{ "sales-invoice__create__general-data" | translate }}</h5>
-    <form [formGroup]="metaFormGroup">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{
-          "sales-return__create__return-date" | translate
-        }}</mat-label>
-        <input
-          matInput
-          placeholder="Ex. 12/30/2023"
-          [matDatepicker]="datePicker"
-          formControlName="date"
-        />
-        <mat-datepicker-toggle
-          matSuffix
-          [for]="datePicker"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #datePicker></mat-datepicker>
-      </mat-form-field>
 
-      <app-autocomplete-search
-        [label]="'sales-return__create__payment-method' | translate"
-        placeholder="Ex. Cash"
-        routeName="payment-method"
-        defaultValue="Cash"
-        [selected]="metaFormGroup.controls['payment_method'].valid"
-        (onSelectData)="onSelectPaymentMethod($event)"
-        (onUnselectData)="onUnselectPaymentMethod()"
-      ></app-autocomplete-search>
+  <div class="kisi">
+    <div class="buat__utama">
+      <!-- ---------------------------------------------------------- -->
+      <!-- Data umum                                                   -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu" [formGroup]="metaFormGroup">
+        <h2 class="kartu__label">
+          {{ 'sales-return__create__general-data' | translate }}
+        </h2>
 
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{
-          "sales-return__create__bill-date" | translate
-        }}</mat-label>
-        <input
-          matInput
-          placeholder="Ex. 12/30/2023"
-          [matDatepicker]="picker"
-          formControlName="bill_date"
-        />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-    </form>
-  </div>
-</div>
-
-<div class="d-flex">
-  <div class="d-flex position-relative">
-    <app-vertical-divider></app-vertical-divider>
-    <app-box-stepper
-      step="2"
-      [valid]="productFormGroup.valid"
-    ></app-box-stepper>
-  </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4 flex-grow-1">
-    <button
-      mat-stroked-button
-      color="primary"
-      style="letter-spacing: 0"
-      type="button"
-      (click)="openItemSelector()"
-    >
-      {{ "sales-invoice__create__add-item" | translate }}
-    </button>
-
-    <div class="table-responsive">
-      <form [formGroup]="productFormGroup">
-        <table class="table mb-2">
-          <thead>
-            <tr>
-              <th class="text-center" style="width: 300px">
-                {{ "sales-invoice__create__item" | translate }}
-              </th>
-              <th class="text-center" style="width: 200px">
-                {{ "sales-invoice__create__quantity" | translate }}
-              </th>
-              <th class="text-center" style="width: 150px">
-                {{ "sales-invoice__create__action" | translate }}
-              </th>
-            </tr>
-          </thead>
-          <tbody *ngIf="t.controls.length > 0">
-            <tr
-              *ngFor="let itemForm of t.controls; index as i"
-              [formGroup]="getFormGroupAt(i)"
+        <div class="kartu__baris">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ 'sales-return__create__return-date' | translate }}</mat-label>
+            <input
+              matInput
+              [matDatepicker]="returPicker"
+              formControlName="date"
+              autocomplete="off"
+            />
+            <!--
+              Tombol kalender manual, bukan mat-datepicker-toggle: elemen
+              toggle itu hilang tanpa jejak pada pipeline dev meski utuh di
+              bundel produksi.
+            -->
+            <button
+              type="button"
+              matSuffix
+              class="buka-kalender"
+              (click)="returPicker.open()"
+              [attr.aria-label]="'general__pick-date' | translate"
             >
-              <ng-container
-                [ngSwitch]="!itemForm.get('package_code_id') ? 1 : 2"
-              >
-                <ng-container *ngSwitchCase="1">
-                  <td>
-                    <p>{{ itemForm.get("reference")?.value }}</p>
-                    <div class="text-clamp-2">
-                      {{ itemForm.get("description")?.value }}
-                    </div>
-                    <p>
+              <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+            </button>
+            <mat-datepicker #returPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ 'sales-return__create__bill-date' | translate }}</mat-label>
+            <input
+              matInput
+              [matDatepicker]="fakturPicker"
+              formControlName="bill_date"
+              autocomplete="off"
+            />
+            <button
+              type="button"
+              matSuffix
+              class="buka-kalender"
+              (click)="fakturPicker.open()"
+              [attr.aria-label]="'general__pick-date' | translate"
+            >
+              <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+            </button>
+            <mat-datepicker #fakturPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <app-combo-search
+            #comboMetode
+            [label]="'sales-return__create__payment-method' | translate"
+            inputId="rj-metode"
+            route="payment-method"
+            [disabled]="isSubmitting"
+            (pick)="pilihMetode($event)"
+            (clear)="lepasMetode()"
+          />
+          <p class="petunjuk">
+            <i class="ph ph-info" aria-hidden="true"></i>
+            <span>{{ 'sales-return__create__payment-method-hint' | translate }}</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- ---------------------------------------------------------- -->
+      <!-- Barang yang diretur                                         -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu">
+        <div class="kartu__kepala">
+          <h2 class="kartu__label">
+            {{ 'sales-return__create__return-data' | translate }}
+          </h2>
+
+          <div class="kartu__kepala-aksi">
+            <button type="button" class="aksi-kecil" (click)="openItemSelector()">
+              <i class="ph ph-plus" aria-hidden="true"></i>
+              {{ 'sales-return__create__add-item' | translate }}
+            </button>
+          </div>
+        </div>
+
+        <div class="gulir">
+          <table class="tabel tabel--rapat">
+            <thead>
+              <tr>
+                <th>{{ 'sales-return__create__return-data__item' | translate }}</th>
+                <th>{{ 'sales-return__create__return-data__quantity' | translate }}</th>
+                <th class="tabel__nilai-kepala">
+                  {{ 'sales-return__create__return-data__price' | translate }}
+                </th>
+                <th class="tabel__nilai-kepala">
+                  {{ 'sales-return__create__return-data__total' | translate }}
+                </th>
+                <th class="tabel__aksi-kepala">
+                  <span class="sr-only">{{ 'general__actions' | translate }}</span>
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let baris of t.controls; index as i">
+                <td>
+                  <div class="barang__ref">
+                    {{ getFormGroupAt(i).get('reference')?.value }}
+                  </div>
+                  <div class="barang__desc">
+                    {{ getFormGroupAt(i).get('description')?.value }}
+                  </div>
+                </td>
+
+                <td [formGroup]="getFormGroupAt(i)">
+                  <div class="jumlah">
+                    <mat-form-field appearance="outline" class="w-sempit"><input matInput type="text" mask="separator" thousandSeparator="." formControlName="quantity" autocomplete="off" placeholder="0" (input)="jumlahBerubah()" /></mat-form-field>
+                    <span class="jumlah__satuan">{{ satuanBaris(i) }}</span>
+                  </div>
+                  <div class="jumlah__konversi" *ngIf="konversiBaris(i)">
+                    {{ konversiBaris(i) }}
+                  </div>
+                </td>
+
+                <!--
+                  Harga ikut baris faktur asal. Sebelum fakturnya dipilih,
+                  kolom ini memang belum bisa berkata apa-apa; bila satu
+                  barang cocok dengan lebih dari satu baris faktur (harga
+                  berbeda dalam satu nota), pilihannya dinyatakan di sini.
+                -->
+                <td class="tabel__nilai">
+                  <ng-container *ngIf="selectedBill == null">—</ng-container>
+
+                  <ng-container *ngIf="selectedBill != null">
+                    <ng-container
+                      *ngIf="getFormGroupAt(i).get('priceOptions')?.value.length === 0"
+                    >
+                      <span class="pill pill--garis">
+                        {{ 'sales-return__create__no-line' | translate }}
+                      </span>
+                    </ng-container>
+
+                    <ng-container
+                      *ngIf="getFormGroupAt(i).get('priceOptions')?.value.length === 1"
+                    >
+                      Rp
                       {{
-                        "sales-invoice__create__current-stock" | translate
-                      }}:&nbsp;
-                      {{ itemForm.get("stock")?.value | number : "0.0-2" }}
-                      {{ itemForm.get("default_unit")?.value }}
-                    </p>
-                  </td>
-                  <td>
-                    <mat-form-field appearance="outline">
-                      <mat-label>{{
-                        "sales-invoice__create__quantity" | translate
-                      }}</mat-label>
-                      <input
-                        matInput
-                        type="text"
-                        class="text-center"
-                        mask="separator"
-                        thousandSeparator=" "
-                        formControlName="quantity"
-                        autocomplete="off"
-                        placeholder="Ex. 20"
-                        focusedInput
-                      />
-                      <mat-hint
-                        *ngIf="itemForm.get('conversion')?.value == 1"
-                        >{{ itemForm.get("unit")?.value }}</mat-hint
+                        getFormGroupAt(i).get('price')?.value -
+                          getFormGroupAt(i).get('discount')?.value | number: '1.0-0'
+                      }}
+                    </ng-container>
+
+                    <mat-form-field
+                      appearance="outline"
+                      class="w-pilihan"
+                      *ngIf="getFormGroupAt(i).get('priceOptions')?.value.length > 1"
+                    >
+                      <mat-select
+                        [placeholder]="'sales-return__create__pick-line' | translate"
+                        (selectionChange)="pilihBarisFaktur($event, i)"
                       >
-                      <mat-hint *ngIf="itemForm.get('conversion')?.value != 1"
-                        >{{ itemForm.get("unit")?.value }} -
-                        {{
-                          itemForm.get("quantity")?.value *
-                            itemForm.get("conversion")?.value | number : "0.0-2"
-                        }}
-                        {{ itemForm.get("default_unit")?.value }}</mat-hint
-                      >
+                        <mat-option
+                          *ngFor="let opsi of getFormGroupAt(i).get('priceOptions')?.value"
+                          [value]="opsi"
+                        >
+                          Rp {{ opsi.price - opsi.discount | number: '1.0-0' }}
+                        </mat-option>
+                      </mat-select>
                     </mat-form-field>
-                  </td>
-                  <td class="text-center">
-                    <button mat-icon-button (click)="deleteItem(i)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </td>
-                </ng-container>
-                <ng-container *ngSwitchCase="2">
-                  <td>
-                    <p>{{ itemForm.get("name")?.value }}</p>
-                    <div class="text-clamp-2 mb-2">
-                      {{ itemForm.get("description")?.value }}
-                    </div>
-                    <ul>
-                      <li
-                        *ngFor="
-                          let content of itemForm.get('package_content')?.value
-                        "
-                      >
-                        <p>
-                          {{ content.reference }} ({{
-                            content.quantity | number : "0.0-2"
-                          }}
-                          {{
-                            content.item_unit == null
-                              ? content.unit
-                              : content.item_unit.unit
-                          }})
-                        </p>
-                        <p class="text-clamp-2">{{ content.description }}</p>
-                      </li>
-                    </ul>
-                  </td>
-                  <td>
-                    <mat-form-field appearance="outline">
-                      <mat-label>{{
-                        "sales-invoice__create__quantity" | translate
-                      }}</mat-label>
-                      <input
-                        matInput
-                        type="text"
-                        class="text-center"
-                        mask="separator"
-                        thousandSeparator=" "
-                        formControlName="quantity"
-                        autocomplete="off"
-                        placeholder="Ex. 20"
-                        focusedInput
-                      />
-                    </mat-form-field>
-                  </td>
-                  <td class="text-center">
-                    <button mat-icon-button (click)="deleteItem(i)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </td>
-                </ng-container>
-              </ng-container>
-            </tr>
-          </tbody>
-          <tbody *ngIf="t.controls.length == 0">
-            <tr>
-              <td colspan="3">
-                <empty-table />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </form>
-    </div>
+                  </ng-container>
+                </td>
 
-    <p>{{ "sales-return__create__description" | translate }}</p>
+                <td class="tabel__nilai">
+                  Rp {{ totalBaris(i) | number: '1.0-0' }}
+                </td>
 
-    <button
-      class="action-button"
-      (click)="fetchSalesInvoice()"
-      [disabled]="isLoading || !metaFormGroup.valid || !productFormGroup.valid"
-    >
-      {{ "sales-return__create__search" | translate }}
-    </button>
-  </div>
-</div>
-
-<div class="d-flex">
-  <div class="d-flex position-relative">
-    <app-vertical-divider></app-vertical-divider>
-    <app-box-stepper step="3" [valid]="selectedBill != null"></app-box-stepper>
-  </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4 flex-grow-1">
-    <h5>{{ "sales-return__create__available-sales-invoice" | translate }}</h5>
-    <p *ngIf="billOptions.length > 0">
-      {{ "sales-return__create__available-sales-invoice__info" | translate }}
-    </p>
-
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>
-              {{ "sales-return__create__sales-invoice__date" | translate }}
-            </th>
-            <th>
-              {{ "sales-return__create__sales-invoice__name" | translate }}
-            </th>
-            <th>
-              {{ "sales-return__create__sales-invoice__customer" | translate }}
-            </th>
-            <th>
-              {{ "sales-return__create__sales-invoice__selected" | translate }}
-            </th>
-          </tr>
-        </thead>
-        <tbody *ngIf="billOptions.length == 0">
-          <tr>
-            <td colspan="3">
-              <empty-table />
-            </td>
-          </tr>
-        </tbody>
-        <tbody *ngIf="billOptions.length > 0">
-          <tr
-            *ngFor="let bill of billOptions; index as i"
-            (click)="selectSalesInvoice(i)"
-          >
-            <td>{{ bill.date | date : "dd MMMM YYYY" }}</td>
-            <td>{{ bill.name }}</td>
-            <td>{{ bill.customer == null ? "Retail" : bill.customer.name }}</td>
-            <td>
-              <mat-icon *ngIf="bill.id == selectedBill?.id">check</mat-icon>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<div class="d-flex">
-  <div class="d-flex position-relative">
-    <app-box-stepper step="4" [valid]="isValid"></app-box-stepper>
-  </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4 flex-grow-1">
-    <h5>{{ "sales-return__create__return-data" | translate }}</h5>
-
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>
-              {{ "sales-return__create__return-data__item" | translate }}
-            </th>
-            <th>
-              {{ "sales-return__create__return-data__price" | translate }}
-            </th>
-            <th>
-              {{ "sales-return__create__return-data__quantity" | translate }}
-            </th>
-            <th>
-              {{ "sales-return__create__return-data__total" | translate }}
-            </th>
-          </tr>
-        </thead>
-        <tbody *ngIf="t.controls.length == 0">
-          <tr>
-            <td colspan="5">
-              <empty-table />
-            </td>
-          </tr>
-        </tbody>
-        <tbody *ngIf="t.controls.length > 0">
-          <tr
-            *ngFor="let itemForm of t.controls; index as i"
-            [formGroup]="getFormGroupAt(i)"
-          >
-            <td>
-              <p>{{ itemForm.get("reference")?.value }}</p>
-              <div class="text-clamp-2">
-                {{ itemForm.get("description")?.value }}
-              </div>
-            </td>
-            <td>
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>{{
-                  "sales-return__create__price" | translate
-                }}</mat-label>
-                <mat-select
-                  (selectionChange)="selectSalesInvoiceItem($event, i)"
-                >
-                  <mat-option
-                    *ngFor="let opt of itemForm.get('priceOptions')?.value"
-                    [value]="opt"
+                <td class="tabel__aksi">
+                  <button
+                    type="button"
+                    class="tabel__aksi-btn"
+                    (click)="deleteItem(i)"
+                    [title]="'general__delete' | translate"
+                    [attr.aria-label]="'general__delete' | translate"
                   >
-                    {{ opt.price | number : "0.2-2" }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              {{ itemForm.get("price")?.value | number : "0.2-2" }}
-            </td>
-            <td>
-              {{ itemForm.get("quantity")?.value | number : "0.0-2" }}
-              {{ itemForm.get("unit")?.value }}
-            </td>
-            <td>
-              {{
-                (itemForm.get("price")?.value -
-                  itemForm.get("discount")?.value) *
-                  itemForm.get("quantity")?.value
-              }}
-            </td>
-          </tr>
-        </tbody>
-        <tfoot *ngIf="t.controls.length > 0">
-          <tr>
-            <td colspan="2"></td>
-            <td>
-              {{ "sales-return__create__return-data__total" | translate }}
-            </td>
-            <td>{{ totalPrice | number : "0.0-2" }}</td>
-          </tr>
-        </tfoot>
-      </table>
+                    <i class="ph ph-trash" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+
+            <tbody *ngIf="t.controls.length === 0">
+              <tr>
+                <td colspan="5" class="tabel__pesan">
+                  {{ 'sales-return__create__no-item' | translate }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <button type="button" class="tambah" (click)="openItemSelector()">
+          <i class="ph ph-plus-circle" aria-hidden="true"></i>
+          <span>{{ 'sales-return__create__add-item' | translate }}</span>
+          <span class="tambah__kunci">Alt + A</span>
+        </button>
+      </section>
+
+      <!-- ---------------------------------------------------------- -->
+      <!-- Faktur asal                                                 -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu">
+        <div class="kartu__kepala">
+          <h2 class="kartu__label">
+            {{ 'sales-return__create__available-sales-invoice' | translate }}
+          </h2>
+
+          <div class="kartu__kepala-aksi">
+            <button
+              type="button"
+              class="aksi-kecil"
+              [disabled]="!bisaCari"
+              (click)="cariFaktur()"
+            >
+              <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+              {{ 'sales-return__create__search' | translate }}
+            </button>
+          </div>
+        </div>
+
+        <p class="petunjuk">
+          <i class="ph ph-info" aria-hidden="true"></i>
+          <span>{{ 'sales-return__create__available-sales-invoice__info' | translate }}</span>
+        </p>
+
+        <p class="tabel__pesan" *ngIf="isLoading">
+          {{ 'general__loading' | translate }}
+        </p>
+
+        <p class="tabel__pesan" *ngIf="!isLoading && sudahCari && billOptions.length === 0">
+          {{ 'sales-return__create__no-invoice' | translate }}
+        </p>
+
+        <div class="faktur" *ngIf="!isLoading && billOptions.length > 0">
+          <div
+            class="faktur__kartu"
+            *ngFor="let faktur of billOptions; index as i"
+            [class.faktur__kartu--on]="selectedBill?.id === faktur.id"
+          >
+            <button type="button" class="faktur__pilih" (click)="pilihFaktur(i)">
+              <span class="faktur__nama">
+                {{ faktur.name }}
+                <span class="pill pill--hijau" *ngIf="selectedBill?.id === faktur.id">
+                  <i class="ph-fill ph-check-circle" aria-hidden="true"></i>
+                  {{ 'sales-return__create__sales-invoice__selected' | translate }}
+                </span>
+              </span>
+              <span class="faktur__rinci">
+                {{ faktur.date | date: 'dd MMMM yyyy' }} ·
+                {{ faktur.customer?.name ?? ('sales-invoice__retail' | translate) }} ·
+                {{ faktur.sales_invoice?.length ?? 0 }}
+                {{ 'sales-return__create__line-count' | translate }}
+              </span>
+            </button>
+
+            <button
+              type="button"
+              class="tabel__aksi-btn"
+              (click)="lihatFaktur(i)"
+              [title]="'general__view' | translate"
+              [attr.aria-label]="'general__view' | translate"
+            >
+              <i class="ph ph-eye" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+      </section>
     </div>
 
-    <button class="action-button" [disabled]="!isValid" (click)="submit()">
-      {{ "sales-return__create__submit" | translate }}
-    </button>
+    <!-- ------------------------------------------------------------ -->
+    <!-- Kolom kanan                                                   -->
+    <!-- ------------------------------------------------------------ -->
+    <aside class="buat__samping">
+      <section class="kartu">
+        <h2 class="kartu__label">
+          {{ 'sales-return__create__summary' | translate }}
+        </h2>
+
+        <div class="ringkas">
+          <div class="ringkas__baris">
+            <span>{{ 'sales-return__create__summary__items' | translate }}</span>
+            <span>{{ t.length }}</span>
+          </div>
+          <div class="ringkas__baris">
+            <span>{{ 'sales-return__create__summary__invoice' | translate }}</span>
+            <span>{{ selectedBill?.name ?? '—' }}</span>
+          </div>
+          <div class="ringkas__baris baris__total">
+            <span>{{ 'sales-return__create__summary__total' | translate }}</span>
+            <span>Rp {{ totalRetur | number: '1.0-0' }}</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="kartu">
+        <h2 class="kartu__label">
+          {{ 'sales-return__create__before-save' | translate }}
+        </h2>
+
+        <ul class="periksa">
+          <li [class.periksa--ok]="metaFormGroup.controls['bill_date'].valid">
+            <i
+              [class]="
+                metaFormGroup.controls['bill_date'].valid
+                  ? 'ph-fill ph-check-circle'
+                  : 'ph ph-circle'
+              "
+              aria-hidden="true"
+            ></i>
+            <span>{{ 'sales-return__create__check-bill-date' | translate }}</span>
+          </li>
+
+          <li [class.periksa--ok]="t.length > 0 && productFormGroup.valid">
+            <i
+              [class]="
+                t.length > 0 && productFormGroup.valid
+                  ? 'ph-fill ph-check-circle'
+                  : 'ph ph-circle'
+              "
+              aria-hidden="true"
+            ></i>
+            <span>{{ 'sales-return__create__check-items' | translate }}</span>
+          </li>
+
+          <li [class.periksa--ok]="selectedBill != null">
+            <i
+              [class]="
+                selectedBill != null ? 'ph-fill ph-check-circle' : 'ph ph-circle'
+              "
+              aria-hidden="true"
+            ></i>
+            <span>{{ 'sales-return__create__check-invoice' | translate }}</span>
+          </li>
+
+          <li [class.periksa--ok]="semuaTerpetakan">
+            <i
+              [class]="semuaTerpetakan ? 'ph-fill ph-check-circle' : 'ph ph-circle'"
+              aria-hidden="true"
+            ></i>
+            <span>{{ 'sales-return__create__check-mapping' | translate }}</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="kartu">
+        <h2 class="kartu__label">{{ 'general__actions' | translate }}</h2>
+
+        <button
+          type="button"
+          class="btn btn--primary btn--blok"
+          [disabled]="!bisaSimpan"
+          (click)="submit()"
+        >
+          <i class="ph ph-check" aria-hidden="true"></i>
+          {{ 'sales-return__create__submit' | translate }}
+        </button>
+
+        <button
+          type="button"
+          class="btn btn--kedua btn--blok"
+          (click)="batal()"
+          [disabled]="isSubmitting"
+        >
+          {{ 'general__cancel' | translate }}
+        </button>
+      </section>
+    </aside>
   </div>
 </div>
-{{ errorMessage }}

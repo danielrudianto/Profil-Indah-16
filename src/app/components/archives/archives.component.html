@@ -7,11 +7,13 @@
     gutterSize="20px"
   >
     <mat-grid-tile *ngFor="let month of monthData(year)">
+      <!-- 'yyyy' tahun kalender; 'YYYY' tahun pekan-basis dan Angular
+           melemparnya sebagai NG02100 di tiap kartu. -->
       <app-archive-card
         (click)="selectMonth(year, month.month)"
         class="w-100 h-100 p-2"
         title="{{
-          getDateFromMonthYear(month.month - 1, year) | date : 'MMMM YYYY'
+          getDateFromMonthYear(month.month - 1, year) | date : 'MMMM yyyy'
         }}"
         [count]="month.count"
       />

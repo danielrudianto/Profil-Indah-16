@@ -1,56 +1,69 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
+import { FormControl, FormGroup } from '@angular/forms';
+import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import moment from 'moment';
+
+import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { ArchiveMode } from 'src/app/components/archives/archives.component';
+import { ArchivesComponent } from 'src/app/components/archives/archives.component';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { SalesReturnArchiveFilterComponent } from './sales-return-archive-filter/sales-return-archive-filter.component';
-import { ArchiveViewComponent } from 'src/app/components/archives/archive-view/archive-view.component';
-import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
-import { MatDialog } from '@angular/material/dialog';
 import { SalesReturnArchiveViewComponent } from 'src/app/components/document-view/sales-return-archive-view/sales-return-archive-view.component';
-import { ArchivesComponent } from '../../../components/archives/archives.component';
-import { ArchiveSearchComponent } from '../../../components/archives/archive-search/archive-search.component';
-import { NgIf, NgFor, DatePipe } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
+/**
+ * Arsip retur penjualan — kembaran arsip faktur penjualan (4a) tanpa
+ * urusannya dengan pembayaran.
+ *
+ * Kepala kolomnya TIDAK bisa diurutkan: endpoint arsipnya menuntut sortBy
+ * dan sortDirection lolos skema, tetapi controller tidak meneruskan
+ * keduanya ke repository — tombol urut hanya akan berbohong. Keduanya
+ * tetap dikirim bernilai tetap supaya lolos validasi.
+ */
 @Component({
-    selector: 'app-sales-return-archive',
-    templateUrl: './sales-return-archive.component.html',
-    styleUrls: ['./sales-return-archive.component.scss'],
-    animations: [slideInOutAnimation],
-    imports: [ArchivesComponent, ArchiveSearchComponent, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DatePipe, TranslatePipe]
+  selector: 'app-sales-return-archive',
+  templateUrl: './sales-return-archive.component.html',
+  animations: [slideInOutAnimation],
+  imports: [
+    TabelKosongComponent,
+    ArchivesComponent,
+    ListPageComponent,
+    NgIf,
+    NgFor,
+    DatePipe,
+    TranslatePipe,
+  ],
 })
 export class SalesReturnArchiveComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router,
   ) {}
 
   mode: ArchiveMode = ArchiveMode.year;
   dataSource: any[] = [];
-  dataCount: number = 0;
-  page: number = 1;
-  isLoading: boolean = false;
+  dataCount = 0;
+  page = 1;
+  /* Ukuran halaman dipatok server lewat LIMIT; tidak ada pilihan di layar. */
+  pageSize = 10;
+  isLoading = false;
   month: number | null = null;
   year: number | null = null;
-  keyword: string = '';
+  keyword = '';
+
   filterFormGroup: FormGroup = new FormGroup({
     startDate: new FormControl(''),
     endDate: new FormControl(''),
     isActive: new FormControl(''),
     isDelete: new FormControl(''),
   });
-
-  sortBy: string = 'date';
-  sortDirection: 'asc' | 'desc' = 'desc';
-
-  ngOnInit(): void {}
 
   onMonthSelected(event: any) {
     this.mode = ArchiveMode.month;
@@ -78,18 +91,17 @@ export class SalesReturnArchiveComponent {
         year: this.year,
         page: this.page,
         keyword: this.keyword,
-        // Convert to DD-MM-YYYY
         startDate: moment(
-          new Date(this.filterFormGroup.get('startDate')?.value)
+          new Date(this.filterFormGroup.get('startDate')?.value),
         ).format('YYYY-MM-DD'),
         endDate: moment(
-          new Date(this.filterFormGroup.get('endDate')?.value)
+          new Date(this.filterFormGroup.get('endDate')?.value),
         ).format('YYYY-MM-DD'),
         isActive: this.filterFormGroup.get('isActive')?.value,
         isDelete: this.filterFormGroup.get('isDelete')?.value,
-        sortBy: this.sortBy,
-        sortDirection: this.sortDirection,
-        type: this.filterFormGroup.get('dateType')?.value,
+        /* Dituntut skema, diabaikan controller — lihat catatan kelas. */
+        sortBy: 'date',
+        sortDirection: 'desc' as const,
       })
       .subscribe({
         next: (data: any) => {
@@ -105,9 +117,66 @@ export class SalesReturnArchiveComponent {
       });
   }
 
-  changePage(event: PageEvent) {
-    this.page = event.pageIndex + 1;
+  /** Saringan aktif sebagai kapsul yang bisa dilepas — satu sumber: formulir. */
+  get kapsul(): { kunci: string; teks: string }[] {
+    const v = this.filterFormGroup.value;
+    const hasil: { kunci: string; teks: string }[] = [];
+
+    if (v.startDate && v.endDate) {
+      const dari = moment(new Date(v.startDate)).format('D MMM');
+      const sampai = moment(new Date(v.endDate)).format('D MMM YYYY');
+      hasil.push({ kunci: 'tanggal', teks: `${dari} – ${sampai}` });
+    }
+
+    if (!(v.isActive && v.isDelete)) {
+      if (v.isActive) hasil.push({ kunci: 'aktif', teks: 'Aktif' });
+      if (v.isDelete) hasil.push({ kunci: 'dihapus', teks: 'Dihapus' });
+    }
+
+    return hasil;
+  }
+
+  lepasKapsul(kunci: string): void {
+    if (kunci === 'tanggal') {
+      this.filterFormGroup.patchValue({
+        startDate: new Date(this.year!, this.month! - 1, 1),
+        endDate: new Date(this.year!, this.month!, 0),
+      });
+    } else if (kunci === 'aktif') {
+      this.filterFormGroup.patchValue({ isActive: false });
+    } else if (kunci === 'dihapus') {
+      this.filterFormGroup.patchValue({ isDelete: false });
+    }
+
+    /* Melepas kapsul terakhir tidak boleh mengosongkan daftar. */
+    const v = this.filterFormGroup.value;
+    if (!v.isActive && !v.isDelete) {
+      this.filterFormGroup.patchValue({ isActive: true, isDelete: true });
+    }
+
+    this.fetchSelectedMonth(1);
+  }
+
+  hapusSemuaSaringan(): void {
+    this.filterFormGroup.patchValue({
+      startDate: new Date(this.year!, this.month! - 1, 1),
+      endDate: new Date(this.year!, this.month!, 0),
+      isActive: true,
+      isDelete: true,
+    });
+    this.fetchSelectedMonth(1);
+  }
+
+  bukaHalaman(halaman: number) {
+    this.page = halaman;
     this.fetchSelectedMonth();
+  }
+
+  lacakRetur = (_: number, item: any): number => item.id;
+
+  /** Formulir buat retur adalah anak berjalur '' dari /Sales-return. */
+  buatRetur() {
+    this.router.navigate(['/Sales-return']);
   }
 
   backToYear() {
@@ -121,22 +190,31 @@ export class SalesReturnArchiveComponent {
     this.fetchSelectedMonth(1);
   }
 
+  resetPencarian(): void {
+    this.onQueryChanged('');
+  }
+
   openFilter() {
     this.dialog
       .open(SalesReturnArchiveFilterComponent, {
         data: {
           month: this.month,
           year: this.year,
-          startDate: this.filterFormGroup.get('startDate')?.value,
-          endDate: this.filterFormGroup.get('endDate')?.value,
-          isActive: this.filterFormGroup.get('isActive')?.value,
-          isDelete: this.filterFormGroup.get('isDelete')?.value,
+          ...this.filterFormGroup.value,
         },
       })
       .afterClosed()
       .subscribe((data) => {
-        const changes = this.checkChanges(data);
-        if (changes) {
+        /*
+          Dialog yang ditutup lewat Batal atau tekan latar tidak mengembalikan
+          apa-apa. Tanpa penjagaan ini, checkChanges membaca properti dari
+          undefined dan saringannya ikut hangus.
+        */
+        if (data == null) {
+          return;
+        }
+
+        if (this.checkChanges(data)) {
           this.filterFormGroup.patchValue(data);
           this.fetchSelectedMonth(1);
         }
@@ -144,37 +222,19 @@ export class SalesReturnArchiveComponent {
   }
 
   private checkChanges(data: any) {
-    const isActive = data.isActive;
-    const isDelete = data.isDelete;
+    const lama = this.filterFormGroup.value;
 
-    const maxDate = data.endDate;
-    const minDate = data.startDate;
+    if (data.isActive != lama.isActive) return true;
+    if (data.isDelete != lama.isDelete) return true;
 
-    const existingIsActive = this.filterFormGroup.value.isActive;
-    const existingIsDelete = this.filterFormGroup.value.isDelete;
+    if (
+      new Date(lama.startDate).getTime() != new Date(data.startDate).getTime()
+    )
+      return true;
+    if (new Date(lama.endDate).getTime() != new Date(data.endDate).getTime())
+      return true;
 
-    const existingMinDate = this.filterFormGroup.value.startDate;
-    const existingMaxDate = this.filterFormGroup.value.endDate;
-
-    let response = false;
-
-    if (isActive != existingIsActive) {
-      response = true;
-    }
-
-    if (isDelete != existingIsDelete) {
-      response = true;
-    }
-
-    if (existingMinDate.getTime() != minDate.getTime()) {
-      response = true;
-    }
-
-    if (existingMaxDate.getTime() != maxDate.getTime()) {
-      response = true;
-    }
-
-    return response;
+    return false;
   }
 
   viewArchive(id: number) {
@@ -186,10 +246,10 @@ export class SalesReturnArchiveComponent {
       })
       .afterClosed()
       .subscribe((result) => {
-        if (result == 'deleted') {
+        if (result === 'deleted') {
           const index = this.dataSource.findIndex((x) => x.id == id);
-          if (index != -1) {
-            this.dataSource[index].isDelete = true;
+          if (index !== -1) {
+            this.dataSource[index].is_delete = true;
           }
         }
       });

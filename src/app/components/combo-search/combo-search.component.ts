@@ -162,6 +162,17 @@ export class ComboSearchComponent implements OnInit {
     this.pilih(item);
   }
 
+  /**
+   * Mengosongkan kolom tanpa memancing peristiwa clear — dipakai formulir
+   * yang mengatur ulang dirinya setelah berhasil menyimpan, ketika nilai
+   * di balik kolom ini sudah dikembalikan lewat jalurnya sendiri.
+   */
+  reset(): void {
+    this.terpilih = null;
+    this.control.setValue('', { emitEvent: false });
+    this.tutup();
+  }
+
   private tutup(): void {
     this.terbuka = false;
     this.sorot = -1;

@@ -1,32 +1,64 @@
-h5 {
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-size: 1.2rem;
-  color: #041e49;
-  margin-bottom: 2rem;
+/*
+  Kerangka formulirnya dipakai bersama dengan formulir buat lainnya; yang khas
+  halaman ini hanya kartu kandidat faktur.
+*/
+@use "../../../styles/form-buat";
+
+/* Kolom pilihan baris faktur di tabel barang — cukup untuk "Rp 1.250.000". */
+.w-pilihan {
+  width: 160px;
 }
 
-.sales-invoice__action-wrapper {
+/*
+  Kandidat faktur sebagai kartu yang bisa dipilih — anatomi keadaan__kartu
+  yang disederhanakan: nama menonjol, rinciannya redup, terpilih dibingkai
+  aksen. Tombol lihat berdiri di luar area pilih supaya meninjau isi faktur
+  tidak sekaligus memilihnya.
+*/
+.faktur {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faktur__kartu {
+  display: flex;
   align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 0;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px var(--color-divider);
+
+  &--on {
+    box-shadow: inset 0 0 0 1px var(--color-accent);
+    background: var(--color-active);
+  }
 }
 
-.sales-invoice__save-indicator {
-  color: #0b57d0;
-  font-weight: 500;
-  outline: none;
-  border: none;
-  background-color: transparent;
-}
-
-.add-button {
-  outline: none;
-  border: none;
-  color: white;
-  font-weight: 400;
-  background-color: #005cbb;
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.25rem;
+.faktur__pilih {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
   cursor: pointer;
+  border-radius: 10px;
+}
+
+.faktur__nama {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.faktur__rinci {
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }

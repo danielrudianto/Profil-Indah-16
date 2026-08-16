@@ -1,96 +1,160 @@
+<!--
+  Dua tahap seperti seluruh arsip: app-archives memilih bulan lebih dulu,
+  baru daftarnya muncul.
+-->
 <app-archives
   [@slideInOutAnimation]="mode == 0 ? 'in' : 'out'"
   route="sales-return"
   (onMonthSelected)="onMonthSelected($event)"
 />
 
-<div class="container" [@slideInOutAnimation]="mode == 1 ? 'in' : 'out'">
-  <div class="row">
-    <div class="col-12">
-      <div class="dashboard-card">
-        <app-archive-search
-          [isFilterAvailable]="true"
-          (onQueryChanged)="onQueryChanged($event)"
-          (onFilterButtonClicked)="openFilter()"
-        />
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th style="width: 250px">
-                  {{ "sales-return__archive__date" | translate }}
-                </th>
-                <th style="width: 250px">
-                  {{ "sales-return__archive__name" | translate }}
-                </th>
-                <th style="width: 250px">
-                  {{ "sales-return__archive__invoice-name" | translate }}
-                </th>
-                <th style="width: 250px">
-                  {{ "sales-return__archive__customer" | translate }}
-                </th>
-                <th style="width: 150px">
-                  {{ "sales-return__archive__created-by" | translate }}
-                </th>
-                <th style="width: 150px">
-                  {{ "sales-return__archive__status" | translate }}
-                </th>
-              </tr>
-            </thead>
-            <tbody *ngIf="isLoading">
-              <tr>
-                <td colspan="4">
-                  <mat-spinner id="spinner"></mat-spinner>
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length == 0">
-              <tr>
-                <td colspan="4">
-                  <empty-table />
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr
-                *ngFor="let item of dataSource; index as i"
-                (click)="viewArchive(item.id)"
-              >
-                <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.sales_invoice_code.name }}</td>
-                <td>
-                  {{
-                    item.sales_invoice_code.customer == null
-                      ? "Retail"
-                      : item.sales_invoice_code.customer.name
-                  }}
-                </td>
-                <td>{{ item.user_sales_return_code_created_byTouser.name }}</td>
-                <td>
-                  {{
-                    (item.is_delete
-                      ? "sales-return__status__deleted"
-                      : "sales-return__status__active"
-                    ) | translate
-                  }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="paginator__wrapper">
-          <button class="action-button p-relative" (click)="backToYear()">
-            {{ "general__archive__back-to-previous" | translate }}
-          </button>
-          <mat-paginator
-            [length]="dataCount"
-            [pageSize]="20"
-            [pageIndex]="page - 1"
-            (page)="changePage($event)"
-          />
-        </div>
-      </div>
+<div [@slideInOutAnimation]="mode == 1 ? 'in' : 'out'">
+  <app-list-page
+    [heading]="'sales-return__archive__title' | translate"
+    [lede]="'sales-return__archive__lede' | translate"
+    [searchPlaceholder]="'sales-return__archive__search' | translate"
+    [keyword]="keyword"
+    [addLabel]="'sales-return__create' | translate"
+    [page]="page"
+    [pageSize]="pageSize"
+    [total]="dataCount"
+    [loading]="isLoading"
+    [showPageSize]="false"
+    (search)="onQueryChanged($event)"
+    (pageChange)="bukaHalaman($event)"
+    (add)="buatRetur()"
+    (refresh)="fetchSelectedMonth()"
+  >
+    <ng-container aksi>
+      <button type="button" class="aksi-hantu" (click)="backToYear()">
+        <i class="ph ph-arrow-u-up-left" aria-hidden="true"></i>
+        {{ 'sales-return__back-to-archive' | translate }}
+      </button>
+
+      <button
+        type="button"
+        class="aksi-ikon"
+        (click)="openFilter()"
+        [title]="'general__filter' | translate"
+        [attr.aria-label]="'general__filter' | translate"
+      >
+        <i class="ph ph-funnel" aria-hidden="true"></i>
+      </button>
+    </ng-container>
+
+    <div class="saringan" *ngIf="kapsul.length > 0">
+      <span class="saringan__kapsul" *ngFor="let k of kapsul">
+        {{ k.teks }}
+        <button
+          type="button"
+          (click)="lepasKapsul(k.kunci)"
+          [attr.aria-label]="'general__delete' | translate"
+        >
+          <i class="ph ph-x" aria-hidden="true"></i>
+        </button>
+      </span>
+
+      <button
+        type="button"
+        class="saringan__bersih"
+        (click)="hapusSemuaSaringan()"
+      >
+        {{ 'sales-return__filter__clear' | translate }}
+      </button>
     </div>
-  </div>
+
+    <table class="tabel">
+      <thead>
+        <tr>
+          <!--
+            Tanpa tombol urut: endpoint arsip retur tidak meneruskan sortBy
+            ke query-nya, jadi kepala yang bisa ditekan hanya akan berbohong.
+          -->
+          <th>{{ 'sales-return__archive__date' | translate }}</th>
+          <th>{{ 'sales-return__archive__name' | translate }}</th>
+          <th>{{ 'sales-return__archive__invoice-name' | translate }}</th>
+          <th>{{ 'sales-return__archive__customer' | translate }}</th>
+          <th>{{ 'sales-return__archive__created-by' | translate }}</th>
+          <th>{{ 'sales-return__archive__status' | translate }}</th>
+          <th class="tabel__aksi-kepala">
+            <span class="sr-only">{{ 'general__actions' | translate }}</span>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody *ngIf="!isLoading && dataSource.length > 0">
+        <tr *ngFor="let item of dataSource; trackBy: lacakRetur">
+          <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
+          <td class="tabel__utama">{{ item.name }}</td>
+          <td>{{ item.sales_invoice_code?.name }}</td>
+          <!--
+            Faktur tanpa pelanggan bukan data yang hilang — itu penjualan
+            eceran, dan disebut demikian.
+          -->
+          <td>
+            {{
+              item.sales_invoice_code?.customer?.name ??
+                ('sales-invoice__retail' | translate)
+            }}
+          </td>
+          <td class="tabel__redup">
+            {{ item.user_sales_return_code_created_byTouser?.name }}
+          </td>
+          <td>
+            <span
+              class="pill"
+              [class.pill--hijau]="!item.is_delete"
+              [class.pill--garis]="item.is_delete"
+            >
+              <i
+                class="ph-fill"
+                [class.ph-check-circle]="!item.is_delete"
+                [class.ph-trash]="item.is_delete"
+                aria-hidden="true"
+              ></i>
+              {{
+                (item.is_delete
+                  ? 'sales-return__status__deleted'
+                  : 'sales-return__status__active'
+                ) | translate
+              }}
+            </span>
+          </td>
+          <td class="tabel__aksi">
+            <button
+              type="button"
+              class="tabel__aksi-btn"
+              (click)="viewArchive(item.id)"
+              [title]="'general__view' | translate"
+              [attr.aria-label]="'general__view' | translate"
+            >
+              <i class="ph ph-eye" aria-hidden="true"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+
+      <tbody *ngIf="isLoading">
+        <tr>
+          <td colspan="7" class="tabel__pesan">
+            {{ 'general__loading' | translate }}
+          </td>
+        </tr>
+      </tbody>
+
+      <tbody *ngIf="!isLoading && dataSource.length === 0">
+        <tr>
+          <td colspan="7">
+            <app-tabel-kosong
+              ikon="ph-arrow-u-down-left"
+              [judul]="'sales-return__empty__title' | translate"
+              [penjelasan]="'sales-return__empty__desc' | translate"
+              [kataKunci]="keyword"
+              (reset)="resetPencarian()"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </app-list-page>
 </div>
