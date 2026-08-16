@@ -448,24 +448,28 @@
         -->
         <div class="kembali__slot">
           <ng-container *ngIf="perlakuanDiskon === 'kembali'">
-            <div class="seg" role="group">
+            <!--
+              Dua kartu keadaan, persis kelebihan bayar — bukan segmented yang
+              gayanya tidak pernah ada di halaman ini.
+            -->
+            <div class="keadaan">
               <button
                 type="button"
-                class="seg__opt"
-                [class.seg__opt--on]="metodeKembali === 'Cash'"
-                [attr.aria-pressed]="metodeKembali === 'Cash'"
+                class="keadaan__kartu"
+                [class.keadaan__kartu--on]="metodeKembali === 'Cash'"
                 (click)="pilihMetodeKembali('Cash')"
               >
-                {{ 'overpayment__create__method-cash' | translate }}
+                <i class="ph ph-money" aria-hidden="true"></i>
+                <span class="keadaan__judul">{{ 'overpayment__create__method-cash' | translate }}</span>
               </button>
               <button
                 type="button"
-                class="seg__opt"
-                [class.seg__opt--on]="metodeKembali === 'Bank transfer'"
-                [attr.aria-pressed]="metodeKembali === 'Bank transfer'"
+                class="keadaan__kartu"
+                [class.keadaan__kartu--on]="metodeKembali === 'Bank transfer'"
                 (click)="pilihMetodeKembali('Bank transfer')"
               >
-                {{ 'overpayment__create__method-transfer' | translate }}
+                <i class="ph ph-bank" aria-hidden="true"></i>
+                <span class="keadaan__judul">{{ 'overpayment__create__method-transfer' | translate }}</span>
               </button>
             </div>
 
