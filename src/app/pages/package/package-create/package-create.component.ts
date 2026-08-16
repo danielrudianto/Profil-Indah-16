@@ -1,49 +1,74 @@
-import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { Router } from '@angular/router';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgxMaskDirective } from 'ngx-mask';
+
 import {
   ProductSelectorComponent,
-  ProductSelectorType,
 } from 'src/app/components/product-selector/product-selector.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { VerticalDividerComponent } from '../../../components/vertical-divider/vertical-divider.component';
-import { BoxStepperComponent } from '../../../components/box-stepper/box-stepper.component';
-import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { NgxMaskDirective } from 'ngx-mask';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import { NgIf, NgFor, DecimalPipe } from '@angular/common';
-import { MatIcon } from '@angular/material/icon';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 
+/**
+ * Buat paket — bundel beberapa barang dengan satu harga paket.
+ *
+ * Saat masuk faktur, isi paket dihargai proporsional terhadap harga
+ * paketnya, jadi harga acuan tiap baris di sini menentukan PORSI, bukan
+ * harga jual akhir. Barang yang sama dengan satuan yang sama ditolak masuk
+ * dua kali — beda dengan faktur, komposisi master tidak punya alasan untuk
+ * baris kembar.
+ */
 @Component({
-    selector: 'app-package-create',
-    templateUrl: './package-create.component.html',
-    styleUrls: ['./package-create.component.scss'],
-    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatButton, NgIf, NgFor, MatHint, MatIconButton, MatIcon, EmptyTableComponent, DecimalPipe, TranslatePipe]
+  selector: 'app-package-create',
+  templateUrl: './package-create.component.html',
+  styleUrls: ['./package-create.component.scss'],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    MatFormField,
+    MatLabel,
+    MatPrefix,
+    MatInput,
+    NgxMaskDirective,
+    TranslatePipe,
+  ],
 })
-export class PackageCreateComponent {
+export class PackageCreateComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private alertService: AlertService,
-    private _hotkeysService: HotkeysService,
+    private hotkeysService: HotkeysService,
     private apiService: ApiService,
     private dynamicComponentService: DynamicComponentService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router,
   ) {
-    this._hotkeysService.add([
-      new Hotkey('alt+a', (event: KeyboardEvent): boolean => {
+    this.hotkeysService.add(
+      new Hotkey('alt+a', (): boolean => {
         this.openItemSelector();
-        return false; // Prevent bubbling
+        return false;
       }),
-    ]);
+    );
   }
 
-  isSubmitting: boolean = false;
+  isSubmitting = false;
 
   metaFormGroup: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -51,140 +76,164 @@ export class PackageCreateComponent {
     price: new FormControl('', [Validators.required, Validators.min(1)]),
   });
 
-  itemsFormGroup: FormGroup = new FormGroup({
+  itemFormGroup: FormGroup = new FormGroup({
     items: new FormArray([]),
-    number_of_items: new FormControl(0, Validators.min(1)),
-    value: new FormControl(0),
-    valueWODiscount: new FormControl(0),
   });
 
   ngOnInit(): void {
-    this.t.valueChanges.subscribe(() => {
-      let totalPrice = 0;
-      let valueWODiscount = 0;
-      if (this.t.controls.length > 0) {
-        this.t.controls.forEach((x) => {
-          const discount = Number(x.get('discount')?.value);
-          const price = Number(x.get('price')?.value);
-          const quantity = Number(x.get('quantity')?.value);
-
-          totalPrice += quantity * (price - discount);
-          valueWODiscount += quantity * price;
-        });
-
-        this.itemsFormGroup.patchValue({
-          value: totalPrice,
-          valueWODiscount: valueWODiscount,
-        });
-      }
-
-      this.itemsFormGroup.patchValue({
-        number_of_items: this.t.length,
-      });
-    });
+    this.perbaruiChecklist();
+    this.metaFormGroup.valueChanges.subscribe(() => this.perbaruiChecklist());
+    this.itemFormGroup.valueChanges.subscribe(() => this.perbaruiChecklist());
   }
 
   ngOnDestroy(): void {
-    this._hotkeysService.reset();
+    this.hotkeysService.reset();
   }
 
-  get f() {
-    return this.itemsFormGroup.controls;
-  }
-  get t() {
-    return this.f['items'] as FormArray;
+  get t(): FormArray {
+    return this.itemFormGroup.get('items') as FormArray;
   }
 
-  getFormGroupAt(i: number) {
+  itemAt(i: number): FormGroup {
     return this.t.at(i) as FormGroup;
   }
 
-  removeItem(i: number) {
+  /** Nilai seluruh isi pada harga satuannya, sebelum diskon. */
+  get nilaiSatuan(): number {
+    return this.t.controls.reduce((total, x) => {
+      return (
+        total +
+        (Number(x.get('quantity')?.value) || 0) *
+          (Number(x.get('price')?.value) || 0)
+      );
+    }, 0);
+  }
+
+  /** Nilai netto diskon — pembanding harga paketnya. */
+  get nilaiNetto(): number {
+    return this.t.controls.reduce((total, x) => {
+      return (
+        total +
+        (Number(x.get('quantity')?.value) || 0) *
+          ((Number(x.get('price')?.value) || 0) -
+            (Number(x.get('discount')?.value) || 0))
+      );
+    }, 0);
+  }
+
+  get hargaPaket(): number {
+    return Number(this.metaFormGroup.get('price')?.value) || 0;
+  }
+
+  get hemat(): number {
+    return this.nilaiNetto - this.hargaPaket;
+  }
+
+  /**
+   * Daftar syarat sebelum simpan. FIELD yang diperbarui pada perubahan
+   * formulir, BUKAN getter yang mengembalikan larik baru — getter seperti
+   * itu membuat NG0100 berulang. Sudah pernah terjadi di aplikasi ini.
+   */
+  checklist: { kunci: string; selesai: boolean }[] = [];
+
+  perbaruiChecklist(): void {
+    this.checklist = [
+      {
+        kunci: 'package__create__check-info',
+        selesai: this.metaFormGroup.valid,
+      },
+      {
+        kunci: 'package__create__check-items',
+        selesai: this.t.length > 0,
+      },
+      {
+        kunci: 'package__create__check-valid',
+        selesai: this.t.length > 0 && this.itemFormGroup.valid,
+      },
+    ];
+  }
+
+  removeItem(i: number): void {
     this.t.removeAt(i);
   }
 
-  openItemSelector() {
-    const dialog = this.dynamicComponentService
+  openItemSelector(): void {
+    this.dynamicComponentService
       .createDynamicComponent(ProductSelectorComponent, {})
       .subscribe((result: any) => {
-        if (result) {
-          const data = result.data;
-          const sub = result.sub;
-          const check = this.checkProductExists(
-            data.id,
-            sub == null ? null : sub.id
-          );
-
-          if (!check) {
-            this.alertService.showSuccess(
-              this.translateService.instant('general__item__exists')
-            );
-            return;
-          }
-
-          this.t.push(
-            this.formBuilder.group({
-              product_id: [data.id, Validators.required],
-              product_unit_id: [sub == null ? null : sub.id],
-              reference: [data.reference, Validators.required],
-              description: [data.description, Validators.required],
-              price: [
-                sub == null ? data.sales_price : sub.sales_price,
-                [Validators.required, Validators.min(0.01)],
-              ],
-              discount: [
-                sub == null ? data.sales_discount : sub.sales_discount,
-                [Validators.required, Validators.min(0)],
-              ],
-              quantity: [0, [Validators.required, Validators.min(0.01)]],
-            })
-          );
+        if (!result) {
+          return;
         }
+
+        const data = result.data;
+        const sub = result.sub;
+
+        /*
+          Komposisi master tidak punya alasan untuk baris kembar — beda
+          dengan faktur yang membolehkannya untuk bonus supplier.
+        */
+        if (this.sudahAda(data.id, sub == null ? null : sub.id)) {
+          this.alertService.showSuccess(
+            this.translateService.instant('general__item__exists'),
+          );
+          return;
+        }
+
+        this.t.push(
+          this.formBuilder.group({
+            product_id: [data.id, Validators.required],
+            product_unit_id: [sub == null ? null : sub.id],
+            reference: [data.reference, Validators.required],
+            description: [data.description, Validators.required],
+            unit: [sub == null ? data.unit : sub.unit],
+            price: [
+              sub == null ? data.sales_price : sub.sales_price,
+              [Validators.required, Validators.min(0.01)],
+            ],
+            discount: [
+              sub == null ? data.sales_discount : sub.sales_discount,
+              [Validators.required, Validators.min(0)],
+            ],
+            quantity: [null, [Validators.required, Validators.min(0.01)]],
+          }),
+        );
       });
   }
 
-  private checkProductExists(productID: number, productUnitID: number | null) {
-    const index = this.t.value.findIndex((x: any) => {
-      return x.product_id == productID && x.product_unit_id == productUnitID;
-    });
-
-    return index == -1 ? true : false;
+  private sudahAda(productID: number, productUnitID: number | null): boolean {
+    return this.t.value.some(
+      (x: any) =>
+        x.product_id === productID && x.product_unit_id === productUnitID,
+    );
   }
 
-  submitForm() {
+  batal(): void {
+    this.router.navigate(['/Package']);
+  }
+
+  submitForm(): void {
     this.isSubmitting = true;
     this.apiService
       .post('product-package', {
         name: this.metaFormGroup.get('name')?.value,
         description: this.metaFormGroup.get('description')?.value,
-        price: this.metaFormGroup.get('price')?.value,
+        price: Number(this.metaFormGroup.get('price')?.value),
         package_content: this.t.value.map((x: any) => {
           return {
             product_id: x.product_id,
             product_unit_id: x.product_unit_id,
             quantity: x.quantity,
+            /* Harga acuan disimpan NETTO — porsi proporsionalnya di faktur. */
             price: x.price - x.discount,
           };
         }),
       })
       .subscribe({
         next: (result: any) => {
-          this.alertService.showInfo(
-            `${this.translateService.instant(
-              'package__create__success-suffix'
-            )} ${result.name} ${this.translateService.instant(
-              'package__create__success-prefix'
-            )}`
+          this.alertService.showSuccess(
+            `${result.name} ${this.translateService.instant('package__create__success-prefix')}`,
           );
-          this.metaFormGroup.reset();
-          this.itemsFormGroup.reset();
-          this.t.clear();
-
-          this.itemsFormGroup.patchValue({
-            number_of_items: this.t.length,
-            value: 0,
-            valueWODiscount: 0,
-          });
+          this.router.navigate(['/Package']);
         },
         error: (error) => {
           this.alertService.showError(error);

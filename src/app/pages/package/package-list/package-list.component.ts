@@ -1,103 +1,96 @@
-import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
-import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { Package } from 'src/app/models/item.model';
-import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
+import { Component, OnInit } from '@angular/core';
+import { NgFor, NgIf, DecimalPipe } from '@angular/common';
+import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
+
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { AuthService } from 'src/app/services/auth.service';
-import { FeatureSearchComponent } from '../../../components/feature-search/feature-search.component';
-import { NgIf, NgFor, DecimalPipe } from '@angular/common';
-import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
-import { MatIcon } from '@angular/material/icon';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
+/**
+ * Daftar paket — bundel beberapa barang dengan satu harga paket, tampil
+ * sebagai satu baris di faktur penjualan.
+ *
+ * Pencariannya ditenagai Meilisearch (indeks "package"), jadi kata kunci
+ * hidup; ukuran halamannya ditentukan server lewat process.env.LIMIT dan
+ * pilihan 10/25/50 dimatikan. Buat dan ubah adalah HALAMAN, bukan dialog:
+ * isinya tabel barang yang butuh ruang.
+ */
 @Component({
-    selector: 'app-package-list',
-    templateUrl: './package-list.component.html',
-    imports: [FeatureSearchComponent, NgIf, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, EmptyTableComponent, MatProgressSpinner, MatPaginator, DecimalPipe, TranslatePipe]
+  selector: 'app-package-list',
+  templateUrl: './package-list.component.html',
+  imports: [
+    ListPageComponent,
+    TabelKosongComponent,
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    TranslatePipe,
+  ],
 })
-export class PackageListComponent {
+export class PackageListComponent implements OnInit {
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private dialog: MatDialog,
-    private translateService: TranslateService,
     private apiService: ApiService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private router: Router,
   ) {}
 
-  isLoading: boolean = true;
-  dataSource: Package[] = [];
-  dataCount: number = 0;
-  page: number = 1;
-  previousRoute: string = '';
-  isAdministrator: boolean = false;
+  isLoading = true;
+  dataSource: any[] = [];
+  dataCount = 0;
+  page = 1;
+  pageSize = 10;
+  keyword = '';
 
   ngOnInit(): void {
-    this.isAdministrator = this.authService.isAdministrator();
+    this.ambilData();
   }
 
-  openDialog(dialogType: string, id: number) {
-    if (dialogType == 'edit') {
-      this.router.navigate(['Edit', id], {
-        relativeTo: this.activatedRoute,
+  lacakPaket = (_: number, item: any): number => item.id;
+
+  ambilData(): void {
+    this.isLoading = true;
+
+    this.apiService
+      .get('product-package', {
+        keyword: this.keyword,
+        page: this.page,
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.dataCount = data.count;
+          this.dataSource = data.data;
+        },
+        error: (error: any) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
       });
-    }
-
-    if (dialogType == 'delete') {
-      const index = this.dataSource.findIndex((item) => item.id == id);
-      this.dialog
-        .open(DeleteConfirmationComponent, {
-          data: {
-            title: this.translateService.instant(
-              'package__delete__confirmation'
-            ),
-            document: this.dataSource[index].name,
-          },
-        })
-        .afterClosed()
-        .subscribe((result) => {
-          if (result == true) {
-            this.apiService.delete(`product-package/${id}`).subscribe({
-              next: (data) => {
-                this.alertService.showSuccess(
-                  this.translateService.instant('package__delete__success')
-                );
-                this.dataSource.splice(index, 1);
-                this.dataCount = this.dataCount - 1;
-              },
-              error: (error) => {
-                this.alertService.showError(error);
-              },
-            });
-          }
-        });
-    }
   }
 
-  changePage(event: PageEvent) {
-    this.page = event.pageIndex + 1;
-  }
-
-  fetchProducts(page: number) {
-    this.page = page;
-  }
-
-  onUpdatePage() {
+  cari(kataKunci: string): void {
+    this.keyword = kataKunci;
     this.page = 1;
+    this.ambilData();
   }
 
-  onUpdateData(data: any) {
-    this.dataCount = data.count;
-    this.dataSource = data.data;
+  resetPencarian(): void {
+    this.cari('');
   }
 
-  onUpdateLoadingStatus(data: any) {
-    this.isLoading = data;
+  bukaHalaman(halaman: number): void {
+    this.page = halaman;
+    this.ambilData();
+  }
+
+  buat(): void {
+    this.router.navigate(['/Package/Create']);
+  }
+
+  ubah(item: any): void {
+    this.router.navigate(['/Package/Edit', item.id]);
   }
 }

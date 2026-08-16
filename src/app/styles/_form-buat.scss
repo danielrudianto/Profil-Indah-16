@@ -331,10 +331,27 @@
   }
 }
 
+/* Total dipisah garis dan dibesarkan — itu angka yang dibaca terakhir. */
+.ringkas__total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-divider);
+}
+
 .ringkas__total strong {
   font-size: 19px;
   font-weight: 600;
   color: var(--color-accent);
+}
+
+/* Sel total baris pada tabel barang. */
+.baris__total {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 /* ---------------------------------------------------------------- */

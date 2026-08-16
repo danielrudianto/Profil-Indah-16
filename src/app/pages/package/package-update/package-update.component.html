@@ -1,176 +1,133 @@
-<div *ngIf="isLoading">
-  <mat-spinner id="spinner"></mat-spinner>
-</div>
-<div *ngIf="!isLoading">
-  <div class="d-flex mt-4">
-    <div class="d-flex position-relative">
-      <app-vertical-divider></app-vertical-divider>
-      <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
-    </div>
-    <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-      <h5>{{ "package__create__general-data" | translate }}</h5>
-      <form [formGroup]="metaFormGroup">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>{{
-            "package__create__package-name" | translate
-          }}</mat-label>
-          <input matInput formControlName="name" placeholder="Name" />
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>{{
-            "package__create__package-description" | translate
-          }}</mat-label>
-          <input
-            matInput
-            formControlName="description"
-            placeholder="Description"
-          /> </mat-form-field
-        ><mat-form-field appearance="outline" class="w-100">
-          <mat-label>{{ "package__create__price" | translate }}</mat-label>
-          <input
-            matInput
-            formControlName="price"
-            placeholder="Ex. 200 000"
-            type="text"
-            mask="separator.2"
-            thousandSeparator=" "
-          />
-        </mat-form-field>
-      </form>
-    </div>
-  </div>
-  <div class="d-flex">
-    <div class="d-flex position-relative">
-      <app-box-stepper
-        step="2"
-        [valid]="itemsFormGroup.valid"
-      ></app-box-stepper>
-    </div>
-    <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-      <form [formGroup]="itemsFormGroup">
-        <table class="table w-100 mb-2">
-          <thead>
-            <tr>
-              <th>{{ "package__create__table__item" | translate }}</th>
-              <th>{{ "package__create__table__unit-price" | translate }}</th>
-              <th>{{ "package__create__table__quantity" | translate }}</th>
-              <th>{{ "package__create__table__total" | translate }}</th>
-            </tr>
-          </thead>
-          <tbody *ngIf="t.controls.length > 0">
-            <tr
-              *ngFor="let itemForm of t.controls; index as i"
-              [formGroup]="getFormGroupAt(i)"
-            >
-              <td>
-                <p>{{ itemForm.get("reference")?.value }}</p>
-                <div class="text-clamp-2">
-                  {{ itemForm.get("description")?.value }}
-                </div>
-              </td>
-              <td>
-                <mat-form-field appearance="outline">
-                  <mat-label>{{
-                    "package__create__table__unit-price" | translate
-                  }}</mat-label>
-                  <input
-                    matInput
-                    type="text"
-                    class="text-center"
-                    mask="separator"
-                    thousandSeparator=" "
-                    formControlName="price"
-                    autocomplete="off"
-                    placeholder="Ex. 8 000"
-                    [readonly]="true"
-                  />
-                </mat-form-field>
-              </td>
-              <td>
-                <mat-form-field appearance="outline">
-                  <mat-label>{{
-                    "package__create__table__quantity" | translate
-                  }}</mat-label>
-                  <input
-                    matInput
-                    type="text"
-                    class="text-center"
-                    mask="separator"
-                    thousandSeparator=" "
-                    formControlName="quantity"
-                    autocomplete="off"
-                    placeholder="Ex. 20"
-                    readonly
-                  />
-                  <mat-hint *ngIf="itemForm.get('conversion')?.value == 1">{{
-                    itemForm.get("unit")?.value
-                  }}</mat-hint>
-                  <mat-hint *ngIf="itemForm.get('conversion')?.value != 1"
-                    >{{ itemForm.get("unit")?.value }} -
-                    {{
-                      itemForm.get("quantity")?.value *
-                        itemForm.get("conversion")?.value | number : "0.0-2"
-                    }}
-                    {{ itemForm.get("default_unit")?.value }}</mat-hint
-                  >
-                </mat-form-field>
-              </td>
-              <td>
-                Rp.&nbsp;{{
-                  itemForm.get("quantity")?.value *
-                    (itemForm.get("price")?.value -
-                      itemForm.get("discount")?.value) | number : "0.2-2"
-                }}
-              </td>
-            </tr>
-          </tbody>
-          <tbody *ngIf="t.controls.length == 0">
-            <tr>
-              <td colspan="4">
-                <empty-table />
-              </td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="2"></td>
-              <td>
-                {{
-                  "package__create__table__value-before-discount" | translate
-                }}
-              </td>
-              <td>
-                {{
-                  itemsFormGroup.controls["valueWODiscount"].value
-                    | number : "0.2-2"
-                }}
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2"></td>
-              <td>
-                {{ "package__create__table__value-after-discount" | translate }}
-              </td>
-              <td>
-                {{ itemsFormGroup.controls["value"].value | number : "0.2-2" }}
-              </td>
-            </tr>
-          </tfoot>
-        </table>
-      </form>
+<!-- Ubah paket — meta bisa diubah, isinya baca-saja. -->
+<div class="buat" *ngIf="!isLoading">
+  <div class="kisi">
+    <div class="buat__utama">
+      <header class="buat__head">
+        <h1 class="buat__title">{{ 'package__update__title' | translate }}</h1>
+        <p class="buat__lede">{{ 'package__update__lede' | translate }}</p>
+      </header>
 
-      <button
-        [disabled]="
-          !metaFormGroup.valid ||
-          !itemsFormGroup.valid ||
-          isSubmitting ||
-          t.controls.length == 0
-        "
-        class="action-button"
-        (click)="submitForm()"
-      >
-        {{ "package__create__submit" | translate }}
-      </button>
+      <!-- Data umum -->
+      <section class="kartu" [formGroup]="metaFormGroup">
+        <h2 class="kartu__label">{{ 'package__create__general-data' | translate }}</h2>
+
+        <div class="kartu__baris">
+          <div class="field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'package__create__package-name' | translate }}</mat-label>
+              <input matInput type="text" formControlName="name" autocomplete="off" />
+            </mat-form-field>
+          </div>
+          <div class="field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'package__price' | translate }}</mat-label>
+              <input matInput type="text" class="input--kanan" mask="separator" thousandSeparator=" " formControlName="price" autocomplete="off" />
+              <span matTextPrefix>Rp&nbsp;</span>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="field">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ 'package__create__package-description' | translate }}</mat-label>
+            <textarea matInput rows="2" formControlName="description"></textarea>
+          </mat-form-field>
+        </div>
+      </section>
+
+      <!-- Isi paket: baca-saja, dengan alasannya tertulis -->
+      <section class="kartu">
+        <h2 class="kartu__label">{{ 'package__create__items' | translate }}</h2>
+
+        <!--
+          Banner, bukan teks bantu: ketiadaan kolom isian di bawah harus
+          punya penjelasan, atau ia terbaca sebagai fitur yang rusak.
+          Halaman lamanya MENAMPILKAN kolom isian lalu membuang ketikannya
+          diam-diam saat disimpan.
+        -->
+        <p class="petunjuk">
+          <i class="ph ph-lock-simple" aria-hidden="true"></i>
+          {{ 'package__update__content-note' | translate }}
+        </p>
+
+        <div class="gulir">
+          <table class="tabel">
+            <thead>
+              <tr>
+                <th>{{ 'package__create__table__item' | translate }}</th>
+                <th>{{ 'package__create__table__quantity' | translate }}</th>
+                <th class="ke-kanan">{{ 'package__create__table__unit-price' | translate }}</th>
+                <th class="ke-kanan">{{ 'package__create__table__total' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let baris of isi">
+                <td>
+                  <span class="barang__ref">{{ baris.reference }}</span>
+                  <span class="barang__desc">{{ baris.description }}</span>
+                </td>
+                <td>{{ baris.quantity | number: '0.0-2' }} {{ baris.unit }}</td>
+                <td class="ke-kanan baris__total">Rp {{ baris.price | number: '1.0-0' }}</td>
+                <td class="ke-kanan baris__total">
+                  Rp {{ baris.quantity * baris.price | number: '1.0-0' }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
+
+    <aside class="buat__samping">
+      <section class="kartu">
+        <h2 class="kartu__label">{{ 'package__summary' | translate }}</h2>
+
+        <dl class="ringkas">
+          <div>
+            <dt>{{ 'package__summary__net-value' | translate }}</dt>
+            <dd>Rp {{ nilaiIsi | number: '1.0-0' }}</dd>
+          </div>
+          <div>
+            <dt>{{ 'package__summary__package-price' | translate }}</dt>
+            <dd>Rp {{ hargaPaket | number: '1.0-0' }}</dd>
+          </div>
+        </dl>
+
+        <div class="ringkas__total">
+          <span>{{ 'package__summary__saving' | translate }}</span>
+          <strong>Rp {{ hemat | number: '1.0-0' }}</strong>
+        </div>
+      </section>
+
+      <section class="kartu">
+        <h2 class="kartu__label">{{ 'general__actions' | translate }}</h2>
+
+        <button
+          type="button"
+          class="btn btn--primary btn--blok"
+          [disabled]="isSubmitting || !metaFormGroup.valid"
+          (click)="submitForm()"
+        >
+          <i class="ph ph-check" aria-hidden="true"></i>
+          {{ 'package__update__save' | translate }}
+        </button>
+        <button type="button" class="btn btn--kedua btn--blok" (click)="batal()">
+          {{ 'general__cancel' | translate }}
+        </button>
+
+        <!-- Penghapusan hanya untuk administrator. -->
+        <button
+          type="button"
+          class="btn btn--bahaya btn--blok"
+          [disabled]="!isAdministrator || isSubmitting"
+          (click)="delete()"
+        >
+          <i class="ph ph-trash" aria-hidden="true"></i>
+          {{ 'package__update__delete' | translate }}
+        </button>
+      </section>
+    </aside>
   </div>
 </div>
+
+<p class="tabel__pesan" *ngIf="isLoading">{{ 'general__loading' | translate }}</p>
