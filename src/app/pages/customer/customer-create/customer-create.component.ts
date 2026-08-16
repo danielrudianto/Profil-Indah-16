@@ -8,12 +8,22 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { NgxMaskDirective } from 'ngx-mask';
+import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
 import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-customer-create',
     templateUrl: './customer-create.component.html',
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatDialogActions, MatButton, TranslatePipe]
+    imports: [
+    DialogShellComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    NgxMaskDirective,
+    TranslatePipe,
+  ]
 })
 export class CustomerCreateComponent {
   constructor(
@@ -46,7 +56,8 @@ export class CustomerCreateComponent {
             .get('customer__create__success')
             .subscribe((message: string) => {
               this.alertService.showSuccess(`Customer ${data.name} ${message}`);
-              this.closeDialog();
+              /* Bawa datanya pulang: pemanggil bisa langsung memilihnya. */
+              this.dialog.close(data);
             });
         },
         error: (error) => {
