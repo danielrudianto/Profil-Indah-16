@@ -20,6 +20,12 @@ import { availableBankSearch, IBank } from 'src/app/utils/bank';
 import { CustomerCreateComponent } from 'src/app/pages/customer/customer-create/customer-create.component';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import {
+  MatDatepicker,
+  MatDatepickerInput,
+  MatDatepickerToggle,
+} from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 /**
  * Catat kelebihan bayar — bagian `16a`/`16b` berkas desain.
@@ -36,10 +42,14 @@ import { MatInput } from '@angular/material/input';
  * ditentukan sekali ketika metodenya berubah.
  */
 @Component({
+  providers: [provideNativeDateAdapter()],
   selector: 'app-overpayment-create',
   templateUrl: './overpayment-create.component.html',
   styleUrl: './overpayment-create.component.scss',
   imports: [
+    MatDatepicker,
+    MatDatepickerInput,
+    MatDatepickerToggle,
     MatFormField,
     MatLabel,
     MatInput,

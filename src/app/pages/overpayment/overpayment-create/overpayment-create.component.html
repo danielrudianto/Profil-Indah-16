@@ -31,7 +31,9 @@
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ 'overpayment__create__date' | translate }}</mat-label>
-              <input matInput type="date" formControlName="date" />
+              <input matInput [matDatepicker]="opPicker1" formControlName="date" (click)="opPicker1.open()" />
+              <mat-datepicker-toggle matIconSuffix [for]="opPicker1" />
+              <mat-datepicker #opPicker1 />
             </mat-form-field>
           </div>
 
@@ -64,8 +66,7 @@
               (onSelectData)="onSelectPaymentMethod($event)"
               (onUnselectData)="onUnselectPaymentMethod()"
             />
-            <p class="petunjuk">
-              <i class="ph ph-info" aria-hidden="true"></i>
+            <p class="field__bantu">
               {{ 'overpayment__create__payment-method-hint' | translate }}
             </p>
           </div>
@@ -75,6 +76,7 @@
               <mat-label>{{ 'overpayment__create__value' | translate }}</mat-label>
               <input matInput type="text" mask="separator" thousandSeparator="." formControlName="value" autocomplete="off" placeholder="0" />
             </mat-form-field>
+            <p class="field__bantu">{{ 'overpayment__create__currency' | translate }}</p>
           </div>
         </div>
       </section>
@@ -90,7 +92,9 @@
         <div class="field">
           <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ 'overpayment__create__return-plan-date' | translate }}</mat-label>
-              <input matInput type="date" formControlName="return_payment_date" />
+              <input matInput [matDatepicker]="opPicker2" formControlName="return_payment_date" (click)="opPicker2.open()" />
+              <mat-datepicker-toggle matIconSuffix [for]="opPicker2" />
+              <mat-datepicker #opPicker2 />
             </mat-form-field>
         </div>
 
@@ -128,6 +132,7 @@
 
         <!-- Transfer: bank, nama akun, nomor akun. -->
         <ng-container *ngIf="metode === 'Bank transfer'">
+          <div class="kartu__baris kartu__baris--tiga">
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ 'overpayment__create__return-payment-bank' | translate }}</mat-label>
@@ -138,7 +143,6 @@
             </datalist>
           </div>
 
-          <div class="kartu__baris">
             <div class="field">
               <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ 'overpayment__create__account-name' | translate }}</mat-label>
@@ -161,8 +165,7 @@
               <mat-label>{{ 'overpayment__create__receiver-name' | translate }}</mat-label>
               <input matInput type="text" formControlName="return_payment_name" autocomplete="off" />
             </mat-form-field>
-          <p class="petunjuk">
-            <i class="ph ph-info" aria-hidden="true"></i>
+          <p class="field__bantu">
             {{ 'overpayment__create__receiver-hint' | translate }}
           </p>
         </div>

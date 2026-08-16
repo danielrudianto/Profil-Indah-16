@@ -8,7 +8,30 @@
     <app-sidenav />
   </mat-drawer>
 
+  <!--
+    Lapisan dekoratif berblur besar, di lapis PALING BAWAH.
+
+    Pernah dicabut karena disangka membuat halaman berhenti tergambar. Dugaan
+    itu KELIRU: penyebabnya aturan position: relative yang dulu dipasang pada
+    mat-drawer demi menaikkan z-index — drawer keluar dari penempatan absolut
+    Material dan tingginya sendiri mendorong seluruh isi shell ke luar layar.
+    Blurnya tidak bersalah.
+
+    Karena itu urutannya kini diatur lewat z-index pada lapisan ini saja, dan
+    position milik Material tidak disentuh sama sekali.
+  -->
   <mat-drawer-content>
+    <!--
+      Di DALAM mat-drawer-content, bukan sebagai anak langsung containernya:
+      mat-drawer-container hanya memproyeksikan mat-drawer dan
+      mat-drawer-content — anak lain dibuang tanpa peringatan, dan itulah
+      sebabnya lapisan ini sempat tidak pernah muncul di DOM.
+
+      mat-drawer-content sudah position: relative dari Material sendiri, jadi
+      lapisan absolutnya menempel ke situ tanpa menyentuh apa pun.
+    -->
+    <app-page-bloom />
+
     <app-topbar />
 
     <main class="dashboard__body">

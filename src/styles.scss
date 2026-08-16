@@ -138,6 +138,14 @@ html {
   font-family: "Montserrat", system-ui, sans-serif;
 }
 
+/*
+  Isi halaman DIBATASI lebarnya, bukan melebar sampai tepi layar.
+
+  Pada monitor lebar, isi yang mengikuti seluruh lebar membuat baris tabel
+  memanjang sampai mata harus berpindah jauh dari kolom pertama ke kolom
+  terakhir — dan jarak kiri yang hilang membuat kartunya seperti menempel ke
+  navigasi samping. Batasnya 1640px mengikuti push #15.
+*/
 .shell__body {
   padding: 1.5rem 2rem;
 }

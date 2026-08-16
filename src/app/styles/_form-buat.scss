@@ -104,19 +104,39 @@
 }
 
 /*
-  SATU KOLOM. Sempat dua kolom yang menyesuaikan sendiri, dan itu yang membuat
-  kartunya terlihat ragged: kolom yang punya teks bantu di bawahnya jadi lebih
-  tinggi daripada tetangganya, dan jumlah isian yang ganjil menyisakan satu
-  kolom melar sendirian di baris terakhir.
+  DUA KOLOM, sesuai berkas desain.
 
-  Satu kolom juga membebaskan lebar penuh, sehingga keterangan yang dulu
-  berdesakan sebagai teks kecil di bawah kolom bisa berdiri sebagai banner
-  yang benar-benar terbaca.
+  Sempat dijadikan satu kolom karena barisnya terlihat ragged — tetapi
+  penyebabnya bukan jumlah kolomnya, melainkan dua hal yang ditambahkan
+  sendiri: ruang subscript Material di bawah tiap kolom, dan keterangan yang
+  dijadikan banner setinggi 40px di satu sisi sementara sisi lain kosong.
+
+  align-items: start yang membuatnya rapi: kedua kolom rata di ATAS, dan
+  keterangan yang hanya dimiliki salah satunya menjuntai ke bawah tanpa
+  menarik tetangganya ikut memanjang.
 */
 .kartu__baris {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 6px 16px;
+}
+
+@media (max-width: 720px) {
+  .kartu__baris {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Tiga kolom: bank, nama akun, nomor akun. */
+.kartu__baris--tiga {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 860px) {
+  .kartu__baris--tiga {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* ---------------------------------------------------------------- */

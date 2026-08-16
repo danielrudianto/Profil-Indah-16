@@ -14,6 +14,7 @@ import { SidenavComponent } from 'src/app/components/sidenav/sidenav.component';
 import { TopbarComponent } from 'src/app/components/topbar/topbar.component';
 import { NAV_ITEMS } from 'src/app/constants/navigation.constant';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PageBloomComponent } from 'src/app/components/page-bloom/page-bloom.component';
 
 /**
  * Dashboard utama — layar pertama setelah masuk.
@@ -30,7 +31,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  imports: [
+  imports: [PageBloomComponent, 
     NgIf,
     AsyncPipe,
     MatDrawerContainer,

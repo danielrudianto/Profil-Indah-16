@@ -20,12 +20,22 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { ComboSearchComponent } from 'src/app/components/combo-search/combo-search.component';
 import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import {
+  MatDatepicker,
+  MatDatepickerInput,
+  MatDatepickerToggle,
+} from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
+  providers: [provideNativeDateAdapter()],
     selector: 'app-good-receipt-create',
     templateUrl: './good-receipt-create.component.html',
     styleUrls: ['./good-receipt-create.component.scss'],
     imports: [
+    MatDatepicker,
+    MatDatepickerInput,
+    MatDatepickerToggle,
     MatHint,
     MatFormField,
     MatLabel,

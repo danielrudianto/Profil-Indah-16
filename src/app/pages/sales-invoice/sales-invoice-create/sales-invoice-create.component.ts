@@ -38,8 +38,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CustomerCreateComponent } from 'src/app/pages/customer/customer-create/customer-create.component';
 import { MatDialog } from '@angular/material/dialog';
 import { NgClass } from '@angular/common';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
+  providers: [provideNativeDateAdapter()],
     selector: 'app-sales-invoice-create',
     templateUrl: './sales-invoice-create.component.html',
     styleUrls: ['./sales-invoice-create.component.scss'],
@@ -49,6 +51,9 @@ import { NgClass } from '@angular/common';
       pemilih pelanggan; sisanya digambar sendiri lewat kelas Nocturne.
     */
     imports: [
+    MatDatepicker,
+    MatDatepickerInput,
+    MatDatepickerToggle,
     MatFormField,
     MatLabel,
     MatInput,

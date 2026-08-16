@@ -61,7 +61,9 @@
             dikirim ke server.
           -->
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{ "good-receipt__create__date" | translate }}</mat-label><input matInput type="date" formControlName="date" /></mat-form-field>
+            <mat-label>{{ "good-receipt__create__date" | translate }}</mat-label><input matInput [matDatepicker]="grPicker1" formControlName="date" (click)="grPicker1.open()" />
+              <mat-datepicker-toggle matIconSuffix [for]="grPicker1" />
+              <mat-datepicker #grPicker1 /></mat-form-field>
         </div>
 
         <div class="field">
@@ -152,9 +154,19 @@
               <mat-label>{{ "good-receipt__invoice__discount" | translate }}</mat-label>
               <input matInput type="text" formControlName="document_discount" mask="separator.2" thousandSeparator=" " />
             </mat-form-field>
-            <p class="field__bantu">{{ "good-receipt__invoice__discount__note" | translate }}</p>
           </div>
         </div>
+
+        <!--
+          Banner, bukan teks bantu: kalimat ini mengubah ARTI angka yang baru
+          diketik — diskon dokumen dihitung di luar diskon tiap baris — dan
+          keterangan sepenting itu tidak boleh berupa catatan kaki kecil yang
+          mudah terlewat.
+        -->
+        <p class="petunjuk">
+          <i class="ph ph-info" aria-hidden="true"></i>
+          {{ "good-receipt__invoice__discount__note" | translate }}
+        </p>
 
         <div class="faktur__kosong" *ngIf="!dokumenLengkap">
           <i class="ph ph-clock" aria-hidden="true"></i>

@@ -11,7 +11,17 @@
   background: transparent;
 }
 
+/*
+  Isi halaman DIBATASI lebarnya dan ditengahkan — bukan melebar sampai tepi.
+
+  Pada monitor lebar, isi yang mengikuti seluruh lebar membuat baris tabel
+  memanjang sampai mata harus berpindah jauh antar kolom, dan hilangnya jarak
+  kiri membuat kartu terasa menempel ke navigasi samping. Batas 1640px
+  mengikuti push #15.
+*/
 .dashboard__body {
+  max-width: 1640px;
+  margin: 0 auto;
   padding: 28px 32px;
 }
 
