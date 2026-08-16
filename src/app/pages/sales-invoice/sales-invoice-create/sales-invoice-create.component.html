@@ -255,6 +255,18 @@
             </tbody>
           </table>
         </div>
+
+        <!--
+          Baris tambah yang sama dengan penerimaan barang, sampai ke pintasan
+          Alt+A — dua formulir yang melakukan hal serupa harus menawarkan
+          jalan yang serupa. Pintasannya sendiri sudah lama terdaftar di
+          komponen ini; barisnya saja yang belum pernah digambar.
+        -->
+        <button type="button" class="tambah" (click)="openItemSelector()">
+          <i class="ph ph-plus-circle" aria-hidden="true"></i>
+          <span>{{ 'good-receipt__create__add-item' | translate }}</span>
+          <span class="tambah__kunci">Alt + A</span>
+        </button>
       </section>
 
       <!-- ---------------------------------------------------------- -->

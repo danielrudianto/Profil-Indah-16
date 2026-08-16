@@ -144,6 +144,7 @@
 /* ---------------------------------------------------------------- */
 
 .field {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -157,17 +158,27 @@
 }
 
 /*
-  Keterangan MILIK kolom di atasnya, dan jaraknya harus mengatakan itu.
+  Keterangan MENEMPATI ruang subscript Material, bukan menambah tinggi sel.
 
-  mat-form-field menyisipkan ruang subscript-nya sendiri di bawah kolom, jadi
-  keterangan yang ditaruh apa adanya duduk terlalu jauh — terbaca seperti
-  bagian formulir yang lain — sementara kolom berikutnya justru terasa dekat.
-  Margin atas negatif menyerap ruang itu; margin bawah menambah jarak ke kolom
-  sesudahnya. Dekat dengan pemiliknya, jauh dari yang bukan.
+  mat-form-field selalu menyisakan ~22px kosong di bawah kolom untuk pesan
+  galat. Kalau keterangan ditumpuk SETELAH ruang itu, sel yang punya
+  keterangan menjadi lebih tinggi daripada tetangganya — dan grid memulai
+  baris berikutnya setelah sel tertinggi, sehingga kolom tanpa keterangan
+  mendapat jurang kosong di bawahnya (Tanggal vs Customer pada faktur).
+  Diposisikan absolut ke dalam ruang subscript, kedua sel selalu sama tinggi:
+  bedanya hanya subscript-nya terisi atau tidak.
 */
 .field__bantu {
-  margin: -14px 0 6px;
+  position: absolute;
+  top: calc(100% - 20px);
+  left: 0;
+  right: 0;
+  margin: 0;
   font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: color-mix(in srgb, var(--color-text) 52%, transparent);
 }
 

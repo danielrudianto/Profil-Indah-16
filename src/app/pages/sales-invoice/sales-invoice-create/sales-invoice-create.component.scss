@@ -327,15 +327,28 @@
 /* ---------------------------------------------------------------- */
 
 /*
-  Tinggi slot DIPESAN. Berpindah antara "di faktur saja" dan "dikembalikan",
-  lalu antara cash dan transfer, tidak boleh membuat kartu di bawahnya
-  melompat — pola yang sama dengan slot faktur pada penerimaan barang.
+  TANPA tinggi yang dipesan. Slot dipesan berguna ketika ada kartu lain DI
+  BAWAHNYA yang tidak boleh melompat; kartu pengembalian ini kartu terakhir
+  kolom utama, jadi pesanan itu hanya meninggalkan jurang kosong menggantung
+  ketika "diskon di faktur saja" terpilih — keadaan bawaannya sendiri.
 */
 .kembali__slot {
-  min-height: 96px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+
+  &:empty {
+    display: none;
+  }
+}
+
+/* Baris tambah barang — meniru penerimaan barang, sampai ke pintasannya. */
+.tambah__kunci {
+  margin-left: auto;
+  padding: 2px 8px;
+  border: 1px solid var(--color-divider);
+  border-radius: 5px;
+  font-size: 11px;
 }
 
 /* Kartu pilihan di sini bertingkat dua: judul, lalu akibatnya satu kalimat. */
