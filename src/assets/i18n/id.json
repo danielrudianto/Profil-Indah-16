@@ -1901,5 +1901,13 @@
   "sales-invoice__create__issue": "Terbitkan faktur",
   "settings__avatar": "Avatar",
   "settings__avatar_note": "Gambar diri yang tampil di baris atas dan pada catatan yang Anda buat.",
-  "settings__avatar_edit": "Atur avatar"
+  "settings__avatar_edit": "Atur avatar",
+  "sales-invoice__rebate": "Pengembalian diskon",
+  "sales-invoice__rebate__note": "Kalau diskon diberikan sebagai uang kembali ke pelanggan (cash atau transfer), catat di sini supaya laporan harian cocok dengan bank.",
+  "sales-invoice__rebate__on-invoice": "Diskon di faktur saja",
+  "sales-invoice__rebate__on-invoice__note": "Harga dipotong, tidak ada uang keluar.",
+  "sales-invoice__rebate__returned": "Dikembalikan ke pelanggan",
+  "sales-invoice__rebate__returned__note": "Uang keluar, tercatat & ikut rekonsiliasi.",
+  "sales-invoice__rebate__value": "Nominal dikembalikan",
+  "sales-invoice__rebate__receiver": "Nama penerima"
 }

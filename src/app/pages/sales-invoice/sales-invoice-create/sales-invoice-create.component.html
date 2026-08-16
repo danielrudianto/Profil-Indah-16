@@ -357,6 +357,149 @@
           {{ paymentsFormGroup.errors?.['invalidInternalPayment'] }}
         </p>
       </section>
+
+      <!-- ---------------------------------------------------------- -->
+      <!-- Pengembalian diskon                                         -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu" [formGroup]="rebateFormGroup">
+        <h2 class="kartu__label">
+          {{ 'sales-invoice__rebate' | translate }}
+        </h2>
+
+        <p class="petunjuk">
+          <i class="ph ph-info" aria-hidden="true"></i>
+          {{ 'sales-invoice__rebate__note' | translate }}
+        </p>
+
+        <!--
+          Dua kartu pilihan yang setara. Keduanya disebut namanya — yang satu
+          tidak mengeluarkan uang sama sekali, yang lain mengurangi kas — dan
+          akibat sebesar itu tidak boleh diwakili saklar yang hanya menyebut
+          salah satunya.
+        -->
+        <div class="keadaan">
+          <button
+            type="button"
+            class="keadaan__kartu"
+            [class.keadaan__kartu--on]="perlakuanDiskon === 'faktur'"
+            (click)="pilihPerlakuan('faktur')"
+          >
+            <i class="ph ph-receipt" aria-hidden="true"></i>
+            <span class="keadaan__teks">
+              <span class="keadaan__judul">
+                {{ 'sales-invoice__rebate__on-invoice' | translate }}
+              </span>
+              <span class="keadaan__desk">
+                {{ 'sales-invoice__rebate__on-invoice__note' | translate }}
+              </span>
+            </span>
+          </button>
+
+          <button
+            type="button"
+            class="keadaan__kartu"
+            [class.keadaan__kartu--on]="perlakuanDiskon === 'kembali'"
+            (click)="pilihPerlakuan('kembali')"
+          >
+            <i class="ph ph-hand-coins" aria-hidden="true"></i>
+            <span class="keadaan__teks">
+              <span class="keadaan__judul">
+                {{ 'sales-invoice__rebate__returned' | translate }}
+              </span>
+              <span class="keadaan__desk">
+                {{ 'sales-invoice__rebate__returned__note' | translate }}
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <!--
+          Tingginya DIPESAN. Berpindah antara kedua pilihan dan antara cash dan
+          transfer tidak boleh membuat kartu di bawahnya melompat — pola yang
+          sama dengan slot faktur pada penerimaan barang.
+        -->
+        <div class="kembali__slot">
+          <ng-container *ngIf="perlakuanDiskon === 'kembali'">
+            <div class="seg" role="group">
+              <button
+                type="button"
+                class="seg__opt"
+                [class.seg__opt--on]="metodeKembali === 'Cash'"
+                [attr.aria-pressed]="metodeKembali === 'Cash'"
+                (click)="pilihMetodeKembali('Cash')"
+              >
+                {{ 'overpayment__create__method-cash' | translate }}
+              </button>
+              <button
+                type="button"
+                class="seg__opt"
+                [class.seg__opt--on]="metodeKembali === 'Bank transfer'"
+                [attr.aria-pressed]="metodeKembali === 'Bank transfer'"
+                (click)="pilihMetodeKembali('Bank transfer')"
+              >
+                {{ 'overpayment__create__method-transfer' | translate }}
+              </button>
+            </div>
+
+            <div class="kartu__baris">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>
+                  {{ 'sales-invoice__rebate__value' | translate }}
+                </mat-label>
+                <input
+                  matInput
+                  type="text"
+                  class="input--kanan"
+                  mask="separator"
+                  thousandSeparator="."
+                  formControlName="value"
+                  autocomplete="off"
+                />
+                <span matTextPrefix>Rp&nbsp;</span>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>
+                  {{ 'sales-invoice__rebate__receiver' | translate }}
+                </mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="receiver_name"
+                  autocomplete="off"
+                />
+              </mat-form-field>
+            </div>
+
+            <!-- Transfer meminta tujuan; cash tidak punya tujuan apa pun. -->
+            <div class="kartu__baris" *ngIf="metodeKembali === 'Bank transfer'">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>
+                  {{ 'overpayment__create__return-payment-bank' | translate }}
+                </mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="bank_name"
+                  autocomplete="off"
+                />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>
+                  {{ 'overpayment__create__return-payment-number' | translate }}
+                </mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="account_number"
+                  autocomplete="off"
+                />
+              </mat-form-field>
+            </div>
+          </ng-container>
+        </div>
+      </section>
     </div>
 
     <!-- ------------------------------------------------------------ -->

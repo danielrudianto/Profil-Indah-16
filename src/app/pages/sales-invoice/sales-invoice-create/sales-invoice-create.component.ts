@@ -747,6 +747,29 @@ export class SalesInvoiceCreateComponent {
     }
 
     const sales_invoice_code = {
+      /*
+        Pengembalian diskon. Dikirim null ketika diskonnya memang hanya
+        dipotong di faktur — server membedakan keduanya dari ada-tidaknya isi
+        ruas ini, bukan dari nilai nol, sebab nol bisa berarti "dikembalikan
+        tetapi nominalnya belum diisi".
+      */
+      rebate:
+        this.perlakuanDiskon === 'kembali'
+          ? {
+              value: this.nominalKembali,
+              payment_method_id: null,
+              method: this.metodeKembali,
+              receiver_name: this.rebateFormGroup.value.receiver_name,
+              bank_name:
+                this.metodeKembali === 'Cash'
+                  ? null
+                  : this.rebateFormGroup.value.bank_name,
+              account_number:
+                this.metodeKembali === 'Cash'
+                  ? null
+                  : this.rebateFormGroup.value.account_number,
+            }
+          : null,
       sales:
         this.metaFormGroup.controls['sales'].value == 'INTERNAL'
           ? null
@@ -907,6 +930,11 @@ export class SalesInvoiceCreateComponent {
   }
 
   get isValid(): boolean {
+    /* Pengembalian yang setengah terisi tidak boleh ikut terbit. */
+    if (!this.pengembalianLengkap) {
+      return false;
+    }
+
     if (
       !this.metaFormGroup.valid ||
       !this.billFormGroup.valid ||
@@ -1133,6 +1161,97 @@ export class SalesInvoiceCreateComponent {
   /* ---------------------------------------------------------------- */
   /* Ringkasan                                                         */
   /* ---------------------------------------------------------------- */
+
+  /* ---------------------------------------------------------------- */
+  /* Pengembalian diskon                                               */
+  /* ---------------------------------------------------------------- */
+
+  /**
+   * Perlakuan diskon: 'faktur' (dipotong di faktur saja) atau 'kembali'
+   * (dikembalikan sebagai uang).
+   *
+   * BUKAN saklar boolean. Keduanya keputusan setara yang akibatnya
+   * berlawanan — yang pertama tidak mengeluarkan uang sama sekali, yang kedua
+   * mengurangi kas — jadi keduanya harus disebut namanya.
+   */
+  perlakuanDiskon: 'faktur' | 'kembali' = 'faktur';
+
+  /** 'Cash' atau 'Bank transfer'; ejaannya sama dengan yang dikirim server. */
+  metodeKembali: string = 'Cash';
+
+  rebateFormGroup: FormGroup = new FormGroup({
+    value: new FormControl(0),
+    receiver_name: new FormControl(''),
+    bank_name: new FormControl(''),
+    account_number: new FormControl(''),
+  });
+
+  /**
+   * Memilih perlakuan diskon.
+   *
+   * Berpindah ke "dikembalikan" mengisi nominalnya dengan total diskon faktur
+   * — angka yang hampir selalu benar, dan tetap boleh diubah. Berpindah balik
+   * MENGOSONGKAN seluruh isian: kalau dibiarkan, nama penerima dan nomor
+   * rekening yang telanjur diketik ikut terkirim pada faktur yang sebenarnya
+   * tidak mengeluarkan uang sepeser pun.
+   */
+  pilihPerlakuan(pilihan: 'faktur' | 'kembali'): void {
+    this.perlakuanDiskon = pilihan;
+
+    if (pilihan === 'kembali') {
+      if (!Number(this.rebateFormGroup.value.value)) {
+        this.rebateFormGroup.patchValue({ value: this.totalDiskon });
+      }
+      return;
+    }
+
+    this.rebateFormGroup.reset({
+      value: 0,
+      receiver_name: '',
+      bank_name: '',
+      account_number: '',
+    });
+  }
+
+  pilihMetodeKembali(pilihan: string): void {
+    this.metodeKembali = pilihan;
+
+    /* Bank dan nomor akun tidak berlaku pada pengembalian tunai. */
+    if (pilihan === 'Cash') {
+      this.rebateFormGroup.patchValue({ bank_name: '', account_number: '' });
+    }
+  }
+
+  /** Total diskon faktur — nilai bawaan nominal pengembalian. */
+  get totalDiskon(): number {
+    return this.diskonItem + Number(this.valueFormGroup.value.discount ?? 0);
+  }
+
+  get nominalKembali(): number {
+    return Number(this.rebateFormGroup.value.value) || 0;
+  }
+
+  /**
+   * Benar bila pengembaliannya sudah cukup lengkap untuk dicatat.
+   *
+   * Nama penerima WAJIB. Tanpa itu catatan ini hanya memindahkan selisih kas
+   * dari "tidak tercatat" menjadi "tercatat tetapi tidak bisa ditelusuri", dan
+   * sore hari tetap tidak ada yang bisa menjawab siapa yang membawa uangnya.
+   */
+  get pengembalianLengkap(): boolean {
+    if (this.perlakuanDiskon !== 'kembali') {
+      return true;
+    }
+
+    const v = this.rebateFormGroup.value;
+    if (this.nominalKembali <= 0 || !v.receiver_name) {
+      return false;
+    }
+
+    return this.metodeKembali === 'Cash'
+      ? true
+      : !!v.bank_name && !!v.account_number;
+  }
 
   get subtotal(): number {
     return this.t.value.reduce(

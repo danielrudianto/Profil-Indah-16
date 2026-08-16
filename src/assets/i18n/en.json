@@ -1895,5 +1895,13 @@
   "sales-invoice__create__issue": "Issue invoice",
   "settings__avatar": "Avatar",
   "settings__avatar_note": "The picture shown in the top bar and on records you create.",
-  "settings__avatar_edit": "Edit avatar"
+  "settings__avatar_edit": "Edit avatar",
+  "sales-invoice__rebate": "Discount returned",
+  "sales-invoice__rebate__note": "If the discount is handed back to the customer as money (cash or transfer), record it here so the daily report matches the bank.",
+  "sales-invoice__rebate__on-invoice": "Discount on the invoice only",
+  "sales-invoice__rebate__on-invoice__note": "The price is reduced; no money leaves.",
+  "sales-invoice__rebate__returned": "Returned to the customer",
+  "sales-invoice__rebate__returned__note": "Money leaves, recorded and reconciled.",
+  "sales-invoice__rebate__value": "Amount returned",
+  "sales-invoice__rebate__receiver": "Receiver name"
 }
