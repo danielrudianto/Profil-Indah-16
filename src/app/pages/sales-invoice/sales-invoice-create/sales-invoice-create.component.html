@@ -41,9 +41,8 @@
           </div>
 
           <div class="field">
-            <label>{{ 'sales-invoice__create__customer' | translate }}</label>
             <app-autocomplete-search
-              label=""
+              [label]="'sales-invoice__create__customer' | translate"
               placeholder="Ex. Bing Jaya"
               routeName="customer"
               defaultValue="Retail"
