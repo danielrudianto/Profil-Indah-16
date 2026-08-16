@@ -1960,5 +1960,11 @@
   "sales-invoice__type__internal__desk": "Goods set aside so they are not sold.",
   "sales-invoice__type__internal__note": "Stock is held — no money comes in.",
   "company__create__lede": "Companies are used on invoices and receipts.",
-  "company__update__lede": "Edit its details, or delete it when no longer used."
+  "company__update__lede": "Edit its details, or delete it when no longer used.",
+  "customer__lede": "Customers with their address and person in charge.",
+  "customer__search": "Search customer name…",
+  "customer__add": "Add customer",
+  "customer__empty__title": "No customers yet",
+  "customer__empty__desc": "Customers are used on invoices and deposits. Add one with the button above.",
+  "customer__update__lede": "Edit their details, or delete when no longer used."
 }

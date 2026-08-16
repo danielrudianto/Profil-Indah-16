@@ -1,95 +1,136 @@
-import { Component } from '@angular/core';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
-import { CustomerModel } from 'src/app/models/customer.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { CustomerUpdateComponent } from './customer-update/customer-update.component';
+import { Component, OnInit } from '@angular/core';
+import { NgFor, NgIf } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { FeatureBackgroundComponent } from '../../components/feature-background/feature-background.component';
-import { FeatureHeaderComponent } from '../../components/feature-header/feature-header.component';
-import { FeatureSearchComponent } from '../../components/feature-search/feature-search.component';
-import { NgIf, NgFor } from '@angular/common';
-import { EmptyTableComponent } from '../../components/empty-table/empty-table.component';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NgxMaskPipe } from 'ngx-mask';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
+import { CustomerCreateComponent } from './customer-create/customer-create.component';
+import { CustomerUpdateComponent } from './customer-update/customer-update.component';
+
+/**
+ * Daftar pelanggan — mengikuti susunan daftar perusahaan; endpoint-nya
+ * menerima pageSize, jadi pilihan 10/25/50 dibiarkan hidup.
+ */
 @Component({
-    selector: 'app-customer',
-    templateUrl: './customer.component.html',
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, EmptyTableComponent, MatProgressSpinner, MatPaginator, NgxMaskPipe, TranslatePipe]
+  selector: 'app-customer',
+  templateUrl: './customer.component.html',
+  imports: [
+    ListPageComponent,
+    TabelKosongComponent,
+    NgIf,
+    NgFor,
+    NgxMaskPipe,
+    TranslatePipe,
+  ],
 })
-export class CustomerComponent {
+export class CustomerComponent implements OnInit {
   constructor(
-    private authService: AuthService,
-    private dynamicComponentService: DynamicComponentService,
-    private dialog: MatDialog
+    private apiService: ApiService,
+    private alertService: AlertService,
+    private dialog: MatDialog,
   ) {}
 
-  isLoading: boolean = true;
-  dataSource: CustomerModel[] = [];
-  dataCount: number = 0;
-  page: number = 1;
-  pageSize: number = 10;
-  previousRoute: string = '';
-  isAdministrator: boolean = false;
+  isLoading = true;
+  dataSource: any[] = [];
+  dataCount = 0;
+  page = 1;
+  pageSize = 10;
+  keyword = '';
 
   ngOnInit(): void {
-    this.isAdministrator = this.authService.isAdministrator();
+    this.ambilData();
   }
 
-  openDialog(id: number) {
-    this.dialog
-      .open(CustomerUpdateComponent, {
-        data: {
-          id: id,
+  lacakPelanggan = (_: number, item: any): number => item.id;
+
+  ambilData(): void {
+    this.isLoading = true;
+
+    this.apiService
+      .get('customer', {
+        keyword: this.keyword,
+        page: this.page,
+        pageSize: this.pageSize,
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.dataCount = data.count;
+          this.dataSource = data.data;
         },
+        error: (error: any) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
+  }
+
+  cari(kataKunci: string): void {
+    this.keyword = kataKunci;
+    this.page = 1;
+    this.ambilData();
+  }
+
+  resetPencarian(): void {
+    this.cari('');
+  }
+
+  bukaHalaman(halaman: number): void {
+    this.page = halaman;
+    this.ambilData();
+  }
+
+  gantiUkuran(ukuran: number): void {
+    this.pageSize = ukuran;
+    this.page = 1;
+    this.ambilData();
+  }
+
+  tambah(): void {
+    this.dialog
+      .open(CustomerCreateComponent, {
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
       })
       .afterClosed()
       .subscribe((data) => {
-        if (data === 'deleted') {
-          const index = this.dataSource.findIndex((x) => x.id == id);
-          if (index != -1) {
-            this.dataSource.splice(index, 1);
-          }
-
-          this.dataCount--;
-          return;
-        } else if (data) {
-          const index = this.dataSource.findIndex((x) => x.id == id);
-          if (index != -1) {
-            this.dataSource[index].name = data.name;
-            this.dataSource[index].address = data.address;
-            this.dataSource[index].npwp = data.npwp;
-          }
+        if (data) {
+          this.page = 1;
+          this.ambilData();
         }
       });
   }
 
-  changePage(event: PageEvent) {
-    if (this.pageSize != event.pageSize) {
-      this.pageSize = event.pageSize;
-      this.fetchProducts(1);
-    } else {
-      this.page = event.pageIndex + 1;
-      this.fetchProducts(this.page);
-    }
-  }
+  ubah(item: any): void {
+    this.dialog
+      .open(CustomerUpdateComponent, {
+        data: { id: item.id },
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (!data) {
+          return;
+        }
 
-  fetchProducts(page: number) {
-    this.page = page;
-  }
+        const index = this.dataSource.findIndex((x) => x.id === item.id);
+        if (index === -1) {
+          return;
+        }
 
-  onUpdatePage() {
-    this.page = 1;
-  }
+        if (data === 'deleted') {
+          this.dataSource.splice(index, 1);
+          this.dataCount = this.dataCount - 1;
+          return;
+        }
 
-  onUpdateData(data: any) {
-    this.dataCount = data.count;
-    this.dataSource = data.data;
-  }
-
-  onUpdateLoadingStatus(data: any) {
-    this.isLoading = data;
+        this.dataSource[index] = { ...this.dataSource[index], ...data };
+      });
   }
 }

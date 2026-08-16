@@ -1966,5 +1966,11 @@
   "sales-invoice__type__internal__desk": "Barang dititip supaya tidak terjual.",
   "sales-invoice__type__internal__note": "Stok ditahan — tidak ada uang masuk.",
   "company__create__lede": "Perusahaan dipakai pada faktur dan penerimaan.",
-  "company__update__lede": "Ubah datanya, atau hapus bila tidak lagi dipakai."
+  "company__update__lede": "Ubah datanya, atau hapus bila tidak lagi dipakai.",
+  "customer__lede": "Pelanggan beserta alamat dan penanggung jawabnya.",
+  "customer__search": "Cari nama pelanggan…",
+  "customer__add": "Tambah pelanggan",
+  "customer__empty__title": "Belum ada pelanggan",
+  "customer__empty__desc": "Pelanggan dipakai pada faktur dan setoran. Tambahkan lewat tombol di atas.",
+  "customer__update__lede": "Ubah datanya, atau hapus bila tidak lagi dipakai."
 }

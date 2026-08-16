@@ -12,10 +12,20 @@ import { MatInput } from '@angular/material/input';
 import { NgxMaskDirective } from 'ngx-mask';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
 @Component({
     selector: 'app-customer-update',
     templateUrl: './customer-update.component.html',
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatButton, MatIcon, MatDialogActions, TranslatePipe]
+    imports: [
+    DialogShellComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    NgxMaskDirective,
+    TranslatePipe,
+  ]
 })
 export class CustomerUpdateComponent {
   constructor(
@@ -62,6 +72,10 @@ export class CustomerUpdateComponent {
       .add(() => {
         this.isLoading = false;
       });
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 
   delete() {
