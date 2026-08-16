@@ -1931,5 +1931,21 @@
   "promotion__status__finished": "Finished",
   "promotion__status__deleted": "Deleted",
   "promotion__empty__title": "No promotions yet",
-  "promotion__empty__desc": "Supplier programmes will appear here. Create one with the button above."
+  "promotion__empty__desc": "Supplier programmes will appear here. Create one with the button above.",
+  "promotion__create__title": "Create Promotion",
+  "promotion__create__lede": "Supplier programme: a spend target on chosen brands within a period.",
+  "promotion__create__info": "Promotion info",
+  "promotion__create__brands": "Participating brands",
+  "promotion__create__brands-empty": "No brands yet. Search and pick from the field above.",
+  "promotion__create__rules": "SKU rules",
+  "promotion__create__rules-and": "All rules must match (AND)",
+  "promotion__create__rules-empty": "No SKU rules — without rules, every SKU of the chosen brands counts.",
+  "promotion__create__add-rule": "Add rule",
+  "promotion__create__rule-value": "Value",
+  "promotion__create__actions": "Actions",
+  "promotion__create__save": "Save promotion",
+  "promotion__create__saved": "Promotion saved.",
+  "promotion__create__no-end": "No end date (ongoing)",
+  "promotion__create__no-target": "No specific target",
+  "general__pick-date": "Pick a date"
 }

@@ -430,3 +430,24 @@
   border-radius: 5px;
   font-size: 11px;
 }
+
+/* Tombol pembuka kalender di ujung kolom tanggal. */
+.buka-kalender {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 18px;
+  color: color-mix(in srgb, var(--color-text) 60%, transparent);
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-hover);
+    color: var(--color-text);
+  }
+}

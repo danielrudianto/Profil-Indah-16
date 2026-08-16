@@ -18,7 +18,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { availableBankSearch, IBank } from 'src/app/utils/bank';
 import { CustomerCreateComponent } from 'src/app/pages/customer/customer-create/customer-create.component';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {
   MatDatepicker,
@@ -47,6 +47,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
   templateUrl: './overpayment-create.component.html',
   styleUrl: './overpayment-create.component.scss',
   imports: [
+    MatSuffix,
     MatDatepicker,
     MatDatepickerInput,
     MatDatepickerToggle,

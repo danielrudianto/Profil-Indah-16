@@ -37,8 +37,16 @@
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ 'sales-invoice__create__date' | translate }}</mat-label>
               <input matInput [matDatepicker]="siPicker1" formControlName="date" (click)="siPicker1.open()" />
-              <mat-datepicker-toggle matIconSuffix [for]="siPicker1" />
-              <mat-datepicker #siPicker1 />
+              <!--
+                Tombol kalender manual, bukan mat-datepicker-toggle: elemen toggle itu
+                hilang tanpa jejak pada pipeline dev meski utuh di bundel produksi,
+                dan tombol biasa yang memanggil open() berperilaku sama di keduanya.
+              -->
+              <button type="button" matSuffix class="buka-kalender" (click)="siPicker1.open()"
+                [attr.aria-label]="'general__pick-date' | translate">
+                <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+              </button>
+              <mat-datepicker #siPicker1></mat-datepicker>
             </mat-form-field>
           </div>
 

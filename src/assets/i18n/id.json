@@ -1937,5 +1937,21 @@
   "promotion__status__finished": "Selesai",
   "promotion__status__deleted": "Dihapus",
   "promotion__empty__title": "Belum ada promosi",
-  "promotion__empty__desc": "Program promosi pemasok akan tampil di sini. Buat lewat tombol di atas."
+  "promotion__empty__desc": "Program promosi pemasok akan tampil di sini. Buat lewat tombol di atas.",
+  "promotion__create__title": "Buat Promosi",
+  "promotion__create__lede": "Program pemasok: target belanja pada merek terpilih dalam satu periode.",
+  "promotion__create__info": "Info promosi",
+  "promotion__create__brands": "Merek peserta",
+  "promotion__create__brands-empty": "Belum ada merek. Cari lalu pilih dari kolom di atas.",
+  "promotion__create__rules": "Aturan SKU",
+  "promotion__create__rules-and": "Semua aturan harus terpenuhi (AND)",
+  "promotion__create__rules-empty": "Belum ada aturan SKU — tanpa aturan, semua SKU merek terpilih ikut.",
+  "promotion__create__add-rule": "Tambah aturan",
+  "promotion__create__rule-value": "Nilai",
+  "promotion__create__actions": "Aksi",
+  "promotion__create__save": "Simpan promosi",
+  "promotion__create__saved": "Promosi tersimpan.",
+  "promotion__create__no-end": "Tidak ada akhirnya (berjalan terus)",
+  "promotion__create__no-target": "Tidak ada target tertentu",
+  "general__pick-date": "Pilih tanggal"
 }

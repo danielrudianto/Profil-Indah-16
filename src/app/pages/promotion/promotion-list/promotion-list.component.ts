@@ -83,12 +83,12 @@ export class PromotionListComponent {
     this.page = page;
   }
 
+  /*
+    Halaman penuh, bukan panel yang menimpa daftar: formulirnya tiga kartu
+    dengan aturan yang bisa bertambah — terlalu besar untuk lapisan tempelan.
+  */
   onAddButtonPressed() {
-    const url = window.location.href;
-    this.dynamicComponentService.createDynamicComponent(
-      PromotionCreateComponent,
-      {}
-    );
+    this.router.navigate(['/Promotion/Create']);
   }
 
   fetch(page: number = this.page) {

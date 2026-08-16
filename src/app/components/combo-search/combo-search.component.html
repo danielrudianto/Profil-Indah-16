@@ -8,7 +8,12 @@
     -->
     <mat-label>{{ label }}</mat-label>
     <input matInput type="text" autocomplete="off" [id]="inputId" [formControl]="control" [attr.placeholder]="placeholder" [attr.disabled]="disabled ? '' : null" [attr.aria-expanded]="terbuka" role="combobox" aria-autocomplete="list" (focus)="fokus()" (keydown)="tombol($event)" />
-    <i class="ph ph-caret-down" matSuffix aria-hidden="true"></i>
+    <!--
+      Ikon kaca pembesar, BUKAN caret. Caret menjanjikan daftar pilihan tetap
+      seperti mat-select; kolom ini autocomplete — orang mengetik, daftarnya
+      menyaring — dan ikonnya harus menjanjikan hal yang benar.
+    -->
+    <i class="ph ph-magnifying-glass" matSuffix aria-hidden="true"></i>
   </mat-form-field>
 
   <ul class="combo__daftar" *ngIf="terbuka" role="listbox">

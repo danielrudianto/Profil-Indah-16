@@ -32,8 +32,16 @@
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ 'overpayment__create__date' | translate }}</mat-label>
               <input matInput [matDatepicker]="opPicker1" formControlName="date" (click)="opPicker1.open()" />
-              <mat-datepicker-toggle matIconSuffix [for]="opPicker1" />
-              <mat-datepicker #opPicker1 />
+              <!--
+                Tombol kalender manual, bukan mat-datepicker-toggle: elemen toggle itu
+                hilang tanpa jejak pada pipeline dev meski utuh di bundel produksi,
+                dan tombol biasa yang memanggil open() berperilaku sama di keduanya.
+              -->
+              <button type="button" matSuffix class="buka-kalender" (click)="opPicker1.open()"
+                [attr.aria-label]="'general__pick-date' | translate">
+                <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+              </button>
+              <mat-datepicker #opPicker1></mat-datepicker>
             </mat-form-field>
           </div>
 
@@ -93,8 +101,16 @@
           <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ 'overpayment__create__return-plan-date' | translate }}</mat-label>
               <input matInput [matDatepicker]="opPicker2" formControlName="return_payment_date" (click)="opPicker2.open()" />
-              <mat-datepicker-toggle matIconSuffix [for]="opPicker2" />
-              <mat-datepicker #opPicker2 />
+              <!--
+                Tombol kalender manual, bukan mat-datepicker-toggle: elemen toggle itu
+                hilang tanpa jejak pada pipeline dev meski utuh di bundel produksi,
+                dan tombol biasa yang memanggil open() berperilaku sama di keduanya.
+              -->
+              <button type="button" matSuffix class="buka-kalender" (click)="opPicker2.open()"
+                [attr.aria-label]="'general__pick-date' | translate">
+                <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+              </button>
+              <mat-datepicker #opPicker2></mat-datepicker>
             </mat-form-field>
         </div>
 
