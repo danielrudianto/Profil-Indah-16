@@ -13,8 +13,20 @@
   bisa dibedakan.
 */
 .bloom {
-  position: absolute;
-  inset: 0;
+  /*
+    STICKY setinggi layar, bukan absolute inset 0.
+
+    mat-drawer-content adalah elemen yang menggulung, dan anak absolut dengan
+    inset 0 hanya setinggi viewport-nya — begitu halaman digulung, lapisannya
+    ikut naik lalu HABIS, dan sisa halaman berdiri di atas latar polos dengan
+    garis potongan persis di batasnya. Sticky membuatnya menempel selama
+    digulung; margin-bottom negatif meniadakan tingginya dari aliran sehingga
+    konten di bawahnya tidak terdorong.
+  */
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  margin-bottom: -100vh;
   overflow: hidden;
   pointer-events: none;
   z-index: 0;

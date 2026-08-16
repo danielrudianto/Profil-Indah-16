@@ -380,3 +380,53 @@
 .btn--blok {
   width: 100%;
 }
+
+/* ---------------------------------------------------------------- */
+/* Baris tambah barang                                               */
+/*                                                                   */
+/* SATU definisi untuk semua formulir. Sempat hidup sebagai dua      */
+/* salinan berbeda di penerimaan barang dan faktur penjualan — yang  */
+/* satu abu, yang satu beraksen, hover-nya berlainan — dan dua       */
+/* salinan itulah yang membuat "tombol yang sama" terasa dua tombol. */
+/* ---------------------------------------------------------------- */
+
+.tambah {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 11px 14px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  text-align: left;
+  color: var(--color-accent);
+  background: transparent;
+  border: 1px dashed color-mix(in srgb, var(--color-accent) 45%, transparent);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+
+  i {
+    font-size: 17px;
+  }
+
+  &:hover {
+    background: var(--color-accent-wash);
+    border-color: var(--color-accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.tambah__kunci {
+  margin-left: auto;
+  padding: 2px 8px;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+  border-radius: 5px;
+  font-size: 11px;
+}

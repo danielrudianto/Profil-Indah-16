@@ -239,33 +239,6 @@
   }
 }
 
-/* Tombol tambah bergaris putus — menyatakan tempat yang masih bisa diisi. */
-.tambah {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  min-height: 42px;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-accent);
-  background: transparent;
-  border: 1px dashed color-mix(in srgb, var(--color-accent) 45%, transparent);
-  border-radius: 8px;
-  cursor: pointer;
-
-  &:hover {
-    background: var(--color-accent-wash);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-  }
-}
-
 .galat {
   margin: 0;
   font-size: 12.5px;
@@ -340,15 +313,6 @@
   &:empty {
     display: none;
   }
-}
-
-/* Baris tambah barang — meniru penerimaan barang, sampai ke pintasannya. */
-.tambah__kunci {
-  margin-left: auto;
-  padding: 2px 8px;
-  border: 1px solid var(--color-divider);
-  border-radius: 5px;
-  font-size: 11px;
 }
 
 /* Kartu pilihan di sini bertingkat dua: judul, lalu akibatnya satu kalimat. */
