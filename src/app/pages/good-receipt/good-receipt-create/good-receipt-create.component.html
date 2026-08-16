@@ -338,6 +338,24 @@
         <span>{{ "good-receipt__create__add-item" | translate }}</span>
         <span class="tambah__kunci">Alt + A</span>
       </button>
+
+      <!--
+        Ringkasan tepat di bawah barangnya: subtotal, diskon dokumen, lalu
+        grand total — supaya angka akhirnya terbaca tanpa melirik kolom kanan.
+        Hanya untuk peran yang melihat harga.
+      -->
+      <dl class="ringkas ringkas--bawah" *ngIf="bolehUbahHarga">
+        <dt>{{ "good-receipt__summary__subtotal" | translate }}</dt>
+        <dd>Rp {{ subtotal | number: "1.0-0" }}</dd>
+
+        <ng-container *ngIf="diskonDokumen > 0">
+          <dt>{{ "good-receipt__summary__doc-discount" | translate }}</dt>
+          <dd class="ringkas__kurang">– Rp {{ diskonDokumen | number: "1.0-0" }}</dd>
+        </ng-container>
+
+        <dt>{{ "good-receipt__summary__grand-total" | translate }}</dt>
+        <dd class="ringkas__total"><strong>Rp {{ total | number: "1.0-0" }}</strong></dd>
+      </dl>
     </section>
   </div>
 

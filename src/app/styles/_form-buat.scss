@@ -534,3 +534,11 @@
     flex: none;
   }
 }
+
+/* Ringkasan di kaki kartu barang: menepi ke kanan, selebar kolom angka. */
+.ringkas--bawah {
+  max-width: 340px;
+  margin-left: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-divider);
+}
