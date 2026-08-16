@@ -252,16 +252,23 @@ const routes: Routes = [
                   ),
               },
               {
-                path: '**',
-                redirectTo: 'Sales',
-              },
-              {
                 path: 'Purchase',
                 canActivate: [AdministratorGuard],
                 loadComponent: () =>
                   import('./pages/price/price-purchase/price-purchase.component').then(
                     (m) => m.PricePurchaseComponent,
                   ),
+              },
+              /*
+                Wildcard WAJIB paling akhir. Ia pernah berdiri di antara Sales
+                dan Purchase, dan karena router mencocokkan berurutan,
+                /Price/Purchase selalu tertangkap wildcard lalu dialihkan ke
+                Sales — halaman harga beli tidak pernah bisa dibuka sama
+                sekali.
+              */
+              {
+                path: '**',
+                redirectTo: 'Sales',
               },
             ],
           },

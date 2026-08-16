@@ -690,3 +690,61 @@
     outline-offset: 2px;
   }
 }
+
+/* ---------------------------------------------------------------- */
+/* Dialog harga (jual & beli) — satu baris per satuan                */
+/* ---------------------------------------------------------------- */
+
+.harga__memuat {
+  margin: 0;
+  padding: 24px 0;
+  text-align: center;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+/* Barang yang sedang diubah, di atas baris-baris satuannya. */
+.harga__produk {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+/*
+  Baris satuan: nama satuan di kiri, dua isian Rupiah berdampingan.
+  Kolom pertama diberi lebar tetap supaya seluruh baris sejajar meski nama
+  satuannya berbeda panjang.
+*/
+.harga__baris {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 6px;
+}
+
+.harga__satuan {
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.harga__satuan-nama {
+  font-weight: 500;
+}
+
+.harga__satuan-konversi {
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+}
+
+/* Pesan pelanggaran menempati seluruh lebar di bawah barisnya. */
+.harga__galat {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: -4px 0 8px;
+  font-size: 12.5px;
+  /* Merah yang sama dengan .btn--bahaya — satu merah untuk semua. */
+  color: #e05260;
+}

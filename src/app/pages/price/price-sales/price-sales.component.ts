@@ -1,72 +1,110 @@
-import { Component } from '@angular/core';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
-import { Router } from '@angular/router';
-import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { PriceSalesUpdateComponent } from './price-sales-update/price-sales-update.component';
+import { Component, OnInit } from '@angular/core';
+import { NgFor, NgIf, DecimalPipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { TransactionHeaderComponent } from '../../../components/transaction-header/transaction-header.component';
-import { FeatureSearchComponent } from '../../../components/feature-search/feature-search.component';
-import { NgIf, NgFor, DecimalPipe } from '@angular/common';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
-@Component({
-    selector: 'app-price-sales',
-    templateUrl: './price-sales.component.html',
-    styleUrls: ['./price-sales.component.scss'],
-    imports: [TransactionHeaderComponent, FeatureSearchComponent, NgIf, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, TranslatePipe]
-})
-export class PriceSalesComponent {
-  constructor(private router: Router, private dialog: MatDialog) {}
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
+import { PriceSalesUpdateComponent } from './price-sales-update/price-sales-update.component';
 
-  isLoading: boolean = false;
-  backRoute: string = this.router.url;
+/**
+ * Daftar harga jual — mengikuti susunan daftar pelanggan. Ukuran halaman
+ * ditentukan server lewat process.env.LIMIT, jadi pilihan 10/25/50 dimatikan;
+ * tidak ada tombol tambah karena barangnya lahir dari halaman produk, di sini
+ * hanya harganya yang diubah.
+ */
+@Component({
+  selector: 'app-price-sales',
+  templateUrl: './price-sales.component.html',
+  imports: [
+    ListPageComponent,
+    TabelKosongComponent,
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    TranslatePipe,
+  ],
+})
+export class PriceSalesComponent implements OnInit {
+  constructor(
+    private apiService: ApiService,
+    private alertService: AlertService,
+    private dialog: MatDialog,
+  ) {}
+
+  isLoading = true;
   dataSource: any[] = [];
-  dataCount: number = 0;
-  page: number = 1;
+  dataCount = 0;
+  page = 1;
+  pageSize = 20;
+  keyword = '';
 
   ngOnInit(): void {
-    const url = this.router.url;
-    const urlSegments = url.split('/');
-    urlSegments.pop();
-    urlSegments.pop();
-
-    this.backRoute = urlSegments.join('/');
+    this.ambilData();
   }
 
-  onUpdatePage() {
-    this.page = 1;
-  }
+  lacakProduk = (_: number, item: any): number => item.id;
 
-  onUpdateData(data: any) {
-    this.dataCount = data.count;
-    this.dataSource = data.data;
-  }
+  ambilData(): void {
+    this.isLoading = true;
 
-  onUpdateLoadingStatus(data: any) {
-    this.isLoading = data;
-  }
-
-  changePage(event: PageEvent) {
-    this.page = event.pageIndex + 1;
-  }
-
-  openUpdatePriceDialog(id: number): void {
-    this.dialog
-      .open(PriceSalesUpdateComponent, {
-        data: {
-          id: id,
+    this.apiService
+      .get('product-price-sales', {
+        keyword: this.keyword,
+        page: this.page,
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.dataCount = data.count;
+          this.dataSource = data.data;
+        },
+        error: (error: any) => {
+          this.alertService.showError(error);
         },
       })
+      .add(() => {
+        this.isLoading = false;
+      });
+  }
+
+  cari(kataKunci: string): void {
+    this.keyword = kataKunci;
+    this.page = 1;
+    this.ambilData();
+  }
+
+  resetPencarian(): void {
+    this.cari('');
+  }
+
+  bukaHalaman(halaman: number): void {
+    this.page = halaman;
+    this.ambilData();
+  }
+
+  ubah(item: any): void {
+    this.dialog
+      .open(PriceSalesUpdateComponent, {
+        data: { id: item.id },
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
+      })
       .afterClosed()
-      .subscribe((data: any) => {
-        if (data) {
-          const index = this.dataSource.findIndex((x) => x.id == id);
-          if (index != -1) {
-            this.dataSource[index].sales_price = data[0].price;
-            this.dataSource[index].sales_discount = data[0].discount;
-          }
+      .subscribe((data) => {
+        /*
+          Dialognya mengembalikan seluruh baris satuan; baris pertama selalu
+          satuan dasar, dan itulah yang tampil di daftar ini.
+        */
+        if (!data || !data.length) {
+          return;
+        }
+
+        const index = this.dataSource.findIndex((x) => x.id === item.id);
+        if (index !== -1) {
+          this.dataSource[index].sales_price = data[0].price;
+          this.dataSource[index].sales_discount = data[0].discount;
         }
       });
   }

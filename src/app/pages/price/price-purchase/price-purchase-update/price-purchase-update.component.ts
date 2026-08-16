@@ -1,41 +1,70 @@
-import { Component, Inject, Input } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { AlertService } from 'src/app/services/alert.service';
-import { ApiService } from 'src/app/services/api.service';
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import { NgIf, NgFor } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgFor, NgIf } from '@angular/common';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { NgxMaskDirective } from 'ngx-mask';
-import { MatButton } from '@angular/material/button';
 
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
+import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
+
+/**
+ * Dialog ubah harga beli — kembaran dialog harga jual, membaca dan menulis
+ * kolom purchase_* pada barang dan satuannya.
+ */
 @Component({
-    selector: 'app-price-purchase-update',
-    templateUrl: './price-purchase-update.component.html',
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, NgIf, MatProgressSpinner, NgFor, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatDialogActions, MatButton, TranslatePipe]
+  selector: 'app-price-purchase-update',
+  templateUrl: './price-purchase-update.component.html',
+  styleUrls: ['./price-purchase-update.component.scss'],
+  imports: [
+    DialogShellComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    NgFor,
+    NgIf,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    NgxMaskDirective,
+    TranslatePipe,
+  ],
 })
-export class PricePurchaseUpdateComponent {
+export class PricePurchaseUpdateComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private apiService: ApiService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
     private translateService: TranslateService,
-    private dialog: MatDialogRef<PricePurchaseUpdateComponent>
+    private dialogRef: MatDialogRef<PricePurchaseUpdateComponent>,
   ) {}
 
+  /*
+    Diskon Rupiah yang melebihi harganya membuat total barisnya negatif —
+    ditolak di sini, bukan diserahkan ke backend.
+  */
   discountLessThanPriceValidator(control: AbstractControl) {
-    const formGroup = control as FormGroup;
-    const price = formGroup.get('price')?.value;
-    const discount = formGroup.get('discount')?.value;
-    return discount > price ? { discountTooHigh: true } : null;
+    const grup = control as FormGroup;
+    const harga = Number(grup.get('price')?.value) || 0;
+    const diskon = Number(grup.get('discount')?.value) || 0;
+    return diskon > harga ? { discountTooHigh: true } : null;
   }
 
-  isSubmitting: boolean = false;
-  isLoading: boolean = true;
+  isSubmitting = false;
+  isLoading = true;
+
   priceFormGroup: FormGroup = new FormGroup({
     reference: new FormControl(''),
     description: new FormControl(''),
@@ -48,12 +77,12 @@ export class PricePurchaseUpdateComponent {
     this.fetchByID();
   }
 
-  get f() {
-    return this.priceFormGroup.controls;
+  get t(): FormArray {
+    return this.priceFormGroup.get('purchase_price') as FormArray;
   }
 
-  get t() {
-    return this.priceFormGroup.get('purchase_price') as FormArray;
+  barisAt(i: number): FormGroup {
+    return this.t.at(i) as FormGroup;
   }
 
   fetchByID(): void {
@@ -64,29 +93,22 @@ export class PricePurchaseUpdateComponent {
           this.priceFormGroup.patchValue({
             reference: data.reference,
             description: data.description,
-            id: data.id,
             unit: data.unit,
+            id: data.id,
           });
 
+          /* Baris pertama satuan dasar; product_unit_id null menandainya. */
           this.t.push(
             this.formBuilder.group(
               {
                 unit: [data.unit],
                 product_unit_id: [null],
-                price: [
-                  data.purchase_price,
-                  [Validators.min(0), Validators.required],
-                ],
-                discount: [
-                  data.purchase_discount,
-                  [Validators.min(0), Validators.required],
-                ],
+                price: [data.purchase_price, [Validators.min(0), Validators.required]],
+                discount: [data.purchase_discount, [Validators.min(0), Validators.required]],
                 conversion: [1],
               },
-              {
-                validators: this.discountLessThanPriceValidator,
-              }
-            )
+              { validators: this.discountLessThanPriceValidator },
+            ),
           );
 
           data.product_unit.forEach((x: any) => {
@@ -95,26 +117,18 @@ export class PricePurchaseUpdateComponent {
                 {
                   unit: [x.unit],
                   product_unit_id: [x.id],
-                  price: [
-                    x.purchase_price,
-                    [Validators.min(0), Validators.required],
-                  ],
-                  discount: [
-                    x.purchase_discount,
-                    [Validators.min(0), Validators.required],
-                  ],
+                  price: [x.purchase_price, [Validators.min(0), Validators.required]],
+                  discount: [x.purchase_discount, [Validators.min(0), Validators.required]],
                   conversion: [x.conversion],
                 },
-                {
-                  validators: this.discountLessThanPriceValidator,
-                }
-              )
+                { validators: this.discountLessThanPriceValidator },
+              ),
             );
           });
         },
         error: (error) => {
           this.alertService.showError(error);
-          this.closeDialog();
+          this.dialogRef.close();
         },
       })
       .add(() => {
@@ -122,15 +136,11 @@ export class PricePurchaseUpdateComponent {
       });
   }
 
-  closeDialog(data: any = undefined) {
-    this.dialog.close(data);
+  closeDialog(): void {
+    this.dialogRef.close();
   }
 
-  getFormGroupAt(i: number) {
-    return this.t.at(i) as FormGroup;
-  }
-
-  onSubmit(): void {
+  submitForm(): void {
     this.isSubmitting = true;
     this.apiService
       .put('product-price-purchase', {
@@ -140,9 +150,9 @@ export class PricePurchaseUpdateComponent {
       .subscribe({
         next: (_) => {
           this.alertService.showSuccess(
-            this.translateService.instant('purchase-price__update__success')
+            this.translateService.instant('purchase-price__update__success'),
           );
-          this.closeDialog(this.t.value);
+          this.dialogRef.close(this.t.value);
         },
         error: (error) => {
           this.alertService.showError(error);

@@ -1,115 +1,54 @@
-<h2 mat-dialog-title>{{ "sales-price__update__title" | translate }}</h2>
-<form [formGroup]="priceFormGroup" (ngSubmit)="submitForm()">
-  <mat-dialog-content>
-    <label>{{ "sales-price__update__reference" | translate }}</label>
-    <p>{{ priceFormGroup.get("reference")?.value }}</p>
+<app-dialog-shell
+  icon="ph ph-tag"
+  [heading]="'sales-price__update__title' | translate"
+  [lede]="'sales-price__update__lede' | translate"
+  [submitLabel]="'sales-price__update__submit' | translate"
+  [submitting]="isSubmitting"
+  [canSubmit]="!isLoading && priceFormGroup.valid"
+  (submitted)="submitForm()"
+  (close)="closeDialog()"
+>
+  <p class="harga__memuat" *ngIf="isLoading">{{ 'general__loading' | translate }}</p>
 
-    <label>{{ "sales-price__update__description" | translate }}</label>
-    <p class="text-clamp-2">
-      {{ priceFormGroup.get("description")?.value }}
-    </p>
-
-    <table class="table">
-      <thead>
-        <tr>
-          <th>
-            {{ "sales-price__update__unit" | translate }}
-          </th>
-          <th>
-            {{ "sales-price__update__price" | translate }}
-          </th>
-          <th>{{ "sales-price__update__discount" | translate }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let itemForm of t.controls; index as i"
-          [formGroup]="getFormGroupAt(i)"
-        >
-          <td>
-            <p class="mb-0">{{ itemForm.get("unit")?.value }}</p>
-            <small *ngIf="itemForm.get('conversion')?.value != 1"
-              >{{ itemForm.get("conversion")?.value }}
-              {{ priceFormGroup.get("unit")?.value }}</small
-            >
-          </td>
-
-          <td>
-            <mat-form-field appearance="outline">
-              <mat-label>{{
-                "sales-price__update__price" | translate
-              }}</mat-label>
-              <input
-                matInput
-                type="text"
-                class="text-center"
-                mask="separator"
-                thousandSeparator=" "
-                formControlName="price"
-                autocomplete="off"
-                placeholder="Ex. 20"
-              />
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field appearance="outline">
-              <mat-label>{{
-                "sales-price__update__discount" | translate
-              }}</mat-label>
-              <input
-                matInput
-                type="text"
-                class="text-center"
-                mask="separator"
-                thousandSeparator=" "
-                formControlName="discount"
-                autocomplete="off"
-                placeholder="Ex. 20"
-              />
-            </mat-form-field>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </mat-dialog-content>
-
-  <mat-dialog-actions align="end">
-    <button
-      mat-stroked-button
-      color="primary"
-      style="letter-spacing: 0"
-      type="submit"
-      [disabled]="isSubmitting || !priceFormGroup.valid"
-    >
-      {{ "sales-price__update__submit" | translate }}
-    </button>
-  </mat-dialog-actions>
-</form>
-<!-- <app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
-  <div class="create-dialog">
-    <app-dialog-header
-      [title]="'sales-price__update__title' | translate"
-      (onDialogClose)="closeDialog()"
-    >
-    </app-dialog-header>
-    <div class="create-dialog__content">
-      <div *ngIf="isLoading">
-        <mat-spinner id="spinner" />
-      </div>
-      <div *ngIf="!isLoading">
-        <div class="table-responsive">
-          
-        </div>
-      </div>
+  <ng-container *ngIf="!isLoading">
+    <!-- Barang yang sedang diubah — dibaca, bukan diketik. -->
+    <div class="harga__produk">
+      <span class="barang__ref">{{ priceFormGroup.get('reference')?.value }}</span>
+      <span class="barang__desc">{{ priceFormGroup.get('description')?.value }}</span>
     </div>
-    <div class="create-dialog__footer">
-      <button
-        type="button"
-        class="next-button"
-        (click)="submitForm()"
-        
-      >
-      </button>
+
+    <!-- Satu baris per satuan; satuan dasar selalu paling atas. -->
+    <div
+      class="harga__baris"
+      *ngFor="let baris of t.controls; index as i"
+      [formGroup]="barisAt(i)"
+    >
+      <div class="harga__satuan">
+        <span class="harga__satuan-nama">{{ baris.get('unit')?.value }}</span>
+        <span class="harga__satuan-konversi" *ngIf="baris.get('conversion')?.value != 1">
+          = {{ baris.get('conversion')?.value }} {{ priceFormGroup.get('unit')?.value }}
+        </span>
+        <span class="harga__satuan-konversi" *ngIf="baris.get('conversion')?.value == 1">
+          {{ 'price__base-unit' | translate }}
+        </span>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'sales-price__update__price' | translate }}</mat-label>
+        <input matInput type="text" class="input--kanan" mask="separator.2" thousandSeparator=" " formControlName="price" autocomplete="off" />
+        <span matTextPrefix>Rp&nbsp;</span>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'sales-price__update__discount' | translate }}</mat-label>
+        <input matInput type="text" class="input--kanan" mask="separator.2" thousandSeparator=" " formControlName="discount" autocomplete="off" />
+        <span matTextPrefix>Rp&nbsp;</span>
+      </mat-form-field>
+
+      <p class="harga__galat" *ngIf="baris.hasError('discountTooHigh')">
+        <i class="ph ph-warning" aria-hidden="true"></i>
+        {{ 'price__discount-too-high' | translate }}
+      </p>
     </div>
-  </div>
-</app-dynamic-dialog> -->
+  </ng-container>
+</app-dialog-shell>

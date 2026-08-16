@@ -1,77 +1,75 @@
-<app-transaction-header
-  [title]="'purchase-price__title' | translate"
-  [backRoute]="backRoute"
-/>
+<app-list-page
+  [heading]="'purchase-price__title' | translate"
+  [lede]="'purchase-price__lede' | translate"
+  [searchPlaceholder]="'purchase-price__search' | translate"
+  [keyword]="keyword"
+  [page]="page"
+  [pageSize]="pageSize"
+  [total]="dataCount"
+  [loading]="isLoading"
+  [showPageSize]="false"
+  (search)="cari($event)"
+  (pageChange)="bukaHalaman($event)"
+  (refresh)="ambilData()"
+>
+  <table class="tabel">
+    <thead>
+      <tr>
+        <th>{{ 'purchase-price__reference' | translate }}</th>
+        <th>{{ 'purchase-price__description' | translate }}</th>
+        <th class="tabel__nilai-kepala">{{ 'purchase-price__price' | translate }}</th>
+        <th class="tabel__nilai-kepala">{{ 'purchase-price__discount' | translate }}</th>
+        <th class="tabel__aksi-kepala">
+          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+        </th>
+      </tr>
+    </thead>
 
-<div class="dashboard-card">
-  <app-feature-search
-    [addButton]="false"
-    route="product-price-purchase"
-    [page]="page"
-    [enable]="true"
-    (onChange)="onUpdateData($event)"
-    (onLoadingChange)="onUpdateLoadingStatus($event)"
-    (updatePage)="onUpdatePage()"
-    (onNewQuery)="page = 1"
-  ></app-feature-search>
+    <tbody *ngIf="!isLoading && dataSource.length > 0">
+      <tr
+        *ngFor="let item of dataSource; trackBy: lacakProduk"
+        class="tabel__baris-klik"
+        (click)="ubah(item)"
+      >
+        <td class="tabel__utama">{{ item.reference }}</td>
+        <td class="tabel__redup">{{ item.description }}</td>
+        <td class="tabel__nilai">Rp {{ item.purchase_price | number: '1.0-2' }}</td>
+        <!-- Nol berarti tidak ada diskon — em dash lebih jelas daripada Rp 0. -->
+        <td class="tabel__nilai">
+          {{ item.purchase_discount ? 'Rp ' + (item.purchase_discount | number: '1.0-2') : '—' }}
+        </td>
+        <td class="tabel__aksi" (click)="$event.stopPropagation()">
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="ubah(item)"
+            [title]="'general__edit' | translate"
+            [attr.aria-label]="'general__edit' | translate"
+          >
+            <i class="ph ph-pencil-simple" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
 
-  <div class="table-responsive">
-    <table class="table">
-      <thead>
-        <tr>
-          <th style="width: 150px">
-            {{ "purchase-price__reference" | translate }}
-          </th>
-          <th style="width: 250px">
-            {{ "purchase-price__description" | translate }}
-          </th>
-          <th style="width: 150px" class="text-center">
-            {{ "purchase-price__price" | translate }}
-          </th>
-          <th style="width: 150px" class="text-center">
-            {{ "purchase-price__discount" | translate }}
-          </th>
-        </tr>
-      </thead>
-      <tbody *ngIf="!isLoading && dataSource.length > 0">
-        <tr
-          *ngFor="let item of dataSource"
-          (click)="openUpdatePriceDialog(item.id)"
-        >
-          <td>{{ item.reference }}</td>
-          <td>
-            <span class="text-clamp-1">
-              {{ item.description }}
-            </span>
-          </td>
-          <td class="text-center">
-            {{ item.purchase_price | number : "0.2-2" }}
-          </td>
-          <td class="text-center">
-            {{ item.purchase_discount | number : "0.2-2" }}
-          </td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="!isLoading && dataSource.length == 0">
-        <tr>
-          <td colspan="4">
-            <empty-table />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <tbody *ngIf="isLoading">
+      <tr>
+        <td colspan="5" class="tabel__pesan">{{ 'general__loading' | translate }}</td>
+      </tr>
+    </tbody>
 
-  <mat-paginator
-    class="paginator"
-    [pageIndex]="page - 1"
-    [length]="dataCount"
-    [pageSize]="10"
-    [pageSizeOptions]="[10, 25, 50]"
-    (page)="changePage($event)"
-    aria-label="Select page"
-    hidePageSize="true"
-    *ngIf="!isLoading"
-  >
-  </mat-paginator>
-</div>
+    <tbody *ngIf="!isLoading && dataSource.length === 0">
+      <tr>
+        <td colspan="5">
+          <app-tabel-kosong
+            ikon="ph-tag"
+            [judul]="'purchase-price__empty__title' | translate"
+            [penjelasan]="'purchase-price__empty__desc' | translate"
+            [kataKunci]="keyword"
+            (reset)="resetPencarian()"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</app-list-page>
