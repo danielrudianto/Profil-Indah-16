@@ -38,6 +38,17 @@
   </div>
 
   <form class="login__card" [formGroup]="loginFormGroup" (ngSubmit)="login()">
+    <!--
+      Setengah bola di BELAKANG kartu, menyembul dari sudut kanan-atas.
+
+      Ditaruh di dalam kartu, bukan di lapisan latar: dengan z-index negatif
+      ia turun ke belakang latar kartunya sendiri, dan karena ikut kartu, ia
+      menempel di tempat yang sama pada semua ukuran layar — bukan ditebak
+      lewat persentase lebar viewport.
+    -->
+    <span class="login__sphere" aria-hidden="true">
+      <img src="assets/images/orn-dome.png" alt="" />
+    </span>
     <div class="login__brand">
       <svg viewBox="0 0 48 48" class="login__logo" aria-hidden="true">
         <path
@@ -171,10 +182,12 @@
       beberapa benda yang melayang sendiri-sendiri.
     -->
     <div class="orn-dekat" aria-hidden="true">
+      <!--
+        Hanya dua yang tersisa di dekat maskot — kerucut dan batu abstraknya
+        dilepas atas permintaan pemilik: terlalu ramai mengelilingi gajahnya.
+      -->
       <img class="orn orn--graph" src="assets/images/orn-graph.png" alt="" />
-      <img class="orn orn--cone" src="assets/images/orn-cone.png" alt="" />
       <img class="orn orn--dome" src="assets/images/orn-dome.png" alt="" />
-      <img class="orn orn--rock" src="assets/images/orn-rock.png" alt="" />
     </div>
 
     <div class="login__mascot-caption">{{ 'login__caption' | translate }}</div>
