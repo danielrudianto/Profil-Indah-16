@@ -1,87 +1,133 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NgFor, NgIf } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
-import { PaymentMethod } from 'src/app/models/payment-method.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { PaymentMethodUpdateComponent } from './payment-method-update/payment-method-update.component';
-import { FeatureBackgroundComponent } from '../../components/feature-background/feature-background.component';
-import { FeatureHeaderComponent } from '../../components/feature-header/feature-header.component';
-import { FeatureSearchComponent } from '../../components/feature-search/feature-search.component';
-import { NgIf, NgFor } from '@angular/common';
-import { EmptyTableComponent } from '../../components/empty-table/empty-table.component';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
+import { PaymentMethodCreateComponent } from './payment-method-create/payment-method-create.component';
+import { PaymentMethodUpdateComponent } from './payment-method-update/payment-method-update.component';
+
+/**
+ * Daftar metode pembayaran — mengikuti susunan daftar pelanggan. Ukuran
+ * halaman ditentukan server lewat process.env.LIMIT dan tidak bisa diminta
+ * lain, jadi pilihan 10/25/50 dimatikan (alasannya sama dengan perusahaan).
+ */
 @Component({
-    selector: 'app-payment-method',
-    templateUrl: './payment-method.component.html',
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, FeatureSearchComponent, NgIf, NgFor, EmptyTableComponent, MatProgressSpinner, MatPaginator, TranslatePipe]
+  selector: 'app-payment-method',
+  templateUrl: './payment-method.component.html',
+  imports: [
+    ListPageComponent,
+    TabelKosongComponent,
+    NgIf,
+    NgFor,
+    TranslatePipe,
+  ],
 })
-export class PaymentMethodComponent {
+export class PaymentMethodComponent implements OnInit {
   constructor(
-    private authService: AuthService,
-    private dynamicComponentService: DynamicComponentService,
-    private dialog: MatDialog
+    private apiService: ApiService,
+    private alertService: AlertService,
+    private dialog: MatDialog,
   ) {}
 
-  isLoading: boolean = true;
-  dataSource: PaymentMethod[] = [];
-  dataCount: number = 0;
-  page: number = 1;
-  previousRoute: string = '';
-  isAdministrator: boolean = false;
+  isLoading = true;
+  dataSource: any[] = [];
+  dataCount = 0;
+  page = 1;
+  pageSize = 10;
+  keyword = '';
 
   ngOnInit(): void {
-    this.isAdministrator = this.authService.isAdministrator();
+    this.ambilData();
   }
 
-  openDialog(id: number) {
-    if (id === 0) return;
+  lacakMetode = (_: number, item: any): number => item.id;
 
-    this.dialog
-      .open(PaymentMethodUpdateComponent, {
-        data: {
-          id: id,
+  ambilData(): void {
+    this.isLoading = true;
+
+    this.apiService
+      .get('payment-method', {
+        keyword: this.keyword,
+        page: this.page,
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.dataCount = data.count;
+          this.dataSource = data.data;
         },
+        error: (error: any) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
+  }
+
+  cari(kataKunci: string): void {
+    this.keyword = kataKunci;
+    this.page = 1;
+    this.ambilData();
+  }
+
+  resetPencarian(): void {
+    this.cari('');
+  }
+
+  bukaHalaman(halaman: number): void {
+    this.page = halaman;
+    this.ambilData();
+  }
+
+  tambah(): void {
+    this.dialog
+      .open(PaymentMethodCreateComponent, {
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
       })
       .afterClosed()
       .subscribe((data) => {
-        if (data === 'deleted') {
-          const index = this.dataSource.findIndex((x) => x.id === id);
-          if (index != -1) {
-            this.dataSource.splice(index, 1);
-          }
-          this.dataCount--;
-          return;
-        } else if (data) {
-          const index = this.dataSource.findIndex((x) => x.id == id);
-          if (index != -1) {
-            this.dataSource[index].name = data.name;
-            this.dataSource[index].description = data.description;
-          }
+        if (data) {
+          this.page = 1;
+          this.ambilData();
         }
       });
   }
 
-  changePage(event: PageEvent) {
-    this.page = event.pageIndex + 1;
-  }
+  ubah(item: any): void {
+    /* Metode bawaan (id 0) milik sistem — tidak bisa diubah atau dihapus. */
+    if (!item.id) {
+      return;
+    }
 
-  fetchProducts(page: number) {
-    this.page = page;
-  }
+    this.dialog
+      .open(PaymentMethodUpdateComponent, {
+        data: { id: item.id },
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (!data) {
+          return;
+        }
 
-  onUpdatePage() {
-    this.page = 1;
-  }
+        const index = this.dataSource.findIndex((x) => x.id === item.id);
+        if (index === -1) {
+          return;
+        }
 
-  onUpdateData(data: any) {
-    this.dataCount = data.count;
-    this.dataSource = data.data;
-  }
+        if (data === 'deleted') {
+          this.dataSource.splice(index, 1);
+          this.dataCount = this.dataCount - 1;
+          return;
+        }
 
-  onUpdateLoadingStatus(data: any) {
-    this.isLoading = data;
+        this.dataSource[index] = { ...this.dataSource[index], ...data };
+      });
   }
 }

@@ -1,71 +1,71 @@
-<app-feature-background />
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <app-feature-header
-        [title]="'payment-method__title' | translate"
-        [help]="'payment-method__help' | translate"
-        [isBackAvailable]="true"
-      ></app-feature-header>
-      <div class="dashboard-card">
-        <app-feature-search
-          [addButton]="true"
-          route="payment-method"
-          [page]="page"
-          [enable]="true"
-          (onChange)="onUpdateData($event)"
-          (onLoadingChange)="onUpdateLoadingStatus($event)"
-          (updatePage)="onUpdatePage()"
-          (onNewQuery)="page = 1"
-        ></app-feature-search>
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th class="text-center">
-                  {{ "payment-method__name" | translate }}
-                </th>
-                <th class="text-center">
-                  {{ "payment-method__description" | translate }}
-                </th>
-              </tr>
-            </thead>
-            <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr *ngFor="let item of dataSource" (click)="openDialog(item.id)">
-                <td class="text-center">{{ item.name }}</td>
-                <td class="text-center">
-                  <div class="text-clamp-1">{{ item.description }}</div>
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length == 0">
-              <tr>
-                <td colspan="2">
-                  <empty-table />
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="isLoading">
-              <tr>
-                <td colspan="2" class="text-center">
-                  <mat-spinner id="spinner"></mat-spinner>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <mat-paginator
-          class="paginator"
-          [pageIndex]="page - 1"
-          [length]="dataCount"
-          [pageSize]="10"
-          (page)="changePage($event)"
-          aria-label="Select page"
-          hidePageSize="true"
-          *ngIf="!isLoading"
-        >
-        </mat-paginator>
-      </div>
-    </div>
-  </div>
-</div>
+<app-list-page
+  [heading]="'payment-method__title' | translate"
+  [lede]="'payment-method__lede' | translate"
+  [searchPlaceholder]="'payment-method__search' | translate"
+  [addLabel]="'payment-method__add' | translate"
+  [keyword]="keyword"
+  [page]="page"
+  [pageSize]="pageSize"
+  [total]="dataCount"
+  [loading]="isLoading"
+  [showPageSize]="false"
+  (search)="cari($event)"
+  (pageChange)="bukaHalaman($event)"
+  (add)="tambah()"
+  (refresh)="ambilData()"
+>
+  <table class="tabel">
+    <thead>
+      <tr>
+        <th>{{ 'payment-method__name' | translate }}</th>
+        <th>{{ 'payment-method__description' | translate }}</th>
+        <th class="tabel__aksi-kepala">
+          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!isLoading && dataSource.length > 0">
+      <tr
+        *ngFor="let item of dataSource; trackBy: lacakMetode"
+        [class.tabel__baris-klik]="!!item.id"
+        (click)="ubah(item)"
+      >
+        <td class="tabel__utama">{{ item.name }}</td>
+        <td class="tabel__redup">{{ item.description }}</td>
+        <td class="tabel__aksi" (click)="$event.stopPropagation()">
+          <button
+            *ngIf="item.id"
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="ubah(item)"
+            [title]="'general__edit' | translate"
+            [attr.aria-label]="'general__edit' | translate"
+          >
+            <i class="ph ph-pencil-simple" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="isLoading">
+      <tr>
+        <td colspan="3" class="tabel__pesan">{{ 'general__loading' | translate }}</td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="!isLoading && dataSource.length === 0">
+      <tr>
+        <td colspan="3">
+          <app-tabel-kosong
+            ikon="ph-credit-card"
+            [judul]="'payment-method__empty__title' | translate"
+            [penjelasan]="'payment-method__empty__desc' | translate"
+            [kataKunci]="keyword"
+            (reset)="resetPencarian()"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</app-list-page>

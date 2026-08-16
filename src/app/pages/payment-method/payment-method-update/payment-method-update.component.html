@@ -1,49 +1,33 @@
-<h2 mat-dialog-title>{{ "payment-method__update__title" | translate }}</h2>
-<form [formGroup]="paymentMethodFormGroup" (ngSubmit)="submitForm()">
-  <mat-dialog-content>
-    <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ "payment-method__add__name" | translate }}</mat-label>
-      <input
-        [disabled]="isSubmitting"
-        matInput
-        placeholder="Ex. PT. ABC"
-        type="text"
-        formControlName="name"
-      />
-    </mat-form-field>
-    <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{
-        "payment-method__add__description" | translate
-      }}</mat-label>
-      <input
-        matInput
-        placeholder="Ex. Rekening BCA a/n Toko Profil Indah"
-        type="text"
-        formControlName="description"
-      />
+<app-dialog-shell
+  icon="ph ph-credit-card"
+  [heading]="'payment-method__update__title' | translate"
+  [lede]="'payment-method__update__lede' | translate"
+  [submitLabel]="'general__submit' | translate"
+  [submitting]="isSubmitting"
+  [canSubmit]="paymentMethodFormGroup.valid"
+  (submitted)="submitForm()"
+  (close)="closeDialog()"
+>
+  <div [formGroup]="paymentMethodFormGroup">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'payment-method__add__name' | translate }}</mat-label>
+      <input matInput type="text" formControlName="name" autocomplete="off" />
     </mat-form-field>
 
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'payment-method__add__description' | translate }}</mat-label>
+      <textarea matInput rows="2" formControlName="description"></textarea>
+    </mat-form-field>
+
+    <!-- Penghapusan hanya untuk administrator. -->
     <button
-      mat-stroked-button
-      color="warn"
       type="button"
+      class="btn btn--bahaya btn--blok"
+      [disabled]="!isAdministrator"
       (click)="delete()"
-      style="letter-spacing: 0"
-      [disabled]="!isAdministrator || isSubmitting || isLoading"
     >
-      <mat-icon>warning</mat-icon>
-      <span>{{ "payment-method__update__delete" | translate }}</span>
+      <i class="ph ph-trash" aria-hidden="true"></i>
+      {{ 'payment-method__update__delete' | translate }}
     </button>
-  </mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <button
-      type="submit"
-      mat-stroked-button
-      color="primary"
-      (click)="submitForm()"
-      [disabled]="isSubmitting || !paymentMethodFormGroup.valid || isLoading"
-    >
-      {{ "payment-method__add__submit" | translate }}
-    </button>
-  </mat-dialog-actions>
-</form>
+  </div>
+</app-dialog-shell>

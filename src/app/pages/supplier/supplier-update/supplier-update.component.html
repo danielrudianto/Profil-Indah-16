@@ -1,65 +1,38 @@
-<h2 mat-dialog-title>{{ "supplier__update__title" | translate }}</h2>
-
-<form [formGroup]="supplierFormGroup" (ngSubmit)="submitForm()">
-  <mat-dialog-content>
-    <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ "supplier__name" | translate }}</mat-label>
-      <input
-        [disabled]="isSubmitting"
-        matInput
-        placeholder="Ex. Abdul"
-        type="text"
-        formControlName="name"
-      />
-    </mat-form-field>
-    <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ "supplier__address" | translate }}</mat-label>
-      <textarea
-        [disabled]="isSubmitting"
-        matInput
-        placeholder="Ex. Jalan Raya ABC no. XX"
-        type="text"
-        formControlName="address"
-      ></textarea>
+<app-dialog-shell
+  icon="ph ph-truck"
+  [heading]="'supplier__update__title' | translate"
+  [lede]="'supplier__update__lede' | translate"
+  [submitLabel]="'general__submit' | translate"
+  [submitting]="isSubmitting"
+  [canSubmit]="supplierFormGroup.valid"
+  (submitted)="submitForm()"
+  (close)="closeDialog()"
+>
+  <div [formGroup]="supplierFormGroup">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'supplier__add__name' | translate }}</mat-label>
+      <input matInput type="text" formControlName="name" autocomplete="off" />
     </mat-form-field>
 
-    <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ "supplier__npwp" | translate }}</mat-label>
-      <input
-        [disabled]="isSubmitting"
-        matInput
-        mask="00.000.000.0-000.000"
-        placeholder="Ex. XX.XXX.XXX.X-XXX.XXX"
-        type="text"
-        formControlName="npwp"
-      />
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'supplier__add__address' | translate }}</mat-label>
+      <textarea matInput rows="2" formControlName="address"></textarea>
     </mat-form-field>
 
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'supplier__add__npwp' | translate }}</mat-label>
+      <input matInput type="text" mask="00.000.000.0-000.000" formControlName="npwp" autocomplete="off" />
+    </mat-form-field>
+
+    <!-- Dua penjaga: peran administrator dan can_delete dari server. -->
     <button
       type="button"
-      mat-stroked-button
-      color="warn"
-      style="letter-spacing: 0"
-      [disabled]="
-        !isAdministrator || supplierFormGroup.get('can_delete')?.value == false
-      "
-      (click)="openDeleteConfirmation()"
-      *ngIf="!data.noAction"
+      class="btn btn--bahaya btn--blok"
+      [disabled]="!isAdministrator || !supplierFormGroup.get('can_delete')?.value"
+      (click)="delete()"
     >
-      {{ "supplier__view__delete" | translate }}
-      <mat-icon>warning</mat-icon>
+      <i class="ph ph-trash" aria-hidden="true"></i>
+      {{ 'supplier__update__delete' | translate }}
     </button>
-  </mat-dialog-content>
-
-  <mat-dialog-actions align="end">
-    <button
-      type="submit"
-      mat-stroked-button
-      style="letter-spacing: 0"
-      color="primary"
-      [disabled]="isSubmitting || !supplierFormGroup.valid"
-    >
-      {{ "supplier__update__submit" | translate }}
-    </button>
-  </mat-dialog-actions>
-</form>
+  </div>
+</app-dialog-shell>

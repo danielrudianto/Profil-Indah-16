@@ -1,36 +1,42 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
+import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
 
 @Component({
     selector: 'app-payment-method-update',
     templateUrl: './payment-method-update.component.html',
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, MatButton, MatIcon, MatDialogActions, TranslatePipe]
+    imports: [
+    DialogShellComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    TranslatePipe,
+  ]
 })
-export class PaymentMethodUpdateComponent {
+export class PaymentMethodUpdateComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private apiService: ApiService,
-    private dialogRef: MatDialogRef<PaymentMethodUpdateComponent>,
     private alertService: AlertService,
+    private dialogRef: MatDialogRef<PaymentMethodUpdateComponent>,
     private translateService: TranslateService,
-    private dialog: MatDialog,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog
   ) {}
 
   isAdministrator: boolean = false;
+  isLoading: boolean = true;
   isSubmitting: boolean = false;
-  isLoading: boolean = false;
   paymentMethodFormGroup: FormGroup = new FormGroup({
     id: new FormControl('', Validators.required),
     name: new FormControl('', Validators.required),
@@ -42,11 +48,30 @@ export class PaymentMethodUpdateComponent {
     this.isAdministrator = this.authService.isAdministrator();
   }
 
-  closeDialog(data: any = undefined) {
-    this.dialogRef.close(data);
+  fetchByID(): void {
+    this.isLoading = true;
+    this.apiService
+      .get(`payment-method/${this.data.id}`)
+      .subscribe({
+        next: (data: any) => {
+          this.paymentMethodFormGroup.patchValue(data);
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+          this.dialogRef.close();
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
   }
 
-  delete(): void {
+  closeDialog() {
+    this.dialogRef.close();
+  }
+
+  delete() {
+    this.isSubmitting = true;
     this.dialog
       .open(DeleteConfirmationComponent, {
         data: {
@@ -56,22 +81,30 @@ export class PaymentMethodUpdateComponent {
         },
       })
       .afterClosed()
-      .subscribe((result) => {
-        if (result === true) {
-          this.isSubmitting = true;
-
-          this.apiService.delete(`payment-method/${this.data.id}`).subscribe({
-            next: (_) => {
-              this.alertService.showSuccess(
-                this.translateService.instant('payment-method__delete__success')
-              );
-              this.dialogRef.close('deleted');
-            },
-            error: (error) => {
-              this.alertService.showError(error);
-            },
-          });
+      .subscribe((hasil) => {
+        /*
+          Konfirmasi menutup dengan `true` HANYA lewat tombol hapus; menekan
+          batal (atau backdrop) mengirim undefined. Tanpa pemeriksaan ini,
+          membatalkan konfirmasi tetap menghapus datanya.
+        */
+        if (hasil !== true) {
+          this.isSubmitting = false;
+          return;
         }
+
+        this.apiService.delete(`payment-method/${this.data.id}`).subscribe({
+          next: (_) => {
+            this.alertService.showSuccess(
+              this.translateService.instant('payment-method__delete__success')
+            );
+
+            this.dialogRef.close('deleted');
+          },
+          error: (error) => {
+            this.alertService.showError(error);
+            this.isSubmitting = false;
+          },
+        });
       });
   }
 
@@ -82,41 +115,16 @@ export class PaymentMethodUpdateComponent {
       .subscribe({
         next: (data: any) => {
           this.translateService
-            .get([
-              'payment-method__add__successfully-prefix',
-              'payment-method__update__successfully',
-            ])
-            .subscribe((translation) => {
-              this.alertService.showSuccess(
-                `${translation['payment-method__add__successfully-prefix']} ${data.name} ${translation['payment-method__update__successfully']}`
-              );
-              this.closeDialog(data);
+            .get('payment-method__update__successfully')
+            .subscribe((message: string) => {
+              this.dialogRef.close(data);
+              this.alertService.showSuccess(`${data.name} ${message}`);
             });
         },
         error: (error) => {
           this.alertService.showError(error);
+          this.isSubmitting = false;
         },
-      })
-      .add(() => {
-        this.isSubmitting = false;
-      });
-  }
-
-  fetchByID(): void {
-    this.isLoading = true;
-    this.apiService
-      .get(`payment-method/${this.data.id}`)
-      .subscribe({
-        next: (data) => {
-          this.paymentMethodFormGroup.patchValue(data);
-        },
-        error: (error) => {
-          this.alertService.showError(error);
-          this.closeDialog();
-        },
-      })
-      .add(() => {
-        this.isLoading = false;
       });
   }
 }

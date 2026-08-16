@@ -1,77 +1,74 @@
-<app-feature-background />
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <app-feature-header
-        [title]="'supplier__title' | translate"
-        [help]="'supplier__help' | translate"
-        [isBackAvailable]="true"
-      ></app-feature-header>
-      <div class="dashboard-card">
-        <app-feature-search
-          [addButton]="true"
-          route="supplier"
-          [page]="page"
-          [pageSize]="pageSize"
-          [enable]="true"
-          (onChange)="onUpdateData($event)"
-          (onLoadingChange)="onUpdateLoadingStatus($event)"
-          (updatePage)="onUpdatePage()"
-          (onNewQuery)="page = 1"
-        ></app-feature-search>
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th class="text-center">{{ "supplier__name" | translate }}</th>
-                <th class="text-center">
-                  {{ "supplier__address" | translate }}
-                </th>
-                <th class="text-center">{{ "supplier__npwp" | translate }}</th>
-              </tr>
-            </thead>
-            <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr *ngFor="let item of dataSource" (click)="openDialog(item.id)">
-                <td class="text-center">{{ item.name }}</td>
-                <td class="text-center">
-                  <div class="text-clamp-2">{{ item.address }}</div>
-                </td>
-                <td class="text-center">
-                  <span *ngIf="item.npwp != null">{{
-                    item.npwp | mask : "00.000.000.0-000.000"
-                  }}</span>
-                  <span *ngIf="item.npwp == null">N/A</span>
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length == 0">
-              <tr>
-                <td colspan="3">
-                  <empty-table />
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="isLoading">
-              <tr>
-                <td colspan="3" class="text-center">
-                  <mat-spinner id="spinner"></mat-spinner>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <mat-paginator
-          [disabled]="isLoading"
-          class="paginator"
-          [pageIndex]="page - 1"
-          [length]="dataCount"
-          [pageSize]="10"
-          (page)="changePage($event)"
-          aria-label="Select page"
-          [pageSize]="pageSize"
-          [pageSizeOptions]="[10, 25, 50]"
-        ></mat-paginator>
-      </div>
-    </div>
-  </div>
-</div>
+<app-list-page
+  [heading]="'supplier__title' | translate"
+  [lede]="'supplier__lede' | translate"
+  [searchPlaceholder]="'supplier__search' | translate"
+  [addLabel]="'supplier__add' | translate"
+  [keyword]="keyword"
+  [page]="page"
+  [pageSize]="pageSize"
+  [total]="dataCount"
+  [loading]="isLoading"
+  (search)="cari($event)"
+  (pageChange)="bukaHalaman($event)"
+  (pageSizeChange)="gantiUkuran($event)"
+  (add)="tambah()"
+  (refresh)="ambilData()"
+>
+  <table class="tabel">
+    <thead>
+      <tr>
+        <th>{{ 'supplier__name' | translate }}</th>
+        <th>{{ 'supplier__address' | translate }}</th>
+        <th>{{ 'supplier__npwp' | translate }}</th>
+        <th class="tabel__aksi-kepala">
+          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!isLoading && dataSource.length > 0">
+      <tr
+        *ngFor="let item of dataSource; trackBy: lacakSupplier"
+        class="tabel__baris-klik"
+        (click)="ubah(item)"
+      >
+        <td class="tabel__utama">{{ item.name }}</td>
+        <td class="tabel__redup">{{ item.address }}</td>
+        <td>
+          {{ item.npwp ? (item.npwp | mask: '00.000.000.0-000.000') : '—' }}
+        </td>
+        <td class="tabel__aksi" (click)="$event.stopPropagation()">
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="ubah(item)"
+            [title]="'general__edit' | translate"
+            [attr.aria-label]="'general__edit' | translate"
+          >
+            <i class="ph ph-pencil-simple" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="isLoading">
+      <tr>
+        <td colspan="4" class="tabel__pesan">{{ 'general__loading' | translate }}</td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="!isLoading && dataSource.length === 0">
+      <tr>
+        <td colspan="4">
+          <app-tabel-kosong
+            ikon="ph-truck"
+            [judul]="'supplier__empty__title' | translate"
+            [penjelasan]="'supplier__empty__desc' | translate"
+            [kataKunci]="keyword"
+            (reset)="resetPencarian()"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</app-list-page>
