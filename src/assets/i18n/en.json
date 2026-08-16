@@ -1958,5 +1958,7 @@
   "sales-invoice__type__deposit__desk": "Money held for goods that have not arrived.",
   "sales-invoice__type__deposit__note": "The money is recorded; the goods follow.",
   "sales-invoice__type__internal__desk": "Goods set aside so they are not sold.",
-  "sales-invoice__type__internal__note": "Stock is held — no money comes in."
+  "sales-invoice__type__internal__note": "Stock is held — no money comes in.",
+  "company__create__lede": "Companies are used on invoices and receipts.",
+  "company__update__lede": "Edit its details, or delete it when no longer used."
 }

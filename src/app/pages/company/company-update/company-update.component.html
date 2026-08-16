@@ -1,63 +1,41 @@
-<h2 mat-dialog-title>{{ "company__update__title" | translate }}</h2>
-<form [formGroup]="companyFormGroup" (ngSubmit)="submitForm()">
-  <mat-dialog-content>
-    <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ "company__update__name" | translate }}</mat-label>
-      <input
-        [disabled]="isSubmitting"
-        matInput
-        placeholder="Ex. PT. ABC"
-        type="text"
-        formControlName="name"
-      />
-    </mat-form-field>
-    <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ "company__update__address" | translate }}</mat-label>
-      <textarea
-        [disabled]="isSubmitting"
-        matInput
-        placeholder="Ex. Jalan Raya ABC no. XX"
-        type="text"
-        formControlName="address"
-      ></textarea>
+<app-dialog-shell
+  icon="ph ph-buildings"
+  [heading]="'company__update__title' | translate"
+  [lede]="'company__update__lede' | translate"
+  [submitLabel]="'general__submit' | translate"
+  [submitting]="isSubmitting"
+  [canSubmit]="companyFormGroup.valid"
+  (submitted)="submitForm()"
+  (close)="closeDialog()"
+>
+  <div [formGroup]="companyFormGroup">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'company__update__name' | translate }}</mat-label>
+      <input matInput type="text" formControlName="name" autocomplete="off" placeholder="Ex. PT. ABC" />
     </mat-form-field>
 
-    <mat-form-field class="w-100" appearance="outline">
-      <mat-label>{{ "company__update__npwp" | translate }}</mat-label>
-      <input
-        [disabled]="isSubmitting"
-        matInput
-        mask="00.000.000.0-000.000"
-        placeholder="Ex. XX.XXX.XXX.X-XXX.XXX"
-        type="text"
-        formControlName="npwp"
-      />
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'company__update__address' | translate }}</mat-label>
+      <textarea matInput rows="2" formControlName="address" placeholder="Ex. Jalan Raya ABC no. XX"></textarea>
     </mat-form-field>
 
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'company__update__npwp' | translate }}</mat-label>
+      <input matInput type="text" mask="00.000.000.0-000.000" formControlName="npwp" autocomplete="off" placeholder="Ex. XX.XXX.XXX.X-XXX.XXX" />
+    </mat-form-field>
+
+    <!--
+      Hapus dibatasi dua penjaga sekaligus: peran administrator, dan can_delete
+      dari server — perusahaan yang pernah dipakai dokumen tidak boleh hilang.
+    -->
     <button
-      mat-stroked-button
-      color="warn"
       type="button"
-      [disabled]="
-        !isAdministrator || !this.companyFormGroup.get('can_delete')?.value
-      "
-      style="letter-spacing: 0"
+      class="btn btn--bahaya btn--blok"
+      [disabled]="!isAdministrator || !companyFormGroup.get('can_delete')?.value"
       (click)="delete()"
     >
-      <mat-icon>warning</mat-icon>
-      <span>{{ "company__update__delete" | translate }}</span>
+      <i class="ph ph-trash" aria-hidden="true"></i>
+      {{ 'company__update__delete' | translate }}
     </button>
-  </mat-dialog-content>
-
-  <mat-dialog-actions align="end">
-    <button
-      type="submit"
-      mat-stroked-button
-      color="primary"
-      style="letter-spacing: 0"
-      [disabled]="isSubmitting || !companyFormGroup.valid"
-    >
-      {{ "general__submit" | translate }}
-    </button>
-  </mat-dialog-actions>
-</form>
+  </div>
+</app-dialog-shell>

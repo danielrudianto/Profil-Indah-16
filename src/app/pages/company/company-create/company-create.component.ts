@@ -8,13 +8,23 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { NgxMaskDirective } from 'ngx-mask';
+import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-company-create',
     templateUrl: './company-create.component.html',
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatDialogActions, MatButton, TranslatePipe]
+    imports: [
+    DialogShellComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    NgxMaskDirective,
+    TranslatePipe,
+  ]
 })
 export class CompanyCreateComponent {
   constructor(
@@ -46,10 +56,12 @@ export class CompanyCreateComponent {
         this.alertService.showSuccess(
           `Company ${data.name} created successfully`
         );
-        this.closeDialog();
+        /* Bawa datanya pulang: daftar bisa langsung menampilkannya. */
+        this.dialog.close(data);
       },
       error: (error) => {
         this.alertService.showError(error);
+        this.isSubmitting = false;
       },
     });
   }

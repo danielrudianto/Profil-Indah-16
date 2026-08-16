@@ -12,11 +12,21 @@ import { MatInput } from '@angular/material/input';
 import { NgxMaskDirective } from 'ngx-mask';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
 
 @Component({
     selector: 'app-company-update',
     templateUrl: './company-update.component.html',
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatButton, MatIcon, MatDialogActions, TranslatePipe]
+    imports: [
+    DialogShellComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    NgxMaskDirective,
+    TranslatePipe,
+  ]
 })
 export class CompanyUpdateComponent {
   constructor(

@@ -1964,5 +1964,7 @@
   "sales-invoice__type__deposit__desk": "Titipan uang untuk barang yang belum datang.",
   "sales-invoice__type__deposit__note": "Uang masuk dicatat; barangnya menyusul.",
   "sales-invoice__type__internal__desk": "Barang dititip supaya tidak terjual.",
-  "sales-invoice__type__internal__note": "Stok ditahan — tidak ada uang masuk."
+  "sales-invoice__type__internal__note": "Stok ditahan — tidak ada uang masuk.",
+  "company__create__lede": "Perusahaan dipakai pada faktur dan penerimaan.",
+  "company__update__lede": "Ubah datanya, atau hapus bila tidak lagi dipakai."
 }

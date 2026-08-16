@@ -552,3 +552,14 @@
   }
 }
 
+/* Tindakan merusak: merah, tetap bergaris — bukan isian penuh yang berteriak. */
+.btn--bahaya {
+  color: #e05260;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, #e05260 55%, transparent);
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, #e05260 10%, transparent);
+    border-color: #e05260;
+  }
+}
