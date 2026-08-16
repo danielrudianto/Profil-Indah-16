@@ -413,6 +413,19 @@ const routes: Routes = [
               ),
           },
           {
+            /*
+              Laporan belanja per supplier — nilai belanja adalah angka
+              sensitif, jadi hanya super administrator; server mengunci
+              endpoint-nya dengan middleware yang sama.
+            */
+            path: 'Supplier/Report/:id',
+            canActivate: [SuperAdministratorGuard],
+            loadComponent: () =>
+              import('./pages/supplier/supplier-report/supplier-report.component').then(
+                (m) => m.SupplierReportComponent,
+              ),
+          },
+          {
             path: 'Good-receipt',
             canActivate: [PurchasingGuard],
             loadComponent: () =>

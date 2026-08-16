@@ -38,6 +38,17 @@
           {{ item.npwp ? (item.npwp | mask: '00.000.000.0-000.000') : '—' }}
         </td>
         <td class="tabel__aksi" (click)="$event.stopPropagation()">
+          <!-- Laporan belanja: angka sensitif, hanya super administrator. -->
+          <button
+            *ngIf="isSuperAdministrator"
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="laporan(item)"
+            [title]="'supplier-report__title' | translate"
+            [attr.aria-label]="'supplier-report__title' | translate"
+          >
+            <i class="ph ph-chart-bar" aria-hidden="true"></i>
+          </button>
           <button
             type="button"
             class="tabel__aksi-btn"
