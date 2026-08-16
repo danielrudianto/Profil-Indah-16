@@ -1126,7 +1126,7 @@
   "customer__add__npwp": "NPWP",
   "customer__add__pic": "Person in Charge",
   "customer__add__phone_number": "Phone number",
-  "customer_add__submit": "Submit",
+  "customer_add__submit": "Save customer",
   "user__list__name": "Name",
   "user__list__username": "Username",
   "user__list__NIK": "NIK",
