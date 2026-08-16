@@ -9,7 +9,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { slideInOutAnimation } from '../../../animations/slide-in-out.animation';
 import { MatDialog } from '@angular/material/dialog';
-import { GoodReceiptViewComponent } from './good-receipt-view/good-receipt-view.component';
+import { GoodReceiptViewComponent } from 'src/app/components/document-view/good-receipt-view/good-receipt-view.component';
 import { ArchivesComponent } from '../../../components/archives/archives.component';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';

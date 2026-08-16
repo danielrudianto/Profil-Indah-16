@@ -1,8 +1,8 @@
 import { Component, Inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
-import { AlertService } from '../../../../services/alert.service';
-import { ApiService } from '../../../../services/api.service';
-import { AuthService } from '../../../../services/auth.service';
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe, NgFor, DecimalPipe } from '@angular/common';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';

@@ -13,7 +13,7 @@ import { ListPageComponent } from 'src/app/components/list-page/list-page.compon
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { SalesInvoiceArchiveFilterComponent } from './sales-invoice-archive-filter/sales-invoice-archive-filter.component';
-import { SalesInvoiceViewComponent } from './sales-invoice-view/sales-invoice-view.component';
+import { SalesInvoiceViewComponent } from 'src/app/components/document-view/sales-invoice-view/sales-invoice-view.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
 /**

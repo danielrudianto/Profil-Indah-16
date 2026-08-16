@@ -10,7 +10,7 @@ import { SalesReturnArchiveFilterComponent } from './sales-return-archive-filter
 import { ArchiveViewComponent } from 'src/app/components/archives/archive-view/archive-view.component';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { MatDialog } from '@angular/material/dialog';
-import { SalesReturnArchiveViewComponent } from './sales-return-archive-view/sales-return-archive-view.component';
+import { SalesReturnArchiveViewComponent } from 'src/app/components/document-view/sales-return-archive-view/sales-return-archive-view.component';
 import { ArchivesComponent } from '../../../components/archives/archives.component';
 import { ArchiveSearchComponent } from '../../../components/archives/archive-search/archive-search.component';
 import { NgIf, NgFor, DatePipe } from '@angular/common';

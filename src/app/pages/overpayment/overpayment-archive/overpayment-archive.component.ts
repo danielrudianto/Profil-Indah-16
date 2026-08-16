@@ -8,7 +8,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { OverpaymentArchiveViewComponent } from './overpayment-archive-view/overpayment-archive-view.component';
+import { OverpaymentArchiveViewComponent } from 'src/app/components/document-view/overpayment-archive-view/overpayment-archive-view.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
 /**

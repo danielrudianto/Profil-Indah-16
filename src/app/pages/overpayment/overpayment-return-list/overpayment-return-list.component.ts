@@ -5,7 +5,7 @@ import moment from 'moment';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { MatDialog } from '@angular/material/dialog';
-import { OverpaymentArchiveViewComponent } from '../overpayment-archive/overpayment-archive-view/overpayment-archive-view.component';
+import { OverpaymentArchiveViewComponent } from 'src/app/components/document-view/overpayment-archive-view/overpayment-archive-view.component';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';

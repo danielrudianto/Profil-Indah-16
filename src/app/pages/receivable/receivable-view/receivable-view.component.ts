@@ -10,7 +10,7 @@ import { ReceivablePaymentCreateComponent } from './receivable-payment-create/re
 import { ArchiveViewComponent } from '../../../components/archives/archive-view/archive-view.component';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { SalesInvoiceViewComponent } from '../../sales-invoice/sales-invoice-archive/sales-invoice-view/sales-invoice-view.component';
+import { SalesInvoiceViewComponent } from 'src/app/components/document-view/sales-invoice-view/sales-invoice-view.component';
 import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
 import { FeatureHeaderComponent } from '../../../components/feature-header/feature-header.component';
 import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';

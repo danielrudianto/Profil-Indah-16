@@ -7,10 +7,10 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { StockCardViewComponent } from './stock-card-view/stock-card-view.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { SalesReturnArchiveViewComponent } from '../../sales-return/sales-return-archive/sales-return-archive-view/sales-return-archive-view.component';
-import { SalesInvoiceViewComponent } from '../../sales-invoice/sales-invoice-archive/sales-invoice-view/sales-invoice-view.component';
-import { GoodReceiptViewComponent } from '../../good-receipt/good-receipt-archive/good-receipt-view/good-receipt-view.component';
-import { AdjustmentCaseViewComponent } from '../../adjustment-case/adjustment-case-archive/adjustment-case-view/adjustment-case-view.component';
+import { SalesReturnArchiveViewComponent } from 'src/app/components/document-view/sales-return-archive-view/sales-return-archive-view.component';
+import { SalesInvoiceViewComponent } from 'src/app/components/document-view/sales-invoice-view/sales-invoice-view.component';
+import { GoodReceiptViewComponent } from 'src/app/components/document-view/good-receipt-view/good-receipt-view.component';
+import { AdjustmentCaseViewComponent } from 'src/app/components/document-view/adjustment-case-view/adjustment-case-view.component';
 import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';

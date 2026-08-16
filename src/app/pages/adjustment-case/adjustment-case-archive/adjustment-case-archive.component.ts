@@ -8,7 +8,7 @@ import moment from 'moment';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { MatDialog } from '@angular/material/dialog';
-import { AdjustmentCaseViewComponent } from './adjustment-case-view/adjustment-case-view.component';
+import { AdjustmentCaseViewComponent } from 'src/app/components/document-view/adjustment-case-view/adjustment-case-view.component';
 import { ArchivesComponent } from '../../../components/archives/archives.component';
 import { ArchiveSearchComponent } from '../../../components/archives/archive-search/archive-search.component';
 import { MatIcon } from '@angular/material/icon';
