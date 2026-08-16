@@ -294,10 +294,15 @@
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
+/*
+  TANPA overflow: hidden. Pilihan yang aktif digambar dengan cincin
+  box-shadow, dan wadah yang memotong isinya ikut menggunting sisi kanan
+  cincin itu — tombol EN tampil separuh bingkai. Sudut membulat dipegang
+  masing-masing tombol lewat border-radius-nya sendiri.
+*/
 .seg {
   display: flex;
   border-radius: 4px;
-  overflow: hidden;
 }
 
 .seg__opt {
@@ -459,7 +464,11 @@
   menimpa rotate dan ornamennya melompat tegak.
 */
 /*
-  Ketiganya menempel TEPI LAYAR, di luar jangkauan kartu isian.
+  Semuanya di luar jangkauan kartu isian, tapi TERSEBAR ke seluruh layar —
+  bukan menumpuk di dua tepi. Sebarannya mengikuti halaman login
+  Terra-Nusa-Teknologi-Office: batu di kanan-atas, grafik di tepi kanan
+  bawah-40%, kerucut di bawah pada 60% lebar, kubah menemani kartu di
+  kiri-atas, dan satu batu kecil menjaga kiri-bawah.
 
   Kartu itu sedikit tembus pandang supaya latarnya terbaca — jadi ornamen yang
   kebetulan berdiri di belakangnya tidak tersembunyi, ia menyembul samar
@@ -475,18 +484,34 @@
 }
 
 .orn-bg--rock {
-  width: 220px;
-  bottom: -18px;
-  left: -34px;
+  width: 190px;
+  top: -26px;
+  right: 5%;
   opacity: 0.4;
+}
+
+.orn-bg--graph {
+  width: 150px;
+  bottom: 38%;
+  right: -30px;
+  opacity: 0.38;
+  transform: rotate(8deg);
 }
 
 .orn-bg--cone {
   width: 180px;
-  top: 58%;
-  right: -40px;
+  bottom: -34px;
+  left: 58%;
   opacity: 0.42;
   transform: rotate(-15deg);
+}
+
+.orn-bg--batu-kecil {
+  width: 120px;
+  bottom: -20px;
+  left: -30px;
+  opacity: 0.3;
+  transform: rotate(115deg);
 }
 
 /*
@@ -563,15 +588,21 @@
 
   .orn-bg--rock {
     width: 110px;
-    bottom: -24px;
+    top: -18px;
+  }
+
+  .orn-bg--graph {
+    width: 100px;
   }
 
   .orn-bg--cone {
     width: 96px;
-    top: auto;
-    bottom: 30%;
-    left: auto;
-    right: -26px;
+    bottom: -22px;
+  }
+
+  /* Layar menyempit — yang kecil pergi lebih dulu supaya tidak berdesakan. */
+  .orn-bg--batu-kecil {
+    display: none;
   }
 }
 
