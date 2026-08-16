@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { StatCard } from 'src/app/models/stat-card.model';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { ReportInventoryComponent } from '../../report-inventory/report-inventory.component';
+import { ReportInventoryComponent } from '../../report/report-inventory/report-inventory.component';
 import { Router, RouterLink } from '@angular/router';
 import { ReportFinanceComponent } from '../../report/report-finance/report-finance.component';
 import { ApiService } from 'src/app/services/api.service';
@@ -13,13 +13,31 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 import { NgFor } from '@angular/common';
 import { StatCardComponent } from '../../../components/stat-card/stat-card.component';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
 import { GcpInfoComponent } from '../../../components/gcp-info/gcp-info.component';
 
 @Component({
-    selector: 'app-administrator-dashboard',
-    templateUrl: './administrator-dashboard.component.html',
-    imports: [MatTooltip, RouterLink, MatGridList, NgFor, MatGridTile, StatCardComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, GcpInfoComponent, TranslatePipe]
+  selector: 'app-administrator-dashboard',
+  templateUrl: './administrator-dashboard.component.html',
+  imports: [
+    MatTooltip,
+    RouterLink,
+    MatGridList,
+    NgFor,
+    MatGridTile,
+    StatCardComponent,
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    GcpInfoComponent,
+    TranslatePipe,
+  ],
 })
 export class AdministratorDashboardComponent {
   constructor(
@@ -29,7 +47,7 @@ export class AdministratorDashboardComponent {
     private alertService: AlertService,
     private translateService: TranslateService,
     private authService: AuthService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   stats: StatCard[] = [
@@ -85,12 +103,12 @@ export class AdministratorDashboardComponent {
         if (!this.authService.isSuperAdministrator()) {
           this.alertService.showSuccess(
             this.translateService.instant(
-              'general__superadministrator-required'
-            )
+              'general__superadministrator-required',
+            ),
           );
           return;
         }
-        
+
         this.dialog.open(ReportFinanceComponent, {});
         break;
       case 'sales':
@@ -113,7 +131,7 @@ export class AdministratorDashboardComponent {
       case 'inventory':
         this.dynamicComponentService.createDynamicComponent(
           ReportInventoryComponent,
-          {}
+          {},
         );
         break;
       default:
@@ -128,7 +146,7 @@ export class AdministratorDashboardComponent {
 
   checkAndFetchStats(): void {
     const lastSynced = localStorage.getItem(
-      'dashboard:administrator:last-synced'
+      'dashboard:administrator:last-synced',
     );
 
     if (lastSynced == null || lastSynced == undefined) {
@@ -156,34 +174,34 @@ export class AdministratorDashboardComponent {
       next: (data: any) => {
         localStorage.setItem(
           'dashboard:administrator:last-synced',
-          new Date().toISOString()
+          new Date().toISOString(),
         );
 
         localStorage.setItem(
           'dashboard:administrator:sales-today',
-          data.sales.current
+          data.sales.current,
         );
         localStorage.setItem(
           'dashboard:administrator:sales-yesterday',
-          data.sales.previous
+          data.sales.previous,
         );
         localStorage.setItem(
           'dashboard:administrator:purchase-today',
-          data.purchase.current
+          data.purchase.current,
         );
         localStorage.setItem(
           'dashboard:administrator:purchase-yesterday',
-          data.purchase.previous
+          data.purchase.previous,
         );
 
         localStorage.setItem('dashboard:administrator:deposit', data.deposit);
         localStorage.setItem(
           'dashboard:administrator:promotion',
-          data.promotion
+          data.promotion,
         );
         localStorage.setItem(
           'dashboard:administrator:receivable',
-          data.receivable
+          data.receivable,
         );
 
         this.syncWithLocalStorage();
@@ -203,21 +221,21 @@ export class AdministratorDashboardComponent {
       localStorage.getItem('dashboard:administrator:sales-yesterday') == null
         ? 0
         : Number(
-            localStorage.getItem('dashboard:administrator:sales-yesterday')
+            localStorage.getItem('dashboard:administrator:sales-yesterday'),
           );
 
     const todayPurchase =
       localStorage.getItem('dashboard:administrator:purchase-today') == null
         ? 0
         : Number(
-            localStorage.getItem('dashboard:administrator:purchase-today')
+            localStorage.getItem('dashboard:administrator:purchase-today'),
           );
 
     const yesterdayPurchase =
       localStorage.getItem('dashboard:administrator:purchase-yesterday') == null
         ? 0
         : Number(
-            localStorage.getItem('dashboard:administrator:purchase-yesterday')
+            localStorage.getItem('dashboard:administrator:purchase-yesterday'),
           );
 
     const deposit =

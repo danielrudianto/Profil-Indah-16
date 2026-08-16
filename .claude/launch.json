@@ -3,6 +3,8 @@
   "configurations": [
     {
       "name": "profil-indah-16",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["ng", "serve", "--port", "2100"],
       "port": 2100,
       "url": "http://localhost:2100",
       "autoPort": false

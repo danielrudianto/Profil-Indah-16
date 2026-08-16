@@ -2,19 +2,29 @@ import { Component } from '@angular/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { DynamicDialogComponent } from '../../components/dynamic-dialog/dynamic-dialog.component';
-import { DialogHeaderComponent } from '../../components/dialog-header/dialog-header.component';
-import { CountUpDirective } from '../../directives/count-up.directive';
+import { DynamicDialogComponent } from '../../../components/dynamic-dialog/dynamic-dialog.component';
+import { DialogHeaderComponent } from '../../../components/dialog-header/dialog-header.component';
+import { CountUpDirective } from '../../../directives/count-up.directive';
 import { MatDivider } from '@angular/material/divider';
 import { NgFor, UpperCasePipe, DecimalPipe } from '@angular/common';
-import { CircleAvatarComponent } from '../../components/circle-avatar/circle-avatar.component';
+import { CircleAvatarComponent } from '../../../components/circle-avatar/circle-avatar.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-report-inventory',
-    templateUrl: './report-inventory.component.html',
-    styleUrls: ['./report-inventory.component.scss'],
-    imports: [DynamicDialogComponent, DialogHeaderComponent, CountUpDirective, MatDivider, NgFor, CircleAvatarComponent, UpperCasePipe, DecimalPipe, TranslatePipe]
+  selector: 'app-report-inventory',
+  templateUrl: './report-inventory.component.html',
+  styleUrls: ['./report-inventory.component.scss'],
+  imports: [
+    DynamicDialogComponent,
+    DialogHeaderComponent,
+    CountUpDirective,
+    MatDivider,
+    NgFor,
+    CircleAvatarComponent,
+    UpperCasePipe,
+    DecimalPipe,
+    TranslatePipe,
+  ],
 })
 export class ReportInventoryComponent {
   isOpened: boolean = false;
@@ -26,7 +36,7 @@ export class ReportInventoryComponent {
   constructor(
     private apiService: ApiService,
     private dynamicComponentService: DynamicComponentService,
-    private alertService: AlertService
+    private alertService: AlertService,
   ) {}
 
   ngOnInit(): void {
@@ -74,7 +84,7 @@ export class ReportInventoryComponent {
           const csv = data.map((row: any) =>
             header
               .map((fieldName) => JSON.stringify(row[fieldName], replacer))
-              .join(',')
+              .join(','),
           );
 
           csv.unshift(header.join(','));

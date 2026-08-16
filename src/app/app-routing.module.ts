@@ -653,13 +653,6 @@ const routes: Routes = [
       },
 
       {
-        path: 'Cashier',
-        loadComponent: () =>
-          import('./pages/cashier/cashier.component').then(
-            (m) => m.CashierComponent,
-          ),
-      },
-      {
         /*
               Alamat lama berawalan peran. pathMatch 'prefix' membuat sisa
               jalurnya ikut terbawa, jadi /Administrator/Deposit mendarat di /Deposit —
