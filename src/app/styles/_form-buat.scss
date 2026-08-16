@@ -136,8 +136,17 @@
   }
 }
 
+/*
+  Keterangan MILIK kolom di atasnya, dan jaraknya harus mengatakan itu.
+
+  mat-form-field menyisipkan ruang subscript-nya sendiri di bawah kolom, jadi
+  keterangan yang ditaruh apa adanya duduk terlalu jauh — terbaca seperti
+  bagian formulir yang lain — sementara kolom berikutnya justru terasa dekat.
+  Margin atas negatif menyerap ruang itu; margin bawah menambah jarak ke kolom
+  sesudahnya. Dekat dengan pemiliknya, jauh dari yang bukan.
+*/
 .field__bantu {
-  margin: 6px 0 0;
+  margin: -14px 0 6px;
   font-size: 12px;
   color: color-mix(in srgb, var(--color-text) 52%, transparent);
 }
