@@ -1958,6 +1958,5 @@
   "promotion__create__check-supplier": "Pemasok dipilih",
   "promotion__create__check-brand": "Minimal satu merek peserta",
   "promotion__create__check-start": "Tanggal mulai terisi",
-  "customer__add__lede": "Pelanggan baru langsung bisa dipilih di faktur.",
-  "good-receipt__summary__grand-total": "Grand total"
+  "customer__add__lede": "Pelanggan baru langsung bisa dipilih di faktur."
 }

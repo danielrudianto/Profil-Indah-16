@@ -1952,6 +1952,5 @@
   "promotion__create__check-supplier": "Supplier selected",
   "promotion__create__check-brand": "At least one participating brand",
   "promotion__create__check-start": "Start date filled in",
-  "customer__add__lede": "A new customer can be picked on invoices right away.",
-  "good-receipt__summary__grand-total": "Grand total"
+  "customer__add__lede": "A new customer can be picked on invoices right away."
 }
