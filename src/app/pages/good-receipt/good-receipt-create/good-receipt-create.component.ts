@@ -26,6 +26,7 @@ import {
   MatDatepickerToggle,
 } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { Router } from '@angular/router';
 
 @Component({
   providers: [provideNativeDateAdapter()],
@@ -59,7 +60,8 @@ export class GoodReceiptCreateComponent {
     private datePipe: DatePipe,
     private translateService: TranslateService,
     private _hotKeysService: HotkeysService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {
     this._hotKeysService.add([
       new Hotkey('alt + a', (): boolean => {
@@ -263,6 +265,23 @@ export class GoodReceiptCreateComponent {
    * mengurusnya, termasuk memilih product_unit bila satuannya dipilih.
    * Meilisearch ikut diperbarui sendiri lewat antrean "product-updated".
    */
+  /**
+   * Benar bila nomor faktur suppliernya benar-benar terisi — bukan sekadar
+   * kartu "Dokumen lengkap" yang dipilih. Centang "dokumen final" dan tombol
+   * simpannya membaca ini.
+   */
+  get fakturTerisi(): boolean {
+    if (!this.dokumenLengkap) {
+      return false;
+    }
+    const v = this.metaFormGroup.value;
+    return !!(v.invoice_name ?? '').toString().trim() && !!(v.faktur ?? '').toString().trim();
+  }
+
+  batal(): void {
+    this.router.navigate(['/Good-receipt/Archive']);
+  }
+
   private simpanHargaMaster(): void {
     if (!this.bolehUbahHarga) {
       return;
