@@ -249,3 +249,13 @@
   flex-direction: column;
   min-width: 0;
 }
+
+/*
+  PERCOBAAN — hanya formulir ini. Ground kartu terpilih pada mode gelap
+  dilembutkan ke 12% aksen di atas surface; token globalnya tidak disentuh.
+  Bila disukai, pindahkan ke --color-active di SettingsService dan hapus
+  blok ini; bila tidak, hapus blok ini saja.
+*/
+:host-context([data-theme="dark"]) .keadaan__kartu--on {
+  background: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+}

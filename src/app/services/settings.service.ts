@@ -152,17 +152,9 @@ export class SettingsService {
       '--color-accent-base': aksen.base,
       '--color-accent-tint': aksen.tint,
 
-      /*
-        Ground keadaan aktif: kartu pilihan, ikon dialog, avatar, banner.
-
-        Versi gelapnya 12% di atas SURFACE — bukan 22% di atas latar
-        terdalam. Pada 22%, kartu terpilih menjadi blok biru pekat yang
-        kontrasnya jauh lebih keras daripada padanannya di mode terang;
-        12% menyamakan nuansanya dengan wash sidebar aktif dan dengan
-        birunya mode terang.
-      */
+      /* Ground keadaan aktif: kartu pilihan, ikon dialog, avatar, banner. */
       '--color-active': gelap
-        ? `color-mix(in srgb, ${aksen.base} 12%, #161b29)`
+        ? `color-mix(in srgb, ${aksen.base} 22%, #0d121d)`
         : `color-mix(in srgb, ${aksen.tint} 45%, #ffffff)`,
 
       /* Item sidebar aktif, tag halaman, chip saringan aktif. */
