@@ -64,7 +64,8 @@
               (onSelectData)="onSelectPaymentMethod($event)"
               (onUnselectData)="onUnselectPaymentMethod()"
             />
-            <p class="field__bantu">
+            <p class="petunjuk">
+              <i class="ph ph-info" aria-hidden="true"></i>
               {{ 'overpayment__create__payment-method-hint' | translate }}
             </p>
           </div>
@@ -160,7 +161,8 @@
               <mat-label>{{ 'overpayment__create__receiver-name' | translate }}</mat-label>
               <input matInput type="text" formControlName="return_payment_name" autocomplete="off" />
             </mat-form-field>
-          <p class="field__bantu">
+          <p class="petunjuk">
+            <i class="ph ph-info" aria-hidden="true"></i>
             {{ 'overpayment__create__receiver-hint' | translate }}
           </p>
         </div>

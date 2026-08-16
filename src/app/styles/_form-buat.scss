@@ -103,10 +103,19 @@
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
-/* Dua kolom isian bersebelahan; menumpuk sendiri ketika sempit. */
+/*
+  SATU KOLOM. Sempat dua kolom yang menyesuaikan sendiri, dan itu yang membuat
+  kartunya terlihat ragged: kolom yang punya teks bantu di bawahnya jadi lebih
+  tinggi daripada tetangganya, dan jumlah isian yang ganjil menyisakan satu
+  kolom melar sendirian di baris terakhir.
+
+  Satu kolom juga membebaskan lebar penuh, sehingga keterangan yang dulu
+  berdesakan sebagai teks kecil di bawah kolom bisa berdiri sebagai banner
+  yang benar-benar terbaca.
+*/
 .kartu__baris {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 14px;
 }
 
