@@ -2110,5 +2110,9 @@
   "package__update__lede": "The name, description, and package price can change; the contents cannot.",
   "package__update__content-note": "Package contents cannot change once created — old invoices are computed from this composition. If the contents change, create a new package and delete this one.",
   "package__update__delete": "Delete package",
-  "package__update__save": "Save changes"
+  "package__update__save": "Save changes",
+  "package-selector__title": "Pick a package",
+  "package-selector__lede": "Pressing a row adds the package to the document — one package, one line.",
+  "package-selector__in-doc": "Already in document",
+  "package-selector__packages": "packages"
 }

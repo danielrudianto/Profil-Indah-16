@@ -2110,5 +2110,9 @@
   "package__update__lede": "Nama, deskripsi, dan harga paketnya bisa diubah; isinya tidak.",
   "package__update__content-note": "Isi paket tidak bisa diubah setelah dibuat — faktur lama menghitung dari komposisi ini. Bila isinya berubah, buat paket baru dan hapus yang ini.",
   "package__update__delete": "Hapus paket",
-  "package__update__save": "Simpan perubahan"
+  "package__update__save": "Simpan perubahan",
+  "package-selector__title": "Pilih paket",
+  "package-selector__lede": "Menekan baris menambahkan paketnya ke dokumen — satu paket satu baris.",
+  "package-selector__in-doc": "Sudah di dokumen",
+  "package-selector__packages": "paket"
 }

@@ -479,7 +479,13 @@ export class SalesInvoiceCreateComponent {
 
   openPackageSelector() {
     this.dynamicComponentService
-      .createDynamicComponent(PackageSelectorComponent, {})
+      .createDynamicComponent(PackageSelectorComponent, {
+        /* Untuk lencana "sudah di faktur" pada baris pemilihnya. */
+        barisSaatIni: () =>
+          this.t.controls
+            .map((x) => x.get('package_code_id')?.value)
+            .filter((id) => id != null),
+      })
       .subscribe((data) => {
         if (data) {
           const result = this.checkExistingPackage(data.item.id);
