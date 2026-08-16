@@ -1,155 +1,120 @@
-<div class="view-panel-wrapper">
-  <div class="view-panel-backdrop" (click)="close()"></div>
-  <div class="view-panel" [@panelAnimation]="panelState">
-    <div class="row-action">
-      <h2 mat-dialog-title>Customize your avatar!</h2>
-      <div class="d-flex">
-        <button mat-icon-button (click)="close()">
-          <mat-icon>close</mat-icon>
-        </button>
+<!--
+  Ubah avatar — bagian `21a` berkas desain.
+
+  DIALOG DI TENGAH, bukan panel yang menggeser dari kanan. Seluruh pilihan lain
+  di aplikasi ini sudah berupa dialog; panel samping membuat layar ini
+  satu-satunya yang berperilaku sendiri.
+-->
+<div class="dialog-bungkus">
+  <div class="dialog-latar" (click)="close()"></div>
+
+  <div class="dialog" [@panelAnimation]="panelState" [formGroup]="avatarFormGroup">
+    <header class="dialog__kepala">
+      <div>
+        <h2 class="dialog__judul">{{ 'set-avatar__title' | translate }}</h2>
+        <p class="dialog__lede">{{ 'set-avatar__lede' | translate }}</p>
       </div>
-    </div>
-    <div class="view-panel-content" id="content">
-      <div class="text-center">
+
+      <button
+        type="button"
+        class="dialog__tutup"
+        (click)="close()"
+        [attr.aria-label]="'general__close' | translate"
+      >
+        <i class="ph ph-x" aria-hidden="true"></i>
+      </button>
+    </header>
+
+    <!-- Pratinjau + lingkaran latar --------------------------------- -->
+    <div class="pratinjau">
+      <span class="pratinjau__lingkar" [style.background]="warnaLatar">
         <app-avatar
+          [width]="96"
           [top]="avatarFormGroup.value.top"
           [accessories]="avatarFormGroup.value.accessories"
-          [clothes]="avatarFormGroup.value.clothes"
+          [circle]="avatarFormGroup.value.circle"
+          [color]="avatarFormGroup.value.color"
+          [eyebrows]="avatarFormGroup.value.eyebrows"
           [eyes]="avatarFormGroup.value.eyes"
           [mouth]="avatarFormGroup.value.mouth"
-          [eyebrows]="avatarFormGroup.value.eyebrows"
-          [color]="avatarFormGroup.value.color"
-          [circle]="avatarFormGroup.value.circle"
+          [clothes]="avatarFormGroup.value.clothes"
         />
-      </div>
+      </span>
 
-      <form [formGroup]="avatarFormGroup" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="fill" class="w-100">
-          <mat-label>Top</mat-label>
-          <mat-select formControlName="top">
-            <mat-option [value]="0">No hair</mat-option>
-            <mat-option [value]="1">Hijab</mat-option>
-            <mat-option [value]="2">Long hair big hair</mat-option>
-            <mat-option [value]="3">Long hair bob</mat-option>
-            <mat-option [value]="4">Long hair curly</mat-option>
-            <mat-option [value]="5">Long hair dreads</mat-option>
-            <mat-option [value]="6">Long hair straight</mat-option>
-            <mat-option [value]="7">Medium hair</mat-option>
-            <mat-option [value]="8">Short hair 1</mat-option>
-            <mat-option [value]="9">Short hair 2</mat-option>
-            <mat-option [value]="10">Short hair frizzle</mat-option>
-            <mat-option [value]="11">Shaggy</mat-option>
-            <mat-option [value]="12">Short round</mat-option>
-            <mat-option [value]="13">Short side</mat-option>
-            <mat-option [value]="14">Caesar</mat-option>
-          </mat-select>
-        </mat-form-field>
+      <div class="pratinjau__atur">
+        <mat-slide-toggle formControlName="circle">
+          {{ 'set-avatar__circle' | translate }}
+        </mat-slide-toggle>
 
-        <mat-form-field appearance="fill" class="w-100">
-          <mat-label>Accessories</mat-label>
-          <mat-select formControlName="accessories">
-            <mat-option [value]="0">None</mat-option>
-            <mat-option [value]="1">Kurt</mat-option>
-            <mat-option [value]="2">Perscription</mat-option>
-            <mat-option [value]="3">Round</mat-option>
-            <mat-option [value]="4">Sunglasses</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="fill" class="w-100">
-          <mat-label>Clothes</mat-label>
-          <mat-select formControlName="clothes">
-            <mat-option [value]="0">Blazer shirt</mat-option>
-            <mat-option [value]="1">Blazer sweater</mat-option>
-            <mat-option [value]="2">Collar sweater</mat-option>
-            <mat-option [value]="3">Hoodie</mat-option>
-            <mat-option [value]="4">Overall</mat-option>
-            <mat-option [value]="5">Shirt crew neck</mat-option>
-            <mat-option [value]="6">Shirt scoop neck</mat-option>
-            <mat-option [value]="7">Shirt v neck</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="fill" class="w-100">
-          <mat-label>Eyes</mat-label>
-          <mat-select formControlName="eyes">
-            <mat-option [value]="0">Close</mat-option>
-            <mat-option [value]="1">Cry</mat-option>
-            <mat-option [value]="2">Default</mat-option>
-            <mat-option [value]="3">Dizzy</mat-option>
-            <mat-option [value]="4">Eye roll</mat-option>
-            <mat-option [value]="5">Happy</mat-option>
-            <mat-option [value]="6">Hearts</mat-option>
-            <mat-option [value]="7">Side</mat-option>
-            <mat-option [value]="8">Squint</mat-option>
-            <mat-option [value]="9">Surprised</mat-option>
-            <mat-option [value]="10">Wink</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="fill" class="w-100">
-          <mat-label>Eyebrows</mat-label>
-          <mat-select formControlName="eyebrows">
-            <mat-option [value]="0">Angry</mat-option>
-            <mat-option [value]="1">Default</mat-option>
-            <mat-option [value]="2">Flat</mat-option>
-            <mat-option [value]="3">Raised</mat-option>
-            <mat-option [value]="4">Sad</mat-option>
-            <mat-option [value]="5">Unibrow</mat-option>
-            <mat-option [value]="6">Up</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="fill" class="w-100">
-          <mat-label>Mouth</mat-label>
-          <mat-select formControlName="mouth">
-            <mat-option [value]="0">Concerned</mat-option>
-            <mat-option [value]="1">Default</mat-option>
-            <mat-option [value]="2">Disbelief</mat-option>
-            <mat-option [value]="3">Eating</mat-option>
-            <mat-option [value]="4">Grimace</mat-option>
-            <mat-option [value]="5">Sad</mat-option>
-            <mat-option [value]="6">Scream</mat-option>
-            <mat-option [value]="7">Serious</mat-option>
-            <mat-option [value]="8">Smile</mat-option>
-            <mat-option [value]="9">Tongue</mat-option>
-            <mat-option [value]="10">Twinkle</mat-option>
-            <mat-option [value]="11">Vomit</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <app-color-picker
-          [disabled]="!avatarFormGroup.value.circle"
-          [selectedColor]="avatarFormGroup.value.color"
-          (onColorSelected)="onColorSelected($event)"
-        />
-
-        <mat-slide-toggle formControlName="circle"
-          >Circled style</mat-slide-toggle
-        >
-      </form>
-    </div>
-    <div class="shortcuts">
-      <div class="shortcut-key">
-        <span class="shortcut-key-label">ESC</span>
-        <span class="shortcut-key-function">{{
-          "general__back" | translate
-        }}</span>
-      </div>
-      <div class="shortcut-key">
-        <span class="shortcut-key-label">F</span>
-        <span class="shortcut-key-function">{{ "general__toggle-full-screen" | translate }}</span>
+        <!--
+          Penggeser warna mati ketika lingkarannya dimatikan: warna latar yang
+          tidak digambar tidak bisa diubah, dan menawarkannya membuat orang
+          menggeser lalu bertanya kenapa tidak terjadi apa-apa.
+        -->
+        <div class="pratinjau__warna">
+          <label>{{ 'set-avatar__circle-color' | translate }}</label>
+          <app-color-picker
+            [disabled]="!avatarFormGroup.value.circle"
+            [selectedColor]="avatarFormGroup.value.color"
+            (onColorSelected)="onColorSelected($event)"
+          />
+        </div>
       </div>
     </div>
-    <div class="actions">
+
+    <!-- Tab per kelompok -------------------------------------------- -->
+    <div class="tab" role="tablist">
       <button
-        class="action-button"
         type="button"
-        (click)="onSubmit()"
-        [disabled]="isSubmitting"
+        role="tab"
+        class="tab__opt"
+        *ngFor="let k of kelompok"
+        [class.tab__opt--on]="kelompokAktif === k.kunci"
+        [attr.aria-selected]="kelompokAktif === k.kunci"
+        (click)="bukaKelompok(k.kunci)"
       >
-        Save avatar
+        {{ k.label | translate }}
+        <span class="tab__jumlah">{{ k.opsi.length }}</span>
       </button>
     </div>
+
+    <!--
+      Petak bergambar. Tiap opsi digambar utuh — bentuknya terbaca tanpa perlu
+      dicoba satu per satu, dan itulah seluruh alasan layar ini dibangun ulang.
+    -->
+    <div class="petak" role="listbox">
+      <button
+        type="button"
+        role="option"
+        class="petak__opt"
+        *ngFor="let n of kelompokTerbuka.opsi"
+        [class.petak__opt--on]="terpilih(kelompokTerbuka.kunci, n)"
+        [attr.aria-selected]="terpilih(kelompokTerbuka.kunci, n)"
+        (click)="pilih(kelompokTerbuka.kunci, n)"
+      >
+        <span class="petak__lingkar" [style.background]="warnaLatar">
+          <img [src]="gambar(kelompokTerbuka.kunci, n)" alt="" aria-hidden="true" />
+        </span>
+      </button>
+    </div>
+
+    <p class="petunjuk-hidup">
+      <i class="ph ph-info" aria-hidden="true"></i>
+      {{ 'set-avatar__live' | translate }}
+    </p>
+
+    <footer class="dialog__kaki">
+      <button type="button" class="btn btn--kedua" (click)="close()">
+        {{ 'general__cancel' | translate }}
+      </button>
+      <button
+        type="button"
+        class="btn btn--primary"
+        [disabled]="isSubmitting"
+        (click)="onSubmit()"
+      >
+        {{ 'set-avatar__save' | translate }}
+      </button>
+    </footer>
   </div>
 </div>

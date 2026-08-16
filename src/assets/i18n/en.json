@@ -1905,5 +1905,18 @@
   "sales-invoice__rebate__value": "Amount returned",
   "sales-invoice__rebate__receiver": "Receiver name",
   "tax-invoice__placeholder": "16 digits",
-  "tax-invoice__hint": "No hyphens or dots · max. 16 digits"
+  "tax-invoice__hint": "No hyphens or dots · max. 16 digits",
+  "set-avatar__title": "Edit avatar",
+  "set-avatar__lede": "Pick the shape directly — no need to try one by one",
+  "set-avatar__circle": "Background circle",
+  "set-avatar__circle-color": "Background colour",
+  "set-avatar__live": "Changes show in the preview straight away",
+  "set-avatar__save": "Save avatar",
+  "set-avatar__saved": "Avatar saved.",
+  "set-avatar__group__top": "Hair",
+  "set-avatar__group__accessories": "Accessories",
+  "set-avatar__group__clothes": "Clothes",
+  "set-avatar__group__eyes": "Eyes",
+  "set-avatar__group__eyebrows": "Eyebrows",
+  "set-avatar__group__mouth": "Mouth"
 }

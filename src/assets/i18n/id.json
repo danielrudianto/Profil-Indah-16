@@ -1911,5 +1911,18 @@
   "sales-invoice__rebate__value": "Nominal dikembalikan",
   "sales-invoice__rebate__receiver": "Nama penerima",
   "tax-invoice__placeholder": "16 digit angka",
-  "tax-invoice__hint": "Tanpa tanda hubung & titik · maks. 16 digit"
+  "tax-invoice__hint": "Tanpa tanda hubung & titik · maks. 16 digit",
+  "set-avatar__title": "Ubah avatar",
+  "set-avatar__lede": "Pilih bentuknya langsung — tidak perlu coba satu-satu",
+  "set-avatar__circle": "Lingkaran latar",
+  "set-avatar__circle-color": "Warna latar",
+  "set-avatar__live": "Perubahan langsung terlihat di pratinjau",
+  "set-avatar__save": "Simpan avatar",
+  "set-avatar__saved": "Avatar tersimpan.",
+  "set-avatar__group__top": "Rambut",
+  "set-avatar__group__accessories": "Aksesori",
+  "set-avatar__group__clothes": "Pakaian",
+  "set-avatar__group__eyes": "Mata",
+  "set-avatar__group__eyebrows": "Alis",
+  "set-avatar__group__mouth": "Mulut"
 }
