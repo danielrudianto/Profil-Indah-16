@@ -511,3 +511,26 @@
     color: #fff;
   }
 }
+
+/*
+  Banner keterangan beraksen — SATU definisi untuk semua formulir. Sempat
+  hidup sebagai lima salinan yang pelan-pelan berbeda bentuk, dan banner
+  halaman baru selalu tampak "beda sendiri" dibanding penerimaan barang.
+*/
+.petunjuk {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--color-active);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  color: var(--color-accent);
+  font-size: 13px;
+
+  i {
+    font-size: 16px;
+    flex: none;
+  }
+}

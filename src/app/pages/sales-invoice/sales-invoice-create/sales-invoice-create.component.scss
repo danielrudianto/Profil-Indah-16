@@ -74,29 +74,6 @@
   }
 }
 
-/*
-  Banner keterangan beraksen. Ia menyatakan sesuatu yang mengubah arti angka di
-  bawahnya — harga bisa dihitung ulang saat terbit — jadi ia berwarna, bukan
-  abu seperti teks bantu biasa.
-*/
-.petunjuk {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin: 0;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: var(--color-accent-wash);
-  color: var(--color-accent);
-  font-size: 12.5px;
-  line-height: 1.5;
-
-  i {
-    font-size: 15px;
-    flex: none;
-    margin-top: 1px;
-  }
-}
 
 /* Tabel item menggulung mendatar di dalam kartunya sendiri. */
 .gulir {

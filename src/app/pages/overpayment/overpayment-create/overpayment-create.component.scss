@@ -23,28 +23,3 @@
   */
 }
 
-/*
-  Banner keterangan.
-
-  Naik dari teks kecil di bawah kolom menjadi banner utuh sejak kartunya
-  berpindah ke satu kolom: lebar penuh membuat kalimatnya benar-benar terbaca,
-  bukan berdesakan sebagai catatan kaki yang mudah terlewat.
-*/
-.petunjuk {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin: 0;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: var(--color-accent-wash);
-  color: var(--color-accent);
-  font-size: 12.5px;
-  line-height: 1.5;
-
-  i {
-    font-size: 15px;
-    flex: none;
-    margin-top: 1px;
-  }
-}

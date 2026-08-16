@@ -1,12 +1,15 @@
 <!-- Buat promosi — bagian `17a`/`17b` berkas desain. -->
 <div class="buat" [formGroup]="promotionFormGroup">
-  <div class="buat__head">
-    <h1 class="buat__title">{{ 'promotion__create__title' | translate }}</h1>
-    <p class="buat__lede">{{ 'promotion__create__lede' | translate }}</p>
-  </div>
-
   <div class="kisi">
     <div class="buat__utama">
+      <!--
+        Judul DI DALAM kolom utama, meniru penerimaan barang: dengan begitu
+        kolom samping mulai sejajar judul, bukan menggantung di bawahnya.
+      -->
+      <header class="buat__head">
+        <h1 class="buat__title">{{ 'promotion__create__title' | translate }}</h1>
+        <p class="buat__lede">{{ 'promotion__create__lede' | translate }}</p>
+      </header>
       <!-- Info -->
       <section class="kartu">
         <h2 class="kartu__label">{{ 'promotion__create__info' | translate }}</h2>
