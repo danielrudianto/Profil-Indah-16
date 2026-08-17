@@ -18,6 +18,7 @@ import { Subject, Subscription } from 'rxjs';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { PageTitleService } from 'src/app/services/page-title.service';
 import {
   ProductSelectorComponent,
   ProductSelectorType,
@@ -93,6 +94,7 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
     private hotkeysService: HotkeysService,
     private dialog: MatDialog,
     private router: Router,
+    private pageTitleService: PageTitleService,
   ) {
     this.hotkeysService.add([
       new Hotkey('alt+a', (): boolean => {
@@ -125,6 +127,13 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
+    /* Jalan pulang ke daftarnya ada di topbar, seperti penerimaan barang. */
+    this.pageTitleService.pasangKonteks({
+      kembaliLabel: 'sales-return__archive__title',
+      kembaliJalur: '/Sales-return/Archive',
+      tag: 'sales-return__new',
+    });
+
     /*
       Satu langganan untuk satu kontrol, dipasang sekali. Bentuk lamanya
       memasang langganan baru pada SETIAP baris setiap kali barang berubah

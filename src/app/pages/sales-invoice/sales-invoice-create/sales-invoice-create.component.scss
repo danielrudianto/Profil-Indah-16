@@ -191,36 +191,10 @@
 /* Pembayaran                                                        */
 /* ---------------------------------------------------------------- */
 
-.bayar {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 150px 36px;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 0;
-  border-top: 1px solid var(--color-divider);
-}
-
-.bayar__nama {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-
-  strong {
-    font-size: 13.5px;
-    font-weight: 500;
-  }
-
-  span {
-    font-size: 12px;
-    color: color-mix(in srgb, var(--color-text) 50%, transparent);
-  }
-}
-
-.galat {
-  margin: 0;
-  font-size: 12.5px;
-  color: #e05260;
-}
+/*
+  .bayar, .bayar__nama, dan .galat kini tinggal di _form-buat.scss —
+  konfirmasi deposit memakai baris pembayaran yang sama.
+*/
 
 
 /* ---------------------------------------------------------------- */

@@ -6,19 +6,22 @@
   uangnya. Wajahnya ditentukan kartu pilihan di kartu Pengembalian.
 -->
 <div class="buat">
-  <div class="buat__head">
-    <h1 class="buat__title">
-      {{ 'overpayment__create__title' | translate }}
-      <span class="tag-otomatis">
-        <i class="ph ph-sparkle" aria-hidden="true"></i>
-        {{ 'overpayment__create__auto-number' | translate }}
-      </span>
-    </h1>
-    <p class="buat__lede">{{ 'overpayment__create__lede' | translate }}</p>
-  </div>
-
   <div class="kisi">
     <div class="buat__utama">
+      <!--
+        Kepala DI DALAM kolom kiri, seperti penerimaan barang: kolom
+        ringkasan di kanan mulai sejajar dengan judul, bukan di bawahnya.
+      -->
+      <div class="buat__head">
+        <h1 class="buat__title">
+          {{ 'overpayment__create__title' | translate }}
+          <span class="tag-otomatis">
+            <i class="ph ph-sparkle" aria-hidden="true"></i>
+            {{ 'overpayment__create__auto-number' | translate }}
+          </span>
+        </h1>
+        <p class="buat__lede">{{ 'overpayment__create__lede' | translate }}</p>
+      </div>
       <!-- ---------------------------------------------------------- -->
       <!-- Penerimaan                                                  -->
       <!-- ---------------------------------------------------------- -->
@@ -197,27 +200,31 @@
           {{ 'overpayment__create__summary' | translate }}
         </h2>
 
+        <!--
+          Tiap baris dibungkus div, mengikuti anatomi ringkasan penerimaan
+          barang di _form-buat.scss: label kiri, nilai kanan, turun ke bawah.
+        -->
         <dl class="ringkas">
-          <dt>{{ 'overpayment__create__summary-value' | translate }}</dt>
-          <dd class="ringkas__total">
-            <strong>Rp {{ nominal | number: '1.0-0' }}</strong>
-          </dd>
-
-          <ng-container *ngIf="metode">
+          <div *ngIf="metode">
             <dt>{{ 'overpayment__create__summary-returned' | translate }}</dt>
             <dd>{{ ringkasPengembalian }}</dd>
-          </ng-container>
+          </div>
 
-          <ng-container *ngIf="metode === 'Bank transfer' && tujuanTransfer">
+          <div *ngIf="metode === 'Bank transfer' && tujuanTransfer">
             <dt>{{ 'overpayment__create__summary-target' | translate }}</dt>
             <dd>{{ tujuanTransfer }}</dd>
-          </ng-container>
+          </div>
 
-          <ng-container *ngIf="metode === 'Cash' && namaPenerima">
+          <div *ngIf="metode === 'Cash' && namaPenerima">
             <dt>{{ 'overpayment__create__summary-receiver' | translate }}</dt>
             <dd>{{ namaPenerima }}</dd>
-          </ng-container>
+          </div>
         </dl>
+
+        <div class="ringkas__total">
+          <span>{{ 'overpayment__create__summary-value' | translate }}</span>
+          <strong>Rp {{ nominal | number: '1.0-0' }}</strong>
+        </div>
       </section>
 
       <section class="kartu">

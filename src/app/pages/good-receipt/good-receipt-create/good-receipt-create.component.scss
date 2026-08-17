@@ -404,55 +404,11 @@ select.input {
   white-space: nowrap;
 }
 
-.ringkas {
-  margin: 0 0 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  font-size: 13.5px;
-
-  div {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  dt {
-    color: color-mix(in srgb, var(--color-text) 58%, transparent);
-  }
-
-  dd {
-    margin: 0;
-    font-variant-numeric: tabular-nums;
-  }
-}
-
-.ringkas__kurang {
-  color: color-mix(in srgb, var(--color-text) 70%, transparent);
-}
-
-/* Total dipisah garis dan dibesarkan — itu angka yang dibaca terakhir. */
-.ringkas__total {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  padding-top: 14px;
-  border-top: 1px solid var(--color-divider);
-
-  span {
-    font-size: 13.5px;
-    color: color-mix(in srgb, var(--color-text) 58%, transparent);
-  }
-
-  strong {
-    font-size: 22px;
-    font-weight: 500;
-    color: var(--color-accent);
-    font-variant-numeric: tabular-nums;
-  }
-}
+/*
+  .ringkas dan .ringkas__total kini tinggal di _form-buat.scss — anatomi
+  halaman ini yang dijadikan bentuk bersamanya, jadi salinan lokalnya
+  dibuang.
+*/
 
 /* ---------------------------------------------------------------- */
 /* Penanda mode, tag nomor otomatis, tombol tambah di kepala kartu    */

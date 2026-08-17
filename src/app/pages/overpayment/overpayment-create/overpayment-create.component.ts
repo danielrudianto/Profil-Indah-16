@@ -16,6 +16,7 @@ import moment from 'moment';
 import { AutocompleteSearchComponent } from 'src/app/components/autocomplete-search/autocomplete-search.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { PageTitleService } from 'src/app/services/page-title.service';
 import { availableBankSearch, IBank } from 'src/app/utils/bank';
 import { CustomerCreateComponent } from 'src/app/pages/customer/customer-create/customer-create.component';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
@@ -71,6 +72,7 @@ export class OverpaymentCreateComponent implements OnInit {
     private translateService: TranslateService,
     private dialog: MatDialog,
     private router: Router,
+    private pageTitleService: PageTitleService,
   ) {}
 
   banks: IBank[] = availableBankSearch.search('').splice(0, 8);
@@ -100,6 +102,13 @@ export class OverpaymentCreateComponent implements OnInit {
   metode: string = '';
 
   ngOnInit(): void {
+    /* Jalan pulang ke daftarnya ada di topbar, seperti penerimaan barang. */
+    this.pageTitleService.pasangKonteks({
+      kembaliLabel: 'overpayment__title',
+      kembaliJalur: '/Overpayment/Return',
+      tag: 'overpayment__create__title',
+    });
+
     this.returnFormGroup.controls['return_payment_bank'].valueChanges.subscribe(
       (data) => {
         this.banks = availableBankSearch.search(data ?? '').splice(0, 8);

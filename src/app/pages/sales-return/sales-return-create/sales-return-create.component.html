@@ -5,19 +5,22 @@
   baris faktur asal yang dipilih, bukan ketikan bebas.
 -->
 <div class="buat">
-  <div class="buat__head">
-    <h1 class="buat__title">
-      {{ 'sales-return__title' | translate }}
-      <span class="tag-otomatis">
-        <i class="ph ph-sparkle" aria-hidden="true"></i>
-        {{ 'sales-return__create__auto-number' | translate }}
-      </span>
-    </h1>
-    <p class="buat__lede">{{ 'sales-return__create__description' | translate }}</p>
-  </div>
-
   <div class="kisi">
     <div class="buat__utama">
+      <!--
+        Kepala DI DALAM kolom kiri, seperti penerimaan barang: kolom
+        ringkasan di kanan mulai sejajar dengan judul, bukan di bawahnya.
+      -->
+      <div class="buat__head">
+        <h1 class="buat__title">
+          {{ 'sales-return__title' | translate }}
+          <span class="tag-otomatis">
+            <i class="ph ph-sparkle" aria-hidden="true"></i>
+            {{ 'sales-return__create__auto-number' | translate }}
+          </span>
+        </h1>
+        <p class="buat__lede">{{ 'sales-return__create__description' | translate }}</p>
+      </div>
       <!-- ---------------------------------------------------------- -->
       <!-- Data umum                                                   -->
       <!-- ---------------------------------------------------------- -->
@@ -309,19 +312,20 @@
           {{ 'sales-return__create__summary' | translate }}
         </h2>
 
-        <div class="ringkas">
-          <div class="ringkas__baris">
-            <span>{{ 'sales-return__create__summary__items' | translate }}</span>
-            <span>{{ t.length }}</span>
+        <dl class="ringkas">
+          <div>
+            <dt>{{ 'sales-return__create__summary__items' | translate }}</dt>
+            <dd>{{ t.length }}</dd>
           </div>
-          <div class="ringkas__baris">
-            <span>{{ 'sales-return__create__summary__invoice' | translate }}</span>
-            <span>{{ selectedBill?.name ?? '—' }}</span>
+          <div>
+            <dt>{{ 'sales-return__create__summary__invoice' | translate }}</dt>
+            <dd>{{ selectedBill?.name ?? '—' }}</dd>
           </div>
-          <div class="ringkas__baris baris__total">
-            <span>{{ 'sales-return__create__summary__total' | translate }}</span>
-            <span>Rp {{ totalRetur | number: '1.0-0' }}</span>
-          </div>
+        </dl>
+
+        <div class="ringkas__total">
+          <span>{{ 'sales-return__create__summary__total' | translate }}</span>
+          <strong>Rp {{ totalRetur | number: '1.0-0' }}</strong>
         </div>
       </section>
 

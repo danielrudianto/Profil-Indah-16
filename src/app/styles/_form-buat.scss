@@ -312,23 +312,38 @@
 /* Ringkasan                                                         */
 /* ---------------------------------------------------------------- */
 
+/*
+  Anatomi ringkasan MENGIKUTI PENERIMAAN BARANG: tiap baris turun ke bawah,
+  label kiri redup, nilai kanan. Bentuk grid dua kolom yang sempat ada di
+  sini membuat barisnya mengalir menyamping — format yang tidak dipakai
+  satu halaman pun yang tampil benar.
+*/
 .ringkas {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 8px 16px;
-  margin: 0;
-  font-size: 13px;
+  margin: 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 13.5px;
+
+  div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
 
   dt {
-    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+    color: color-mix(in srgb, var(--color-text) 58%, transparent);
   }
 
   dd {
     margin: 0;
-    text-align: right;
     font-variant-numeric: tabular-nums;
-    overflow-wrap: anywhere;
   }
+}
+
+.ringkas__kurang {
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
 }
 
 /* Total dipisah garis dan dibesarkan — itu angka yang dibaca terakhir. */
@@ -337,15 +352,27 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  margin-top: 14px;
   padding-top: 14px;
   border-top: 1px solid var(--color-divider);
-}
 
-.ringkas__total strong {
-  font-size: 19px;
-  font-weight: 600;
-  color: var(--color-accent);
+  span {
+    font-size: 13.5px;
+    color: color-mix(in srgb, var(--color-text) 58%, transparent);
+  }
+
+  /*
+    18px, bukan 22px: label sepanjang "Sisa tagihan" bersama angka jutaan
+    harus tetap muat satu baris di kolom ringkasan 300px — angka yang
+    membungkus dua baris lebih sulit dibaca daripada angka yang sedikit
+    lebih kecil.
+  */
+  strong {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--color-accent);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
 }
 
 /* Sel total baris pada tabel barang. */
@@ -763,5 +790,40 @@
   margin: -4px 0 8px;
   font-size: 12.5px;
   /* Merah yang sama dengan .btn--bahaya — satu merah untuk semua. */
+  color: #e05260;
+}
+
+/* ---------------------------------------------------------------- */
+/* Baris pembayaran — dipakai faktur penjualan dan konfirmasi deposit */
+/* ---------------------------------------------------------------- */
+
+.bayar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px 36px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--color-divider);
+}
+
+.bayar__nama {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  strong {
+    font-size: 13.5px;
+    font-weight: 500;
+  }
+
+  span {
+    font-size: 12px;
+    color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  }
+}
+
+.galat {
+  margin: 0;
+  font-size: 12.5px;
   color: #e05260;
 }

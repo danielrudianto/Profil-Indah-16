@@ -19,6 +19,7 @@ import { UpdateProductSalesPriceComponent } from 'src/app/components/update-prod
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
+import { PageTitleService } from 'src/app/services/page-title.service';
 import { v4 } from 'uuid';
 import { VerticalDividerComponent } from '../../../components/vertical-divider/vertical-divider.component';
 import { BoxStepperComponent } from '../../../components/box-stepper/box-stepper.component';
@@ -80,7 +81,8 @@ export class SalesInvoiceCreateComponent {
     private sheet: MatBottomSheet,
     private dynamicComponentService: DynamicComponentService,
     private translateService: TranslateService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private pageTitleService: PageTitleService
   ) {
     this._hotkeysService.add([
       new Hotkey('alt+a', (event: KeyboardEvent): boolean => {
@@ -270,6 +272,13 @@ export class SalesInvoiceCreateComponent {
   }
 
   ngOnInit(): void {
+    /* Jalan pulang ke daftar faktur ada di topbar, seperti penerimaan barang. */
+    this.pageTitleService.pasangKonteks({
+      kembaliLabel: 'sales-invoice__title',
+      kembaliJalur: '/Sales-invoice/Archive',
+      tag: 'sales-invoice__new',
+    });
+
     this.perbaruiChecklist();
 
     this.metaFormGroup.valueChanges.subscribe(() => this.perbaruiChecklist());
