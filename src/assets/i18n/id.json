@@ -1377,7 +1377,9 @@
       "idRequired": "ID produk tidak boleh kosong.",
       "unitIdRequired": "ID satuan produk tidak boleh kosong.",
       "idNumeric": "ID produk harus berupa angka.",
-      "unitArray": "Satuan barang harus berupa array."
+      "unitArray": "Satuan barang harus berupa array.",
+      "unitTooLong": "Nama satuan terlalu panjang (maksimal 45 karakter)",
+      "conversionPositive": "Rasio konversi harus angka lebih dari nol"
     },
     "uuid": {
       "required": "UUID tidak boleh kosong."
@@ -2011,7 +2013,6 @@
   "promotion__add-btn": "Buat promosi",
   "promotion__period": "Periode",
   "promotion__continuous": "Berjalan terus",
-  "promotion__achievement": "Capaian",
   "promotion__status__running": "Berjalan",
   "promotion__status__upcoming": "Akan datang",
   "promotion__status__finished": "Selesai",
@@ -2239,6 +2240,16 @@
   "supplier-report__empty": "Belum ada pembelian pada rentang ini.",
   "product__update__lede": "Ubah identitas barang. Harga jual dan beli diubah lewat halaman Harga.",
   "product__update__price-note": "Harga tidak diubah dari sini — pakai menu Harga Jual atau Harga Beli.",
+  "product__unit__title": "Satuan tambahan",
+  "product__unit__note": "Menambah satuan selalu aman. Rasio konversi TERKUNCI begitu satuannya dipakai dokumen — mengubahnya menggeser seluruh riwayat stok dan HPP diam-diam.",
+  "product__unit__name": "Satuan",
+  "product__unit__conversion": "Rasio ke satuan dasar",
+  "product__unit__add": "Tambah satuan",
+  "product__unit__locked": "Rasio terkunci — sudah dipakai dokumen",
+  "product__unit__saved": "Satuan tersimpan.",
+  "product__unit__deleted": "Satuan terhapus.",
+  "product__unit__deactivated": "Satuan dipakai riwayat — dinonaktifkan, bukan dihapus.",
+  "product__unit__delete-confirm": "Hapus satuan ini? Bila sudah dipakai riwayat, ia akan dinonaktifkan.",
   "sales-return__archive__lede": "Seluruh dokumen retur penjualan, per bulan.",
   "sales-return__archive__search": "Cari nomor dokumen…",
   "sales-return__back-to-archive": "Kembali ke arsip",

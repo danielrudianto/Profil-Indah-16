@@ -61,6 +61,14 @@
 
   <div class="list-page__kartu">
     <!--
+      Garis kemajuan tak tentu selama datanya dimuat. Menempel absolut di
+      bibir kartu supaya muncul-hilangnya tidak menggeser tabel sepiksel pun.
+    -->
+    <div class="muat" *ngIf="loading" aria-hidden="true">
+      <div class="muat__bar"></div>
+    </div>
+
+    <!--
       Tabelnya menggulung MENDATAR di dalam kotaknya sendiri, bukan mendorong
       seluruh halaman melebar. Tanpa ini, pada layar sempit seluruh shell —
       termasuk navigasi samping — ikut bergeser ketika tabel lebih lebar dari

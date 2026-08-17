@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import {
   FormControl,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -41,11 +42,14 @@ import { PRODUCT_UNITS, ProductUnit } from 'src/app/constants/unit.constant';
 @Component({
   selector: 'app-product-update',
   templateUrl: './product-update.component.html',
+  styleUrls: ['./product-update.component.scss'],
   imports: [
     DialogShellComponent,
     ComboSearchComponent,
     ReactiveFormsModule,
+    FormsModule,
     NgFor,
+    NgIf,
     MatFormField,
     MatLabel,
     MatInput,
@@ -97,10 +101,137 @@ export class ProductUpdateComponent implements OnInit {
     can_delete: new FormControl(false),
   });
 
+  /**
+   * Satuan tambahan barang ini. Tiap baris membawa `dipakai` dari server:
+   * rasio satuan yang sudah ditunjuk dokumen TERKUNCI — mengubahnya akan
+   * menggeser seluruh riwayat stok dan HPP tanpa jejak. Nama tetap bebas.
+   */
+  satuan: {
+    id?: number;
+    unit: string;
+    conversion: number | null;
+    dipakai: boolean;
+    unitAsli?: string;
+    conversionAsli?: number;
+    baru?: boolean;
+    sibuk?: boolean;
+  }[] = [];
+
   ngOnInit(): void {
     this.isAdministrator = this.authService.isAdministrator();
     this.fetchByID();
+    this.fetchSatuan();
   }
+
+  fetchSatuan(): void {
+    this.apiService.get(`product/${this.data.id}/units`).subscribe({
+      next: (data: any) => {
+        this.satuan = (data as any[]).map((s) => ({
+          id: s.id,
+          unit: s.unit,
+          conversion: Number(s.conversion),
+          dipakai: !!s.dipakai,
+          unitAsli: s.unit,
+          conversionAsli: Number(s.conversion),
+        }));
+      },
+      error: (error) => {
+        this.alertService.showError(error);
+      },
+    });
+  }
+
+  tambahSatuan(): void {
+    this.satuan.push({ unit: '', conversion: null, dipakai: false, baru: true });
+  }
+
+  satuanBerubah(s: (typeof this.satuan)[number]): boolean {
+    if (s.baru) return true;
+    return s.unit !== s.unitAsli || Number(s.conversion) !== s.conversionAsli;
+  }
+
+  bolehSimpanSatuan(s: (typeof this.satuan)[number]): boolean {
+    return (
+      !s.sibuk &&
+      s.unit.trim() !== '' &&
+      s.conversion != null &&
+      Number(s.conversion) > 0 &&
+      this.satuanBerubah(s)
+    );
+  }
+
+  simpanSatuan(s: (typeof this.satuan)[number]): void {
+    s.sibuk = true;
+
+    const selesai = () => {
+      this.alertService.showSuccess(
+        this.translateService.instant('product__unit__saved'),
+      );
+      this.fetchSatuan();
+    };
+    const gagal = (error: any) => {
+      this.alertService.showError(error);
+      s.sibuk = false;
+    };
+
+    if (s.baru) {
+      this.apiService
+        .post(`product/${this.data.id}/unit`, {
+          unit: s.unit.trim(),
+          conversion: Number(s.conversion),
+        })
+        .subscribe({ next: selesai, error: gagal });
+      return;
+    }
+
+    /* Rasio hanya ikut terkirim bila belum terkunci. */
+    this.apiService
+      .put(`product/unit/${s.id}`, {
+        unit: s.unit.trim(),
+        ...(s.dipakai ? {} : { conversion: Number(s.conversion) }),
+      })
+      .subscribe({ next: selesai, error: gagal });
+  }
+
+  hapusSatuan(s: (typeof this.satuan)[number], indeks: number): void {
+    if (s.baru) {
+      /* Baris rancangan belum pernah sampai ke server — buang saja. */
+      this.satuan.splice(indeks, 1);
+      return;
+    }
+
+    this.dialog
+      .open(DeleteConfirmationComponent, {
+        data: {
+          title: this.translateService.instant('product__unit__delete-confirm'),
+        },
+      })
+      .afterClosed()
+      .subscribe((hasil) => {
+        if (hasil !== true) return;
+
+        s.sibuk = true;
+        this.apiService.delete(`product/unit/${s.id}`).subscribe({
+          next: (jawab: any) => {
+            this.alertService.showSuccess(
+              this.translateService.instant(
+                jawab?.deactivated
+                  ? 'product__unit__deactivated'
+                  : 'product__unit__deleted',
+              ),
+            );
+            this.fetchSatuan();
+          },
+          error: (error) => {
+            this.alertService.showError(error);
+            s.sibuk = false;
+          },
+        });
+      });
+  }
+
+  lacakSatuan = (indeks: number, s: { id?: number }): number =>
+    s.id ?? -(indeks + 1);
 
   fetchByID(): void {
     this.isLoading = true;

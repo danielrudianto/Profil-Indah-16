@@ -79,6 +79,83 @@
       <i class="ph ph-info" aria-hidden="true"></i>
       <span>{{ 'product__update__price-note' | translate }}</span>
     </p>
+  </div>
+
+  <!-- ------------------------------------------------------------ -->
+  <!-- Satuan tambahan: tambah bebas, rasio terkunci begitu dipakai   -->
+  <!-- ------------------------------------------------------------ -->
+  <div class="satuan" *ngIf="isAdministrator">
+    <h3 class="satuan__label">{{ 'product__unit__title' | translate }}</h3>
+    <p class="petunjuk">
+      <i class="ph ph-info" aria-hidden="true"></i>
+      <span>{{ 'product__unit__note' | translate }}</span>
+    </p>
+
+    <div
+      class="satuan__baris"
+      *ngFor="let s of satuan; index as i; trackBy: lacakSatuan"
+    >
+      <input
+        class="satuan__nama"
+        type="text"
+        maxlength="45"
+        [placeholder]="'product__unit__name' | translate"
+        [(ngModel)]="s.unit"
+        [ngModelOptions]="{ standalone: true }"
+        [disabled]="!!s.sibuk"
+      />
+
+      <input
+        class="satuan__rasio"
+        type="number"
+        min="0"
+        step="any"
+        [placeholder]="'product__unit__conversion' | translate"
+        [(ngModel)]="s.conversion"
+        [ngModelOptions]="{ standalone: true }"
+        [disabled]="s.dipakai || !!s.sibuk"
+        [title]="s.dipakai ? ('product__unit__locked' | translate) : ''"
+      />
+
+      <!-- Gembok menjelaskan KENAPA rasionya tidak bisa disentuh. -->
+      <i
+        class="ph ph-lock-simple satuan__gembok"
+        *ngIf="s.dipakai"
+        [title]="'product__unit__locked' | translate"
+        aria-hidden="true"
+      ></i>
+
+      <button
+        type="button"
+        class="satuan__aksi satuan__aksi--simpan"
+        *ngIf="satuanBerubah(s)"
+        [disabled]="!bolehSimpanSatuan(s)"
+        (click)="simpanSatuan(s)"
+        [title]="'general__submit' | translate"
+        [attr.aria-label]="'general__submit' | translate"
+      >
+        <i class="ph ph-check" aria-hidden="true"></i>
+      </button>
+
+      <button
+        type="button"
+        class="satuan__aksi satuan__aksi--hapus"
+        [disabled]="!!s.sibuk"
+        (click)="hapusSatuan(s, i)"
+        [title]="'general__delete' | translate"
+        [attr.aria-label]="'general__delete' | translate"
+      >
+        <i class="ph ph-trash" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <button type="button" class="btn btn--kedua satuan__tambah" (click)="tambahSatuan()">
+      <i class="ph ph-plus" aria-hidden="true"></i>
+      {{ 'product__unit__add' | translate }}
+    </button>
+  </div>
+
+  <div>
 
     <!-- Dua penjaga: peran administrator dan can_delete dari server. -->
     <button

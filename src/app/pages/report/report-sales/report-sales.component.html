@@ -45,6 +45,17 @@
     </div>
   </header>
 
+  <!--
+    Layar memuat menggantikan isi, bukan menindihnya: hero berisi nol dan
+    grafik kosong selama menunggu terbaca seperti "penjualan bulan ini nol"
+    — kabar buruk palsu yang tampil beberapa detik setiap kali buka.
+  -->
+  <div class="laporan__memuat" *ngIf="isLoading">
+    <i class="ph ph-circle-notch laporan__putar" aria-hidden="true"></i>
+    <span>{{ 'general__loading' | translate }}</span>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
   <!-- Empat angka mockup: total, retur, biaya pengiriman, biaya layanan. -->
   <div class="hero">
     <div class="hero__kartu hero__kartu--utama">
@@ -298,4 +309,5 @@
         </table>
       </div>
   </section>
+  </ng-container>
 </div>

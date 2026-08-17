@@ -558,3 +558,32 @@
 .terbaik-kartu__aksi {
   margin-left: auto;
 }
+
+/* ---------------------------------------------------------------- */
+/* Layar memuat laporan                                              */
+/*                                                                   */
+/* Menggantikan isi, bukan menindihnya: hero berisi nol selama       */
+/* menunggu terbaca sebagai angka sungguhan yang buruk.              */
+/* ---------------------------------------------------------------- */
+
+.laporan__memuat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 90px 0;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  font-size: 13.5px;
+}
+
+.laporan__putar {
+  font-size: 30px;
+  color: var(--color-accent);
+  animation: laporan-putar 0.9s linear infinite;
+}
+
+@keyframes laporan-putar {
+  to {
+    transform: rotate(360deg);
+  }
+}

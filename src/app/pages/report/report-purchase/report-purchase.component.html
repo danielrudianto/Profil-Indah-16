@@ -45,6 +45,13 @@
     </div>
   </header>
 
+  <!-- Layar memuat menggantikan isi — hero nol selama menunggu itu dusta. -->
+  <div class="laporan__memuat" *ngIf="isLoading">
+    <i class="ph ph-circle-notch laporan__putar" aria-hidden="true"></i>
+    <span>{{ 'general__loading' | translate }}</span>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
   <div class="hero">
     <div class="hero__kartu hero__kartu--utama">
       <span class="hero__label">{{ 'report-purchase__hero__total' | translate }}</span>
@@ -197,4 +204,5 @@
       </table>
     </div>
   </section>
+  </ng-container>
 </div>
