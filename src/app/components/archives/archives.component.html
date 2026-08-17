@@ -5,8 +5,20 @@
 -->
 <div class="arsip">
   <header class="arsip__kepala" *ngIf="heading">
-    <h1 class="arsip__judul">{{ heading | translate }}</h1>
-    <p class="arsip__lede" *ngIf="lede">{{ lede | translate }}</p>
+    <div>
+      <h1 class="arsip__judul">{{ heading | translate }}</h1>
+      <p class="arsip__lede" *ngIf="lede">{{ lede | translate }}</p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn--primary"
+      *ngIf="addLabel"
+      (click)="add.emit()"
+    >
+      <i class="ph ph-plus" aria-hidden="true"></i>
+      {{ addLabel | translate }}
+    </button>
   </header>
 
   <p class="arsip__pesan" *ngIf="isLoading">

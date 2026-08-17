@@ -5,6 +5,8 @@
 <app-archives
   heading="sales-return__archive__title"
   lede="archives__lede"
+  addLabel="sales-return__create"
+  (add)="buatRetur()"
   [@slideInOutAnimation]="mode == 0 ? 'in' : 'out'"
   route="sales-return"
   (onMonthSelected)="onMonthSelected($event)"

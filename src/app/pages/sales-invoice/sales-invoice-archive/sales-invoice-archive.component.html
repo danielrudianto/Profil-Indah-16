@@ -6,6 +6,8 @@
 <app-archives
   heading="sales-invoice__title"
   lede="archives__lede"
+  addLabel="sales-invoice__create"
+  (add)="buatFaktur()"
   [@slideInOutAnimation]="mode == 0 ? 'in' : 'out'"
   route="sales-invoice"
   (onMonthSelected)="onMonthSelected($event)"

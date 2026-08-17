@@ -37,6 +37,14 @@ export class ArchivesComponent implements OnInit {
   @Input() heading = '';
   @Input() lede = '';
 
+  /**
+   * Kunci i18n tombol buat di kepala. Tanpa ini, dari tahap pilih bulan
+   * tidak ada jalan ke formulir buatnya sama sekali — tombolnya baru
+   * muncul setelah sebuah bulan dipilih.
+   */
+  @Input() addLabel = '';
+  @Output() add: EventEmitter<void> = new EventEmitter<void>();
+
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,

@@ -11,8 +11,14 @@
   color: var(--color-text);
 }
 
-/* Kepala yang sama dengan app-list-page: judul besar, lede redup. */
+/* Kepala yang sama dengan app-list-page: judul besar, lede redup,
+   tombol buat di ujung kanan. */
 .arsip__kepala {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
   margin-bottom: 20px;
 }
 
