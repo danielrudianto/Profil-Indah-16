@@ -85,7 +85,9 @@ export class ReportMoneyDorComponent implements OnInit {
       })
       .subscribe({
         next: (data: any) => {
-          this.baris = data ?? [];
+          /* Endpoint membungkus hasilnya {id:0, name:"DOR", data:[…]} —
+             meniru bentuk baris harian; yang berarti hanya data-nya. */
+          this.baris = data?.data ?? [];
         },
         error: (error) => {
           this.alertService.showError(error);
