@@ -1,0 +1,23 @@
+<!-- Muka laporan (9b): kartu jenis laporan, disaring per peran. -->
+<div class="laporan">
+  <header class="laporan__kepala">
+    <h1 class="laporan__judul">{{ 'report__landing__title' | translate }}</h1>
+    <p class="laporan__lede">{{ 'report__landing__lede' | translate }}</p>
+  </header>
+
+  <div class="laporan__kisi">
+    <a class="laporan__kartu" *ngFor="let k of kartu" [routerLink]="k.jalur">
+      <span class="laporan__ikon" aria-hidden="true">
+        <i class="ph" [class]="'ph ' + k.ikon"></i>
+      </span>
+      <span class="laporan__isi">
+        <strong>{{ k.judul | translate }}</strong>
+        <span>{{ k.desk | translate }}</span>
+      </span>
+      <span class="laporan__buka" aria-hidden="true">
+        {{ 'report__landing__open' | translate }}
+        <i class="ph ph-arrow-right"></i>
+      </span>
+    </a>
+  </div>
+</div>

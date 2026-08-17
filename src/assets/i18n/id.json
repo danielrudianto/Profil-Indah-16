@@ -2259,5 +2259,20 @@
   "purchase-invoice__complete__check-tax": "Faktur pajak terisi (boleh kosong)",
   "purchase-invoice__complete__check-discount": "Diskon dokumen tidak melebihi total",
   "purchase-invoice__complete__issue": "Terbitkan faktur",
-  "purchase-invoice__complete__reject": "Tolak penerimaan"
+  "purchase-invoice__complete__reject": "Tolak penerimaan",
+  "report__landing__title": "Laporan",
+  "report__landing__lede": "Pilih laporan yang mau dibuka. Yang tampil hanya yang boleh dilihat peranmu.",
+  "report__landing__open": "Buka",
+  "report__landing__sales": "Laporan penjualan",
+  "report__landing__sales__desc": "Nilai penjualan per bulan: grafik harian, per merek, tipe, dan sales.",
+  "report__landing__purchase": "Laporan pembelian",
+  "report__landing__purchase__desc": "Belanja ke supplier per bulan beserta rinciannya.",
+  "report__landing__money": "Laporan uang masuk",
+  "report__landing__money__desc": "Penerimaan uang per metode pembayaran, dengan rincian per dokumen.",
+  "report__landing__output": "Laporan pengeluaran barang",
+  "report__landing__output__desc": "Barang yang keluar dari gudang per periode.",
+  "report__landing__inadequate": "Stok di bawah minimum",
+  "report__landing__inadequate__desc": "Barang yang stoknya sudah menyentuh batas minimum dan perlu dibeli.",
+  "report__landing__problematic": "Barang bermasalah",
+  "report__landing__problematic__desc": "Barang dengan catatan ganjil yang perlu ditinjau."
 }

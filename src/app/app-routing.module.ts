@@ -280,6 +280,18 @@ const routes: Routes = [
                 (m) => m.ReportComponent,
               ),
             children: [
+              /*
+                Muka laporan (9b) — kartu jenis laporan per peran. Dulu tidak
+                ada dan '' jatuh ke wildcard, jadi membuka /Report justru
+                terlempar ke dashboard.
+              */
+              {
+                path: '',
+                loadComponent: () =>
+                  import('./pages/report/report-landing/report-landing.component').then(
+                    (m) => m.ReportLandingComponent,
+                  ),
+              },
               {
                 path: 'Sales',
                 canActivate: [SalesGuard],
@@ -295,10 +307,6 @@ const routes: Routes = [
                   import('./pages/report/report-output/report-output.component').then(
                     (m) => m.ReportOutputComponent,
                   ),
-              },
-              {
-                path: '**',
-                redirectTo: '/Administrator',
               },
               {
                 path: 'Purchase',
@@ -339,6 +347,17 @@ const routes: Routes = [
                   import('./pages/report/report-money/report-money-dor/report-money-dor.component').then(
                     (m) => m.ReportMoneyDorComponent,
                   ),
+              },
+              /*
+                Wildcard HARUS paling akhir. Dulu ia berdiri sebelum
+                Purchase, Inadequate, Problematic, dan Money — kelima
+                laporan itu tidak pernah bisa dibuka siapa pun karena
+                wildcard menang lebih dulu. Bug yang sama dengan yang
+                pernah mengubur /Price/Purchase.
+              */
+              {
+                path: '**',
+                redirectTo: '',
               },
             ],
           },

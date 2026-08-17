@@ -2259,5 +2259,20 @@
   "purchase-invoice__complete__check-tax": "Tax invoice filled (may be empty)",
   "purchase-invoice__complete__check-discount": "Document discount within total",
   "purchase-invoice__complete__issue": "Issue invoice",
-  "purchase-invoice__complete__reject": "Reject receipt"
+  "purchase-invoice__complete__reject": "Reject receipt",
+  "report__landing__title": "Reports",
+  "report__landing__lede": "Pick a report to open. Only those your role may see are shown.",
+  "report__landing__open": "Open",
+  "report__landing__sales": "Sales report",
+  "report__landing__sales__desc": "Monthly sales value: daily chart, by brand, type, and salesman.",
+  "report__landing__purchase": "Purchase report",
+  "report__landing__purchase__desc": "Monthly supplier spending with its breakdown.",
+  "report__landing__money": "Money receipt report",
+  "report__landing__money__desc": "Money received per payment method, with per-document detail.",
+  "report__landing__output": "Goods output report",
+  "report__landing__output__desc": "Goods leaving the warehouse per period.",
+  "report__landing__inadequate": "Below minimum stock",
+  "report__landing__inadequate__desc": "Products whose stock hit the minimum threshold and need restocking.",
+  "report__landing__problematic": "Problematic products",
+  "report__landing__problematic__desc": "Products with odd records that need review."
 }
