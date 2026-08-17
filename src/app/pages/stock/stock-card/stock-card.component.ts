@@ -1,31 +1,30 @@
-import { Component, Input } from '@angular/core';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
-import { panelAnimation } from 'src/app/animations/panel.animation';
+import { Component, OnInit } from '@angular/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { SalesReturnArchiveViewComponent } from 'src/app/components/document-view/sales-return-archive-view/sales-return-archive-view.component';
 import { SalesInvoiceViewComponent } from 'src/app/components/document-view/sales-invoice-view/sales-invoice-view.component';
 import { GoodReceiptViewComponent } from 'src/app/components/document-view/good-receipt-view/good-receipt-view.component';
 import { AdjustmentCaseViewComponent } from 'src/app/components/document-view/adjustment-case-view/adjustment-case-view.component';
-import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
-import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
 import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
+/**
+ * Kartu stok satu produk — riwayat mutasi tersimpan, berhalaman dari
+ * server. Bentuknya pola list-page seperti daftar lain; klik baris
+ * membuka dokumen yang mencatat mutasinya (faktur, penerimaan,
+ * penyesuaian, atau retur).
+ */
 @Component({
     selector: 'app-stock-card',
     templateUrl: './stock-card.component.html',
     styleUrls: ['./stock-card.component.scss'],
-    animations: [panelAnimation],
-    imports: [FeatureBackgroundComponent, MatIconButton, MatIcon, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, DatePipe, TranslatePipe]
+    imports: [ListPageComponent, TabelKosongComponent, NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe]
 })
-export class StockCardComponent {
+export class StockCardComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
@@ -42,6 +41,14 @@ export class StockCardComponent {
   pageSize: number = 10;
   productDataSource: any = null;
   id: number | null = null;
+
+  /**
+   * Posisi stok kini — diambil dari saldo baris TERBARU kartu (halaman
+   * pertama, urutan menurun). Payload produk tidak membawa angka stok,
+   * dan halaman lama menampilkan ruas `deposit` yang tidak pernah
+   * dikirim siapa pun — kotaknya selamanya kosong.
+   */
+  stokKini: number | null = null;
 
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.params['id']);
@@ -63,6 +70,12 @@ export class StockCardComponent {
         next: (data: any) => {
           this.dataSource = data.data;
           this.dataCount = data.count;
+
+          if (this.page === 1 && data.data.length > 0) {
+            const teratas = data.data[0];
+            this.stokKini =
+              teratas.stock == null ? null : Number(teratas.stock);
+          }
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -128,15 +141,12 @@ export class StockCardComponent {
     }
   }
 
-  changePage(event: PageEvent) {
-    if (event.pageSize == this.pageSize) {
-      this.page = event.pageIndex + 1;
-      this.fetchStockCard();
-    } else {
-      this.pageSize = event.pageSize;
-      this.fetchStockCard(1);
-    }
+  gantiUkuran(ukuran: number): void {
+    this.pageSize = ukuran;
+    this.fetchStockCard(1);
   }
+
+  lacak = (_: number, item: any): number => item.id ?? 0;
 
   onBackButtonPressed() {
     const backUrl = this.route.snapshot.queryParams['backLocation'];
