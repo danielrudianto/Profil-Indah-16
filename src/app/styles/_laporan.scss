@@ -156,27 +156,32 @@
   min-width: 0;
 }
 
+/*
+  Kedua batang BERTUMPUK dalam satu kolom, seperti mockup: nilai beraksen
+  di belakang, transaksi netral pekat di depannya — bukan berdampingan.
+*/
 .grafik__batang {
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  width: 100%;
+  position: relative;
+  width: 70%;
   height: 100%;
-  justify-content: center;
+}
+
+.grafik__nilai,
+.grafik__transaksi {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  min-height: 2px;
+  border-radius: 3px 3px 0 0;
 }
 
 .grafik__nilai {
-  width: 55%;
-  min-height: 2px;
-  border-radius: 3px 3px 0 0;
   background: color-mix(in srgb, var(--color-accent) 75%, transparent);
 }
 
 .grafik__transaksi {
-  width: 25%;
-  min-height: 2px;
-  border-radius: 3px 3px 0 0;
-  background: color-mix(in srgb, var(--color-text) 25%, transparent);
+  background: color-mix(in srgb, var(--color-text) 30%, var(--color-surface));
 }
 
 .grafik__tanggal {
@@ -363,4 +368,84 @@
   .laporan__kisi-2 {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+/* Baris kepala grafik: subjudul kiri, rentang tanggal kanan bawah. */
+.grafik__sub {
+  margin: -8px 0 0;
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.grafik__kaki {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.grafik__rentang {
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+/* Grafik lebar bersanding kartu terbaik — mockup 9a. */
+.laporan__kisi-utama {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 16px;
+  align-items: start;
+
+  .kartu {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .laporan__kisi-utama {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Ikon kecil kotak aksen pada baris terbaik — mockup 9a. */
+.terbaik__ikon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: var(--color-active);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  color: var(--color-accent);
+
+  i {
+    font-size: 17px;
+  }
+}
+
+.terbaik__teks {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+
+  small {
+    font-size: 11.5px;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  }
+}
+
+/* Bar peringkat di atas JALUR selebar kolom — mockup per-brand. */
+.peringkat__jalur {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-text) 10%, transparent);
+  overflow: hidden;
+}
+
+.peringkat__jalur .peringkat__bar {
+  position: absolute;
+  inset: 0 auto 0 0;
 }

@@ -2309,5 +2309,15 @@
   "report-purchase__chart": "Pembelian harian",
   "report-purchase__chart__receipts": "Penerimaan",
   "report-purchase__best__supplier": "Supplier",
-  "nav__report": "Laporan"
+  "nav__report": "Laporan",
+  "report-sales__hero__invoices": "faktur",
+  "report-sales__hero__per-invoice": "per faktur",
+  "report-sales__hero__returns": "Retur",
+  "report-sales__hero__returns-count": "retur",
+  "report-sales__hero__of-sales": "dari penjualan",
+  "report-sales__hero__delivery-cost": "Biaya pengiriman",
+  "report-sales__hero__service-cost": "Biaya layanan",
+  "report-sales__best__customer": "Pelanggan",
+  "report-sales__best__customer-unit": "pelanggan",
+  "report-sales__see-by-type": "Lihat per tipe"
 }

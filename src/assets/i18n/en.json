@@ -2309,5 +2309,15 @@
   "report-purchase__chart": "Daily purchases",
   "report-purchase__chart__receipts": "Receipts",
   "report-purchase__best__supplier": "Supplier",
-  "nav__report": "Reports"
+  "nav__report": "Reports",
+  "report-sales__hero__invoices": "invoices",
+  "report-sales__hero__per-invoice": "per invoice",
+  "report-sales__hero__returns": "Returns",
+  "report-sales__hero__returns-count": "returns",
+  "report-sales__hero__of-sales": "of sales",
+  "report-sales__hero__delivery-cost": "Delivery cost",
+  "report-sales__hero__service-cost": "Service cost",
+  "report-sales__best__customer": "Customers",
+  "report-sales__best__customer-unit": "customers",
+  "report-sales__see-by-type": "See by type"
 }

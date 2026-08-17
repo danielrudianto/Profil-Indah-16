@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { NgIf, NgFor, DecimalPipe, LowerCasePipe } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
@@ -30,14 +30,15 @@ import {
 /**
  * Laporan penjualan — bagian `9a` berkas desain.
  *
- * Empat kartu hero (total disorot), grafik batang harian nilai +
- * transaksi yang digambar CSS tanpa pustaka grafik, baris terbaik bulan
- * ini dengan peringkat lengkapnya di dialog, dan penjualan per merek
- * ber-bar. Unduhan Excel-nya dipertahankan apa adanya — pembukuannya
- * sudah bergantung pada bentuk berkas itu.
+ * Empat kartu hero mengikuti mockup — total (dengan rata-rata per
+ * faktur), retur, biaya pengiriman, biaya layanan — grafik batang harian
+ * bertumpuk yang digambar CSS tanpa pustaka grafik, kartu terbaik bulan
+ * ini berikon di samping grafik, dan penjualan per merek ber-jalur.
+ * Unduhan Excel-nya dipertahankan apa adanya — pembukuannya sudah
+ * bergantung pada bentuk berkas itu.
  *
- * Angka retur TIDAK digambar: endpoint-nya tidak pernah mengirim
- * returned_value/returns, dan bentuk lamanya menampilkan undefined.
+ * Angka retur dan jumlah pelanggan dulu tidak pernah dikirim endpoint;
+ * keduanya kini ditambahkan di server, bukan diterka di peramban.
  */
 @Component({
   selector: 'app-report-sales',
@@ -55,6 +56,7 @@ import {
     NgIf,
     NgFor,
     DecimalPipe,
+    LowerCasePipe,
     FormsModule,
     ReactiveFormsModule,
     TranslatePipe,
@@ -89,6 +91,10 @@ export class ReportSalesComponent implements OnInit {
   terbaikMerek: string | null = null;
   terbaikTipe: string | null = null;
 
+  nilaiRetur = 0;
+  jumlahRetur = 0;
+  jumlahPelanggan = 0;
+
   chart: any[] = [];
   merek: { name: string; value: number }[] = [];
 
@@ -118,6 +124,9 @@ export class ReportSalesComponent implements OnInit {
           this.terbaikMerek = data.brand;
           this.terbaikTipe = data.type;
           this.terbaikSales = data.sales;
+          this.nilaiRetur = Number(data.returned_value ?? 0);
+          this.jumlahRetur = Number(data.returns ?? 0);
+          this.jumlahPelanggan = Number(data.customerCount ?? 0);
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -147,6 +156,25 @@ export class ReportSalesComponent implements OnInit {
     this.date.setValue(nilai);
     datepicker.close();
     this.ambilData();
+  }
+
+  /** Rata-rata nilai per faktur — sub kartu total, seperti mockup. */
+  get rataRataFaktur(): number {
+    return this.transaksi === 0 ? 0 : this.total / this.transaksi;
+  }
+
+  /** Porsi retur terhadap penjualan, untuk sub kartu retur. */
+  get persenRetur(): number {
+    return this.total === 0 ? 0 : (this.nilaiRetur / this.total) * 100;
+  }
+
+  /** Nama bulan terpilih untuk subjudul dan rentang grafik. */
+  get namaBulan(): string {
+    return this.date.value!.format('MMMM YYYY');
+  }
+
+  get rentangGrafik(): string {
+    return `1 – ${this.hariDalamBulan.length} ${this.date.value!.format('MMMM')}`;
   }
 
   /* ---------------------------------------------------------------- */
