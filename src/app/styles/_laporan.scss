@@ -41,8 +41,26 @@
   gap: 12px;
 }
 
-.laporan__bulan {
-  width: 180px;
+/*
+  Pemilih bulan berbentuk TOMBOL — bentuk dan tingginya sama dengan tombol
+  unduh di sampingnya. mat-datepicker tetap butuh input sebagai jangkar;
+  input itu ditidurkan di belakang tombol, tak terlihat dan tak bisa
+  difokus.
+*/
+.laporan__bulan-kendali {
+  position: relative;
+  display: inline-flex;
+}
+
+.laporan__bulan-jangkar {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  border: 0;
+  padding: 0;
+  pointer-events: none;
 }
 
 /* ---------------------------------------------------------------- */

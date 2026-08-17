@@ -134,6 +134,11 @@ export class ReportPurchaseComponent implements OnInit {
     return this.penerimaan === 0 ? 0 : this.total / this.penerimaan;
   }
 
+  /** Nama bulan terpilih untuk label tombol pemilih bulan. */
+  get namaBulan(): string {
+    return this.date.value!.format('MMMM YYYY');
+  }
+
   /* ---------------------------------------------------------------- */
   /* Grafik harian                                                     */
   /* ---------------------------------------------------------------- */

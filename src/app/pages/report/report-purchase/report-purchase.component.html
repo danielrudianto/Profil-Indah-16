@@ -7,29 +7,31 @@
     </div>
 
     <div class="laporan__kendali">
-      <mat-form-field appearance="outline" class="laporan__bulan" subscriptSizing="dynamic">
-        <mat-label>{{ 'report-sales__month' | translate }}</mat-label>
+      <div class="laporan__bulan-kendali">
+        <!-- Jangkar datepicker; kendali yang terlihat adalah tombolnya. -->
         <input
-          matInput
+          class="laporan__bulan-jangkar"
           [matDatepicker]="bulanPicker"
           [formControl]="date"
           readonly
+          tabindex="-1"
+          aria-hidden="true"
         />
         <button
           type="button"
-          matSuffix
-          class="buka-kalender"
+          class="btn btn--kedua"
           (click)="bulanPicker.open()"
           [attr.aria-label]="'general__pick-date' | translate"
         >
           <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+          {{ namaBulan }}
         </button>
         <mat-datepicker
           #bulanPicker
           startView="multi-year"
           (monthSelected)="setMonthAndYear($event, bulanPicker)"
         ></mat-datepicker>
-      </mat-form-field>
+      </div>
 
       <button
         type="button"
