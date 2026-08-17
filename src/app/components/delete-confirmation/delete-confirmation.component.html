@@ -1,24 +1,27 @@
-<h1 mat-dialog-title>
-  <span *ngIf="data.header == undefined">{{
-    "general__delete-confirmation__title" | translate
-  }}</span>
+<div class="konfirmasi" role="alertdialog" aria-modal="true">
+  <div class="konfirmasi__kepala">
+    <span class="konfirmasi__ikon" aria-hidden="true">
+      <i class="ph ph-warning"></i>
+    </span>
+    <h2 class="konfirmasi__judul">
+      {{ (data.header ?? 'general__delete-confirmation__title') | translate }}
+    </h2>
+  </div>
 
-  <span *ngIf="data.header != undefined">{{ data.header | translate }}</span>
-</h1>
-<mat-dialog-content>
-  <p>{{ data.title }}</p>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>
-    {{ "general__delete-confirmation__close" | translate }}
-  </button>
-  <button
-    mat-stroked-button
-    color="primary"
-    style="letter-spacing: 0"
-    mat-dialog-close
-    (click)="deleteDocument()"
-  >
-    {{ "general__delete-confirmation__submit" | translate }}
-  </button>
-</mat-dialog-actions>
+  <p class="konfirmasi__pesan">{{ data.title }}</p>
+
+  <!-- Nama dokumennya ditonjolkan — yang dihapus harus tersebut. -->
+  <p class="konfirmasi__dokumen" *ngIf="data.document">
+    {{ data.document }}
+  </p>
+
+  <div class="konfirmasi__aksi">
+    <button type="button" class="btn btn--kedua" (click)="batal()">
+      {{ 'general__delete-confirmation__close' | translate }}
+    </button>
+    <button type="button" class="btn btn--bahaya" (click)="setuju()">
+      <i class="ph ph-trash" aria-hidden="true"></i>
+      {{ 'general__delete-confirmation__submit' | translate }}
+    </button>
+  </div>
+</div>

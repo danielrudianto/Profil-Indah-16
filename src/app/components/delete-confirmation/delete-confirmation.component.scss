@@ -1,0 +1,71 @@
+/*
+  Kartu konfirmasi digambar sendiri; panel Material di baliknya sudah
+  ditransparankan lewat aturan :has() di styles.scss.
+*/
+.konfirmasi {
+  width: min(420px, 90vw);
+  padding: 20px 24px;
+  border-radius: 14px;
+  background: var(--color-surface);
+  box-shadow:
+    inset 0 0 0 1px var(--color-divider),
+    0 18px 50px color-mix(in srgb, #000 35%, transparent);
+  font-family: "Montserrat", system-ui, sans-serif;
+  color: var(--color-text);
+}
+
+.konfirmasi__kepala {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* Ikon 40px kotak — anatomi kepala dialog, tetapi bahaya, bukan aksen. */
+.konfirmasi__ikon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: color-mix(in srgb, #b3261e 16%, transparent);
+  color: #e05260;
+
+  i {
+    font-size: 20px;
+  }
+}
+
+.konfirmasi__judul {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.konfirmasi__pesan {
+  margin: 0 0 8px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--color-text) 75%, transparent);
+}
+
+/* Nama dokumen yang akan dihapus — menonjol, bukan tenggelam di kalimat. */
+.konfirmasi__dokumen {
+  margin: 0 0 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--color-bg);
+  box-shadow: inset 0 0 0 1px var(--color-divider);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.konfirmasi__aksi {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}

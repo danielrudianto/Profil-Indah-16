@@ -173,6 +173,19 @@ html {
   overflow: visible;
 }
 
+/*
+  Dialog konfirmasi menggambar kartunya sendiri, tetapi dibuka enam belas
+  pemanggil yang tidak satu pun memasang panelClass. Daripada menyunting
+  keenam belasnya, panel Material-nya dikenali dari isinya.
+*/
+.mat-mdc-dialog-surface:has(> app-delete-confirmation) {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  overflow: visible;
+}
+
 .nocturne-dialog-backdrop {
   background: color-mix(in srgb, var(--color-bg) 55%, transparent);
   backdrop-filter: blur(3px);
