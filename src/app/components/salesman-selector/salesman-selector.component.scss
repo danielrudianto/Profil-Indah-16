@@ -1,86 +1,168 @@
-.item-selector__wrapper {
-  flex-grow: 1;
-}
+/* Kartu dialog daftar sales — anatomi dialog Nocturne. */
 
-.item-selector__item-wrapper {
+.sales {
+  width: min(480px, calc(100vw - 48px));
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  cursor: pointer;
-  transition: 0.3s all ease;
+  border-radius: 16px;
+  background: var(--color-surface);
+  box-shadow:
+    0 0 0 1px var(--color-divider),
+    0 24px 60px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
 }
 
-.item-selector__reference {
-  font-family: "Poppins", sans-serif;
-  font-size: 0.85rem;
-  color: #0b57d0;
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-}
-
-.item-selector__description {
-  font-family: "Poppins", sans-serif;
-  font-size: 0.85rem;
-  color: #041e49;
-  font-weight: 400;
-  margin-bottom: 0.25rem;
-}
-
-.item-selector__unit-wrapper {
-  width: 100%;
-}
-
-.item-selector__unit {
-  font-family: "Poppins", sans-serif;
-  font-size: 0.85rem;
-  color: #041e49;
-  font-weight: 400;
-  margin-bottom: 0.25rem;
-  transition: 0.3s all ease;
-  width: 100%;
-  padding: 0.25rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+.sales__kepala {
   display: flex;
-  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--color-divider);
 }
 
-.item-selector__unit-icon {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  margin-right: 0.25rem;
-}
+.sales__ikon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 10px;
+  background: var(--color-active);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  color: var(--color-accent);
 
-.item-selector__unit-text {
-  flex-grow: 1;
-}
-
-.item-selector__unit:hover {
-  color: #0b57d0;
-  background-color: #f3f3f3;
-}
-
-@media screen and (max-width: 576px) {
-  .create-dialog {
-    width: 300px;
+  i {
+    font-size: 20px;
   }
 }
 
-@media screen and (min-width: 576px) {
-  .create-dialog {
-    width: 500px;
+.sales__teks {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sales__judul {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.sales__lede {
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.sales__tutup {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  cursor: pointer;
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-text) 8%, transparent);
+  }
+
+  i {
+    font-size: 16px;
   }
 }
 
-@media screen and (min-width: 992px) {
-  .create-dialog {
-    width: 700px;
+.sales__isi {
+  padding: 8px 12px;
+  max-height: 55vh;
+  overflow-y: auto;
+}
+
+.sales__daftar {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sales__baris {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 8px;
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-text) 5%, transparent);
   }
 }
 
-@media screen and (min-width: 1200px) {
-  .create-dialog {
-    width: 800px;
+.sales__nama {
+  flex: 1;
+  min-width: 0;
+  font-size: 13.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sales__hapus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+  cursor: pointer;
+
+  &:hover {
+    color: #e05260;
+    background: color-mix(in srgb, #e05260 12%, transparent);
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  i {
+    font-size: 16px;
+  }
+}
+
+.sales__kosong {
+  margin: 16px 8px;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+}
+
+.sales__memuat {
+  display: flex;
+  justify-content: center;
+  padding: 28px 0;
+  font-size: 22px;
+  color: var(--color-accent);
+}
+
+.sales__putar {
+  animation: sales-putar 0.9s linear infinite;
+}
+
+@keyframes sales-putar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sales__kaki {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 20px;
+  border-top: 1px solid var(--color-divider);
 }

@@ -767,6 +767,8 @@
   "purchase-invoice__confirm__delete__success": "Faktur pembelian dihapus.",
   "salesman-selector__title": "Daftar sales",
   "salesman-selector__delete": "Hapus",
+  "salesman-selector__lede": "Nama yang tercatat di faktur penjualan — hapus salah ketik di sini.",
+  "salesman-selector__empty": "Belum ada sales yang tercatat.",
   "receivable-view__add-payment": "Tambah pembayaran",
   "payment-history__title": "Riwayat pembayaran",
   "payment-history__delete": "Hapus pembayaran",

@@ -5,18 +5,14 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { DynamicDialogComponent } from '../dynamic-dialog/dynamic-dialog.component';
-import { DialogHeaderComponent } from '../dialog-header/dialog-header.component';
 import { NgIf, NgFor } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
-import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-salesman-selector',
     templateUrl: './salesman-selector.component.html',
     styleUrls: ['./salesman-selector.component.scss'],
-    imports: [DynamicDialogComponent, DialogHeaderComponent, NgIf, MatProgressSpinner, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, TranslatePipe]
+    imports: [DynamicDialogComponent, NgIf, NgFor, TranslatePipe]
 })
 export class SalesmanSelectorComponent {
   constructor(
@@ -78,6 +74,10 @@ export class SalesmanSelectorComponent {
       .add(() => {
         this.isSubmitting = false;
       });
+  }
+
+  inisial(nama: string | null | undefined): string {
+    return (nama ?? '?').trim().charAt(0).toUpperCase() || '?';
   }
 
   closeDialog() {

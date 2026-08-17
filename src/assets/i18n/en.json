@@ -751,6 +751,8 @@
   "purchase-invoice__confirm__delete__success": "Purchase invoice deleted successfully.",
   "salesman-selector__title": "Salesman list",
   "salesman-selector__delete": "Delete",
+  "salesman-selector__lede": "Names recorded on sales invoices — remove typos here.",
+  "salesman-selector__empty": "No salesman recorded yet.",
   "receivable-view__add-payment": "Add payment",
   "payment-history__title": "Payment history",
   "payment-history__delete": "Delete payment",
