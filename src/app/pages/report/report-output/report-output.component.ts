@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
   MomentDateAdapter,
@@ -9,844 +10,345 @@ import {
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
-import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
+import {
+  MatDatepicker,
+  MatDatepickerInput,
+} from '@angular/material/datepicker';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import moment, { Moment } from 'moment';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { PageBreak, TDocumentDefinitions } from 'pdfmake/interfaces';
+import * as xlsx from 'xlsx';
+import { saveAs } from 'file-saver';
+
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
 import {
-  Alignment,
-  CanvasRect,
-  Content,
-  PageBreak,
-  PageOrientation,
-  PageSize,
-  TDocumentDefinitions,
-} from 'pdfmake/interfaces';
-import { DecimalPipe, NgIf, NgFor } from '@angular/common';
-// pdfmake 0.2.23 mengekspor objek vfs-nya langsung (module.exports = vfs).
-// Sampai 0.2.10 yang diekspor masih pembungkus, sehingga jalur lamanya
-// pdfFonts.pdfMake.vfs. Bentuk lama itu kini menghasilkan undefined, dan
-// pembuatan PDF gagal saat dijalankan tanpa satu pun galat kompilasi —
-// @types/pdfmake harus ikut disamakan versinya agar selisih itu terlihat.
-pdfMake.vfs = pdfFonts;
-import * as xlsx from 'xlsx';
-import { saveAs } from 'file-saver';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
-import { TransactionHeaderComponent } from '../../../components/transaction-header/transaction-header.component';
-import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatSelect, MatOption } from '@angular/material/select';
-import { AutocompleteSearchComponent } from '../../../components/autocomplete-search/autocomplete-search.component';
-import { MatChipListbox, MatChip } from '@angular/material/chips';
+  ComboItem,
+  ComboSearchComponent,
+} from 'src/app/components/combo-search/combo-search.component';
 
+// pdfmake 0.2.23 mengekspor objek vfs-nya langsung (module.exports = vfs).
+pdfMake.vfs = pdfFonts;
+
+/**
+ * Laporan keluar-masuk barang sebulan: stok awal, mutasi per sumber
+ * (pembelian, penyesuaian, penjualan, retur), dan stok akhirnya.
+ *
+ * Bentuk lamanya adalah formulir unduh buta — tidak menampilkan satu
+ * angka pun sebelum berkasnya dibuka, mewajibkan setiap merek dan tipe
+ * dicentang satu per satu, dan PDF-nya menggandakan SELURUH baris di
+ * setiap seksi merek karena lupa menyaring. Sekarang datanya tampil di
+ * layar, saringan kosong berarti semua, dan unduhan mengikuti persis
+ * apa yang terlihat.
+ */
 @Component({
-    selector: 'app-report-output',
-    templateUrl: './report-output.component.html',
-    providers: [
-        {
-            provide: DateAdapter,
-            useClass: MomentDateAdapter,
-            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-        },
-        { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
-    ],
-    imports: [FeatureBackgroundComponent, TransactionHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, AutocompleteSearchComponent, NgIf, MatChipListbox, NgFor, MatChip, TranslatePipe]
+  selector: 'app-report-output',
+  templateUrl: './report-output.component.html',
+  styleUrls: ['./report-output.component.scss'],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
+  ],
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslatePipe,
+    MatDatepicker,
+    MatDatepickerInput,
+    ComboSearchComponent,
+  ],
 })
-export class ReportOutputComponent {
+export class ReportOutputComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private decimalPipe: DecimalPipe,
-    private translateService: TranslateService
+    private translateService: TranslateService,
   ) {}
 
-  selectedBrands: any[] = [];
-  selectedTypes: any[] = [];
-  isSubmitting: boolean = false;
+  isLoading = true;
+  isDownloading = false;
 
-  documentFormGroup: FormGroup = new FormGroup({
-    format: new FormControl('', Validators.required),
-    groupBy: new FormControl('', Validators.required),
-    date: new FormControl(moment(), Validators.required),
-  });
+  date = new FormControl(moment());
 
-  ngOnInit(): void {}
+  /** Pengelompokan seksi di layar dan lembar di berkas unduhan. */
+  kelompok: 'brand' | 'type' = 'brand';
 
-  submitForm() {
-    if (
-      !this.documentFormGroup.valid ||
-      this.selectedBrands.length == 0 ||
-      this.selectedTypes.length == 0 ||
-      this.isSubmitting
-    ) {
-      return;
-    } else {
-      this.apiService
-        .post('report/output', {
-          month: this.documentFormGroup.value.date._d.getMonth() + 1,
-          year: this.documentFormGroup.value.date._d.getFullYear(),
-          format: this.documentFormGroup.value.format,
-          group: this.documentFormGroup.value.groupBy,
-          brand: this.selectedBrands.map((x) => x.id),
-          type: this.selectedTypes.map((x) => x.id),
-        })
-        .subscribe({
-          next: (data: any) => {
-            const format = this.documentFormGroup.value.format;
-            const groupBy = this.documentFormGroup.value.groupBy;
+  /** Saringan. Kosong berarti semua — backend memahaminya begitu. */
+  merek: ComboItem[] = [];
+  tipe: ComboItem[] = [];
 
-            if (format == 'PDF') {
-              let content: Content[] = [];
-              if (groupBy === 'brand') {
-                data.brands.forEach((brand: any, i: number) => {
-                  content.push({
-                    text: brand.name,
-                    style: 'header',
-                    marginBottom: 20,
-                  });
+  baris: any[] = [];
 
-                  const dataTable = {
-                    layout: 'lightHorizontalLines',
-                    table: {
-                      headerRows: 1,
-                      widths: [
-                        'auto',
-                        75,
-                        '*',
-                        'auto',
-                        'auto',
-                        50,
-                        50,
-                        50,
-                        50,
-                        50,
-                        50,
-                        50,
-                        50,
-                      ],
-                      body: [
-                        [
-                          [
-                            {
-                              text: 'No',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'No.',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Referensi',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Reference',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Deskripsi',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Description',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Merek',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Brand',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Tipe',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Type',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Stok awal',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Initial stock',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Masukan atas kasus penyesuaian',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Adjustment case input',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Keluaran atas kasus penyesuaian',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Adjustment case output',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Masukan atas pembelian',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Input from purchase',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Keluaran atas penjualan',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Output from sales',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Masukan atas retur penjualan',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Input from sales return',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Stock akhir',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Final stock',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Satuan',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Unit',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                        ],
-                        ...(data.data as any[]).map((y, index) => {
-                          return [
-                            {
-                              text: this.decimalPipe.transform(
-                                index + 1,
-                                '1.0'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: y.reference,
-                              style: 'tableContent',
-                            },
-                            {
-                              text: y.description,
-                              style: 'tableContent',
-                            },
-                            {
-                              text: y.product_brand.name,
-                              style: 'tableContent',
-                            },
-                            {
-                              text: y.product_type.name,
-                              style: 'tableContent',
-                            },
-                            {
-                              text: this.decimalPipe.transform(
-                                y.stock,
-                                '1.0-2'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: this.decimalPipe.transform(
-                                y.report.adjustment_case_found,
-                                '1.0-2'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: this.decimalPipe.transform(
-                                y.report.adjustment_case_lost,
-                                '1.0-2'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: this.decimalPipe.transform(
-                                y.report.good_receipt,
-                                '1.0-2'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: this.decimalPipe.transform(
-                                y.report.sales_invoice,
-                                '1.0-2'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: this.decimalPipe.transform(
-                                y.report.sales_return,
-                                '1.0-2'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: this.decimalPipe.transform(
-                                y.report.adjustment_case_found +
-                                  y.report.adjustment_case_lost +
-                                  y.report.good_receipt +
-                                  y.report.sales_invoice +
-                                  y.report.sales_return,
-                                '1.0-2'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: y.unit,
-                              style: 'tableContent',
-                            },
-                          ];
-                        }),
-                      ],
-                    },
-                    pageBreak:
-                      i == (data.brands as any[]).length - 1
-                        ? undefined
-                        : ('after' as PageBreak),
-                  };
-
-                  content.push(dataTable);
-                });
-              } else if (groupBy === 'type') {
-                data.types.forEach((type: any, i: number) => {
-                  content.push({
-                    text: type.name,
-                    style: 'header',
-                    marginBottom: 20,
-                  });
-
-                  const dataTable = {
-                    layout: 'lightHorizontalLines',
-                    table: {
-                      headerRows: 1,
-                      widths: [
-                        'auto',
-                        75,
-                        '*',
-                        'auto',
-                        'auto',
-                        50,
-                        50,
-                        50,
-                        50,
-                        50,
-                        50,
-                        50,
-                        50,
-                      ],
-                      body: [
-                        [
-                          [
-                            {
-                              text: 'No',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'No.',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Referensi',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Reference',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Deskripsi',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Description',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Merek',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Brand',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Tipe',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Type',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Stok awal',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Initial stock',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Masukan atas kasus penyesuaian',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Adjustment case input',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Keluaran atas kasus penyesuaian',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Adjustment case output',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Masukan atas pembelian',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Input from purchase',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Keluaran atas penjualan',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Output from sales',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Masukan atas retur penjualan',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Input from sales return',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Stock akhir',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Final stock',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                          [
-                            {
-                              text: 'Satuan',
-                              style: 'tableHeader',
-                            },
-                            {
-                              text: 'Unit',
-                              style: 'tableHeaderSubtitle',
-                            },
-                          ],
-                        ],
-                        ...(data.data as any[]).map((y, index) => {
-                          return [
-                            {
-                              text: this.decimalPipe.transform(
-                                index + 1,
-                                '1.0'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: y.reference,
-                              style: 'tableContent',
-                            },
-                            {
-                              text: y.description,
-                              style: 'tableContent',
-                            },
-                            {
-                              text: y.product_brand.name,
-                              style: 'tableContent',
-                            },
-                            {
-                              text: y.product_type.name,
-                              style: 'tableContent',
-                            },
-                            {
-                              text: this.decimalPipe.transform(
-                                y.stock,
-                                '1.0-2'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: this.decimalPipe.transform(
-                                y.report.adjustment_case_found,
-                                '1.0-2'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: this.decimalPipe.transform(
-                                y.report.adjustment_case_lost,
-                                '1.0-2'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: this.decimalPipe.transform(
-                                y.report.good_receipt,
-                                '1.0-2'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: this.decimalPipe.transform(
-                                y.report.sales_invoice,
-                                '1.0-2'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: this.decimalPipe.transform(
-                                y.report.sales_return,
-                                '1.0-2'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: this.decimalPipe.transform(
-                                y.report.adjustment_case_found +
-                                  y.report.adjustment_case_lost +
-                                  y.report.good_receipt +
-                                  y.report.sales_invoice +
-                                  y.report.sales_return,
-                                '1.0-2'
-                              ),
-                              style: 'tableContent',
-                            },
-                            {
-                              text: y.unit,
-                              style: 'tableContent',
-                            },
-                          ];
-                        }),
-                      ],
-                    },
-                    pageBreak:
-                      i == (data.brands as any[]).length - 1
-                        ? undefined
-                        : ('after' as PageBreak),
-                  };
-
-                  content.push(dataTable);
-                });
-              }
-
-              let documentDefinition: TDocumentDefinitions = {
-                pageSize: 'A4' as PageSize,
-                pageOrientation: 'landscape' as PageOrientation,
-                header: function () {
-                  return [
-                    {
-                      canvas: [
-                        {
-                          type: 'rect',
-                          x: 0,
-                          y: 0,
-                          w: 170,
-                          h: 5,
-                          color: '#DE482B',
-                        } as CanvasRect,
-                      ],
-                    },
-                  ];
-                },
-                content: content,
-                styles: {
-                  header: {
-                    bold: true,
-                    fontSize: 22,
-                    alignment: 'left' as Alignment,
-                    color: '#000000',
-                  },
-                  subheader: {
-                    fontSize: 12,
-                    alignment: 'left' as Alignment,
-                    bold: false,
-                    italics: true,
-                    color: '#616161',
-                  },
-                  body: {
-                    fontSize: 10,
-                    alignment: 'left' as Alignment,
-                    bold: false,
-                    color: '#292423',
-                  },
-                  tableHeader: {
-                    bold: true,
-                    fontSize: 10,
-                    color: 'black',
-                  },
-                  tableHeaderSubtitle: {
-                    bold: false,
-                    italics: true,
-                    fontSize: 8,
-                    color: '#616161',
-                  },
-                  tableContent: {
-                    bold: false,
-                    fontSize: 10,
-                    color: '#292423',
-                  },
-                },
-              };
-
-              pdfMake
-                .createPdf(documentDefinition)
-                .download(`Output_report_${new Date().getTime()}.pdf`);
-            } else if (format == 'Excel') {
-              const workbook = xlsx.utils.book_new();
-
-              if (groupBy == 'brand') {
-                data.brands.forEach((brand: any) => {
-                  const brandName = brand.name;
-                  const worksheetData = [
-                    [
-                      'No',
-                      'Reference',
-                      'Description',
-                      'Brand',
-                      'Type',
-                      'Initial Stock',
-                      'Adjustment Input',
-                      'Adjustment Output',
-                      'Good Receipt Input',
-                      'Bill Output',
-                      'Sales Return',
-                      'Final Stock',
-                      'Unit',
-                    ],
-                    ...(data.data as any[])
-                      .filter((x) => x.product_brand.id == brand.id)
-                      .map((x, index) => {
-                        return [
-                          index + 1,
-                          x.reference,
-                          x.description,
-                          x.product_brand.name,
-                          x.product_type.name,
-                          x.stock,
-                          x.report.adjustment_case_found,
-                          x.report.adjustment_case_lost,
-                          x.report.good_receipt,
-                          x.report.sales_invoice,
-                          x.report.sales_return,
-                          x.report.adjustment_case_found +
-                            x.report.adjustment_case_lost +
-                            x.report.good_receipt +
-                            x.report.sales_invoice +
-                            x.report.sales_return,
-                          x.unit,
-                        ];
-                      }),
-                  ];
-
-                  const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);
-                  xlsx.utils.book_append_sheet(workbook, worksheet, brandName);
-                });
-
-                const excelBuffer = xlsx.write(workbook, {
-                  bookType: 'xlsx',
-                  type: 'array',
-                });
-                const blob = new Blob([excelBuffer], {
-                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                });
-                saveAs(blob, `Output_report_${new Date().getTime()}.xlsx`);
-                this.alertService.showSuccess(
-                  this.translateService.instant(
-                    'report-output__export__successful'
-                  )
-                );
-              } else if (groupBy == 'type') {
-                data.types.forEach((type: any) => {
-                  const typeName = type.name;
-                  const worksheetData = [
-                    [
-                      'No',
-                      'Reference',
-                      'Description',
-                      'Brand',
-                      'Type',
-                      'Initial Stock',
-                      'Adjustment Input',
-                      'Adjustment Output',
-                      'Good Receipt Input',
-                      'Bill Output',
-                      'Sales Return',
-                      'Final Stock',
-                      'Unit',
-                    ],
-                    ...(data.data as any[])
-                      .filter((x) => x.product_type.id == type.id)
-                      .map((x, index) => {
-                        return [
-                          index + 1,
-                          x.reference,
-                          x.description,
-                          x.product_brand.name,
-                          x.product_type.name,
-                          x.stock,
-                          x.report.adjustment_case_found,
-                          x.report.adjustment_case_lost,
-                          x.report.good_receipt,
-                          x.report.sales_invoice,
-                          x.report.sales_return,
-                          x.report.adjustment_case_found +
-                            x.report.adjustment_case_lost +
-                            x.report.good_receipt +
-                            x.report.sales_invoice +
-                            x.report.sales_return,
-                          x.unit,
-                        ];
-                      }),
-                  ];
-
-                  const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);
-                  xlsx.utils.book_append_sheet(workbook, worksheet, typeName);
-                });
-
-                const excelBuffer = xlsx.write(workbook, {
-                  bookType: 'xlsx',
-                  type: 'array',
-                });
-                const blob = new Blob([excelBuffer], {
-                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                });
-                saveAs(blob, `Output_report_${new Date().getTime()}.xlsx`);
-                this.alertService.showSuccess(
-                  this.translateService.instant(
-                    'report-output__export__successful'
-                  )
-                );
-              }
-            }
-          },
-          error: (error) => {
-            this.alertService.showError(error);
-          },
-        })
-        .add(() => {
-          this.isSubmitting = false;
-        });
-    }
+  ngOnInit(): void {
+    this.ambilData();
   }
 
-  printPDF(data: any) {}
+  ambilData(): void {
+    this.isLoading = true;
+    this.apiService
+      .post('report/output', {
+        month: this.date.value!.month() + 1,
+        year: this.date.value!.year(),
+        group: this.kelompok,
+        brand: this.merek.map((x) => x.id),
+        type: this.tipe.map((x) => x.id),
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.baris = data.data ?? [];
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
+  }
 
-  printExcel(data: any) {}
-
-  setMonthAndYear(
-    normalizedMonthAndYear: Moment,
-    datepicker: MatDatepicker<Moment>
-  ) {
-    const ctrlValue = moment(this.documentFormGroup.value.date) ?? moment();
-    ctrlValue.month(normalizedMonthAndYear.month());
-    ctrlValue.year(normalizedMonthAndYear.year());
-    this.documentFormGroup.get('date')?.setValue(ctrlValue);
+  setMonthAndYear(pilihan: Moment, datepicker: MatDatepicker<Moment>): void {
+    const nilai = this.date.value ?? moment();
+    nilai.month(pilihan.month());
+    nilai.year(pilihan.year());
+    this.date.setValue(nilai);
     datepicker.close();
+    this.ambilData();
   }
 
-  onSelectBrand(event: any) {
-    if (this.selectedBrands.filter((x) => x.id == event.id).length > 0) {
+  get namaBulan(): string {
+    return this.date.value!.format('MMMM YYYY');
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Saringan dan pengelompokan                                        */
+  /* ---------------------------------------------------------------- */
+
+  /** Ganti kelompok hanya menyusun ulang tampilan — datanya sama. */
+  setKelompok(k: 'brand' | 'type'): void {
+    this.kelompok = k;
+  }
+
+  pilihMerek(item: ComboItem): void {
+    if (this.merek.some((x) => x.id === item.id)) {
       return;
-    } else {
-      this.selectedBrands.push(event);
     }
+    this.merek = [...this.merek, item];
+    this.ambilData();
   }
 
-  onSelectType(event: any) {
-    if (this.selectedTypes.filter((x) => x.id == event.id).length > 0) {
+  hapusMerek(indeks: number): void {
+    this.merek = this.merek.filter((_, i) => i !== indeks);
+    this.ambilData();
+  }
+
+  pilihTipe(item: ComboItem): void {
+    if (this.tipe.some((x) => x.id === item.id)) {
       return;
-    } else {
-      this.selectedTypes.push(event);
     }
+    this.tipe = [...this.tipe, item];
+    this.ambilData();
   }
 
-  onUnselectBrand(event: any) {
-    this.selectedBrands = this.selectedBrands.filter((x) => x.id != event.id);
+  hapusTipe(indeks: number): void {
+    this.tipe = this.tipe.filter((_, i) => i !== indeks);
+    this.ambilData();
   }
 
-  onUnselectType(event: any) {
-    this.selectedTypes = this.selectedTypes.filter((x) => x.id != event.id);
+  /** Seksi per merek/tipe, hanya kelompok yang memang punya baris. */
+  get kelompokTampil(): { nama: string; baris: any[] }[] {
+    const peta = new Map<string, any[]>();
+    for (const b of this.baris) {
+      const nama =
+        this.kelompok === 'brand' ? b.product_brand.name : b.product_type.name;
+      if (!peta.has(nama)) {
+        peta.set(nama, []);
+      }
+      peta.get(nama)!.push(b);
+    }
+    return [...peta.entries()]
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([nama, isi]) => ({
+        nama,
+        baris: [...isi].sort((a, b) =>
+          String(a.reference).localeCompare(String(b.reference)),
+        ),
+      }));
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Angka turunan                                                     */
+  /*                                                                   */
+  /* Penjualan dan penyesuaian keluar sudah bertanda minus dari        */
+  /* backend, jadi mutasi bersih cukup dijumlahkan apa adanya.         */
+  /* ---------------------------------------------------------------- */
+
+  mutasi(b: any): number {
+    return (
+      Number(b.report.good_receipt) +
+      Number(b.report.adjustment_case_found) +
+      Number(b.report.adjustment_case_lost) +
+      Number(b.report.sales_invoice) +
+      Number(b.report.sales_return)
+    );
+  }
+
+  /**
+   * Stok awal + mutasi. Berkas lama menjumlahkan mutasinya saja lalu
+   * menamai kolomnya "Final Stock" — stok awalnya tertinggal.
+   */
+  stokAkhir(b: any): number {
+    return Number(b.stock) + this.mutasi(b);
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Unduhan — mengikuti kelompok dan saringan yang tampil             */
+  /* ---------------------------------------------------------------- */
+
+  private barisEkspor(k: { nama: string; baris: any[] }): any[][] {
+    return k.baris.map((x, index) => [
+      index + 1,
+      x.reference,
+      x.description,
+      x.product_brand.name,
+      x.product_type.name,
+      Number(x.stock),
+      Number(x.report.adjustment_case_found),
+      Number(x.report.adjustment_case_lost),
+      Number(x.report.good_receipt),
+      Number(x.report.sales_invoice),
+      Number(x.report.sales_return),
+      this.stokAkhir(x),
+      x.unit,
+    ]);
+  }
+
+  downloadExcel(): void {
+    const workbook = xlsx.utils.book_new();
+
+    for (const k of this.kelompokTampil) {
+      const worksheet = xlsx.utils.aoa_to_sheet([
+        [
+          'No',
+          'Reference',
+          'Description',
+          'Brand',
+          'Type',
+          'Initial Stock',
+          'Adjustment Input',
+          'Adjustment Output',
+          'Good Receipt Input',
+          'Bill Output',
+          'Sales Return',
+          'Final Stock',
+          'Unit',
+        ],
+        ...this.barisEkspor(k),
+      ]);
+      // Nama lembar Excel dibatasi 31 huruf oleh formatnya sendiri.
+      xlsx.utils.book_append_sheet(workbook, worksheet, k.nama.slice(0, 31));
+    }
+
+    const excelBuffer = xlsx.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+    saveAs(
+      new Blob([excelBuffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      }),
+      `Output_report_${new Date().getTime()}.xlsx`,
+    );
+    this.alertService.showSuccess(
+      this.translateService.instant('report-output__export__successful'),
+    );
+  }
+
+  downloadPdf(): void {
+    const kelompok = this.kelompokTampil;
+    const angka = (nilai: number) => Number(nilai).toLocaleString('id-ID');
+
+    const kepala = (id: string, en: string) => [
+      { text: id, style: 'kepala' },
+      { text: en, style: 'kepalaSub' },
+    ];
+
+    const dokumen: TDocumentDefinitions = {
+      pageSize: 'A4',
+      pageOrientation: 'landscape',
+      content: kelompok.map((k, i) => ({
+        stack: [
+          { text: k.nama, style: 'judul' },
+          { text: `Periode ${this.namaBulan}`, style: 'sub' },
+          {
+            table: {
+              headerRows: 1,
+              widths: [
+                'auto',
+                70,
+                '*',
+                'auto',
+                'auto',
+                38,
+                38,
+                38,
+                38,
+                38,
+                38,
+                40,
+                'auto',
+              ],
+              body: [
+                [
+                  kepala('No', 'No.'),
+                  kepala('Referensi', 'Reference'),
+                  kepala('Deskripsi', 'Description'),
+                  kepala('Merek', 'Brand'),
+                  kepala('Tipe', 'Type'),
+                  kepala('Stok awal', 'Initial stock'),
+                  kepala('Penyesuaian +', 'Adjustment in'),
+                  kepala('Penyesuaian −', 'Adjustment out'),
+                  kepala('Pembelian', 'Purchase in'),
+                  kepala('Penjualan', 'Sales out'),
+                  kepala('Retur', 'Sales return'),
+                  kepala('Stok akhir', 'Final stock'),
+                  kepala('Satuan', 'Unit'),
+                ],
+                ...this.barisEkspor(k).map((b) =>
+                  b.map((nilai, kolom) => ({
+                    text: typeof nilai === 'number' && kolom > 0 ? angka(nilai) : String(nilai ?? ''),
+                    style: kolom >= 5 && kolom <= 11 ? 'isiAngka' : 'isi',
+                  })),
+                ),
+              ],
+            },
+            layout: 'lightHorizontalLines',
+          },
+        ],
+        pageBreak:
+          i === kelompok.length - 1 ? undefined : ('after' as PageBreak),
+      })),
+      styles: {
+        judul: { fontSize: 16, bold: true, margin: [0, 0, 0, 2] },
+        sub: { fontSize: 10, color: '#666666', margin: [0, 0, 0, 10] },
+        kepala: { fontSize: 8, bold: true },
+        kepalaSub: { fontSize: 7, italics: true, color: '#616161' },
+        isi: { fontSize: 8 },
+        isiAngka: { fontSize: 8, alignment: 'right' },
+      },
+    };
+
+    pdfMake
+      .createPdf(dokumen)
+      .download(`Output_report_${new Date().getTime()}.pdf`);
   }
 }

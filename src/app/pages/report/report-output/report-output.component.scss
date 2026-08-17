@@ -1,0 +1,7 @@
+/* Seluruh anatomi halaman laporan tinggal di partial bersama. */
+@use "../../../styles/laporan";
+
+/* Barang keluar (penjualan, penyesuaian minus) diberi wajah merah redup. */
+.keluar {
+  color: #e05260;
+}
