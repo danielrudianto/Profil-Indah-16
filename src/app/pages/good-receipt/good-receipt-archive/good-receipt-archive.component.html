@@ -91,14 +91,16 @@
           <th>{{ 'good-receipt__archive__company' | translate }}</th>
           <th>{{ 'good-receipt__archive__invoice-name' | translate }}</th>
           <th>{{ 'good-receipt__archive__status' | translate }}</th>
-          <th class="tabel__aksi-kepala">
-            <span class="sr-only">{{ 'general__actions' | translate }}</span>
-          </th>
         </tr>
       </thead>
 
       <tbody *ngIf="!isLoading && dataSource.length > 0">
-        <tr *ngFor="let item of dataSource; trackBy: lacakPenerimaan">
+        <!-- Seluruh baris adalah tombolnya — satu-satunya aksi memang melihat. -->
+        <tr
+          *ngFor="let item of dataSource; trackBy: lacakPenerimaan"
+          class="tabel__baris-klik"
+          (click)="viewArchive(item.id)"
+        >
           <td>{{ item.date | date: 'dd MMMM yyyy' }}</td>
           <td class="tabel__utama">{{ item.name }}</td>
           <td>{{ item.supplier?.name }}</td>
@@ -129,23 +131,12 @@
               }}
             </span>
           </td>
-          <td class="tabel__aksi">
-            <button
-              type="button"
-              class="tabel__aksi-btn"
-              (click)="viewArchive(item.id)"
-              [title]="'general__view' | translate"
-              [attr.aria-label]="'general__view' | translate"
-            >
-              <i class="ph ph-eye" aria-hidden="true"></i>
-            </button>
-          </td>
         </tr>
       </tbody>
 
       <tbody *ngIf="isLoading">
         <tr>
-          <td colspan="7" class="tabel__pesan">
+          <td colspan="6" class="tabel__pesan">
             {{ 'general__loading' | translate }}
           </td>
         </tr>
@@ -153,7 +144,7 @@
 
       <tbody *ngIf="!isLoading && dataSource.length === 0">
         <tr>
-          <td colspan="7">
+          <td colspan="6">
           <app-tabel-kosong
             ikon="ph-package"
             [judul]="'good-receipt__empty__title' | translate"

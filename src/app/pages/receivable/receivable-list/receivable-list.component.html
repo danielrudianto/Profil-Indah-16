@@ -21,9 +21,6 @@
         <th class="tabel__nilai-kepala">
           {{ 'receivable__amount' | translate }}
         </th>
-        <th class="tabel__aksi-kepala">
-          <span class="sr-only">{{ 'general__actions' | translate }}</span>
-        </th>
       </tr>
     </thead>
 
@@ -54,23 +51,12 @@
         <td class="tabel__nilai baris__total">
           Rp {{ sisa(item) | number: '1.0-0' }}
         </td>
-        <td class="tabel__aksi">
-          <button
-            type="button"
-            class="tabel__aksi-btn"
-            (click)="lihat(item)"
-            [title]="'general__view' | translate"
-            [attr.aria-label]="'general__view' | translate"
-          >
-            <i class="ph ph-caret-right" aria-hidden="true"></i>
-          </button>
-        </td>
       </tr>
     </tbody>
 
     <tbody *ngIf="isLoading">
       <tr>
-        <td colspan="4" class="tabel__pesan">
+        <td colspan="3" class="tabel__pesan">
           {{ 'general__loading' | translate }}
         </td>
       </tr>
@@ -78,7 +64,7 @@
 
     <tbody *ngIf="!isLoading && tersaring.length === 0">
       <tr>
-        <td colspan="4">
+        <td colspan="3">
           <app-tabel-kosong
             ikon="ph-hand-coins"
             [judul]="'receivable__empty__title' | translate"

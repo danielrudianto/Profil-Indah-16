@@ -103,14 +103,16 @@
             </button>
           </th>
           <th>{{ 'sales-deposit__archive__status' | translate }}</th>
-          <th class="tabel__aksi-kepala">
-            <span class="sr-only">{{ 'general__actions' | translate }}</span>
-          </th>
         </tr>
       </thead>
 
       <tbody *ngIf="!isLoading && dataSource.length > 0">
-        <tr *ngFor="let item of dataSource; trackBy: lacakDeposit">
+        <!-- Seluruh baris adalah tombolnya — satu-satunya aksi memang melihat. -->
+        <tr
+          *ngFor="let item of dataSource; trackBy: lacakDeposit"
+          class="tabel__baris-klik"
+          (click)="viewArchive(item.id)"
+        >
           <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
           <td class="tabel__utama">{{ item.name }}</td>
           <td>
@@ -138,23 +140,12 @@
               {{ 'deposit__status__' + keadaan(item) | translate }}
             </span>
           </td>
-          <td class="tabel__aksi">
-            <button
-              type="button"
-              class="tabel__aksi-btn"
-              (click)="viewArchive(item.id)"
-              [title]="'general__view' | translate"
-              [attr.aria-label]="'general__view' | translate"
-            >
-              <i class="ph ph-eye" aria-hidden="true"></i>
-            </button>
-          </td>
         </tr>
       </tbody>
 
       <tbody *ngIf="isLoading">
         <tr>
-          <td colspan="6" class="tabel__pesan">
+          <td colspan="5" class="tabel__pesan">
             {{ 'general__loading' | translate }}
           </td>
         </tr>
@@ -162,7 +153,7 @@
 
       <tbody *ngIf="!isLoading && dataSource.length === 0">
         <tr>
-          <td colspan="6">
+          <td colspan="5">
             <app-tabel-kosong
               ikon="ph-piggy-bank"
               [judul]="'deposit__archive__empty__title' | translate"
