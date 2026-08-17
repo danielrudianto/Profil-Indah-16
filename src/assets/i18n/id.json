@@ -2308,5 +2308,6 @@
   "report-purchase__hero__best-supplier": "Supplier teratas",
   "report-purchase__chart": "Pembelian harian",
   "report-purchase__chart__receipts": "Penerimaan",
-  "report-purchase__best__supplier": "Supplier"
+  "report-purchase__best__supplier": "Supplier",
+  "nav__report": "Laporan"
 }

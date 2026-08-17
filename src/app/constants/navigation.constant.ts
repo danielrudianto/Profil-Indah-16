@@ -67,6 +67,9 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'nav__overpayment', icon: 'ph ph-arrows-counter-clockwise', path: 'Overpayment', group: 'menu', roles: SALES },
   { label: 'nav__expense', icon: 'ph ph-trend-down', path: 'Expense', group: 'menu', roles: GENERAL },
   { label: 'nav__adjustment_case', icon: 'ph ph-sliders', path: 'Adjustment-case', group: 'menu', roles: ADMIN },
+  /* Perannya menjiplak OperationalGuard di rutenya; muka laporannya sendiri
+     menyaring kartu per peran lebih lanjut. */
+  { label: 'nav__report', icon: 'ph ph-chart-bar', path: 'Report', group: 'menu', roles: SEMUA_OPERASIONAL },
 
   /* ---------------------------------------------------------------- */
   /* Master                                                            */

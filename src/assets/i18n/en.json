@@ -2308,5 +2308,6 @@
   "report-purchase__hero__best-supplier": "Top supplier",
   "report-purchase__chart": "Daily purchases",
   "report-purchase__chart__receipts": "Receipts",
-  "report-purchase__best__supplier": "Supplier"
+  "report-purchase__best__supplier": "Supplier",
+  "nav__report": "Reports"
 }
