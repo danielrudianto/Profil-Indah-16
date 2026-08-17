@@ -447,5 +447,15 @@
         {{ "general__cancel" | translate }}
       </button>
     </section>
+
+    <!-- Pintu ke daftar penerimaan — pola kartu tindakan yang sama dengan faktur. -->
+    <section class="kartu">
+      <h2 class="kartu__label">{{ "general__other-actions" | translate }}</h2>
+
+      <button type="button" class="btn btn--kedua btn--blok" (click)="batal()">
+        <i class="ph ph-list-dashes" aria-hidden="true"></i>
+        {{ "good-receipt__view-list" | translate }}
+      </button>
+    </section>
   </aside>
 </div>

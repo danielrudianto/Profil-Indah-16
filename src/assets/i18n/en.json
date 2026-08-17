@@ -367,6 +367,7 @@
   "good-receipt__archive__view__subtotal": "Subtotal",
   "good-receipt__archive__view__discount": "Discount",
   "good-receipt__archive__view__total": "Total",
+  "good-receipt__view-list": "View receipt list",
   "good-receipt__archive__view__invoice-name": "Invoice name",
   "good-receipt__archive__view__tax-invoice-name": "Tax invoice name",
   "good-receipt__archive__edit": "Edit",
