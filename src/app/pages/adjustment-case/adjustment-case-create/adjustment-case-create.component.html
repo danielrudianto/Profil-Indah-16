@@ -221,6 +221,30 @@
           {{ 'general__cancel' | translate }}
         </button>
       </section>
+
+      <!--
+        Arsip dan antrean persetujuan HIDUP di sini — sebelumnya kedua
+        halaman itu ada tetapi tidak punya satu pun tautan, sehingga
+        terkubur tak terjangkau dari antarmuka.
+      -->
+      <section class="kartu">
+        <h2 class="kartu__label">{{ 'general__other-actions' | translate }}</h2>
+
+        <button type="button" class="btn btn--kedua btn--blok" (click)="bukaArsip()">
+          <i class="ph ph-archive" aria-hidden="true"></i>
+          {{ 'adjustment-case__create__view-archive' | translate }}
+        </button>
+
+        <button
+          *ngIf="isSuperAdministrator"
+          type="button"
+          class="btn btn--kedua btn--blok"
+          (click)="bukaAntrean()"
+        >
+          <i class="ph ph-stamp" aria-hidden="true"></i>
+          {{ 'adjustment-case__create__view-confirm' | translate }}
+        </button>
+      </section>
     </aside>
   </div>
 </div>

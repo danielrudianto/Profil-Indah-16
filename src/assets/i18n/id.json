@@ -2071,6 +2071,8 @@
   "adjustment-case__create__check-company": "Perusahaan dipilih",
   "adjustment-case__create__check-items": "Ada barang di daftar",
   "adjustment-case__create__check-quantity": "Semua jumlah terisi",
+  "adjustment-case__create__view-archive": "Arsip penyesuaian",
+  "adjustment-case__create__view-confirm": "Antrean persetujuan",
   "adjustment-case__create__confirm-note": "Stok baru berubah setelah dikonfirmasi admin. Kasus yang diajukan menunggu di halaman Konfirmasi.",
   "adjustment-case__create__submit": "Ajukan penyesuaian",
   "adjustment-case__confirm__lede": "Kasus yang menunggu keputusan admin. Setelah disetujui atau ditolak, kasusnya pindah ke arsip.",

@@ -2071,6 +2071,8 @@
   "adjustment-case__create__check-company": "Company selected",
   "adjustment-case__create__check-items": "Items on the list",
   "adjustment-case__create__check-quantity": "All quantities filled in",
+  "adjustment-case__create__view-archive": "Adjustment archive",
+  "adjustment-case__create__view-confirm": "Approval queue",
   "adjustment-case__create__confirm-note": "Stock only changes after admin confirmation. Submitted cases wait on the Confirmation page.",
   "adjustment-case__create__submit": "Submit adjustment",
   "adjustment-case__confirm__lede": "Cases waiting for an admin decision. Once approved or rejected, they move to the archive.",

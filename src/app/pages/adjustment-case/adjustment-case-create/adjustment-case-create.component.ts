@@ -28,6 +28,7 @@ import {
 } from 'src/app/components/product-selector/product-selector.component';
 import { ComboSearchComponent } from 'src/app/components/combo-search/combo-search.component';
 import { AlertService } from 'src/app/services/alert.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 
@@ -71,6 +72,7 @@ export class AdjustmentCaseCreateComponent implements OnInit, OnDestroy {
     private datePipe: DatePipe,
     private translateService: TranslateService,
     private router: Router,
+    private authService: AuthService,
   ) {
     this.hotkeysService.add(
       new Hotkey('alt+a', (): boolean => {
@@ -82,6 +84,9 @@ export class AdjustmentCaseCreateComponent implements OnInit, OnDestroy {
 
   productSelectorSubject: Subject<any> = new Subject();
   isSubmitting: boolean = false;
+
+  /* Antrean persetujuan hanya milik pemilik — tautannya pun begitu. */
+  isSuperAdministrator = false;
 
   /* 0 = Ditemukan (wajib perusahaan), 1 = Hilang — mengikuti backend. */
   metaFormGroup: FormGroup = new FormGroup({
@@ -95,6 +100,7 @@ export class AdjustmentCaseCreateComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
+    this.isSuperAdministrator = this.authService.isSuperAdministrator();
     this.perbaruiChecklist();
     this.metaFormGroup.valueChanges.subscribe(() => this.perbaruiChecklist());
     this.itemFormGroup.valueChanges.subscribe(() => this.perbaruiChecklist());
@@ -275,5 +281,13 @@ export class AdjustmentCaseCreateComponent implements OnInit, OnDestroy {
       .add(() => {
         this.isSubmitting = false;
       });
+  }
+
+  bukaArsip(): void {
+    this.router.navigate(['/Adjustment-case/Archive']);
+  }
+
+  bukaAntrean(): void {
+    this.router.navigate(['/Adjustment-case/Confirm']);
   }
 }
