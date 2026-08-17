@@ -15,7 +15,7 @@
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ 'package__create__package-name' | translate }}</mat-label>
-              <input matInput type="text" formControlName="name" autocomplete="off" />
+              <input matInput type="text" formControlName="name" maxlength="45" autocomplete="off" />
             </mat-form-field>
           </div>
           <div class="field">
@@ -30,7 +30,7 @@
         <div class="field">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>{{ 'package__create__package-description' | translate }}</mat-label>
-            <textarea matInput rows="2" formControlName="description"></textarea>
+            <textarea matInput rows="2" formControlName="description" maxlength="200"></textarea>
           </mat-form-field>
         </div>
       </section>

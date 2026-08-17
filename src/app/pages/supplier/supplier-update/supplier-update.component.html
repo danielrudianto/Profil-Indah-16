@@ -11,7 +11,7 @@
   <div [formGroup]="supplierFormGroup">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>{{ 'supplier__add__name' | translate }}</mat-label>
-      <input matInput type="text" formControlName="name" autocomplete="off" />
+      <input matInput type="text" formControlName="name" maxlength="100" autocomplete="off" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">

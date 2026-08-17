@@ -18,13 +18,13 @@
         <div class="field field--penuh">
           <mat-form-field appearance="outline" class="w-100">
               <mat-label>{{ "product__add__reference" | translate }}</mat-label>
-              <input matInput type="text" formControlName="reference" placeholder="MLT-9-G" />
+              <input matInput type="text" formControlName="reference" maxlength="50" placeholder="MLT-9-G" />
             </mat-form-field>
         </div>
 
         <div class="field field--penuh">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{ "product__add__description" | translate }}</mat-label><textarea matInput formControlName="description" placeholder="Multiplek 9mm Garuda"></textarea></mat-form-field>
+            <mat-label>{{ "product__add__description" | translate }}</mat-label><textarea matInput formControlName="description" maxlength="191" placeholder="Multiplek 9mm Garuda"></textarea></mat-form-field>
         </div>
 
         <div class="field">
