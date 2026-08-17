@@ -1,0 +1,47 @@
+/* Peringkat ber-bar — anatomi yang sama dengan kartu peringkat laporan. */
+.peringkat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.peringkat__baris {
+  display: grid;
+  grid-template-columns: minmax(90px, 140px) minmax(0, 1fr) 46px 110px;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.peringkat__nama {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.peringkat__bar {
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 75%, transparent);
+  min-width: 4px;
+}
+
+.peringkat__persen {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  font-size: 12px;
+}
+
+.peringkat__nilai {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.peringkat__kosong {
+  margin: 0;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}

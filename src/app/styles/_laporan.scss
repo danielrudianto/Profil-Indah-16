@@ -1,0 +1,366 @@
+/*
+  Kerangka halaman laporan — dipakai laporan penjualan, pembelian, dan
+  laporan supplier lewat @use. Yang di sini hanya yang tidak boleh berbeda
+  antar laporan: kepala dengan kendali, kartu angka hero, grafik batang
+  harian, dan daftar peringkat ber-bar.
+*/
+
+.laporan {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-bottom: 32px;
+  font-family: "Montserrat", system-ui, sans-serif;
+  color: var(--color-text);
+}
+
+/* Judul di kiri, kendali (bulan + unduh) di kanan. */
+.laporan__kepala {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.laporan__judul {
+  margin: 0 0 4px;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.laporan__lede {
+  margin: 0;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+.laporan__kendali {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.laporan__bulan {
+  width: 180px;
+}
+
+/* ---------------------------------------------------------------- */
+/* Kartu — anatomi yang sama dengan kartu formulir                    */
+/* ---------------------------------------------------------------- */
+
+.kartu {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 12px 28px 16px;
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1px var(--color-divider);
+}
+
+.kartu + .kartu,
+.hero + .kartu {
+  margin-top: 16px;
+}
+
+.kartu__label {
+  margin: 4px 0 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Kartu angka hero — yang utama disorot aksen                        */
+/* ---------------------------------------------------------------- */
+
+.hero {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.hero__kartu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-divider);
+}
+
+.hero__kartu--utama {
+  background: var(--color-active);
+  box-shadow: 0 0 0 1px var(--color-accent);
+
+  .hero__nilai {
+    color: var(--color-accent);
+  }
+}
+
+.hero__label {
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+.hero__nilai {
+  font-size: 22px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.hero__nilai--tanggal {
+  font-size: 17px;
+}
+
+.hero__sub {
+  font-size: 11.5px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+@media (max-width: 1100px) {
+  .hero {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Grafik batang harian                                              */
+/*                                                                   */
+/* Dua batang per hari: nilai (aksen) dan jumlah transaksi (netral), */
+/* masing-masing diskalakan pada maksimumnya sendiri.                */
+/* ---------------------------------------------------------------- */
+
+.grafik {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 180px;
+  padding-top: 8px;
+}
+
+.grafik__hari {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  min-width: 0;
+}
+
+.grafik__batang {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+}
+
+.grafik__nilai {
+  width: 55%;
+  min-height: 2px;
+  border-radius: 3px 3px 0 0;
+  background: color-mix(in srgb, var(--color-accent) 75%, transparent);
+}
+
+.grafik__transaksi {
+  width: 25%;
+  min-height: 2px;
+  border-radius: 3px 3px 0 0;
+  background: color-mix(in srgb, var(--color-text) 25%, transparent);
+}
+
+.grafik__tanggal {
+  font-size: 10px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+.grafik__legenda {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  i {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+}
+
+.grafik__legenda--nilai {
+  background: color-mix(in srgb, var(--color-accent) 75%, transparent);
+}
+
+.grafik__legenda--transaksi {
+  background: color-mix(in srgb, var(--color-text) 25%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Peringkat ber-bar: nama, bar relatif, persen, nilai               */
+/* ---------------------------------------------------------------- */
+
+.peringkat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.peringkat__baris {
+  display: grid;
+  grid-template-columns: minmax(120px, 200px) minmax(0, 1fr) 52px 130px;
+  align-items: center;
+  gap: 12px;
+  font-size: 13.5px;
+}
+
+.peringkat__nama {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.peringkat__bar {
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 75%, transparent);
+  min-width: 4px;
+}
+
+.peringkat__persen {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  font-size: 12.5px;
+}
+
+.peringkat__nilai {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Baris "terbaik bulan ini": label redup, nama menonjol, aksi kanan. */
+.terbaik {
+  display: flex;
+  flex-direction: column;
+}
+
+.terbaik__baris {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+
+  & + .terbaik__baris {
+    border-top: 1px solid var(--color-divider);
+  }
+}
+
+.terbaik__label {
+  width: 90px;
+  flex-shrink: 0;
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+.terbaik__nama {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.terbaik__aksi {
+  margin-left: auto;
+}
+
+/* Kepala kartu: label kiri, kendali (seg / tombol kecil) kanan. */
+.kartu__kepala {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.gulir {
+  overflow-x: auto;
+}
+
+/* Saklar dua-pilihan — grafik vs tabel. */
+.seg {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 9px;
+  background: var(--color-bg);
+  box-shadow: inset 0 0 0 1px var(--color-divider);
+}
+
+.seg__tombol {
+  padding: 5px 12px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: color-mix(in srgb, var(--color-text) 60%, transparent);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.seg__tombol--on {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: 0 0 0 1px var(--color-divider);
+}
+
+.laporan__kosong {
+  margin: 0;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+/* Dua kolom kartu bawah; menyatu di layar sempit. */
+.laporan__kisi-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+
+  .kartu + .kartu {
+    margin-top: 0;
+  }
+
+  .kartu {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 1000px) {
+  .laporan__kisi-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

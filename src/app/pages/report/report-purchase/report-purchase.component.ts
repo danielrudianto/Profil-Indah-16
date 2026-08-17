@@ -1,86 +1,97 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
   MomentDateAdapter,
 } from '@angular/material-moment-adapter';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatRipple } from '@angular/material/core';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { ApiService } from 'src/app/services/api.service';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import moment, { Moment } from 'moment';
-import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { AlertService } from 'src/app/services/alert.service';
 import * as xlsx from 'xlsx';
-import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
-import { SupplierPurchaseChartComponent } from './supplier-purchase-chart/supplier-purchase-chart.component';
-import { BrandPurchaseChartComponent } from './brand-purchase-chart/brand-purchase-chart.component';
-import { TypePurchaseChartComponent } from './type-purchase-chart/type-purchase-chart.component';
-import { DatePipe, DecimalPipe } from '@angular/common';
-import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
-import { FeatureHeaderComponent } from '../../../components/feature-header/feature-header.component';
-import { PurchaseChartComponent } from '../../../components/charts/purchase-chart/purchase-chart.component';
-import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
+import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import {
+  MatDatepicker,
+  MatDatepickerInput,
+} from '@angular/material/datepicker';
+
+/**
+ * Laporan pembelian — saudara kandung laporan penjualan, dengan yang
+ * benar-benar dikirim endpoint-nya: total belanja, jumlah penerimaan,
+ * diskon barang, grafik harian, dan nama terbaik per supplier, merek,
+ * dan tipe.
+ *
+ * Bentuk lamanya membaca data.total yang TIDAK PERNAH ADA — kolom
+ * totalnya selalu kosong; bidang yang benar bernama `value`. Peringkat
+ * lengkap per dimensi tidak digambar: endpoint-nya memang tidak ada
+ * untuk pembelian, dan tombol rincian yang lama membuka panel berisi
+ * data yang tidak pernah diisi.
+ */
 @Component({
-    selector: 'app-report-purchase',
-    templateUrl: './report-purchase.component.html',
-    styleUrls: ['./report-purchase.component.scss'],
-    providers: [
-        {
-            provide: DateAdapter,
-            useClass: MomentDateAdapter,
-            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-        },
-        { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
-    ],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, PurchaseChartComponent, MatRipple, MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, MatButton, MatIcon, MatGridList, MatGridTile, DecimalPipe, TranslatePipe]
+  selector: 'app-report-purchase',
+  templateUrl: './report-purchase.component.html',
+  styleUrls: ['./report-purchase.component.scss'],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
+  ],
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslatePipe,
+    MatFormField,
+    MatLabel,
+    MatSuffix,
+    MatInput,
+    MatDatepicker,
+    MatDatepickerInput,
+  ],
 })
-export class ReportPurchaseComponent {
+export class ReportPurchaseComponent implements OnInit {
   constructor(
-    private translateService: TranslateService,
     private apiService: ApiService,
-    private dynamicComponentService: DynamicComponentService,
     private alertService: AlertService,
-    private datePipe: DatePipe
+    private translateService: TranslateService,
   ) {}
 
-  isLoading: boolean = false;
-  isSubmitting: boolean = false;
-  columnNumber: number = 0;
-
-  transactions: number = 0;
-  chartDataSource: any[] = [];
-  supplierCount: number = 0;
-  totalPurchase: number = 0;
-  bestSupplier: string = 'N/A';
-  bestBrand: string = 'N/A';
-  bestType: string = 'N/A';
-  returnValue: number = 0;
-  returnCount: number = 0;
-
-  brandDataSource: any[] = [];
-  typeDataSource: any[] = [];
-  salesDataSource: any[] = [];
-  supplierDataSource: any[] = [];
+  isLoading = true;
+  isSubmitting = false;
 
   date = new FormControl(moment());
 
+  total = 0;
+  penerimaan = 0;
+  diskon = 0;
+
+  terbaikSupplier: string | null = null;
+  terbaikMerek: string | null = null;
+  terbaikTipe: string | null = null;
+
+  chart: any[] = [];
+
+  mode: 'grafik' | 'tabel' = 'grafik';
+
   ngOnInit(): void {
-    this.fetchSalesReport();
-
-    this.columnNumber = this.colNumber;
-
-    window.onresize = () => {
-      this.columnNumber = this.colNumber;
-    };
+    this.ambilData();
   }
 
-  fetchSalesReport(): void {
+  ambilData(): void {
     this.isLoading = true;
     this.apiService
       .post('report/purchase', {
@@ -90,14 +101,17 @@ export class ReportPurchaseComponent {
       })
       .subscribe({
         next: (data: any) => {
-          this.chartDataSource = data.chart;
-          this.transactions = data.goodReceiptCount;
-          this.supplierCount = data.supplier;
-          this.totalPurchase = data.total;
-
-          this.bestBrand = data.brand == null ? 'N/A' : data.brand;
-          this.bestType = data.type == null ? 'N/A' : data.type;
-          this.bestSupplier = data.supplier == null ? 'N/A' : data.supplier;
+          /* Bidangnya `value`; bentuk lama membaca `total` yang tak ada. */
+          this.total = Number(data.value);
+          this.penerimaan = Number(data.goodReceiptCount);
+          this.diskon = Number(data.discount);
+          this.chart = data.chart ?? [];
+          this.terbaikSupplier = data.supplier;
+          this.terbaikMerek = data.brand;
+          this.terbaikTipe = data.type;
+        },
+        error: (error) => {
+          this.alertService.showError(error);
         },
       })
       .add(() => {
@@ -105,43 +119,65 @@ export class ReportPurchaseComponent {
       });
   }
 
-  setMonthAndYear(
-    normalizedMonthAndYear: Moment,
-    datepicker: MatDatepicker<Moment>
-  ) {
-    const ctrlValue = this.date.value ?? moment();
-    ctrlValue.month(normalizedMonthAndYear.month());
-    ctrlValue.year(normalizedMonthAndYear.year());
-    this.date.setValue(ctrlValue);
+  setMonthAndYear(pilihan: Moment, datepicker: MatDatepicker<Moment>): void {
+    const nilai = this.date.value ?? moment();
+    nilai.month(pilihan.month());
+    nilai.year(pilihan.year());
+    this.date.setValue(nilai);
     datepicker.close();
-
-    this.fetchSalesReport();
+    this.ambilData();
   }
 
-  openDetail(detailType: string) {
-    if (!this.isLoading) {
-      switch (detailType) {
-        case 'supplier':
-          this.dynamicComponentService.createDynamicComponent(
-            SupplierPurchaseChartComponent,
-            this.supplierDataSource
-          );
-          break;
-        case 'brand':
-          this.dynamicComponentService.createDynamicComponent(
-            BrandPurchaseChartComponent,
-            this.brandDataSource
-          );
-          break;
-        case 'type':
-          this.dynamicComponentService.createDynamicComponent(
-            TypePurchaseChartComponent,
-            this.typeDataSource
-          );
-          break;
-      }
+  /* ---------------------------------------------------------------- */
+  /* Grafik harian                                                     */
+  /* ---------------------------------------------------------------- */
+
+  get hariDalamBulan(): number[] {
+    const jumlah = new Date(
+      this.date.value!.year(),
+      this.date.value!.month() + 1,
+      0,
+    ).getDate();
+    return Array.from({ length: jumlah }, (_, i) => i + 1);
+  }
+
+  dataHari(hari: number): any {
+    return this.chart.find((x) => x.date === hari);
+  }
+
+  private get maksNilai(): number {
+    return Math.max(...this.chart.map((x) => Number(x.value)), 1);
+  }
+
+  private get maksPenerimaan(): number {
+    return Math.max(...this.chart.map((x) => Number(x.goodReceiptCount)), 1);
+  }
+
+  tinggiNilai(hari: number): number {
+    const d = this.dataHari(hari);
+    return d ? Math.max((Number(d.value) / this.maksNilai) * 100, 1.5) : 0;
+  }
+
+  tinggiPenerimaan(hari: number): number {
+    const d = this.dataHari(hari);
+    return d
+      ? Math.max((Number(d.goodReceiptCount) / this.maksPenerimaan) * 100, 1.5)
+      : 0;
+  }
+
+  keteranganHari(hari: number): string {
+    const d = this.dataHari(hari);
+    if (!d) {
+      return `${hari}: —`;
     }
+    return `${hari}: Rp ${Number(d.value).toLocaleString('id-ID')} · ${
+      d.goodReceiptCount
+    } penerimaan`;
   }
+
+  /* ---------------------------------------------------------------- */
+  /* Unduh — bentuk berkasnya dipertahankan apa adanya                 */
+  /* ---------------------------------------------------------------- */
 
   download(): void {
     this.isSubmitting = true;
@@ -168,7 +204,7 @@ export class ReportPurchaseComponent {
 
           data.forEach((y: any, index: number) => {
             const excelDateSerialNumber = xlsx.SSF.parse_date_code(
-              new Date(y.date).getTime() / (24 * 60 * 60 * 1000) + 25569
+              new Date(y.date).getTime() / (24 * 60 * 60 * 1000) + 25569,
             );
 
             worksheetData.push([
@@ -185,7 +221,6 @@ export class ReportPurchaseComponent {
           });
 
           const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);
-          // Convert range to table for filter functionality
           const range = xlsx.utils.decode_range(worksheet['!ref']!);
           worksheet['!ref'] = xlsx.utils.encode_range({
             s: { r: 0, c: 0 },
@@ -209,7 +244,7 @@ export class ReportPurchaseComponent {
                 sz: 11,
               },
               fill: {
-                fgColor: { rgb: '000000' }, // Black background
+                fgColor: { rgb: '000000' },
                 patternType: 'solid',
               },
               alignment: {
@@ -219,33 +254,30 @@ export class ReportPurchaseComponent {
             };
           }
 
-          // Column widths and formatting
           worksheet['!cols'] = [
-            { wpx: 40 }, // No
-            { wpx: 90 }, // Date
-            { wpx: 120 }, // Name
-            { wpx: 120 }, // Invoice name
-            { wpx: 80 }, // Faktur
-            { wpx: 150 }, // Supplier name
-            { wpx: 80 }, // Value
-            { wpx: 80 }, // Discount
-            { wpx: 80 }, // Total
+            { wpx: 40 },
+            { wpx: 90 },
+            { wpx: 120 },
+            { wpx: 120 },
+            { wpx: 80 },
+            { wpx: 150 },
+            { wpx: 80 },
+            { wpx: 80 },
+            { wpx: 80 },
           ];
-          // Format dates (column B)
+
           for (let R = 1; R <= range.e.r; ++R) {
             const dateAddr = xlsx.utils.encode_cell({ r: R, c: 1 });
             const jsDate = new Date(data[R - 1].date);
             worksheet[dateAddr] = {
               t: 'd',
               v: jsDate,
-              z: 'dd-mmm-yyyy', // Format as "05-Jul-2023"
+              z: 'dd-mmm-yyyy',
             };
-            // Format currency (columns G, H, I)
             [6, 7, 8].forEach((col) => {
-              // Use numeric indices for columns G (6), H (7), I (8)
               const addr = xlsx.utils.encode_cell({ r: R, c: col });
               if (worksheet[addr]) {
-                worksheet[addr].z = '#,##0.00;[Red]-#,##0.00'; // Currency format
+                worksheet[addr].z = '#,##0.00;[Red]-#,##0.00';
               }
             });
           }
@@ -261,24 +293,23 @@ export class ReportPurchaseComponent {
 
           worksheet['!page'] = {
             orientation: 'landscape',
-            paperSize: 9, // A4 (9=Letter, 9=A4)
+            paperSize: 9,
             fitToPage: true,
             fitToWidth: 1,
             fitToHeight: 0,
           };
 
-          // Create workbook
           const workbook = xlsx.utils.book_new();
           xlsx.utils.book_append_sheet(workbook, worksheet, 'Purchase Report');
-          // Export file
           xlsx.writeFile(
             workbook,
-            `Purchase_Report_${new Date().getTime()}.xlsx`
+            `Purchase_Report_${new Date().getTime()}.xlsx`,
           );
 
-          // Show success message
           this.alertService.showSuccess(
-            this.translateService.instant('purchase-report__export__successful')
+            this.translateService.instant(
+              'purchase-report__export__successful',
+            ),
           );
         },
         error: (error) => {
@@ -288,24 +319,5 @@ export class ReportPurchaseComponent {
       .add(() => {
         this.isSubmitting = false;
       });
-  }
-
-  get colNumber(): number {
-    // If window width > 768, 3 columns, it > 512, 2 columns; else 1
-    if (window.innerWidth > 1200) {
-      return 3;
-    } else if (window.innerWidth > 768) {
-      return 2;
-    } else {
-      return 1;
-    }
-  }
-
-  get maxDayOnMonth(): number {
-    return new Date(
-      this.date.value!.year(),
-      this.date.value!.month() + 1,
-      0
-    ).getDate();
   }
 }

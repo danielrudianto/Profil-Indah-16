@@ -1,0 +1,27 @@
+<app-dialog-shell
+  icon="ph ph-ranking"
+  [heading]="data.judul | translate"
+  [lede]="''"
+  [submitLabel]="'general__close' | translate"
+  [submitting]="false"
+  [canSubmit]="true"
+  (submitted)="closeDialog()"
+  (close)="closeDialog()"
+>
+  <div class="peringkat" *ngIf="data.baris.length > 0">
+    <div class="peringkat__baris" *ngFor="let b of data.baris">
+      <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
+      <span
+        class="peringkat__bar"
+        [style.width.%]="lebar(b.value)"
+        aria-hidden="true"
+      ></span>
+      <span class="peringkat__persen">{{ persen(b.value) | number: '1.0-1' }}%</span>
+      <span class="peringkat__nilai">Rp {{ b.value | number: '1.0-0' }}</span>
+    </div>
+  </div>
+
+  <p class="peringkat__kosong" *ngIf="data.baris.length === 0">
+    {{ 'report__rank__empty' | translate }}
+  </p>
+</app-dialog-shell>
