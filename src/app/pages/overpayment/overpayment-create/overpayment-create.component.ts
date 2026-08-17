@@ -214,6 +214,32 @@ export class OverpaymentCreateComponent implements OnInit {
     );
   }
 
+  /**
+   * Daftar periksa "sebelum simpan" — pola yang sama dengan formulir buat
+   * lainnya. Dihitung dari keadaan form saat digambar, bukan disimpan.
+   */
+  get checklist(): { kunci: string; selesai: boolean }[] {
+    const meta = this.metaFormGroup;
+    const kembali = this.returnFormGroup;
+    return [
+      {
+        kunci: 'overpayment__create__check-receipt',
+        selesai:
+          !!meta.value.date &&
+          meta.controls['payment_method_id'].valid &&
+          Number(meta.value.value) > 0,
+      },
+      {
+        kunci: 'overpayment__create__check-plan',
+        selesai: !!kembali.value.return_payment_date,
+      },
+      {
+        kunci: 'overpayment__create__check-method',
+        selesai: this.metode !== '' && kembali.valid,
+      },
+    ];
+  }
+
   batal() {
     this.router.navigate(['/Overpayment']);
   }

@@ -30,6 +30,12 @@
           {{ 'overpayment__create__receipt' | translate }}
         </h2>
 
+        <!-- Penjelasan modulnya di muka — bukan formulir telanjang. -->
+        <p class="petunjuk">
+          <i class="ph ph-info" aria-hidden="true"></i>
+          {{ 'overpayment__create__note' | translate }}
+        </p>
+
         <div class="kartu__baris">
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
@@ -99,6 +105,11 @@
         <h2 class="kartu__label">
           {{ 'overpayment__create__return' | translate }}
         </h2>
+
+        <p class="petunjuk">
+          <i class="ph ph-info" aria-hidden="true"></i>
+          {{ 'overpayment__create__return-note' | translate }}
+        </p>
 
         <div class="field">
           <mat-form-field appearance="outline" class="w-100">
@@ -195,6 +206,20 @@
     <!-- Ringkasan dan aksi                                            -->
     <!-- ------------------------------------------------------------ -->
     <aside class="buat__samping">
+      <section class="kartu">
+        <h2 class="kartu__label">
+          {{ 'overpayment__create__before-save' | translate }}
+        </h2>
+        <ul class="periksa">
+          <li *ngFor="let c of checklist" [class.periksa--on]="c.selesai">
+            <span class="periksa__bulat" aria-hidden="true">
+              <i class="ph ph-check" *ngIf="c.selesai"></i>
+            </span>
+            {{ c.kunci | translate }}
+          </li>
+        </ul>
+      </section>
+
       <section class="kartu">
         <h2 class="kartu__label">
           {{ 'overpayment__create__summary' | translate }}
