@@ -1,94 +1,73 @@
-import { Component } from '@angular/core';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { DepositViewComponent } from '../deposit-view/deposit-view.component';
-import { MatDialog } from '@angular/material/dialog';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ApiService } from '../../../services/api.service';
-import { AlertService } from '../../../services/alert.service';
-import { debounceTime } from 'rxjs';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
+import { Component, OnInit } from '@angular/core';
 import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
+import { DepositViewComponent } from '../deposit-view/deposit-view.component';
+
+/**
+ * Daftar deposit yang menunggu konfirmasi — pola app-list-page.
+ *
+ * Tidak ada tombol tambah: deposit lahir dari formulir faktur penjualan
+ * (tipe transaksi deposit), bukan dari halaman ini. Yang bisa dilakukan
+ * di sini hanyalah meninjau dan masuk ke halaman konfirmasinya —
+ * dulu jalur konfirmasi bersembunyi di dalam dialog tinjau, sekarang
+ * tombolnya berdiri di barisnya sendiri.
+ */
 @Component({
-    selector: 'app-deposit-list',
-    templateUrl: './deposit-list.component.html',
-    imports: [MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, NgIf, NgFor, EmptyTableComponent, MatProgressSpinner, MatPaginator, DecimalPipe, DatePipe, TranslatePipe]
+  selector: 'app-deposit-list',
+  templateUrl: './deposit-list.component.html',
+  imports: [
+    ListPageComponent,
+    TabelKosongComponent,
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    DatePipe,
+    TranslatePipe,
+  ],
 })
-export class DepositListComponent {
+export class DepositListComponent implements OnInit {
   constructor(
-    private dialog: MatDialog,
     private apiService: ApiService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialog: MatDialog,
+    private router: Router,
   ) {}
 
-  isLoading: boolean = false;
+  isLoading = true;
   dataSource: any[] = [];
-  dataCount: number = 0;
-  page: number = 1;
-  pageSize: number = 10;
-
-  searchBarFormControl: FormControl = new FormControl('');
+  dataCount = 0;
+  page = 1;
+  pageSize = 10;
+  keyword = '';
 
   ngOnInit(): void {
-    this.fetch(1);
-
-    this.searchBarFormControl.valueChanges
-      .pipe(debounceTime(500))
-      .subscribe(() => {
-        this.fetch(1);
-      });
+    this.ambilData();
   }
 
-  changePage(event: any) {
-    if (event.pageIndex == this.page - 1) {
-      this.pageSize = event.pageSize;
-      this.fetch(1);
-    } else {
-      this.page = event.pageIndex + 1;
-      this.fetch();
-    }
-  }
+  lacakDeposit = (_: number, item: any): number => item.id;
 
-  viewDeposit(id: number) {
-    this.dialog
-      .open(DepositViewComponent, {
-        data: {
-          id: id,
-          noAction: false,
-          print: true,
-        },
-      })
-      .afterClosed()
-      .subscribe((data) => {
-        if (data === 'reject') {
-          const index = this.dataSource.findIndex((x) => x.id === id);
-          if (index != -1) {
-            this.dataSource.splice(index, 1);
-          }
-          this.dataCount--;
-        }
-      });
-  }
-
-  fetch(page: number = this.page) {
+  ambilData(): void {
     this.isLoading = true;
+
     this.apiService
-      .get(`sales-deposit`, {
-        keyword: this.searchBarFormControl.value,
+      .get('sales-deposit', {
+        keyword: this.keyword,
         page: this.page,
         pageSize: this.pageSize,
       })
       .subscribe({
         next: (data: any) => {
-          this.dataSource = data.data;
           this.dataCount = data.count;
+          this.dataSource = data.data;
         },
-        error: (error) => {
+        error: (error: any) => {
           this.alertService.showError(error);
         },
       })
@@ -97,9 +76,61 @@ export class DepositListComponent {
       });
   }
 
-  getValue(data: any[]) {
-    return data.reduce((a, b) => {
-      return a + b.quantity * (b.price - b.discount);
-    }, 0);
+  cari(kataKunci: string): void {
+    this.keyword = kataKunci;
+    this.page = 1;
+    this.ambilData();
+  }
+
+  resetPencarian(): void {
+    this.cari('');
+  }
+
+  bukaHalaman(halaman: number): void {
+    this.page = halaman;
+    this.ambilData();
+  }
+
+  gantiUkuran(ukuran: number): void {
+    this.pageSize = ukuran;
+    this.page = 1;
+    this.ambilData();
+  }
+
+  /** Nilai deposit: jumlah netto seluruh barangnya. */
+  nilai(item: any): number {
+    return (item.sales_deposit ?? []).reduce(
+      (a: number, b: any) => a + b.quantity * (b.price - b.discount),
+      0,
+    );
+  }
+
+  lihat(item: any): void {
+    this.dialog
+      .open(DepositViewComponent, {
+        data: {
+          id: item.id,
+          noAction: false,
+          print: true,
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data === 'reject') {
+          const index = this.dataSource.findIndex((x) => x.id === item.id);
+          if (index !== -1) {
+            this.dataSource.splice(index, 1);
+            this.dataCount = this.dataCount - 1;
+          }
+        }
+      });
+  }
+
+  konfirmasi(item: any): void {
+    this.router.navigate(['/Deposit/Confirm', item.id]);
+  }
+
+  keArsip(): void {
+    this.router.navigate(['/Deposit/Archive']);
   }
 }

@@ -1,58 +1,95 @@
-<div class="dashboard-card">
-  <mat-form-field class="w-100" appearance="outline">
-    <mat-label>{{ "general__search-bar" | translate }}</mat-label>
-    <input
-      matInput
-      #searchBar
-      placeholder="Search item by its reference or description"
-      [formControl]="searchBarFormControl"
-    />
-  </mat-form-field>
-  <div class="table-responsive">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>{{ "sales-deposit__archive__date" | translate }}</th>
-          <th>{{ "sales-deposit__archive__sales" | translate }}</th>
-          <th>{{ "sales-deposit__archive__document" | translate }}</th>
-          <th>{{ "sales-deposit__archive__customer" | translate }}</th>
-          <th>{{ "sales-deposit__archive__amount" | translate }}</th>
-        </tr>
-      </thead>
-      <tbody *ngIf="!isLoading && dataSource.length > 0">
-        <tr *ngFor="let data of dataSource" (click)="viewDeposit(data.id)">
-          <td>{{ data.date | date : "dd MMMM YY" }}</td>
-          <td>{{ data.sales ?? "INTERNAL" }}</td>
-          <td>{{ data.name }}</td>
-          <td>{{ data.customer == null ? "Retail" : data.customer.name }}</td>
-          <td>{{ getValue(data.sales_deposit) | number : "0.2-2" }}</td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="!isLoading && dataSource.length == 0">
-        <tr>
-          <td colspan="6">
-            <empty-table />
-          </td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="isLoading">
-        <tr>
-          <td colspan="6" class="text-center">
-            <mat-spinner id="spinner"></mat-spinner>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <mat-paginator
-    class="paginator"
-    [pageIndex]="page - 1"
-    [length]="dataCount"
-    [pageSizeOptions]="[10, 25, 50]"
-    [pageSize]="pageSize"
-    (page)="changePage($event)"
-    aria-label="Select page"
-    *ngIf="!isLoading"
-  >
-  </mat-paginator>
-</div>
+<app-list-page
+  [heading]="'deposit__list__title' | translate"
+  [lede]="'deposit__list__lede' | translate"
+  [searchPlaceholder]="'deposit__list__search' | translate"
+  [keyword]="keyword"
+  [page]="page"
+  [pageSize]="pageSize"
+  [total]="dataCount"
+  [loading]="isLoading"
+  (search)="cari($event)"
+  (pageChange)="bukaHalaman($event)"
+  (pageSizeChange)="gantiUkuran($event)"
+  (refresh)="ambilData()"
+>
+  <ng-container aksi>
+    <!-- Deposit lahir dari formulir faktur; di sini hanya jalan ke arsipnya. -->
+    <button type="button" class="aksi-hantu" (click)="keArsip()">
+      <i class="ph ph-archive" aria-hidden="true"></i>
+      {{ 'deposit__archive' | translate }}
+    </button>
+  </ng-container>
+
+  <table class="tabel">
+    <thead>
+      <tr>
+        <th>{{ 'sales-deposit__archive__date' | translate }}</th>
+        <th>{{ 'sales-deposit__archive__document' | translate }}</th>
+        <th>{{ 'sales-deposit__archive__customer' | translate }}</th>
+        <th>{{ 'sales-deposit__archive__sales' | translate }}</th>
+        <th class="tabel__nilai-kepala">
+          {{ 'sales-deposit__archive__amount' | translate }}
+        </th>
+        <th class="tabel__aksi-kepala">
+          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!isLoading && dataSource.length > 0">
+      <tr *ngFor="let item of dataSource; trackBy: lacakDeposit">
+        <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
+        <td class="tabel__utama">{{ item.name }}</td>
+        <td>
+          {{ item.customer?.name ?? ('sales-invoice__retail' | translate) }}
+        </td>
+        <td class="tabel__redup">{{ item.sales || 'INTERNAL' }}</td>
+        <td class="tabel__nilai">
+          Rp {{ nilai(item) | number: '1.0-0' }}
+        </td>
+        <td class="tabel__aksi">
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="lihat(item)"
+            [title]="'general__view' | translate"
+            [attr.aria-label]="'general__view' | translate"
+          >
+            <i class="ph ph-eye" aria-hidden="true"></i>
+          </button>
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="konfirmasi(item)"
+            [title]="'deposit__list__confirm' | translate"
+            [attr.aria-label]="'deposit__list__confirm' | translate"
+          >
+            <i class="ph ph-seal-check" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="isLoading">
+      <tr>
+        <td colspan="6" class="tabel__pesan">
+          {{ 'general__loading' | translate }}
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="!isLoading && dataSource.length === 0">
+      <tr>
+        <td colspan="6">
+          <app-tabel-kosong
+            ikon="ph-piggy-bank"
+            [judul]="'deposit__list__empty__title' | translate"
+            [penjelasan]="'deposit__list__empty__desc' | translate"
+            [kataKunci]="keyword"
+            (reset)="resetPencarian()"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</app-list-page>

@@ -1,27 +1,15 @@
 import { Component } from '@angular/core';
-import { FeatureBackgroundComponent } from '../../components/feature-background/feature-background.component';
-import { TransactionHeaderComponent } from '../../components/transaction-header/transaction-header.component';
 import { RouterOutlet } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
 
+/**
+ * Shell deposit — kini hanya penampung rute anaknya, mengikuti shell
+ * faktur penjualan dan retur penjualan. Deposit dibuat dari formulir
+ * faktur (tipe transaksi), jadi anak-anaknya: daftar menunggu, arsip,
+ * dan halaman konfirmasi.
+ */
 @Component({
-    selector: 'app-deposit',
-    templateUrl: './deposit.component.html',
-    styleUrls: ['./deposit.component.scss'],
-    imports: [FeatureBackgroundComponent, TransactionHeaderComponent, RouterOutlet, TranslatePipe]
+  selector: 'app-deposit',
+  templateUrl: './deposit.component.html',
+  imports: [RouterOutlet],
 })
-export class DepositComponent {
-  constructor() {}
-  availableMenus = [
-    {
-      label: 'deposit__archive',
-      link: 'Archive',
-      icon: 'folder',
-    },
-    {
-      label: 'deposit__list',
-      link: '',
-      icon: 'list',
-    },
-  ];
-}
+export class DepositComponent {}

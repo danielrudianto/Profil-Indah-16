@@ -1,232 +1,130 @@
-import { DatePipe, Location, NgIf, NgFor, DecimalPipe } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { Component, OnInit } from '@angular/core';
+import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { Hotkey, HotkeysService } from 'angular2-hotkeys';
-import { Subject } from 'rxjs';
-import { CustomerModel } from 'src/app/models/customer.model';
-import { PaymentSelectorComponent } from 'src/app/components/payment-selector/payment-selector.component';
-import { SalesmanSelectorComponent } from 'src/app/components/salesman-selector/salesman-selector.component';
-import { UpdateProductSalesPriceComponent } from 'src/app/components/update-product-sales-price/update-product-sales-price.component';
+import { NgxMaskDirective } from 'ngx-mask';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { v4 } from 'uuid';
-import { DepositConfirmUpdatePaymentComponent } from './deposit-confirm-update-payment/deposit-confirm-update-payment.component';
-import { MatDialog } from '@angular/material/dialog';
-import { VerticalDividerComponent } from '../../../components/vertical-divider/vertical-divider.component';
-import { BoxStepperComponent } from '../../../components/box-stepper/box-stepper.component';
-import { MatFormField, MatLabel, MatSuffix, MatPrefix } from '@angular/material/form-field';
+import { PageTitleService } from 'src/app/services/page-title.service';
+import { PaymentSelectorComponent } from 'src/app/components/payment-selector/payment-selector.component';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { NgxMaskDirective } from 'ngx-mask';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
+import {
+  MatDatepicker,
+  MatDatepickerInput,
+} from '@angular/material/datepicker';
 
+/**
+ * Konfirmasi deposit — kerangka form-buat 5a.
+ *
+ * Mengeksekusi deposit menjadi faktur: barang, diskon, pengiriman, dan
+ * servis dibaca apa adanya dari depositnya dan TIDAK bisa diubah di sini —
+ * muatan POST /sales-deposit/confirm memang hanya id, tanggal faktur, dan
+ * pembayaran. Bentuk lamanya menggambar checkbox "masuk faktur" per barang
+ * yang tidak pernah dikirim ke mana-mana.
+ *
+ * Pembayaran dua lapis: yang tercatat saat deposit dibuat (baca saja) dan
+ * pelunasan baru yang ditambahkan sekarang. Bentuk lamanya menjumlahkan
+ * pembayaran dari kontrol `amount` yang tidak pernah ada — barisnya
+ * bernama `value` — sehingga totalnya NaN, penjagaan "pembayaran melebihi
+ * tagihan" tidak pernah menyala, dan is_paid selalu terkirim false.
+ */
 @Component({
-    selector: 'app-deposit-confirm',
-    templateUrl: './deposit-confirm.component.html',
-    styleUrls: ['./deposit-confirm.component.scss'],
-    imports: [VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, NgFor, EmptyTableComponent, NgxMaskDirective, MatPrefix, MatButton, MatIconButton, MatIcon, DecimalPipe, DatePipe, TranslatePipe]
+  selector: 'app-deposit-confirm',
+  templateUrl: './deposit-confirm.component.html',
+  styleUrls: ['./deposit-confirm.component.scss'],
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    DatePipe,
+    ReactiveFormsModule,
+    NgxMaskDirective,
+    TranslatePipe,
+    MatFormField,
+    MatLabel,
+    MatSuffix,
+    MatInput,
+    MatDatepicker,
+    MatDatepickerInput,
+  ],
+  providers: [DatePipe],
 })
-export class DepositConfirmComponent {
+export class DepositConfirmComponent implements OnInit {
   constructor(
-    private formBuilder: FormBuilder,
-    private alertService: AlertService,
     private apiService: ApiService,
-    private _hotkeysService: HotkeysService,
-    private router: Router,
+    private alertService: AlertService,
+    private formBuilder: FormBuilder,
+    private translateService: TranslateService,
     private datePipe: DatePipe,
     private sheet: MatBottomSheet,
-    private dynamicComponentService: DynamicComponentService,
     private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService,
-    private location: Location,
-    private dialog: MatDialog
-  ) {
-    this._hotkeysService.add([
-      new Hotkey('alt+s', (event: KeyboardEvent): boolean => {
-        this.submitForm();
-        return false;
-      }),
-    ]);
+    private router: Router,
+    private pageTitleService: PageTitleService,
+  ) {}
 
-    const url = this.router.url;
-    this.isAdministrator = url.split('/')[1] == 'Administrator';
-  }
-
-  salesmen: string[] = [];
-  isSubmitting: boolean = false;
-  isAdministrator: boolean = false;
+  isLoading = true;
+  isSubmitting = false;
   paymentOptions: any[] = [];
 
-  checkDiscount: ValidatorFn = (
-    group: AbstractControl
-  ): ValidationErrors | null => {
-    let total = parseFloat(group.get('total')?.value ?? 0);
-    let discount = parseFloat(group.get('discount')?.value ?? 0);
-    return discount <= total ? null : { error: true };
-  };
-
-  validateTotal: ValidatorFn = (
-    group: AbstractControl
-  ): ValidationErrors | null => {
-    const total = Number(group.get('total')?.value);
-    const service = Number(group.get('service')?.value);
-    const discount = Number(group.get('discount')?.value);
-    const delivery = Number(group.get('delivery')?.value);
-
-    const grand = total + delivery + service - discount;
-
-    if (grand <= 0) {
-      return {
-        sales: true,
-      };
-    } else {
-      return null;
-    }
-  };
-
-  NotZero: ValidatorFn = (
-    control: AbstractControl
-  ): ValidationErrors | null => {
-    return Number(control.value) != 0 ? null : { error: true };
-  };
+  /** Data deposit apa adanya — sumber tampilan baca-saja. */
+  deposit: any = null;
 
   metaFormGroup: FormGroup = new FormGroup({
-    uuid: new FormControl(v4()),
-    name: new FormControl('', Validators.required),
-    customer: new FormControl('Retail customer', Validators.required),
-    customer_id: new FormControl(0, Validators.required),
     date: new FormControl(new Date(), Validators.required),
-    sales: new FormControl('', Validators.required),
-  });
-
-  billFormGroup: FormGroup = new FormGroup({
-    items: new FormArray([]),
   });
 
   paymentsFormGroup: FormGroup = new FormGroup({
-    sales_invoice_payment: new FormArray([]),
-    sales_deposit_payment: new FormArray([]),
+    pembayaran_baru: new FormArray([]),
   });
 
-  valueFormGroup: FormGroup = new FormGroup(
-    {
-      discount: new FormControl(0, [Validators.required, Validators.min(0)]),
-      delivery: new FormControl(0, [Validators.required, Validators.min(0)]),
-      service: new FormControl(0, [Validators.required, Validators.min(0)]),
-      before: new FormControl(0, [Validators.required, Validators.min(0)]),
-      total: new FormControl(0, [Validators.required, Validators.min(0)]),
-    },
-    {
-      validators: this.validateTotal,
-    }
-  );
-
-  @ViewChild('trigger') trigger: MatAutocompleteTrigger | undefined;
-  @ViewChild('input') input: any;
-
   ngOnInit(): void {
-    const id = this.activatedRoute.snapshot.params['id'];
-
-    this.apiService.get(`sales-deposit/${id}`).subscribe({
-      next: (result: any) => {
-        if (result.is_delete) {
-          this.alertService.showSuccess(
-            this.translateService.instant('deposit__confirm__already-confirmed')
-          );
-          this.location.back();
-          return;
-        }
-
-        // Set up the meta data from deposit
-        this.metaFormGroup.patchValue({
-          customer: result.customer == null ? 'Retail' : result.customer.name,
-          customer_id: result.customer_id == null ? 0 : result.customer_id,
-          name: result.name,
-          sales: result.sales == null ? 'INTERNAL' : result.sales,
-        });
-
-        this.valueFormGroup.patchValue({
-          discount: result.discount,
-          delivery: result.delivery,
-          service: result.service,
-          before: result.sales_deposit.reduce((a: any, b: any) => {
-            return a + b.price * b.quantity;
-          }, 0),
-          total: result.sales_deposit.reduce((a: any, b: any) => {
-            return a + (b.price - b.discount) * b.quantity;
-          }, 0),
-        });
-
-        // Insert the items to the form Array
-        (result.sales_deposit as any[]).forEach((x) => {
-          this.t.push(
-            this.formBuilder.group({
-              id: [x.id],
-              product_id: [x.product_id],
-              reference: [x.product.reference],
-              description: [x.product.description],
-              quantity: [
-                Number(x.quantity),
-                [Validators.required, Validators.min(0.1)],
-              ],
-              price: [
-                Number(x.price),
-                [Validators.required, Validators.min(0)],
-              ],
-              discount: [
-                Number(x.discount),
-                [Validators.required, Validators.min(0)],
-              ],
-              unit: [
-                x.product_unit_id == null
-                  ? x.product.unit
-                  : x.product_unit.unit,
-              ],
-              conversion: [
-                x.product_unit_id == null ? 1 : x.product_unit.conversion,
-              ],
-              default_unit: [
-                x.product_unit == null ? x.product.unit : x.product_unit.unit,
-              ],
-            })
-          );
-        });
-
-        // Insert the payments to the form Array
-        result.sales_deposit_payment.forEach((item: any) => {
-          this.sales_deposit_payment.push(
-            this.formBuilder.group({
-              id: [item.id, Validators.required],
-              payment_method_id: [item.payment_method_id],
-              date: new FormControl(item.date, Validators.required),
-              payment_method_name: [
-                item.payment_method == null ? 'Cash' : item.payment_method.name,
-                Validators.required,
-              ],
-              payment_method_description: [
-                item.payment_method == null
-                  ? ''
-                  : item.payment_method.description,
-              ],
-              value: [item.value, [Validators.required, Validators.min(0.01)]],
-            })
-          );
-        });
-      },
+    /* Jalan pulang ke daftar deposit ada di topbar, seperti penerimaan barang. */
+    this.pageTitleService.pasangKonteks({
+      kembaliLabel: 'deposit__list__title',
+      kembaliJalur: '/Deposit',
+      tag: 'deposit__confirm__title',
     });
 
+    const id = this.activatedRoute.snapshot.params['id'];
+
     this.apiService
-      .get('payment-method/all', {
-        keyword: '',
-        page: 1,
+      .get(`sales-deposit/${id}`)
+      .subscribe({
+        next: (data: any) => {
+          if (data.is_delete || data.isDelete) {
+            this.alertService.showSuccess(
+              this.translateService.instant(
+                'deposit__confirm__already-confirmed',
+              ),
+            );
+            this.router.navigate(['/Deposit']);
+            return;
+          }
+
+          this.deposit = data;
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+          this.router.navigate(['/Deposit']);
+        },
       })
+      .add(() => {
+        this.isLoading = false;
+      });
+
+    this.apiService
+      .get('payment-method/all', { keyword: '', page: 1 })
       .subscribe({
         next: (data: any) => {
           this.paymentOptions = data;
@@ -234,196 +132,178 @@ export class DepositConfirmComponent {
       });
   }
 
-  get f() {
-    return this.billFormGroup.controls;
-  }
-  get t() {
-    return this.f['items'] as FormArray;
+  get p(): FormArray {
+    return this.paymentsFormGroup.controls['pembayaran_baru'] as FormArray;
   }
 
-  get g() {
-    return this.paymentsFormGroup.controls;
+  getFormGroupAtPayment(i: number): FormGroup {
+    return this.p.at(i) as FormGroup;
   }
 
-  get sales_invoice_payment() {
-    return this.g['sales_invoice_payment'] as FormArray;
-  }
+  /* ---------------------------------------------------------------- */
+  /* Nilai-nilai                                                       */
+  /* ---------------------------------------------------------------- */
 
-  get sales_deposit_payment() {
-    return this.g['sales_deposit_payment'] as FormArray;
-  }
-
-  get totalPayment(): number {
-    return (
-      this.sales_invoice_payment.controls.reduce((a, b) => {
-        return a + Number(b.get('amount')?.value);
-      }, 0) +
-      this.sales_deposit_payment.controls.reduce((a, b) => {
-        return a + Number(b.get('amount')?.value);
-      }, 0)
+  get nilaiBarang(): number {
+    return (this.deposit?.sales_deposit ?? []).reduce(
+      (a: number, b: any) => a + (b.price - b.discount) * b.quantity,
+      0,
     );
   }
 
-  get isAllChecked(): boolean {
-    return this.t.controls.every((item) => item.get('checked')?.value);
+  totalBaris(x: any): number {
+    return (x.price - x.discount) * x.quantity;
   }
 
-  /**
-   * Calculates the total bill based on the inputted value.
-   * @returns The total bill, including delivery and service fee, but
-   *          excluding discount.
-   */
-  get totalBill() {
-    // Calculate the total bill by adding the total value, delivery fee,
-    // and service fee. Then, subtract the discount from the result.
+  satuanBaris(x: any): string {
+    return x.product_unit == null ? x.product.unit : x.product_unit.unit;
+  }
+
+  /** Total tagihan: barang netto + pengiriman + servis − diskon dokumen. */
+  get totalTagihan(): number {
+    if (this.deposit == null) {
+      return 0;
+    }
+
     return (
-      this.valueFormGroup.controls['total'].value +
-      this.valueFormGroup.controls['delivery'].value +
-      this.valueFormGroup.controls['service'].value -
-      this.valueFormGroup.controls['discount'].value
+      this.nilaiBarang +
+      Number(this.deposit.delivery ?? 0) +
+      Number(this.deposit.service ?? 0) -
+      Number(this.deposit.discount ?? 0)
     );
   }
 
-  openPaymentSelector() {
+  get sudahDibayar(): number {
+    return (this.deposit?.sales_deposit_payment ?? []).reduce(
+      (a: number, b: any) => a + Number(b.value),
+      0,
+    );
+  }
+
+  get pembayaranBaru(): number {
+    return this.p.controls.reduce(
+      (a, b) => a + Number(b.get('value')?.value ?? 0),
+      0,
+    );
+  }
+
+  get totalPembayaran(): number {
+    return this.sudahDibayar + this.pembayaranBaru;
+  }
+
+  get sisa(): number {
+    return this.totalTagihan - this.totalPembayaran;
+  }
+
+  get lunas(): boolean {
+    return this.totalPembayaran === this.totalTagihan;
+  }
+
+  /** Pembayaran tidak boleh melebihi tagihan — server menolaknya juga. */
+  get pembayaranSah(): boolean {
+    return this.totalPembayaran <= this.totalTagihan;
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Pembayaran baru                                                   */
+  /* ---------------------------------------------------------------- */
+
+  openPaymentSelector(): void {
     this.sheet
       .open(PaymentSelectorComponent, {
         data: this.paymentOptions,
       })
       .afterDismissed()
-      .subscribe((data) => {
-        if (data) {
-          const exists = this.checkExistingPayment(data.id);
-          if (exists) {
-            this.alertService.showSuccess(
-              this.translateService.instant('general__payment__exists')
-            );
-            return;
-          }
+      .subscribe((data: any) => {
+        if (!data) {
+          return;
+        }
 
-          this.sales_invoice_payment.push(
-            this.formBuilder.group({
-              payment_method_id: [data.id, Validators.required],
-              name: [data.name, Validators.required],
-              description: [data.description, Validators.required],
-              date: new FormControl(new Date(), Validators.required),
-              value: [0, [Validators.required, Validators.min(0.01)]],
-            })
+        const sudahAda = this.p.controls.some(
+          (x) => x.get('payment_method_id')?.value == data.id,
+        );
+        if (sudahAda) {
+          this.alertService.showSuccess(
+            this.translateService.instant('general__payment__exists'),
           );
+          return;
         }
+
+        /* Nilai awal: sisa tagihan, seperti kartu pembayaran faktur. */
+        this.p.push(
+          this.formBuilder.group({
+            payment_method_id: [data.id, Validators.required],
+            name: [data.name],
+            description: [data.description],
+            value: [
+              Math.max(this.sisa, 0),
+              [Validators.required, Validators.min(0.01)],
+            ],
+          }),
+        );
       });
   }
 
-  private checkExistingPayment(paymentMethodID: number | null) {
-    const existing = this.sales_invoice_payment.controls.filter((x) => {
-      return x.get('payment_method_id')?.value == paymentMethodID;
-    });
-
-    return existing.length > 0;
+  deletePayment(i: number): void {
+    this.p.removeAt(i);
   }
 
-  updatePaymentMethod(i: number) {
-    this.dialog
-      .open(DepositConfirmUpdatePaymentComponent, {
-        data: this.sales_invoice_payment.at(i).value,
-      })
-      .afterClosed()
-      .subscribe((data) => {
-        if (data) {
-          this.sales_invoice_payment.at(i).patchValue({
-            value: Number(data.value),
-            date: new Date(data.date),
-          });
-        }
-      });
+  /* ---------------------------------------------------------------- */
+  /* Kirim                                                             */
+  /* ---------------------------------------------------------------- */
+
+  get bisaSimpan(): boolean {
+    return (
+      !this.isSubmitting &&
+      !this.isLoading &&
+      this.deposit != null &&
+      this.metaFormGroup.valid &&
+      this.paymentsFormGroup.valid &&
+      this.pembayaranSah
+    );
   }
 
-  getFormGroupAt(i: number) {
-    return this.t.at(i) as FormGroup;
+  batal(): void {
+    this.router.navigate(['/Deposit']);
   }
 
-  getFormGroupAtPayment(i: number) {
-    return this.sales_deposit_payment.at(i) as FormGroup;
-  }
-
-  getFormGroupAtNewPayment(i: number) {
-    return this.sales_invoice_payment.at(i) as FormGroup;
-  }
-
-  deletePayment(i: number) {
-    this.sales_invoice_payment.removeAt(i);
-  }
-
-  get isFormValid(): boolean {
-    let validation = true;
-    if (!this.metaFormGroup.valid) {
-      validation = false;
-    }
-
-    if (!this.valueFormGroup.valid) {
-      validation = false;
-    }
-
-    if (!this.paymentsFormGroup.valid) {
-      validation = false;
-    }
-
-    if (this.totalPayment > this.totalBill) {
-      validation = false;
-    }
-
-    return validation;
-  }
-
-  get isPaymentFormGroupValid(): boolean {
-    let validation = true;
-
-    if (this.totalPayment > this.totalBill) {
-      validation = false;
-    }
-    return validation;
-  }
-
-  submitForm() {
-    this.isSubmitting = true;
-
-    // If total payment is greater than total bill then show error
-    if (this.totalPayment > this.totalBill) {
-      this.alertService.showError('deposit__confirm__total-payment');
-      this.isSubmitting = false;
+  submit(): void {
+    if (!this.bisaSimpan) {
       return;
     }
 
+    const tanggalFaktur = this.datePipe.transform(
+      this.metaFormGroup.value.date,
+      'yyyy-MM-dd',
+    );
+
+    this.isSubmitting = true;
     this.apiService
       .post('sales-deposit/confirm', {
         id: Number(this.activatedRoute.snapshot.params['id']),
-        date: this.datePipe.transform(
-          this.metaFormGroup.controls['date'].value,
-          'yyyy-MM-dd'
-        ),
+        date: tanggalFaktur,
         sales_invoice_payment: [
-          ...this.sales_deposit_payment.controls.map((x) => {
-            return {
-              payment_method_id: x.get('payment_method_id')?.value,
-              value: Number(x.get('value')?.value),
-              date: this.datePipe.transform(x.get('date')?.value, 'yyyy-MM-dd'),
-            };
-          }),
-          ...this.sales_invoice_payment.controls.map((x) => {
-            return {
-              date: this.datePipe.transform(x.get('date')?.value, 'yyyy-MM-dd'),
-              payment_method_id: x.get('payment_method_id')?.value,
-              value: Number(x.get('value')?.value),
-            };
-          }),
+          /* Pembayaran lama memakai tanggalnya sendiri… */
+          ...(this.deposit.sales_deposit_payment ?? []).map((x: any) => ({
+            payment_method_id: x.payment_method_id,
+            value: Number(x.value),
+            date: this.datePipe.transform(x.date, 'yyyy-MM-dd'),
+          })),
+          /* …pelunasan baru tercatat pada tanggal fakturnya. */
+          ...this.p.controls.map((x) => ({
+            payment_method_id: x.get('payment_method_id')?.value,
+            value: Number(x.get('value')?.value),
+            date: tanggalFaktur,
+          })),
         ],
-        is_paid: this.totalPayment == this.totalBill,
+        is_paid: this.lunas,
       })
       .subscribe({
         next: (_) => {
           this.alertService.showSuccess(
-            this.translateService.instant('deposit__confirm__success')
+            this.translateService.instant('deposit__confirm__success'),
           );
-          this.location.back();
+          this.router.navigate(['/Deposit']);
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -432,23 +312,5 @@ export class DepositConfirmComponent {
       .add(() => {
         this.isSubmitting = false;
       });
-  }
-
-  canExit() {
-    if (
-      this.billFormGroup.dirty ||
-      this.metaFormGroup.dirty ||
-      this.valueFormGroup.dirty
-    ) {
-      if (
-        confirm('All input will be deleted. Are you sure to exit this page?')
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return true;
-    }
   }
 }

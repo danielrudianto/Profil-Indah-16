@@ -1,145 +1,174 @@
+<!--
+  Dua tahap seperti seluruh arsip: app-archives memilih bulan lebih dulu,
+  baru daftarnya muncul.
+-->
 <app-archives
   [@slideInOutAnimation]="mode == 0 ? 'in' : 'out'"
   route="sales-deposit"
   (onMonthSelected)="onMonthSelected($event)"
 />
 
-<div
-  class="container boundary-container"
-  [@slideInOutAnimation]="mode == 1 ? 'in' : 'out'"
->
-  <div class="row">
-    <div class="col-12">
-      <div class="dashboard-card">
-        <app-archive-search
-          [isFilterAvailable]="true"
-          (onQueryChanged)="onQueryChanged($event)"
-          (onFilterButtonClicked)="openFilter()"
-        />
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th style="width: 250px" (click)="changeSortBy('date')">
-                  <div class="d-flex align-items-center">
-                    <span>{{
-                      "sales-deposit__archive__date" | translate
-                    }}</span>
-                    <mat-icon
-                      class="icon-display"
-                      [ngClass]="{
-                        asc: sortBy === 'date' && sortDirection === 'asc',
-                        desc: sortBy === 'date' && sortDirection === 'desc'
-                      }"
-                      >arrow_downward</mat-icon
-                    >
-                  </div>
-                </th>
-                <th style="width: 250px" (click)="changeSortBy('name')">
-                  <div class="d-flex align-items-center">
-                    <span>
-                      {{ "sales-deposit__archive__name" | translate }}</span
-                    >
-                    <mat-icon
-                      class="icon-display"
-                      [ngClass]="{
-                        asc: sortBy === 'name' && sortDirection === 'asc',
-                        desc: sortBy === 'name' && sortDirection === 'desc'
-                      }"
-                      >arrow_downward</mat-icon
-                    >
-                  </div>
-                </th>
-                <th style="width: 250px" (click)="changeSortBy('customer')">
-                  <div class="d-flex align-items-center">
-                    <span>
-                      {{ "sales-deposit__archive__customer" | translate }}</span
-                    >
-                    <mat-icon
-                      class="icon-display"
-                      [ngClass]="{
-                        asc: sortBy === 'customer' && sortDirection === 'asc',
-                        desc: sortBy === 'customer' && sortDirection === 'desc'
-                      }"
-                      >arrow_downward</mat-icon
-                    >
-                  </div>
-                </th>
-                <th style="width: 200px" (click)="changeSortBy('sales')">
-                  <div class="d-flex align-items-center">
-                    <span>
-                      {{ "sales-deposit__archive__sales" | translate }}</span
-                    >
-                    <mat-icon
-                      class="icon-display"
-                      [ngClass]="{
-                        asc: sortBy === 'sales' && sortDirection === 'asc',
-                        desc: sortBy === 'sales' && sortDirection === 'desc'
-                      }"
-                      >arrow_downward</mat-icon
-                    >
-                  </div>
-                </th>
-                <th style="width: 150px">
-                  <div class="d-flex align-items-center">
-                    <span>
-                      {{ "sales-deposit__archive__status" | translate }}</span
-                    >
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody *ngIf="isLoading">
-              <tr>
-                <td colspan="5">
-                  <mat-spinner id="spinner"></mat-spinner>
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length == 0">
-              <tr>
-                <td colspan="5">
-                  <empty-table />
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr
-                *ngFor="let item of dataSource; index as i"
-                (click)="viewArchive(item.id)"
-              >
-                <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
-                <td>{{ item.name }}</td>
-                <td>
-                  {{ item.customer == null ? "Retail" : item.customer.name }}
-                </td>
-                <td>{{ item.sales == null ? "N/A" : item.sales }}</td>
-                <td>
-                  {{
-                    (item.isDelete
-                      ? "sales-deposit__archive__deleted"
-                      : "sales-deposit__archive__active"
-                    ) | translate
-                  }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="paginator__wrapper">
-          <button class="action-button p-relative" (click)="backToYear()">
-            {{ "general__archive__back-to-previous" | translate }}
-          </button>
-          <mat-paginator
-            [length]="dataCount"
-            [pageSize]="pageSize"
-            [pageSizeOptions]="[10, 25, 50]"
-            [pageIndex]="page - 1"
-            [pageSizeOptions]="[10, 25, 50]"
-            (page)="changePage($event)"
-          />
-        </div>
-      </div>
+<div [@slideInOutAnimation]="mode == 1 ? 'in' : 'out'">
+  <app-list-page
+    [heading]="'deposit__archive__title' | translate"
+    [lede]="'deposit__archive__lede' | translate"
+    [searchPlaceholder]="'deposit__archive__search' | translate"
+    [keyword]="keyword"
+    [addLabel]="'deposit__list__title' | translate"
+    [page]="page"
+    [pageSize]="pageSize"
+    [total]="dataCount"
+    [loading]="isLoading"
+    [showPageSize]="false"
+    (search)="onQueryChanged($event)"
+    (pageChange)="bukaHalaman($event)"
+    (add)="keDaftar()"
+    (refresh)="fetchSelectedMonth()"
+  >
+    <ng-container aksi>
+      <button type="button" class="aksi-hantu" (click)="backToYear()">
+        <i class="ph ph-arrow-u-up-left" aria-hidden="true"></i>
+        {{ 'deposit__back-to-archive' | translate }}
+      </button>
+
+      <button
+        type="button"
+        class="aksi-ikon"
+        (click)="openFilter()"
+        [title]="'general__filter' | translate"
+        [attr.aria-label]="'general__filter' | translate"
+      >
+        <i class="ph ph-funnel" aria-hidden="true"></i>
+      </button>
+    </ng-container>
+
+    <div class="saringan" *ngIf="kapsul.length > 0">
+      <span class="saringan__kapsul" *ngFor="let k of kapsul">
+        {{ k.teks }}
+        <button
+          type="button"
+          (click)="lepasKapsul(k.kunci)"
+          [attr.aria-label]="'general__delete' | translate"
+        >
+          <i class="ph ph-x" aria-hidden="true"></i>
+        </button>
+      </span>
+
+      <button
+        type="button"
+        class="saringan__bersih"
+        (click)="hapusSemuaSaringan()"
+      >
+        {{ 'deposit__filter__clear' | translate }}
+      </button>
     </div>
-  </div>
+
+    <table class="tabel">
+      <thead>
+        <tr>
+          <th class="tabel__urut">
+            <button type="button" (click)="changeSortBy('date')">
+              {{ 'sales-deposit__archive__date' | translate }}
+              <i class="ph" [ngClass]="ikonUrut('date')" aria-hidden="true"></i>
+            </button>
+          </th>
+          <th class="tabel__urut">
+            <button type="button" (click)="changeSortBy('name')">
+              {{ 'sales-deposit__archive__document' | translate }}
+              <i class="ph" [ngClass]="ikonUrut('name')" aria-hidden="true"></i>
+            </button>
+          </th>
+          <th class="tabel__urut">
+            <button type="button" (click)="changeSortBy('customer')">
+              {{ 'sales-deposit__archive__customer' | translate }}
+              <i
+                class="ph"
+                [ngClass]="ikonUrut('customer')"
+                aria-hidden="true"
+              ></i>
+            </button>
+          </th>
+          <th class="tabel__urut">
+            <button type="button" (click)="changeSortBy('sales')">
+              {{ 'sales-deposit__archive__sales' | translate }}
+              <i
+                class="ph"
+                [ngClass]="ikonUrut('sales')"
+                aria-hidden="true"
+              ></i>
+            </button>
+          </th>
+          <th>{{ 'sales-deposit__archive__status' | translate }}</th>
+          <th class="tabel__aksi-kepala">
+            <span class="sr-only">{{ 'general__actions' | translate }}</span>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody *ngIf="!isLoading && dataSource.length > 0">
+        <tr *ngFor="let item of dataSource; trackBy: lacakDeposit">
+          <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
+          <td class="tabel__utama">{{ item.name }}</td>
+          <td>
+            {{ item.customer?.name ?? ('sales-invoice__retail' | translate) }}
+          </td>
+          <td class="tabel__redup">{{ item.sales || 'INTERNAL' }}</td>
+          <td>
+            <!--
+              Tiga keadaan, tiga wajah: menunggu (jam, garis), dikonfirmasi
+              (centang, hijau), ditolak (silang, garis redup). Dibedakan
+              warna DAN ikon, bukan warna saja.
+            -->
+            <span
+              class="pill"
+              [class.pill--hijau]="keadaan(item) === 'dikonfirmasi'"
+              [class.pill--garis]="keadaan(item) !== 'dikonfirmasi'"
+            >
+              <i
+                class="ph-fill"
+                [class.ph-clock]="keadaan(item) === 'menunggu'"
+                [class.ph-check-circle]="keadaan(item) === 'dikonfirmasi'"
+                [class.ph-x-circle]="keadaan(item) === 'ditolak'"
+                aria-hidden="true"
+              ></i>
+              {{ 'deposit__status__' + keadaan(item) | translate }}
+            </span>
+          </td>
+          <td class="tabel__aksi">
+            <button
+              type="button"
+              class="tabel__aksi-btn"
+              (click)="viewArchive(item.id)"
+              [title]="'general__view' | translate"
+              [attr.aria-label]="'general__view' | translate"
+            >
+              <i class="ph ph-eye" aria-hidden="true"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+
+      <tbody *ngIf="isLoading">
+        <tr>
+          <td colspan="6" class="tabel__pesan">
+            {{ 'general__loading' | translate }}
+          </td>
+        </tr>
+      </tbody>
+
+      <tbody *ngIf="!isLoading && dataSource.length === 0">
+        <tr>
+          <td colspan="6">
+            <app-tabel-kosong
+              ikon="ph-piggy-bank"
+              [judul]="'deposit__archive__empty__title' | translate"
+              [penjelasan]="'deposit__archive__empty__desc' | translate"
+              [kataKunci]="keyword"
+              (reset)="resetPencarian()"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </app-list-page>
 </div>

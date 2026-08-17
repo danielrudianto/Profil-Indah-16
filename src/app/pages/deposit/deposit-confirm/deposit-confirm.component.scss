@@ -1,18 +1,46 @@
-h5 {
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-size: 1.2rem;
-  color: #041e49;
-  margin-bottom: 2rem;
+/*
+  Kerangka formulirnya dipakai bersama dengan formulir buat lainnya; yang
+  khas halaman ini hanya rincian baca-saja dan judul seksi pembayaran.
+*/
+@use "../../../styles/form-buat";
+
+/* Rincian deposit baca-saja: label redup di kiri, nilai di kanan. */
+.rinci {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
-.add-button {
-  outline: none;
-  border: none;
-  color: white;
-  font-weight: 400;
-  background-color: #005cbb;
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.25rem;
-  cursor: pointer;
+.rinci__baris {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 13.5px;
+}
+
+.rinci__label {
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+/* Judul kecil pemisah pembayaran lama dan pelunasan baru. */
+.bayar__seksi {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+/*
+  Nilai pembayaran lama menempati kolom nilai milik grid .bayar; kolom
+  tombolnya memang kosong pada baris baca-saja, jadi tidak perlu padding
+  pengganti — grid-nya sendiri yang menjaga sejajar.
+*/
+.bayar__tetap {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
 }
