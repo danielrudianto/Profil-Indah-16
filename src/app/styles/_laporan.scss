@@ -449,3 +449,32 @@
   position: absolute;
   inset: 0 auto 0 0;
 }
+
+/* Tautan kecil beraksen di kepala kartu — "Lihat per tipe →". */
+.kartu__tautan {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-accent);
+  cursor: pointer;
+
+  i {
+    font-size: 14px;
+    transition: transform 0.18s ease;
+  }
+
+  &:hover i {
+    transform: translateX(2px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}

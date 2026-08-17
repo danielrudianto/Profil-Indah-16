@@ -2319,5 +2319,8 @@
   "report-sales__hero__service-cost": "Service cost",
   "report-sales__best__customer": "Customers",
   "report-sales__best__customer-unit": "customers",
-  "report-sales__see-by-type": "See by type"
+  "report-sales__see-by-type": "See by type",
+  "report__daily-detail": "Daily detail",
+  "report__daily-detail__show": "Show",
+  "report__daily-detail__hide": "Hide"
 }

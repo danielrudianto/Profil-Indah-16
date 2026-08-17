@@ -7,7 +7,7 @@
     </div>
 
     <div class="laporan__kendali">
-      <mat-form-field appearance="outline" class="laporan__bulan">
+      <mat-form-field appearance="outline" class="laporan__bulan" subscriptSizing="dynamic">
         <mat-label>{{ 'report-sales__month' | translate }}</mat-label>
         <input
           matInput
@@ -89,28 +89,9 @@
             {{ namaBulan }}
           </p>
         </div>
-
-        <div class="seg" role="group">
-          <button
-            type="button"
-            class="seg__tombol"
-            [class.seg__tombol--on]="mode === 'grafik'"
-            (click)="mode = 'grafik'"
-          >
-            {{ 'report-sales__chart__graph' | translate }}
-          </button>
-          <button
-            type="button"
-            class="seg__tombol"
-            [class.seg__tombol--on]="mode === 'tabel'"
-            (click)="mode = 'tabel'"
-          >
-            {{ 'report-sales__chart__table' | translate }}
-          </button>
-        </div>
       </div>
 
-      <ng-container *ngIf="mode === 'grafik'">
+      <ng-container>
         <div class="grafik">
           <div
             class="grafik__hari"
@@ -148,35 +129,6 @@
         </div>
       </ng-container>
 
-      <div class="gulir" *ngIf="mode === 'tabel'">
-        <table class="tabel tabel--rapat">
-          <thead>
-            <tr>
-              <th>{{ 'report-sales__table__date' | translate }}</th>
-              <th class="tabel__nilai-kepala">{{ 'report-sales__chart__value' | translate }}</th>
-              <th class="tabel__nilai-kepala">{{ 'report-sales__hero__discount' | translate }}</th>
-              <th class="tabel__nilai-kepala">{{ 'report-sales__hero__delivery' | translate }}</th>
-              <th class="tabel__nilai-kepala">{{ 'report-sales__hero__service' | translate }}</th>
-              <th class="tabel__nilai-kepala">{{ 'report-sales__chart__transactions' | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let d of chart">
-              <td class="tabel__tanggal">{{ d.date }}</td>
-              <td class="tabel__nilai baris__total">Rp {{ d.value | number: '1.0-0' }}</td>
-              <td class="tabel__nilai">Rp {{ d.discount | number: '1.0-0' }}</td>
-              <td class="tabel__nilai">Rp {{ d.delivery | number: '1.0-0' }}</td>
-              <td class="tabel__nilai">Rp {{ d.service | number: '1.0-0' }}</td>
-              <td class="tabel__nilai">{{ d.salesInvoiceCount | number }}</td>
-            </tr>
-            <tr *ngIf="chart.length === 0">
-              <td colspan="6" class="tabel__pesan">
-                {{ 'report-sales__empty' | translate }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </section>
 
     <!-- Terbaik bulan ini — baris berikon; klik membuka peringkatnya. -->
@@ -262,8 +214,9 @@
     <div class="kartu__kepala">
       <h2 class="kartu__label">{{ 'report-sales__by-brand' | translate }}</h2>
 
-      <button type="button" class="tautan" (click)="rincian('type')">
-        {{ 'report-sales__see-by-type' | translate }} →
+      <button type="button" class="kartu__tautan" (click)="rincian('type')">
+        {{ 'report-sales__see-by-type' | translate }}
+        <i class="ph ph-arrow-right" aria-hidden="true"></i>
       </button>
     </div>
 
@@ -281,5 +234,61 @@
     <p class="laporan__kosong" *ngIf="merek.length === 0">
       {{ 'report-sales__empty' | translate }}
     </p>
+  </section>
+
+  <!--
+    Rincian angka per hari — TERLIPAT dan di dasar halaman. Tabelnya
+    sepanjang bulan; membiarkannya menggantikan grafik merusak pandangan,
+    dan yang butuh baris lengkap turun ke sini atau mengunduh Excel-nya.
+  -->
+  <section class="kartu">
+    <div class="kartu__kepala">
+      <h2 class="kartu__label">{{ 'report__daily-detail' | translate }}</h2>
+
+      <button
+        type="button"
+        class="aksi-kecil"
+        (click)="rincianTerbuka = !rincianTerbuka"
+        [attr.aria-expanded]="rincianTerbuka"
+      >
+        <i
+          class="ph"
+          [class.ph-caret-down]="!rincianTerbuka"
+          [class.ph-caret-up]="rincianTerbuka"
+          aria-hidden="true"
+        ></i>
+        {{ (rincianTerbuka ? 'report__daily-detail__hide' : 'report__daily-detail__show') | translate }}
+      </button>
+    </div>
+
+      <div class="gulir" *ngIf="rincianTerbuka">
+        <table class="tabel tabel--rapat">
+          <thead>
+            <tr>
+              <th>{{ 'report-sales__table__date' | translate }}</th>
+              <th class="tabel__nilai-kepala">{{ 'report-sales__chart__value' | translate }}</th>
+              <th class="tabel__nilai-kepala">{{ 'report-sales__hero__discount' | translate }}</th>
+              <th class="tabel__nilai-kepala">{{ 'report-sales__hero__delivery' | translate }}</th>
+              <th class="tabel__nilai-kepala">{{ 'report-sales__hero__service' | translate }}</th>
+              <th class="tabel__nilai-kepala">{{ 'report-sales__chart__transactions' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let d of chart">
+              <td class="tabel__tanggal">{{ d.date }}</td>
+              <td class="tabel__nilai baris__total">Rp {{ d.value | number: '1.0-0' }}</td>
+              <td class="tabel__nilai">Rp {{ d.discount | number: '1.0-0' }}</td>
+              <td class="tabel__nilai">Rp {{ d.delivery | number: '1.0-0' }}</td>
+              <td class="tabel__nilai">Rp {{ d.service | number: '1.0-0' }}</td>
+              <td class="tabel__nilai">{{ d.salesInvoiceCount | number }}</td>
+            </tr>
+            <tr *ngIf="chart.length === 0">
+              <td colspan="6" class="tabel__pesan">
+                {{ 'report-sales__empty' | translate }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
   </section>
 </div>

@@ -7,7 +7,7 @@
     </div>
 
     <div class="laporan__kendali">
-      <mat-form-field appearance="outline" class="laporan__bulan">
+      <mat-form-field appearance="outline" class="laporan__bulan" subscriptSizing="dynamic">
         <mat-label>{{ 'report-sales__month' | translate }}</mat-label>
         <input
           matInput
@@ -69,27 +69,9 @@
     <div class="kartu__kepala">
       <h2 class="kartu__label">{{ 'report-purchase__chart' | translate }}</h2>
 
-      <div class="seg" role="group">
-        <button
-          type="button"
-          class="seg__tombol"
-          [class.seg__tombol--on]="mode === 'grafik'"
-          (click)="mode = 'grafik'"
-        >
-          {{ 'report-sales__chart__graph' | translate }}
-        </button>
-        <button
-          type="button"
-          class="seg__tombol"
-          [class.seg__tombol--on]="mode === 'tabel'"
-          (click)="mode = 'tabel'"
-        >
-          {{ 'report-sales__chart__table' | translate }}
-        </button>
-      </div>
     </div>
 
-    <ng-container *ngIf="mode === 'grafik'">
+    <ng-container>
       <div class="grafik">
         <div
           class="grafik__hari"
@@ -124,7 +106,50 @@
       </div>
     </ng-container>
 
-    <div class="gulir" *ngIf="mode === 'tabel'">
+  </section>
+
+  <!-- Terbaik bulan ini — nama saja: endpoint peringkat pembelian tidak ada. -->
+  <section class="kartu">
+    <h2 class="kartu__label">{{ 'report-sales__best' | translate }}</h2>
+
+    <div class="terbaik">
+      <div class="terbaik__baris">
+        <span class="terbaik__label">{{ 'report-purchase__best__supplier' | translate }}</span>
+        <span class="terbaik__nama">{{ terbaikSupplier || '—' }}</span>
+      </div>
+      <div class="terbaik__baris">
+        <span class="terbaik__label">{{ 'report-sales__best__brand' | translate }}</span>
+        <span class="terbaik__nama">{{ terbaikMerek || '—' }}</span>
+      </div>
+      <div class="terbaik__baris">
+        <span class="terbaik__label">{{ 'report-sales__best__type' | translate }}</span>
+        <span class="terbaik__nama">{{ terbaikTipe || '—' }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rincian angka per hari — terlipat di dasar, seperti laporan penjualan. -->
+  <section class="kartu">
+    <div class="kartu__kepala">
+      <h2 class="kartu__label">{{ 'report__daily-detail' | translate }}</h2>
+
+      <button
+        type="button"
+        class="aksi-kecil"
+        (click)="rincianTerbuka = !rincianTerbuka"
+        [attr.aria-expanded]="rincianTerbuka"
+      >
+        <i
+          class="ph"
+          [class.ph-caret-down]="!rincianTerbuka"
+          [class.ph-caret-up]="rincianTerbuka"
+          aria-hidden="true"
+        ></i>
+        {{ (rincianTerbuka ? 'report__daily-detail__hide' : 'report__daily-detail__show') | translate }}
+      </button>
+    </div>
+
+    <div class="gulir" *ngIf="rincianTerbuka">
       <table class="tabel tabel--rapat">
         <thead>
           <tr>
@@ -148,26 +173,6 @@
           </tr>
         </tbody>
       </table>
-    </div>
-  </section>
-
-  <!-- Terbaik bulan ini — nama saja: endpoint peringkat pembelian tidak ada. -->
-  <section class="kartu">
-    <h2 class="kartu__label">{{ 'report-sales__best' | translate }}</h2>
-
-    <div class="terbaik">
-      <div class="terbaik__baris">
-        <span class="terbaik__label">{{ 'report-purchase__best__supplier' | translate }}</span>
-        <span class="terbaik__nama">{{ terbaikSupplier || '—' }}</span>
-      </div>
-      <div class="terbaik__baris">
-        <span class="terbaik__label">{{ 'report-sales__best__brand' | translate }}</span>
-        <span class="terbaik__nama">{{ terbaikMerek || '—' }}</span>
-      </div>
-      <div class="terbaik__baris">
-        <span class="terbaik__label">{{ 'report-sales__best__type' | translate }}</span>
-        <span class="terbaik__nama">{{ terbaikTipe || '—' }}</span>
-      </div>
     </div>
   </section>
 </div>

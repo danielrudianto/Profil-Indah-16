@@ -2319,5 +2319,8 @@
   "report-sales__hero__service-cost": "Biaya layanan",
   "report-sales__best__customer": "Pelanggan",
   "report-sales__best__customer-unit": "pelanggan",
-  "report-sales__see-by-type": "Lihat per tipe"
+  "report-sales__see-by-type": "Lihat per tipe",
+  "report__daily-detail": "Rincian harian",
+  "report__daily-detail__show": "Tampilkan",
+  "report__daily-detail__hide": "Sembunyikan"
 }

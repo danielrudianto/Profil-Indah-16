@@ -98,8 +98,8 @@ export class ReportSalesComponent implements OnInit {
   chart: any[] = [];
   merek: { name: string; value: number }[] = [];
 
-  /** 'grafik' menggambar batang; 'tabel' merinci angkanya per hari. */
-  mode: 'grafik' | 'tabel' = 'grafik';
+  /** Kartu rincian harian di dasar halaman — terlipat sampai diminta. */
+  rincianTerbuka = false;
 
   ngOnInit(): void {
     this.ambilData();

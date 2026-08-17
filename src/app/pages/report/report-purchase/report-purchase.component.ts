@@ -85,7 +85,8 @@ export class ReportPurchaseComponent implements OnInit {
 
   chart: any[] = [];
 
-  mode: 'grafik' | 'tabel' = 'grafik';
+  /** Kartu rincian harian di dasar halaman — terlipat sampai diminta. */
+  rincianTerbuka = false;
 
   ngOnInit(): void {
     this.ambilData();
