@@ -182,7 +182,10 @@ html {
 .mat-mdc-dialog-surface:has(> app-sales-invoice-view),
 .mat-mdc-dialog-surface:has(> app-promotion-view),
 .mat-mdc-dialog-surface:has(> app-expense-view),
-.mat-mdc-dialog-surface:has(> app-deposit-view) {
+.mat-mdc-dialog-surface:has(> app-deposit-view),
+.mat-mdc-dialog-surface:has(> app-good-receipt-view),
+.mat-mdc-dialog-surface:has(> app-adjustment-case-view),
+.mat-mdc-dialog-surface:has(> app-overpayment-archive-view) {
   background: transparent;
   box-shadow: none;
   border-radius: 0;

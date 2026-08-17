@@ -1,188 +1,92 @@
-<h2
-  mat-dialog-title
-  cdkDrag
-  cdkDragRootElement=".cdk-overlay-pane"
-  cdkDragHandle
-  cdkDragBoundary="body"
->
-  {{ "adjustment-case__archive__view__title" | translate }}
-</h2>
-
-<mat-dialog-content>
-  <form [formGroup]="adjustmentCaseFormGroup">
-    <mat-accordion>
-      <mat-expansion-panel
-        disabled
-        class="mat-elevation-z0"
-        hideToggle
-        [expanded]="step() === 0"
-        (opened)="setStep(0)"
-      >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            {{ "adjustment-case__archive__view__general__title" | translate }}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <div class="row">
-          <div class="col-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "adjustment-case__archive__view__date" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="date" />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "adjustment-case__archive__view__name" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="name" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "adjustment-case__archive__view__created-by" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="createdBy" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "adjustment-case__archive__view__created-at" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="createdAt" />
-            </mat-form-field>
-
-            <button
-              mat-stroked-button
-              color="primary"
-              style="letter-spacing: 0"
-              (click)="nextStep()"
-            >
-              {{ "general__next" | translate }}
-            </button>
-          </div>
-          <div class="col-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "adjustment-case__archive__view__company" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="company" />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "adjustment-case__archive__view__type" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="type" />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "adjustment-case__archive__view__status" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="status" />
-            </mat-form-field>
-          </div>
+<!-- Tampilan baca penyesuaian stok — dokumen, bukan formulir. -->
+<div class="lihat">
+  <ng-container *ngIf="!isLoading && dokumen">
+    <header class="lihat__kepala">
+      <div class="lihat__identitas">
+        <span class="lihat__avatar" aria-hidden="true">{{ inisial }}</span>
+        <div>
+          <h2 class="lihat__nama">{{ tipeKey | translate }}</h2>
+          <p class="lihat__nomor">{{ dokumen.name }}</p>
         </div>
-      </mat-expansion-panel>
-      <mat-expansion-panel
-        disabled
-        class="mat-elevation-z0"
-        hideToggle
-        [expanded]="step() === 1"
-        (opened)="setStep(1)"
+      </div>
+
+      <span
+        class="pill"
+        [class.pill--hijau]="!dokumen.isDelete && dokumen.isConfirm"
+        [class.pill--amber]="!dokumen.isDelete && !dokumen.isConfirm"
+        [class.pill--garis]="dokumen.isDelete"
       >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            {{ "adjustment-case__archive__view__item__title" | translate }}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
+        {{ statusKey | translate }}
+      </span>
+    </header>
 
-        <div class="row">
-          <div class="col-12">
-            <div class="table-responsive">
-              <table class="table data-table">
-                <thead>
-                  <tr>
-                    <th class="text-center" style="width: 200px">
-                      {{
-                        "adjustment-case__archive__view__items__product"
-                          | translate
-                      }}
-                    </th>
-                    <th class="text-center" style="width: 200px">
-                      {{
-                        "adjustment-case__archive__view__items__quantity"
-                          | translate
-                      }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of t.controls">
-                    <td>
-                      <p class="mb-0">{{ item.get("reference")?.value }}</p>
-                      <p class="text-clamp-1 mb-0">
-                        {{ item.get("description")?.value }}
-                      </p>
-                    </td>
-                    <td class="text-center">
-                      {{ item.get("quantity")?.value | number : "0.0-2" }}
-                      {{ item.get("unit")?.value }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="d-flex">
-              <button
-                type="button"
-                mat-stroked-button
-                color="warn"
-                class="me-3"
-                style="letter-spacing: 0"
-                (click)="prevStep()"
-              >
-                {{ "general__previous" | translate }}
-              </button>
-
-              <button
-                type="button"
-                mat-stroked-button
-                color="warn"
-                style="letter-spacing: 0"
-                [disabled]="!canDelete"
-                *ngIf="!data.noAction"
-                (click)="openDeleteConfirmation()"
-              >
-                <mat-icon>warning</mat-icon>
-                {{ "adjustment-case__archive__view__delete" | translate }}
-              </button>
-            </div>
-          </div>
+    <div class="lihat__isi">
+      <dl class="lihat__kisi">
+        <div>
+          <dt>{{ 'sales-invoice__archive__view__date' | translate }}</dt>
+          <dd>{{ dokumen.date | date: 'dd MMMM yyyy' }}</dd>
         </div>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </form>
-</mat-dialog-content>
+        <div>
+          <dt>{{ 'adjustment-case__archive__view__company' | translate }}</dt>
+          <dd>{{ dokumen.company || '—' }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'sales-invoice__view__created-by' | translate }}</dt>
+          <dd>{{ dokumen.createdBy }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'sales-invoice__view__created-at' | translate }}</dt>
+          <dd>{{ dokumen.createdAt | date: 'dd MMMM yyyy HH:mm' }}</dd>
+        </div>
+      </dl>
 
-<mat-dialog-actions align="end">
-  <button
-    mat-stroked-button
-    color="primary"
-    style="letter-spacing: 0"
-    type="button"
-    (click)="print()"
-  >
-    {{ "general__print" | translate }}</button
-  >"
-  <button
-    mat-stroked-button
-    color="primary"
-    style="letter-spacing: 0"
-    type="button"
-    mat-dialog-close
-  >
-    {{ "general__close" | translate }}</button
-  >"
-</mat-dialog-actions>
+      <h3 class="lihat__label">
+        {{ 'sales-invoice__archive__view__item__title' | translate }}
+        ({{ barang.length }})
+      </h3>
+
+      <table class="tabel tabel--rapat">
+        <thead>
+          <tr>
+            <th>{{ 'sales-invoice__view__product' | translate }}</th>
+            <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__qty' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let b of barang">
+            <td>
+              <span class="lihat__ref">{{ b.reference }}</span>
+              <span class="lihat__desk">{{ b.description }}</span>
+            </td>
+            <td class="tabel__nilai baris__total">
+              {{ b.quantity | number: '1.0-2' }} {{ b.unit }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="lihat__kaki">
+      <button
+        *ngIf="canDelete && !data.noAction"
+        type="button"
+        class="btn btn--bahaya"
+        [disabled]="isSubmitting"
+        (click)="openDeleteConfirmation()"
+      >
+        <i class="ph ph-trash" aria-hidden="true"></i>
+        {{ 'general__delete' | translate }}
+      </button>
+
+      <span class="lihat__renggang"></span>
+
+      <button type="button" class="btn" (click)="tutup()">
+        {{ 'general__close' | translate }}
+      </button>
+    </footer>
+  </ng-container>
+
+  <p class="lihat__memuat" *ngIf="isLoading">
+    {{ 'general__loading' | translate }}
+  </p>
+</div>
