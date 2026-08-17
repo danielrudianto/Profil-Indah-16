@@ -164,24 +164,32 @@
     </div>
 
     <ng-container>
-      <div class="grafik">
+      <!-- Dua jalur terpisah, sumbu tanggal sama: nilai di atas, transaksi di bawah. -->
+      <div class="grafik grafik--nilai">
         <div
           class="grafik__hari"
           *ngFor="let hari of hariDalamBulan"
           [title]="keteranganHari(hari)"
         >
-          <div class="grafik__batang">
-            <span
-              class="grafik__nilai"
-              [style.height.%]="tinggiNilai(hari)"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="grafik__transaksi"
-              [style.height.%]="tinggiTransaksi(hari)"
-              aria-hidden="true"
-            ></span>
-          </div>
+          <span
+            class="grafik__nilai"
+            [style.height.%]="tinggiNilai(hari)"
+            aria-hidden="true"
+          ></span>
+        </div>
+      </div>
+
+      <div class="grafik grafik--transaksi">
+        <div
+          class="grafik__hari"
+          *ngFor="let hari of hariDalamBulan"
+          [title]="keteranganHari(hari)"
+        >
+          <span
+            class="grafik__transaksi"
+            [style.height.%]="tinggiTransaksi(hari)"
+            aria-hidden="true"
+          ></span>
           <span class="grafik__tanggal">{{ hari }}</span>
         </div>
       </div>
