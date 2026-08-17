@@ -76,7 +76,25 @@
 
   <!-- Saringan merek/tipe — kosong berarti semua. -->
   <section class="kartu">
-    <h2 class="kartu__label">{{ 'report-output__saringan' | translate }}</h2>
+    <div class="kartu__kepala">
+      <h2 class="kartu__label">{{ 'report-output__saringan' | translate }}</h2>
+
+      <!-- Bawaan hanya yang bergerak; ribuan barang diam cuma menenggelamkan mutasi. -->
+      <button
+        type="button"
+        class="aksi-kecil"
+        (click)="hanyaBergerak = !hanyaBergerak"
+        [attr.aria-pressed]="hanyaBergerak"
+      >
+        <i
+          class="ph"
+          [class.ph-funnel]="hanyaBergerak"
+          [class.ph-funnel-x]="!hanyaBergerak"
+          aria-hidden="true"
+        ></i>
+        {{ (hanyaBergerak ? 'report-output__show-all' : 'report-output__only-moving') | translate }}
+      </button>
+    </div>
 
     <div class="laporan__kisi-2">
       <div>

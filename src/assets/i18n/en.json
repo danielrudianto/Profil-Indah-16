@@ -1102,6 +1102,8 @@
   "report-output__col__final": "Closing stock",
   "report-output__col__unit": "Unit",
   "report-output__empty": "No products for these filters and month.",
+  "report-output__only-moving": "Moving items only",
+  "report-output__show-all": "Show all items",
   "report-output__export__successful": "Successfully exported output report",
   "report-company__title": "Company report",
   "report-company__company": "Company",

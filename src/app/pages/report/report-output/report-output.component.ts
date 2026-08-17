@@ -87,6 +87,13 @@ export class ReportOutputComponent implements OnInit {
   merek: ComboItem[] = [];
   tipe: ComboItem[] = [];
 
+  /**
+   * Bawaan: hanya barang yang bergerak bulan itu. Data asli berisi
+   * ±6.700 barang dan dua pertiganya diam — menggambar semuanya cuma
+   * menenggelamkan mutasi yang justru ingin dibaca.
+   */
+  hanyaBergerak = true;
+
   baris: any[] = [];
 
   ngOnInit(): void {
@@ -166,8 +173,12 @@ export class ReportOutputComponent implements OnInit {
 
   /** Seksi per merek/tipe, hanya kelompok yang memang punya baris. */
   get kelompokTampil(): { nama: string; baris: any[] }[] {
+    const tampil = this.hanyaBergerak
+      ? this.baris.filter((b) => this.mutasi(b) !== 0)
+      : this.baris;
+
     const peta = new Map<string, any[]>();
-    for (const b of this.baris) {
+    for (const b of tampil) {
       const nama =
         this.kelompok === 'brand' ? b.product_brand.name : b.product_type.name;
       if (!peta.has(nama)) {
