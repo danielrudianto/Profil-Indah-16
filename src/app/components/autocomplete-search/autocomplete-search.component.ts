@@ -28,7 +28,8 @@ export class AutocompleteSearchComponent {
   @Input('placeholder') placeholder!: string;
   @Input('label') label!: string;
   @Input('selected') selected!: boolean;
-  @Input('defaultValue') defaultValue!: string;
+  /* Opsional — pemanggil tanpa nilai baku memang tidak mengirimnya. */
+  @Input('defaultValue') defaultValue?: string;
   @Input('reset') reset: boolean = false;
   @Input('disabled') disabled: boolean = false;
 

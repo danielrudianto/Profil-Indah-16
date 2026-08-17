@@ -14,8 +14,12 @@
       -->
       <div class="buat__head">
         <h1 class="buat__title">
-          {{ 'overpayment__create__title' | translate }}
-          <span class="tag-otomatis">
+          {{
+            (editId ? 'overpayment__update__title' : 'overpayment__create__title')
+              | translate
+          }}
+          <!-- Nomor hanya dibuat saat mencatat; saat mengubah, nomornya sudah ada. -->
+          <span class="tag-otomatis" *ngIf="!editId">
             <i class="ph ph-sparkle" aria-hidden="true"></i>
             {{ 'overpayment__create__auto-number' | translate }}
           </span>
@@ -59,7 +63,7 @@
               [label]="'overpayment__create__customer' | translate"
               placeholder="Ex. Bing Jaya"
               routeName="customer"
-              defaultValue="Retail"
+              [defaultValue]="namaPelangganAwal"
               [selected]="metaFormGroup.controls['customer_id'].valid"
               (onSelectData)="onSelectCustomer($event)"
               (onUnselectData)="onUnselectCustomer()"
@@ -79,6 +83,7 @@
               [label]="'overpayment__create__payment-method' | translate"
               placeholder="Ex. Cash"
               routeName="payment-method#no-dor"
+              [defaultValue]="namaMetodeAwal"
               [selected]="metaFormGroup.controls['payment_method_id'].valid"
               (onSelectData)="onSelectPaymentMethod($event)"
               (onUnselectData)="onUnselectPaymentMethod()"

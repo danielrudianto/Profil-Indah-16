@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { NgFor, NgIf, DecimalPipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxMaskDirective } from 'ngx-mask';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import moment from 'moment';
@@ -72,11 +72,23 @@ export class OverpaymentCreateComponent implements OnInit {
     private translateService: TranslateService,
     private dialog: MatDialog,
     private router: Router,
+    private route: ActivatedRoute,
     private pageTitleService: PageTitleService,
   ) {}
 
   banks: IBank[] = availableBankSearch.search('').splice(0, 8);
   isSubmitting: boolean = false;
+
+  /**
+   * Terisi ketika halaman dibuka dari menu "Update" daftar 16c —
+   * formulir yang sama dipakai untuk mencatat dan mengubah, hanya
+   * alamat kirimnya yang berbeda.
+   */
+  editId: number | null = null;
+
+  /* Teks yang tampil di kedua kolom autocomplete saat mode ubah. */
+  namaPelangganAwal = 'Retail';
+  namaMetodeAwal?: string;
 
   metaFormGroup: FormGroup = new FormGroup({
     customer_id: new FormControl(0, Validators.required),
@@ -102,11 +114,18 @@ export class OverpaymentCreateComponent implements OnInit {
   metode: string = '';
 
   ngOnInit(): void {
+    const idUbah = Number(this.route.snapshot.queryParams['id']);
+    if (Number.isInteger(idUbah) && idUbah > 0) {
+      this.editId = idUbah;
+    }
+
     /* Jalan pulang ke daftarnya ada di topbar, seperti penerimaan barang. */
     this.pageTitleService.pasangKonteks({
       kembaliLabel: 'overpayment__title',
-      kembaliJalur: '/Overpayment/Return',
-      tag: 'overpayment__create__title',
+      kembaliJalur: '/Overpayment',
+      tag: this.editId
+        ? 'overpayment__update__title'
+        : 'overpayment__create__title',
     });
 
     this.returnFormGroup.controls['return_payment_bank'].valueChanges.subscribe(
@@ -114,6 +133,50 @@ export class OverpaymentCreateComponent implements OnInit {
         this.banks = availableBankSearch.search(data ?? '').splice(0, 8);
       },
     );
+
+    if (this.editId) {
+      this.muatUntukUbah(this.editId);
+    }
+  }
+
+  /**
+   * Mengisi formulir dari catatan yang ada. Catatan yang sudah
+   * dikembalikan tidak bisa diubah — server menolaknya dengan 409, jadi
+   * halamannya jujur sejak awal dan memulangkan penggunanya.
+   */
+  private muatUntukUbah(id: number): void {
+    this.apiService.get(`overpayment/${id}`).subscribe({
+      next: (data: any) => {
+        if (data.is_resolved) {
+          this.alertService.showError(
+            this.translateService.instant('overpayment__update__resolved'),
+          );
+          this.router.navigate(['/Overpayment']);
+          return;
+        }
+
+        this.metaFormGroup.patchValue({
+          customer_id: data.customer_id ?? 0,
+          date: data.date,
+          payment_method_id: data.payment_method_id ?? -1,
+          value: Number(data.value),
+        });
+        this.returnFormGroup.patchValue({
+          return_payment_date: data.return_payment_date,
+          return_payment_name: data.return_payment_name,
+          return_payment_bank: data.return_payment_bank ?? '',
+          return_payment_number: data.return_payment_number ?? '',
+        });
+        this.pilihMetode(data.return_payment_method);
+
+        this.namaPelangganAwal = data.customer?.name ?? 'Retail';
+        this.namaMetodeAwal = data.payment_method?.name ?? undefined;
+      },
+      error: (error) => {
+        this.alertService.showError(error);
+        this.router.navigate(['/Overpayment']);
+      },
+    });
   }
 
   /**
@@ -254,32 +317,42 @@ export class OverpaymentCreateComponent implements OnInit {
     const paymentMethodID = this.metaFormGroup.get('payment_method_id')?.value;
     const transfer = this.metode === 'Bank transfer';
 
-    this.apiService
-      .post('overpayment', {
-        customer_id: customerID == 0 ? null : customerID,
-        payment_method_id: paymentMethodID == -1 ? null : paymentMethodID,
-        date: moment(new Date(this.metaFormGroup.get('date')?.value)).format(
-          'YYYY-MM-DD',
-        ),
-        return_payment_date: moment(
-          new Date(this.returnFormGroup.get('return_payment_date')?.value),
-        ).format('YYYY-MM-DD'),
-        return_payment_method: this.metode,
-        return_payment_name: this.namaPenerima,
-        /* Cash tidak punya bank maupun nomor akun; dikirim null, bukan ''. */
-        return_payment_bank: transfer
-          ? this.returnFormGroup.get('return_payment_bank')?.value
-          : null,
-        return_payment_number: transfer
-          ? this.returnFormGroup.get('return_payment_number')?.value
-          : null,
-        value: this.nominal,
-        sales_deposit_code_id: null,
-      })
+    const isian = {
+      customer_id: customerID == 0 ? null : customerID,
+      payment_method_id: paymentMethodID == -1 ? null : paymentMethodID,
+      date: moment(new Date(this.metaFormGroup.get('date')?.value)).format(
+        'YYYY-MM-DD',
+      ),
+      return_payment_date: moment(
+        new Date(this.returnFormGroup.get('return_payment_date')?.value),
+      ).format('YYYY-MM-DD'),
+      return_payment_method: this.metode,
+      return_payment_name: this.namaPenerima,
+      /* Cash tidak punya bank maupun nomor akun; dikirim null, bukan ''. */
+      return_payment_bank: transfer
+        ? this.returnFormGroup.get('return_payment_bank')?.value
+        : null,
+      return_payment_number: transfer
+        ? this.returnFormGroup.get('return_payment_number')?.value
+        : null,
+      value: this.nominal,
+      sales_deposit_code_id: null,
+    };
+
+    /* Formulir yang sama, dua alamat: PUT saat mengubah, POST saat mencatat. */
+    const kirim = this.editId
+      ? this.apiService.put(`overpayment/${this.editId}`, isian)
+      : this.apiService.post('overpayment', isian);
+
+    kirim
       .subscribe({
         next: () => {
           this.alertService.showSuccess(
-            this.translateService.instant('overpayment__create__success'),
+            this.translateService.instant(
+              this.editId
+                ? 'overpayment__update__success'
+                : 'overpayment__create__success',
+            ),
           );
           this.metaFormGroup.reset();
           this.returnFormGroup.reset();
