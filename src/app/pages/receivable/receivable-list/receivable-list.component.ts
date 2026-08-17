@@ -83,8 +83,14 @@ export class ReceivableListComponent implements OnInit {
     );
   }
 
+  /*
+    Endpoint sudah mengirim SISA BERSIH: repository menghitung
+    value - payment di server dan hanya field `value` yang keluar.
+    Mengurangi `payment` lagi di sini berarti Number(undefined) = NaN —
+    kolom jumlah kosong dan bar perbandingannya ikut rusak.
+  */
   sisa(item: any): number {
-    return Number(item.value) - Number(item.payment);
+    return Number(item.value);
   }
 
   /** Lebar bar relatif terhadap penunggak terbesar, dalam persen. */

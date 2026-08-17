@@ -52,6 +52,14 @@ export class ReceivableViewComponent implements OnInit {
   page = 1;
   pageSize = 10;
 
+  /**
+   * Total SELURUH faktur pelanggan ini, dihitung server. Menjumlah
+   * dataSource saja pernah membuat header berbunyi Rp 184 juta untuk
+   * pelanggan yang di daftar tertulis Rp 260 juta — halamannya cuma
+   * memuat 10 dari 20 faktur.
+   */
+  totalPiutang = 0;
+
   ngOnInit(): void {
     this.pageTitleService.pasangKonteks({
       kembaliLabel: 'receivable__title',
@@ -82,6 +90,7 @@ export class ReceivableViewComponent implements OnInit {
         next: (data: any) => {
           this.dataSource = data.data;
           this.dataCount = data.count;
+          this.totalPiutang = Number(data.total ?? 0);
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -130,10 +139,6 @@ export class ReceivableViewComponent implements OnInit {
 
   sisa(item: any): number {
     return this.nilai(item) - this.terbayar(item);
-  }
-
-  get totalPiutang(): number {
-    return this.dataSource.reduce((a, b) => a + this.sisa(b), 0);
   }
 
   /* ---------------------------------------------------------------- */
