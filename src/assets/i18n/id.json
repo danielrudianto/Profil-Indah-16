@@ -378,6 +378,7 @@
   "sales-deposit__archive__amount": "Nominal",
   "sales-deposit__archive__payment": "Pembayaran",
   "sales-deposit__archive__other-actions": "Aksi",
+  "deposit__view__execute": "Eksekusi jadi faktur",
   "sales-deposit__archive__view__deleted": "Dihapus",
   "sales-deposit__archive__view__confirmed": "Dikonfirmasi",
   "sales-deposit__archive__view__pending": "Menunggu konfrimasi",

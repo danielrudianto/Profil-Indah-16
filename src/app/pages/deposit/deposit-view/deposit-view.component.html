@@ -1,608 +1,156 @@
-<h2 mat-dialog-title>{{ "deposit__view__title" | translate }}</h2>
-<mat-dialog-content>
-  <div *ngIf="isLoading">
-    <mat-spinner id="spinner" class="spinner"></mat-spinner>
-  </div>
-  <form [formGroup]="salesDepositFormGroup" *ngIf="!isLoading">
-    <mat-expansion-panel
-      disabled
-      class="mat-elevation-z0"
-      hideToggle
-      [expanded]="step() === 0"
-      (opened)="setStep(0)"
-    >
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{ "sales-invoice__archive__view__general__title" | translate }}
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-
-      <div class="row">
-        <div class="col-6">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{
-              "sales-invoice__archive__view__date" | translate
-            }}</mat-label>
-            <input matInput readonly formControlName="date" />
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{
-              "sales-invoice__archive__view__name" | translate
-            }}</mat-label>
-            <input matInput readonly formControlName="name" />
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{
-              "sales-invoice__archive__view__status" | translate
-            }}</mat-label>
-            <input matInput readonly formControlName="status" />
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{
-              "sales-invoice__archive__view__created-by" | translate
-            }}</mat-label>
-            <input matInput readonly formControlName="createdBy" />
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{
-              "sales-invoice__archive__view__created-at" | translate
-            }}</mat-label>
-            <input matInput readonly formControlName="createdAt" />
-          </mat-form-field>
-
-          <button
-            mat-stroked-button
-            color="primary"
-            style="letter-spacing: 0"
-            (click)="nextStep()"
-          >
-            {{ "general__next" | translate }}
-          </button>
-        </div>
-        <div class="col-6">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{
-              "sales-invoice__archive__view__customer" | translate
-            }}</mat-label>
-            <input matInput readonly formControlName="customer" />
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{
-              "sales-invoice__archive__view__sales" | translate
-            }}</mat-label>
-            <input matInput readonly formControlName="sales" />
-          </mat-form-field>
+<!-- Tampilan baca deposit — dokumen, bukan formulir. -->
+<div class="lihat">
+  <ng-container *ngIf="!isLoading && dokumen">
+    <header class="lihat__kepala">
+      <div class="lihat__identitas">
+        <span class="lihat__avatar" aria-hidden="true">{{ inisial }}</span>
+        <div>
+          <h2 class="lihat__nama">{{ namaPelanggan }}</h2>
+          <p class="lihat__nomor">{{ dokumen.name }}</p>
         </div>
       </div>
-    </mat-expansion-panel>
-    <mat-expansion-panel
-      disabled
-      class="mat-elevation-z0"
-      hideToggle
-      [expanded]="step() === 1"
-      (opened)="setStep(1)"
-    >
-      <div class="row">
-        <div class="col-12">
-          <div class="table-responsive">
-            <table class="table data-table">
-              <thead>
-                <tr>
-                  <th class="text-center" style="width: 200px">
-                    {{
-                      "sales-invoice__archive__view__items__product" | translate
-                    }}
-                  </th>
-                  <th class="text-center" style="width: 200px">
-                    {{
-                      "sales-invoice__archive__view__items__quantity"
-                        | translate
-                    }}
-                  </th>
-                  <th class="text-center" style="width: 200px">
-                    {{
-                      "sales-invoice__archive__view__items__price" | translate
-                    }}
-                  </th>
-                  <th class="text-center" style="width: 300px">
-                    {{
-                      "sales-invoice__archive__view__items__discount"
-                        | translate
-                    }}
-                  </th>
-                  <th class="text-center" style="width: 200px">
-                    {{
-                      "sales-invoice__archive__view__items__total" | translate
-                    }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of t.controls">
-                  <td>
-                    <p class="mb-0">{{ item.get("reference")?.value }}</p>
-                    <p class="text-clamp-1 mb-0">
-                      {{ item.get("description")?.value }}
-                    </p>
-                  </td>
-                  <td class="text-center">
-                    {{ item.get("quantity")?.value | number : "0.0-2" }}
-                    {{ item.get("unit")?.value }}
-                  </td>
-                  <td class="text-center">
-                    Rp.&nbsp;{{ item.get("price")?.value | number : "0.2-2" }}
-                  </td>
-                  <td
-                    class="text-center"
-                    [matTooltip]="
-                      getDiscountPercentage(
-                        item.get('discount')!.value,
-                        item.get('price')?.value
-                      )
-                    "
-                  >
-                    Rp.&nbsp;{{
-                      item.get("discount")?.value | number : "0.2-2"
-                    }}
-                  </td>
-                  <td class="text-center">
-                    Rp.&nbsp;{{
-                      (item.get("price")?.value - item.get("discount")?.value) *
-                        item.get("quantity")?.value | number : "0.2-2"
-                    }}
-                  </td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td colspan="3"></td>
-                  <td class="text-center">
-                    {{ "sales-invoice__archive__view__subtotal" | translate }}
-                  </td>
-                  <td class="text-center" colspan="2">
-                    Rp.&nbsp;{{ subtotal | number : "0.2-2" }}
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="3"></td>
-                  <td class="text-center">
-                    {{ "sales-invoice__archive__view__discount" | translate }}
-                  </td>
-                  <td class="text-center" colspan="2">
-                    Rp.&nbsp;{{
-                      salesDepositFormGroup.get("discount")?.value
-                        | number : "0.2-2"
-                    }}
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="3"></td>
-                  <td class="text-center">
-                    {{ "sales-invoice__archive__view__service" | translate }}
-                  </td>
-                  <td class="text-center" colspan="2">
-                    Rp.&nbsp;{{
-                      salesDepositFormGroup.get("service")?.value
-                        | number : "0.2-2"
-                    }}
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="3"></td>
-                  <td class="text-center">
-                    {{ "sales-invoice__archive__view__delivery" | translate }}
-                  </td>
-                  <td class="text-center" colspan="2">
-                    Rp.&nbsp;{{
-                      salesDepositFormGroup.get("delivery")?.value
-                        | number : "0.2-2"
-                    }}
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="3"></td>
-                  <td class="text-center">
-                    {{ "sales-invoice__archive__view__total" | translate }}
-                  </td>
-                  <td class="text-center" colspan="2">
-                    Rp.&nbsp;{{ total | number : "0.2-2" }}
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
 
-          <div class="d-flex">
-            <button
-              type="button"
-              mat-stroked-button
-              color="warn"
-              class="me-3"
-              style="letter-spacing: 0"
-              (click)="prevStep()"
-            >
-              {{ "general__previous" | translate }}
-            </button>
+      <span
+        class="pill"
+        [class.pill--amber]="!dokumen.isDelete"
+        [class.pill--garis]="dokumen.isDelete"
+      >
+        {{ statusKey | translate }}
+      </span>
+    </header>
 
-            <button
-              type="button"
-              mat-stroked-button
-              color="primary"
-              style="letter-spacing: 0"
-              (click)="nextStep()"
-            >
-              {{ "general__next" | translate }}
-            </button>
-          </div>
+    <div class="lihat__isi">
+      <dl class="lihat__kisi">
+        <div>
+          <dt>{{ 'sales-invoice__archive__view__date' | translate }}</dt>
+          <dd>{{ dokumen.date | date: 'dd MMMM yyyy' }}</dd>
         </div>
-      </div>
-    </mat-expansion-panel>
-    <mat-expansion-panel
-      disabled
-      class="mat-elevation-z0"
-      hideToggle
-      [expanded]="step() === 1"
-      (opened)="setStep(1)"
-    >
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{ "sales-invoice__archive__view__item__title" | translate }}
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-    </mat-expansion-panel>
-    <mat-expansion-panel
-      disabled
-      class="mat-elevation-z0"
-      hideToggle
-      [expanded]="step() === 2"
-      (opened)="setStep(2)"
-    >
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{ "sales-invoice__archive__view__payment__title" | translate }}
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-
-      <div class="row">
-        <div class="col-12">
-          <div class="table-responsive">
-            <table class="table data-table">
-              <thead>
-                <tr>
-                  <th style="width: 150px">
-                    {{
-                      "sales-invoice__archive__view__payments__date" | translate
-                    }}
-                  </th>
-                  <th style="width: 200px">
-                    {{
-                      "sales-invoice__archive__view__payments__method"
-                        | translate
-                    }}
-                  </th>
-                  <th style="width: 200px">
-                    {{
-                      "sales-invoice__archive__view__payments__amount"
-                        | translate
-                    }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of dataSource.sales_deposit_payment">
-                  <td>{{ item.date | date : "dd MMMM yyyy" }}</td>
-                  <td>
-                    {{
-                      item.payment_method == null
-                        ? "Cash"
-                        : item.payment_method.name
-                    }}
-                  </td>
-                  <td>{{ item.value | number : "0.2-2" }}</td>
-                </tr>
-              </tbody>
-              <tbody *ngIf="dataSource.sales_deposit_payment.length == 0">
-                <td colspan="3">
-                  {{
-                    "sales-invoice__archive__view__payments__empty" | translate
-                  }}
-                </td>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="d-flex">
-            <button
-              type="button"
-              mat-stroked-button
-              color="warn"
-              class="me-3"
-              style="letter-spacing: 0"
-              (click)="prevStep()"
-            >
-              {{ "general__previous" | translate }}
-            </button>
-
-            <button
-              type="button"
-              mat-stroked-button
-              color="primary"
-              style="letter-spacing: 0"
-              [matMenuTriggerFor]="menu"
-              *ngIf="!data.noAction"
-            >
-              {{ "sales-deposit__archive__other-actions" | translate }}
-              <mat-icon>menu</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="delete()">
-                <mat-icon>delete</mat-icon>
-                <span>{{ "sales-deposit__archive__delete" | translate }}</span>
-              </button>
-              <button mat-menu-item (click)="confirm()">
-                <mat-icon>check</mat-icon>
-                <span>{{ "sales-deposit__archive__confirm" | translate }}</span>
-              </button>
-            </mat-menu>
-          </div>
+        <div>
+          <dt>{{ 'sales-invoice__view__sales' | translate }}</dt>
+          <dd>{{ dokumen.sales }}</dd>
         </div>
-      </div>
-    </mat-expansion-panel>
-  </form>
-</mat-dialog-content>
+        <div>
+          <dt>{{ 'sales-invoice__view__created-by' | translate }}</dt>
+          <dd>{{ dokumen.createdBy }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'sales-invoice__view__created-at' | translate }}</dt>
+          <dd>{{ dokumen.createdAt | date: 'dd MMMM yyyy HH:mm' }}</dd>
+        </div>
+      </dl>
 
-<mat-dialog-actions align="end"
-  ><button
-    mat-stroked-button
-    type="button"
-    color="primary"
-    style="letter-spacing: 0"
-    (click)="print()"
-  >
-    {{ "general__print" | translate }}
-  </button>
-  <button
-    mat-stroked-button
-    type="button"
-    color="primary"
-    style="letter-spacing: 0"
-    mat-dialog-close
-  >
-    {{ "general__close" | translate }}
-  </button>
-</mat-dialog-actions>
+      <h3 class="lihat__label">
+        {{ 'sales-invoice__archive__view__item__title' | translate }}
+        ({{ barang.length }})
+      </h3>
 
-<!-- <div class="view-panel-wrapper">
-  <div class="view-panel-backdrop" (click)="close()"></div>
-  <div class="view-panel" [@panelAnimation]="panelState">
-    <div class="row-action">
-      <h2 mat-dialog-title>{{ "deposit__view__title" | translate }}</h2>
-      <div class="d-flex">
-        <button mat-icon-button (click)="enlarge()">
-          <mat-icon *ngIf="panelState != 'enlarged'">open_in_full</mat-icon>
-          <mat-icon *ngIf="panelState == 'enlarged'">close_fullscreen</mat-icon>
-        </button>
-        <button mat-icon-button (click)="close()">
-          <mat-icon>close</mat-icon>
-        </button>
+      <div class="lihat__gulir">
+        <table class="tabel tabel--rapat">
+          <thead>
+            <tr>
+              <th>{{ 'sales-invoice__view__product' | translate }}</th>
+              <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__qty' | translate }}</th>
+              <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__price' | translate }}</th>
+              <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__discount' | translate }}</th>
+              <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__line-total' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let b of barang">
+              <td>
+                <span class="lihat__ref">{{ b.reference }}</span>
+                <span class="lihat__desk">{{ b.description }}</span>
+              </td>
+              <td class="tabel__nilai">{{ b.quantity | number: '1.0-2' }} {{ b.unit }}</td>
+              <td class="tabel__nilai">Rp {{ b.price | number: '1.0-0' }}</td>
+              <td class="tabel__nilai">Rp {{ b.discount | number: '1.0-0' }}</td>
+              <td class="tabel__nilai baris__total">
+                Rp {{ totalBaris(b) | number: '1.0-0' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+
+      <dl class="lihat__nilai">
+        <div>
+          <dt>{{ 'sales-invoice__view__subtotal' | translate }}</dt>
+          <dd>Rp {{ subtotal | number: '1.0-0' }}</dd>
+        </div>
+        <div *ngIf="dokumen.discount > 0">
+          <dt>{{ 'sales-invoice__view__doc-discount' | translate }}</dt>
+          <dd class="lihat__minus">− Rp {{ dokumen.discount | number: '1.0-0' }}</dd>
+        </div>
+        <div *ngIf="dokumen.delivery > 0">
+          <dt>{{ 'sales-invoice__view__delivery' | translate }}</dt>
+          <dd>+ Rp {{ dokumen.delivery | number: '1.0-0' }}</dd>
+        </div>
+        <div *ngIf="dokumen.service > 0">
+          <dt>{{ 'sales-invoice__view__service' | translate }}</dt>
+          <dd>+ Rp {{ dokumen.service | number: '1.0-0' }}</dd>
+        </div>
+        <div class="lihat__total">
+          <dt>{{ 'sales-invoice__view__grand-total' | translate }}</dt>
+          <dd>Rp {{ grandTotal | number: '1.0-0' }}</dd>
+        </div>
+      </dl>
+
+      <h3 class="lihat__label">
+        {{ 'sales-invoice__archive__view__payment__title' | translate }}
+        ({{ pembayaran.length }})
+      </h3>
+
+      <ul class="lihat__bayar" *ngIf="pembayaran.length > 0">
+        <li *ngFor="let p of pembayaran">
+          <div>
+            <span class="lihat__bayar-metode">{{ p.payment_method }}</span>
+            <span class="lihat__bayar-tanggal">
+              {{ p.date | date: 'dd MMMM yyyy' }}
+            </span>
+          </div>
+          <strong>Rp {{ p.value | number: '1.0-0' }}</strong>
+        </li>
+      </ul>
+      <p class="lihat__kosong" *ngIf="pembayaran.length === 0">
+        {{ 'sales-invoice__archive__view__payments__empty' | translate }}
+      </p>
     </div>
-    <div class="view-panel-content" id="content">
-      <mat-spinner id="spinner" *ngIf="isLoading" />
 
-      <div *ngIf="!isLoading">
-        <h5 class="mt-2"></h5>
-        <mat-divider class="mb-3" />
-        <label>{{ "deposit__view__date" | translate }}</label>
-        <p>{{ dataSource.date | date : "MM/dd/yyyy" }}</p>
-
-        <label>{{ "deposit__view__name" | translate }}</label>
-        <p>{{ dataSource.name }}</p>
-
-        <label>{{ "deposit__view__sales" | translate }}</label>
-        <p>
-          {{ dataSource.sales == null ? "INTERNAL" : dataSource.sales }}
-        </p>
-
-        <label>{{ "deposit__view__amount" | translate }}</label>
-        <p>
-          {{
-            dataSource.subTotal -
-              dataSource.discount +
-              dataSource.delivery +
-              dataSource.service | mask : "separator.2"
-          }}
-        </p>
-
-        <label>{{ "deposit__view__customer" | translate }}</label>
-        <p>
-          {{
-            dataSource.customer == null ? "Retail" : dataSource.customer.name
-          }}
-        </p>
-
-        <h5>{{ "deposit__view__deposit-data" | translate }}</h5>
-        <mat-divider class="mb-2" />
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th style="width: 250px" rowspan="2">
-                  {{ "deposit__view__table__item" | translate }}
-                </th>
-                <th style="width: 150px" rowspan="2" class="text-center">
-                  {{ "deposit__view__table__quantity" | translate }}
-                </th>
-                <th style="width: 250px" rowspan="2" class="text-center">
-                  {{ "deposit__view__table__price" | translate }}
-                </th>
-                <th colspan="2" class="text-center">
-                  {{ "deposit__view__table__discount" | translate }}
-                </th>
-                <th style="width: 250px" rowspan="2" class="text-center">
-                  {{ "deposit__view__table__total" | translate }}
-                </th>
-              </tr>
-              <tr>
-                <th style="width: 150px" class="text-center">Rp.</th>
-                <th style="width: 100px" class="text-center">%</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of dataSource.deposit">
-                <td>
-                  <p>{{ item.product.reference }}</p>
-                  <p class="text-clamp-1">{{ item.product.description }}</p>
-                </td>
-                <td class="text-center">
-                  {{ item.quantity | number : "0.0-2" }}
-                  {{
-                    item.product_unit == null
-                      ? item.product.unit
-                      : item.product_unit.unit
-                  }}
-                </td>
-                <td class="text-center">
-                  {{ item.price | number : "0.2-2" }}
-                </td>
-                <td class="text-center">
-                  {{ item.discount | number : "0.2-2" }}
-                </td>
-                <td class="text-center">
-                  {{
-                    item.price == 0
-                      ? 0
-                      : ((item.discount * 100) / item.price | number : "0.0-2")
-                  }}&nbsp;%
-                </td>
-                <td class="text-center">
-                  {{ item.price * item.quantity | number : "0.2-2" }}
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="4"></td>
-                <td class="text-center">
-                  {{ "deposit__view__table__subtotal" | translate }}
-                </td>
-                <td class="text-center" colspan="2">
-                  {{ dataSource.subTotal | number : "0.2-2" }}
-                </td>
-              </tr>
-              <tr>
-                <td colspan="4"></td>
-                <td class="text-center">
-                  {{ "deposit__view__table__discount" | translate }}
-                </td>
-                <td class="text-center" colspan="2">
-                  {{ dataSource.discount | number : "0.2-2" }}
-                </td>
-              </tr>
-              <tr>
-                <td colspan="4"></td>
-                <td class="text-center">
-                  {{ "deposit__view__table__service" | translate }}
-                </td>
-                <td class="text-center" colspan="2">
-                  {{ dataSource.service | number : "0.2-2" }}
-                </td>
-              </tr>
-              <tr>
-                <td colspan="4"></td>
-                <td class="text-center">
-                  {{ "deposit__view__table__delivery" | translate }}
-                </td>
-                <td class="text-center" colspan="2">
-                  {{ dataSource.delivery | number : "0.2-2" }}
-                </td>
-              </tr>
-              <tr>
-                <td colspan="4"></td>
-                <td class="text-center">
-                  {{ "deposit__view__table__total" | translate }}
-                </td>
-                <td class="text-center" colspan="2">
-                  {{
-                    dataSource.subTotal -
-                      dataSource.discount +
-                      dataSource.delivery +
-                      dataSource.service | number : "0.2-2"
-                  }}
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-
-        <h5 class="mt-4">
-          {{ "deposit__view__payment-data" | translate }}
-        </h5>
-        <mat-divider />
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>{{ "deposit__view__table__payment-date" | translate }}</th>
-                <th>
-                  {{ "deposit__view__table__payment-method" | translate }}
-                </th>
-                <th>
-                  {{ "deposit__view__table__payment-amount" | translate }}
-                </th>
-              </tr>
-            </thead>
-            <tbody *ngIf="dataSource.deposit_payment.length > 0">
-              <tr *ngFor="let payment of dataSource.deposit_payment">
-                <td>{{ payment.date | date : "dd MMMM yyyy" }}</td>
-                <td>
-                  {{
-                    payment.payment_method == null
-                      ? "Cash"
-                      : payment.payment_method.name
-                  }}
-                </td>
-                <td>{{ payment.value | number : "0.2-2" }}</td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="dataSource.deposit_payment.length == 0">
-              <tr>
-                <td colspan="3" class="text-center">No payment</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="shortcuts">
-      <div class="shortcut-key">
-        <span class="shortcut-key-label">ESC</span>
-        <span class="shortcut-key-function">{{
-          "general__back" | translate
-        }}</span>
-      </div>
-      <div class="shortcut-key">
-        <span class="shortcut-key-label">F</span>
-        <span class="shortcut-key-function">{{
-          "general__toggle-full-screen" | translate
-        }}</span>
-      </div>
-      <div class="shortcut-key">
-        <span class="shortcut-key-label">P</span>
-        <span class="shortcut-key-function">{{
-          "general__print" | translate
-        }}</span>
-      </div>
-    </div>
-    <div class="actions">
-      <button class="action-button mx-1" (click)="confirmDeposit()">
-        {{ "deposit__view__confirm-button" | translate }}
+    <footer class="lihat__kaki">
+      <button
+        *ngIf="!data.noAction && !dokumen.isDelete"
+        type="button"
+        class="btn btn--bahaya"
+        (click)="delete()"
+      >
+        <i class="ph ph-trash" aria-hidden="true"></i>
+        {{ 'general__delete' | translate }}
       </button>
-      <button class="action-button mx-1" (click)="deleteDeposit()">
-        {{ "deposit__view__delete-button" | translate }}
+
+      <span class="lihat__renggang"></span>
+
+      <button type="button" class="btn btn--kedua" (click)="print()">
+        <i class="ph ph-printer" aria-hidden="true"></i>
+        {{ 'general__print' | translate }}
       </button>
-    </div>
-  </div>
-</div> -->
+
+      <button
+        *ngIf="!data.noAction && !dokumen.isDelete"
+        type="button"
+        class="btn"
+        (click)="confirm()"
+      >
+        <i class="ph ph-arrow-right" aria-hidden="true"></i>
+        {{ 'deposit__view__execute' | translate }}
+      </button>
+
+      <button type="button" class="btn btn--kedua" (click)="tutup()">
+        {{ 'general__close' | translate }}
+      </button>
+    </footer>
+  </ng-container>
+
+  <p class="lihat__memuat" *ngIf="isLoading">
+    {{ 'general__loading' | translate }}
+  </p>
+</div>

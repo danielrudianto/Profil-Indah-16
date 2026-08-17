@@ -960,6 +960,7 @@
   "sales-deposit__archive__amount": "Value",
   "sales-deposit__archive__payment": "Payment",
   "sales-deposit__archive__other-actions": "Actions",
+  "deposit__view__execute": "Execute as invoice",
   "sales-deposit__archive__view__deleted": "Deleted",
   "sales-deposit__archive__view__confirmed": "Confirmed",
   "sales-deposit__archive__view__pending": "Waiting for confirmation",
