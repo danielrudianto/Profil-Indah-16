@@ -2322,5 +2322,6 @@
   "report-sales__see-by-type": "Lihat per tipe",
   "report__daily-detail": "Rincian harian",
   "report__daily-detail__show": "Tampilkan",
-  "report__daily-detail__hide": "Sembunyikan"
+  "report__daily-detail__hide": "Sembunyikan",
+  "report-purchase__hero__per-receipt": "Rata-rata per penerimaan"
 }

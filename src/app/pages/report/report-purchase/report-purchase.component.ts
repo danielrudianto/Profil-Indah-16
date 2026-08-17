@@ -129,6 +129,11 @@ export class ReportPurchaseComponent implements OnInit {
     this.ambilData();
   }
 
+  /** Rata-rata nilai per penerimaan — pengisi kartu hero keempat. */
+  get rataRataPenerimaan(): number {
+    return this.penerimaan === 0 ? 0 : this.total / this.penerimaan;
+  }
+
   /* ---------------------------------------------------------------- */
   /* Grafik harian                                                     */
   /* ---------------------------------------------------------------- */

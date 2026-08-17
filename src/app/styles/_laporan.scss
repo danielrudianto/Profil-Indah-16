@@ -478,3 +478,48 @@
     outline-offset: 2px;
   }
 }
+
+/* ---------------------------------------------------------------- */
+/* Baris kartu terbaik — merek, tipe, sales, pelanggan SATU BARIS.   */
+/* Anatomi kartunya sejajar dengan hero supaya iramanya sama.        */
+/* ---------------------------------------------------------------- */
+
+.terbaik-kisi {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.terbaik-kisi--tiga {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 1100px) {
+  .terbaik-kisi,
+  .terbaik-kisi--tiga {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .terbaik-kisi,
+  .terbaik-kisi--tiga {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.terbaik-kartu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-divider);
+  min-width: 0;
+}
+
+.terbaik-kartu__aksi {
+  margin-left: auto;
+}

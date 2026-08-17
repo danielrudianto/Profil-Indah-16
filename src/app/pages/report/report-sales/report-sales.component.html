@@ -77,137 +77,134 @@
     </div>
   </div>
 
-  <!-- Grafik lebar bersanding kartu terbaik bulan ini — susunan mockup. -->
-  <div class="laporan__kisi-utama">
-    <section class="kartu">
-      <div class="kartu__kepala">
-        <div>
-          <h2 class="kartu__label">{{ 'report-sales__chart' | translate }}</h2>
-          <p class="grafik__sub">
-            {{ transaksi | number }}
-            {{ 'report-sales__chart__transactions' | translate | lowercase }} ·
-            {{ namaBulan }}
-          </p>
-        </div>
-      </div>
+  <!--
+    Merek, tipe, sales, dan pelanggan SATU BARIS TETAP — permintaan pak
+    Daniel: dua kartu bersanding yang tingginya timpang terasa mepet.
+    Grafiknya lebar penuh di bawahnya.
+  -->
+  <div class="terbaik-kisi">
+    <div class="terbaik-kartu">
+      <span class="terbaik__ikon" aria-hidden="true">
+        <i class="ph ph-tag-simple"></i>
+      </span>
+      <span class="terbaik__teks">
+        <small>{{ 'report-sales__best__brand' | translate }}</small>
+        <span class="terbaik__nama">{{ terbaikMerek || '—' }}</span>
+      </span>
+      <button
+        type="button"
+        class="tabel__aksi-btn terbaik-kartu__aksi"
+        (click)="rincian('brand')"
+        [title]="'report-sales__best__detail' | translate"
+        [attr.aria-label]="'report-sales__best__detail' | translate"
+      >
+        <i class="ph ph-caret-right" aria-hidden="true"></i>
+      </button>
+    </div>
 
-      <ng-container>
-        <div class="grafik">
-          <div
-            class="grafik__hari"
-            *ngFor="let hari of hariDalamBulan"
-            [title]="keteranganHari(hari)"
-          >
-            <div class="grafik__batang">
-              <span
-                class="grafik__nilai"
-                [style.height.%]="tinggiNilai(hari)"
-                aria-hidden="true"
-              ></span>
-              <span
-                class="grafik__transaksi"
-                [style.height.%]="tinggiTransaksi(hari)"
-                aria-hidden="true"
-              ></span>
-            </div>
-            <span class="grafik__tanggal">{{ hari }}</span>
-          </div>
-        </div>
+    <div class="terbaik-kartu">
+      <span class="terbaik__ikon" aria-hidden="true">
+        <i class="ph ph-squares-four"></i>
+      </span>
+      <span class="terbaik__teks">
+        <small>{{ 'report-sales__best__type' | translate }}</small>
+        <span class="terbaik__nama">{{ terbaikTipe || '—' }}</span>
+      </span>
+      <button
+        type="button"
+        class="tabel__aksi-btn terbaik-kartu__aksi"
+        (click)="rincian('type')"
+        [title]="'report-sales__best__detail' | translate"
+        [attr.aria-label]="'report-sales__best__detail' | translate"
+      >
+        <i class="ph ph-caret-right" aria-hidden="true"></i>
+      </button>
+    </div>
 
-        <div class="grafik__kaki">
-          <div class="grafik__legenda">
-            <span>
-              <i class="grafik__legenda--nilai" aria-hidden="true"></i>
-              {{ 'report-sales__chart__value' | translate }}
-            </span>
-            <span>
-              <i class="grafik__legenda--transaksi" aria-hidden="true"></i>
-              {{ 'report-sales__chart__transactions' | translate }}
-            </span>
-          </div>
-          <span class="grafik__rentang">{{ rentangGrafik }}</span>
-        </div>
-      </ng-container>
+    <div class="terbaik-kartu">
+      <span class="terbaik__ikon" aria-hidden="true">
+        <i class="ph ph-medal"></i>
+      </span>
+      <span class="terbaik__teks">
+        <small>{{ 'report-sales__best__sales' | translate }}</small>
+        <span class="terbaik__nama">{{ terbaikSales || '—' }}</span>
+      </span>
+      <button
+        type="button"
+        class="tabel__aksi-btn terbaik-kartu__aksi"
+        (click)="rincian('sales')"
+        [title]="'report-sales__best__detail' | translate"
+        [attr.aria-label]="'report-sales__best__detail' | translate"
+      >
+        <i class="ph ph-caret-right" aria-hidden="true"></i>
+      </button>
+    </div>
 
-    </section>
-
-    <!-- Terbaik bulan ini — baris berikon; klik membuka peringkatnya. -->
-    <section class="kartu">
-      <h2 class="kartu__label">{{ 'report-sales__best' | translate }}</h2>
-
-      <div class="terbaik">
-        <div class="terbaik__baris">
-          <span class="terbaik__ikon" aria-hidden="true">
-            <i class="ph ph-users"></i>
-          </span>
-          <span class="terbaik__teks">
-            <small>{{ 'report-sales__best__customer' | translate }}</small>
-            <span class="terbaik__nama">
-              {{ jumlahPelanggan | number }}
-              {{ 'report-sales__best__customer-unit' | translate }}
-            </span>
-          </span>
-        </div>
-
-        <div class="terbaik__baris">
-          <span class="terbaik__ikon" aria-hidden="true">
-            <i class="ph ph-medal"></i>
-          </span>
-          <span class="terbaik__teks">
-            <small>{{ 'report-sales__best__sales' | translate }}</small>
-            <span class="terbaik__nama">{{ terbaikSales || '—' }}</span>
-          </span>
-          <button
-            type="button"
-            class="tabel__aksi-btn terbaik__aksi"
-            (click)="rincian('sales')"
-            [title]="'report-sales__best__detail' | translate"
-            [attr.aria-label]="'report-sales__best__detail' | translate"
-          >
-            <i class="ph ph-caret-right" aria-hidden="true"></i>
-          </button>
-        </div>
-
-        <div class="terbaik__baris">
-          <span class="terbaik__ikon" aria-hidden="true">
-            <i class="ph ph-tag-simple"></i>
-          </span>
-          <span class="terbaik__teks">
-            <small>{{ 'report-sales__best__brand' | translate }}</small>
-            <span class="terbaik__nama">{{ terbaikMerek || '—' }}</span>
-          </span>
-          <button
-            type="button"
-            class="tabel__aksi-btn terbaik__aksi"
-            (click)="rincian('brand')"
-            [title]="'report-sales__best__detail' | translate"
-            [attr.aria-label]="'report-sales__best__detail' | translate"
-          >
-            <i class="ph ph-caret-right" aria-hidden="true"></i>
-          </button>
-        </div>
-
-        <div class="terbaik__baris">
-          <span class="terbaik__ikon" aria-hidden="true">
-            <i class="ph ph-squares-four"></i>
-          </span>
-          <span class="terbaik__teks">
-            <small>{{ 'report-sales__best__type' | translate }}</small>
-            <span class="terbaik__nama">{{ terbaikTipe || '—' }}</span>
-          </span>
-          <button
-            type="button"
-            class="tabel__aksi-btn terbaik__aksi"
-            (click)="rincian('type')"
-            [title]="'report-sales__best__detail' | translate"
-            [attr.aria-label]="'report-sales__best__detail' | translate"
-          >
-            <i class="ph ph-caret-right" aria-hidden="true"></i>
-          </button>
-        </div>
-      </div>
-    </section>
+    <div class="terbaik-kartu">
+      <span class="terbaik__ikon" aria-hidden="true">
+        <i class="ph ph-users"></i>
+      </span>
+      <span class="terbaik__teks">
+        <small>{{ 'report-sales__best__customer' | translate }}</small>
+        <span class="terbaik__nama">
+          {{ jumlahPelanggan | number }}
+          {{ 'report-sales__best__customer-unit' | translate }}
+        </span>
+      </span>
+    </div>
   </div>
+
+  <section class="kartu">
+    <div class="kartu__kepala">
+      <div>
+        <h2 class="kartu__label">{{ 'report-sales__chart' | translate }}</h2>
+        <p class="grafik__sub">
+          {{ transaksi | number }}
+          {{ 'report-sales__chart__transactions' | translate | lowercase }} ·
+          {{ namaBulan }}
+        </p>
+      </div>
+    </div>
+
+    <ng-container>
+      <div class="grafik">
+        <div
+          class="grafik__hari"
+          *ngFor="let hari of hariDalamBulan"
+          [title]="keteranganHari(hari)"
+        >
+          <div class="grafik__batang">
+            <span
+              class="grafik__nilai"
+              [style.height.%]="tinggiNilai(hari)"
+              aria-hidden="true"
+            ></span>
+            <span
+              class="grafik__transaksi"
+              [style.height.%]="tinggiTransaksi(hari)"
+              aria-hidden="true"
+            ></span>
+          </div>
+          <span class="grafik__tanggal">{{ hari }}</span>
+        </div>
+      </div>
+
+      <div class="grafik__kaki">
+        <div class="grafik__legenda">
+          <span>
+            <i class="grafik__legenda--nilai" aria-hidden="true"></i>
+            {{ 'report-sales__chart__value' | translate }}
+          </span>
+          <span>
+            <i class="grafik__legenda--transaksi" aria-hidden="true"></i>
+            {{ 'report-sales__chart__transactions' | translate }}
+          </span>
+        </div>
+        <span class="grafik__rentang">{{ rentangGrafik }}</span>
+      </div>
+    </ng-container>
+
+  </section>
 
   <!-- Penjualan per merek — bar di atas jalur penuh, seperti mockup. -->
   <section class="kartu">

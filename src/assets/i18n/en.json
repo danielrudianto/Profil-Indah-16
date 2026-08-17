@@ -2322,5 +2322,6 @@
   "report-sales__see-by-type": "See by type",
   "report__daily-detail": "Daily detail",
   "report__daily-detail__show": "Show",
-  "report__daily-detail__hide": "Hide"
+  "report__daily-detail__hide": "Hide",
+  "report-purchase__hero__per-receipt": "Average per receipt"
 }

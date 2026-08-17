@@ -57,10 +57,41 @@
       <strong class="hero__nilai">Rp {{ diskon | number: '1.0-0' }}</strong>
     </div>
     <div class="hero__kartu">
-      <span class="hero__label">{{ 'report-purchase__hero__best-supplier' | translate }}</span>
-      <strong class="hero__nilai hero__nilai--tanggal">
-        {{ terbaikSupplier || '—' }}
-      </strong>
+      <span class="hero__label">{{ 'report-purchase__hero__per-receipt' | translate }}</span>
+      <strong class="hero__nilai">Rp {{ rataRataPenerimaan | number: '1.0-0' }}</strong>
+    </div>
+  </div>
+
+  <!-- Supplier, merek, tipe SATU BARIS TETAP — sejajar dengan laporan penjualan. -->
+  <div class="terbaik-kisi terbaik-kisi--tiga">
+    <div class="terbaik-kartu">
+      <span class="terbaik__ikon" aria-hidden="true">
+        <i class="ph ph-truck"></i>
+      </span>
+      <span class="terbaik__teks">
+        <small>{{ 'report-purchase__best__supplier' | translate }}</small>
+        <span class="terbaik__nama">{{ terbaikSupplier || '—' }}</span>
+      </span>
+    </div>
+
+    <div class="terbaik-kartu">
+      <span class="terbaik__ikon" aria-hidden="true">
+        <i class="ph ph-tag-simple"></i>
+      </span>
+      <span class="terbaik__teks">
+        <small>{{ 'report-sales__best__brand' | translate }}</small>
+        <span class="terbaik__nama">{{ terbaikMerek || '—' }}</span>
+      </span>
+    </div>
+
+    <div class="terbaik-kartu">
+      <span class="terbaik__ikon" aria-hidden="true">
+        <i class="ph ph-squares-four"></i>
+      </span>
+      <span class="terbaik__teks">
+        <small>{{ 'report-sales__best__type' | translate }}</small>
+        <span class="terbaik__nama">{{ terbaikTipe || '—' }}</span>
+      </span>
     </div>
   </div>
 
@@ -108,25 +139,6 @@
 
   </section>
 
-  <!-- Terbaik bulan ini — nama saja: endpoint peringkat pembelian tidak ada. -->
-  <section class="kartu">
-    <h2 class="kartu__label">{{ 'report-sales__best' | translate }}</h2>
-
-    <div class="terbaik">
-      <div class="terbaik__baris">
-        <span class="terbaik__label">{{ 'report-purchase__best__supplier' | translate }}</span>
-        <span class="terbaik__nama">{{ terbaikSupplier || '—' }}</span>
-      </div>
-      <div class="terbaik__baris">
-        <span class="terbaik__label">{{ 'report-sales__best__brand' | translate }}</span>
-        <span class="terbaik__nama">{{ terbaikMerek || '—' }}</span>
-      </div>
-      <div class="terbaik__baris">
-        <span class="terbaik__label">{{ 'report-sales__best__type' | translate }}</span>
-        <span class="terbaik__nama">{{ terbaikTipe || '—' }}</span>
-      </div>
-    </div>
-  </section>
 
   <!-- Rincian angka per hari — terlipat di dasar, seperti laporan penjualan. -->
   <section class="kartu">
