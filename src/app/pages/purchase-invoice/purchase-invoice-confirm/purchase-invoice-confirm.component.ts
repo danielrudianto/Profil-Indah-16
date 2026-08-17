@@ -78,4 +78,8 @@ export class PurchaseInvoiceConfirmComponent implements OnInit {
   keArsip(): void {
     this.router.navigate(['/Purchase-invoice/Archive']);
   }
+
+  inisial(nama: string | null | undefined): string {
+    return (nama ?? '?').trim().charAt(0).toUpperCase() || '?';
+  }
 }
