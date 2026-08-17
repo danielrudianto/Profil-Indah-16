@@ -1,0 +1,12 @@
+/* Seluruh anatomi halaman laporan tinggal di partial bersama. */
+@use "../../../styles/laporan";
+
+/* Uang keluar (retur, pengembalian diskon) diberi wajah merah redup. */
+.keluar {
+  color: #e05260;
+}
+
+/* Baris TOTAL dipisah garis tegas. */
+.baris-total td {
+  border-top: 2px solid var(--color-divider);
+}

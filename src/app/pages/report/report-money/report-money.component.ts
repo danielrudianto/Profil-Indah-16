@@ -1,48 +1,74 @@
-import { DatePipe, NgIf, NgFor, DecimalPipe } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
+import {
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
+import * as XLSX from 'xlsx';
+
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import * as XLSX from 'xlsx';
-import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
-import { FeatureHeaderComponent } from '../../../components/feature-header/feature-header.component';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { MatIconButton, MatButton } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
-import { MatIcon } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
+import {
+  MatDatepicker,
+  MatDatepickerInput,
+} from '@angular/material/datepicker';
 
+/**
+ * Laporan uang masuk harian — per metode pembayaran.
+ *
+ * Tiap baris metode memuat uang masuk (faktur, deposit, kelebihan bayar)
+ * DAN uang keluarnya: retur penjualan serta PENGEMBALIAN DISKON faktur —
+ * bayar tunai 5.000 dengan diskon 1.000 yang dikembalikan via transfer
+ * berarti +5.000 di kas dan -1.000 di transfernya. Kolom pengembalian
+ * diskon dulu tidak pernah dihitung sama sekali.
+ */
 @Component({
-    selector: 'app-report-money',
-    templateUrl: './report-money.component.html',
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatIconButton, RouterLink, MatIcon, MatButton, DecimalPipe, TranslatePipe]
+  selector: 'app-report-money',
+  templateUrl: './report-money.component.html',
+  styleUrls: ['./report-money.component.scss'],
+  providers: [DatePipe],
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslatePipe,
+    MatDatepicker,
+    MatDatepickerInput,
+  ],
 })
-export class ReportMoneyComponent {
+export class ReportMoneyComponent implements OnInit {
   constructor(
     private apiService: ApiService,
+    private alertService: AlertService,
     private datePipe: DatePipe,
-    private alertService: AlertService
   ) {}
 
-  dataSource: any[] = [];
-  dorDataSource: any = null;
-  isLoading: boolean = false;
-  isDownloading: boolean = false;
-  date: FormControl = new FormControl(new Date(), Validators.required);
+  isLoading = true;
+  isDownloading = false;
+
+  date = new FormControl(new Date());
+
+  metode: any[] = [];
+  dor: { sales: string | null; salesInvoice: number; salesDeposit: number }[] =
+    [];
 
   ngOnInit(): void {
-    this.fetchMoneyReceipt();
+    this.ambilData();
 
     this.date.valueChanges.subscribe(() => {
-      this.fetchMoneyReceipt();
+      this.ambilData();
     });
   }
 
-  fetchMoneyReceipt() {
+  get namaTanggal(): string {
+    return this.datePipe.transform(this.date.value, 'dd MMMM yyyy') ?? '';
+  }
+
+  ambilData(): void {
     this.isLoading = true;
     this.apiService
       .post('report/money-receipt', {
@@ -50,11 +76,8 @@ export class ReportMoneyComponent {
       })
       .subscribe({
         next: (data: any) => {
-          this.dataSource = data.filter((x: any) => x.id != 0);
-          const dorIndex = data.findIndex((x: any) => x.id == 0);
-          if (dorIndex != 0) {
-            this.dorDataSource = data[dorIndex];
-          }
+          this.metode = data.filter((x: any) => x.id !== 0);
+          this.dor = data.find((x: any) => x.id === 0)?.data ?? [];
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -65,7 +88,53 @@ export class ReportMoneyComponent {
       });
   }
 
-  downloadTodayReport() {
+  /* ---------------------------------------------------------------- */
+  /* Nilai per baris                                                   */
+  /* ---------------------------------------------------------------- */
+
+  /** Masuk − keluar untuk satu metode. */
+  totalBaris(m: any): number {
+    return (
+      Number(m.salesInvoice) +
+      Number(m.salesDeposit) -
+      Number(m.salesReturn) +
+      Number(m.overpayment) -
+      Number(m.rebate ?? 0)
+    );
+  }
+
+  get totalMasuk(): number {
+    return this.metode.reduce(
+      (a, b) => a + Number(b.salesInvoice) + Number(b.salesDeposit),
+      0,
+    );
+  }
+
+  get totalKeluar(): number {
+    return this.metode.reduce(
+      (a, b) => a + Number(b.salesReturn) + Number(b.rebate ?? 0),
+      0,
+    );
+  }
+
+  get totalDor(): number {
+    return this.dor.reduce(
+      (a, b) => a + Number(b.salesInvoice) + Number(b.salesDeposit),
+      0,
+    );
+  }
+
+  get totalBersih(): number {
+    return (
+      this.metode.reduce((a, b) => a + this.totalBaris(b), 0) + this.totalDor
+    );
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Unduh — bentuk berkasnya dipertahankan apa adanya                 */
+  /* ---------------------------------------------------------------- */
+
+  download(): void {
     this.isDownloading = true;
     this.apiService
       .post('report/money-receipt/download', {
@@ -84,30 +153,6 @@ export class ReportMoneyComponent {
       });
   }
 
-  get totalPayments(): number {
-    const payments =
-      this.dataSource.length == 0
-        ? 0
-        : this.dataSource.reduce((a, b) => {
-            return (
-              a +
-              b.salesInvoice +
-              b.salesDeposit -
-              b.salesReturn +
-              b.overpayment
-            );
-          }, 0);
-
-    const dorPayments =
-      this.dorDataSource.data.length == 0
-        ? 0
-        : this.dorDataSource.data.reduce((a: any, b: any) => {
-            return a + b.salesInvoice + b.salesDeposit;
-          }, 0);
-
-    return payments + dorPayments;
-  }
-
   private exportToExcel(
     data: {
       date: Date;
@@ -116,7 +161,7 @@ export class ReportMoneyComponent {
       value: number;
       payment: number;
       paymentMethod: string;
-    }[]
+    }[],
   ) {
     const excelData = data.map((item, index) => ({
       no: index + 1,
@@ -130,17 +175,14 @@ export class ReportMoneyComponent {
 
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
 
-    // Set number format for Value and Payment columns (columns E and F, 0-indexed)
     if (worksheet['!ref']) {
       const range = XLSX.utils.decode_range(worksheet['!ref']);
       for (let row = range.s.r + 1; row <= range.e.r; row++) {
-        // Column E (Value) - 4th column (0-indexed)
         const valueCell = worksheet[XLSX.utils.encode_cell({ r: row, c: 4 })];
         if (valueCell) {
           valueCell.z = '#,##0.00';
         }
 
-        // Column F (Payment) - 5th column (0-indexed)
         const paymentCell = worksheet[XLSX.utils.encode_cell({ r: row, c: 5 })];
         if (paymentCell) {
           paymentCell.z = '#,##0.00';
@@ -148,7 +190,6 @@ export class ReportMoneyComponent {
       }
     }
 
-    // Rest of the function remains the same...
     const columnWidths = [
       { wch: 5 },
       { wch: 12 },
@@ -163,7 +204,6 @@ export class ReportMoneyComponent {
     const workbook: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Invoices');
 
-    // Generate Excel file and trigger download
     XLSX.writeFile(workbook, 'Penerimaan uang.xlsx');
   }
 

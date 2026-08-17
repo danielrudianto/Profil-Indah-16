@@ -2340,5 +2340,16 @@
   "report-finance__unallocated-banner": "Sales worth",
   "report-finance__unallocated-banner-2": "have no allocated COGS yet — the COGS and profit figures below are not final until allocation completes.",
   "report-finance__unallocated-row": "Unallocated",
-  "report-finance__unallocated-warning": "Warning: Rp {{nilai}} of sales has no allocated COGS; figures in this report are not final."
+  "report-finance__unallocated-warning": "Warning: Rp {{nilai}} of sales has no allocated COGS; figures in this report are not final.",
+  "report-money__lede": "A day's money in and out, per payment method.",
+  "report-money__hero__net": "Net today",
+  "report-money__hero__in": "Money in",
+  "report-money__hero__out": "Money out",
+  "report-money__hero__out-sub": "Returns + discount refunds",
+  "report-money__hero__dor": "DOR",
+  "report-money__by-method": "By payment method",
+  "report-money__rebate": "Discount refund",
+  "report-money__dor": "DOR by salesman",
+  "report-money__dor__sales": "Salesman",
+  "report-money__dor__empty": "No DOR receipts on this date."
 }

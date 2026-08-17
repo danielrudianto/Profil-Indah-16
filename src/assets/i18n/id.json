@@ -874,7 +874,7 @@
   "dashboard-administrator__adjustment": "Penyesuaian stok",
   "general__against-yesterday": "Dibandingkan kemarin",
   "general__against-last-month": "Dibandingkan bulan lalu",
-  "report-money__title": "Laporan penerimaan uang",
+  "report-money__title": "Laporan uang masuk",
   "report-money__dor__title": "Laporan penerimaan uang (DOR)",
   "report-money__description": "Laporan ini menunjukkan uang yang diterima dari penjualan atau deposit ke Profil Indah.",
   "report-money__date": "Tanggal penerimaan uang",
@@ -2340,5 +2340,16 @@
   "report-finance__unallocated-banner": "Ada penjualan senilai",
   "report-finance__unallocated-banner-2": "yang HPP-nya belum teralokasi — angka HPP dan laba di bawah belum final sampai penetapan HPP-nya selesai.",
   "report-finance__unallocated-row": "Belum teralokasi",
-  "report-finance__unallocated-warning": "Peringatan: Rp {{nilai}} penjualan belum teralokasi HPP-nya; angka pada laporan ini belum final."
+  "report-finance__unallocated-warning": "Peringatan: Rp {{nilai}} penjualan belum teralokasi HPP-nya; angka pada laporan ini belum final.",
+  "report-money__lede": "Penerimaan dan pengeluaran uang sehari, per metode pembayaran.",
+  "report-money__hero__net": "Bersih hari ini",
+  "report-money__hero__in": "Uang masuk",
+  "report-money__hero__out": "Uang keluar",
+  "report-money__hero__out-sub": "Retur + pengembalian diskon",
+  "report-money__hero__dor": "DOR",
+  "report-money__by-method": "Per metode pembayaran",
+  "report-money__rebate": "Pengembalian diskon",
+  "report-money__dor": "DOR per sales",
+  "report-money__dor__sales": "Sales",
+  "report-money__dor__empty": "Tidak ada penerimaan DOR pada tanggal ini."
 }
