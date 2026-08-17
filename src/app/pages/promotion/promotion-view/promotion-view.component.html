@@ -1,238 +1,127 @@
-<h2 mat-dialog-title>{{ "promotion__view__view-result" | translate }}</h2>
-<mat-dialog-content>
-  <form [formGroup]="formGroup">
-    <mat-accordion>
-      <mat-expansion-panel
-        disabled
-        class="mat-elevation-z0"
-        hideToggle
-        [expanded]="step() === 0"
-        (opened)="setStep(0)"
-      >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            {{ "promotion__view__general" | translate }}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <div class="row">
-          <div class="col-12">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ "promotion__view__name" | translate }}</mat-label>
-              <input
-                matInput
-                formControlName="name"
-                placeholder="Ex. Promosi TACO"
-              />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "promotion__view__description" | translate
-              }}</mat-label>
-              <textarea
-                matInput
-                formControlName="description"
-                style="resize: none"
-                rows="3"
-              ></textarea>
-            </mat-form-field>
-          </div>
-          <div class="col-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "promotion__view__start-date" | translate
-              }}</mat-label>
-              <input matInput formControlName="startDate" />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ "promotion__view__target" | translate }}</mat-label>
-              <input
-                formControlName="target"
-                matInput
-                type="text"
-                mask="separator.2"
-                thousandSeparator=" "
-                placeholder="Ex. 8 000"
-              />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "promotion__view__created-by" | translate
-              }}</mat-label>
-              <input matInput formControlName="createdBy" />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "promotion__view__created-at" | translate
-              }}</mat-label>
-              <input matInput formControlName="createdAt" />
-            </mat-form-field>
-          </div>
-          <div class="col-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "promotion__view__end-date" | translate
-              }}</mat-label>
-              <input matInput formControlName="endDate" />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "promotion__view__supplier" | translate
-              }}</mat-label>
-              <input matInput formControlName="supplierName" />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ "promotion__view__status" | translate }}</mat-label>
-              <input matInput formControlName="status" />
-            </mat-form-field>
-          </div>
-        </div>
-
-        <p>{{ "promotion__view__brand" | translate }}</p>
-        <mat-chip-listbox>
-          <mat-chip *ngFor="let item of t.controls">{{
-            item.get("name")?.value
-          }}</mat-chip>
-        </mat-chip-listbox>
-
-        <button
-          mat-stroked-button
-          color="primary"
-          style="letter-spacing: 0"
-          (click)="nextStep()"
-          class="mt-3"
-        >
-          {{ "general__next" | translate }}
-        </button>
-      </mat-expansion-panel>
-      <mat-expansion-panel
-        disabled
-        class="mat-elevation-z0"
-        hideToggle
-        [expanded]="step() === 1"
-        (opened)="setStep(1)"
-      >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            {{ "promotion__view__rules" | translate }}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <table class="table">
-          <thead>
-            <tr>
-              <th>{{ "promotion__rules__rule" | translate }}</th>
-              <th>{{ "promotion__rules__value" | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of u.controls">
-              <td>{{ item.get("rule")?.value }}</td>
-              <td>{{ item.get("value")?.value }}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="d-flex">
-          <button
-            type="button"
-            mat-stroked-button
-            color="warn"
-            class="me-3"
-            style="letter-spacing: 0"
-            (click)="prevStep()"
-          >
-            {{ "general__previous" | translate }}
-          </button>
-          <button
-            type="button"
-            mat-stroked-button
-            color="warn"
-            style="letter-spacing: 0"
-            *ngIf="!data.noAction"
-            [matMenuTriggerFor]="menu"
-          >
-            <mat-icon>warning</mat-icon>
-            {{ "promotion__view__action" | translate }}
-          </button>
-          <mat-menu #menu>
-            <button mat-menu-item (click)="openUpdatePromotion()">
-              <mat-icon>edit</mat-icon>
-              <span>{{ "promotion__view__action__edit" | translate }}</span>
-            </button>
-            <button mat-menu-item (click)="openPromotionResult()">
-              <mat-icon>view_list</mat-icon>
-              <span>{{
-                "promotion__view__action__view-result" | translate
-              }}</span>
-            </button>
-          </mat-menu>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </form>
-</mat-dialog-content>
-<!-- <div *ngIf="isLoading">
-  <mat-spinner id="spinner"></mat-spinner>
-</div>
-<div *ngIf="!isLoading" mat-dialog-content>
-    <mat-tab [label]="'promotion__view__items' | translate">
-      <div class="items__wrapper">
-        <div class="item-list" *ngFor="let item of dataSource.items">
-          <div class="item-list__icon">
-            <svg
-              viewBox="-0.5 0 21 21"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-              <g
-                id="SVGRepo_tracerCarrier"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              ></g>
-              <g id="SVGRepo_iconCarrier">
-                <path
-                  opacity="0.4"
-                  d="M14.19 0.970215H5.81C2.17 0.970215 0 3.14022 0 6.78022V15.1602C0 18.8002 2.17 20.9702 5.81 20.9702H14.19C17.83 20.9702 20 18.8002 20 15.1602V6.78022C20 3.14022 17.83 0.970215 14.19 0.970215Z"
-                  fill="#5985e1"
-                ></path>
-                <path
-                  d="M16.3105 7.84033C16.3105 8.25033 15.9805 8.59033 15.5605 8.59033H10.3105C9.90055 8.59033 9.56055 8.25033 9.56055 7.84033C9.56055 7.43033 9.90055 7.09033 10.3105 7.09033H15.5605C15.9805 7.09033 16.3105 7.43033 16.3105 7.84033Z"
-                  fill="#5985e1"
-                ></path>
-                <path
-                  d="M7.97055 6.87027L5.72055 9.12027C5.57055 9.27027 5.38055 9.34027 5.19055 9.34027C5.00055 9.34027 4.80055 9.27027 4.66055 9.12027L3.91055 8.37027C3.61055 8.08027 3.61055 7.60027 3.91055 7.31027C4.20055 7.02027 4.67055 7.02027 4.97055 7.31027L5.19055 7.53027L6.91055 5.81027C7.20055 5.52027 7.67055 5.52027 7.97055 5.81027C8.26055 6.10027 8.26055 6.58027 7.97055 6.87027Z"
-                  fill="#5985e1"
-                ></path>
-                <path
-                  d="M16.3105 14.8403C16.3105 15.2503 15.9805 15.5903 15.5605 15.5903H10.3105C9.90055 15.5903 9.56055 15.2503 9.56055 14.8403C9.56055 14.4303 9.90055 14.0903 10.3105 14.0903H15.5605C15.9805 14.0903 16.3105 14.4303 16.3105 14.8403Z"
-                  fill="#5985e1"
-                ></path>
-                <path
-                  d="M7.97055 13.8703L5.72055 16.1203C5.57055 16.2703 5.38055 16.3403 5.19055 16.3403C5.00055 16.3403 4.80055 16.2703 4.66055 16.1203L3.91055 15.3703C3.61055 15.0803 3.61055 14.6003 3.91055 14.3103C4.20055 14.0203 4.67055 14.0203 4.97055 14.3103L5.19055 14.5303L6.91055 12.8103C7.20055 12.5203 7.67055 12.5203 7.97055 12.8103C8.26055 13.1003 8.26055 13.5803 7.97055 13.8703Z"
-                  fill="#5985e1"
-                ></path>
-              </g>
-            </svg>
-          </div>
-          <div class="item-list__text">
-            <h3>{{ item.reference }}</h3>
-            <p>{{ item.description }}</p>
-          </div>
+<!-- Tampilan baca promosi — dokumen, bukan formulir. -->
+<div class="lihat">
+  <ng-container *ngIf="!isLoading && promo">
+    <header class="lihat__kepala">
+      <div class="lihat__identitas">
+        <span class="lihat__avatar" aria-hidden="true">
+          <i class="ph ph-seal-percent"></i>
+        </span>
+        <div>
+          <h2 class="lihat__nama">{{ promo.name }}</h2>
+          <p class="lihat__nomor">{{ promo.supplierName }}</p>
         </div>
       </div>
-    </mat-tab>
-  </mat-tab-group>
-</div>
 
-<mat-dialog-actions align="end">
-  <button
-    class="action-button"
-    [disabled]="isDownloading"
-    (click)="downloadResult()"
-  >
-    {{ "promotion__view__download-button" | translate }}
-  </button>
-</mat-dialog-actions> -->
+      <span
+        class="pill"
+        [class.pill--hijau]="!promo.isDelete"
+        [class.pill--garis]="promo.isDelete"
+      >
+        {{
+          (promo.isDelete
+            ? 'promotion__view__status__deleted'
+            : 'promotion__view__status__active'
+          ) | translate
+        }}
+      </span>
+    </header>
+
+    <div class="lihat__isi">
+      <dl class="lihat__kisi">
+        <div>
+          <dt>{{ 'promotion__view__target' | translate }}</dt>
+          <dd>Rp {{ promo.target | number: '1.0-0' }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'promotion__view__start-date' | translate }}</dt>
+          <dd>{{ promo.startDate | date: 'dd MMMM yyyy' }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'promotion__view__created-by' | translate }}</dt>
+          <dd>{{ promo.createdBy }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'promotion__view__end-date' | translate }}</dt>
+          <dd>
+            {{
+              promo.endDate == null
+                ? ('promotion__view__continuous' | translate)
+                : (promo.endDate | date: 'dd MMMM yyyy')
+            }}
+          </dd>
+        </div>
+        <div class="lihat__lebar" *ngIf="promo.description">
+          <dt>{{ 'promotion__view__description' | translate }}</dt>
+          <dd>{{ promo.description }}</dd>
+        </div>
+      </dl>
+
+      <h3 class="lihat__label">
+        {{ 'promotion__view__brand' | translate }} ({{ merek.length }})
+      </h3>
+      <div class="chip-kumpul">
+        <span class="tag" *ngFor="let m of merek">{{ m }}</span>
+      </div>
+
+      <h3 class="lihat__label">
+        {{ 'promotion__view__rules' | translate }} ({{ aturan.length }})
+      </h3>
+      <table class="tabel tabel--rapat">
+        <thead>
+          <tr>
+            <th>{{ 'promotion__rules__rule' | translate }}</th>
+            <th>{{ 'promotion__rules__value' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of aturan">
+            <td class="tabel__utama">{{ a.rule }}</td>
+            <td>{{ a.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="lihat__kaki">
+      <button
+        *ngIf="!data.noAction"
+        type="button"
+        class="btn btn--kedua"
+        (click)="openUpdatePromotion()"
+      >
+        <i class="ph ph-pencil-simple" aria-hidden="true"></i>
+        {{ 'promotion__view__action__edit' | translate }}
+      </button>
+
+      <span class="lihat__renggang"></span>
+
+      <button
+        type="button"
+        class="btn btn--kedua"
+        [disabled]="isDownloading"
+        (click)="downloadResult()"
+      >
+        <i class="ph ph-file-xls" aria-hidden="true"></i>
+        {{ 'promotion__view__download-button' | translate }}
+      </button>
+
+      <button
+        *ngIf="!data.noAction"
+        type="button"
+        class="btn btn--kedua"
+        (click)="openPromotionResult()"
+      >
+        <i class="ph ph-list-magnifying-glass" aria-hidden="true"></i>
+        {{ 'promotion__view__action__view-result' | translate }}
+      </button>
+
+      <button type="button" class="btn" (click)="tutup()">
+        {{ 'general__close' | translate }}
+      </button>
+    </footer>
+  </ng-container>
+
+  <p class="lihat__memuat" *ngIf="isLoading">
+    {{ 'general__loading' | translate }}
+  </p>
+</div>

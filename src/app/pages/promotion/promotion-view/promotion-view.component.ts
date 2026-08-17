@@ -1,30 +1,26 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { Component, Inject, signal } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent } from '@angular/material/dialog';
+import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import * as xlsx from 'xlsx';
 import { saveAs } from 'file-saver';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { NgxMaskDirective } from 'ngx-mask';
-import { MatChipListbox, MatChip } from '@angular/material/chips';
-import { MatButton } from '@angular/material/button';
-import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
-import { MatIcon } from '@angular/material/icon';
 
+/**
+ * Tampilan BACA promosi — dokumen, bukan formulir berbaju input.
+ * Unduhan hasil Excel dipertahankan persis; aksi ubah dan lihat hasil
+ * naik ke kaki dialog, tidak lagi bersembunyi di menu "Aksi lainnya".
+ */
 @Component({
-    selector: 'app-promotion-view',
-    templateUrl: './promotion-view.component.html',
-    styleUrls: ['./promotion-view.component.scss'],
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatChipListbox, NgFor, MatChip, MatButton, NgIf, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, TranslatePipe]
+  selector: 'app-promotion-view',
+  templateUrl: './promotion-view.component.html',
+  styleUrls: ['./promotion-view.component.scss'],
+  providers: [DatePipe],
+  imports: [NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe],
 })
-export class PromotionViewComponent {
+export class PromotionViewComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { id: number; noAction: boolean },
     private apiService: ApiService,
@@ -32,7 +28,6 @@ export class PromotionViewComponent {
     private dialog: MatDialogRef<PromotionViewComponent>,
     private translateService: TranslateService,
     private datePipe: DatePipe,
-    private formBuilder: FormBuilder,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -40,38 +35,16 @@ export class PromotionViewComponent {
   isLoading: boolean = false;
   isDownloading: boolean = false;
 
-  step = signal(0);
-
-  formGroup: FormGroup = new FormGroup({
-    id: new FormControl('', Validators.required),
-    name: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required),
-    target: new FormControl('', Validators.required),
-    supplierID: new FormControl('', Validators.required),
-    supplierName: new FormControl('', Validators.required),
-    startDate: new FormControl('', Validators.required),
-    endDate: new FormControl('', Validators.required),
-    status: new FormControl('', Validators.required),
-    createdBy: new FormControl('', Validators.required),
-    createdAt: new FormControl('', Validators.required),
-    promotion_brand: new FormArray([]),
-    promotion_rules: new FormArray([]),
-  });
-
-  get f() {
-    return this.formGroup.controls;
-  }
-
-  get t() {
-    return this.f['promotion_brand'] as FormArray;
-  }
-
-  get u() {
-    return this.f['promotion_rules'] as FormArray;
-  }
+  promo: any = null;
+  merek: string[] = [];
+  aturan: { rule: string; value: string }[] = [];
 
   ngOnInit(): void {
     this.fetchByID();
+  }
+
+  tutup(): void {
+    this.dialog.close();
   }
 
   downloadResult(): void {
@@ -293,46 +266,24 @@ export class PromotionViewComponent {
       .get(`promotion/${this.data.id}`)
       .subscribe({
         next: (data: any) => {
-          this.formGroup.patchValue({
-            id: data.id,
+          this.promo = {
             name: data.name,
-            target: data.target,
             description: data.description,
-            supplierID: data.supplier_id,
+            target: Number(data.target),
             supplierName: data.supplier.name,
-            startDate: this.datePipe.transform(data.startDate, 'dd MMMM yyyy'),
-            endDate:
-              data.endDate == null
-                ? this.translateService.instant('promotion__view__continuous')
-                : this.datePipe.transform(data.endDate, 'dd MMMM yyyy'),
-            status: data.is_delete
-              ? this.translateService.instant(
-                  'promotion__view__status__deleted'
-                )
-              : this.translateService.instant(
-                  'promotion__view__status__active'
-                ),
+            startDate: data.startDate,
+            endDate: data.endDate,
+            isDelete: data.is_delete,
             createdBy: data.promotion_code_created_by.name,
-            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM yyyy'),
-          });
-
-          data.promotion_brand.forEach((x: any) => {
-            this.t.push(
-              this.formBuilder.group({
-                id: [x.id],
-                name: [x.product_brand.name],
-              })
-            );
-          });
-
-          data.promotion_rules.forEach((x: any) => {
-            this.u.push(
-              this.formBuilder.group({
-                rule: [x.rule],
-                value: [x.value],
-              })
-            );
-          });
+            createdAt: data.created_at,
+          };
+          this.merek = (data.promotion_brand ?? []).map(
+            (x: any) => x.product_brand.name
+          );
+          this.aturan = (data.promotion_rules ?? []).map((x: any) => ({
+            rule: x.rule,
+            value: x.value,
+          }));
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -349,18 +300,6 @@ export class PromotionViewComponent {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
     });
     saveAs(data, `${fileName}_${new Date().getTime()}.xlsx`);
-  }
-
-  setStep(index: number) {
-    this.step.set(index);
-  }
-
-  nextStep() {
-    this.step.update((i) => i + 1);
-  }
-
-  prevStep() {
-    this.step.update((i) => i - 1);
   }
 
   openUpdatePromotion() {
