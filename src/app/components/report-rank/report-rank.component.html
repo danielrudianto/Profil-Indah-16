@@ -9,8 +9,12 @@
   (close)="closeDialog()"
 >
   <div class="peringkat" *ngIf="data.baris.length > 0">
-    <div class="peringkat__baris" *ngFor="let b of data.baris">
-      <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
+    <div
+      class="peringkat__baris"
+      *ngFor="let b of data.baris"
+      [title]="b.name + ' — ' + (persen(b.value) | number: '1.0-1') + '% · Rp ' + (b.value | number: '1.0-0')"
+    >
+      <span class="peringkat__nama">{{ b.name }}</span>
       <span
         class="peringkat__bar"
         [style.width.%]="lebar(b.value)"

@@ -223,8 +223,13 @@
     </div>
 
     <div class="peringkat" *ngIf="merek.length > 0">
-      <div class="peringkat__baris" *ngFor="let b of merek">
-        <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
+      <!-- Satu baris satu tooltip: nama, porsi, dan nilainya ikut terbaca dari batangnya. -->
+      <div
+        class="peringkat__baris"
+        *ngFor="let b of merek"
+        [title]="b.name + ' — ' + (persenMerek(b.value) | number: '1.0-1') + '% · Rp ' + (b.value | number: '1.0-0')"
+      >
+        <span class="peringkat__nama">{{ b.name }}</span>
         <span class="peringkat__jalur" aria-hidden="true">
           <span class="peringkat__bar" [style.width.%]="lebarMerek(b.value)"></span>
         </span>

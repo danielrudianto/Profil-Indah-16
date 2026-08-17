@@ -83,7 +83,8 @@
 }
 
 .kartu__label {
-  margin: 4px 0 0;
+  /* Jarak bawah = napas antara judul kartu dan isinya. */
+  margin: 4px 0 12px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -401,7 +402,12 @@
 
 /* Baris kepala grafik: subjudul kiri, rentang tanggal kanan bawah. */
 .grafik__sub {
-  margin: -8px 0 0;
+  /*
+    Judul kartu membawa jarak bawah 12px; -4px di sini menjadikannya
+    8px — subjudul merapat ke judulnya tanpa menabrak seperti dulu
+    (sebelumnya -8px dan keduanya bertumpukan).
+  */
+  margin: -4px 0 0;
   font-size: 12.5px;
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }

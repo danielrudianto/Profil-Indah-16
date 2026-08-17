@@ -41,7 +41,10 @@
           merek" di laporan. Angkanya tetap di kolom sebelah; bar hanya
           mempercepat perbandingan.
         -->
-        <td class="piutang__bar-sel">
+        <td
+          class="piutang__bar-sel"
+          [title]="(item.name ?? ('sales-invoice__retail' | translate)) + ' — Rp ' + (sisa(item) | number: '1.0-0')"
+        >
           <span
             class="piutang__bar"
             [style.width.%]="lebarBar(item)"
