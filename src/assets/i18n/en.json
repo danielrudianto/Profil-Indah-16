@@ -176,6 +176,7 @@
   "supplier__add__submit": "Save supplier",
   "stock-list__title": "Stock List",
   "stock-report__title": "Stock Report",
+  "stock-report__empty": "No mutations up to this date.",
   "stock-report__date": "Report date",
   "stock-report__document": "View by document date",
   "stock-report__input": "View by input date",

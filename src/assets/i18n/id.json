@@ -173,6 +173,7 @@
   "supplier__add__submit": "Simpan supplier",
   "stock-list__title": "Daftar Stok",
   "stock-report__title": "Laporan stock harian",
+  "stock-report__empty": "Belum ada mutasi sampai tanggal ini.",
   "stock-report__date": "Tanggal laporan",
   "stock-report__document": "Lihat berdasarkan tanggal dokumen",
   "stock-report__input": "Lihat berdasarkan tanggal input",

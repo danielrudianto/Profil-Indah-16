@@ -183,6 +183,8 @@ export class DepositViewComponent implements OnInit {
           id: this.data.id,
         },
         disableClose: true,
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
       })
       .afterClosed()
       .subscribe((data) => {
