@@ -1,128 +1,83 @@
-import { Component, Inject, signal } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
+import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DatePipe, NgFor, DecimalPipe } from '@angular/common';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
-import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
 
+/**
+ * Tampilan BACA retur penjualan — dokumen, bukan formulir berbaju
+ * kolom input. Hapus untuk administrator; menutup dengan 'deleted'
+ * agar pemanggilnya menyegarkan daftar.
+ */
 @Component({
-    selector: 'app-sales-return-archive-view',
-    templateUrl: './sales-return-archive-view.component.html',
-    imports: [MatDialogTitle, CdkDrag, CdkDragHandle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, MatIcon, MatDialogActions, MatDialogClose, DecimalPipe, TranslatePipe]
+  selector: 'app-sales-return-archive-view',
+  templateUrl: './sales-return-archive-view.component.html',
+  styleUrls: ['./sales-return-archive-view.component.scss'],
+  imports: [NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe],
 })
-export class SalesReturnArchiveViewComponent {
+export class SalesReturnArchiveViewComponent implements OnInit {
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { id: number },
-    private dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public data: { id: number; noAction: boolean },
     private dialogRef: MatDialogRef<SalesReturnArchiveViewComponent>,
-    private alertService: AlertService,
     private apiService: ApiService,
+    private dialog: MatDialog,
+    private alertService: AlertService,
     private authService: AuthService,
-    private datePipe: DatePipe,
     private translateService: TranslateService,
-    private formBuilder: FormBuilder
   ) {}
 
-  isAdministrator: boolean = false;
-  isSubmitting: boolean = false;
-  isLoading: boolean = false;
-  step = signal(0);
+  isAdministrator = false;
+  isSubmitting = false;
+  isLoading = true;
+
+  dokumen: any = null;
+  barang: any[] = [];
 
   ngOnInit(): void {
     this.isAdministrator = this.authService.isAdministrator();
-    this.fetchByID();
-  }
-
-  salesReturnFormGroup: FormGroup = new FormGroup({
-    id: new FormControl('', Validators.required),
-    name: new FormControl('', Validators.required),
-    status: new FormControl('', Validators.required),
-    date: new FormControl('', Validators.required),
-    invoice_name: new FormControl('', Validators.required),
-    invoice_date: new FormControl('', Validators.required),
-    customer: new FormControl('', Validators.required),
-    sales: new FormControl('', Validators.required),
-    createdBy: new FormControl('', Validators.required),
-    createdAt: new FormControl('', Validators.required),
-    sales_return: new FormArray([]),
-    payment_method: new FormControl(''),
-  });
-
-  get f() {
-    return this.salesReturnFormGroup.controls;
-  }
-
-  get t() {
-    return this.f['sales_return'] as FormArray;
-  }
-
-  fetchByID() {
-    this.isLoading = true;
     this.apiService
       .get('sales-return/' + this.data.id, {})
       .subscribe({
         next: (data: any) => {
-          this.salesReturnFormGroup.patchValue({
-            id: data.id,
+          this.dokumen = {
             name: data.name,
-            date: this.datePipe.transform(data.date, 'dd MMMM yyyy'),
-            invoice_name: data.sales_invoice_code.name,
-            invoice_date: this.datePipe.transform(
-              data.sales_invoice_code.date,
-              'dd MMMM yyyy'
-            ),
+            date: data.date,
+            invoiceName: data.sales_invoice_code.name,
+            invoiceDate: data.sales_invoice_code.date,
             customer:
               data.sales_invoice_code.customer == null
-                ? 'Retail'
+                ? null
                 : data.sales_invoice_code.customer.name,
             sales:
               data.sales_invoice_code.sales == null
                 ? 'INTERNAL'
-                : data.sales_invoice_code.sales,
+                : data.sales_invoice_code.sales.toUpperCase(),
             isDelete: data.is_delete,
-            status: data.is_delete
-              ? this.translateService.instant('sales-return__status__deleted')
-              : this.translateService.instant('sales-return__status__active'),
-            createdBy: data.user_sales_return_code_created_byTouser.name,
-            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM yyyy HH:mm'),
-            payment_method:
+            paymentMethod:
               data.payment_method == null ? 'Cash' : data.payment_method.name,
-          });
+            createdBy: data.user_sales_return_code_created_byTouser.name,
+            createdAt: data.created_at,
+          };
 
-          data.sales_return.forEach((x: any) => {
-            this.t.push(
-              this.formBuilder.group({
-                id: [x.id],
-                product_id: [x.sales_invoice.product_id],
-                product_unit_id: [x.sales_invoice.product_unit_id],
-                reference: [x.sales_invoice.product.reference],
-                description: [x.sales_invoice.product.description],
-                quantity: [x.quantity],
-                price: [x.sales_invoice.price],
-                discount: [x.sales_invoice.discount],
-                unit: [
-                  x.sales_invoice.product_unit == null
-                    ? x.sales_invoice.product.unit
-                    : x.sales_invoice.product_unit.unit,
-                ],
-                conversion: [
-                  x.sales_invoice.product_unit == null
-                    ? 1
-                    : x.sales_invoice.product_unit.conversion,
-                ],
-              })
-            );
-          });
+          this.barang = (data.sales_return ?? []).map((x: any) => ({
+            reference: x.sales_invoice.product.reference,
+            description: x.sales_invoice.product.description,
+            quantity: Number(x.quantity),
+            unit:
+              x.sales_invoice.product_unit == null
+                ? x.sales_invoice.product.unit
+                : x.sales_invoice.product_unit.unit,
+            price: Number(x.sales_invoice.price),
+            discount: Number(x.sales_invoice.discount),
+          }));
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -134,25 +89,33 @@ export class SalesReturnArchiveViewComponent {
       });
   }
 
-  setStep(index: number) {
-    this.step.set(index);
+  get namaPelanggan(): string {
+    return (
+      this.dokumen?.customer ??
+      this.translateService.instant('sales-invoice__retail')
+    );
   }
 
-  nextStep() {
-    this.step.update((i) => i + 1);
+  get inisial(): string {
+    return this.namaPelanggan.trim().charAt(0).toUpperCase() || '?';
   }
 
-  prevStep() {
-    this.step.update((i) => i - 1);
+  get subtotal(): number {
+    return this.barang.reduce(
+      (a, b) => a + b.quantity * (b.price - b.discount),
+      0,
+    );
   }
 
-  get subtotal() {
-    return this.t.value.reduce((a: any, b: any) => {
-      return a + b.quantity * (b.price - b.discount);
-    }, 0);
+  totalBaris(b: any): number {
+    return b.quantity * (b.price - b.discount);
   }
 
-  delete() {
+  tutup(): void {
+    this.dialogRef.close();
+  }
+
+  delete(): void {
     this.dialog
       .open(DeleteConfirmationComponent, {
         data: {
@@ -160,13 +123,13 @@ export class SalesReturnArchiveViewComponent {
         },
       })
       .afterClosed()
-      .subscribe((data) => {
-        if (data == true) {
+      .subscribe((jawaban) => {
+        if (jawaban == true) {
           this.isSubmitting = true;
           this.apiService
             .delete(`sales-return/${this.data.id}`)
             .subscribe({
-              next: (_) => {
+              next: () => {
                 this.dialogRef.close('deleted');
               },
               error: (error) => {
