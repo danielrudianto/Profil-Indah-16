@@ -267,7 +267,7 @@
   "adjustment-case__archive": "Archive",
   "adjustment-case__confirm": "Confirm",
   "adjustment-case__create": "Create",
-  "sales-invoice__create__view-salesman": "View available salesmen",
+  "sales-invoice__create__view-salesman": "View salesman list",
   "sales-invoice__create__add-product": "Add product",
   "sales-invoice__create__add-package": "Add package",
   "sales-invoice__create__item": "Item",

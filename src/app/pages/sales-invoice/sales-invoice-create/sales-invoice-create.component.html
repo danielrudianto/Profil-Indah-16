@@ -112,6 +112,15 @@
             <option value="INTERNAL"></option>
             <option *ngFor="let s of salesmen" [value]="s"></option>
           </datalist>
+          <!--
+            Jendela daftar sales — sempat hilang saat halaman ini dirakit
+            ulang; viewSalesman() tinggal tanpa satu pun pemanggil.
+          -->
+          <p class="field__bantu">
+            <button type="button" class="tautan" (click)="viewSalesman()">
+              {{ 'sales-invoice__create__view-salesman' | translate }}
+            </button>
+          </p>
         </div>
 
       </section>
