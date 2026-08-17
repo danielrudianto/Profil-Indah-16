@@ -5,6 +5,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import * as XLSX from 'xlsx';
 
@@ -36,6 +37,7 @@ import {
     FormsModule,
     ReactiveFormsModule,
     TranslatePipe,
+    RouterLink,
     MatDatepicker,
     MatDatepickerInput,
   ],

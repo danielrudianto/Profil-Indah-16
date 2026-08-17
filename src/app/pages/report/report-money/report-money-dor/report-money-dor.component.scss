@@ -1,0 +1,31 @@
+/* Seluruh anatomi halaman laporan tinggal di partial bersama. */
+@use "../../../../styles/laporan";
+
+.laporan__sampai {
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+/* Petunjuk arti DOR — istilah toko yang tidak menjelaskan dirinya. */
+.petunjuk-dor {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  background: var(--color-active);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-accent) 40%, transparent);
+
+  i {
+    flex-shrink: 0;
+    font-size: 16px;
+    color: var(--color-accent);
+    line-height: 1.5;
+  }
+}
+
+.baris-total td {
+  border-top: 2px solid var(--color-divider);
+}

@@ -57,6 +57,7 @@
     <div class="hero__kartu">
       <span class="hero__label">{{ 'report-money__hero__dor' | translate }}</span>
       <strong class="hero__nilai">Rp {{ totalDor | number: '1.0-0' }}</strong>
+      <span class="hero__sub">{{ 'report-money__hero__dor-sub' | translate }}</span>
     </div>
   </div>
 
@@ -119,7 +120,14 @@
 
   <!-- DOR — penerimaan per sales yang belum masuk metode mana pun. -->
   <section class="kartu">
-    <h2 class="kartu__label">{{ 'report-money__dor' | translate }}</h2>
+    <div class="kartu__kepala">
+      <h2 class="kartu__label">{{ 'report-money__dor' | translate }}</h2>
+
+      <a class="kartu__tautan" routerLink="Dor">
+        {{ 'report-money__dor__recap' | translate }}
+        <i class="ph ph-arrow-right" aria-hidden="true"></i>
+      </a>
+    </div>
 
     <div class="gulir" *ngIf="dor.length > 0">
       <table class="tabel tabel--rapat">

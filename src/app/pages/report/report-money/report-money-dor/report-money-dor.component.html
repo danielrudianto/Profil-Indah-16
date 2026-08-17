@@ -1,71 +1,102 @@
-<app-feature-background />
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <app-feature-header
-        [title]="'report-money__dor__title' | translate"
-        [isBackAvailable]="true"
-      ></app-feature-header>
+<!-- Rekap DOR per sales — salah kasih harga yang dipotong dari komisi. -->
+<div class="laporan">
+  <header class="laporan__kepala">
+    <div>
+      <h1 class="laporan__judul">{{ 'report-dor__title' | translate }}</h1>
+      <p class="laporan__lede">{{ 'report-dor__lede' | translate }}</p>
     </div>
-    <div class="dashboard-card">
-      <!-- Datepicker -->
-      <mat-form-field appearance="outline">
-        <mat-label>{{ "report-money__date" | translate }}</mat-label>
-        <mat-date-range-input
-          [formGroup]="formGroup"
-          [rangePicker]="startDatePicker"
-        >
-          <input
-            matStartDate
-            placeholder="Start date"
-            formControlName="startDate"
-          />
-          <input
-            matEndDate
-            placeholder="End date"
-            formControlName="endDate"
-            (dateChange)="onDateRangeChange($event)"
-          />
-        </mat-date-range-input>
-        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="startDatePicker"
-        ></mat-datepicker-toggle>
-        <mat-date-range-picker #startDatePicker></mat-date-range-picker>
-      </mat-form-field>
 
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>{{ "report-money__method" | translate }}</th>
-              <th>{{ "report-money__sales-invoice" | translate }}</th>
-              <th>{{ "report-money__deposit" | translate }}</th>
-              <th>{{ "report-money__total" | translate }}</th>
-            </tr>
-          </thead>
-          <tbody *ngIf="isLoading">
-            <tr>
-              <td colspan="5">
-                <mat-spinner id="spinner"></mat-spinner>
-              </td>
-            </tr>
-          </tbody>
-          <tbody *ngIf="!isLoading && dorDataSource != null">
-            <tr *ngFor="let data of dorDataSource.data">
-              <td>{{ data.sales }}</td>
-              <td>{{ data.salesInvoice | number : "0.2-2" }}</td>
-              <td>{{ data.salesDeposit | number : "0.2-2" }}</td>
-              <td>
-                {{ data.salesInvoice + data.salesDeposit | number : "0.2-2" }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="laporan__kendali">
+      <div class="laporan__bulan-kendali">
+        <input
+          class="laporan__bulan-jangkar"
+          [matDatepicker]="dariPicker"
+          [formControl]="dari"
+          readonly
+          tabindex="-1"
+          aria-hidden="true"
+        />
+        <button
+          type="button"
+          class="btn btn--kedua"
+          (click)="dariPicker.open()"
+          [attr.aria-label]="'report-dor__from' | translate"
+        >
+          <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+          {{ teksTanggal(dari.value) }}
+        </button>
+        <mat-datepicker #dariPicker></mat-datepicker>
       </div>
 
-      <p>{{ "report-money__description" | translate }}</p>
+      <span class="laporan__sampai">—</span>
+
+      <div class="laporan__bulan-kendali">
+        <input
+          class="laporan__bulan-jangkar"
+          [matDatepicker]="sampaiPicker"
+          [formControl]="sampai"
+          readonly
+          tabindex="-1"
+          aria-hidden="true"
+        />
+        <button
+          type="button"
+          class="btn btn--kedua"
+          (click)="sampaiPicker.open()"
+          [attr.aria-label]="'report-dor__to' | translate"
+        >
+          <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+          {{ teksTanggal(sampai.value) }}
+        </button>
+        <mat-datepicker #sampaiPicker></mat-datepicker>
+      </div>
     </div>
-  </div>
+  </header>
+
+  <section class="kartu">
+    <h2 class="kartu__label">{{ 'report-dor__by-sales' | translate }}</h2>
+
+    <p class="petunjuk-dor">
+      <i class="ph ph-info" aria-hidden="true"></i>
+      <span>{{ 'report-dor__hint' | translate }}</span>
+    </p>
+
+    <div class="gulir" *ngIf="!isLoading && baris.length > 0">
+      <table class="tabel">
+        <thead>
+          <tr>
+            <th>{{ 'report-money__dor__sales' | translate }}</th>
+            <th class="tabel__nilai-kepala">{{ 'report-money__sales-invoice' | translate }}</th>
+            <th class="tabel__nilai-kepala">{{ 'report-money__deposit' | translate }}</th>
+            <th class="tabel__nilai-kepala">{{ 'report-dor__deduction' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let b of baris">
+            <td class="tabel__utama">{{ b.sales || 'INTERNAL' }}</td>
+            <td class="tabel__nilai">Rp {{ b.salesInvoice | number: '1.0-0' }}</td>
+            <td class="tabel__nilai">Rp {{ b.salesDeposit | number: '1.0-0' }}</td>
+            <td class="tabel__nilai baris__total">
+              Rp {{ totalBaris(b) | number: '1.0-0' }}
+            </td>
+          </tr>
+          <tr class="baris-total">
+            <td class="tabel__utama">TOTAL</td>
+            <td colspan="2"></td>
+            <td class="tabel__nilai baris__total">
+              Rp {{ total | number: '1.0-0' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="tabel__pesan" *ngIf="isLoading">
+      {{ 'general__loading' | translate }}
+    </p>
+
+    <p class="laporan__kosong" *ngIf="!isLoading && baris.length === 0">
+      {{ 'report-dor__empty' | translate }}
+    </p>
+  </section>
 </div>

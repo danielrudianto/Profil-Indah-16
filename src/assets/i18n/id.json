@@ -2351,5 +2351,15 @@
   "report-money__rebate": "Pengembalian diskon",
   "report-money__dor": "DOR per sales",
   "report-money__dor__sales": "Sales",
-  "report-money__dor__empty": "Tidak ada penerimaan DOR pada tanggal ini."
+  "report-money__dor__empty": "Tidak ada penerimaan DOR pada tanggal ini.",
+  "report-money__hero__dor-sub": "Salah harga — dipotong dari komisi sales",
+  "report-money__dor__recap": "Rekap potong komisi",
+  "report-dor__title": "Rekap DOR per sales",
+  "report-dor__lede": "Selisih salah kasih harga per sales, untuk dipotong dari komisinya.",
+  "report-dor__from": "Dari tanggal",
+  "report-dor__to": "Sampai tanggal",
+  "report-dor__by-sales": "Per sales",
+  "report-dor__hint": "DOR adalah selisih akibat salah memberi harga. Nilainya dicatat atas nama sales yang memberikan harga dan dipotong dari komisinya.",
+  "report-dor__deduction": "Potongan komisi",
+  "report-dor__empty": "Tidak ada DOR pada rentang tanggal ini."
 }
