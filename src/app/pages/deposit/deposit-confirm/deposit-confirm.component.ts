@@ -23,6 +23,7 @@ import {
   MatDatepicker,
   MatDatepickerInput,
 } from '@angular/material/datepicker';
+import { PAYMENT_ROUNDING_TOLERANCE } from 'src/app/constants/payment.constant';
 
 /**
  * Konfirmasi deposit — kerangka form-buat 5a.
@@ -196,7 +197,8 @@ export class DepositConfirmComponent implements OnInit {
   }
 
   get lunas(): boolean {
-    return this.totalPembayaran === this.totalTagihan;
+    /* Kesamaan persis menggantungkan dokumen gara-gara receh pembulatan. */
+    return this.totalTagihan - this.totalPembayaran <= PAYMENT_ROUNDING_TOLERANCE;
   }
 
   /** Pembayaran tidak boleh melebihi tagihan — server menolaknya juga. */
