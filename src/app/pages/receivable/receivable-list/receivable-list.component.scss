@@ -1,22 +1,20 @@
-.receivable-bar__wrapper {
-  width: 100%;
-  background-color: transparent;
-  height: 20px;
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+/*
+  Bar sisa piutang, relatif terhadap penunggak terbesar — pola bar
+  "penjualan per merek" di laporan: pembanding cepat, angkanya tetap di
+  kolom sebelah.
+*/
+.piutang__bar-kepala {
+  width: 40%;
 }
 
-.receivable-bar__item-wrapper {
-  flex-grow: 1;
+.piutang__bar-sel {
+  padding-right: 24px;
 }
 
-.receivable-bar {
-  height: 20px;
-  background-color: rgba(154, 177, 255, 0.692);
-}
-
-.receivable-bar__wrapper p {
-  flex-shrink: 0;
+.piutang__bar {
+  display: block;
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 75%, transparent);
+  min-width: 6px;
 }

@@ -2214,5 +2214,19 @@
   "archives__documents": "documents",
   "archives__empty": "No documents archived yet.",
   "archives__lede": "Pick a month to open its documents.",
-  "general__other-actions": "Other actions"
+  "general__other-actions": "Other actions",
+  "receivable__lede": "Each customer's outstanding balance from unpaid invoices.",
+  "receivable__search": "Search customer name…",
+  "receivable__empty__title": "No receivables",
+  "receivable__empty__desc": "Every customer invoice has been paid.",
+  "receivable__back": "Back to receivables",
+  "receivable__view__empty__title": "No outstanding invoices",
+  "receivable__view__empty__desc": "All of this customer's invoices are settled.",
+  "receivable__payment__lede": "The amount is capped at this invoice's remaining balance.",
+  "receivable__payment__date": "Payment date",
+  "receivable__payment__method": "Payment method",
+  "receivable__payment__amount": "Amount",
+  "receivable__payment__remaining": "Remaining:",
+  "receivable__payment__full": "Full payment",
+  "receivable__payment__none": "No payments on this invoice yet."
 }

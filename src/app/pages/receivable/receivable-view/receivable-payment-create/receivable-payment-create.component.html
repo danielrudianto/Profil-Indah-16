@@ -1,68 +1,72 @@
-<h2 mat-dialog-title>
-  {{ "payment-history__add-payment__title" | translate }}
-</h2>
-
-<form [formGroup]="paymentFormGroup" (ngSubmit)="submitPayment()">
-  <mat-dialog-content>
+<app-dialog-shell
+  icon="ph ph-hand-coins"
+  [heading]="'receivable-view__add-payment' | translate"
+  [lede]="'receivable__payment__lede' | translate"
+  [submitLabel]="'general__submit' | translate"
+  [submitting]="isSubmitting"
+  [canSubmit]="bisaSimpan"
+  (submitted)="submit()"
+  (close)="closeDialog()"
+>
+  <div [formGroup]="paymentFormGroup">
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{
-        "payment-history__add-payment__date" | translate
-      }}</mat-label>
-      <input matInput formControlName="date" [matDatepicker]="picker" />
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-
-    <mat-form-field
-      appearance="outline"
-      class="w-100"
-      [ngClass]="{
-        'd-none': paymentFormGroup.controls['full_payment'].value
-      }"
-    >
-      <mat-label>{{
-        "payment-history__add-payment__amount" | translate
-      }}</mat-label>
+      <mat-label>{{ 'receivable__payment__date' | translate }}</mat-label>
       <input
         matInput
-        formControlName="value"
+        [matDatepicker]="bayarPicker"
+        formControlName="date"
+        autocomplete="off"
+      />
+      <!--
+        Tombol kalender manual, bukan mat-datepicker-toggle: elemen toggle
+        itu hilang tanpa jejak pada pipeline dev meski utuh di bundel
+        produksi.
+      -->
+      <button
+        type="button"
+        matSuffix
+        class="buka-kalender"
+        (click)="bayarPicker.open()"
+        [attr.aria-label]="'general__pick-date' | translate"
+      >
+        <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+      </button>
+      <mat-datepicker #bayarPicker></mat-datepicker>
+    </mat-form-field>
+
+    <app-combo-search
+      [label]="'receivable__payment__method' | translate"
+      inputId="rc-metode"
+      route="payment-method"
+      [disabled]="isSubmitting"
+      (pick)="pilihMetode($event)"
+      (clear)="lepasMetode()"
+    />
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>{{ 'receivable__payment__amount' | translate }}</mat-label>
+      <input
+        matInput
         type="text"
-        mask="separator.2"
-        thousandSeparator=" "
-        [readonly]="paymentFormGroup.controls['full_payment'].value"
+        class="input--kanan"
+        formControlName="value"
+        mask="separator"
+        thousandSeparator="."
+        autocomplete="off"
+        placeholder="0"
       />
     </mat-form-field>
 
-    <app-autocomplete-search
-      [label]="'payment-history__add-payment__payment-method' | translate"
-      placeholder="Ex. Cash"
-      [routeName]="'payment-method'"
-      [selected]="paymentFormGroup.controls['payment_method'].valid"
-      (onSelectData)="onSelectPaymentMethod($event)"
-      (onUnselectData)="onUnselectPaymentMethod()"
-    />
-
-    <p>
-      <mat-checkbox
-        formControlName="full_payment"
-        color="primary"
-        class="w-100"
-      >
-        <span class="checkbox-label">{{
-          "payment-history__add-payment__full-payment" | translate
-        }}</span>
-      </mat-checkbox>
+    <p class="petunjuk">
+      <i class="ph ph-info" aria-hidden="true"></i>
+      <span>
+        {{ 'receivable__payment__remaining' | translate }}
+        Rp {{ data.max | number: '1.0-0' }}
+      </span>
     </p>
-  </mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <button
-      mat-stroked-button
-      color="primary"
-      style="letter-spacing: 0"
-      [disabled]="isSubmitting || !paymentFormGroup.valid"
-      type="submit"
-    >
-      {{ "payment-history__add-payment__submit" | translate }}
-    </button>
-  </mat-dialog-actions>
-</form>
+
+    <mat-checkbox formControlName="full_payment">
+      {{ 'receivable__payment__full' | translate }}
+    </mat-checkbox>
+  </div>
+</app-dialog-shell>

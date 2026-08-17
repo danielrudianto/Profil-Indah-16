@@ -1,86 +1,28 @@
-<app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
-  <div class="create-dialog">
-    <app-dialog-header
-      [title]="'payment-history__title' | translate"
-      (onDialogClose)="closeDialog()"
-    >
-    </app-dialog-header>
-    <div class="create-dialog__content">
-      <div *ngIf="isLoading">
-        <mat-spinner id="spinner"></mat-spinner>
-      </div>
-
-      <div
-        *ngIf="!isLoading && dataSource.length > 0"
-        class="item-selector__wrapper"
-      >
-        <div
-          class="item-selector__item-wrapper"
-          *ngFor="let element of dataSource"
-        >
-          <div class="item-selector__unit-wrapper" [matMenuTriggerFor]="menu">
-            <div class="item-selector__unit">
-              <div class="item-selector__unit-icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                  <g
-                    id="SVGRepo_tracerCarrier"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></g>
-                  <g id="SVGRepo_iconCarrier">
-                    <path
-                      opacity="0.4"
-                      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                      fill="#5985e1"
-                    ></path>
-                    <path
-                      d="M16 11.25H12.75V8C12.75 7.59 12.41 7.25 12 7.25C11.59 7.25 11.25 7.59 11.25 8V11.25H8C7.59 11.25 7.25 11.59 7.25 12C7.25 12.41 7.59 12.75 8 12.75H11.25V16C11.25 16.41 11.59 16.75 12 16.75C12.41 16.75 12.75 16.41 12.75 16V12.75H16C16.41 12.75 16.75 12.41 16.75 12C16.75 11.59 16.41 11.25 16 11.25Z"
-                      fill="#5985e1"
-                    ></path>
-                  </g>
-                </svg>
-              </div>
-              <div class="item-selector__unit-text">
-                <p class="item-selector__reference">
-                  {{
-                    element.payment_method == null
-                      ? "Cash"
-                      : element.payment_method.name
-                  }}
-                </p>
-                <p
-                  class="item-selector__description"
-                  *ngIf="element.payment_method != null"
-                >
-                  {{ element.payment_method.description }}
-                </p>
-                <p class="item-selector__value">
-                  {{ element.value | number : "0.2-2" }}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <mat-menu #menu>
-            <button
-              mat-menu-item
-              [disabled]="isSubmitting"
-              (click)="deletePayment(element.id)"
-            >
-              {{ "payment-history__delete" | translate }}
-            </button>
-          </mat-menu>
-        </div>
-      </div>
-
-      <div *ngIf="!isLoading && dataSource.length == 0">
-        <empty-table />
-      </div>
+<app-dialog-shell
+  icon="ph ph-clock-counter-clockwise"
+  [heading]="'receivable-view__payment-history' | translate"
+  [lede]="data.name"
+  [submitLabel]="'general__close' | translate"
+  [submitting]="false"
+  [canSubmit]="true"
+  (submitted)="closeDialog()"
+  (close)="closeDialog()"
+>
+  <div class="bayar" *ngFor="let bayar of data.payments">
+    <div class="bayar__nama">
+      <strong>{{ bayar.payment_method?.name ?? 'Cash' }}</strong>
+      <span>{{ bayar.date | date: 'dd MMMM yyyy' }}</span>
     </div>
+    <div class="bayar__tetap">Rp {{ bayar.value | number: '1.0-0' }}</div>
   </div>
-</app-dynamic-dialog>
+
+  <p class="petunjuk" *ngIf="data.payments.length === 0">
+    <i class="ph ph-info" aria-hidden="true"></i>
+    <span>{{ 'receivable__payment__none' | translate }}</span>
+  </p>
+
+  <div class="ringkas__total" *ngIf="data.payments.length > 0">
+    <span>{{ 'receivable__view__payment' | translate }}</span>
+    <strong>Rp {{ total | number: '1.0-0' }}</strong>
+  </div>
+</app-dialog-shell>

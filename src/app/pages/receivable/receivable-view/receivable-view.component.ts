@@ -1,82 +1,80 @@
-import { Component, Input } from '@angular/core';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { panelAnimation } from 'src/app/animations/panel.animation';
+import { Component, OnInit } from '@angular/core';
+import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { ReceivablePaymentHistoryComponent } from './receivable-payment-history/receivable-payment-history.component';
-import { ReceivablePaymentCreateComponent } from './receivable-payment-create/receivable-payment-create.component';
-import { ArchiveViewComponent } from '../../../components/archives/archive-view/archive-view.component';
-import { ActivatedRoute } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
+import { PageTitleService } from 'src/app/services/page-title.service';
 import { SalesInvoiceViewComponent } from 'src/app/components/document-view/sales-invoice-view/sales-invoice-view.component';
-import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
-import { FeatureHeaderComponent } from '../../../components/feature-header/feature-header.component';
-import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { ReceivablePaymentCreateComponent } from './receivable-payment-create/receivable-payment-create.component';
+import { ReceivablePaymentHistoryComponent } from './receivable-payment-history/receivable-payment-history.component';
 
+/**
+ * Piutang satu pelanggan — faktur yang belum lunas beserta sisanya.
+ *
+ * Riwayat pembayaran dibaca dari data yang SUDAH ADA di tiap baris
+ * (sales_invoice_payment ikut terkirim), bukan dari GET /history/:id —
+ * endpoint itu sudah dihapus dari server, jadi dialog lama selalu gagal
+ * memuat lalu menutup dirinya sendiri.
+ */
 @Component({
-    selector: 'app-receivable-view',
-    templateUrl: './receivable-view.component.html',
-    styleUrls: ['./receivable-view.component.scss'],
-    animations: [panelAnimation],
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatMenuTrigger, MatMenu, MatMenuItem, MatPaginator, DecimalPipe, DatePipe, TranslatePipe]
+  selector: 'app-receivable-view',
+  templateUrl: './receivable-view.component.html',
+  imports: [
+    ListPageComponent,
+    TabelKosongComponent,
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    DatePipe,
+    TranslatePipe,
+  ],
 })
-export class ReceivableViewComponent {
+export class ReceivableViewComponent implements OnInit {
   constructor(
     private apiService: ApiService,
-    private alertSerivce: AlertService,
-    private dynamicComponentService: DynamicComponentService,
+    private alertService: AlertService,
     private translateService: TranslateService,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private router: Router,
+    private dialog: MatDialog,
+    private pageTitleService: PageTitleService,
   ) {}
 
-  isLoadingData: boolean = false;
-  isLoadingCard: boolean = false;
-
-  customerDataSource: any = null;
+  isLoading = true;
+  namaPelanggan = '';
   dataSource: any[] = [];
-  dataCount: number = 0;
-  page: number = 1;
-  pageSize: number = 10;
+  dataCount = 0;
+  page = 1;
+  pageSize = 10;
 
   ngOnInit(): void {
+    this.pageTitleService.pasangKonteks({
+      kembaliLabel: 'receivable__title',
+      kembaliJalur: '/Receivable',
+    });
+
     const id = this.route.snapshot.params['id'];
     if (id != 0) {
-      this.fetchCustomerData();
+      this.apiService.get(`customer/${id}`).subscribe({
+        next: (data: any) => {
+          this.namaPelanggan = data.name;
+        },
+      });
     }
 
-    this.fetchReceivableData();
+    this.ambilData();
   }
 
-  fetchCustomerData(): void {
-    this.isLoadingData = true;
-    const id = this.route.snapshot.params['id'];
-    this.apiService
-      .get(`customer/${id}`)
-      .subscribe({
-        next: (data) => {
-          this.customerDataSource = data;
-        },
-        error: (error) => {
-          this.alertSerivce.showError(error);
-        },
-      })
-      .add(() => {
-        this.isLoadingData = false;
-      });
-  }
-
-  fetchReceivableData(page: number = this.page): void {
-    const id = this.route.snapshot.params['id'];
+  ambilData(page: number = this.page): void {
     this.page = page;
-    this.isLoadingCard = true;
+    this.isLoading = true;
     this.apiService
-      .get(`receivable/customer/${id}`, {
+      .get(`receivable/customer/${this.route.snapshot.params['id']}`, {
         page: this.page,
         pageSize: this.pageSize,
       })
@@ -86,88 +84,105 @@ export class ReceivableViewComponent {
           this.dataCount = data.count;
         },
         error: (error) => {
-          this.alertSerivce.showError(error);
-          this.dynamicComponentService.closeDynamicComponent();
+          this.alertService.showError(error);
+          this.router.navigate(['/Receivable']);
         },
       })
       .add(() => {
-        this.isLoadingCard = false;
+        this.isLoading = false;
       });
   }
 
-  copyData(data: string): void {
-    navigator.clipboard.writeText(data);
-    this.alertSerivce.showSuccess(
-      this.translateService.instant('general__copy__success')
+  bukaHalaman(halaman: number): void {
+    this.ambilData(halaman);
+  }
+
+  gantiUkuran(ukuran: number): void {
+    this.pageSize = ukuran;
+    this.ambilData(1);
+  }
+
+  lacakFaktur = (_: number, item: any): number => item.id;
+
+  /* ---------------------------------------------------------------- */
+  /* Nilai per faktur                                                  */
+  /* ---------------------------------------------------------------- */
+
+  nilai(item: any): number {
+    const barang = (item.sales_invoice ?? []).reduce(
+      (a: number, b: any) => a + (b.price - b.discount) * b.quantity,
+      0,
+    );
+    return (
+      barang +
+      Number(item.delivery ?? 0) +
+      Number(item.service ?? 0) -
+      Number(item.discount ?? 0)
     );
   }
 
-  changePage(event: PageEvent) {
-    if (event.pageSize == this.pageSize) {
-      this.page = event.pageIndex + 1;
-      this.fetchReceivableData();
-    } else {
-      this.fetchReceivableData(1);
-    }
-  }
-
-  createPayment(id: number) {
-    const index = this.dataSource.findIndex((x) => x.id == id);
-    const data = this.dataSource[index];
-
-    const value = this.valueOf(
-      data.sales_invoice,
-      data.delivery + data.service - data.discount
+  terbayar(item: any): number {
+    return (item.sales_invoice_payment ?? []).reduce(
+      (a: number, b: any) => a + Number(b.value),
+      0,
     );
-
-    const payment = this.paymentOf(data.sales_invoice_payment);
-    this.dialog
-      .open(ReceivablePaymentCreateComponent, {
-        data: {
-          id: id,
-          max: value - payment,
-        },
-      })
-      .afterClosed()
-      .subscribe((data) => {
-        if (data) {
-          this.alertSerivce.showSuccess(
-            this.translateService.instant('receivable__success__message')
-          );
-          this.dataSource[index].sales_invoice_payment.push(data);
-        }
-      });
-
   }
 
-  openView(id: number) {
+  sisa(item: any): number {
+    return this.nilai(item) - this.terbayar(item);
+  }
+
+  get totalPiutang(): number {
+    return this.dataSource.reduce((a, b) => a + this.sisa(b), 0);
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Aksi per faktur                                                   */
+  /* ---------------------------------------------------------------- */
+
+  lihatFaktur(item: any): void {
     this.dialog.open(SalesInvoiceViewComponent, {
-      data: {
-        id: id,
-        noAction: true,
-      },
+      data: { id: item.id, noAction: true },
     });
   }
 
-  get totalReceivable(): number {
-    return this.dataSource.reduce((a: any, b: any) => {
-      return a + (Number(b.value) - Number(b.payment));
-    }, 0);
+  bayar(item: any): void {
+    this.dialog
+      .open(ReceivablePaymentCreateComponent, {
+        data: { id: item.id, max: this.sisa(item) },
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (!data) {
+          return;
+        }
+
+        this.alertService.showSuccess(
+          this.translateService.instant('receivable__success__message'),
+        );
+
+        /*
+          Faktur yang lunas hilang dari piutang; muat ulang dari server
+          supaya baris dan totalnya menyatakan hal yang sama.
+        */
+        this.ambilData();
+      });
   }
 
-  valueOf(data: any[], additional: number) {
-    const sales_invoice = data.reduce((a, b) => {
-      return a + (b.price - b.discount) * b.quantity;
-    }, 0);
-
-    return sales_invoice + additional;
+  riwayat(item: any): void {
+    this.dialog.open(ReceivablePaymentHistoryComponent, {
+      data: {
+        name: item.name,
+        payments: item.sales_invoice_payment ?? [],
+      },
+      panelClass: 'nocturne-dialog',
+      backdropClass: 'nocturne-dialog-backdrop',
+    });
   }
 
-  paymentOf(data: any[]) {
-    const sales_invoice_payment = data.reduce((a, b) => {
-      return a + b.value;
-    }, 0);
-
-    return sales_invoice_payment;
+  kembali(): void {
+    this.router.navigate(['/Receivable']);
   }
 }

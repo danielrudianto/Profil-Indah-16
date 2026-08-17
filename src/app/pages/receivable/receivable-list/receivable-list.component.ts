@@ -1,58 +1,102 @@
-import { Component } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiService } from 'src/app/services/api.service';
-import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
-import { FeatureHeaderComponent } from '../../../components/feature-header/feature-header.component';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { NgFor, DecimalPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
+
+/**
+ * Daftar piutang per pelanggan — pola app-list-page.
+ *
+ * Endpoint-nya mengembalikan SEMUA pelanggan yang berutang sekaligus,
+ * tanpa halaman — jumlahnya memang sekecil itu. Pencarian berjalan di
+ * peramban dan paginasi tidak digambar.
+ *
+ * Sisa piutang tiap pelanggan diberi BAR RELATIF terhadap yang terbesar
+ * — pola "penjualan per merek" di laporan — supaya siapa yang paling
+ * banyak menunggak terbaca tanpa membandingkan angka satu-satu.
+ */
 @Component({
-    selector: 'app-receivable-list',
-    templateUrl: './receivable-list.component.html',
-    styleUrl: './receivable-list.component.scss',
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, NgFor, DecimalPipe, TranslatePipe]
+  selector: 'app-receivable-list',
+  templateUrl: './receivable-list.component.html',
+  styleUrls: ['./receivable-list.component.scss'],
+  imports: [
+    ListPageComponent,
+    TabelKosongComponent,
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    TranslatePipe,
+  ],
 })
-export class ReceivableListComponent {
+export class ReceivableListComponent implements OnInit {
   constructor(
     private apiService: ApiService,
+    private alertService: AlertService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
+  isLoading = true;
   dataSource: any[] = [];
-  filteredDataSource: any[] = [];
-  searchFormControl: FormControl = new FormControl('');
+  tersaring: any[] = [];
+  keyword = '';
 
   ngOnInit(): void {
-    this.fetchReceivable();
-    this.searchFormControl.valueChanges.subscribe(() => {
-      const search = this.searchFormControl.value.toLowerCase();
-      this.filteredDataSource = this.dataSource.filter((item) =>
-        item.name?.toLowerCase().includes(search)
-      );
-    });
+    this.ambilData();
   }
 
-  fetchReceivable() {
-    this.apiService.get('receivable').subscribe({
-      next: (data: any) => {
-        this.dataSource = data;
-        this.filteredDataSource = data;
-      },
-    });
+  ambilData(): void {
+    this.isLoading = true;
+    this.apiService
+      .get('receivable')
+      .subscribe({
+        next: (data: any) => {
+          this.dataSource = data;
+          this.saring();
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
   }
 
-  get max() {
-    // get maximum value of datasource.value
-    return Math.max(...this.dataSource.map((item) => item.value));
+  cari(kataKunci: string): void {
+    this.keyword = kataKunci;
+    this.saring();
   }
 
-  viewReceivable(id: number) {
-    this.router.navigate([id], {
-      relativeTo: this.route,
-    });
+  resetPencarian(): void {
+    this.cari('');
+  }
+
+  private saring(): void {
+    const kunci = this.keyword.toLowerCase();
+    this.tersaring = this.dataSource.filter((x) =>
+      (x.name ?? '').toLowerCase().includes(kunci),
+    );
+  }
+
+  sisa(item: any): number {
+    return Number(item.value) - Number(item.payment);
+  }
+
+  /** Lebar bar relatif terhadap penunggak terbesar, dalam persen. */
+  lebarBar(item: any): number {
+    const terbesar = Math.max(...this.dataSource.map((x) => this.sisa(x)), 1);
+    return Math.max((this.sisa(item) / terbesar) * 100, 2);
+  }
+
+  lacakPiutang = (_: number, item: any): number => item.id ?? 0;
+
+  lihat(item: any): void {
+    /* Pelanggan eceran tidak punya id — server memakai 0 untuk null. */
+    this.router.navigate([item.id ?? 0], { relativeTo: this.route });
   }
 }

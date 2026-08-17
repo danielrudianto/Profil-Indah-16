@@ -2214,5 +2214,19 @@
   "archives__documents": "dokumen",
   "archives__empty": "Belum ada dokumen yang diarsipkan.",
   "archives__lede": "Pilih bulan untuk membuka daftar dokumennya.",
-  "general__other-actions": "Tindakan lainnya"
+  "general__other-actions": "Tindakan lainnya",
+  "receivable__lede": "Sisa tagihan tiap pelanggan dari faktur yang belum lunas.",
+  "receivable__search": "Cari nama pelanggan…",
+  "receivable__empty__title": "Tidak ada piutang",
+  "receivable__empty__desc": "Semua faktur pelanggan sudah lunas.",
+  "receivable__back": "Kembali ke daftar piutang",
+  "receivable__view__empty__title": "Tidak ada faktur menunggak",
+  "receivable__view__empty__desc": "Seluruh faktur pelanggan ini sudah lunas.",
+  "receivable__payment__lede": "Nominalnya dibatasi sisa tagihan faktur ini.",
+  "receivable__payment__date": "Tanggal pembayaran",
+  "receivable__payment__method": "Metode pembayaran",
+  "receivable__payment__amount": "Nominal",
+  "receivable__payment__remaining": "Sisa tagihan:",
+  "receivable__payment__full": "Lunas penuh",
+  "receivable__payment__none": "Belum ada pembayaran pada faktur ini."
 }

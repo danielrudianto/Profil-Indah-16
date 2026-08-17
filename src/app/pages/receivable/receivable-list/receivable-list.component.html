@@ -1,53 +1,90 @@
-<app-feature-background />
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <app-feature-header
-        [title]="'receivable__title' | translate"
-        [isBackAvailable]="true"
-      ></app-feature-header>
-      <div class="dashboard-card">
-        <div class="table-responsive">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Search</mat-label>
-            <input matInput [formControl]="searchFormControl" />
-          </mat-form-field>
-          <table class="table">
-            <thead>
-              <tr>
-                <th style="width: 250px">
-                  {{ "receivable__name" | translate }}
-                </th>
-                <th style="width: 200px">
-                  {{ "receivable__amount" | translate }}
-                </th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="let data of filteredDataSource"
-                (click)="viewReceivable(data.id == null ? 0 : data.id)"
-              >
-                <td>
-                  <p class="mb-0 text-clamp-1">
-                    {{ data.name }}
-                  </p>
-                </td>
-                <td>{{ data.value | number : "0.2-2" }}</td>
-                <td>
-                  <div class="receivable-bar__wrapper">
-                    <div
-                      class="receivable-bar"
-                      [style.width]="(data.value * 100) / max + '%'"
-                    ></div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<app-list-page
+  [heading]="'receivable__title' | translate"
+  [lede]="'receivable__lede' | translate"
+  [searchPlaceholder]="'receivable__search' | translate"
+  [keyword]="keyword"
+  [page]="1"
+  [pageSize]="tersaring.length || 1"
+  [total]="tersaring.length"
+  [loading]="isLoading"
+  [showPageSize]="false"
+  (search)="cari($event)"
+  (refresh)="ambilData()"
+>
+  <table class="tabel">
+    <thead>
+      <tr>
+        <th>{{ 'receivable__name' | translate }}</th>
+        <th class="piutang__bar-kepala">
+          <span class="sr-only">{{ 'receivable__amount' | translate }}</span>
+        </th>
+        <th class="tabel__nilai-kepala">
+          {{ 'receivable__amount' | translate }}
+        </th>
+        <th class="tabel__aksi-kepala">
+          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!isLoading && tersaring.length > 0">
+      <tr
+        *ngFor="let item of tersaring; trackBy: lacakPiutang"
+        class="tabel__baris-klik"
+        (click)="lihat(item)"
+      >
+        <td class="tabel__utama">
+          {{ item.name ?? ('sales-invoice__retail' | translate) }}
+        </td>
+        <!--
+          Bar relatif terhadap penunggak terbesar — pola "penjualan per
+          merek" di laporan. Angkanya tetap di kolom sebelah; bar hanya
+          mempercepat perbandingan.
+        -->
+        <td class="piutang__bar-sel">
+          <span
+            class="piutang__bar"
+            [style.width.%]="lebarBar(item)"
+            aria-hidden="true"
+          ></span>
+        </td>
+        <td class="tabel__nilai baris__total">
+          Rp {{ sisa(item) | number: '1.0-0' }}
+        </td>
+        <td class="tabel__aksi">
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="lihat(item)"
+            [title]="'general__view' | translate"
+            [attr.aria-label]="'general__view' | translate"
+          >
+            <i class="ph ph-caret-right" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="isLoading">
+      <tr>
+        <td colspan="4" class="tabel__pesan">
+          {{ 'general__loading' | translate }}
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="!isLoading && tersaring.length === 0">
+      <tr>
+        <td colspan="4">
+          <app-tabel-kosong
+            ikon="ph-hand-coins"
+            [judul]="'receivable__empty__title' | translate"
+            [penjelasan]="'receivable__empty__desc' | translate"
+            [kataKunci]="keyword"
+            (reset)="resetPencarian()"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</app-list-page>
