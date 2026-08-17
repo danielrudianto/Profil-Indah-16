@@ -392,6 +392,17 @@
           {{ 'sales-return__create__submit' | translate }}
         </button>
 
+        <!-- Jalan yang KELIHATAN ke daftar retur — sepasang dengan faktur. -->
+        <button
+          type="button"
+          class="btn btn--kedua btn--blok"
+          (click)="batal()"
+          [disabled]="isSubmitting"
+        >
+          <i class="ph ph-list-dashes" aria-hidden="true"></i>
+          {{ 'sales-return__view-list' | translate }}
+        </button>
+
         <button
           type="button"
           class="btn btn--kedua btn--blok"

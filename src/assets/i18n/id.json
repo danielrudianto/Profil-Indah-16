@@ -2208,5 +2208,7 @@
   "deposit__confirm__check-paid": "Lunas penuh",
   "deposit__confirm__submit": "Konfirmasi & terbitkan faktur",
   "sales-invoice__new": "Faktur baru",
-  "sales-return__new": "Retur baru"
+  "sales-return__new": "Retur baru",
+  "sales-invoice__view-list": "Daftar faktur penjualan",
+  "sales-return__view-list": "Daftar retur penjualan"
 }

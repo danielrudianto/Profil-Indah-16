@@ -620,6 +620,16 @@
           {{ 'sales-invoice__create__issue' | translate }}
         </button>
 
+        <!--
+          Jalan yang KELIHATAN ke daftar faktur — tautan topbar saja terlalu
+          halus untuk pintu sepenting ini. Batal di bawahnya tetap ada untuk
+          membuang formulir; keduanya memang menuju tempat yang sama.
+        -->
+        <button type="button" class="btn btn--kedua btn--blok" (click)="batal()">
+          <i class="ph ph-list-dashes" aria-hidden="true"></i>
+          {{ 'sales-invoice__view-list' | translate }}
+        </button>
+
         <button type="button" class="btn btn--kedua btn--blok" (click)="batal()">
           {{ 'general__cancel' | translate }}
         </button>

@@ -2208,5 +2208,7 @@
   "deposit__confirm__check-paid": "Fully paid",
   "deposit__confirm__submit": "Confirm & issue invoice",
   "sales-invoice__new": "New invoice",
-  "sales-return__new": "New return"
+  "sales-return__new": "New return",
+  "sales-invoice__view-list": "Sales invoice list",
+  "sales-return__view-list": "Sales return list"
 }
