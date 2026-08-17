@@ -110,7 +110,7 @@ export class PromotionResultComponent {
 
               sheetData.forEach((x, index) => {
                 worksheetData.push([
-                  this.datePipe.transform(new Date(x.date), 'YYYY-MM-dd'),
+                  this.datePipe.transform(new Date(x.date), 'yyyy-MM-dd'),
                   x.name,
                   x.reference,
                   x.customer,
@@ -174,7 +174,7 @@ export class PromotionResultComponent {
 
               sheetData.forEach((x, index) => {
                 worksheetData.push([
-                  this.datePipe.transform(new Date(x.date), 'YYYY-MM-dd'),
+                  this.datePipe.transform(new Date(x.date), 'yyyy-MM-dd'),
                   x.name,
                   x.reference,
                   x.supplier,

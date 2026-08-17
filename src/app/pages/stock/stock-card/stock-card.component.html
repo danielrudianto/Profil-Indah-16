@@ -257,7 +257,7 @@
             </tbody>
             <tbody *ngIf="!isLoadingCard && dataSource.length > 0">
               <tr *ngFor="let item of dataSource" (click)="viewDocument(item)">
-                <td>{{ item.date | date : "dd MMMM YYYY" }}</td>
+                <td>{{ item.date | date : "dd MMMM yyyy" }}</td>
                 <td>{{ item.document_name }}</td>
                 <td>
                   {{ item.display_quantity | number : "0.0-2" }}

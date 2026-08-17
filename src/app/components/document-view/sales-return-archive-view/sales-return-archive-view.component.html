@@ -277,7 +277,7 @@
 </mat-dialog-actions>
 
 <!-- <label>{{ "sales-return__archive__view__date" | translate }}</label>
-<p>{{ data.date | date : "dd/MM/YYYY" }}</p>
+<p>{{ data.date | date : "dd/MM/yyyy" }}</p>
 
 <label>{{ "sales-return__archive__view__name" | translate }}</label>
 <p>{{ data.name }}</p>
@@ -315,7 +315,7 @@
 </p>
 
 <label>{{ "sales-return__archive__view__created-at" | translate }}</label>
-<p>{{ data.created_at | date : "dd/MM/YYYY HH:mm:ss" }}</p>
+<p>{{ data.created_at | date : "dd/MM/yyyy HH:mm:ss" }}</p>
 
 <label>{{ "sales-return__archive__view__payment-method" | translate }}</label>
 <p *ngIf="data.payment_method == null">Cash</p>
@@ -326,7 +326,7 @@
 <mat-divider />
 
 <label>{{ "sales-return__archive__view__bill-date" | translate }}</label>
-<p>{{ data.bill.date | date : "dd/MM/YYYY" }}</p>
+<p>{{ data.bill.date | date : "dd/MM/yyyy" }}</p>
 
 <label>{{ "sales-return__archive__view__bill-name" | translate }}</label>
 <p>{{ data.bill.name }}</p>

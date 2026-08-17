@@ -160,9 +160,9 @@ export class DepositViewComponent {
           this.dataSource = data;
           this.salesDepositFormGroup.patchValue({
             name: data.name,
-            date: this.datePipe.transform(data.date, 'dd MMMM YYYY'),
+            date: this.datePipe.transform(data.date, 'dd MMMM yyyy'),
             createdBy: data.user_bill_code_created_byTouser.name,
-            createdAt: this.datePipe.transform(data.createdAt, 'dd MMMM YYYY'),
+            createdAt: this.datePipe.transform(data.createdAt, 'dd MMMM yyyy'),
             customer: data.customer == null ? 'Retail' : data.customer.name,
             sales: data.sales == null ? 'Internal' : data.sales,
             value: data.sales_deposit.reduce((a: any, b: any) => {

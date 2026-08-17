@@ -87,7 +87,7 @@ export class AdjustmentCaseViewComponent {
     this.apiService.get('adjustment-case/' + id).subscribe({
       next: (data: any) => {
         this.adjustmentCaseFormGroup.patchValue({
-          date: this.datePipe.transform(data.date, 'dd MMMM YYYY'),
+          date: this.datePipe.transform(data.date, 'dd MMMM yyyy'),
           name: data.name,
           company: data.company == null ? 'N/A' : data.company.name,
           type:
@@ -112,7 +112,7 @@ export class AdjustmentCaseViewComponent {
           is_confirm: data.is_confirm,
           is_delete: data.is_delete,
           createdBy: data.user_adjustment_case_code_created_byTouser.name,
-          createdAt: this.datePipe.transform(data.created_at, 'dd MMMM YYYY HH:mm'),
+          createdAt: this.datePipe.transform(data.created_at, 'dd MMMM yyyy HH:mm'),
         });
 
         for (const adjustment of data.adjustment_case) {

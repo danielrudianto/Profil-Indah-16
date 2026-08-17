@@ -64,7 +64,7 @@ export class PaymentListComponent {
             : paymentData.payment_method.name
         } - ${this.datePipe.transform(
           paymentData.date,
-          'dd MMMM YYYY'
+          'dd MMMM yyyy'
         )} - Rp. ${this.decimalPipe.transform(paymentData.value, '0.2-2')}`,
       },
     });

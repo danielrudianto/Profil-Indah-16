@@ -112,7 +112,7 @@ export class PromotionViewComponent {
             ],
             [
               this.translateService.instant('promotion__download__start-date'),
-              this.datePipe.transform(data.data.start, 'dd MMM YYYY'),
+              this.datePipe.transform(data.data.start, 'dd MMM yyyy'),
             ],
             [
               this.translateService.instant('promotion__download__end-date'),
@@ -120,7 +120,7 @@ export class PromotionViewComponent {
                 ? this.translateService.instant(
                     'promotion__download__continuous-end'
                   )
-                : this.datePipe.transform(data.data.end, 'dd MMM YYYY'),
+                : this.datePipe.transform(data.data.end, 'dd MMM yyyy'),
             ],
           ]);
 
@@ -176,7 +176,7 @@ export class PromotionViewComponent {
               worksheet,
               [
                 [
-                  this.datePipe.transform(element.date, 'dd MMM YYYY'),
+                  this.datePipe.transform(element.date, 'dd MMM yyyy'),
                   element.good_receipt_code_name,
                   element.value,
                 ],
@@ -190,7 +190,7 @@ export class PromotionViewComponent {
               worksheetItems,
               [
                 [
-                  this.datePipe.transform(element.date, 'dd MMM YYYY'),
+                  this.datePipe.transform(element.date, 'dd MMM yyyy'),
                   element.good_receipt_code_name,
                   element.reference,
                   element.quantity,
@@ -300,11 +300,11 @@ export class PromotionViewComponent {
             description: data.description,
             supplierID: data.supplier_id,
             supplierName: data.supplier.name,
-            startDate: this.datePipe.transform(data.startDate, 'dd MMMM YYYY'),
+            startDate: this.datePipe.transform(data.startDate, 'dd MMMM yyyy'),
             endDate:
               data.endDate == null
                 ? this.translateService.instant('promotion__view__continuous')
-                : this.datePipe.transform(data.endDate, 'dd MMMM YYYY'),
+                : this.datePipe.transform(data.endDate, 'dd MMMM yyyy'),
             status: data.is_delete
               ? this.translateService.instant(
                   'promotion__view__status__deleted'
@@ -313,7 +313,7 @@ export class PromotionViewComponent {
                   'promotion__view__status__active'
                 ),
             createdBy: data.promotion_code_created_by.name,
-            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM YYYY'),
+            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM yyyy'),
           });
 
           data.promotion_brand.forEach((x: any) => {

@@ -75,11 +75,11 @@ export class SalesReturnArchiveViewComponent {
           this.salesReturnFormGroup.patchValue({
             id: data.id,
             name: data.name,
-            date: this.datePipe.transform(data.date, 'dd MMMM YYYY'),
+            date: this.datePipe.transform(data.date, 'dd MMMM yyyy'),
             invoice_name: data.sales_invoice_code.name,
             invoice_date: this.datePipe.transform(
               data.sales_invoice_code.date,
-              'dd MMMM YYYY'
+              'dd MMMM yyyy'
             ),
             customer:
               data.sales_invoice_code.customer == null
@@ -94,7 +94,7 @@ export class SalesReturnArchiveViewComponent {
               ? this.translateService.instant('sales-return__status__deleted')
               : this.translateService.instant('sales-return__status__active'),
             createdBy: data.user_sales_return_code_created_byTouser.name,
-            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM YYYY HH:mm'),
+            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM yyyy HH:mm'),
             payment_method:
               data.payment_method == null ? 'Cash' : data.payment_method.name,
           });

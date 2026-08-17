@@ -41,8 +41,8 @@
             *ngFor="let data of dataSource"
             (click)="openOverpaymentView(data.id)"
           >
-            <td>{{ data.date | date : "dd MMMM YYYY" }}</td>
-            <td>{{ data.return_payment_date | date : "dd MMMM YYYY" }}</td>
+            <td>{{ data.date | date : "dd MMMM yyyy" }}</td>
+            <td>{{ data.return_payment_date | date : "dd MMMM yyyy" }}</td>
             <td>{{ data.value | number : "0.2-2" }}</td>
             <td>{{ data.return_payment_name }}</td>
           </tr>

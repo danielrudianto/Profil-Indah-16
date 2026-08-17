@@ -47,14 +47,14 @@ export class OverpaymentArchiveViewComponent {
     this.apiService.get(`overpayment/${this.data.id}`).subscribe({
       next: (data: any) => {
         this.overpaymentFormGroup.patchValue({
-          date: this.datePipe.transform(data.date, 'dd MMMM YYYY'),
+          date: this.datePipe.transform(data.date, 'dd MMMM yyyy'),
           value: data.value,
           customer: data.customer == null ? 'Retail' : data.customer.name,
           payment_method:
             data.payment_method == null ? 'Cash' : data.payment_method.name,
           return_payment_date: this.datePipe.transform(
             data.return_payment_date,
-            'dd MMMM YYYY'
+            'dd MMMM yyyy'
           ),
           return_payment_method: data.return_payment_method,
           return_payment_name: data.return_payment_name,

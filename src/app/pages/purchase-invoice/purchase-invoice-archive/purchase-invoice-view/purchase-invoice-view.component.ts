@@ -120,7 +120,7 @@ export class PurchaseInvoiceViewComponent {
             invoice_name: data.invoice_name == '' ? 'N/A' : data.invoice_name,
             faktur:
               data.faktur == '' || data.faktur == null ? 'N/A' : data.faktur,
-            date: this.datePipe.transform(data.date, 'dd MMMM YYYY'),
+            date: this.datePipe.transform(data.date, 'dd MMMM yyyy'),
             supplier: data.supplier.name,
             status: data.is_delete
               ? this.translateService.instant(
@@ -136,7 +136,7 @@ export class PurchaseInvoiceViewComponent {
             is_delete: data.is_delete,
             is_confirm: data.is_confirm,
             createdBy: data.user_good_receipt_code_created_byTouser.name,
-            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM YYYY'),
+            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM yyyy'),
           });
 
           data.good_receipt.forEach((x: any) => {
@@ -160,7 +160,7 @@ export class PurchaseInvoiceViewComponent {
           });
 
           this.goodReceiptFormGroup.patchValue({
-            date: this.datePipe.transform(data.date, 'dd MMMM YYYY'),
+            date: this.datePipe.transform(data.date, 'dd MMMM yyyy'),
             name: data.name,
             invoice_name: data.invoice_name,
             faktur: data.faktur,
@@ -177,7 +177,7 @@ export class PurchaseInvoiceViewComponent {
                   'sales-invoice__archive__view__status__pending'
                 ),
             createdBy: data.user_good_receipt_code_created_byTouser.name,
-            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM YYYY'),
+            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM yyyy'),
           });
         },
         error: (error) => {

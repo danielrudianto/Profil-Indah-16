@@ -104,10 +104,10 @@
               </thead>
               <tbody>
                 <tr *ngFor="let data of t.controls">
-                  <td>{{ data.get("date")?.value | date : "dd/MM/YYYY" }}</td>
+                  <td>{{ data.get("date")?.value | date : "dd/MM/yyyy" }}</td>
                   <td>
                     {{
-                      data.get("created_at")?.value | date : "dd/MM/YYYY HH:mm"
+                      data.get("created_at")?.value | date : "dd/MM/yyyy HH:mm"
                     }}
                   </td>
                   <td>{{ data.get("document_name")?.value }}</td>
@@ -199,9 +199,9 @@
           "
         >
           <tr *ngFor="let data of dataSource.document.mutation">
-            <td>{{ data.date | date : "dd/MM/YYYY" }}</td>
+            <td>{{ data.date | date : "dd/MM/yyyy" }}</td>
             <td>
-              {{ data.createdAt | date : "dd/MM/YYYY HH:mm" }}
+              {{ data.createdAt | date : "dd/MM/yyyy HH:mm" }}
             </td>
             <td>{{ data.name }}</td>
             <td>
@@ -222,9 +222,9 @@
           "
         >
           <tr *ngFor="let data of dataSource.input.mutation">
-            <td>{{ data.date | date : "dd/MM/YYYY" }}</td>
+            <td>{{ data.date | date : "dd/MM/yyyy" }}</td>
             <td>
-              {{ data.createdAt | date : "dd/MM/YYYY HH:mm" }}
+              {{ data.createdAt | date : "dd/MM/yyyy HH:mm" }}
             </td>
             <td>{{ data.name }}</td>
             <td>{{ data.opponent }}</td>

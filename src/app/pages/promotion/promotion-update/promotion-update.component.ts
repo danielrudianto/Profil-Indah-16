@@ -167,12 +167,12 @@ export class PromotionUpdateComponent {
             ? null
             : this.datePipe.transform(
                 this.promotionFormGroup.value.end_date,
-                'dd-MM-YYYY'
+                'dd-MM-yyyy'
               ),
         target: Number(this.promotionFormGroup.value.target),
         start_date: this.datePipe.transform(
           this.promotionFormGroup.value.start_date,
-          'dd-MM-YYYY'
+          'dd-MM-yyyy'
         ),
         promotion_rules: this.t.value,
         promotion_brand: this.u.value.map((x: any) => {
