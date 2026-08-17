@@ -1,187 +1,83 @@
-import { DatePipe, DecimalPipe, NgFor } from '@angular/common';
+import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
 import {
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  Output,
-  signal,
-} from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
+
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
-import { MatTooltip } from '@angular/material/tooltip';
-import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
-import { MatIcon } from '@angular/material/icon';
+import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
 
+/**
+ * Tampilan BACA faktur pembelian (arsip) — dokumen, bukan formulir
+ * berbaju kolom input. Bentuk lamanya membawa jalur hapus SALAH JENIS
+ * dokumen (DELETE sales-invoice/:id pada id penerimaan barang!) yang
+ * untungnya tidak pernah terpanggil dari template; hanya jalur benar
+ * (DELETE good-receipt/:id) yang dipertahankan. Navigasi ubahnya juga
+ * dibetulkan — dulu menunjuk prefix /Administrator yang sudah tiada.
+ */
 @Component({
-    selector: 'app-purchase-invoice-view',
-    templateUrl: './purchase-invoice-view.component.html',
-    styleUrls: ['./purchase-invoice-view.component.scss'],
-    imports: [MatDialogTitle, CdkDrag, CdkDragHandle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, MatTooltip, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, MatDialogActions, MatDialogClose, DecimalPipe, TranslatePipe]
+  selector: 'app-purchase-invoice-view',
+  templateUrl: './purchase-invoice-view.component.html',
+  styleUrls: ['./purchase-invoice-view.component.scss'],
+  imports: [NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe],
 })
-export class PurchaseInvoiceViewComponent {
+export class PurchaseInvoiceViewComponent implements OnInit {
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { id: number },
-    private authService: AuthService,
-    private dialog: MatDialog,
-    private apiService: ApiService,
-    private alertService: AlertService,
-    private translateService: TranslateService,
+    @Inject(MAT_DIALOG_DATA) public data: { id: number; noAction: boolean },
     private dialogRef: MatDialogRef<PurchaseInvoiceViewComponent>,
-    private datePipe: DatePipe,
-    private decimalPipe: DecimalPipe,
-    private formBuilder: FormBuilder,
-    private router: Router
+    private apiService: ApiService,
+    private dialog: MatDialog,
+    private alertService: AlertService,
+    private authService: AuthService,
+    private translateService: TranslateService,
+    private router: Router,
   ) {}
 
-  isAdministrator: boolean = false;
-  isLoading: boolean = false;
-  isSubmitting: boolean = false;
-  dataSource: any;
+  isAdministrator = false;
+  isSubmitting = false;
+  isLoading = true;
 
-  step = signal(0);
-
-  goodReceiptFormGroup: FormGroup = new FormGroup({
-    id: new FormControl('', Validators.required),
-    name: new FormControl('', Validators.required),
-    invoice_name: new FormControl(''),
-    faktur: new FormControl(''),
-    date: new FormControl('', Validators.required),
-    supplier: new FormControl(''),
-    status: new FormControl(''),
-    createdBy: new FormControl('', Validators.required),
-    createdAt: new FormControl('', Validators.required),
-    discount: new FormControl(0, Validators.required),
-    good_receipt: new FormArray([]),
-    is_delete: new FormControl(false),
-    is_confirm: new FormControl(false),
-  });
-
-  get f() {
-    return this.goodReceiptFormGroup.controls;
-  }
-
-  get t() {
-    return this.f['good_receipt'] as FormArray;
-  }
+  dokumen: any = null;
+  barang: any[] = [];
 
   ngOnInit(): void {
     this.isAdministrator = this.authService.isAdministrator();
-    this.fetchByID();
-  }
-
-  openDeleteConfirmation() {
-    this.dialog
-      .open(DeleteConfirmationComponent, {
-        data: {
-          title: this.translateService.instant(
-            'sales-invoice__archive__view__delete__title'
-          ),
-        },
-      })
-      .afterClosed()
-      .subscribe((data) => {
-        if (data === true) {
-          this.apiService.delete(`sales-invoice/${this.data.id}`).subscribe({
-            next: () => {
-              this.alertService.showSuccess(
-                this.translateService.instant('sales-invoice__delete__success')
-              );
-              this.dialogRef.close();
-            },
-            error: (error) => {
-              this.alertService.showError(error);
-            },
-          });
-        }
-      });
-  }
-
-  fetchByID(): void {
-    this.isLoading = true;
     this.apiService
       .get(`good-receipt/${this.data.id}`)
       .subscribe({
         next: (data: any) => {
-          this.goodReceiptFormGroup.patchValue({
+          this.dokumen = {
             name: data.name,
-            invoice_name: data.invoice_name == '' ? 'N/A' : data.invoice_name,
-            faktur:
-              data.faktur == '' || data.faktur == null ? 'N/A' : data.faktur,
-            date: this.datePipe.transform(data.date, 'dd MMMM yyyy'),
-            supplier: data.supplier.name,
-            status: data.is_delete
-              ? this.translateService.instant(
-                  'purchase-invoice__archive__view__status__deleted'
-                )
-              : data.is_confirm
-              ? this.translateService.instant(
-                  'purchase-invoice__archive__view__status__confirmed'
-                )
-              : this.translateService.instant(
-                  'purchase-invoice__archive__view__status__pending'
-                ),
-            is_delete: data.is_delete,
-            is_confirm: data.is_confirm,
-            createdBy: data.user_good_receipt_code_created_byTouser.name,
-            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM yyyy'),
-          });
-
-          data.good_receipt.forEach((x: any) => {
-            this.t.push(
-              this.formBuilder.group({
-                id: [x.id],
-                product_id: [x.product_id],
-                product_unit_id: [x.product_unit_id],
-                quantity: [x.quantity],
-                price: [x.price],
-                discount: [x.discount],
-                unit: [
-                  x.product_unit_id == null
-                    ? x.product.unit
-                    : x.product_unit.unit,
-                ],
-                reference: [x.product.reference],
-                description: [x.product.description],
-              })
-            );
-          });
-
-          this.goodReceiptFormGroup.patchValue({
-            date: this.datePipe.transform(data.date, 'dd MMMM yyyy'),
-            name: data.name,
-            invoice_name: data.invoice_name,
+            invoiceName: data.invoice_name,
             faktur: data.faktur,
+            date: data.date,
             supplier: data.supplier.name,
-            status: data.is_delete
-              ? this.translateService.instant(
-                  'sales-invoice__archive__view__status__deleted'
-                )
-              : data.is_confirm
-              ? this.translateService.instant(
-                  'sales-invoice__archive__view__status__confirmed'
-                )
-              : this.translateService.instant(
-                  'sales-invoice__archive__view__status__pending'
-                ),
+            isDelete: data.is_delete,
+            isConfirm: data.is_confirm,
+            discount: Number(data.discount ?? 0),
             createdBy: data.user_good_receipt_code_created_byTouser.name,
-            createdAt: this.datePipe.transform(data.created_at, 'dd MMMM yyyy'),
-          });
+            createdAt: data.created_at,
+          };
+
+          this.barang = (data.good_receipt ?? []).map((x: any) => ({
+            reference: x.product.reference,
+            description: x.product.description,
+            quantity: Number(x.quantity),
+            unit:
+              x.product_unit_id == null ? x.product.unit : x.product_unit.unit,
+            price: Number(x.price),
+            discount: Number(x.discount),
+          }));
         },
         error: (error) => {
           this.alertService.showError(error);
+          this.dialogRef.close();
         },
       })
       .add(() => {
@@ -189,97 +85,69 @@ export class PurchaseInvoiceViewComponent {
       });
   }
 
-  get subtotal(): number {
-    return this.t.controls.reduce((acc: number, item: any) => {
-      const price = item.get('price').value || 0;
-      const quantity = item.get('quantity').value || 0;
-      const discount = item.get('discount').value || 0;
-      return acc + (price - discount) * quantity;
-    }, 0);
+  get inisial(): string {
+    return (
+      (this.dokumen?.supplier ?? '?').trim().charAt(0).toUpperCase() || '?'
+    );
   }
 
-  getDiscountPercentage(discount: number, price: number) {
-    if (price == 0) {
-      return '0%';
-    } else {
-      return `${this.decimalPipe.transform(
-        (discount * 100) / price,
-        '1.2-2'
-      )}%`;
+  get statusKey(): string {
+    if (this.dokumen?.isDelete) {
+      return 'purchase-invoice__archive__view__status__deleted';
     }
+    return this.dokumen?.isConfirm
+      ? 'purchase-invoice__archive__view__status__confirmed'
+      : 'purchase-invoice__archive__view__status__pending';
   }
 
-  setStep(index: number) {
-    this.step.set(index);
+  get subtotal(): number {
+    return this.barang.reduce(
+      (a, b) => a + b.quantity * (b.price - b.discount),
+      0,
+    );
   }
 
-  nextStep() {
-    this.step.update((i) => i + 1);
+  get grandTotal(): number {
+    return this.subtotal - this.dokumen.discount;
   }
 
-  prevStep() {
-    this.step.update((i) => i - 1);
+  totalBaris(b: any): number {
+    return b.quantity * (b.price - b.discount);
   }
 
-  updatePurchaseInvoice() {
+  /** Ubah dan hapus hanya untuk admin pada dokumen terkonfirmasi yang hidup. */
+  get bolehKelola(): boolean {
+    return (
+      this.isAdministrator &&
+      !this.data.noAction &&
+      this.dokumen?.isDelete === false &&
+      this.dokumen?.isConfirm === true
+    );
+  }
+
+  tutup(): void {
+    this.dialogRef.close();
+  }
+
+  edit(): void {
     this.dialogRef.close();
     setTimeout(() => {
-      this.router.navigate([
-        `/Administrator/Purchase-invoice/Edit/${this.data.id}`,
-      ]);
+      this.router.navigate([`/Purchase-invoice/Edit/${this.data.id}`]);
     }, 100);
   }
 
-  get canDelete(): boolean {
-    if (!this.isAdministrator) {
-      return false;
-    }
-
-    const isConfirmed = this.goodReceiptFormGroup.get('is_confirm')?.value;
-    const isDeleted = this.goodReceiptFormGroup.get('is_delete')?.value;
-
-    if (isDeleted) {
-      return false;
-    }
-
-    if (!isConfirmed) {
-      return false;
-    }
-
-    return true;
-  }
-
-  get canEdit(): boolean {
-    if (!this.isAdministrator) {
-      return false;
-    }
-
-    const isConfirmed = this.goodReceiptFormGroup.get('is_confirm')?.value;
-    const isDeleted = this.goodReceiptFormGroup.get('is_delete')?.value;
-
-    if (isDeleted) {
-      return false;
-    }
-
-    if (!isConfirmed) {
-      return false;
-    }
-
-    return true;
-  }
-
-  delete() {
+  delete(): void {
     this.dialog
       .open(DeleteConfirmationComponent, {
         data: {
           title: this.translateService.instant(
-            'purchase-invoice__delete__message'
+            'purchase-invoice__delete__message',
           ),
         },
       })
       .afterClosed()
-      .subscribe((data) => {
-        if (data == true) {
+      .subscribe((jawaban) => {
+        if (jawaban == true) {
           this.isSubmitting = true;
           this.apiService
             .delete(`good-receipt/${this.data.id}`)

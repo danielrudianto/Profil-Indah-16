@@ -186,7 +186,8 @@ html {
 .mat-mdc-dialog-surface:has(> app-good-receipt-view),
 .mat-mdc-dialog-surface:has(> app-adjustment-case-view),
 .mat-mdc-dialog-surface:has(> app-overpayment-archive-view),
-.mat-mdc-dialog-surface:has(> app-sales-return-archive-view) {
+.mat-mdc-dialog-surface:has(> app-sales-return-archive-view),
+.mat-mdc-dialog-surface:has(> app-purchase-invoice-view) {
   background: transparent;
   box-shadow: none;
   border-radius: 0;
