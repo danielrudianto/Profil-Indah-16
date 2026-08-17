@@ -868,3 +868,33 @@
     outline-offset: 2px;
   }
 }
+
+/*
+  Penanda simpan-harga — tanda buku yang sama di penerimaan barang,
+  faktur penjualan, dan pelengkapan faktur pembelian.
+*/
+.simpan-harga {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  background: transparent;
+  color: color-mix(in srgb, var(--color-text) 40%, transparent);
+  font-size: 15px;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.simpan-harga--on {
+  background: var(--color-active);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}

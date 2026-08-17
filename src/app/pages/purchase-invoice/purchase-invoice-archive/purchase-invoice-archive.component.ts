@@ -1,56 +1,74 @@
 import { Component } from '@angular/core';
-import { PurchaseInvoiceArchiveFilterComponent } from './purchase-invoice-archive-filter/purchase-invoice-archive-filter.component';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
+import { FormControl, FormGroup } from '@angular/forms';
+import { NgIf, NgFor, NgClass, DatePipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import moment from 'moment';
+
+import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
 import { ArchiveMode } from 'src/app/components/archives/archives.component';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ArchivesComponent } from 'src/app/components/archives/archives.component';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { slideInOutAnimation } from 'src/app/animations/slide-in-out.animation';
-import { MatDialog } from '@angular/material/dialog';
+import { PurchaseInvoiceArchiveFilterComponent } from './purchase-invoice-archive-filter/purchase-invoice-archive-filter.component';
 import { PurchaseInvoiceViewComponent } from './purchase-invoice-view/purchase-invoice-view.component';
-import { ArchivesComponent } from '../../../components/archives/archives.component';
-import { ArchiveSearchComponent } from '../../../components/archives/archive-search/archive-search.component';
-import { MatIcon } from '@angular/material/icon';
-import { NgClass, NgIf, NgFor, DatePipe } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
+/**
+ * Arsip faktur pembelian — kembaran arsip faktur penjualan (4a), dibaca
+ * dari arsip penerimaan barang: faktur pembelian memang penerimaan yang
+ * kolom fakturnya sudah dilengkapi.
+ *
+ * Status dinyatakan tiga keadaan: menunggu faktur (amber), lengkap, dan
+ * dihapus. Baris yang menunggu diberi jalan langsung ke formulir
+ * pelengkapannya.
+ */
 @Component({
-    selector: 'app-purchase-invoice-archive',
-    templateUrl: './purchase-invoice-archive.component.html',
-    styleUrls: ['./purchase-invoice-archive.component.scss'],
-    animations: [slideInOutAnimation],
-    imports: [ArchivesComponent, ArchiveSearchComponent, MatIcon, NgClass, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DatePipe, TranslatePipe]
+  selector: 'app-purchase-invoice-archive',
+  templateUrl: './purchase-invoice-archive.component.html',
+  animations: [slideInOutAnimation],
+  imports: [
+    TabelKosongComponent,
+    ArchivesComponent,
+    ListPageComponent,
+    NgIf,
+    NgFor,
+    NgClass,
+    DatePipe,
+    TranslatePipe,
+  ],
 })
 export class PurchaseInvoiceArchiveComponent {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router,
   ) {}
 
   mode: ArchiveMode = ArchiveMode.year;
   dataSource: any[] = [];
-  dataCount: number = 0;
-  page: number = 1;
-  isLoading: boolean = false;
+  dataCount = 0;
+  page = 1;
+  /* Ukuran halaman dipatok server lewat LIMIT; tidak ada pilihan di layar. */
+  pageSize = 10;
+  isLoading = false;
   month: number | null = null;
   year: number | null = null;
-  keyword: string = '';
+  keyword = '';
+
   filterFormGroup: FormGroup = new FormGroup({
     startDate: new FormControl(''),
     endDate: new FormControl(''),
+    isPending: new FormControl(''),
     isActive: new FormControl(''),
     isDelete: new FormControl(''),
-    isPending: new FormControl(''),
   });
 
-  sortBy: string = 'date';
+  sortBy = 'date';
   sortDirection: 'asc' | 'desc' = 'desc';
-
-  ngOnInit(): void {}
 
   onMonthSelected(event: any) {
     this.mode = ArchiveMode.month;
@@ -61,19 +79,14 @@ export class PurchaseInvoiceArchiveComponent {
     this.filterFormGroup.patchValue({
       startDate: new Date(this.year!, this.month! - 1, 1),
       endDate: new Date(this.year!, this.month!, 0),
+      isPending: true,
       isActive: true,
       isDelete: true,
-      isPending: true,
     });
 
     this.fetchSelectedMonth(1);
   }
 
-  /**
-   * Fetches the selected month's sales invoice archives from the API.
-   * @param {number} [page=this.page] - The page number of the results to fetch. Defaults to the current page.
-   * @return {void} This function does not return anything.
-   */
   fetchSelectedMonth(page: number = this.page) {
     this.page = page;
     this.isLoading = true;
@@ -83,17 +96,17 @@ export class PurchaseInvoiceArchiveComponent {
         month: this.month,
         year: this.year,
         page: this.page,
+        pageSize: this.pageSize,
         keyword: this.keyword,
-        // Convert to DD-MM-YYYY
         startDate: moment(
-          new Date(this.filterFormGroup.get('startDate')?.value)
+          new Date(this.filterFormGroup.get('startDate')?.value),
         ).format('YYYY-MM-DD'),
         endDate: moment(
-          new Date(this.filterFormGroup.get('endDate')?.value)
+          new Date(this.filterFormGroup.get('endDate')?.value),
         ).format('YYYY-MM-DD'),
+        isPending: this.filterFormGroup.get('isPending')?.value,
         isActive: this.filterFormGroup.get('isActive')?.value,
         isDelete: this.filterFormGroup.get('isDelete')?.value,
-        isPending: this.filterFormGroup.get('isPending')?.value,
         sortBy: this.sortBy,
         sortDirection: this.sortDirection,
       })
@@ -111,9 +124,90 @@ export class PurchaseInvoiceArchiveComponent {
       });
   }
 
-  changePage(event: PageEvent) {
-    this.page = event.pageIndex + 1;
+  /** Saringan aktif sebagai kapsul yang bisa dilepas — satu sumber: formulir. */
+  get kapsul(): { kunci: string; teks: string }[] {
+    const v = this.filterFormGroup.value;
+    const hasil: { kunci: string; teks: string }[] = [];
+
+    if (v.startDate && v.endDate) {
+      const dari = moment(new Date(v.startDate)).format('D MMM');
+      const sampai = moment(new Date(v.endDate)).format('D MMM YYYY');
+      hasil.push({ kunci: 'tanggal', teks: `${dari} – ${sampai}` });
+    }
+
+    if (!(v.isPending && v.isActive && v.isDelete)) {
+      if (v.isPending) hasil.push({ kunci: 'menunggu', teks: 'Menunggu faktur' });
+      if (v.isActive) hasil.push({ kunci: 'lengkap', teks: 'Lengkap' });
+      if (v.isDelete) hasil.push({ kunci: 'dihapus', teks: 'Dihapus' });
+    }
+
+    return hasil;
+  }
+
+  /** Benar bila daftar sedang tersaring hanya pada yang menunggu faktur. */
+  get hanyaMenunggu(): boolean {
+    const v = this.filterFormGroup.value;
+    return !!v.isPending && !v.isActive && !v.isDelete;
+  }
+
+  /** Chip pintas: saring ke yang menunggu faktur saja, atau kembalikan semua. */
+  toggleMenunggu(): void {
+    const nyala = this.hanyaMenunggu;
+    this.filterFormGroup.patchValue({
+      isPending: true,
+      isActive: nyala,
+      isDelete: nyala,
+    });
+    this.fetchSelectedMonth(1);
+  }
+
+  lepasKapsul(kunci: string): void {
+    if (kunci === 'tanggal') {
+      this.filterFormGroup.patchValue({
+        startDate: new Date(this.year!, this.month! - 1, 1),
+        endDate: new Date(this.year!, this.month!, 0),
+      });
+    } else if (kunci === 'menunggu') {
+      this.filterFormGroup.patchValue({ isPending: false });
+    } else if (kunci === 'lengkap') {
+      this.filterFormGroup.patchValue({ isActive: false });
+    } else if (kunci === 'dihapus') {
+      this.filterFormGroup.patchValue({ isDelete: false });
+    }
+
+    /* Melepas kapsul terakhir tidak boleh mengosongkan daftar. */
+    const v = this.filterFormGroup.value;
+    if (!v.isPending && !v.isActive && !v.isDelete) {
+      this.filterFormGroup.patchValue({
+        isPending: true,
+        isActive: true,
+        isDelete: true,
+      });
+    }
+
+    this.fetchSelectedMonth(1);
+  }
+
+  hapusSemuaSaringan(): void {
+    this.filterFormGroup.patchValue({
+      startDate: new Date(this.year!, this.month! - 1, 1),
+      endDate: new Date(this.year!, this.month!, 0),
+      isPending: true,
+      isActive: true,
+      isDelete: true,
+    });
+    this.fetchSelectedMonth(1);
+  }
+
+  bukaHalaman(halaman: number) {
+    this.page = halaman;
     this.fetchSelectedMonth();
+  }
+
+  lacakDokumen = (_: number, item: any): number => item.id;
+
+  keAntrean() {
+    this.router.navigate(['/Purchase-invoice']);
   }
 
   backToYear() {
@@ -127,10 +221,49 @@ export class PurchaseInvoiceArchiveComponent {
     this.fetchSelectedMonth(1);
   }
 
+  resetPencarian(): void {
+    this.onQueryChanged('');
+  }
+
+  /** Ikon arah urutan; kolom yang tidak aktif tetap diberi ikon redup. */
+  ikonUrut(kolom: string): string {
+    if (this.sortBy !== kolom) {
+      return 'ph-caret-up-down tabel__urut-redup';
+    }
+
+    return this.sortDirection === 'asc' ? 'ph-caret-up' : 'ph-caret-down';
+  }
+
+  changeSortBy(field: string) {
+    if (this.isLoading) {
+      return;
+    }
+
+    if (this.sortBy == field) {
+      this.sortDirection = this.sortDirection == 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortBy = field;
+      this.sortDirection = 'asc';
+    }
+
+    this.fetchSelectedMonth(1);
+  }
+
   /**
-   * Opens the filter component and subscribes to its data changes.
-   * @return {void} This function does not return anything.
+   * Tiga keadaan dokumen: dihapus, menunggu faktur, atau lengkap.
    */
+  keadaan(item: any): 'dihapus' | 'menunggu' | 'lengkap' {
+    if (item.is_delete) {
+      return 'dihapus';
+    }
+
+    return item.is_confirm ? 'lengkap' : 'menunggu';
+  }
+
+  lengkapi(item: any): void {
+    this.router.navigate(['/Purchase-invoice/Confirm', item.id]);
+  }
+
   openFilter() {
     this.dialog
       .open(PurchaseInvoiceArchiveFilterComponent, {
@@ -141,90 +274,23 @@ export class PurchaseInvoiceArchiveComponent {
         },
       })
       .afterClosed()
-      .subscribe((data: any) => {
-        // Check if it is the same
-        const change = this.checkChanges(data);
-        if (change) {
-          this.filterFormGroup.patchValue(data);
-          this.fetchSelectedMonth(1);
+      .subscribe((data) => {
+        /*
+          Dialog yang ditutup lewat Batal atau tekan latar tidak mengembalikan
+          apa-apa. Tanpa penjagaan ini, saringannya ikut hangus.
+        */
+        if (data == null) {
+          return;
         }
+
+        this.filterFormGroup.patchValue(data);
+        this.fetchSelectedMonth(1);
       });
-  }
-
-  private checkChanges(data: any) {
-    const isActive = data.isActive;
-    const isDelete = data.isDelete;
-    const isPending = data.isPending;
-
-    const maxDate = data.endDate;
-    const minDate = data.startDate;
-    const existingIsActive = this.filterFormGroup.value.isActive;
-    const existingIsDelete = this.filterFormGroup.value.isDelete;
-    const existingIsPending = this.filterFormGroup.value.isPending;
-
-    const existingMinDate = this.filterFormGroup.value.startDate;
-    const existingMaxDate = this.filterFormGroup.value.endDate;
-
-    let response = false;
-
-    if (isPending != existingIsPending) {
-      response = true;
-    }
-
-    if (isActive != existingIsActive) {
-      response = true;
-    }
-
-    if (isDelete != existingIsDelete) {
-      response = true;
-    }
-
-    if (existingMinDate.getTime() != minDate.getTime()) {
-      response = true;
-    }
-
-    if (existingMaxDate.getTime() != maxDate.getTime()) {
-      response = true;
-    }
-
-    return response;
-  }
-
-  changeSortBy(field: string) {
-    if (this.isLoading) {
-      return;
-    }
-
-    if (this.sortBy == field) {
-      if (this.sortDirection == 'asc') {
-        this.sortDirection = 'desc';
-      } else {
-        this.sortDirection = 'asc';
-      }
-    } else {
-      this.sortBy = field;
-      this.sortDirection = 'asc';
-    }
-
-    this.fetchSelectedMonth(1);
   }
 
   viewArchive(id: number) {
-    this.dialog
-      .open(PurchaseInvoiceViewComponent, {
-        data: {
-          id: id,
-        },
-      })
-      .afterClosed()
-      .subscribe((data) => {
-        if (data === 'deleted') {
-          const index = this.dataSource.findIndex((x) => x.id == id);
-          if (index != -1) {
-            this.dataSource[index].is_delete = true;
-            return;
-          }
-        }
-      });
+    this.dialog.open(PurchaseInvoiceViewComponent, {
+      data: { id: id },
+    });
   }
 }

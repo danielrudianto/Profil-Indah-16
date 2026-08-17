@@ -581,11 +581,16 @@ const routes: Routes = [
                 (m) => m.PurchaseInvoiceComponent,
               ),
             children: [
+              /*
+                Membuat faktur pembelian dari nol terjadi di formulir
+                penerimaan barang (wajah "dokumen lengkap"); halaman utama
+                menu ini adalah antrean penerimaan yang menunggu faktur.
+              */
               {
                 path: '',
                 loadComponent: () =>
-                  import('./pages/purchase-invoice/purchase-invoice-create/purchase-invoice-create.component').then(
-                    (m) => m.PurchaseInvoiceCreateComponent,
+                  import('./pages/purchase-invoice/purchase-invoice-confirm/purchase-invoice-confirm.component').then(
+                    (m) => m.PurchaseInvoiceConfirmComponent,
                   ),
               },
               {
@@ -593,13 +598,6 @@ const routes: Routes = [
                 loadComponent: () =>
                   import('./pages/purchase-invoice/purchase-invoice-archive/purchase-invoice-archive.component').then(
                     (m) => m.PurchaseInvoiceArchiveComponent,
-                  ),
-              },
-              {
-                path: 'Confirm',
-                loadComponent: () =>
-                  import('./pages/purchase-invoice/purchase-invoice-confirm/purchase-invoice-confirm.component').then(
-                    (m) => m.PurchaseInvoiceConfirmComponent,
                   ),
               },
               {

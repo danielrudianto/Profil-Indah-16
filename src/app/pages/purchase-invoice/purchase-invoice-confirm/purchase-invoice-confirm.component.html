@@ -1,102 +1,79 @@
-<div class="dashboard-card">
-  <app-feature-search
-    [addButton]="false"
-    route="good-receipt/unconfirmed"
-    [page]="page"
-    [enable]="false"
-    (onChange)="onUpdateData($event)"
-    (onLoadingChange)="onUpdateLoadingStatus($event)"
-    (updatePage)="onUpdatePage()"
-    (onNewQuery)="page = 1"
-  ></app-feature-search>
-  <div class="table-responsive">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>{{ "purchase-invoice__confirm__date" | translate }}</th>
-          <th>
-            {{ "purchase-invoice__confirm__good-receipt-name" | translate }}
-          </th>
-          <th>{{ "purchase-invoice__confirm__supplier" | translate }}</th>
-          <th>{{ "purchase-invoice__confirm__created-by" | translate }}</th>
-        </tr>
-      </thead>
-      <tbody *ngIf="isLoading">
-        <tr>
-          <td colspan="4">
-            <mat-spinner id="spinner"></mat-spinner>
-          </td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="!isLoading && dataSource.length == 0">
-        <tr>
-          <td colspan="4">
-            <empty-table />
-          </td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="!isLoading && dataSource.length > 0">
-        <tr
-          *ngFor="let item of dataSource; let i = index"
-          [routerLink]="item.id"
-        >
-          <td>{{ item.date | date : "dd/MM/yyyy" }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.supplier.name }}</td>
-          <td>
-            <p class="mb-0">
-              {{
-                item.user_good_receipt_code_created_byTouser.name
-              }}&nbsp;<app-avatar
-                *ngIf="
-                  item.user_good_receipt_code_created_byTouser.user_avatar !=
-                  null
-                "
-                [top]="
-                  item.user_good_receipt_code_created_byTouser.user_avatar.top
-                "
-                [accessories]="
-                  item.user_good_receipt_code_created_byTouser.user_avatar
-                    .accessories
-                "
-                [eyes]="
-                  item.user_good_receipt_code_created_byTouser.user_avatar.eyes
-                "
-                [mouth]="
-                  item.user_good_receipt_code_created_byTouser.user_avatar.mouth
-                "
-                [clothes]="
-                  item.user_good_receipt_code_created_byTouser.user_avatar
-                    .clothes
-                "
-                [eyebrows]="
-                  item.user_good_receipt_code_created_byTouser.user_avatar
-                    .eyebrows
-                "
-                [circle]="
-                  item.user_good_receipt_code_created_byTouser.user_avatar
-                    .circle
-                "
-                [color]="
-                  item.user_good_receipt_code_created_byTouser.user_avatar.color
-                "
-                [width]="25"
-              />
-            </p>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <mat-paginator
-    class="paginator"
-    [pageIndex]="page - 1"
-    [length]="dataCount"
-    [pageSize]="10"
-    (page)="changePage($event)"
-    aria-label="Select page"
-    hidePageSize="true"
-    *ngIf="!isLoading"
-  >
-  </mat-paginator>
-</div>
+<app-list-page
+  [heading]="'purchase-invoice__queue__title' | translate"
+  [lede]="'purchase-invoice__queue__lede' | translate"
+  [showSearch]="false"
+  [showPageSize]="false"
+  [keyword]="''"
+  [page]="page"
+  [pageSize]="pageSize"
+  [total]="dataCount"
+  [loading]="isLoading"
+  (pageChange)="bukaHalaman($event)"
+  (refresh)="ambilData()"
+>
+  <ng-container aksi>
+    <button type="button" class="aksi-hantu" (click)="keArsip()">
+      <i class="ph ph-archive" aria-hidden="true"></i>
+      {{ 'purchase-invoice__archive' | translate }}
+    </button>
+  </ng-container>
+
+  <table class="tabel">
+    <thead>
+      <tr>
+        <th>{{ 'good-receipt__archive__date' | translate }}</th>
+        <th>{{ 'good-receipt__archive__name' | translate }}</th>
+        <th>{{ 'good-receipt__archive__supplier' | translate }}</th>
+        <th>{{ 'good-receipt__archive__company' | translate }}</th>
+        <th>{{ 'purchase-invoice__confirm__created-by' | translate }}</th>
+        <th class="tabel__aksi-kepala">
+          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!isLoading && dataSource.length > 0">
+      <tr *ngFor="let item of dataSource; trackBy: lacakPenerimaan">
+        <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
+        <td class="tabel__utama">{{ item.name }}</td>
+        <td>{{ item.supplier?.name }}</td>
+        <td class="tabel__redup">{{ item.company?.name }}</td>
+        <td class="tabel__redup">
+          {{ item.user_good_receipt_code_created_byTouser?.name }}
+        </td>
+        <td class="tabel__aksi">
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="lengkapi(item)"
+            [title]="'purchase-invoice__queue__complete' | translate"
+            [attr.aria-label]="'purchase-invoice__queue__complete' | translate"
+          >
+            <i class="ph ph-file-plus" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="isLoading">
+      <tr>
+        <td colspan="6" class="tabel__pesan">
+          {{ 'general__loading' | translate }}
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="!isLoading && dataSource.length === 0">
+      <tr>
+        <td colspan="6">
+          <app-tabel-kosong
+            ikon="ph-file-dashed"
+            [judul]="'purchase-invoice__queue__empty__title' | translate"
+            [penjelasan]="'purchase-invoice__queue__empty__desc' | translate"
+            [kataKunci]="''"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</app-list-page>

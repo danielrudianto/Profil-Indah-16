@@ -1,38 +1,81 @@
-import { Component } from '@angular/core';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
-import { FeatureSearchComponent } from '../../../components/feature-search/feature-search.component';
+import { Component, OnInit } from '@angular/core';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
-import { RouterLink } from '@angular/router';
-import { AvatarComponent } from '../../../components/avatar/avatar.component';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
+
+/**
+ * Antrean penerimaan yang MENUNGGU FAKTUR — halaman kerja utama menu
+ * faktur pembelian. Barang sudah datang dan tercatat; begitu faktur
+ * suppliernya tiba, barisnya dilengkapi lewat tombol di kanan.
+ *
+ * Endpoint-nya tidak menerima kata kunci dan ukuran halamannya dipatok
+ * server lewat LIMIT, jadi kotak cari dan pilihan ukuran tidak digambar.
+ */
 @Component({
-    selector: 'app-purchase-invoice-confirm',
-    templateUrl: './purchase-invoice-confirm.component.html',
-    imports: [FeatureSearchComponent, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, RouterLink, AvatarComponent, MatPaginator, DatePipe, TranslatePipe]
+  selector: 'app-purchase-invoice-confirm',
+  templateUrl: './purchase-invoice-confirm.component.html',
+  imports: [
+    ListPageComponent,
+    TabelKosongComponent,
+    NgIf,
+    NgFor,
+    DatePipe,
+    TranslatePipe,
+  ],
 })
-export class PurchaseInvoiceConfirmComponent {
+export class PurchaseInvoiceConfirmComponent implements OnInit {
+  constructor(
+    private apiService: ApiService,
+    private alertService: AlertService,
+    private router: Router,
+    private route: ActivatedRoute,
+  ) {}
+
+  isLoading = true;
   dataSource: any[] = [];
-  dataCount: number = 0;
-  isLoading: boolean = false;
-  page: number = 1;
+  dataCount = 0;
+  page = 1;
+  pageSize = 10;
 
-  onUpdatePage() {
-    this.page = 1;
+  ngOnInit(): void {
+    this.ambilData();
   }
 
-  onUpdateData(data: any) {
-    this.dataCount = data.count;
-    this.dataSource = data.data;
+  ambilData(page: number = this.page): void {
+    this.page = page;
+    this.isLoading = true;
+    this.apiService
+      .get('good-receipt/unconfirmed', { page: this.page })
+      .subscribe({
+        next: (data: any) => {
+          this.dataSource = data.data;
+          this.dataCount = data.count;
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
   }
 
-  onUpdateLoadingStatus(data: any) {
-    this.isLoading = data;
+  bukaHalaman(halaman: number): void {
+    this.ambilData(halaman);
   }
 
-  changePage(event: PageEvent) {
-    this.page = event.pageIndex + 1;
+  lacakPenerimaan = (_: number, item: any): number => item.id;
+
+  lengkapi(item: any): void {
+    this.router.navigate(['Confirm', item.id], { relativeTo: this.route });
+  }
+
+  keArsip(): void {
+    this.router.navigate(['/Purchase-invoice/Archive']);
   }
 }

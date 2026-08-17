@@ -1,381 +1,347 @@
-import { DatePipe, DecimalPipe, Location, NgIf, NgFor, NgClass } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { Component, OnInit } from '@angular/core';
+import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { NgxMaskDirective } from 'ngx-mask';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { of, switchMap } from 'rxjs';
-import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
-import { UpdateProductPurchasePriceComponent } from 'src/app/components/update-product-purchase-price/update-product-purchase-price.component';
+
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { VerticalDividerComponent } from '../../../components/vertical-divider/vertical-divider.component';
-import { BoxStepperComponent } from '../../../components/box-stepper/box-stepper.component';
-import { MatFormField, MatLabel, MatSuffix, MatHint } from '@angular/material/form-field';
+import { PageTitleService } from 'src/app/services/page-title.service';
+import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
-import { NgxMaskDirective } from 'ngx-mask';
-import { MatTooltip } from '@angular/material/tooltip';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import {
+  MatDatepicker,
+  MatDatepickerInput,
+} from '@angular/material/datepicker';
 
+/**
+ * Melengkapi faktur pada penerimaan yang menunggu — kerangka form-buat.
+ *
+ * Barang dan jumlahnya BACA SAJA: keduanya milik penerimaan dan sudah
+ * mengubah stok; yang dilengkapi di sini hanya nomor faktur supplier,
+ * faktur pajak, tanggal faktur, harga-diskon per baris, dan diskon
+ * dokumen — persis muatan PUT /good-receipt/confirm. Tanda buku pada
+ * baris menyimpan harganya ke master barang, sama seperti di formulir
+ * penerimaan dan faktur penjualan.
+ *
+ * Menolak penerimaan (barang dikembalikan, dokumen batal) juga dari sini,
+ * lewat tombol bahaya dengan konfirmasinya sendiri.
+ */
 @Component({
-    selector: 'app-purchase-invoice-confirm-view',
-    templateUrl: './purchase-invoice-confirm-view.component.html',
-    styleUrls: ['./purchase-invoice-confirm-view.component.scss'],
-    imports: [NgIf, VerticalDividerComponent, BoxStepperComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgxMaskDirective, MatHint, NgFor, MatTooltip, NgClass, MatProgressSpinner, DecimalPipe, TranslatePipe]
+  selector: 'app-purchase-invoice-confirm-view',
+  templateUrl: './purchase-invoice-confirm-view.component.html',
+  styleUrls: ['./purchase-invoice-confirm-view.component.scss'],
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    DatePipe,
+    ReactiveFormsModule,
+    NgxMaskDirective,
+    TranslatePipe,
+    MatFormField,
+    MatLabel,
+    MatSuffix,
+    MatInput,
+    MatDatepicker,
+    MatDatepickerInput,
+  ],
+  providers: [DatePipe],
 })
-export class PurchaseInvoiceConfirmViewComponent {
+export class PurchaseInvoiceConfirmViewComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private sheet: MatBottomSheet,
-    private datePipe: DatePipe,
-    private dialog: MatDialog,
-    private location: Location,
     private translateService: TranslateService,
+    private datePipe: DatePipe,
+    private route: ActivatedRoute,
     private router: Router,
-    private decimalPipe: DecimalPipe
+    private dialog: MatDialog,
+    private pageTitleService: PageTitleService,
   ) {}
 
-  isSubmitting: boolean = false;
-  isLoading: boolean = false;
-  stepIndex: number = 0;
+  isLoading = true;
+  isSubmitting = false;
 
-  /**
-   * Meta form group is used to store date, name, good receipt name, faktur, supplier id, company id, supplier name, and company name.
-   * Only date, name, good receipt name, supplier id, and company id are required.
-   * This will be step 1.
-   */
+  /** Data penerimaan apa adanya — sumber tampilan baca-saja. */
+  penerimaan: any = null;
+
   metaFormGroup: FormGroup = new FormGroup({
-    id: new FormControl('', [Validators.required, Validators.min(0)]),
-    date: new FormControl('', Validators.required),
-    name: new FormControl('', Validators.required),
     invoice_name: new FormControl('', Validators.required),
-    faktur: new FormControl('', [Validators.pattern(/(^$|(^([0-9]{16})$))/g)]),
-    supplier_id: new FormControl('', Validators.required),
-    company_id: new FormControl('', Validators.required),
-
-    supplier_name: new FormControl(''),
-    company_name: new FormControl(''),
+    /* 16 digit faktur pajak, atau kosong bila belum ada. */
+    faktur: new FormControl('', Validators.pattern(/^$|^[0-9]{16}$/)),
+    date: new FormControl(new Date(), Validators.required),
   });
 
-  /**
-   * Purchase document form group is used to store items, discount, and total.
-   * Items is an array of form group which contains id, reference, description, item unit id, unit, quantity, price, discount, discount percentage, initial price, initial discount, discount type, and save.
-   * Only id, reference, description, quantity, price, and discount type are required.
-   * This will be step 2.
-   */
-  purchaseDocumentFormGroup: FormGroup = new FormGroup({
+  itemsFormGroup: FormGroup = new FormGroup({
     items: new FormArray([]),
     discount: new FormControl(0, [Validators.required, Validators.min(0)]),
-    total: new FormControl(0),
   });
 
-  get f() {
-    return this.purchaseDocumentFormGroup.controls;
-  }
-
-  get t() {
-    return this.f['items'] as FormArray;
-  }
-
-  getFormGroupAt(i: number) {
-    return this.t.at(i) as FormGroup;
-  }
-
   ngOnInit(): void {
-    this.isLoading = true;
+    this.pageTitleService.pasangKonteks({
+      kembaliLabel: 'purchase-invoice__queue__title',
+      kembaliJalur: '/Purchase-invoice',
+      tag: 'purchase-invoice__complete__tag',
+    });
+
     this.apiService
       .get(`good-receipt/${this.route.snapshot.params['id']}`)
       .subscribe({
         next: (data: any) => {
-          if (!data) {
+          if (!data || data.is_confirm || data.is_delete) {
             this.alertService.showSuccess(
-              this.translateService.instant('general__not-found')
+              this.translateService.instant('general__already-confirmed'),
             );
-            this.location.back();
+            this.router.navigate(['/Purchase-invoice']);
+            return;
           }
 
-          if (data.is_confirm) {
-            this.alertService.showSuccess(
-              this.translateService.instant('general__already-confirmed')
-            );
-            this.location.back();
-          }
+          this.penerimaan = data;
 
-          if (data.is_delete) {
-            this.alertService.showSuccess(
-              this.translateService.instant('general__allready-deleted')
-            );
-            this.location.back();
-          }
+          this.metaFormGroup.patchValue({
+            invoice_name: data.invoice_name ?? '',
+            faktur: data.faktur ?? '',
+            date: data.date,
+          });
+          this.itemsFormGroup.patchValue({ discount: data.discount ?? 0 });
 
           (data.good_receipt as any[]).forEach((x) => {
             this.t.push(
               this.formBuilder.group({
-                id: [x.id, Validators.required],
-                reference: [x.product.reference, [Validators.required]],
-                description: [x.product.description, [Validators.required]],
+                id: [x.id],
                 product_id: [x.product_id],
                 product_unit_id: [x.product_unit_id],
+                reference: [x.product?.reference],
+                description: [x.product?.description],
+                quantity: [Number(x.quantity)],
                 unit: [
-                  x.product_unit == null ? x.product.unit : x.product_unit.unit,
+                  x.product_unit == null ? x.product?.unit : x.product_unit.unit,
                 ],
-                quantity: [x.quantity],
-                price: [x.price],
-                discount: [x.discount],
-                discountPercentage: [
-                  x.price == 0 ? 0 : (x.discount / x.price) * 100,
+                conversion: [
+                  x.product_unit == null ? 1 : Number(x.product_unit.conversion),
                 ],
-                initialPrice: [x.price],
-                initialDiscount: [x.discount],
+                default_unit: [x.product?.unit],
+                price: [
+                  Number(x.price),
+                  [Validators.required, Validators.min(0)],
+                ],
+                discount: [
+                  Number(x.discount),
+                  [Validators.required, Validators.min(0)],
+                ],
                 save_price: [false],
-              })
+              }),
             );
           });
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+          this.router.navigate(['/Purchase-invoice']);
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
+  }
 
-          this.metaFormGroup.patchValue({
-            id: data.id,
-            name: data.name,
-            invoice_name: data.invoice_name,
-            date: data.date,
-            supplier_id: data.supplier.id,
-            company_id: data.company.id,
-            supplier_name: data.supplier.name,
-            company_name: data.company.name,
-          });
+  get t(): FormArray {
+    return this.itemsFormGroup.controls['items'] as FormArray;
+  }
 
-          this.purchaseDocumentFormGroup.patchValue({
-            discount: data.discount,
-            total: this.t.controls.reduce((a: any, b: any) => {
-              return (
-                a +
-                b.get('quantity').value *
-                  (b.get('price').value - b.get('discount').value)
-              );
-            }, 0),
-          });
+  getFormGroupAt(i: number): FormGroup {
+    return this.t.at(i) as FormGroup;
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Nilai-nilai                                                       */
+  /* ---------------------------------------------------------------- */
+
+  totalBaris(i: number): number {
+    const g = this.getFormGroupAt(i);
+    return (
+      (Number(g.get('price')?.value) - Number(g.get('discount')?.value)) *
+      Number(g.get('quantity')?.value)
+    );
+  }
+
+  get subtotal(): number {
+    return this.t.controls.reduce(
+      (a, b) =>
+        a + Number(b.get('price')?.value) * Number(b.get('quantity')?.value),
+      0,
+    );
+  }
+
+  get diskonItem(): number {
+    return this.t.controls.reduce(
+      (a, b) =>
+        a + Number(b.get('discount')?.value) * Number(b.get('quantity')?.value),
+      0,
+    );
+  }
+
+  get diskonDokumen(): number {
+    return Number(this.itemsFormGroup.controls['discount'].value ?? 0);
+  }
+
+  get total(): number {
+    return this.subtotal - this.diskonItem - this.diskonDokumen;
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Checklist                                                         */
+  /* ---------------------------------------------------------------- */
+
+  get nomorFakturTerisi(): boolean {
+    return this.metaFormGroup.controls['invoice_name'].valid;
+  }
+
+  get fakturPajakSah(): boolean {
+    return this.metaFormGroup.controls['faktur'].valid;
+  }
+
+  get fakturPajakKosong(): boolean {
+    return !this.metaFormGroup.controls['faktur'].value;
+  }
+
+  get diskonSah(): boolean {
+    return this.diskonDokumen <= this.subtotal - this.diskonItem;
+  }
+
+  get bisaTerbitkan(): boolean {
+    return (
+      !this.isSubmitting &&
+      !this.isLoading &&
+      this.penerimaan != null &&
+      this.metaFormGroup.valid &&
+      this.itemsFormGroup.valid &&
+      this.diskonSah
+    );
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Kirim                                                             */
+  /* ---------------------------------------------------------------- */
+
+  batal(): void {
+    this.router.navigate(['/Purchase-invoice']);
+  }
+
+  terbitkan(): void {
+    if (!this.bisaTerbitkan) {
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.apiService
+      .put('good-receipt/confirm', {
+        id: Number(this.penerimaan.id),
+        name: this.penerimaan.name,
+        invoice_name: this.metaFormGroup.value.invoice_name,
+        faktur: this.metaFormGroup.value.faktur,
+        date: this.datePipe.transform(
+          this.metaFormGroup.value.date,
+          'yyyy-MM-dd',
+        ),
+        discount: this.diskonDokumen,
+        good_receipt: this.t.controls.map((x) => ({
+          id: x.get('id')?.value,
+          price: Number(x.get('price')?.value),
+          discount: Number(x.get('discount')?.value),
+        })),
+      })
+      .pipe(
+        /* Baris bertanda buku: harganya ikut disimpan ke master barang. */
+        switchMap((hasil) => {
+          if (!hasil) return of(null);
+
+          const disimpan = this.t.controls
+            .filter((x) => x.get('save_price')?.value)
+            .map((x) => ({
+              product_id: x.get('product_id')?.value,
+              product_unit_id: x.get('product_unit_id')?.value,
+              price: Number(x.get('price')?.value),
+              discount: Number(x.get('discount')?.value),
+            }));
+
+          if (disimpan.length > 0) {
+            return this.apiService.put('product/price-purchase', {
+              items: disimpan,
+            });
+          }
+          return of(null);
+        }),
+      )
+      .subscribe({
+        next: (_) => {
+          this.alertService.showSuccess(
+            this.translateService.instant(
+              'purchase-invoice__confirm__confirm__success',
+            ),
+          );
+          this.router.navigate(['/Purchase-invoice']);
         },
         error: (error) => {
           this.alertService.showError(error);
         },
       })
       .add(() => {
-        this.isLoading = false;
+        this.isSubmitting = false;
       });
-
-    this.t.valueChanges.subscribe({
-      next: () => {
-        this.purchaseDocumentFormGroup.patchValue({
-          total: this.t.controls.reduce((a: any, b: any) => {
-            return (
-              a +
-              b.get('quantity').value *
-                (b.get('price').value - b.get('discount').value)
-            );
-          }, 0),
-        });
-      },
-      error: (error) => {
-        this.alertService.showError(error);
-      },
-    });
   }
 
-  openEditDiscount(i: number) {
+  tolak(): void {
     this.dialog
-      .open(UpdateProductPurchasePriceComponent, {
+      .open(DeleteConfirmationComponent, {
         data: {
-          discount: this.t.controls[i].get('discount')?.value,
-          price: this.t.controls[i].get('price')?.value,
-          discountPercentage:
-            this.t.controls[i].get('discountPercentage')?.value,
-          save_price: this.t.controls[i].get('save_price')?.value,
+          title: this.translateService.instant(
+            'purchase-invoice__confirm__delete__title',
+          ),
         },
       })
       .afterClosed()
-      .subscribe((data: any) => {
-        if (data != undefined) {
-          this.t.controls[i].get('discount')?.setValue(data.discount);
-          this.t.controls[i]
-            .get('discountPercentage')!
-            .setValue(data.discountPercentage);
-          this.t.controls[i].get('price')?.setValue(data.price);
-          this.t.controls[i].get('save_price')?.setValue(data.save_price);
+      .subscribe((hasil) => {
+        /*
+          Konfirmasi menutup dengan `true` HANYA lewat tombolnya; batal
+          (atau backdrop) mengirim undefined. Tanpa pemeriksaan ini,
+          membatalkan konfirmasi tetap menolak penerimaannya.
+        */
+        if (hasil !== true) {
+          return;
         }
+
+        this.isSubmitting = true;
+        this.apiService
+          .put('good-receipt/reject', { id: Number(this.penerimaan.id) })
+          .subscribe({
+            next: (_) => {
+              this.alertService.showSuccess(
+                this.translateService.instant(
+                  'purchase-invoice__confirm__delete__success',
+                ),
+              );
+              this.router.navigate(['/Purchase-invoice']);
+            },
+            error: (error) => {
+              this.alertService.showError(error);
+            },
+          })
+          .add(() => {
+            this.isSubmitting = false;
+          });
       });
-  }
-
-  submitForm(type: string) {
-    if (this.isSubmitting || this.isLoading) {
-      return;
-    }
-
-    if (type == 'confirm') {
-      if (!this.isValid) {
-        return;
-      }
-
-      this.dialog
-        .open(DeleteConfirmationComponent, {
-          data: {
-            header: this.translateService.instant(
-              'purchase-invoice__confirm__header'
-            ),
-            title: this.translateService.instant(
-              'purchase-invoice__confirm__confirm__title'
-            ),
-            document: `[${this.metaFormGroup.value.name}]`,
-          },
-        })
-        .afterClosed()
-        .subscribe((data) => {
-          if (data) {
-            this.apiService
-              .put('good-receipt/confirm', {
-                id: Number(this.metaFormGroup.value.id),
-                name: this.metaFormGroup.value.name,
-                invoice_name: this.metaFormGroup.value.invoice_name,
-                faktur: this.metaFormGroup.value.faktur,
-                date: this.datePipe.transform(
-                  this.metaFormGroup.value.date,
-                  'yyyy-MM-dd'
-                ),
-                discount: Number(
-                  this.purchaseDocumentFormGroup.controls['discount'].value
-                ),
-                good_receipt: this.t.controls.map((x) => {
-                  return {
-                    id: x.get('id')?.value,
-                    price: Number(x.get('price')?.value),
-                    discount: Number(x.get('discount')?.value),
-                  };
-                }),
-              })
-              .pipe(
-                switchMap((result) => {
-                  if (!result) return of(null);
-
-                  const itemsToSave = this.t.controls
-                    .filter((x) => x.get('save_price')?.value)
-                    .map((x) => ({
-                      product_id: x.get('product_id')?.value,
-                      product_unit_id: x.get('product_unit_id')?.value,
-                      price: x.get('price')?.value,
-                      discount: x.get('discount')?.value,
-                    }));
-
-                  if (itemsToSave.length > 0) {
-                    // Post to purchase-price
-                    return this.apiService.put('product/price-purchase', {
-                      items: itemsToSave,
-                    });
-                  }
-                  return of(null);
-                })
-              )
-              .subscribe({
-                next: (result) => {
-                  this.alertService.showSuccess(
-                    this.translateService.instant(
-                      'purchase-invoice__confirm__confirm__success'
-                    )
-                  );
-
-                  const url = this.router.url;
-                  const urlSegments = url.split('/');
-                  urlSegments.pop();
-
-                  this.router.navigate(urlSegments);
-                },
-                error: (error) => {
-                  this.alertService.showError(error);
-                },
-              })
-              .add(() => {
-                this.isSubmitting = false;
-              });
-          }
-        });
-    } else if (type == 'delete') {
-      this.dialog
-        .open(DeleteConfirmationComponent, {
-          data: {
-            header: this.translateService.instant(
-              'purchase-invoice__confirm__header'
-            ),
-            title: this.translateService.instant(
-              'purchase-invoice__confirm__delete__title'
-            ),
-            document: `[${this.metaFormGroup.value.good_receipt_name}]`,
-          },
-        })
-        .afterClosed()
-        .subscribe((data) => {
-          if (data) {
-            this.isSubmitting = true;
-            this.apiService
-              .put(`good-receipt/reject`, {
-                id: Number(this.metaFormGroup.value.id),
-              })
-              .subscribe({
-                next: (_) => {
-                  this.alertService.showSuccess(
-                    this.translateService.instant(
-                      'purchase-invoice__confirm__delete__success'
-                    )
-                  );
-                  // navigate to before
-                  const url = this.router.url;
-                  const urlSegments = url.split('/');
-                  urlSegments.pop();
-
-                  this.router.navigate(urlSegments);
-                },
-                error: (error) => {
-                  this.alertService.showError(error);
-                },
-              })
-              .add(() => {
-                this.isSubmitting = false;
-              });
-          }
-        });
-    }
-  }
-
-  get isValid(): boolean {
-    if (!this.metaFormGroup.valid) {
-      return false;
-    }
-
-    if (!this.purchaseDocumentFormGroup.valid) {
-      return false;
-    }
-
-    const discount = Number(
-      this.purchaseDocumentFormGroup.get('discount')?.value
-    );
-    const total = Number(this.purchaseDocumentFormGroup.get('total')?.value);
-
-    if (discount > total) {
-      return false;
-    }
-
-    return true;
-  }
-
-  getDiscountPercentage(discount: number, price: number) {
-    if (price == 0) {
-      return '0%';
-    } else {
-      return `${this.decimalPipe.transform(
-        (discount * 100) / price,
-        '1.2-2'
-      )}%`;
-    }
   }
 }

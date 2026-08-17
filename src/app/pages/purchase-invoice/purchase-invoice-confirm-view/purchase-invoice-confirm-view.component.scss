@@ -1,65 +1,29 @@
-h5 {
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-size: 1.2rem;
-  color: #041e49;
-  margin-bottom: 2rem;
-}
+/*
+  Kerangka formulirnya dipakai bersama dengan formulir buat lainnya; yang
+  khas halaman ini hanya rincian baca-saja dan lebar kolom diskon dokumen.
+*/
+@use "../../../styles/form-buat";
 
-.purchase-invoice__action-list {
+/* Rincian penerimaan baca-saja: label redup di kiri, nilai di kanan. */
+.rinci {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
-.purchase-invoice__action-list__item {
+.rinci__baris {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  cursor: pointer;
-  transition: 0.3s all ease;
-  outline: none;
-  border: none;
-  background-color: transparent;
-  padding: 0.5rem;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 13.5px;
 }
 
-.purchase-invoice__action-list__item:hover {
-  background-color: #f5f5f5;
+.rinci__label {
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
 
-.purchase-invoice__action-list__item.disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.purchase-invoice__action-list__item h6 {
-  margin: 0;
-  font-family: "Poppins", sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 1rem;
-  line-height: 1.5rem;
-  color: #111827;
-}
-
-.purchase-invoice__action-list__item p {
-  line-clamp: 1;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  display: -webkit-box;
-  margin: 0;
-  font-family: "Poppins", sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
-
-.purchase-invoice__save-indicator {
-  color: #0b57d0;
-  font-weight: 500;
-  outline: none;
-  border: none;
-  background-color: transparent;
+/* Diskon dokumen tidak perlu selebar kartu. */
+.w-diskon {
+  max-width: 260px;
+  align-self: flex-end;
 }
