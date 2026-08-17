@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>
+  {{ 'activity__filter__title' | translate }}
+</h2>
+<form [formGroup]="formGroup">
+  <mat-dialog-content>
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>{{ 'activity__entity' | translate }}</mat-label>
+      <mat-select formControlName="entity">
+        <mat-option [value]="''">{{ 'activity__all' | translate }}</mat-option>
+        <mat-option *ngFor="let e of entities" [value]="e">{{ e }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="w-100" appearance="outline">
+      <mat-label>{{ 'activity__filter__range' | translate }}</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate formControlName="dateFrom" />
+        <input matEndDate formControlName="dateTo" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      type="submit"
+      mat-stroked-button
+      color="primary"
+      style="letter-spacing: 0"
+      (click)="simpan()"
+    >
+      {{ 'general__save-filter' | translate }}
+    </button>
+  </mat-dialog-actions>
+</form>

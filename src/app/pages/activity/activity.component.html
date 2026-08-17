@@ -10,56 +10,42 @@
   (pageSizeChange)="gantiUkuran($event)"
   (refresh)="fetch(page)"
 >
-  <!-- Saringan: jenis data + rentang tanggal, satu baris di atas tabel. -->
-  <div hero class="jejak__saringan">
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'activity__entity' | translate }}</mat-label>
-      <mat-select [formControl]="entityControl">
-        <mat-option [value]="''">{{ 'activity__all' | translate }}</mat-option>
-        <mat-option *ngFor="let e of entities" [value]="e">{{ e }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+  <ng-container aksi>
+    <button
+      type="button"
+      class="aksi-ikon"
+      (click)="openFilter()"
+      [title]="'general__filter' | translate"
+      [attr.aria-label]="'general__filter' | translate"
+    >
+      <i class="ph ph-funnel" aria-hidden="true"></i>
+    </button>
 
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'activity__date_from' | translate }}</mat-label>
-      <input
-        matInput
-        [matDatepicker]="dariPicker"
-        [formControl]="dateFromControl"
-        (click)="dariPicker.open()"
-      />
+    <!--
+      Kapsul saringan aktif hidup DI BARIS KENDALI, bersama tombol
+      corong yang melahirkannya — pola yang sama dengan seluruh arsip.
+    -->
+    <div class="saringan saringan--baris" *ngIf="kapsul.length > 0">
+      <span class="saringan__kapsul" *ngFor="let k of kapsul">
+        {{ k.teks }}
+        <button
+          type="button"
+          (click)="lepasKapsul(k.kunci)"
+          [attr.aria-label]="'general__delete' | translate"
+        >
+          <i class="ph ph-x" aria-hidden="true"></i>
+        </button>
+      </span>
+
       <button
         type="button"
-        matSuffix
-        class="buka-kalender"
-        (click)="dariPicker.open()"
-        [attr.aria-label]="'general__pick-date' | translate"
+        class="saringan__bersih"
+        (click)="hapusSemuaSaringan()"
       >
-        <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+        {{ 'general__filter__clear' | translate }}
       </button>
-      <mat-datepicker #dariPicker></mat-datepicker>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'activity__date_to' | translate }}</mat-label>
-      <input
-        matInput
-        [matDatepicker]="sampaiPicker"
-        [formControl]="dateToControl"
-        (click)="sampaiPicker.open()"
-      />
-      <button
-        type="button"
-        matSuffix
-        class="buka-kalender"
-        (click)="sampaiPicker.open()"
-        [attr.aria-label]="'general__pick-date' | translate"
-      >
-        <i class="ph ph-calendar-blank" aria-hidden="true"></i>
-      </button>
-      <mat-datepicker #sampaiPicker></mat-datepicker>
-    </mat-form-field>
-  </div>
+    </div>
+  </ng-container>
 
   <table class="tabel">
     <thead>
@@ -68,12 +54,16 @@
         <th>{{ 'activity__user' | translate }}</th>
         <th>{{ 'activity__entity' | translate }}</th>
         <th>{{ 'activity__action' | translate }}</th>
-        <th>{{ 'activity__changes' | translate }}</th>
       </tr>
     </thead>
 
     <tbody *ngIf="!isLoading && entries.length > 0">
-      <tr *ngFor="let entry of entries">
+      <!-- Rincian perubahan dibuka lewat klik baris, bukan dijejalkan ke kolom. -->
+      <tr
+        *ngFor="let entry of entries"
+        class="tabel__baris-klik"
+        (click)="lihat(entry)"
+      >
         <td class="tabel__tanggal jejak__waktu">
           {{ entry.createdAt | date: 'dd MMM yyyy HH:mm' }}
         </td>
@@ -106,20 +96,12 @@
             {{ entry.action }}
           </span>
         </td>
-
-        <td class="jejak__ubahan">
-          <span class="jejak__pasangan" *ngFor="let ubah of daftarPerubahan(entry)">
-            <span class="jejak__kolom">{{ ubah.field }}</span>
-            <span class="jejak__nilai">{{ ubah.to }}</span>
-          </span>
-          <em class="jejak__catatan" *ngIf="entry.note">{{ entry.note }}</em>
-        </td>
       </tr>
     </tbody>
 
     <tbody *ngIf="isLoading">
       <tr>
-        <td colspan="5" class="tabel__pesan">
+        <td colspan="4" class="tabel__pesan">
           {{ 'general__loading' | translate }}
         </td>
       </tr>
@@ -127,7 +109,7 @@
 
     <tbody *ngIf="!isLoading && entries.length === 0">
       <tr>
-        <td colspan="5">
+        <td colspan="4">
           <app-tabel-kosong
             ikon="ph-pulse"
             [judul]="'activity__empty' | translate"

@@ -188,6 +188,7 @@ html {
 .mat-mdc-dialog-surface:has(> app-overpayment-archive-view),
 .mat-mdc-dialog-surface:has(> app-sales-return-archive-view),
 .mat-mdc-dialog-surface:has(> app-stock-list-report),
+.mat-mdc-dialog-surface:has(> app-activity-view),
 .mat-mdc-dialog-surface:has(> app-purchase-invoice-view) {
   background: transparent;
   box-shadow: none;
