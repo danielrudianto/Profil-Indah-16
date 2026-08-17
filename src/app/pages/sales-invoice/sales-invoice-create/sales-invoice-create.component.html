@@ -498,8 +498,16 @@
                   thousandSeparator="."
                   formControlName="value"
                   autocomplete="off"
+                  (input)="nominalDiedit()"
+                  (blur)="jepitNominal()"
                 />
                 <span matTextPrefix>Rp&nbsp;</span>
+                <mat-hint>
+                  {{
+                    'sales-invoice__rebate__max'
+                      | translate: { nilai: (totalBill | number) }
+                  }}
+                </mat-hint>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="w-100">

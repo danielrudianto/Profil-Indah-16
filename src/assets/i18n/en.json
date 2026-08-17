@@ -1935,6 +1935,7 @@
   "sales-invoice__rebate__returned": "Returned to the customer",
   "sales-invoice__rebate__returned__note": "Money leaves, recorded and reconciled.",
   "sales-invoice__rebate__value": "Amount returned",
+  "sales-invoice__rebate__max": "Maximum Rp {{nilai}} (invoice net value)",
   "sales-invoice__rebate__receiver": "Receiver name",
   "tax-invoice__placeholder": "16 digits",
   "tax-invoice__hint": "No hyphens or dots · max. 16 digits",

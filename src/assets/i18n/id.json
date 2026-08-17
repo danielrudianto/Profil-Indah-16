@@ -1941,6 +1941,7 @@
   "sales-invoice__rebate__returned": "Dikembalikan ke pelanggan",
   "sales-invoice__rebate__returned__note": "Uang keluar, tercatat & ikut rekonsiliasi.",
   "sales-invoice__rebate__value": "Nominal dikembalikan",
+  "sales-invoice__rebate__max": "Maksimum Rp {{nilai}} (nilai nett bon)",
   "sales-invoice__rebate__receiver": "Nama penerima",
   "tax-invoice__placeholder": "16 digit angka",
   "tax-invoice__hint": "Tanpa tanda hubung & titik · maks. 16 digit",

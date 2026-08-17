@@ -58,6 +58,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     MatDatepickerToggle,
     MatFormField,
     MatLabel,
+    MatHint,
     MatInput,
       FormsModule,
       ReactiveFormsModule,
@@ -310,6 +311,12 @@ export class SalesInvoiceCreateComponent {
         },
         { emitEvent: false }
       );
+
+      /*
+        Diskon berubah → nominal pengembalian ikut, selama pengguna belum
+        menyuntingnya sendiri.
+      */
+      this.autoIsiNominal();
     });
 
     this.paymentsFormGroup.controls['method'].valueChanges.subscribe((data) => {
@@ -1222,6 +1229,13 @@ export class SalesInvoiceCreateComponent {
   });
 
   /**
+   * Benar setelah pengguna menyunting nominal pengembalian dengan
+   * tangannya sendiri. Sebelum itu, nominalnya MENGIKUTI total diskon:
+   * diskon diubah, nominal ikut. Sesudahnya angka pengguna yang menang.
+   */
+  nominalDisunting = false;
+
+  /**
    * Memilih perlakuan diskon.
    *
    * Berpindah ke "dikembalikan" mengisi nominalnya dengan total diskon faktur
@@ -1234,18 +1248,46 @@ export class SalesInvoiceCreateComponent {
     this.perlakuanDiskon = pilihan;
 
     if (pilihan === 'kembali') {
-      if (!Number(this.rebateFormGroup.value.value)) {
-        this.rebateFormGroup.patchValue({ value: this.totalDiskon });
-      }
+      this.autoIsiNominal();
       return;
     }
 
+    this.nominalDisunting = false;
     this.rebateFormGroup.reset({
       value: 0,
       receiver_name: '',
       bank_name: '',
       account_number: '',
     });
+  }
+
+  /**
+   * Nilai bawaan nominal pengembalian: total diskon, dijepit nilai nett
+   * bon — mengembalikan lebih dari nilai bonnya sendiri bukan
+   * pengembalian diskon lagi.
+   */
+  private autoIsiNominal(): void {
+    if (this.perlakuanDiskon !== 'kembali' || this.nominalDisunting) {
+      return;
+    }
+
+    const bawaan = Math.min(this.totalDiskon, Math.max(this.totalBill, 0));
+    if (Number(this.rebateFormGroup.value.value) !== bawaan) {
+      this.rebateFormGroup.patchValue({ value: bawaan }, { emitEvent: false });
+    }
+  }
+
+  /** Dipanggil dari ketikan langsung pada kolom nominal. */
+  nominalDiedit(): void {
+    this.nominalDisunting = true;
+  }
+
+  /** Jepit nominal ke nilai nett bon saat pengguna meninggalkan kolomnya. */
+  jepitNominal(): void {
+    const maks = Math.max(this.totalBill, 0);
+    if (this.nominalKembali > maks) {
+      this.rebateFormGroup.patchValue({ value: maks }, { emitEvent: false });
+    }
   }
 
   pilihMetodeKembali(pilihan: string): void {
@@ -1279,7 +1321,11 @@ export class SalesInvoiceCreateComponent {
     }
 
     const v = this.rebateFormGroup.value;
-    if (this.nominalKembali <= 0 || !v.receiver_name) {
+    if (
+      this.nominalKembali <= 0 ||
+      this.nominalKembali > Math.max(this.totalBill, 0) ||
+      !v.receiver_name
+    ) {
       return false;
     }
 
