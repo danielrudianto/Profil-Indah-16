@@ -2210,5 +2210,8 @@
   "sales-invoice__new": "Faktur baru",
   "sales-return__new": "Retur baru",
   "sales-invoice__view-list": "Daftar faktur penjualan",
-  "sales-return__view-list": "Daftar retur penjualan"
+  "sales-return__view-list": "Daftar retur penjualan",
+  "archives__documents": "dokumen",
+  "archives__empty": "Belum ada dokumen yang diarsipkan.",
+  "archives__lede": "Pilih bulan untuk membuka daftar dokumennya."
 }

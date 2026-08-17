@@ -1,3 +1,134 @@
-.archive__year-wrapper {
-  margin-top: 2rem;
+/*
+  Tahap pilih bulan — Nocturne. Lebar dan posisinya mengikuti kartu daftar
+  (app-list-page) supaya perpindahan ke tahap kedua tidak terasa pindah
+  halaman.
+*/
+.arsip {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-bottom: 32px;
+  font-family: "Montserrat", system-ui, sans-serif;
+  color: var(--color-text);
+}
+
+/* Kepala yang sama dengan app-list-page: judul besar, lede redup. */
+.arsip__kepala {
+  margin-bottom: 20px;
+}
+
+.arsip__judul {
+  margin: 0 0 4px;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.arsip__lede {
+  margin: 0;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+.arsip__pesan {
+  margin: 24px 0;
+  text-align: center;
+  font-size: 13.5px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.arsip__tahun {
+  margin-bottom: 28px;
+}
+
+/* Label tahun kecil beraksen dengan garis yang mengalir ke kanan. */
+.arsip__label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+
+.arsip__garis {
+  flex: 1;
+  height: 1px;
+  background: var(--color-divider);
+}
+
+.arsip__kisi {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.arsip__bulan {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  background: var(--color-surface);
+  border: 0;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px var(--color-divider);
+  cursor: pointer;
+  transition: box-shadow 0.18s ease, background-color 0.18s ease;
+
+  &:hover {
+    box-shadow: inset 0 0 0 1px var(--color-accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &:hover .arsip__panah {
+    color: var(--color-accent);
+    transform: translateX(2px);
+  }
+}
+
+/* Ikon 40px kotak beraksen — anatomi yang sama dengan kepala dialog. */
+.arsip__ikon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: var(--color-accent-wash);
+  color: var(--color-accent);
+
+  i {
+    font-size: 20px;
+  }
+}
+
+.arsip__teks {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+
+  strong {
+    font-size: 14.5px;
+    font-weight: 600;
+  }
+
+  span {
+    font-size: 12.5px;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  }
+}
+
+.arsip__panah {
+  margin-left: auto;
+  font-size: 16px;
+  color: color-mix(in srgb, var(--color-text) 35%, transparent);
+  transition: color 0.18s ease, transform 0.18s ease;
 }

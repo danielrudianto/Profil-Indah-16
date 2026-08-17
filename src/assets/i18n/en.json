@@ -2210,5 +2210,8 @@
   "sales-invoice__new": "New invoice",
   "sales-return__new": "New return",
   "sales-invoice__view-list": "Sales invoice list",
-  "sales-return__view-list": "Sales return list"
+  "sales-return__view-list": "Sales return list",
+  "archives__documents": "documents",
+  "archives__empty": "No documents archived yet.",
+  "archives__lede": "Pick a month to open its documents."
 }

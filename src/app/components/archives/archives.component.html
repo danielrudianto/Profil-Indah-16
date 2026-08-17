@@ -1,22 +1,49 @@
-<div *ngFor="let year of years" class="archive__year-wrapper">
-  <h1>{{ year }}</h1>
-  <mat-divider class="mb-3" />
-  <mat-grid-list
-    [cols]="columnNumber"
-    [rowHeight]="aspectRatio"
-    gutterSize="20px"
-  >
-    <mat-grid-tile *ngFor="let month of monthData(year)">
-      <!-- 'yyyy' tahun kalender; 'YYYY' tahun pekan-basis dan Angular
-           melemparnya sebagai NG02100 di tiap kartu. -->
-      <app-archive-card
+<!--
+  Pilih bulan — pintu setiap arsip. Judul halamannya milik tahap kedua
+  (app-list-page); di sini hanya tahun, bulan, dan berapa banyak dokumen
+  menunggu di baliknya.
+-->
+<div class="arsip">
+  <header class="arsip__kepala" *ngIf="heading">
+    <h1 class="arsip__judul">{{ heading | translate }}</h1>
+    <p class="arsip__lede" *ngIf="lede">{{ lede | translate }}</p>
+  </header>
+
+  <p class="arsip__pesan" *ngIf="isLoading">
+    {{ 'general__loading' | translate }}
+  </p>
+
+  <p class="arsip__pesan" *ngIf="!isLoading && years.length === 0">
+    {{ 'archives__empty' | translate }}
+  </p>
+
+  <section class="arsip__tahun" *ngFor="let year of years">
+    <h2 class="arsip__label">
+      {{ year }}
+      <span class="arsip__garis" aria-hidden="true"></span>
+    </h2>
+
+    <div class="arsip__kisi">
+      <button
+        type="button"
+        class="arsip__bulan"
+        *ngFor="let month of monthData(year)"
         (click)="selectMonth(year, month.month)"
-        class="w-100 h-100 p-2"
-        title="{{
-          getDateFromMonthYear(month.month - 1, year) | date : 'MMMM yyyy'
-        }}"
-        [count]="month.count"
-      />
-    </mat-grid-tile>
-  </mat-grid-list>
+      >
+        <span class="arsip__ikon" aria-hidden="true">
+          <i class="ph ph-folder-open"></i>
+        </span>
+        <span class="arsip__teks">
+          <!-- 'yyyy' tahun kalender; 'YYYY' tahun pekan-basis — NG02100. -->
+          <strong>
+            {{ getDateFromMonthYear(month.month - 1, year) | date: 'MMMM' }}
+          </strong>
+          <span>
+            {{ month.count }} {{ 'archives__documents' | translate }}
+          </span>
+        </span>
+        <i class="ph ph-caret-right arsip__panah" aria-hidden="true"></i>
+      </button>
+    </div>
+  </section>
 </div>
