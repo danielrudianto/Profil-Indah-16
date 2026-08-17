@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { AUDITED_ENTITIES } from 'src/app/constants/audit-entity.constant';
 import { ActivityEntry } from 'src/app/models/activity-entry.model';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
 /**
  * Aktivitas seluruh sistem.
@@ -22,16 +22,17 @@ import { ActivityEntry } from 'src/app/models/activity-entry.model';
  * sehingga pertanyaan "apa saja yang terjadi hari ini" dan "apa saja yang
  * diubah orang tertentu" tidak bisa dijawab dengan membuka dokumen satu per
  * satu.
- *
- * Belum diberi gaya sendiri — sengaja, mengikuti permintaan: bentuknya
- * fungsional dulu, tampilannya menyusul.
  */
 @Component({
   selector: 'app-activity',
   templateUrl: './activity.component.html',
+  styleUrls: ['./activity.component.scss'],
   imports: [
+    ListPageComponent,
+    TabelKosongComponent,
     NgIf,
     NgFor,
+    NgClass,
     DatePipe,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -39,8 +40,6 @@ import { ActivityEntry } from 'src/app/models/activity-entry.model';
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatPaginatorModule,
-    MatProgressSpinner,
     TranslatePipe,
   ],
 })
@@ -61,6 +60,27 @@ export class ActivityComponent {
   page = 1;
   pageSize = 25;
   isLoading = false;
+
+  inisial(nama: string | null | undefined): string {
+    return (nama ?? 'S').trim().charAt(0).toUpperCase() || 'S';
+  }
+
+  kelasTindakan(aksi: string): string {
+    if (aksi === 'create') return 'pill--hijau';
+    if (aksi === 'delete') return 'pill--merah';
+    return 'pill--amber';
+  }
+
+  ikonTindakan(aksi: string): string {
+    if (aksi === 'create') return 'ph-plus-circle';
+    if (aksi === 'delete') return 'ph-x-circle';
+    return 'ph-pencil-simple';
+  }
+
+  gantiUkuran(ukuran: number): void {
+    this.pageSize = ukuran;
+    this.fetch(1);
+  }
 
   ngOnInit(): void {
     /*
@@ -110,11 +130,6 @@ export class ActivityComponent {
         this.isLoading = false;
       },
     });
-  }
-
-  onPage(event: PageEvent): void {
-    this.pageSize = event.pageSize;
-    this.fetch(event.pageIndex + 1);
   }
 
   /** Daftar kolom yang berubah, supaya template tidak perlu mengurai objek. */

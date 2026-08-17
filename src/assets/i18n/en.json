@@ -1632,6 +1632,8 @@
     "invalidGroup": "Invalid group report"
   },
   "activity__title": "Activity",
+  "activity__lede": "System-wide audit trail — who changed what, when, and into what.",
+  "activity__empty__desc": "Data changes will be recorded here automatically.",
   "activity__entity": "Data type",
   "activity__all": "All",
   "activity__date_from": "From date",

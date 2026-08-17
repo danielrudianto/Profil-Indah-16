@@ -1638,6 +1638,8 @@
     "notFound": "Pengeluaran tidak ditemukan"
   },
   "activity__title": "Aktivitas",
+  "activity__lede": "Jejak audit seluruh sistem — siapa mengubah apa, kapan, dan menjadi apa.",
+  "activity__empty__desc": "Perubahan data akan tercatat di sini secara otomatis.",
   "activity__entity": "Jenis data",
   "activity__all": "Semua",
   "activity__date_from": "Dari tanggal",
