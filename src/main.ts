@@ -43,8 +43,24 @@ import { MatRadioModule } from '@angular/material/radio';
 import { HotkeyModule } from 'angular2-hotkeys';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AppComponent } from './app/app.component';
-import { importProvidersFrom } from '@angular/core';
+import { importProvidersFrom, LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeId from '@angular/common/locales/id';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
+/*
+  Tanggal mengikuti bahasa aplikasi, bukan bahasa peramban. Tanpa data
+  locale id yang didaftarkan, DatePipe hanya mengenal en-US dan
+  "Senin, 17 Agustus 2026" selamanya tercetak "Monday, 17 August 2026"
+  di antarmuka yang berbahasa Indonesia.
+
+  LOCALE_ID dibaca SEKALI saat bootstrap — karena itu ganti bahasa
+  memuat ulang halaman (lihat LanguageService); ia bukan nilai yang bisa
+  ditukar hidup-hidup.
+*/
+registerLocaleData(localeId);
+const bahasaTersimpan = localStorage.getItem('lang') ?? 'id';
+const localeAktif = bahasaTersimpan === 'en' ? 'en-US' : 'id-ID';
 
 bootstrapApplication(AppComponent, {
     providers: [
@@ -74,6 +90,9 @@ bootstrapApplication(AppComponent, {
         provideNgxMask(),
         DatePipe,
         DecimalPipe,
+        { provide: LOCALE_ID, useValue: localeAktif },
+        /* Datepicker Material membaca locale-nya sendiri, bukan LOCALE_ID. */
+        { provide: MAT_DATE_LOCALE, useValue: localeAktif },
         provideHttpClient(withInterceptorsFromDi()),
         provideAnimations(),
         provideAnimations(),
