@@ -798,6 +798,25 @@ app-dashboard {
   height: 100%;
 }
 
+/*
+  Popup kalender Material menetapkan Roboto lewat token tipografinya
+  sendiri dan mengabaikan warisan dari body — satu-satunya permukaan
+  yang hurufnya beda sendiri. Token dan kelas-kelas di dalamnya
+  ditegaskan di sini supaya ikut Montserrat seperti seisi aplikasi.
+*/
+.mat-datepicker-content {
+  --mat-datepicker-calendar-text-font: "Montserrat", system-ui, sans-serif;
+  --mat-datepicker-calendar-period-button-text-font: "Montserrat", system-ui,
+    sans-serif;
+
+  &,
+  .mat-calendar,
+  .mat-calendar-body-cell-content,
+  .mat-calendar-period-button {
+    font-family: "Montserrat", system-ui, sans-serif;
+  }
+}
+
 .vertical-divider {
   border-right: 1px solid gray;
   width: 1px;
