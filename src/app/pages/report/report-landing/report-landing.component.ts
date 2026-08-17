@@ -57,6 +57,13 @@ export class ReportLandingComponent implements OnInit {
       peran: [Role.General, Role.Administrator, Role.Owner],
     },
     {
+      ikon: 'ph-warehouse',
+      judul: 'report__landing__inventory',
+      desk: 'report__landing__inventory__desc',
+      jalur: '/Report/Inventory',
+      peran: [Role.Owner],
+    },
+    {
       ikon: 'ph-truck',
       judul: 'report__landing__output',
       desk: 'report__landing__output__desc',

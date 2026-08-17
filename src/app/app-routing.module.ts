@@ -349,6 +349,14 @@ const routes: Routes = [
                   ),
               },
               {
+                path: 'Inventory',
+                canActivate: [SuperAdministratorGuard],
+                loadComponent: () =>
+                  import('./pages/report/report-inventory/report-inventory.component').then(
+                    (m) => m.ReportInventoryComponent,
+                  ),
+              },
+              {
                 path: 'Money/Dor',
                 canActivate: [GeneralGuard],
                 loadComponent: () =>

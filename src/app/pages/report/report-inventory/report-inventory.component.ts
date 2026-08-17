@@ -1,59 +1,76 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
+import moment from 'moment';
+import {
+  MatDatepicker,
+  MatDatepickerInput,
+} from '@angular/material/datepicker';
+
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import { DynamicDialogComponent } from '../../../components/dynamic-dialog/dynamic-dialog.component';
-import { DialogHeaderComponent } from '../../../components/dialog-header/dialog-header.component';
-import { CountUpDirective } from '../../../directives/count-up.directive';
-import { MatDivider } from '@angular/material/divider';
-import { NgFor, UpperCasePipe, DecimalPipe } from '@angular/common';
-import { CircleAvatarComponent } from '../../../components/circle-avatar/circle-avatar.component';
-import { TranslatePipe } from '@ngx-translate/core';
 
+/**
+ * Laporan persediaan — nilai gudang PADA suatu tanggal.
+ *
+ * Server menghitung sisa tiap lapisan stok pada tanggal itu (kuantitas
+ * dikurangi keluaran tertetapkan sampai tanggal tersebut) dan menjumlah
+ * harga pokoknya per perusahaan. Keluaran tanpa induk tidak ternilai —
+ * ditampilkan sebagai peringatan, bukan diam-diam dianggap nol.
+ */
 @Component({
   selector: 'app-report-inventory',
   templateUrl: './report-inventory.component.html',
   styleUrls: ['./report-inventory.component.scss'],
+  providers: [DatePipe],
   imports: [
-    DynamicDialogComponent,
-    DialogHeaderComponent,
-    CountUpDirective,
-    MatDivider,
+    NgIf,
     NgFor,
-    CircleAvatarComponent,
-    UpperCasePipe,
     DecimalPipe,
+    FormsModule,
+    ReactiveFormsModule,
     TranslatePipe,
+    MatDatepicker,
+    MatDatepickerInput,
   ],
 })
-export class ReportInventoryComponent {
-  isOpened: boolean = false;
-  isLoading: boolean = true;
-  data: any[] = [];
-  value: number = 0;
-  isDownloading: boolean = false;
-
+export class ReportInventoryComponent implements OnInit {
   constructor(
     private apiService: ApiService,
-    private dynamicComponentService: DynamicComponentService,
     private alertService: AlertService,
+    private datePipe: DatePipe,
   ) {}
 
-  ngOnInit(): void {
-    this.isOpened = true;
+  isLoading = true;
 
+  date = new FormControl(new Date());
+
+  perusahaan: { id: number; company: string; value: number }[] = [];
+  takBernilai = { count: 0, value: 0 };
+
+  ngOnInit(): void {
+    this.ambilData();
+    this.date.valueChanges.subscribe(() => this.ambilData());
+  }
+
+  get teksTanggal(): string {
+    return this.datePipe.transform(this.date.value, 'dd MMM yyyy') ?? '—';
+  }
+
+  ambilData(): void {
+    this.isLoading = true;
     this.apiService
-      .get('report/inventory')
+      .get('report/inventory', {
+        date: moment(this.date.value).format('YYYY-MM-DD'),
+      })
       .subscribe({
         next: (data: any) => {
-          this.data = data;
-          this.value = data.reduce((a: any, b: any) => {
-            return a + b.value;
-          }, 0);
+          this.perusahaan = data.companies ?? [];
+          this.takBernilai = data.unassigned ?? { count: 0, value: 0 };
         },
         error: (error) => {
           this.alertService.showError(error);
-          this.closeDialog();
         },
       })
       .add(() => {
@@ -61,57 +78,11 @@ export class ReportInventoryComponent {
       });
   }
 
-  download() {
-    this.isDownloading = true;
-    this.apiService
-      .get('report/inventory/download')
-      .subscribe({
-        next: (data: any) => {
-          // Create an excel file
-          const replacer = (key: string, value: any) =>
-            value === null ? '' : value;
-
-          const header = [
-            'reference',
-            'description',
-            'brand',
-            'type',
-            'quantity',
-            'unit',
-            'value',
-          ];
-
-          const csv = data.map((row: any) =>
-            header
-              .map((fieldName) => JSON.stringify(row[fieldName], replacer))
-              .join(','),
-          );
-
-          csv.unshift(header.join(','));
-          const csvArray = csv.join('\r\n');
-          const a = document.createElement('a');
-          const blob = new Blob([csvArray], { type: 'text/csv' });
-          const url = window.URL.createObjectURL(blob);
-
-          a.href = url;
-          a.download = `Inventory report ${new Date().toLocaleDateString()}.csv`;
-          a.click();
-          window.URL.revokeObjectURL(url);
-          a.remove();
-        },
-        error: (error) => {
-          this.alertService.showError(error);
-        },
-      })
-      .add(() => {
-        this.isDownloading = false;
-      });
+  get total(): number {
+    return this.perusahaan.reduce((a, b) => a + Number(b.value), 0);
   }
 
-  closeDialog() {
-    this.isOpened = false;
-    setTimeout(() => {
-      this.dynamicComponentService.closeDynamicComponent();
-    }, 300);
+  persen(nilai: number): number {
+    return this.total === 0 ? 0 : (Number(nilai) / this.total) * 100;
   }
 }

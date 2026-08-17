@@ -1,30 +1,86 @@
-<app-dynamic-dialog (backgroundClick)="closeDialog()" [isOpened]="isOpened">
-  <div class="create-dialog">
-    <app-dialog-header
-      [title]="'report-inventory__title' | translate"
-      (onDialogClose)="closeDialog()"
-    >
-    </app-dialog-header>
-    <div class="create-dialog__content">
-      <h6>{{ "report-inventory__current-value" | translate }}</h6>
-      <p [countUp]="value" [duration]="300"></p>
-      <mat-divider></mat-divider>
-      <div class="list-item" *ngFor="let c of data; index as i">
-        <app-circle-avatar [name]="c.company[0] | uppercase" />
-        <div class="list-item__text-wrapper">
-          <h5>{{ c.company }}</h5>
-          <p class="text-clamp-1">Rp.&nbsp;{{ c.value | number : "0.2-2" }}</p>
-        </div>
+<!-- Laporan persediaan — nilai gudang pada suatu tanggal, per perusahaan. -->
+<div class="laporan">
+  <header class="laporan__kepala">
+    <div>
+      <h1 class="laporan__judul">{{ 'report-inventory__title' | translate }}</h1>
+      <p class="laporan__lede">{{ 'report-inventory__lede' | translate }}</p>
+    </div>
+
+    <div class="laporan__kendali">
+      <div class="laporan__bulan-kendali">
+        <!-- Jangkar datepicker; kendali yang terlihat adalah tombolnya. -->
+        <input
+          class="laporan__bulan-jangkar"
+          [matDatepicker]="tanggalPicker"
+          [formControl]="date"
+          readonly
+          tabindex="-1"
+          aria-hidden="true"
+        />
+        <button
+          type="button"
+          class="btn btn--kedua"
+          (click)="tanggalPicker.open()"
+          [attr.aria-label]="'general__pick-date' | translate"
+        >
+          <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+          {{ teksTanggal }}
+        </button>
+        <mat-datepicker #tanggalPicker></mat-datepicker>
       </div>
     </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero__kartu hero__kartu--utama">
+      <span class="hero__label">{{ 'report-inventory__hero__total' | translate }}</span>
+      <strong class="hero__nilai">Rp {{ total | number: '1.0-0' }}</strong>
+      <span class="hero__sub">{{ teksTanggal }}</span>
+    </div>
+    <div class="hero__kartu" *ngFor="let p of perusahaan">
+      <span class="hero__label">{{ p.company }}</span>
+      <strong class="hero__nilai">Rp {{ p.value | number: '1.0-0' }}</strong>
+      <span class="hero__sub">{{ persen(p.value) | number: '1.0-1' }}% {{ 'report-inventory__of-total' | translate }}</span>
+    </div>
   </div>
-  <div class="create-dialog__footer">
-    <button
-      class="action-button mt-5"
-      [disabled]="isDownloading"
-      (click)="download()"
-    >
-      {{ "report-inventory__download-report" | translate }}
-    </button>
-  </div>
-</app-dynamic-dialog>
+
+  <!-- Keluaran tanpa harga pokok — jujur, bukan diam-diam nol. -->
+  <p class="peringatan" *ngIf="takBernilai.count > 0">
+    <i class="ph ph-warning" aria-hidden="true"></i>
+    <span>
+      {{ 'report-inventory__unassigned' | translate: { jumlah: (takBernilai.count | number), nilai: (takBernilai.value | number: '1.0-0') } }}
+    </span>
+  </p>
+
+  <section class="kartu">
+    <h2 class="kartu__label">{{ 'report-inventory__by-company' | translate }}</h2>
+
+    <div class="gulir" *ngIf="!isLoading">
+      <table class="tabel">
+        <thead>
+          <tr>
+            <th>{{ 'report-inventory__company' | translate }}</th>
+            <th class="tabel__nilai-kepala">{{ 'report-inventory__share' | translate }}</th>
+            <th class="tabel__nilai-kepala">{{ 'report-inventory__value' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of perusahaan">
+            <td class="tabel__utama">{{ p.company }}</td>
+            <td class="tabel__nilai">{{ persen(p.value) | number: '1.0-1' }}%</td>
+            <td class="tabel__nilai">Rp {{ p.value | number: '1.0-0' }}</td>
+          </tr>
+          <tr class="baris-total">
+            <td class="tabel__utama">TOTAL</td>
+            <td></td>
+            <td class="tabel__nilai baris__total">Rp {{ total | number: '1.0-0' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="tabel__pesan" *ngIf="isLoading">
+      {{ 'general__loading' | translate }}
+    </p>
+  </section>
+</div>
