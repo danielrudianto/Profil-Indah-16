@@ -195,6 +195,49 @@ html {
   overflow: visible;
 }
 
+/* ------------------------------------------------------------------ */
+/* Menu Material bergaya Nocturne                                      */
+/*                                                                     */
+/* mat-menu dipakai delapan tempat (aksi baris master barang/merek/    */
+/* tipe, pemilih aksen, dan lainnya) dan tampil dengan kulit bawaan    */
+/* Material: Roboto, sudut kecil, tanpa satu pun token Nocturne —      */
+/* "jelek banget" kata penggunanya. Ditulis lewat token M3 supaya      */
+/* menang dari CSS komponen yang disuntikkan belakangan.               */
+/* ------------------------------------------------------------------ */
+
+html {
+  --mat-menu-container-color: var(--color-surface);
+  --mat-menu-container-shape: 12px;
+  --mat-menu-item-label-text-font: "Montserrat", system-ui, sans-serif;
+  --mat-menu-item-label-text-size: 13.5px;
+  --mat-menu-item-label-text-weight: 500;
+}
+
+.mat-mdc-menu-panel {
+  border: 1px solid var(--color-divider);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.18);
+}
+
+.mat-mdc-menu-item {
+  min-height: 40px;
+  color: var(--color-text);
+
+  /* Ikon Phosphor di dalam butir menu — beri jarak dan warna redup. */
+  .ph {
+    margin-right: 10px;
+    font-size: 16px;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  }
+
+  &:hover:not([disabled]) {
+    background: var(--color-hover);
+  }
+
+  &[disabled] {
+    opacity: 0.45;
+  }
+}
+
 .nocturne-dialog-backdrop {
   background: color-mix(in srgb, var(--color-bg) 55%, transparent);
   backdrop-filter: blur(3px);
