@@ -2213,5 +2213,6 @@
   "sales-return__view-list": "Sales return list",
   "archives__documents": "documents",
   "archives__empty": "No documents archived yet.",
-  "archives__lede": "Pick a month to open its documents."
+  "archives__lede": "Pick a month to open its documents.",
+  "general__other-actions": "Other actions"
 }
