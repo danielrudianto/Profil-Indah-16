@@ -81,8 +81,8 @@
     <tbody *ngIf="!isLoading && dataSource.length > 0">
       <tr
         *ngFor="let item of dataSource; index as i; trackBy: lacakPengeluaran"
-        class="tabel__baris-klik"
-        (click)="ubah(i)"
+        [class.tabel__baris-klik]="isAdministrator"
+        (click)="isAdministrator && ubah(i)"
       >
         <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
         <td class="tabel__utama">{{ item.description }}</td>
@@ -93,6 +93,7 @@
         <td class="tabel__nilai">Rp {{ item.value | number: '1.0-0' }}</td>
         <td class="tabel__aksi" (click)="$event.stopPropagation()">
           <button
+            *ngIf="isAdministrator"
             type="button"
             class="tabel__aksi-btn"
             (click)="ubah(i)"

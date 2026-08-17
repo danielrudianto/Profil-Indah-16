@@ -23,6 +23,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
@@ -76,7 +77,15 @@ export class ExpenseMutationComponent implements OnInit {
     private apiService: ApiService,
     private alertService: AlertService,
     private dialog: MatDialog,
+    private authService: AuthService,
   ) {}
+
+  /*
+    Ubah dan hapus pengeluaran khusus administrator dan pemilik —
+    server menolaknya untuk peran lain, jadi tombolnya pun tidak
+    dijanjikan di sini.
+  */
+  isAdministrator = false;
 
   date = new FormControl(moment());
   isLoading: boolean = true;
@@ -91,6 +100,7 @@ export class ExpenseMutationComponent implements OnInit {
   dataCount: number = 0;
 
   ngOnInit(): void {
+    this.isAdministrator = this.authService.isAdministrator();
     this.fetchReport();
   }
 
