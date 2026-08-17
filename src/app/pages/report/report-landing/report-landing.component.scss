@@ -1,6 +1,6 @@
 /*
-  Muka laporan — lebar dan kepalanya mengikuti halaman daftar supaya
-  berpindah antar menu tidak terasa berpindah aplikasi.
+  Muka laporan — mengikuti mockup 9b: tiga kolom kartu besar (padding 26,
+  tinggi minimum 170, ikon 48), bukan grid rapat kartu kecil.
 */
 .laporan {
   max-width: 1240px;
@@ -11,12 +11,12 @@
 }
 
 .laporan__kepala {
-  margin-bottom: 20px;
+  margin-bottom: 32px;
 }
 
 .laporan__judul {
   margin: 0 0 4px;
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 500;
 }
 
@@ -26,37 +26,45 @@
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
 
-/* Tiga kolom pada layar lebar; auto-fit membiarkannya menyempit sendiri. */
+/* Tiga kolom sesuai mockup; menyempit bertahap di layar kecil. */
 .laporan__kisi {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 1100px) {
+  .laporan__kisi {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .laporan__kisi {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .laporan__kartu {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 18px;
-  border-radius: 12px;
+  gap: 16px;
+  padding: 26px;
+  min-height: 170px;
+  border-radius: 14px;
   background: var(--color-surface);
-  box-shadow: inset 0 0 0 1px var(--color-divider);
+  border: 1px solid var(--color-divider);
   text-decoration: none;
   color: inherit;
-  transition: box-shadow 0.18s ease;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
 
   &:hover {
-    box-shadow:
-      inset 0 0 0 1px var(--color-accent),
-      0 8px 24px color-mix(in srgb, #000 18%, transparent);
+    border-color: var(--color-accent);
+    box-shadow: 0 8px 24px color-mix(in srgb, #000 18%, transparent);
   }
 
-  &:hover .laporan__buka {
-    color: var(--color-accent);
-
-    i {
-      transform: translateX(2px);
-    }
+  &:hover .laporan__buka i {
+    transform: translateX(2px);
   }
 
   &:focus-visible {
@@ -65,18 +73,19 @@
   }
 }
 
-/* Ikon 40px kotak beraksen — anatomi yang sama dengan kepala dialog. */
+/* Ikon 48px kotak beraksen ber-ring — persis mockup. */
 .laporan__ikon {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 10px;
-  background: var(--color-accent-wash);
+  background: var(--color-active);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
   color: var(--color-accent);
 
   i {
-    font-size: 20px;
+    font-size: 24px;
   }
 }
 
@@ -86,17 +95,19 @@
   gap: 4px;
 
   strong {
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 17px;
+    font-weight: 500;
   }
 
   span {
     font-size: 13px;
     line-height: 1.5;
     color: color-mix(in srgb, var(--color-text) 58%, transparent);
+    text-wrap: pretty;
   }
 }
 
+/* "Buka →" selalu beraksen — undangan, bukan rahasia hover. */
 .laporan__buka {
   display: inline-flex;
   align-items: center;
@@ -104,10 +115,10 @@
   margin-top: auto;
   font-size: 13px;
   font-weight: 500;
-  color: color-mix(in srgb, var(--color-text) 55%, transparent);
-  transition: color 0.18s ease;
+  color: var(--color-accent);
 
   i {
+    font-size: 14px;
     transition: transform 0.18s ease;
   }
 }
