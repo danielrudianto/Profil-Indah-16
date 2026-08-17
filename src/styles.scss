@@ -300,8 +300,11 @@ textarea.medan__input {
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
 
+/* th butuh selektor .tabel th.…: aturan .tabel th (rata kiri) menang
+   spesifisitas dari class tunggal, jadi kepala kolom diam di kiri
+   sementara isinya rata kanan — kolom terlihat "ga lurus". */
 .tabel__aksi,
-.tabel__aksi-kepala {
+.tabel th.tabel__aksi-kepala {
   width: 1%;
   text-align: right;
 }
@@ -706,7 +709,7 @@ textarea.medan__input {
   white-space: nowrap;
 }
 
-.tabel__nilai-kepala {
+.tabel th.tabel__nilai-kepala {
   text-align: right;
 }
 
