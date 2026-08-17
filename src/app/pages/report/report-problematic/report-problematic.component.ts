@@ -1,76 +1,76 @@
-import { Component } from '@angular/core';
-import { DynamicComponentService } from '../../../services/dynamic-component.service';
-import { ApiService } from '../../../services/api.service';
-import { AlertService } from '../../../services/alert.service';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import * as xlsx from 'xlsx';
 import { saveAs } from 'file-saver';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
-import { ReportProblematicFilterComponent } from './report-problematic-filter/report-problematic-filter.component';
-import { FeatureBackgroundComponent } from '../../../components/feature-background/feature-background.component';
-import { FeatureHeaderComponent } from '../../../components/feature-header/feature-header.component';
-import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { NgIf, NgFor, DecimalPipe } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { EmptyTableComponent } from '../../../components/empty-table/empty-table.component';
 
+import { AlertService } from 'src/app/services/alert.service';
+import { ApiService } from 'src/app/services/api.service';
+import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
+import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
+import {
+  ComboItem,
+  ComboSearchComponent,
+} from 'src/app/components/combo-search/combo-search.component';
+
+/**
+ * Laporan barang bermasalah — stok yang tercatat MINUS. Barang minus
+ * bukan sekadar kurang: ada transaksi yang lolos tanpa stoknya, jadi
+ * tiap barisnya menunjuk pencatatan yang perlu dibereskan.
+ *
+ * Kembaran laporan barang kurang: anatomi list-page yang sama, saringan
+ * combo+chip yang sama, dan unduhan Excel lewat endpoint tabel yang
+ * sama — tombol unduh lamanya menembak /problematic/download yang tidak
+ * pernah ada di routes.
+ */
 @Component({
-    selector: 'app-report-problematic',
-    templateUrl: './report-problematic.component.html',
-    imports: [FeatureBackgroundComponent, FeatureHeaderComponent, MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatPrefix, MatIcon, MatSuffix, NgIf, MatProgressSpinner, EmptyTableComponent, NgFor, MatPaginator, DecimalPipe, TranslatePipe]
+  selector: 'app-report-problematic',
+  templateUrl: './report-problematic.component.html',
+  styleUrls: ['./report-problematic.component.scss'],
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    TranslatePipe,
+    ListPageComponent,
+    TabelKosongComponent,
+    ComboSearchComponent,
+  ],
 })
-export class ReportProblematicComponent {
+export class ReportProblematicComponent implements OnInit {
   constructor(
-    private dynamicComponentService: DynamicComponentService,
     private apiService: ApiService,
     private alertService: AlertService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
   ) {}
 
-  page: number = 1;
+  isLoading = true;
+  isDownloading = false;
+
   dataSource: any[] = [];
-  dataCount: number = 0;
-  isLoading: boolean = false;
-  isDownloading: boolean = false;
-  search: FormControl = new FormControl('');
-  selectedBrands: any[] = [];
-  selectedTypes: any[] = [];
+  dataCount = 0;
+  page = 1;
+  pageSize = 10;
+  keyword = '';
+
+  /** Saringan. Kosong berarti semua — backend memahaminya begitu. */
+  merek: ComboItem[] = [];
+  tipe: ComboItem[] = [];
 
   ngOnInit(): void {
-    this.fetchData();
-    this.search.valueChanges.pipe(debounceTime(500)).subscribe((value) => {
-      this.fetchData(1);
-    });
+    this.ambilData();
   }
 
-  openFilter() {
-    this.dynamicComponentService
-      .createDynamicComponent(ReportProblematicFilterComponent, {
-        brands: this.selectedBrands,
-        types: this.selectedTypes,
-      })
-      .subscribe((data) => {
-        if (data != undefined && data != null) {
-          this.selectedBrands = data.brands;
-          this.selectedTypes = data.types;
-          this.fetchData(1);
-        }
-      });
-  }
-
-  fetchData(page: number = this.page) {
+  ambilData(page: number = this.page): void {
     this.page = page;
+    this.isLoading = true;
     this.apiService
       .post('product-stock/problematic', {
         page: this.page,
-        brands: this.selectedBrands.map((x) => x.id),
-        types: this.selectedTypes.map((x) => x.id),
-        keyword: this.search.value,
+        pageSize: this.pageSize,
+        keyword: this.keyword,
+        brands: this.merek.map((x) => x.id),
+        types: this.tipe.map((x) => x.id),
       })
       .subscribe({
         next: (data: any) => {
@@ -86,57 +86,92 @@ export class ReportProblematicComponent {
       });
   }
 
-  download() {
+  cari(kata: string): void {
+    this.keyword = kata;
+    this.ambilData(1);
+  }
+
+  gantiUkuran(ukuran: number): void {
+    this.pageSize = ukuran;
+    this.ambilData(1);
+  }
+
+  lacakBarang = (_: number, item: any): number => item.id;
+
+  /* ---------------------------------------------------------------- */
+  /* Saringan merek/tipe                                               */
+  /* ---------------------------------------------------------------- */
+
+  pilihMerek(item: ComboItem): void {
+    if (this.merek.some((x) => x.id === item.id)) {
+      return;
+    }
+    this.merek = [...this.merek, item];
+    this.ambilData(1);
+  }
+
+  hapusMerek(indeks: number): void {
+    this.merek = this.merek.filter((_, i) => i !== indeks);
+    this.ambilData(1);
+  }
+
+  pilihTipe(item: ComboItem): void {
+    if (this.tipe.some((x) => x.id === item.id)) {
+      return;
+    }
+    this.tipe = [...this.tipe, item];
+    this.ambilData(1);
+  }
+
+  hapusTipe(indeks: number): void {
+    this.tipe = this.tipe.filter((_, i) => i !== indeks);
+    this.ambilData(1);
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Unduhan Excel — endpoint yang sama, satu halaman raksasa          */
+  /* ---------------------------------------------------------------- */
+
+  download(): void {
     this.isDownloading = true;
     this.apiService
-      .post('product-stock/problematic/download', {
-        brand: this.selectedBrands.map((x) => x.id),
-        type: this.selectedTypes.map((x) => x.id),
+      .post('product-stock/problematic', {
+        page: 1,
+        pageSize: 10000,
+        keyword: this.keyword,
+        brands: this.merek.map((x) => x.id),
+        types: this.tipe.map((x) => x.id),
       })
       .subscribe({
         next: (data: any) => {
-          // Create excel file
-          const worksheet: xlsx.WorkSheet = xlsx.utils.aoa_to_sheet([]);
-          const worksheetData = [
-            [
-              'No',
-              'Reference',
-              'Description',
-              'Stock',
-              'Minimum stock',
-              'Unit',
-            ],
-          ];
-
-          for (let i = 0; i < data.length; i++) {
-            const x = data[i];
-            worksheetData.push([
+          const worksheet = xlsx.utils.aoa_to_sheet([
+            ['No', 'Reference', 'Description', 'Stock', 'Minimum stock', 'Unit'],
+            ...(data.data as any[]).map((x, i) => [
               i + 1,
               x.reference,
               x.description,
-              x.stock,
-              x.minimum_stock,
+              Number(x.product_stock?.stock ?? 0),
+              Number(x.minimum_stock),
               x.unit,
-            ]);
-          }
+            ]),
+          ]);
 
-          xlsx.utils.sheet_add_aoa(worksheet, worksheetData);
-
-          const workbook: xlsx.WorkBook = xlsx.utils.book_new();
+          const workbook = xlsx.utils.book_new();
           xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-
           const excelBuffer = xlsx.write(workbook, {
             bookType: 'xlsx',
             type: 'array',
           });
-          const blob = new Blob([excelBuffer], {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          });
-          saveAs(blob, `Problematic_report_${new Date().getTime()}.xlsx`);
+          saveAs(
+            new Blob([excelBuffer], {
+              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            }),
+            `Problematic_report_${new Date().getTime()}.xlsx`,
+          );
           this.alertService.showSuccess(
             this.translateService.instant(
-              'problematic-report__export__successful'
-            )
+              'problematic-report__export__successful',
+            ),
           );
         },
         error: (error) => {
@@ -146,10 +181,5 @@ export class ReportProblematicComponent {
       .add(() => {
         this.isDownloading = false;
       });
-  }
-
-  changePage(event: PageEvent) {
-    this.page = event.pageIndex + 1;
-    this.fetchData();
   }
 }

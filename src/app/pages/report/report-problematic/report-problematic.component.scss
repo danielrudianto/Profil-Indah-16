@@ -1,0 +1,19 @@
+/* Saringan merek/tipe di atas tabel, di dalam kartu list-page. */
+.saringan-kisi {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+  padding: 16px 20px 0;
+}
+
+@media (max-width: 700px) {
+  .saringan-kisi {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Stok minus — pencatatan yang perlu dibereskan, merah tegas. */
+.minus {
+  color: #e05260;
+  font-weight: 600;
+}

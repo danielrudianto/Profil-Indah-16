@@ -1105,6 +1105,8 @@
   "product__delete__title": "Delete product",
   "product__deleted-successfully": "Successfully deleted product",
   "report-problematic__title": "Problematic items",
+  "report-problematic__lede": "Products whose recorded stock is negative — a transaction slipped through without its stock; the records need fixing.",
+  "report-problematic__empty": "No products with negative stock. Well done!",
   "problematic-report__export__successful": "Successfully exported problematic items report",
   "user__update-successfully": "User data updated successfully",
   "user__title": "Users data",

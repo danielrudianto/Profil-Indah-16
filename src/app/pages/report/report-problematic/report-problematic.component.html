@@ -1,101 +1,116 @@
-<app-feature-background />
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <app-feature-header
-        [title]="'report-problematic__title' | translate"
-        [isBackAvailable]="true"
-      ></app-feature-header>
-    </div>
-  </div>
-  <div class="row justify-content-center">
-    <div class="col-12">
-      <div class="dashboard-card">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>{{ "report-inadequate__search" | translate }}</mat-label>
-          <input matInput [formControl]="search" />
+<!-- Laporan barang bermasalah — stok yang tercatat minus. -->
+<app-list-page
+  [heading]="'report-problematic__title' | translate"
+  [lede]="'report-problematic__lede' | translate"
+  [searchPlaceholder]="'report-inadequate__search' | translate"
+  [keyword]="keyword"
+  [page]="page"
+  [pageSize]="pageSize"
+  [total]="dataCount"
+  [loading]="isLoading"
+  (search)="cari($event)"
+  (pageChange)="ambilData($event)"
+  (pageSizeChange)="gantiUkuran($event)"
+  (refresh)="ambilData()"
+>
+  <button
+    aksi
+    type="button"
+    class="btn btn--kedua"
+    [disabled]="isDownloading || isLoading"
+    (click)="download()"
+  >
+    <i class="ph ph-file-xls" aria-hidden="true"></i>
+    {{ 'report-sales__download' | translate }}
+  </button>
 
+  <!-- Saringan merek/tipe — kosong berarti semua, sama seperti barang kurang. -->
+  <div class="saringan-kisi">
+    <div>
+      <app-combo-search
+        [label]="'report-inadequate__brand' | translate"
+        route="product-brand"
+        [disabled]="isLoading"
+        (pick)="pilihMerek($event)"
+      />
+      <div class="chip-kumpul" *ngIf="merek.length > 0">
+        <span class="saringan__kapsul" *ngFor="let m of merek; index as i">
+          {{ m.name }}
           <button
-            matPrefix
             type="button"
-            mat-icon-button
-            (click)="download()"
-            [disabled]="isDownloading"
+            (click)="hapusMerek(i)"
+            [attr.aria-label]="'general__delete' | translate"
           >
-            <mat-icon>file_download</mat-icon>
+            <i class="ph ph-x" aria-hidden="true"></i>
           </button>
+        </span>
+      </div>
+    </div>
 
-          <button matSuffix mat-icon-button (click)="openFilter()">
-            <mat-icon>filter_list</mat-icon>
+    <div>
+      <app-combo-search
+        [label]="'report-inadequate__type' | translate"
+        route="product-type"
+        [disabled]="isLoading"
+        (pick)="pilihTipe($event)"
+      />
+      <div class="chip-kumpul" *ngIf="tipe.length > 0">
+        <span class="saringan__kapsul" *ngFor="let t of tipe; index as i">
+          {{ t.name }}
+          <button
+            type="button"
+            (click)="hapusTipe(i)"
+            [attr.aria-label]="'general__delete' | translate"
+          >
+            <i class="ph ph-x" aria-hidden="true"></i>
           </button>
-        </mat-form-field>
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th style="width: 150px">
-                  {{ "report-inadequate__reference" | translate }}
-                </th>
-                <th style="width: 250px">
-                  {{ "report-inadequate__description" | translate }}
-                </th>
-                <th style="width: 150px">
-                  {{ "report-inadequate__brand" | translate }}
-                </th>
-                <th style="width: 150px">
-                  {{ "report-inadequate__type" | translate }}
-                </th>
-                <th style="width: 200px">
-                  {{ "report-inadequate__stock" | translate }}
-                </th>
-                <th style="width: 200px">
-                  {{ "report-inadequate__minimum-stock" | translate }}
-                </th>
-              </tr>
-            </thead>
-            <tbody *ngIf="isLoading">
-              <tr>
-                <td colspan="6">
-                  <mat-spinner id="spinner"></mat-spinner>
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length == 0">
-              <tr>
-                <td colspan="6">
-                  <empty-table />
-                </td>
-              </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && dataSource.length > 0">
-              <tr *ngFor="let data of dataSource; index as i">
-                <td>
-                  <p class="text-clamp-1">{{ data.reference }}</p>
-                </td>
-                <td>
-                  <p class="text-clamp-2">{{ data.description }}</p>
-                </td>
-                <td>{{ data.product_brand.name }}</td>
-                <td>{{ data.product_type.name }}</td>
-                <td>
-                  {{ data.product_stock.stock | number : "0.0-2" }}
-                  {{ data.unit }}
-                </td>
-                <td>
-                  {{ data.minimum_stock | number : "0.0-2" }} {{ data.unit }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <mat-paginator
-          [pageSize]="10"
-          [pageIndex]="page - 1"
-          [length]="dataCount"
-          (page)="changePage($event)"
-          [disabled]="isLoading"
-        />
+        </span>
       </div>
     </div>
   </div>
-</div>
+
+  <table class="tabel">
+    <thead>
+      <tr>
+        <th>{{ 'report-inadequate__reference' | translate }}</th>
+        <th>{{ 'report-inadequate__description' | translate }}</th>
+        <th>{{ 'report-inadequate__brand' | translate }}</th>
+        <th>{{ 'report-inadequate__type' | translate }}</th>
+        <th class="tabel__nilai-kepala">
+          {{ 'report-inadequate__stock' | translate }}
+        </th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!isLoading && dataSource.length > 0">
+      <tr *ngFor="let item of dataSource; trackBy: lacakBarang">
+        <td class="tabel__utama">{{ item.reference }}</td>
+        <td class="tabel__redup">{{ item.description }}</td>
+        <td>{{ item.product_brand.name }}</td>
+        <td>{{ item.product_type.name }}</td>
+        <td class="tabel__nilai minus">
+          {{ item.product_stock.stock | number: '1.0-2' }} {{ item.unit }}
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="isLoading">
+      <tr>
+        <td colspan="5" class="tabel__pesan">
+          {{ 'general__loading' | translate }}
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="!isLoading && dataSource.length === 0">
+      <tr>
+        <td colspan="5">
+          <app-tabel-kosong
+            ikon="ph-seal-warning"
+            [judul]="'report-problematic__empty' | translate"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</app-list-page>

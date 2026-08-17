@@ -1111,6 +1111,8 @@
   "product__update__delete-confirmation-message": "Apakah anda yakin untuk menghapus data produk ini?",
   "product__deleted-successfully": "Produk berhasil di hapus",
   "report-problematic__title": "Barang bermasalah",
+  "report-problematic__lede": "Barang yang stoknya tercatat minus — ada transaksi yang lolos tanpa stoknya, pencatatannya perlu dibereskan.",
+  "report-problematic__empty": "Tidak ada barang dengan stok minus. Mantap!",
   "problematic-report__export__successful": "Laporan barang bermasalah berhasil diekspor",
   "user__update-successfully": "User berhasil diperbaharui",
   "user__title": "Data pengguna",
