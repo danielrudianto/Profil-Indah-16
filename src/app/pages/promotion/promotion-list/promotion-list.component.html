@@ -25,6 +25,7 @@
         <th>{{ 'promotion__period' | translate }}</th>
         <th>{{ 'promotion__brand' | translate }}</th>
         <th class="tabel__nilai-kepala">{{ 'promotion__target' | translate }}</th>
+        <th class="capaian__kepala">{{ 'promotion__achievement' | translate }}</th>
         <th>{{ 'promotion__status' | translate }}</th>
       </tr>
     </thead>
@@ -51,6 +52,30 @@
         </td>
         <td><span class="tag-netral">{{ item.promotion_brand?.length ?? 0 }} {{ 'promotion__list__brand-count' | translate }}</span></td>
         <td class="tabel__nilai">Rp {{ item.target | number: '1.0-0' }}</td>
+        <!--
+          Capaian menyusul per baris — menghitungnya berarti mencocokkan
+          aturan SKU dan menjumlah pembelian seperiode, terlalu berat
+          untuk ditunggu daftar. Promosi tanpa target tidak diberi bar.
+        -->
+        <td class="capaian">
+          <ng-container *ngIf="barCapaian(item) as isi; else belumAda">
+            <div
+              class="capaian__baris"
+              [title]="'Rp ' + (isi.nilai | number: '1.0-0') + ' / Rp ' + (item.target | number: '1.0-0')"
+            >
+              <div class="capaian__rel">
+                <div class="capaian__bar" [style.width.%]="isi.persen"></div>
+              </div>
+              <span class="capaian__persen">{{ isi.persen | number: '1.0-0' }}%</span>
+            </div>
+          </ng-container>
+          <ng-template #belumAda>
+            <span class="capaian__memuat" *ngIf="sedangMuatCapaian(item)">
+              <i class="ph ph-circle-notch capaian__putar" aria-hidden="true"></i>
+            </span>
+            <span class="capaian__kosong" *ngIf="!sedangMuatCapaian(item)">—</span>
+          </ng-template>
+        </td>
         <td>
           <span class="pill" [ngClass]="kelasStatus(item)">
             {{ kunciStatus(item) | translate }}
@@ -60,12 +85,12 @@
     </tbody>
 
     <tbody *ngIf="isLoading">
-      <tr><td colspan="6" class="tabel__pesan">{{ 'general__loading' | translate }}</td></tr>
+      <tr><td colspan="7" class="tabel__pesan">{{ 'general__loading' | translate }}</td></tr>
     </tbody>
 
     <tbody *ngIf="!isLoading && dataSource.length === 0">
       <tr>
-        <td colspan="6">
+        <td colspan="7">
           <app-tabel-kosong
             ikon="ph-megaphone"
             [judul]="'promotion__empty__title' | translate"

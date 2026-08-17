@@ -218,6 +218,7 @@
   "promotion__end-date": "End date",
   "promotion__brand": "Brand",
   "promotion__target": "Target",
+  "promotion__achievement": "Achievement",
   "promotion__status": "Status",
   "promotion__expired": "Expired",
   "promotion__active": "Active",

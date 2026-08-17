@@ -215,6 +215,7 @@
   "promotion__end-date": "Tanggal berakhir",
   "promotion__brand": "Merek",
   "promotion__target": "Target",
+  "promotion__achievement": "Capaian",
   "promotion__status": "Status",
   "promotion__expired": "Kedaluwarsa",
   "promotion__active": "Aktif",

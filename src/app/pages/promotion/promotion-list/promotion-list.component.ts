@@ -23,6 +23,7 @@ import { NgIf, NgFor, NgClass, DatePipe, DecimalPipe } from '@angular/common';
 @Component({
     selector: 'app-promotion-list',
     templateUrl: './promotion-list.component.html',
+    styleUrls: ['./promotion-list.component.scss'],
     imports: [
     ListPageComponent,
     TabelKosongComponent,
@@ -106,11 +107,59 @@ export class PromotionListComponent {
           this.dataCount = data.count;
 
           this.isLoading = false;
+          this.muatCapaian();
         },
         error: (error) => {
           this.alertService.showError(error);
         },
       });
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Capaian target — kolom progress 17c                               */
+  /* ---------------------------------------------------------------- */
+
+  /**
+   * Capaian per promosi, dimuat MENYUSUL per baris halaman ini.
+   *
+   * Menghitung capaian berarti mencocokkan aturan SKU lalu menjumlahkan
+   * pembelian seperiode — terlalu berat untuk ditunggu daftarnya. Maka
+   * daftarnya tampil dulu, barnya terisi begitu tiap jawaban tiba.
+   * Kunci peta memakai id, jadi jawaban yang datang terlambat setelah
+   * pindah halaman tidak menimpa baris yang salah.
+   */
+  capaian: Record<number, { nilai: number; persen: number } | 'memuat'> = {};
+
+  private muatCapaian(): void {
+    for (const item of this.dataSource) {
+      /* Tanpa target tidak ada yang bisa diukur; barnya tidak digambar. */
+      if (!item.target || Number(item.target) <= 0) continue;
+      if (this.capaian[item.id] && this.capaian[item.id] !== 'memuat') continue;
+
+      this.capaian[item.id] = 'memuat';
+      this.apiService.get(`promotion/result/${item.id}`).subscribe({
+        next: (data: any) => {
+          const nilai = Number(data?.result?.purchase ?? 0);
+          this.capaian[item.id] = {
+            nilai,
+            persen: Math.min((nilai / Number(item.target)) * 100, 100),
+          };
+        },
+        error: () => {
+          /* Baris yang gagal dibiarkan tanpa bar; daftarnya tetap hidup. */
+          delete this.capaian[item.id];
+        },
+      });
+    }
+  }
+
+  barCapaian(item: any): { nilai: number; persen: number } | null {
+    const isi = this.capaian[item.id];
+    return isi && isi !== 'memuat' ? isi : null;
+  }
+
+  sedangMuatCapaian(item: any): boolean {
+    return this.capaian[item.id] === 'memuat';
   }
 
   onPageChange(event: any) {
