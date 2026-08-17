@@ -24,6 +24,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ExpenseViewComponent } from '../expense-view/expense-view.component';
+import * as xlsx from 'xlsx';
+import { saveAs } from 'file-saver';
+import { TranslateService } from '@ngx-translate/core';
 import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
@@ -78,7 +82,10 @@ export class ExpenseMutationComponent implements OnInit {
     private alertService: AlertService,
     private dialog: MatDialog,
     private authService: AuthService,
+    private translateService: TranslateService,
   ) {}
+
+  isDownloading = false;
 
   /*
     Ubah dan hapus pengeluaran khusus administrator dan pemilik —
@@ -179,6 +186,80 @@ export class ExpenseMutationComponent implements OnInit {
         if (data) {
           this.fetchReport();
         }
+      });
+  }
+
+  /** Klik baris = LIHAT, untuk peran mana pun. Ubahnya milik admin. */
+  lihat(i: number) {
+    this.dialog
+      .open(ExpenseViewComponent, {
+        data: { id: this.dataSource[i].id },
+      })
+      .afterClosed()
+      .subscribe((hasil) => {
+        if (hasil === 'edit') {
+          this.ubah(i);
+        }
+      });
+  }
+
+  /** Rekap Excel seluruh baris bulan aktif — bukan cuma halaman tampil. */
+  downloadRekap() {
+    this.isDownloading = true;
+    const bulan = Number((this.date.value ?? moment()).format('MM'));
+    const tahun = (this.date.value ?? moment()).format('YYYY');
+
+    this.apiService
+      .get('expense/mutation', {
+        page: 1,
+        month: bulan,
+        year: tahun,
+        pageSize: 10000,
+      })
+      .subscribe({
+        next: (data: any) => {
+          const baris = (data.data as any[]) ?? [];
+          const worksheet = xlsx.utils.aoa_to_sheet([
+            ['Tanggal', 'Deskripsi', 'Tipe', 'Perusahaan', 'Nilai'],
+            ...baris.map((x) => [
+              x.date == null ? '' : String(x.date).slice(0, 10),
+              x.description,
+              x.expense_type?.name ?? '',
+              x.company?.name ?? '',
+              Number(x.value),
+            ]),
+            ['', '', '', 'TOTAL', baris.reduce((a, b) => a + Number(b.value), 0)],
+          ]);
+          worksheet['!cols'] = [
+            { wpx: 90 },
+            { wpx: 260 },
+            { wpx: 140 },
+            { wpx: 160 },
+            { wpx: 110 },
+          ];
+
+          const workbook = xlsx.utils.book_new();
+          xlsx.utils.book_append_sheet(workbook, worksheet, 'Pengeluaran');
+          const excelBuffer = xlsx.write(workbook, {
+            bookType: 'xlsx',
+            type: 'array',
+          });
+          saveAs(
+            new Blob([excelBuffer], {
+              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            }),
+            `Rekap_pengeluaran_${tahun}-${String(bulan).padStart(2, '0')}_${new Date().getTime()}.xlsx`,
+          );
+          this.alertService.showSuccess(
+            this.translateService.instant('expense__mutation__export__successful'),
+          );
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isDownloading = false;
       });
   }
 

@@ -1,0 +1,7 @@
+/* Seluruh anatomi tampilan baca tinggal di partial bersama. */
+@use "../../../styles/lihat";
+
+/* Pengeluaran itu dokumen mungil — kartunya tidak perlu selebar faktur. */
+.lihat {
+  width: min(480px, calc(100vw - 48px));
+}

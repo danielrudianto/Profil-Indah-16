@@ -1,0 +1,66 @@
+<!-- Tampilan baca pengeluaran — dokumen, bukan formulir. -->
+<div class="lihat">
+  <ng-container *ngIf="!isLoading && pengeluaran">
+    <header class="lihat__kepala">
+      <div class="lihat__identitas">
+        <span class="lihat__avatar" aria-hidden="true">
+          <i class="ph ph-trend-down"></i>
+        </span>
+        <div>
+          <h2 class="lihat__nama">{{ pengeluaran.description }}</h2>
+          <p class="lihat__nomor">{{ pengeluaran.expense_type?.name }}</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="lihat__isi">
+      <dl class="lihat__kisi">
+        <div>
+          <dt>{{ 'expense__create__date' | translate }}</dt>
+          <dd>{{ pengeluaran.date | date: 'dd MMMM yyyy' }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'expense__create__company' | translate }}</dt>
+          <dd>{{ pengeluaran.company?.name || '—' }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'expense__view__created-by' | translate }}</dt>
+          <dd>{{ pengeluaran.user_expense_created_byTouser?.name || '—' }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'expense__view__created-at' | translate }}</dt>
+          <dd>{{ pengeluaran.created_at | date: 'dd MMMM yyyy HH:mm' }}</dd>
+        </div>
+      </dl>
+
+      <dl class="lihat__nilai">
+        <div class="lihat__total">
+          <dt>{{ 'expense__create__value' | translate }}</dt>
+          <dd>Rp {{ pengeluaran.value | number: '1.0-0' }}</dd>
+        </div>
+      </dl>
+    </div>
+
+    <footer class="lihat__kaki">
+      <button
+        *ngIf="isAdministrator"
+        type="button"
+        class="btn btn--kedua"
+        (click)="ubah()"
+      >
+        <i class="ph ph-pencil-simple" aria-hidden="true"></i>
+        {{ 'general__edit' | translate }}
+      </button>
+
+      <span class="lihat__renggang"></span>
+
+      <button type="button" class="btn" (click)="tutup()">
+        {{ 'general__close' | translate }}
+      </button>
+    </footer>
+  </ng-container>
+
+  <p class="lihat__memuat" *ngIf="isLoading">
+    {{ 'general__loading' | translate }}
+  </p>
+</div>
