@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
 
 /**
  * Kerangka dialog — sistem desain Nocturne.
@@ -19,7 +20,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'app-dialog-shell',
   templateUrl: './dialog-shell.component.html',
   styleUrls: ['./dialog-shell.component.scss'],
-  imports: [NgIf, TranslatePipe],
+  imports: [NgIf, FormsModule, TranslatePipe],
 })
 export class DialogShellComponent {
   /** Ikon Phosphor lengkap dengan awalannya, misalnya "ph ph-tag-simple". */

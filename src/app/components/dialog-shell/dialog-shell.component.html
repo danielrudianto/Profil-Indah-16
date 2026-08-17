@@ -26,6 +26,12 @@
     ikut mengirimkan — perilaku yang hilang kalau tombolnya berada di luar
     <form>.
   -->
+  <!--
+    FormsModule WAJIB diimpor komponen ini: tanpa direktif NgForm,
+    (ngSubmit) tidak pernah terikat dan tombol type="submit" melakukan
+    submit NATIF browser — halaman reload dan data tidak pernah
+    terkirim, tanpa satu pun pesan galat.
+  -->
   <form (ngSubmit)="submitted.emit()" novalidate>
     <div class="dialog__isi">
       <ng-content></ng-content>
