@@ -341,6 +341,14 @@ const routes: Routes = [
                   ),
               },
               {
+                path: 'Finance',
+                canActivate: [SuperAdministratorGuard],
+                loadComponent: () =>
+                  import('./pages/report/report-finance/report-finance.component').then(
+                    (m) => m.ReportFinanceComponent,
+                  ),
+              },
+              {
                 path: 'Money/Dor',
                 canActivate: [GeneralGuard],
                 loadComponent: () =>

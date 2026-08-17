@@ -43,6 +43,13 @@ export class ReportLandingComponent implements OnInit {
       peran: [Role.Purchasing, Role.General, Role.Administrator, Role.Owner],
     },
     {
+      ikon: 'ph-scales',
+      judul: 'report__landing__finance',
+      desk: 'report__landing__finance__desc',
+      jalur: '/Report/Finance',
+      peran: [Role.Owner],
+    },
+    {
       ikon: 'ph-coins',
       judul: 'report__landing__money',
       desk: 'report__landing__money__desc',

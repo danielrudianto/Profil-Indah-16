@@ -1,84 +1,166 @@
-<h2 mat-dialog-title>{{ "report-finance__title" | translate }}</h2>
+<!-- Laporan keuangan — laba rugi per perusahaan, khusus super administrator. -->
+<div class="laporan">
+  <header class="laporan__kepala">
+    <div>
+      <h1 class="laporan__judul">{{ 'report-finance__title' | translate }}</h1>
+      <p class="laporan__lede">{{ 'report-finance__lede' | translate }}</p>
+    </div>
 
-<form [formGroup]="financeReportFormGroup">
-  <mat-dialog-content>
-    <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ "report-finance__type" | translate }}</mat-label>
-      <mat-select formControlName="type">
-        <mat-option value="0">{{
-          "report-finance__summary" | translate
-        }}</mat-option>
-        <mat-option value="1">{{
-          "report-finance__complete" | translate
-        }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="laporan__kendali">
+      <div class="seg" role="group">
+        <button
+          type="button"
+          class="seg__tombol"
+          [class.seg__tombol--on]="periode === 'bulan'"
+          (click)="gantiPeriode('bulan')"
+        >
+          {{ 'report-finance__monthly' | translate }}
+        </button>
+        <button
+          type="button"
+          class="seg__tombol"
+          [class.seg__tombol--on]="periode === 'tahun'"
+          (click)="gantiPeriode('tahun')"
+        >
+          {{ 'report-finance__yearly' | translate }}
+        </button>
+      </div>
 
-    <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ "report-finance__month" | translate }}</mat-label>
-      <mat-select formControlName="month">
-        <mat-option [value]="0">{{
-          "general__month__all" | translate
-        }}</mat-option>
-        <mat-option [value]="1">{{
-          "general__month__january" | translate
-        }}</mat-option>
-        <mat-option [value]="2">{{
-          "general__month__february" | translate
-        }}</mat-option>
-        <mat-option [value]="3">{{
-          "general__month__march" | translate
-        }}</mat-option>
-        <mat-option [value]="4">{{
-          "general__month__april" | translate
-        }}</mat-option>
-        <mat-option [value]="5">{{
-          "general__month__may" | translate
-        }}</mat-option>
-        <mat-option [value]="6">{{
-          "general__month__june" | translate
-        }}</mat-option>
-        <mat-option [value]="7">{{
-          "general__month__july" | translate
-        }}</mat-option>
-        <mat-option [value]="8">{{
-          "general__month__august" | translate
-        }}</mat-option>
-        <mat-option [value]="9">{{
-          "general__month__september" | translate
-        }}</mat-option>
-        <mat-option [value]="10"
-          >{{ "general__month__october" | translate }}
-        </mat-option>
-        <mat-option [value]="11"
-          >{{ "general__month__november" | translate }}
-        </mat-option>
-        <mat-option [value]="12"
-          >{{ "general__month__december" | translate }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+      <div class="laporan__bulan-kendali">
+        <input
+          class="laporan__bulan-jangkar"
+          [matDatepicker]="bulanPicker"
+          [formControl]="date"
+          readonly
+          tabindex="-1"
+          aria-hidden="true"
+        />
+        <button
+          type="button"
+          class="btn btn--kedua"
+          (click)="bulanPicker.open()"
+          [attr.aria-label]="'general__pick-date' | translate"
+        >
+          <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+          {{ namaBulan }}
+        </button>
+        <mat-datepicker
+          #bulanPicker
+          startView="multi-year"
+          (monthSelected)="setMonthAndYear($event, bulanPicker)"
+        ></mat-datepicker>
+      </div>
 
-    <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ "report-finance__year" | translate }}</mat-label>
-      <mat-select formControlName="year">
-        <!-- From 2023 to current year -->
-        <mat-option *ngFor="let year of currentYear" [value]="year">
-          {{ year }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </mat-dialog-content>
+      <button
+        type="button"
+        class="btn btn--kedua"
+        [disabled]="isDownloading || isLoading"
+        (click)="downloadPdf()"
+      >
+        <i class="ph ph-file-pdf" aria-hidden="true"></i>
+        {{ 'report-finance__download' | translate }}
+      </button>
+    </div>
+  </header>
 
-  <mat-dialog-actions align="end">
-    <button
-      mat-stroked-button
-      color="primary"
-      style="letter-spacing: 0"
-      [disabled]="isDownloading || !financeReportFormGroup.valid"
-      (click)="downloadReport()"
-    >
-      {{ "report-finance__download-report" | translate }}
-    </button>
-  </mat-dialog-actions>
-</form>
+  <!--
+    HPP tak-teralokasi TIDAK disembunyikan: laba di bawah belum final
+    selama masih ada penjualan yang belum menunjuk lapisan stoknya.
+  -->
+  <div class="peringatan" *ngIf="takTeralokasi > 0">
+    <i class="ph-fill ph-warning" aria-hidden="true"></i>
+    <span>
+      {{ 'report-finance__unallocated-banner' | translate }}
+      <strong>Rp {{ takTeralokasi | number: '1.0-0' }}</strong>
+      {{ 'report-finance__unallocated-banner-2' | translate }}
+    </span>
+  </div>
+
+  <div class="hero">
+    <div class="hero__kartu hero__kartu--utama">
+      <span class="hero__label">{{ 'report-finance__hero__net' | translate }}</span>
+      <strong class="hero__nilai">Rp {{ totalLabaBersih | number: '1.0-0' }}</strong>
+    </div>
+    <div class="hero__kartu">
+      <span class="hero__label">{{ 'report-finance__hero__income' | translate }}</span>
+      <strong class="hero__nilai">Rp {{ totalPendapatan | number: '1.0-0' }}</strong>
+    </div>
+    <div class="hero__kartu">
+      <span class="hero__label">{{ 'report-finance__hero__cogs' | translate }}</span>
+      <strong class="hero__nilai">Rp {{ totalHpp | number: '1.0-0' }}</strong>
+    </div>
+    <div class="hero__kartu">
+      <span class="hero__label">{{ 'report-finance__hero__expenses' | translate }}</span>
+      <strong class="hero__nilai">Rp {{ totalBeban | number: '1.0-0' }}</strong>
+    </div>
+  </div>
+
+  <section class="kartu">
+    <h2 class="kartu__label">{{ 'report-finance__by-company' | translate }}</h2>
+
+    <div class="gulir">
+      <table class="tabel">
+        <thead>
+          <tr>
+            <th>{{ 'report-finance__table__company' | translate }}</th>
+            <th class="tabel__nilai-kepala">{{ 'report-finance__hero__income' | translate }}</th>
+            <th class="tabel__nilai-kepala">{{ 'report-finance__hero__cogs' | translate }}</th>
+            <th class="tabel__nilai-kepala">{{ 'report-finance__table__gross' | translate }}</th>
+            <th class="tabel__nilai-kepala">{{ 'report-finance__table__margin' | translate }}</th>
+            <th class="tabel__nilai-kepala">{{ 'report-finance__hero__expenses' | translate }}</th>
+            <th class="tabel__nilai-kepala">{{ 'report-finance__hero__net' | translate }}</th>
+          </tr>
+        </thead>
+
+        <tbody *ngIf="!isLoading">
+          <tr *ngFor="let p of perusahaan">
+            <td class="tabel__utama">{{ p.name }}</td>
+            <td class="tabel__nilai">Rp {{ pendapatan(p.id) | number: '1.0-0' }}</td>
+            <td class="tabel__nilai">Rp {{ hpp(p.id) | number: '1.0-0' }}</td>
+            <td class="tabel__nilai">Rp {{ labaKotor(p.id) | number: '1.0-0' }}</td>
+            <td class="tabel__nilai tabel__redup">{{ margin(p.id) | number: '1.0-1' }}%</td>
+            <td class="tabel__nilai">Rp {{ bebanPerusahaan(p.id) | number: '1.0-0' }}</td>
+            <td class="tabel__nilai baris__total">
+              Rp {{ labaBersih(p.id) | number: '1.0-0' }}
+            </td>
+          </tr>
+
+          <!--
+            Penjualan yang belum menunjuk lapisan stok — HPP-nya belum ada,
+            jadi baris ini kesaksian, bukan laba.
+          -->
+          <tr *ngIf="adaBarisTanpaAlokasi" class="tanpa-alokasi">
+            <td class="tabel__utama">
+              <i class="ph-fill ph-warning" aria-hidden="true"></i>
+              {{ 'report-finance__unallocated-row' | translate }}
+            </td>
+            <td class="tabel__nilai">Rp {{ pendapatan(null) | number: '1.0-0' }}</td>
+            <td class="tabel__nilai">—</td>
+            <td class="tabel__nilai">—</td>
+            <td class="tabel__nilai">—</td>
+            <td class="tabel__nilai">—</td>
+            <td class="tabel__nilai">—</td>
+          </tr>
+
+          <tr class="baris-total">
+            <td class="tabel__utama">TOTAL</td>
+            <td class="tabel__nilai baris__total">Rp {{ totalPendapatan | number: '1.0-0' }}</td>
+            <td class="tabel__nilai baris__total">Rp {{ totalHpp | number: '1.0-0' }}</td>
+            <td class="tabel__nilai baris__total">Rp {{ totalLabaKotor | number: '1.0-0' }}</td>
+            <td class="tabel__nilai"></td>
+            <td class="tabel__nilai baris__total">Rp {{ totalBeban | number: '1.0-0' }}</td>
+            <td class="tabel__nilai baris__total">Rp {{ totalLabaBersih | number: '1.0-0' }}</td>
+          </tr>
+        </tbody>
+
+        <tbody *ngIf="isLoading">
+          <tr>
+            <td colspan="7" class="tabel__pesan">
+              {{ 'general__loading' | translate }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

@@ -3,7 +3,6 @@ import { StatCard } from 'src/app/models/stat-card.model';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { ReportInventoryComponent } from '../../report/report-inventory/report-inventory.component';
 import { Router, RouterLink } from '@angular/router';
-import { ReportFinanceComponent } from '../../report/report-finance/report-finance.component';
 import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
@@ -109,7 +108,8 @@ export class AdministratorDashboardComponent {
           return;
         }
 
-        this.dialog.open(ReportFinanceComponent, {});
+        /* Laporan keuangan kini halaman, bukan dialog PDF. */
+        this.router.navigate(['/Report/Finance']);
         break;
       case 'sales':
         this.router.navigate(['/Administrator/Report/Sales']);
