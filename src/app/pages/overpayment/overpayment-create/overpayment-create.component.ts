@@ -215,7 +215,7 @@ export class OverpaymentCreateComponent implements OnInit {
   }
 
   batal() {
-    this.router.navigate(['/Overpayment/Archive']);
+    this.router.navigate(['/Overpayment']);
   }
 
   submitForm() {
@@ -258,7 +258,7 @@ export class OverpaymentCreateComponent implements OnInit {
           this.metaFormGroup.reset();
           this.returnFormGroup.reset();
           this.metode = '';
-          this.router.navigate(['/Overpayment/Archive']);
+          this.router.navigate(['/Overpayment']);
         },
         error: (error) => {
           this.alertService.showError(error);

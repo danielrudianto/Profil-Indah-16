@@ -41,6 +41,47 @@
     </button>
   </ng-container>
 
+  <!--
+    Banner ringkasan — keadaan seluruh tabel dalam rupiah, bukan halaman
+    yang sedang tampil. Kartu "menunggu" memakai aksen karena dialah
+    pekerjaan yang belum selesai.
+  -->
+  <div hero class="hero">
+    <div class="hero__kartu hero__kartu--utama">
+      <span class="hero__label">
+        {{ 'overpayment__hero__waiting' | translate }}
+      </span>
+      <strong class="hero__nilai">
+        Rp {{ ringkasan.waitingValue | number: '1.0-0' }}
+      </strong>
+      <span class="hero__sub">
+        {{ 'overpayment__hero__docs' | translate: { n: ringkasan.waiting } }}
+      </span>
+    </div>
+    <div class="hero__kartu">
+      <span class="hero__label">
+        {{ 'overpayment__hero__overdue' | translate }}
+      </span>
+      <strong class="hero__nilai hero__nilai--merah">
+        Rp {{ ringkasan.overdueValue | number: '1.0-0' }}
+      </strong>
+      <span class="hero__sub">
+        {{ 'overpayment__hero__docs' | translate: { n: ringkasan.overdue } }}
+      </span>
+    </div>
+    <div class="hero__kartu">
+      <span class="hero__label">
+        {{ 'overpayment__hero__resolved' | translate }}
+      </span>
+      <strong class="hero__nilai">
+        Rp {{ ringkasan.resolvedValue | number: '1.0-0' }}
+      </strong>
+      <span class="hero__sub">
+        {{ 'overpayment__hero__docs' | translate: { n: ringkasan.resolved } }}
+      </span>
+    </div>
+  </div>
+
   <table class="tabel">
     <thead>
       <tr>

@@ -53,6 +53,12 @@
     </div>
   </div>
 
+  <!--
+    Banner ringkasan milik halaman — di antara baris kendali dan kartu
+    tabel. Kosong bila halamannya tidak mengirim apa-apa.
+  -->
+  <ng-content select="[hero]"></ng-content>
+
   <div class="list-page__kartu">
     <!--
       Tabelnya menggulung MENDATAR di dalam kotaknya sendiri, bukan mendorong

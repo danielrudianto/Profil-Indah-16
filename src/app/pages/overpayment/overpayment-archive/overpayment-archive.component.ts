@@ -22,6 +22,7 @@ import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-koso
 @Component({
   selector: 'app-overpayment-archive',
   templateUrl: './overpayment-archive.component.html',
+  styleUrls: ['./overpayment-archive.component.scss'],
   imports: [
     ListPageComponent,
     TabelKosongComponent,
@@ -59,8 +60,15 @@ export class OverpaymentArchiveComponent implements OnInit {
   /** Dicocokkan server ke nama pelanggan. */
   keyword: string = '';
 
-  /** Penghitung untuk chip, datang dari server. */
-  ringkasan: { waiting: number; overdue: number } = { waiting: 0, overdue: 0 };
+  /** Penghitung chip DAN banner, datang dari server — jumlah + nilai Rp. */
+  ringkasan = {
+    waiting: 0,
+    overdue: 0,
+    waitingValue: 0,
+    overdueValue: 0,
+    resolved: 0,
+    resolvedValue: 0,
+  };
 
   ngOnInit(): void {
     this.fetch(1);
@@ -84,7 +92,7 @@ export class OverpaymentArchiveComponent implements OnInit {
           this.dataSource = data.data;
           this.dataCount = data.count;
           if (data.summary) {
-            this.ringkasan = data.summary;
+            this.ringkasan = { ...this.ringkasan, ...data.summary };
           }
         },
         error: (error) => {
@@ -196,11 +204,11 @@ export class OverpaymentArchiveComponent implements OnInit {
   }
 
   catatBaru() {
-    this.router.navigate(['/Overpayment']);
+    this.router.navigate(['/Overpayment/Create']);
   }
 
   ubah(id: number) {
-    this.router.navigate(['/Overpayment'], { queryParams: { id: id } });
+    this.router.navigate(['/Overpayment/Create'], { queryParams: { id: id } });
   }
 
   /**

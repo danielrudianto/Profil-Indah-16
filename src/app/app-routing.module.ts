@@ -171,8 +171,21 @@ const routes: Routes = [
                 (m) => m.OverpaymentComponent,
               ),
             children: [
+              /*
+                Daftar-lah muka halaman ini, bukan formulir catat. Menu
+                bernama "Kelebihan Bayar" yang mendarat di formulir kosong
+                terbaca seperti tidak punya daftar sama sekali.
+              */
               {
                 path: '',
+                canActivate: [SalesGuard],
+                loadComponent: () =>
+                  import('./pages/overpayment/overpayment-archive/overpayment-archive.component').then(
+                    (m) => m.OverpaymentArchiveComponent,
+                  ),
+              },
+              {
+                path: 'Create',
                 canActivate: [SalesGuard],
                 loadComponent: () =>
                   import('./pages/overpayment/overpayment-create/overpayment-create.component').then(
@@ -189,11 +202,7 @@ const routes: Routes = [
               },
               {
                 path: 'Archive',
-                canActivate: [SalesGuard],
-                loadComponent: () =>
-                  import('./pages/overpayment/overpayment-archive/overpayment-archive.component').then(
-                    (m) => m.OverpaymentArchiveComponent,
-                  ),
+                redirectTo: '',
               },
             ],
           },
