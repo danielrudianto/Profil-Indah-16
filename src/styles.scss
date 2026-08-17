@@ -178,7 +178,8 @@ html {
   pemanggil yang tidak satu pun memasang panelClass. Daripada menyunting
   keenam belasnya, panel Material-nya dikenali dari isinya.
 */
-.mat-mdc-dialog-surface:has(> app-delete-confirmation) {
+.mat-mdc-dialog-surface:has(> app-delete-confirmation),
+.mat-mdc-dialog-surface:has(> app-sales-invoice-view) {
   background: transparent;
   box-shadow: none;
   border-radius: 0;

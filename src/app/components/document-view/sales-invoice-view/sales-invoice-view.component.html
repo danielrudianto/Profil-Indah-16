@@ -1,375 +1,172 @@
-<h2
-  mat-dialog-title
-  cdkDrag
-  cdkDragRootElement=".cdk-overlay-pane"
-  cdkDragHandle
-  cdkDragBoundary="body"
->
-  {{ "sales-invoice__archive__view__title" | translate }}
-</h2>
-
-<mat-dialog-content>
-  <form [formGroup]="salesInvoiceFormGroup">
-    <mat-accordion>
-      <mat-expansion-panel
-        disabled
-        class="mat-elevation-z0"
-        hideToggle
-        [expanded]="step() === 0"
-        (opened)="setStep(0)"
-      >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            {{ "sales-invoice__archive__view__general__title" | translate }}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <div class="row">
-          <div class="col-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "sales-invoice__archive__view__date" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="date" />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "sales-invoice__archive__view__name" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="name" />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "sales-invoice__archive__view__status" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="status" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "sales-invoice__archive__view__created-by" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="createdBy" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "sales-invoice__archive__view__created-at" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="createdAt" />
-            </mat-form-field>
-
-            <button
-              mat-stroked-button
-              color="primary"
-              style="letter-spacing: 0"
-              (click)="nextStep()"
-            >
-              {{ "general__next" | translate }}
-            </button>
-          </div>
-          <div class="col-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "sales-invoice__archive__view__customer" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="customer" />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{
-                "sales-invoice__archive__view__sales" | translate
-              }}</mat-label>
-              <input matInput readonly formControlName="sales" />
-            </mat-form-field>
-          </div>
+<!-- Tampilan baca faktur — dokumen, bukan formulir. -->
+<div class="lihat">
+  <ng-container *ngIf="!isLoading && dokumen">
+    <header class="lihat__kepala">
+      <div class="lihat__identitas">
+        <span class="lihat__avatar" aria-hidden="true">{{ inisial }}</span>
+        <div>
+          <h2 class="lihat__nama">{{ namaPelanggan }}</h2>
+          <p class="lihat__nomor">{{ dokumen.name }}</p>
         </div>
-      </mat-expansion-panel>
-      <mat-expansion-panel
-        disabled
-        class="mat-elevation-z0"
-        hideToggle
-        [expanded]="step() === 1"
-        (opened)="setStep(1)"
+      </div>
+
+      <span
+        class="pill"
+        [class.pill--hijau]="!dokumen.isDelete && dokumen.isConfirm"
+        [class.pill--amber]="!dokumen.isDelete && !dokumen.isConfirm"
+        [class.pill--garis]="dokumen.isDelete"
       >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            {{ "sales-invoice__archive__view__item__title" | translate }}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
+        {{ statusKey | translate }}
+      </span>
+    </header>
 
-        <div class="row">
-          <div class="col-12">
-            <div class="table-responsive">
-              <table class="table data-table">
-                <thead>
-                  <tr>
-                    <th class="text-center" style="width: 200px">
-                      {{
-                        "sales-invoice__archive__view__items__product"
-                          | translate
-                      }}
-                    </th>
-                    <th class="text-center" style="width: 200px">
-                      {{
-                        "sales-invoice__archive__view__items__quantity"
-                          | translate
-                      }}
-                    </th>
-                    <th class="text-center" style="width: 200px">
-                      {{
-                        "sales-invoice__archive__view__items__price" | translate
-                      }}
-                    </th>
-                    <th class="text-center" style="width: 300px">
-                      {{
-                        "sales-invoice__archive__view__items__discount"
-                          | translate
-                      }}
-                    </th>
-                    <th class="text-center" style="width: 200px">
-                      {{
-                        "sales-invoice__archive__view__items__total" | translate
-                      }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of t.controls">
-                    <td>
-                      <p class="mb-0">{{ item.get("reference")?.value }}</p>
-                      <p class="text-clamp-1 mb-0">
-                        {{ item.get("description")?.value }}
-                      </p>
-                    </td>
-                    <td class="text-center">
-                      {{ item.get("quantity")?.value | number : "0.0-2" }}
-                      {{ item.get("unit")?.value }}
-                    </td>
-                    <td class="text-center">
-                      Rp.&nbsp;{{ item.get("price")?.value | number : "0.2-2" }}
-                    </td>
-                    <td
-                      class="text-center"
-                      [matTooltip]="
-                        getDiscountPercentage(
-                          item.get('discount')?.value,
-                          item.get('price')?.value
-                        )
-                      "
-                    >
-                      Rp.&nbsp;{{
-                        item.get("discount")?.value | number : "0.2-2"
-                      }}
-                    </td>
-                    <td class="text-center">
-                      Rp.&nbsp;{{
-                        (item.get("price")?.value -
-                          item.get("discount")?.value) *
-                          item.get("quantity")?.value | number : "0.2-2"
-                      }}
-                    </td>
-                  </tr>
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td colspan="3"></td>
-                    <td class="text-center">
-                      {{ "sales-invoice__archive__view__subtotal" | translate }}
-                    </td>
-                    <td class="text-center" colspan="2">
-                      Rp.&nbsp;{{ subtotal | number : "0.2-2" }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="3"></td>
-                    <td class="text-center">
-                      {{ "sales-invoice__archive__view__discount" | translate }}
-                    </td>
-                    <td class="text-center" colspan="2">
-                      Rp.&nbsp;{{
-                        salesInvoiceFormGroup.get("discount")?.value
-                          | number : "0.2-2"
-                      }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="3"></td>
-                    <td class="text-center">
-                      {{ "sales-invoice__archive__view__service" | translate }}
-                    </td>
-                    <td class="text-center" colspan="2">
-                      Rp.&nbsp;{{
-                        salesInvoiceFormGroup.get("service")?.value
-                          | number : "0.2-2"
-                      }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="3"></td>
-                    <td class="text-center">
-                      {{ "sales-invoice__archive__view__delivery" | translate }}
-                    </td>
-                    <td class="text-center" colspan="2">
-                      Rp.&nbsp;{{
-                        salesInvoiceFormGroup.get("delivery")?.value
-                          | number : "0.2-2"
-                      }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="3"></td>
-                    <td class="text-center">
-                      {{ "sales-invoice__archive__view__total" | translate }}
-                    </td>
-                    <td class="text-center" colspan="2">
-                      Rp.&nbsp;{{ grandTotal | number : "0.2-2" }}
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-
-            <div class="d-flex">
-              <button
-                type="button"
-                mat-stroked-button
-                color="warn"
-                class="me-3"
-                style="letter-spacing: 0"
-                (click)="prevStep()"
-              >
-                {{ "general__previous" | translate }}
-              </button>
-
-              <button
-                type="button"
-                mat-stroked-button
-                color="primary"
-                style="letter-spacing: 0"
-                (click)="nextStep()"
-              >
-                {{ "general__next" | translate }}
-              </button>
-            </div>
-          </div>
+    <div class="lihat__isi">
+      <dl class="lihat__kisi">
+        <div>
+          <dt>{{ 'sales-invoice__archive__view__date' | translate }}</dt>
+          <dd>{{ dokumen.date | date: 'dd MMMM yyyy' }}</dd>
         </div>
-      </mat-expansion-panel>
-      <mat-expansion-panel
-        disabled
-        class="mat-elevation-z0"
-        hideToggle
-        [expanded]="step() === 2"
-        (opened)="setStep(2)"
+        <div>
+          <dt>{{ 'sales-invoice__view__sales' | translate }}</dt>
+          <dd>{{ dokumen.sales }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'sales-invoice__view__created-by' | translate }}</dt>
+          <dd>{{ dokumen.createdBy }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'sales-invoice__view__created-at' | translate }}</dt>
+          <dd>{{ dokumen.createdAt | date: 'dd MMMM yyyy HH:mm' }}</dd>
+        </div>
+      </dl>
+
+      <h3 class="lihat__label">
+        {{ 'sales-invoice__archive__view__item__title' | translate }}
+        ({{ barang.length }})
+      </h3>
+
+      <div class="lihat__gulir">
+        <table class="tabel tabel--rapat">
+          <thead>
+            <tr>
+              <th>{{ 'sales-invoice__view__product' | translate }}</th>
+              <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__qty' | translate }}</th>
+              <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__price' | translate }}</th>
+              <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__discount' | translate }}</th>
+              <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__line-total' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let b of barang">
+              <td>
+                <span class="lihat__ref">{{ b.reference }}</span>
+                <span class="lihat__desk">{{ b.description }}</span>
+              </td>
+              <td class="tabel__nilai">{{ b.quantity | number: '1.0-2' }} {{ b.unit }}</td>
+              <td class="tabel__nilai">Rp {{ b.price | number: '1.0-0' }}</td>
+              <td class="tabel__nilai">Rp {{ b.discount | number: '1.0-0' }}</td>
+              <td class="tabel__nilai baris__total">
+                Rp {{ totalBaris(b) | number: '1.0-0' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Rincian nilai — subtotal sampai total, gaya rincian terrabot. -->
+      <dl class="lihat__nilai">
+        <div>
+          <dt>{{ 'sales-invoice__view__subtotal' | translate }}</dt>
+          <dd>Rp {{ subtotal | number: '1.0-0' }}</dd>
+        </div>
+        <div *ngIf="dokumen.discount > 0">
+          <dt>{{ 'sales-invoice__view__doc-discount' | translate }}</dt>
+          <dd class="lihat__minus">− Rp {{ dokumen.discount | number: '1.0-0' }}</dd>
+        </div>
+        <div *ngIf="dokumen.delivery > 0">
+          <dt>{{ 'sales-invoice__view__delivery' | translate }}</dt>
+          <dd>+ Rp {{ dokumen.delivery | number: '1.0-0' }}</dd>
+        </div>
+        <div *ngIf="dokumen.service > 0">
+          <dt>{{ 'sales-invoice__view__service' | translate }}</dt>
+          <dd>+ Rp {{ dokumen.service | number: '1.0-0' }}</dd>
+        </div>
+        <div class="lihat__total">
+          <dt>{{ 'sales-invoice__view__grand-total' | translate }}</dt>
+          <dd>Rp {{ grandTotal | number: '1.0-0' }}</dd>
+        </div>
+      </dl>
+
+      <h3 class="lihat__label">
+        {{ 'sales-invoice__archive__view__payment__title' | translate }}
+        ({{ pembayaran.length }})
+      </h3>
+
+      <ul class="lihat__bayar" *ngIf="pembayaran.length > 0">
+        <li *ngFor="let p of pembayaran">
+          <div>
+            <span class="lihat__bayar-metode">
+              {{ p.payment_method == null ? 'Cash' : p.payment_method.name }}
+            </span>
+            <span class="lihat__bayar-tanggal">
+              {{ p.date | date: 'dd MMMM yyyy' }}
+            </span>
+          </div>
+          <strong>Rp {{ p.value | number: '1.0-0' }}</strong>
+        </li>
+      </ul>
+      <p class="lihat__kosong" *ngIf="pembayaran.length === 0">
+        {{ 'sales-invoice__archive__view__payments__empty' | translate }}
+      </p>
+
+      <!-- Riwayat perubahan — jejak audit, tampil bila memang ada isinya. -->
+      <ng-container *ngIf="riwayat.length > 0">
+        <h3 class="lihat__label">
+          {{ 'sales-invoice__view__history' | translate }}
+        </h3>
+
+        <ol class="lihat__riwayat">
+          <li *ngFor="let r of riwayat; trackBy: lacakRiwayat">
+            <div class="lihat__riwayat-kepala">
+              <strong>{{ labelAksi(r.action) }}</strong>
+              <span *ngIf="r.user?.name"> · {{ r.user.name }}</span>
+              <span class="lihat__riwayat-waktu">
+                {{ r.createdAt | date: 'dd MMM yyyy HH:mm' }}
+              </span>
+            </div>
+            <p class="lihat__riwayat-ubahan" *ngIf="ubahanTeks(r.changes)">
+              {{ ubahanTeks(r.changes) }}
+            </p>
+          </li>
+        </ol>
+      </ng-container>
+    </div>
+
+    <footer class="lihat__kaki">
+      <button
+        *ngIf="isAdministrator && !data.noAction && !dokumen.isDelete"
+        type="button"
+        class="btn btn--bahaya"
+        (click)="openDeleteConfirmation()"
       >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            {{ "sales-invoice__archive__view__payment__title" | translate }}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
+        <i class="ph ph-trash" aria-hidden="true"></i>
+        {{ 'general__delete' | translate }}
+      </button>
 
-        <div class="row">
-          <div class="col-12">
-            <div class="table-responsive">
-              <table class="table data-table">
-                <thead>
-                  <tr>
-                    <th style="width: 150px">
-                      {{
-                        "sales-invoice__archive__view__payments__date"
-                          | translate
-                      }}
-                    </th>
-                    <th style="width: 200px">
-                      {{
-                        "sales-invoice__archive__view__payments__method"
-                          | translate
-                      }}
-                    </th>
-                    <th style="width: 200px">
-                      {{
-                        "sales-invoice__archive__view__payments__amount"
-                          | translate
-                      }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of u.controls">
-                    <td>
-                      {{ item.get("date")?.value | date : "dd MMMM YYYY" }}
-                    </td>
-                    <td>
-                      {{
-                        item.get("payment_method")?.value == null
-                          ? "Cash"
-                          : item.get("payment_method")?.value.name
-                      }}
-                    </td>
-                    <td>{{ item.get("value")?.value | number : "0.2-2" }}</td>
-                  </tr>
-                </tbody>
-                <tbody *ngIf="u.controls.length == 0">
-                  <td colspan="3">
-                    {{
-                      "sales-invoice__archive__view__payments__empty"
-                        | translate
-                    }}
-                  </td>
-                </tbody>
-              </table>
-            </div>
+      <span class="lihat__renggang"></span>
 
-            <div class="d-flex">
-              <button
-                type="button"
-                mat-stroked-button
-                color="warn"
-                class="me-3"
-                style="letter-spacing: 0"
-                (click)="prevStep()"
-              >
-                {{ "general__previous" | translate }}
-              </button>
+      <button type="button" class="btn btn--kedua" (click)="print()">
+        <i class="ph ph-printer" aria-hidden="true"></i>
+        {{ 'general__print' | translate }}
+      </button>
 
-              <button
-                type="button"
-                mat-stroked-button
-                color="warn"
-                style="letter-spacing: 0"
-                [disabled]="
-                  !isAdministrator ||
-                  salesInvoiceFormGroup.get('isDelete')?.value == true
-                "
-                (click)="openDeleteConfirmation()"
-                *ngIf="!data.noAction"
-              >
-                {{ "sales-invoice__archive__view__delete" | translate }}
-                <mat-icon>warning</mat-icon>
-              </button>
-            </div>
-          </div>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </form>
-</mat-dialog-content>
+      <button type="button" class="btn" (click)="tutup()">
+        {{ 'general__close' | translate }}
+      </button>
+    </footer>
+  </ng-container>
 
-<mat-dialog-actions align="end">
-  <button
-    mat-stroked-button
-    color="primary"
-    style="letter-spacing: 0"
-    type="button"
-    (click)="print()"
-  >
-    {{ "general__print" | translate }}
-  </button>
-  <button
-    mat-stroked-button
-    color="primary"
-    style="letter-spacing: 0"
-    mat-dialog-close
-  >
-    {{ "general__close" | translate }}
-  </button>
-</mat-dialog-actions>
+  <p class="lihat__memuat" *ngIf="isLoading">
+    {{ 'general__loading' | translate }}
+  </p>
+</div>

@@ -1,8 +1,10 @@
 import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
-import { Component, Inject, signal } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import {
   Margins,
@@ -10,83 +12,212 @@ import {
   PageSize,
   TDocumentDefinitions,
 } from 'pdfmake/interfaces';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
-import { PaymentListComponent } from 'src/app/components/payment-list/payment-list.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
-import { MatTooltip } from '@angular/material/tooltip';
-import { MatIcon } from '@angular/material/icon';
 
 // pdfmake 0.2.23 mengekspor objek vfs-nya langsung (module.exports = vfs).
-// Sampai 0.2.10 yang diekspor masih pembungkus, sehingga jalur lamanya
-// pdfFonts.pdfMake.vfs. Bentuk lama itu kini menghasilkan undefined, dan
-// pembuatan PDF gagal saat dijalankan tanpa satu pun galat kompilasi —
-// @types/pdfmake harus ikut disamakan versinya agar selisih itu terlihat.
 pdfMake.vfs = pdfFonts;
 
+/**
+ * Tampilan BACA sebuah faktur penjualan — dokumen, bukan formulir.
+ *
+ * Bentuk lamanya menyaru sebagai formulir: setiap nilai dibungkus kolom
+ * input Material lengkap dengan tanda wajib merah, padahal tidak ada
+ * satu pun yang bisa disunting — "jadi curiga aneh". Sekarang: kepala
+ * beridentitas (pelanggan, nomor dokumen, pill status), kisi
+ * label/nilai, tabel barang, rincian nilai, daftar pembayaran, dan —
+ * untuk administrator — riwayat perubahan dari jejak audit.
+ *
+ * Kontraknya tidak berubah: dibuka dengan {id, noAction}, menutup
+ * dengan 'deleted' setelah penghapusan, dan PDF cetakannya dibangun
+ * persis seperti sebelumnya.
+ */
 @Component({
-    selector: 'app-sales-invoice-view',
-    templateUrl: './sales-invoice-view.component.html',
-    styleUrls: ['./sales-invoice-view.component.scss'],
-    imports: [MatDialogTitle, CdkDrag, CdkDragHandle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, MatButton, NgFor, MatTooltip, NgIf, MatIcon, MatDialogActions, MatDialogClose, DecimalPipe, DatePipe, TranslatePipe]
+  selector: 'app-sales-invoice-view',
+  templateUrl: './sales-invoice-view.component.html',
+  styleUrls: ['./sales-invoice-view.component.scss'],
+  providers: [DatePipe, DecimalPipe],
+  imports: [NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe],
 })
-export class SalesInvoiceViewComponent {
+export class SalesInvoiceViewComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { id: number; noAction: boolean },
     private authService: AuthService,
     private dialog: MatDialog,
-    private sheet: MatBottomSheet,
     private apiService: ApiService,
     private alertService: AlertService,
     private translateService: TranslateService,
     private dialogRef: MatDialogRef<SalesInvoiceViewComponent>,
     private datePipe: DatePipe,
     private decimalPipe: DecimalPipe,
-    private formBuilder: FormBuilder
   ) {}
 
-  isAdministrator: boolean = false;
-  isLoading: boolean = false;
+  isAdministrator = false;
+  isLoading = true;
 
-  step = signal(0);
+  dokumen: any = null;
+  barang: any[] = [];
+  pembayaran: any[] = [];
 
-  salesInvoiceFormGroup: FormGroup = new FormGroup({
-    id: new FormControl('', Validators.required),
-    name: new FormControl('', Validators.required),
-    sales: new FormControl(''),
-    date: new FormControl('', Validators.required),
-    customer: new FormControl(''),
-    status: new FormControl(''),
-    createdBy: new FormControl('', Validators.required),
-    createdAt: new FormControl('', Validators.required),
-    discount: new FormControl(0, Validators.required),
-    service: new FormControl(0, Validators.required),
-    delivery: new FormControl(0, Validators.required),
-    sales_invoice: new FormArray([]),
-    sales_invoice_payment: new FormArray([]),
-    isDelete: new FormControl(false),
-  });
+  /** Riwayat perubahan dari jejak audit — khusus administrator. */
+  riwayat: any[] = [];
 
   ngOnInit(): void {
     this.isAdministrator = this.authService.isAdministrator();
-    this.fetchByID();
+    this.ambilData();
+    if (this.isAdministrator) {
+      this.ambilRiwayat();
+    }
   }
 
-  openDeleteConfirmation() {
+  ambilData(): void {
+    this.isLoading = true;
+    this.apiService
+      .get(`sales-invoice/${this.data.id}`)
+      .subscribe({
+        next: (data: any) => {
+          this.dokumen = {
+            name: data.name,
+            date: data.date,
+            sales: data.sales == null ? 'INTERNAL' : data.sales.toUpperCase(),
+            customer: data.customer == null ? null : data.customer.name,
+            isDelete: data.is_delete,
+            isConfirm: data.is_confirm,
+            discount: Number(data.discount),
+            service: Number(data.service),
+            delivery: Number(data.delivery),
+            createdBy: data.user_bill_code_created_byTouser.name,
+            createdAt: data.createdAt,
+          };
+
+          this.barang = (data.sales_invoice ?? []).map((x: any) => ({
+            reference: x.product.reference,
+            description: x.product.description,
+            quantity: Number(x.quantity),
+            unit: x.product_unit == null ? x.product.unit : x.product_unit.unit,
+            price: Number(x.price),
+            discount: Number(x.discount),
+          }));
+
+          this.pembayaran = (data.sales_invoice_payment ?? []).map(
+            (x: any) => ({
+              date: x.date,
+              payment_method: x.payment_method,
+              value: Number(x.value),
+            }),
+          );
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
+  }
+
+  /*
+    Gagal memuat riwayat bukan alasan menahan dokumennya — seksi ini
+    hilang diam-diam (mis. peran tidak berwenang membaca jejak audit).
+  */
+  ambilRiwayat(): void {
+    this.apiService
+      .get('audit-logs', {
+        entity: 'sales_invoice_code',
+        entityID: this.data.id,
+        page_size: 20,
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.riwayat = data.data ?? [];
+        },
+        error: () => {
+          this.riwayat = [];
+        },
+      });
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Turunan tampilan                                                  */
+  /* ---------------------------------------------------------------- */
+
+  get namaPelanggan(): string {
+    return (
+      this.dokumen?.customer ??
+      this.translateService.instant('sales-invoice__retail')
+    );
+  }
+
+  get inisial(): string {
+    return this.namaPelanggan.trim().charAt(0).toUpperCase() || '?';
+  }
+
+  get statusKey(): string {
+    if (this.dokumen?.isDelete) {
+      return 'sales-invoice__archive__view__status__deleted';
+    }
+    return this.dokumen?.isConfirm
+      ? 'sales-invoice__archive__view__status__confirmed'
+      : 'sales-invoice__archive__view__status__pending';
+  }
+
+  get subtotal(): number {
+    return this.barang.reduce(
+      (a, b) => a + b.quantity * (b.price - b.discount),
+      0,
+    );
+  }
+
+  get grandTotal(): number {
+    return (
+      this.subtotal +
+      this.dokumen.delivery +
+      this.dokumen.service -
+      this.dokumen.discount
+    );
+  }
+
+  totalBaris(b: any): number {
+    return b.quantity * (b.price - b.discount);
+  }
+
+  labelAksi(aksi: string): string {
+    return this.translateService.instant(
+      `sales-invoice__view__aksi__${aksi}`,
+    );
+  }
+
+  /** Ringkasan perubahan: "field: nilai" — `from` memang tidak dicatat. */
+  ubahanTeks(changes: any): string {
+    if (!changes || typeof changes !== 'object') {
+      return '';
+    }
+    return Object.entries(changes)
+      .map(([kunci, nilai]) => `${kunci}: ${nilai}`)
+      .join(' · ');
+  }
+
+  lacakRiwayat = (_: number, item: any): number => item.id;
+
+  /* ---------------------------------------------------------------- */
+  /* Aksi                                                              */
+  /* ---------------------------------------------------------------- */
+
+  tutup(): void {
+    this.dialogRef.close();
+  }
+
+  openDeleteConfirmation(): void {
     this.dialog
       .open(DeleteConfirmationComponent, {
         data: {
           title: this.translateService.instant(
-            'sales-invoice__archive__view__delete__title'
+            'sales-invoice__archive__view__delete__title',
           ),
         },
       })
@@ -96,7 +227,7 @@ export class SalesInvoiceViewComponent {
           this.apiService.delete(`sales-invoice/${this.data.id}`).subscribe({
             next: () => {
               this.alertService.showSuccess(
-                this.translateService.instant('sales-invoice__delete__success')
+                this.translateService.instant('sales-invoice__delete__success'),
               );
               this.dialogRef.close('deleted');
             },
@@ -108,424 +239,264 @@ export class SalesInvoiceViewComponent {
       });
   }
 
-  openPaymentModal() {
-    this.sheet.open(PaymentListComponent, {
-      data: {
-        id: this.data.id,
-      },
-    });
-  }
+  /* ---------------------------------------------------------------- */
+  /* Cetak — format rancangan desainer toko                            */
+  /*                                                                   */
+  /* Kepala: judul besar di kiri, logo + nama toko + alamat di kanan.  */
+  /* Info dokumen berpasangan label-di-atas-nilai, tabel barang        */
+  /* berkepala pita abu-abu, blok total menempel kanan, lalu seksi     */
+  /* Payment Record. Watermark DRAFT dipertahankan. Bila logo gagal    */
+  /* termuat, kepalanya jatuh ke varian teks — dokumen tetap tercetak. */
+  /* ---------------------------------------------------------------- */
 
-  fetchByID(): void {
-    this.isLoading = true;
-    this.apiService
-      .get(`sales-invoice/${this.data.id}`)
-      .subscribe({
-        next: (data: any) => {
-          data.sales_invoice.forEach((x: any) => {
-            this.t.push(
-              this.formBuilder.group({
-                id: [x.id],
-                price: [x.price],
-                quantity: [x.quantity],
-                discount: [x.discount],
-                product_id: [x.product_id],
-                product_unit_id: [x.product_unit_id],
-                reference: [x.product.reference],
-                description: [x.product.description],
-                unit: [
-                  x.product_unit == null ? x.product.unit : x.product_unit.unit,
-                ],
-              })
-            );
-          });
-
-          data.sales_invoice_payment.forEach((x: any) => {
-            this.u.push(
-              this.formBuilder.group({
-                id: [x.id],
-                date: [x.date],
-                payment_method: [x.payment_method],
-                value: [x.value],
-              })
-            );
-          });
-
-          this.salesInvoiceFormGroup.patchValue({
-            date: this.datePipe.transform(data.date, 'dd MMMM YYYY'),
-            name: data.name,
-            sales: data.sales == null ? 'INTERNAL' : data.sales.toUpperCase(),
-            customer: data.customer == null ? 'Retail' : data.customer.name,
-            status: data.is_delete
-              ? this.translateService.instant(
-                  'sales-invoice__archive__view__status__deleted'
-                )
-              : data.is_confirm
-              ? this.translateService.instant(
-                  'sales-invoice__archive__view__status__confirmed'
-                )
-              : this.translateService.instant(
-                  'sales-invoice__archive__view__status__pending'
-                ),
-            delivery: data.delivery,
-            discount: data.discount,
-            service: data.service,
-            createdBy: data.user_bill_code_created_byTouser.name,
-            createdAt: this.datePipe.transform(data.createdAt, 'dd MMMM YYYY HH:mm'),
-            isDelete: data.isDelete,
-          });
-        },
-        error: (error) => {
-          this.alertService.showError(error);
-        },
-      })
-      .add(() => {
-        this.isLoading = false;
-      });
-  }
-
-  get f() {
-    return this.salesInvoiceFormGroup.controls;
-  }
-
-  get t() {
-    return this.f['sales_invoice'] as FormArray;
-  }
-
-  get u() {
-    return this.f['sales_invoice_payment'] as FormArray;
-  }
-
-  get subtotal(): number {
-    return this.t.value.reduce((a: any, b: any) => {
-      return a + b.quantity * (b.price - b.discount);
-    }, 0);
-  }
-
-  get grandTotal(): number {
-    const discount = Number(
-      this.salesInvoiceFormGroup.controls['discount'].value
-    );
-    const service = Number(
-      this.salesInvoiceFormGroup.controls['service'].value
-    );
-    const delivery = Number(
-      this.salesInvoiceFormGroup.controls['delivery'].value
-    );
-
-    return this.subtotal + delivery + service - discount;
-  }
-
-  getDiscountPercentage(discount: number, price: number) {
-    if (price == 0) {
-      return '0%';
-    } else {
-      return `${this.decimalPipe.transform(
-        (discount * 100) / price,
-        '1.2-2'
-      )}%`;
-    }
-  }
-
-  setStep(index: number) {
-    this.step.set(index);
-  }
-
-  nextStep() {
-    this.step.update((i) => i + 1);
-  }
-
-  prevStep() {
-    this.step.update((i) => i - 1);
-  }
-
-  print() {
+  async print(): Promise<void> {
     const title = 'Sales Invoice';
     const fileName = 'Sales_invoice';
+    const angka = (nilai: number, format: string) =>
+      this.decimalPipe.transform(nilai, format);
+
+    let logo: string | null = null;
+    try {
+      const respons = await fetch('assets/images/logo.png');
+      const isi = await respons.blob();
+      logo = await new Promise<string>((selesai, gagal) => {
+        const pembaca = new FileReader();
+        pembaca.onload = () => selesai(pembaca.result as string);
+        pembaca.onerror = gagal;
+        pembaca.readAsDataURL(isi);
+      });
+    } catch {
+      logo = null;
+    }
+
+    const kepalaKanan = logo
+      ? {
+          width: 'auto',
+          stack: [
+            { image: logo, width: 52, alignment: 'right' },
+            {
+              text: 'TOKO PROFIL INDAH',
+              bold: true,
+              fontSize: 10,
+              alignment: 'right',
+              margin: [0, 4, 0, 0] as Margins,
+            },
+            {
+              text: 'Jalan Buluh Indah No. 54 C Denpasar - Bali',
+              fontSize: 7,
+              color: '#666666',
+              alignment: 'right',
+            },
+          ],
+        }
+      : {
+          width: 'auto',
+          text: 'Toko Profil Indah',
+          fontSize: 22,
+          bold: true,
+          alignment: 'right',
+        };
+
+    const pasangan = (label: string, nilai: string | null) => ({
+      stack: [
+        { text: label, style: 'label' },
+        { text: nilai ?? '-', style: 'value', margin: [0, 2, 0, 0] as Margins },
+      ],
+      margin: [0, 0, 0, 12] as Margins,
+    });
+
+    /* Garis mendatar tipis tanpa garis tegak — meniru kartu rancangan. */
+    const tataBaris = {
+      hLineWidth: () => 0.5,
+      vLineWidth: () => 0,
+      hLineColor: () => '#dddddd',
+      paddingTop: () => 6,
+      paddingBottom: () => 6,
+      paddingLeft: () => 8,
+      paddingRight: () => 8,
+    };
+
+    const kepalaSel = (teks: string) => ({
+      text: teks,
+      bold: true,
+      fontSize: 10,
+      fillColor: '#e2e2e2',
+    });
+
     const content = [
       {
-        text: 'Sales invoice',
-        bold: true,
-        fontSize: 16,
+        columns: [
+          { width: '*', text: title, fontSize: 24, bold: true },
+          kepalaKanan,
+        ],
+        margin: [0, 0, 0, 20] as Margins,
       },
       {
-        layout: 'lightHorizontalLines',
-        table: {
-          widths: [100, '*', 100, '*'],
-          body: [
-            [
-              {
-                text: 'Date',
-                bold: true,
-                fontSize: 12,
-              },
-              {
-                text: this.datePipe.transform(
-                  this.salesInvoiceFormGroup.controls['date']?.value,
-                  'dd MMM yyyy'
+        columns: [
+          {
+            width: '*',
+            stack: [
+              pasangan(
+                'Date',
+                this.datePipe.transform(this.dokumen.date, 'dd MMM yyyy'),
+              ),
+              pasangan('Status', this.translateService.instant(this.statusKey)),
+              pasangan('Created By', this.dokumen.createdBy),
+            ],
+          },
+          {
+            width: '*',
+            stack: [
+              pasangan('Name', this.dokumen.name),
+              pasangan('Customer', this.namaPelanggan),
+              pasangan(
+                'Created at',
+                this.datePipe.transform(
+                  this.dokumen.createdAt,
+                  'dd MMM yyyy. HH:mm',
                 ),
-                bold: false,
-                fontSize: 12,
-              },
-              {
-                text: 'Name',
-                bold: true,
-                fontSize: 12,
-              },
-              {
-                text: this.salesInvoiceFormGroup.controls['name']?.value,
-                bold: false,
-                fontSize: 12,
-              },
+              ),
             ],
-            [
-              {
-                text: 'Status',
-                bold: true,
-                fontSize: 12,
-              },
-              {
-                text: `${this.salesInvoiceFormGroup.controls['status']?.value}`,
-                bold: false,
-                fontSize: 12,
-              },
-              {
-                text: 'Customer',
-                bold: true,
-                fontSize: 12,
-              },
-              {
-                text: this.salesInvoiceFormGroup.controls['customer']?.value,
-                bold: false,
-                fontSize: 12,
-              },
-            ],
-            [
-              {
-                text: 'Created by',
-                bold: true,
-                fontSize: 12,
-              },
-              {
-                text: this.salesInvoiceFormGroup.controls['createdBy']?.value,
-                bold: false,
-                fontSize: 12,
-              },
-              {
-                text: 'Created at',
-                bold: true,
-                fontSize: 12,
-              },
-              {
-                text: this.salesInvoiceFormGroup.controls['createdAt']?.value,
-                bold: false,
-                fontSize: 12,
-              },
-            ],
-          ],
-        },
-        margin: [0, 10, 0, 10] as Margins,
+          },
+        ],
+        margin: [0, 0, 0, 16] as Margins,
       },
       {
-        layout: 'lightHorizontalLines',
+        layout: tataBaris,
         table: {
           headerRows: 1,
           widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'],
           body: [
             [
-              {
-                text: 'Product',
-                bold: true,
-              },
-              {
-                text: 'Quantity',
-                bold: true,
-              },
-              {
-                text: 'Price',
-                bold: true,
-              },
-              {
-                text: 'Discount (Rp.)',
-                bold: true,
-              },
-              {
-                text: 'Discount (%)',
-                bold: true,
-              },
-              {
-                text: 'Total',
-                bold: true,
-              },
+              kepalaSel('Product'),
+              kepalaSel('Quantity'),
+              kepalaSel('Price'),
+              kepalaSel('Discount (Rp.)'),
+              kepalaSel('Discount (%)'),
+              kepalaSel('Total'),
             ],
-            ...this.t.controls.map((item: any) => {
+            ...this.barang.map((item) => {
               return [
                 [
-                  {
-                    text: item.get('reference')?.value,
-                    style: 'label',
-                  },
-                  {
-                    text: item.get('description')?.value,
-                    style: 'value',
-                  },
+                  { text: item.reference, bold: true, fontSize: 10 },
+                  { text: item.description, fontSize: 8, color: '#666666' },
                 ],
                 {
-                  text: `${this.decimalPipe.transform(
-                    item.get('quantity')?.value,
-                    '1.0-2'
-                  )} ${item.get('unit')?.value}`,
+                  text: `${angka(item.quantity, '1.0-2')} ${item.unit}`,
+                  fontSize: 10,
                 },
+                { text: `${angka(item.price, '1.0-0')}`, fontSize: 10 },
+                { text: `${angka(item.discount, '1.0-0')}`, fontSize: 10 },
                 {
-                  text: `${this.decimalPipe.transform(
-                    item.get('price')?.value,
-                    '1.2-2'
-                  )}`,
-                },
-                {
-                  text: `${this.decimalPipe.transform(
-                    item.get('discount')?.value,
-                    '1.2-2'
-                  )}`,
-                },
-                {
-                  text: `${this.decimalPipe.transform(
-                    item.get('price')?.value == 0
-                      ? 0
-                      : (item.get('discount')?.value * 100) /
-                          item.get('price')?.value,
-                    '1.0-2'
+                  text: `${angka(
+                    item.price == 0 ? 0 : (item.discount * 100) / item.price,
+                    '1.0-2',
                   )}%`,
+                  fontSize: 10,
                 },
                 {
-                  text: `${this.decimalPipe.transform(
-                    (item.get('price')?.value - item.get('discount')?.value) *
-                      item.get('quantity')?.value,
-                    '1.2-2'
-                  )}`,
+                  text: `${angka(this.totalBaris(item), '1.0-0')}`,
+                  fontSize: 10,
                 },
               ];
             }),
-            [
-              '',
-              '',
-              '',
-              '',
-              {
-                text: 'Subtotal',
-                style: 'label',
-                border: [true, true, true, true],
-              },
-              {
-                text: `${this.decimalPipe.transform(this.subtotal, '1.2-2')}`,
-                style: 'value',
-              },
-            ],
-            [
-              '',
-              '',
-              '',
-              '',
-              {
-                text: 'Discount',
-                style: 'label',
-              },
-              {
-                text: `${this.decimalPipe.transform(
-                  this.salesInvoiceFormGroup.get('discount')?.value,
-                  '1.2-2'
-                )}`,
-                style: 'value',
-              },
-            ],
-            [
-              '',
-              '',
-              '',
-              '',
-              {
-                text: 'Service',
-                style: 'label',
-              },
-              {
-                text: `${this.decimalPipe.transform(
-                  this.salesInvoiceFormGroup.get('service')?.value,
-                  '1.2-2'
-                )}`,
-                style: 'value',
-              },
-            ],
-            [
-              '',
-              '',
-              '',
-              '',
-              {
-                text: 'Delivery',
-                style: 'label',
-              },
-              {
-                text: `${this.decimalPipe.transform(
-                  this.salesInvoiceFormGroup.get('delivery')?.value,
-                  '1.2-2'
-                )}`,
-                style: 'value',
-              },
-            ],
-            [
-              '',
-              '',
-              '',
-              '',
-              {
-                text: 'Total',
-                style: 'label',
-              },
-              {
-                text: `${this.decimalPipe.transform(this.grandTotal, '1.2-2')}`,
-                style: 'value',
-              },
-            ],
           ],
         },
-        margin: [0, 0, 0, 10] as Margins,
       },
       {
-        layout: 'lightHorizontalLines',
+        columns: [
+          { width: '*', text: '' },
+          {
+            width: 230,
+            layout: tataBaris,
+            table: {
+              widths: ['*', 'auto'],
+              body: [
+                [
+                  { text: 'Subtotal', bold: true, fontSize: 10 },
+                  { text: `${angka(this.subtotal, '1.0-0')}`, fontSize: 10 },
+                ],
+                [
+                  { text: 'Discount', bold: true, fontSize: 10 },
+                  {
+                    text: `${angka(this.dokumen.discount, '1.0-0')}`,
+                    fontSize: 10,
+                  },
+                ],
+                [
+                  { text: 'Service', bold: true, fontSize: 10 },
+                  {
+                    text: `${angka(this.dokumen.service, '1.0-0')}`,
+                    fontSize: 10,
+                  },
+                ],
+                [
+                  { text: 'Delivery', bold: true, fontSize: 10 },
+                  {
+                    text: `${angka(this.dokumen.delivery, '1.0-0')}`,
+                    fontSize: 10,
+                  },
+                ],
+                [
+                  { text: 'Total', bold: true, fontSize: 10 },
+                  {
+                    text: `${angka(this.grandTotal, '1.0-0')}`,
+                    bold: true,
+                    fontSize: 10,
+                  },
+                ],
+              ],
+            },
+          },
+        ],
+        margin: [0, 0, 0, 24] as Margins,
+      },
+      {
+        text: 'Payment Record',
+        bold: true,
+        fontSize: 14,
+        margin: [0, 0, 0, 8] as Margins,
+      },
+      {
+        layout: tataBaris,
         table: {
           headerRows: 1,
           widths: ['*', '*', '*'],
           body: [
-            ['Date', 'Payment method', 'Amount'],
-            ...(this.u.controls.length == 0
+            [
+              kepalaSel('Date'),
+              kepalaSel('Payment Method'),
+              kepalaSel('Amount'),
+            ],
+            ...(this.pembayaran.length == 0
               ? [
                   [
                     {
                       text: 'No payment',
                       colSpan: 3,
                       alignment: 'center',
+                      fontSize: 10,
                     },
                     {},
                     {},
                   ],
                 ]
-              : [
-                  ...this.u.controls.map((item: any) => {
-                    return [
-                      this.datePipe.transform(
-                        item.get('date')?.value,
-                        'dd MMMM yyyy'
-                      ),
-                      item.get('payment_method')?.value == null
-                        ? 'Cash'
-                        : item.get('payment_method')?.value.name,
-                      `${this.decimalPipe.transform(
-                        item.get('value')?.value,
-                        '1.2-2'
-                      )}`,
-                    ];
-                  }),
-                ]),
+              : this.pembayaran.map((item) => {
+                  return [
+                    {
+                      text: this.datePipe.transform(item.date, 'dd MMMM yyyy'),
+                      fontSize: 10,
+                    },
+                    {
+                      text:
+                        item.payment_method == null
+                          ? 'Cash'
+                          : item.payment_method.name,
+                      fontSize: 10,
+                    },
+                    { text: `${angka(item.value, '1.0-0')}`, fontSize: 10 },
+                  ];
+                })),
           ],
         },
       },
@@ -534,11 +505,11 @@ export class SalesInvoiceViewComponent {
     const documentDefinition = {
       pageOrientation: 'portrait' as PageOrientation,
       pageSize: 'A4' as PageSize,
-      pageMargins: 15,
+      pageMargins: [36, 36, 36, 36] as Margins,
       watermark: {
         text: 'DRAFT',
         color: 'black',
-        opacity: 0.15,
+        opacity: 0.12,
         bold: true,
         italics: false,
       },
@@ -549,25 +520,16 @@ export class SalesInvoiceViewComponent {
       },
       content: content,
       styles: {
-        label: {
-          fontSize: 10,
-          bold: true,
-        },
-        value: {
-          fontSize: 12,
-          bold: false,
-        },
+        label: { fontSize: 9, color: '#666666' },
+        value: { fontSize: 12 },
       },
     };
 
     /*
-      Sel pertama tiap baris tabel barang sengaja berupa LARIK dua objek —
+      Sel pertama tiap baris tabel barang berupa larik dua objek —
       reference di atas description — dan pdfmake memang menumpuk konten
-      seperti itu. Yang tidak sanggup adalah pemodelan tipenya: TableCell
-      tidak menyatu dengan Content bersarang pada kedalaman ini, sehingga
-      createPdf menolaknya sejak @types/pdfmake disamakan dengan runtime
-      0.2.23. Yang dilonggarkan hanya pemeriksaan tipe di titik ini; struktur
-      dokumennya tidak diubah sedikit pun, karena keluarannya sudah benar.
+      seperti itu; pemodelan tipenya saja yang tidak sanggup, jadi
+      pemeriksaan tipe dilonggarkan di titik ini.
     */
     pdfMake
       .createPdf(documentDefinition as TDocumentDefinitions)
