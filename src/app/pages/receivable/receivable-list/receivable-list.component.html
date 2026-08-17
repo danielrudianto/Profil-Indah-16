@@ -31,7 +31,16 @@
         (click)="lihat(item)"
       >
         <td class="tabel__utama">
-          {{ item.name ?? ('sales-invoice__retail' | translate) }}
+          <div class="sel-entitas">
+            <span class="avatar-inisial" aria-hidden="true">
+              {{ inisial(item.name ?? ('sales-invoice__retail' | translate)) }}
+            </span>
+            <span class="sel-entitas__teks">
+              <span class="sel-entitas__utama">
+                {{ item.name ?? ('sales-invoice__retail' | translate) }}
+              </span>
+            </span>
+          </div>
         </td>
         <!--
           Bar relatif terhadap penunggak terbesar — pola "penjualan per

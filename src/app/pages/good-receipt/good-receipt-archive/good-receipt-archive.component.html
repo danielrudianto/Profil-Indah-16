@@ -103,7 +103,14 @@
         >
           <td>{{ item.date | date: 'dd MMMM yyyy' }}</td>
           <td class="tabel__utama">{{ item.name }}</td>
-          <td>{{ item.supplier?.name }}</td>
+          <td>
+            <div class="sel-entitas">
+              <span class="avatar-inisial" aria-hidden="true">{{ inisial(item.supplier?.name) }}</span>
+              <span class="sel-entitas__teks">
+                <span class="sel-entitas__utama">{{ item.supplier?.name }}</span>
+              </span>
+            </div>
+          </td>
           <td>{{ item.company?.name }}</td>
           <td class="tabel__redup">{{ item.invoice_name ?? '—' }}</td>
           <td>

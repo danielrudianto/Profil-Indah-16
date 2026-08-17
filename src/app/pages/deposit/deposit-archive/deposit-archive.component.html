@@ -116,7 +116,16 @@
           <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
           <td class="tabel__utama">{{ item.name }}</td>
           <td>
-            {{ item.customer?.name ?? ('sales-invoice__retail' | translate) }}
+            <div class="sel-entitas">
+              <span class="avatar-inisial" aria-hidden="true">
+                {{ inisial(item.customer?.name ?? ('sales-invoice__retail' | translate)) }}
+              </span>
+              <span class="sel-entitas__teks">
+                <span class="sel-entitas__utama">
+                  {{ item.customer?.name ?? ('sales-invoice__retail' | translate) }}
+                </span>
+              </span>
+            </div>
           </td>
           <td class="tabel__redup">{{ item.sales || 'INTERNAL' }}</td>
           <td>

@@ -288,4 +288,8 @@ export class DepositArchiveComponent {
       },
     });
   }
+
+  inisial(nama: string | null | undefined): string {
+    return (nama ?? '?').trim().charAt(0).toUpperCase() || '?';
+  }
 }

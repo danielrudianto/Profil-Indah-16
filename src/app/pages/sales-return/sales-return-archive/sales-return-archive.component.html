@@ -97,11 +97,17 @@
             Faktur tanpa pelanggan bukan data yang hilang — itu penjualan
             eceran, dan disebut demikian.
           -->
-          <td>
-            {{
-              item.sales_invoice_code?.customer?.name ??
-                ('sales-invoice__retail' | translate)
-            }}
+<td>
+            <div class="sel-entitas">
+              <span class="avatar-inisial" aria-hidden="true">
+                {{ inisial(item.sales_invoice_code?.customer?.name ?? ('sales-invoice__retail' | translate)) }}
+              </span>
+              <span class="sel-entitas__teks">
+                <span class="sel-entitas__utama">
+                  {{ item.sales_invoice_code?.customer?.name ?? ('sales-invoice__retail' | translate) }}
+                </span>
+              </span>
+            </div>
           </td>
           <td class="tabel__redup">
             {{ item.user_sales_return_code_created_byTouser?.name }}

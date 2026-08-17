@@ -105,4 +105,8 @@ export class ReceivableListComponent implements OnInit {
     /* Pelanggan eceran tidak punya id — server memakai 0 untuk null. */
     this.router.navigate([item.id ?? 0], { relativeTo: this.route });
   }
+
+  inisial(nama: string | null | undefined): string {
+    return (nama ?? '?').trim().charAt(0).toUpperCase() || '?';
+  }
 }

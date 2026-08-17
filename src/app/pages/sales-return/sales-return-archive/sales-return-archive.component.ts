@@ -254,4 +254,8 @@ export class SalesReturnArchiveComponent {
         }
       });
   }
+
+  inisial(nama: string | null | undefined): string {
+    return (nama ?? '?').trim().charAt(0).toUpperCase() || '?';
+  }
 }

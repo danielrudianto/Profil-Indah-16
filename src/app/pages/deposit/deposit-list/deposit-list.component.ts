@@ -133,4 +133,8 @@ export class DepositListComponent implements OnInit {
   keArsip(): void {
     this.router.navigate(['/Deposit/Archive']);
   }
+
+  inisial(nama: string | null | undefined): string {
+    return (nama ?? '?').trim().charAt(0).toUpperCase() || '?';
+  }
 }

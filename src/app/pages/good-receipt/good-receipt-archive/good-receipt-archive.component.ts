@@ -345,4 +345,8 @@ export class GoodReceiptArchiveComponent {
   resetPencarian(): void {
     this.onQueryChanged('');
   }
+
+  inisial(nama: string | null | undefined): string {
+    return (nama ?? '?').trim().charAt(0).toUpperCase() || '?';
+  }
 }
