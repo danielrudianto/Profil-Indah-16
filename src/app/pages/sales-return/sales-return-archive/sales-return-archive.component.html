@@ -44,28 +44,33 @@
       >
         <i class="ph ph-funnel" aria-hidden="true"></i>
       </button>
-    </ng-container>
 
-    <div class="saringan" *ngIf="kapsul.length > 0">
-      <span class="saringan__kapsul" *ngFor="let k of kapsul">
-        {{ k.teks }}
+      <!--
+        Kapsul saringan aktif hidup DI BARIS KENDALI, bersama tombol
+        corong yang melahirkannya — bukan band sendirian yang menggantung
+        di antara pencarian dan tabel.
+      -->
+      <div class="saringan saringan--baris" *ngIf="kapsul.length > 0">
+        <span class="saringan__kapsul" *ngFor="let k of kapsul">
+          {{ k.teks }}
+          <button
+            type="button"
+            (click)="lepasKapsul(k.kunci)"
+            [attr.aria-label]="'general__delete' | translate"
+          >
+            <i class="ph ph-x" aria-hidden="true"></i>
+          </button>
+        </span>
+
         <button
           type="button"
-          (click)="lepasKapsul(k.kunci)"
-          [attr.aria-label]="'general__delete' | translate"
+          class="saringan__bersih"
+          (click)="hapusSemuaSaringan()"
         >
-          <i class="ph ph-x" aria-hidden="true"></i>
+          {{ 'sales-return__filter__clear' | translate }}
         </button>
-      </span>
-
-      <button
-        type="button"
-        class="saringan__bersih"
-        (click)="hapusSemuaSaringan()"
-      >
-        {{ 'sales-return__filter__clear' | translate }}
-      </button>
-    </div>
+      </div>
+    </ng-container>
 
     <table class="tabel">
       <thead>
