@@ -3,12 +3,13 @@
   [lede]="'receivable__lede' | translate"
   [searchPlaceholder]="'receivable__search' | translate"
   [keyword]="keyword"
-  [page]="1"
-  [pageSize]="tersaring.length || 1"
+  [page]="page"
+  [pageSize]="pageSize"
   [total]="tersaring.length"
   [loading]="isLoading"
-  [showPageSize]="false"
   (search)="cari($event)"
+  (pageChange)="bukaHalaman($event)"
+  (pageSizeChange)="gantiUkuran($event)"
   (refresh)="ambilData()"
 >
   <table class="tabel">
@@ -26,7 +27,7 @@
 
     <tbody *ngIf="!isLoading && tersaring.length > 0">
       <tr
-        *ngFor="let item of tersaring; trackBy: lacakPiutang"
+        *ngFor="let item of tampil; trackBy: lacakPiutang"
         class="tabel__baris-klik"
         (click)="lihat(item)"
       >

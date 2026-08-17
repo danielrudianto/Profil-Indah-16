@@ -11,9 +11,11 @@ import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-koso
 /**
  * Daftar piutang per pelanggan — pola app-list-page.
  *
- * Endpoint-nya mengembalikan SEMUA pelanggan yang berutang sekaligus,
- * tanpa halaman — jumlahnya memang sekecil itu. Pencarian berjalan di
- * peramban dan paginasi tidak digambar.
+ * Endpoint-nya mengembalikan SEMUA pelanggan yang berutang sekaligus —
+ * jumlahnya memang sekecil itu, dan servernya menjawab dalam sekali
+ * jalan. Pencarian DAN paginasi karena itu berjalan di peramban:
+ * halaman hanya memotong larik yang sudah di memori, tanpa panggilan
+ * jaringan tambahan. Urutannya dari penunggak terbesar.
  *
  * Sisa piutang tiap pelanggan diberi BAR RELATIF terhadap yang terbesar
  * — pola "penjualan per merek" di laporan — supaya siapa yang paling
@@ -44,6 +46,8 @@ export class ReceivableListComponent implements OnInit {
   dataSource: any[] = [];
   tersaring: any[] = [];
   keyword = '';
+  page = 1;
+  pageSize = 10;
 
   ngOnInit(): void {
     this.ambilData();
@@ -78,9 +82,25 @@ export class ReceivableListComponent implements OnInit {
 
   private saring(): void {
     const kunci = this.keyword.toLowerCase();
-    this.tersaring = this.dataSource.filter((x) =>
-      (x.name ?? '').toLowerCase().includes(kunci),
-    );
+    this.tersaring = this.dataSource
+      .filter((x) => (x.name ?? '').toLowerCase().includes(kunci))
+      .sort((a, b) => this.sisa(b) - this.sisa(a));
+    this.page = 1;
+  }
+
+  /** Potongan halaman yang digambar — dari larik yang sudah tersaring. */
+  get tampil(): any[] {
+    const awal = (this.page - 1) * this.pageSize;
+    return this.tersaring.slice(awal, awal + this.pageSize);
+  }
+
+  bukaHalaman(halaman: number): void {
+    this.page = halaman;
+  }
+
+  gantiUkuran(ukuran: number): void {
+    this.pageSize = ukuran;
+    this.page = 1;
   }
 
   /*

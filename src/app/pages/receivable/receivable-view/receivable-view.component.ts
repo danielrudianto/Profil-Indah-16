@@ -11,15 +11,14 @@ import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-koso
 import { PageTitleService } from 'src/app/services/page-title.service';
 import { SalesInvoiceViewComponent } from 'src/app/components/document-view/sales-invoice-view/sales-invoice-view.component';
 import { ReceivablePaymentCreateComponent } from './receivable-payment-create/receivable-payment-create.component';
-import { ReceivablePaymentHistoryComponent } from './receivable-payment-history/receivable-payment-history.component';
 
 /**
  * Piutang satu pelanggan — faktur yang belum lunas beserta sisanya.
  *
- * Riwayat pembayaran dibaca dari data yang SUDAH ADA di tiap baris
- * (sales_invoice_payment ikut terkirim), bukan dari GET /history/:id —
- * endpoint itu sudah dihapus dari server, jadi dialog lama selalu gagal
- * memuat lalu menutup dirinya sendiri.
+ * Klik baris membuka view faktur, dan riwayat pembayaran dibaca DI SANA
+ * — dialog view faktur memuat daftar pembayarannya sendiri. Dialog
+ * riwayat yang berdiri sendiri karena itu dihapus; aksi per baris
+ * tinggal satu: tambah pembayaran.
  */
 @Component({
   selector: 'app-receivable-view',
@@ -174,17 +173,6 @@ export class ReceivableViewComponent implements OnInit {
         */
         this.ambilData();
       });
-  }
-
-  riwayat(item: any): void {
-    this.dialog.open(ReceivablePaymentHistoryComponent, {
-      data: {
-        name: item.name,
-        payments: item.sales_invoice_payment ?? [],
-      },
-      panelClass: 'nocturne-dialog',
-      backdropClass: 'nocturne-dialog-backdrop',
-    });
   }
 
   kembali(): void {

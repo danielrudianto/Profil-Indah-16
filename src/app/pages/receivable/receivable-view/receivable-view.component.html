@@ -43,7 +43,16 @@
     </thead>
 
     <tbody *ngIf="!isLoading && dataSource.length > 0">
-      <tr *ngFor="let item of dataSource; trackBy: lacakFaktur">
+      <!--
+        Klik baris membuka view faktur — dialog itu sudah memuat riwayat
+        pembayarannya sendiri, jadi tombol riwayat yang terpisah dihapus.
+        Satu-satunya aksi yang tersisa per baris: tambah pembayaran.
+      -->
+      <tr
+        *ngFor="let item of dataSource; trackBy: lacakFaktur"
+        class="tabel__baris-klik"
+        (click)="lihatFaktur(item)"
+      >
         <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
         <td class="tabel__utama">{{ item.name }}</td>
         <td class="tabel__nilai">Rp {{ nilai(item) | number: '1.0-0' }}</td>
@@ -55,25 +64,7 @@
           <button
             type="button"
             class="tabel__aksi-btn"
-            (click)="lihatFaktur(item)"
-            [title]="'receivable-view__view' | translate"
-            [attr.aria-label]="'receivable-view__view' | translate"
-          >
-            <i class="ph ph-eye" aria-hidden="true"></i>
-          </button>
-          <button
-            type="button"
-            class="tabel__aksi-btn"
-            (click)="riwayat(item)"
-            [title]="'receivable-view__payment-history' | translate"
-            [attr.aria-label]="'receivable-view__payment-history' | translate"
-          >
-            <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>
-          </button>
-          <button
-            type="button"
-            class="tabel__aksi-btn"
-            (click)="bayar(item)"
+            (click)="bayar(item); $event.stopPropagation()"
             [title]="'receivable-view__add-payment' | translate"
             [attr.aria-label]="'receivable-view__add-payment' | translate"
           >

@@ -767,8 +767,6 @@
   "purchase-invoice__confirm__delete__success": "Faktur pembelian dihapus.",
   "salesman-selector__title": "Daftar sales",
   "salesman-selector__delete": "Hapus",
-  "receivable-view__view": "Lihat",
-  "receivable-view__payment-history": "Riwayat pembayaran",
   "receivable-view__add-payment": "Tambah pembayaran",
   "payment-history__title": "Riwayat pembayaran",
   "payment-history__delete": "Hapus pembayaran",

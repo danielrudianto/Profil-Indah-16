@@ -1,393 +1,231 @@
-<div class="dashboard__wrapper">
-  <div class="dashboard__wrapper-background">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-12" id="get-started">
-          <img src="/assets/images/get-started.png" class="dashboard__hero" />
-          <div class="get-started__text-box px-3">
-            <h1>{{ "dashboard-administrator__hero" | translate }}</h1>
-            <p>{{ "dashboard-administrator__description" | translate }}</p>
-            <div class="get-started__text-box__button-wrapper">
-              <button
-                class="download-button"
-                [matTooltip]="
-                  'dashboard-administrator__download-mobile-application'
-                    | translate
-                "
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="30px"
-                  viewBox="0 -960 960 960"
-                  width="30px"
-                >
-                  <path
-                    d="M236-345 100-480l440-440h271L236-345ZM540-40 303-277l237-237h271L574-277 811-40H540Z"
-                  />
-                </svg>
-              </button>
-              <button
-                class="download-button"
-                (click)="goToStockApplication()"
-                [matTooltip]="
-                  'dashboard-administrator__navigate-stock-application'
-                    | translate
-                "
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="30px"
-                  viewBox="0 -960 960 960"
-                  width="30px"
-                  fill="#e8eaed"
-                >
-                  <path
-                    d="M200-80q-33 0-56.5-23.5T120-160v-451q-18-11-29-28.5T80-680v-120q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v120q0 23-11 40.5T840-611v451q0 33-23.5 56.5T760-80H200Zm0-520v440h560v-440H200Zm-40-80h640v-120H160v120Zm200 280h240v-80H360v80Zm120 20Z"
-                  />
-                </svg>
-              </button>
-              <div class="vertical-divider mx-2"></div>
-              <button
-                class="download-button white"
-                [matTooltip]="
-                  'dashboard-administrator__back-to-home' | translate
-                "
-                [routerLink]="'/'"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="24px"
-                  viewBox="0 -960 960 960"
-                  width="24px"
-                >
-                  <path
-                    d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"
-                  />
-                </svg>
-              </button>
-            </div>
-            <small>{{
-              "dashboard-administrator__other-application" | translate
-            }}</small>
-          </div>
+<div class="dasbor">
+  <!-- Sapaan + tanggal + lencana peran, seturut kepala 9c. -->
+  <div class="dasbor__kepala">
+    <div>
+      <h1 class="dasbor__sapaan">
+        {{ kunciSapaan | translate }}{{ nama ? ', ' + nama : '' }}
+      </h1>
+      <p class="dasbor__tanggal">
+        {{ hariIni | date: 'EEEE, d MMMM yyyy' }} ·
+        {{ 'dashboard__ringkasan' | translate }}
+      </p>
+    </div>
+    <span class="dasbor__peran">
+      <i class="ph ph-shield-check" aria-hidden="true"></i>
+      {{ peran }}
+    </span>
+  </div>
+
+  <!-- Empat ubin angka hari ini. -->
+  <div class="dasbor__ubin-kisi">
+    <div class="dasbor__ubin" (click)="bukaArsipFaktur()">
+      <div class="dasbor__ubin-ikon">
+        <i class="ph ph-receipt" aria-hidden="true"></i>
+      </div>
+      <div class="dasbor__ubin-isi">
+        <div class="dasbor__ubin-label">
+          {{ 'dashboard__kartu__penjualan' | translate }}
+        </div>
+        <div class="dasbor__ubin-nilai">Rp {{ sales.value | number }}</div>
+        <div class="dasbor__ubin-sub">
+          {{
+            'dashboard__kartu__faktur-sub'
+              | translate: { n: sales.count, m: sales.unpaid }
+          }}
+        </div>
+      </div>
+    </div>
+
+    <div class="dasbor__ubin" (click)="bukaLaporan()">
+      <div class="dasbor__ubin-ikon">
+        <i class="ph ph-shopping-cart" aria-hidden="true"></i>
+      </div>
+      <div class="dasbor__ubin-isi">
+        <div class="dasbor__ubin-label">
+          {{ 'dashboard__kartu__pembelian' | translate }}
+        </div>
+        <div class="dasbor__ubin-nilai">Rp {{ purchase.value | number }}</div>
+        <div class="dasbor__ubin-sub">
+          {{ 'dashboard__kartu__dokumen-sub' | translate: { n: purchase.count } }}
+        </div>
+      </div>
+    </div>
+
+    <div class="dasbor__ubin" (click)="bukaPromosi()">
+      <div class="dasbor__ubin-ikon">
+        <i class="ph ph-megaphone" aria-hidden="true"></i>
+      </div>
+      <div class="dasbor__ubin-isi">
+        <div class="dasbor__ubin-label">
+          {{ 'dashboard__kartu__promosi' | translate }}
+        </div>
+        <div class="dasbor__ubin-nilai">
+          {{ 'dashboard__kartu__promosi-nilai' | translate: { n: promotion.count } }}
+        </div>
+        <div class="dasbor__ubin-sub">
+          {{
+            'dashboard__kartu__promosi-sub'
+              | translate: { n: promotion.endingSoon }
+          }}
+        </div>
+      </div>
+    </div>
+
+    <div class="dasbor__ubin">
+      <div class="dasbor__ubin-ikon">
+        <i class="ph ph-piggy-bank" aria-hidden="true"></i>
+      </div>
+      <div class="dasbor__ubin-isi">
+        <div class="dasbor__ubin-label">
+          {{ 'dashboard__kartu__deposit' | translate }}
+        </div>
+        <div class="dasbor__ubin-nilai">Rp {{ deposit.value | number }}</div>
+        <div class="dasbor__ubin-sub">
+          {{ 'dashboard__kartu__dokumen-sub' | translate: { n: deposit.count } }}
         </div>
       </div>
     </div>
   </div>
-</div>
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <mat-grid-list
-        [cols]="columnNumber"
-        [rowHeight]="aspectRatio"
-        class="w-100"
-        gutterSize="20"
-        class="grid-list"
-      >
-        <mat-grid-tile *ngFor="let stat of stats">
-          <app-stat-card
-            class="w-100 h-100"
-            [previousValue]="stat.previousValue"
-            [title]="stat.title | translate"
-            [value]="stat.value"
-            [againstText]="
-              stat.againstText == undefined
-                ? undefined
-                : (stat.againstText | translate)
-            "
-          />
-        </mat-grid-tile>
-      </mat-grid-list>
-    </div>
-  </div>
-</div>
-<div class="container">
-  <div class="row">
-    <div class="col-12 mt-5 mb-3">
-      <mat-accordion [hideToggle]="true">
-        <mat-expansion-panel [expanded]="true">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <h3>{{ "dashboard-administrator__quick-picks" | translate }}</h3>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="quick-picks__wrapper">
-            <button
-              class="quick-picks__wrapper__button"
-              [matTooltip]="
-                'dashboard-administrator__inventory-report' | translate
-              "
-              (click)="openReport('inventory')"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                stroke="#ffffff"
-              >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g
-                  id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></g>
-                <g id="SVGRepo_iconCarrier">
-                  <path
-                    d="M18.6897 11.5298C18.1197 11.3798 17.4497 11.2998 16.6497 11.2998C15.5397 11.2998 15.1297 11.5698 14.5597 11.9998C14.5297 12.0198 14.4997 12.0498 14.4697 12.0798L13.5197 13.0898C12.7197 13.9298 11.2797 13.9398 10.4797 13.0798L9.52969 12.0798C9.49969 12.0498 9.46969 12.0198 9.43969 11.9998C8.86969 11.5698 8.45969 11.2998 7.34969 11.2998C6.54969 11.2998 5.87969 11.3798 5.30969 11.5298C2.92969 12.1698 2.92969 14.0598 2.92969 15.7198V16.6498C2.92969 19.1598 2.92969 21.9998 8.27969 21.9998H15.7197C19.2697 21.9998 21.0697 20.1998 21.0697 16.6498V15.7198C21.0697 14.0598 21.0697 12.1698 18.6897 11.5298ZM14.3297 18.3998H9.66969C9.28969 18.3998 8.97969 18.0898 8.97969 17.6998C8.97969 17.3098 9.28969 16.9998 9.66969 16.9998H14.3297C14.7097 16.9998 15.0197 17.3098 15.0197 17.6998C15.0197 18.0898 14.7097 18.3998 14.3297 18.3998Z"
-                    fill="#5985e1"
-                  ></path>
-                  <path
-                    opacity="0.4"
-                    d="M14.7891 2H9.20906C4.78906 2 4.78906 4.35 4.78906 6.42V12.21C4.78906 12.43 4.88906 12.63 5.05906 12.76C5.22906 12.89 5.45906 12.94 5.66906 12.88C6.11906 12.76 6.67906 12.7 7.34906 12.7C8.01906 12.7 8.15906 12.78 8.55906 13.08L9.46906 14.04C10.1191 14.74 11.0491 15.14 12.0091 15.14C12.9691 15.14 13.8891 14.74 14.5491 14.04L15.4591 13.08C15.8591 12.78 15.9991 12.7 16.6691 12.7C17.3391 12.7 17.8991 12.76 18.3491 12.88C18.5591 12.94 18.7791 12.89 18.9591 12.76C19.1291 12.63 19.2291 12.42 19.2291 12.21V6.42C19.2091 4.35 19.2091 2 14.7891 2Z"
-                    fill="#5985e1"
-                  ></path>
-                  <path
-                    opacity="0.4"
-                    d="M15.0205 17.7C15.0205 18.09 14.7105 18.4 14.3305 18.4H9.67047C9.29047 18.4 8.98047 18.09 8.98047 17.7C8.98047 17.31 9.29047 17 9.67047 17H14.3305C14.7105 17 15.0205 17.31 15.0205 17.7Z"
-                    fill="#5985e1"
-                  ></path>
-                </g>
-              </svg>
-              <p>
-                {{ "dashboard-administrator__inventory-report" | translate }}
-              </p>
-            </button>
 
-            <button
-              class="quick-picks__wrapper__button"
-              [matTooltip]="'dashboard-administrator__sales-report' | translate"
-              (click)="openReport('sales')"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g
-                  id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></g>
-                <g id="SVGRepo_iconCarrier">
-                  <path
-                    opacity="0.4"
-                    d="M6.73022 19.7C7.55022 18.82 8.80023 18.89 9.52023 19.85L10.5302 21.2C11.3402 22.27 12.6502 22.27 13.4602 21.2L14.4702 19.85C15.1902 18.89 16.4402 18.82 17.2602 19.7C19.0402 21.6 20.4902 20.97 20.4902 18.31V7.04C20.4902 3.01 19.5502 2 15.7702 2H8.21024C4.43024 2 3.49023 3.01 3.49023 7.04V18.3C3.50023 20.97 4.96022 21.59 6.73022 19.7Z"
-                    fill="#5985e1"
-                  ></path>
-                  <path
-                    d="M14.75 10.75H9.25C8.84 10.75 8.5 10.41 8.5 10C8.5 9.59 8.84 9.25 9.25 9.25H14.75C15.16 9.25 15.5 9.59 15.5 10C15.5 10.41 15.16 10.75 14.75 10.75Z"
-                    fill="#5985e1"
-                  ></path>
-                </g>
-              </svg>
-              <p>{{ "dashboard-administrator__sales-report" | translate }}</p>
-            </button>
-
-            <button
-              class="quick-picks__wrapper__button"
-              [matTooltip]="
-                'dashboard-administrator__finance-report' | translate
-              "
-              (click)="openReport('finance')"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g
-                  id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></g>
-                <g id="SVGRepo_iconCarrier">
-                  <path
-                    opacity="0.4"
-                    d="M15.5 13.15H13.33C11.55 13.15 10.1 11.71 10.1 9.92V7.75C10.1 7.34 9.77 7 9.35 7H6.18C3.87 7 2 8.5 2 11.18V17.82C2 20.5 3.87 22 6.18 22H12.07C14.38 22 16.25 20.5 16.25 17.82V13.9C16.25 13.48 15.91 13.15 15.5 13.15Z"
-                    fill="#5985e1"
-                  ></path>
-                  <path
-                    d="M17.8198 2H15.8498H14.7598H11.9298C9.66977 2 7.83977 3.44 7.75977 6.01C7.81977 6.01 7.86977 6 7.92977 6H10.7598H11.8498H13.8198C16.1298 6 17.9998 7.5 17.9998 10.18V12.15V14.86V16.83C17.9998 16.89 17.9898 16.94 17.9898 16.99C20.2198 16.92 21.9998 15.44 21.9998 12.83V10.86V8.15V6.18C21.9998 3.5 20.1298 2 17.8198 2Z"
-                    fill="#5985e1"
-                  ></path>
-                  <path
-                    d="M11.9806 7.15024C11.6706 6.84024 11.1406 7.05024 11.1406 7.48024V10.1002C11.1406 11.2002 12.0706 12.1002 13.2106 12.1002C13.9206 12.1102 14.9106 12.1102 15.7606 12.1102C16.1906 12.1102 16.4106 11.6102 16.1106 11.3102C15.0206 10.2202 13.0806 8.27024 11.9806 7.15024Z"
-                    fill="#5985e1"
-                  ></path>
-                </g>
-              </svg>
-              <p>{{ "dashboard-administrator__finance-report" | translate }}</p>
-            </button>
-
-            <button
-              class="quick-picks__wrapper__button"
-              [matTooltip]="
-                'dashboard-administrator__purchase-report' | translate
-              "
-              (click)="openReport('purchase')"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g
-                  id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></g>
-                <g id="SVGRepo_iconCarrier">
-                  <path
-                    opacity="0.4"
-                    d="M19.24 5.58006H18.84L15.46 2.20006C15.19 1.93006 14.75 1.93006 14.47 2.20006C14.2 2.47006 14.2 2.91006 14.47 3.19006L16.86 5.58006H7.14L9.53 3.19006C9.8 2.92006 9.8 2.48006 9.53 2.20006C9.26 1.93006 8.82 1.93006 8.54 2.20006L5.17 5.58006H4.77C3.87 5.58006 2 5.58006 2 8.14006C2 9.11006 2.2 9.75006 2.62 10.1701C2.86 10.4201 3.15 10.5501 3.46 10.6201C3.75 10.6901 4.06 10.7001 4.36 10.7001H19.64C19.95 10.7001 20.24 10.6801 20.52 10.6201C21.36 10.4201 22 9.82006 22 8.14006C22 5.58006 20.13 5.58006 19.24 5.58006Z"
-                    fill="#5985e1"
-                  ></path>
-                  <path
-                    d="M19.6509 10.7001H4.36094C4.06094 10.7001 3.75094 10.6901 3.46094 10.6201L4.72094 18.3001C5.00094 20.0201 5.75094 22.0001 9.08094 22.0001H14.6909C18.0609 22.0001 18.6609 20.3101 19.0209 18.4201L20.5309 10.6201C20.2509 10.6801 19.9509 10.7001 19.6509 10.7001ZM10.6109 17.1601C10.6109 17.5501 10.3009 17.8601 9.91094 17.8601C9.52094 17.8601 9.21094 17.5501 9.21094 17.1601V13.8601C9.21094 13.4701 9.52094 13.1601 9.91094 13.1601C10.3009 13.1601 10.6109 13.4701 10.6109 13.8601V17.1601ZM14.8909 17.1601C14.8909 17.5501 14.5809 17.8601 14.1909 17.8601C13.8009 17.8601 13.4909 17.5501 13.4909 17.1601V13.8601C13.4909 13.4701 13.8009 13.1601 14.1909 13.1601C14.5809 13.1601 14.8909 13.4701 14.8909 13.8601V17.1601Z"
-                    fill="#5985e1"
-                  ></path>
-                </g>
-              </svg>
-              <p>
-                {{ "dashboard-administrator__purchase-report" | translate }}
-              </p>
-            </button>
-
-            <button
-              class="quick-picks__wrapper__button"
-              [matTooltip]="
-                'dashboard-administrator__money-receipt-report' | translate
-              "
-              (click)="openReport('money-receipt')"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g
-                  id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></g>
-                <g id="SVGRepo_iconCarrier">
-                  <path
-                    opacity="0.4"
-                    d="M22 9V16.46C22 18.75 20.14 20.6 17.85 20.6H6.15C3.86 20.6 2 18.75 2 16.46V9H22Z"
-                    fill="#5985e1"
-                  ></path>
-                  <path
-                    d="M22 7.5399V8.9999H2V7.5399C2 5.2499 3.86 3.3999 6.15 3.3999H17.85C20.14 3.3999 22 5.2499 22 7.5399Z"
-                    fill="#5985e1"
-                  ></path>
-                  <path
-                    d="M8 17.25H6C5.59 17.25 5.25 16.91 5.25 16.5C5.25 16.09 5.59 15.75 6 15.75H8C8.41 15.75 8.75 16.09 8.75 16.5C8.75 16.91 8.41 17.25 8 17.25Z"
-                    fill="#5985e1"
-                  ></path>
-                  <path
-                    d="M14.5 17.25H10.5C10.09 17.25 9.75 16.91 9.75 16.5C9.75 16.09 10.09 15.75 10.5 15.75H14.5C14.91 15.75 15.25 16.09 15.25 16.5C15.25 16.91 14.91 17.25 14.5 17.25Z"
-                    fill="#5985e1"
-                  ></path>
-                </g>
-              </svg>
-              <p>
-                {{
-                  "dashboard-administrator__money-receipt-report" | translate
-                }}
-              </p>
-            </button>
-
-            <button
-              class="quick-picks__wrapper__button"
-              [matTooltip]="
-                'dashboard-administrator__problematic-items' | translate
-              "
-              [routerLink]="'/General/Report/Problematic'"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g
-                  id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></g>
-                <g id="SVGRepo_iconCarrier">
-                  <path
-                    opacity="0.4"
-                    d="M21.0802 8.58003V15.42C21.0802 16.54 20.4802 17.58 19.5102 18.15L13.5702 21.58C12.6002 22.14 11.4002 22.14 10.4202 21.58L4.48016 18.15C3.51016 17.59 2.91016 16.55 2.91016 15.42V8.58003C2.91016 7.46003 3.51016 6.41999 4.48016 5.84999L10.4202 2.42C11.3902 1.86 12.5902 1.86 13.5702 2.42L19.5102 5.84999C20.4802 6.41999 21.0802 7.45003 21.0802 8.58003Z"
-                    fill="#5985e1"
-                  ></path>
-                  <path
-                    d="M12 13.75C11.59 13.75 11.25 13.41 11.25 13V7.75C11.25 7.34 11.59 7 12 7C12.41 7 12.75 7.34 12.75 7.75V13C12.75 13.41 12.41 13.75 12 13.75Z"
-                    fill="#5985e1"
-                  ></path>
-                  <path
-                    d="M12 17.2499C11.87 17.2499 11.74 17.2198 11.62 17.1698C11.49 17.1198 11.39 17.0499 11.29 16.9599C11.2 16.8599 11.13 16.7499 11.07 16.6299C11.02 16.5099 11 16.3799 11 16.2499C11 15.9899 11.1 15.7298 11.29 15.5398C11.39 15.4498 11.49 15.3799 11.62 15.3299C11.99 15.1699 12.43 15.2598 12.71 15.5398C12.8 15.6398 12.87 15.7399 12.92 15.8699C12.97 15.9899 13 16.1199 13 16.2499C13 16.3799 12.97 16.5099 12.92 16.6299C12.87 16.7499 12.8 16.8599 12.71 16.9599C12.52 17.1499 12.27 17.2499 12 17.2499Z"
-                    fill="#5985e1"
-                  ></path>
-                </g>
-              </svg>
-              <p>
-                {{ "dashboard-administrator__problematic-items" | translate }}
-              </p>
-            </button>
-
-            <button
-              class="quick-picks__wrapper__button"
-              [matTooltip]="
-                'dashboard-administrator__inadequate-items' | translate
-              "
-              [routerLink]="'/Administrator/Report/Inadequate'"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g
-                  id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></g>
-                <g id="SVGRepo_iconCarrier">
-                  <path
-                    opacity="0.4"
-                    d="M16.1894 8.8599C15.7994 8.8599 15.4894 8.5499 15.4894 8.1599V6.8799C15.4894 5.8999 15.0694 4.9599 14.3494 4.2999C13.6094 3.6299 12.6594 3.3199 11.6594 3.4099C9.97937 3.5699 8.50938 5.2799 8.50938 7.0599V7.9599C8.50938 8.3499 8.19937 8.6599 7.80937 8.6599C7.41937 8.6599 7.10938 8.3499 7.10938 7.9599V7.0599C7.10938 4.5599 9.12938 2.2499 11.5194 2.0199C12.9094 1.8899 14.2494 2.3299 15.2794 3.2699C16.2994 4.1899 16.8794 5.5099 16.8794 6.8799V8.1599C16.8794 8.5499 16.5694 8.8599 16.1894 8.8599Z"
-                    fill="#5985e1"
-                  ></path>
-                  <path
-                    d="M19.9597 8.96008C19.1197 8.03008 17.7397 7.58008 15.7197 7.58008H8.27975C6.25975 7.58008 4.87975 8.03008 4.03975 8.96008C3.06975 10.0401 3.09975 11.4801 3.20975 12.4801L3.90975 18.0501C4.11975 20.0001 4.90975 22.0001 9.20975 22.0001H14.7897C19.0897 22.0001 19.8797 20.0001 20.0897 18.0601L20.7897 12.4701C20.8997 11.4801 20.9297 10.0401 19.9597 8.96008ZM11.9997 18.5801C9.90975 18.5801 8.20975 16.8801 8.20975 14.7901C8.20975 12.7001 9.90975 11.0001 11.9997 11.0001C14.0897 11.0001 15.7897 12.7001 15.7897 14.7901C15.7897 16.8801 14.0897 18.5801 11.9997 18.5801Z"
-                    fill="#5985e1"
-                  ></path>
-                  <path
-                    opacity="0.4"
-                    d="M12.0009 18.58C14.0941 18.58 15.7909 16.8832 15.7909 14.79C15.7909 12.6968 14.0941 11 12.0009 11C9.90778 11 8.21094 12.6968 8.21094 14.79C8.21094 16.8832 9.90778 18.58 12.0009 18.58Z"
-                    fill="#5985e1"
-                  ></path>
-                  <path
-                    d="M13.5991 15.3099L13.0691 14.7799L13.5691 14.2799C13.8591 13.9899 13.8591 13.5099 13.5691 13.2199C13.2791 12.9299 12.7991 12.9299 12.5091 13.2199L12.0091 13.7199L11.4791 13.1899C11.1891 12.8999 10.7091 12.8999 10.4191 13.1899C10.1291 13.4799 10.1291 13.9599 10.4191 14.2499L10.9491 14.7799L10.3991 15.3299C10.1091 15.6199 10.1091 16.0999 10.3991 16.3899C10.5491 16.5399 10.7391 16.6099 10.9291 16.6099C11.1191 16.6099 11.3091 16.5399 11.4591 16.3899L12.0091 15.8399L12.5391 16.3699C12.6891 16.5199 12.8791 16.5899 13.0691 16.5899C13.2591 16.5899 13.4491 16.5199 13.5991 16.3699C13.8891 16.0799 13.8891 15.6099 13.5991 15.3099Z"
-                    fill="#5985e1"
-                  ></path>
-                </g>
-              </svg>
-              <p>
-                {{ "dashboard-administrator__inadequate-items" | translate }}
-              </p>
-            </button>
+  <div class="dasbor__kisi">
+    <!-- Kiri: grafik tujuh hari + lima faktur terakhir. -->
+    <div class="kartu dasbor__kartu">
+      <div class="dasbor__kartu-kepala">
+        <div>
+          <div class="dasbor__kartu-judul">
+            {{ 'dashboard__grafik__judul' | translate }}
           </div>
-          <app-gcp-info />
-        </mat-expansion-panel>
-      </mat-accordion>
+          <div class="dasbor__kartu-sub">
+            {{ 'dashboard__grafik__total' | translate }}
+            Rp {{ totalMinggu | number }}
+          </div>
+        </div>
+        <button type="button" class="dasbor__tautan" (click)="bukaLaporan()">
+          {{ 'dashboard__lihat-laporan' | translate }} →
+        </button>
+      </div>
+
+      <div class="dasbor__grafik" *ngIf="!isLoading">
+        <div
+          class="dasbor__grafik-kolom"
+          *ngFor="let m of minggu; index as i; trackBy: lacakHari"
+        >
+          <div
+            class="dasbor__batang"
+            [class.dasbor__batang--kini]="hariTerakhir(i)"
+            [style.height.%]="tinggiBatang(m.nilai)"
+            [title]="(m.tanggal | date: 'EEEE, d MMMM') + ' — Rp ' + (m.nilai | number)"
+          ></div>
+        </div>
+      </div>
+      <div class="dasbor__grafik-hari" *ngIf="!isLoading">
+        <div class="dasbor__grafik-kolom" *ngFor="let m of minggu; trackBy: lacakHari">
+          {{ m.tanggal | date: 'EEE' }}
+        </div>
+      </div>
+
+      <div class="dasbor__pemisah"></div>
+
+      <div class="dasbor__faktur" *ngIf="!isLoading">
+        <div
+          class="dasbor__faktur-baris"
+          *ngFor="let f of faktur; trackBy: lacakFaktur"
+          (click)="bukaArsipFaktur()"
+        >
+          <span class="dasbor__faktur-nama">{{ f.name }}</span>
+          <span class="dasbor__faktur-pelanggan">{{ f.customer }}</span>
+          <span class="dasbor__faktur-total">Rp {{ f.total | number }}</span>
+          <span class="dasbor__faktur-status">
+            <span
+              class="dasbor__pil"
+              [class.dasbor__pil--lunas]="f.isPaid"
+              [class.dasbor__pil--belum]="!f.isPaid"
+            >
+              <i
+                [class]="f.isPaid ? 'ph-fill ph-check-circle' : 'ph ph-clock'"
+                aria-hidden="true"
+              ></i>
+              {{
+                (f.isPaid ? 'dashboard__faktur__lunas' : 'dashboard__faktur__belum')
+                  | translate
+              }}
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <div class="dasbor__memuat" *ngIf="isLoading">
+        <i class="ph ph-circle-notch dasbor__putar" aria-hidden="true"></i>
+      </div>
+    </div>
+
+    <!-- Kanan: promosi berjalan + aksi cepat. -->
+    <div class="dasbor__kolom">
+      <div class="kartu dasbor__kartu">
+        <div class="dasbor__kartu-kepala">
+          <div class="dasbor__kartu-judul">
+            {{ 'dashboard__promosi__judul' | translate }}
+          </div>
+          <button type="button" class="dasbor__tautan" (click)="bukaPromosi()">
+            {{ 'dashboard__promosi__kelola' | translate }} →
+          </button>
+        </div>
+
+        <div class="dasbor__promosi">
+          <div
+            class="dasbor__promosi-baris"
+            *ngFor="let p of promotion.rows; trackBy: lacakPromosi"
+            (click)="bukaPromosi(p.id)"
+          >
+            <i class="ph ph-megaphone" aria-hidden="true"></i>
+            <div class="dasbor__promosi-isi">
+              <div class="dasbor__promosi-nama">{{ p.name }}</div>
+              <div class="dasbor__promosi-sub">
+                <ng-container *ngIf="p.end; else kontinu">
+                  {{
+                    'dashboard__promosi__sampai'
+                      | translate: { tanggal: (p.end | date: 'd MMM yyyy') }
+                  }}
+                </ng-container>
+                <ng-template #kontinu>
+                  {{ 'dashboard__promosi__kontinu' | translate }}
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <p
+            class="dasbor__promosi-kosong"
+            *ngIf="!isLoading && promotion.rows.length === 0"
+          >
+            {{ 'dashboard__promosi__kosong' | translate }}
+          </p>
+        </div>
+      </div>
+
+      <div class="kartu dasbor__kartu">
+        <div class="dasbor__kartu-judul dasbor__kartu-judul--renggang">
+          {{ 'dashboard__aksi__judul' | translate }}
+        </div>
+        <div class="dasbor__aksi">
+          <button type="button" class="btn btn--kedua" (click)="buatFaktur()">
+            <i class="ph ph-plus" aria-hidden="true"></i>
+            {{ 'dashboard__aksi__faktur' | translate }}
+          </button>
+          <button type="button" class="btn btn--kedua" (click)="tambahBarang()">
+            <i class="ph ph-archive" aria-hidden="true"></i>
+            {{ 'dashboard__aksi__barang' | translate }}
+          </button>
+          <button type="button" class="btn btn--kedua" (click)="pelangganBaru()">
+            <i class="ph ph-user-plus" aria-hidden="true"></i>
+            {{ 'dashboard__aksi__pelanggan' | translate }}
+          </button>
+          <button type="button" class="btn btn--kedua" (click)="bukaDaftarLaporan()">
+            <i class="ph ph-chart-bar" aria-hidden="true"></i>
+            {{ 'dashboard__aksi__laporan' | translate }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
