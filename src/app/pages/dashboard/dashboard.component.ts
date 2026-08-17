@@ -15,6 +15,7 @@ import { TopbarComponent } from 'src/app/components/topbar/topbar.component';
 import { NAV_ITEMS } from 'src/app/constants/navigation.constant';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PageBloomComponent } from 'src/app/components/page-bloom/page-bloom.component';
+import { AdministratorDashboardComponent } from './administrator-dashboard/administrator-dashboard.component';
 
 /**
  * Dashboard utama — layar pertama setelah masuk.
@@ -31,7 +32,8 @@ import { PageBloomComponent } from 'src/app/components/page-bloom/page-bloom.com
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  imports: [PageBloomComponent, 
+  imports: [PageBloomComponent,
+    AdministratorDashboardComponent,
     NgIf,
     AsyncPipe,
     MatDrawerContainer,
@@ -98,6 +100,11 @@ export class DashboardComponent {
   private perbaruiAdaAnak(alamat: string): void {
     const jalur = alamat.split(/[?#]/)[0].replace(/\/$/, '');
     this.adaAnak = jalur !== '' && jalur !== '/';
+  }
+
+  /** Peran 5 dan 7 mendapat dashboard 9c, bukan sekadar sapaan. */
+  get adalahAdministrator(): boolean {
+    return this.authService.isAdministrator();
   }
 
   get punyaNavigasi(): boolean {

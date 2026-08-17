@@ -134,6 +134,10 @@ export class AdministratorDashboardComponent implements OnInit {
     this.router.navigate(['/Sales-invoice/Archive']);
   }
 
+  bukaDeposit(): void {
+    this.router.navigate(['/Deposit']);
+  }
+
   bukaPromosi(id?: number): void {
     this.router.navigate(id ? ['/Promotion', id] : ['/Promotion']);
   }

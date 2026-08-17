@@ -42,7 +42,13 @@
         halaman utuh.
       -->
       <ng-container *ngIf="!adaAnak">
-        <h1 class="dashboard__greeting">
+        <!--
+          Administrator mendarat di dashboard 9c — angka hari ini, grafik
+          seminggu, promosi, aksi cepat. Sapaannya milik komponen itu.
+        -->
+        <app-administrator-dashboard *ngIf="adalahAdministrator" />
+
+        <h1 class="dashboard__greeting" *ngIf="!adalahAdministrator">
           {{ 'dashboard__greeting' | translate }}{{ nama ? ', ' + nama : '' }}
         </h1>
 

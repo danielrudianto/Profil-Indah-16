@@ -26,7 +26,7 @@
         <div class="dasbor__ubin-label">
           {{ 'dashboard__kartu__penjualan' | translate }}
         </div>
-        <div class="dasbor__ubin-nilai">Rp {{ sales.value | number }}</div>
+        <div class="dasbor__ubin-nilai">Rp {{ sales.value | number: '1.0-0' }}</div>
         <div class="dasbor__ubin-sub">
           {{
             'dashboard__kartu__faktur-sub'
@@ -44,7 +44,7 @@
         <div class="dasbor__ubin-label">
           {{ 'dashboard__kartu__pembelian' | translate }}
         </div>
-        <div class="dasbor__ubin-nilai">Rp {{ purchase.value | number }}</div>
+        <div class="dasbor__ubin-nilai">Rp {{ purchase.value | number: '1.0-0' }}</div>
         <div class="dasbor__ubin-sub">
           {{ 'dashboard__kartu__dokumen-sub' | translate: { n: purchase.count } }}
         </div>
@@ -71,7 +71,7 @@
       </div>
     </div>
 
-    <div class="dasbor__ubin">
+    <div class="dasbor__ubin" (click)="bukaDeposit()">
       <div class="dasbor__ubin-ikon">
         <i class="ph ph-piggy-bank" aria-hidden="true"></i>
       </div>
@@ -79,7 +79,7 @@
         <div class="dasbor__ubin-label">
           {{ 'dashboard__kartu__deposit' | translate }}
         </div>
-        <div class="dasbor__ubin-nilai">Rp {{ deposit.value | number }}</div>
+        <div class="dasbor__ubin-nilai">Rp {{ deposit.value | number: '1.0-0' }}</div>
         <div class="dasbor__ubin-sub">
           {{ 'dashboard__kartu__dokumen-sub' | translate: { n: deposit.count } }}
         </div>
@@ -97,7 +97,7 @@
           </div>
           <div class="dasbor__kartu-sub">
             {{ 'dashboard__grafik__total' | translate }}
-            Rp {{ totalMinggu | number }}
+            Rp {{ totalMinggu | number: '1.0-0' }}
           </div>
         </div>
         <button type="button" class="dasbor__tautan" (click)="bukaLaporan()">
@@ -114,7 +114,7 @@
             class="dasbor__batang"
             [class.dasbor__batang--kini]="hariTerakhir(i)"
             [style.height.%]="tinggiBatang(m.nilai)"
-            [title]="(m.tanggal | date: 'EEEE, d MMMM') + ' — Rp ' + (m.nilai | number)"
+            [title]="(m.tanggal | date: 'EEEE, d MMMM') + ' — Rp ' + (m.nilai | number: '1.0-0')"
           ></div>
         </div>
       </div>
@@ -134,7 +134,7 @@
         >
           <span class="dasbor__faktur-nama">{{ f.name }}</span>
           <span class="dasbor__faktur-pelanggan">{{ f.customer }}</span>
-          <span class="dasbor__faktur-total">Rp {{ f.total | number }}</span>
+          <span class="dasbor__faktur-total">Rp {{ f.total | number: '1.0-0' }}</span>
           <span class="dasbor__faktur-status">
             <span
               class="dasbor__pil"
