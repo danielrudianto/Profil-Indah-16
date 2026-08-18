@@ -6,6 +6,11 @@
   _form-buat.scss — disalin dua aturan kecil ini daripada menyeret seluruh
   kerangka formulir ke dialog baca.
 */
+/* Tabel yang kelebaran menggulir di dalam kartunya, bukan menyeret dialog. */
+.gulir {
+  overflow-x: auto;
+}
+
 .barang__ref {
   display: block;
   font-weight: 500;
