@@ -65,6 +65,8 @@ export class ReportMoneyComponent implements OnInit {
 
   /** 30 hari berakhir di tanggal terpilih — bahan grafik dan sorotan. */
   tren: { date: string; masuk: number; keluar: number }[] = [];
+  /** Akumulasi DOR bulan berjalan sampai tanggal terpilih. */
+  dorBulanIni = 0;
   sorotan: { ikon: string; teks: string }[] = [];
   /** Sorotan butuh angka per metode DAN tren; keduanya tiba terpisah. */
   private utamaSiap = false;
@@ -120,6 +122,7 @@ export class ReportMoneyComponent implements OnInit {
             masuk: Number(x.masuk ?? 0),
             keluar: Number(x.keluar ?? 0),
           }));
+          this.dorBulanIni = Number(data.dorBulanIni ?? 0);
           this.susunSorotan();
         },
         error: (error) => {
@@ -306,13 +309,21 @@ export class ReportMoneyComponent implements OnInit {
       });
     }
 
-    /* 3. DOR hari itu — uang yang sudah diterima tapi masih di tangan sales. */
-    if (this.totalDor > 0) {
+    /*
+      3. Akumulasi DOR bulan berjalan — hanya "sudah terkumpul berapa".
+      Sistem ini bukan sistem gaji, jadi tidak berkomentar soal status
+      potongan komisinya.
+    */
+    if (this.dorBulanIni > 0) {
       hasil.push({
         ikon: 'ph-hand-coins',
         teks: t('sorotan-uang__dor', {
-          nilai: this.rupiahRingkas(this.totalDor),
-          n: this.dor.length,
+          nilai: this.rupiahRingkas(this.dorBulanIni),
+          tanggal: formatDate(
+            this.date.value ?? new Date(),
+            'd MMMM',
+            this.localeId,
+          ),
         }),
       });
     }
