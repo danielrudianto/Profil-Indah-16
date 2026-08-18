@@ -1,0 +1,68 @@
+<!-- Dashboard peran — ringkasan milik perannya sendiri, seturut kepala 9c. -->
+<div class="dasbor">
+  <div class="dasbor__kepala">
+    <div>
+      <h1 class="dasbor__sapaan">
+        {{ kunciSapaan | translate }}{{ nama ? ', ' + nama : '' }}
+      </h1>
+      <p class="dasbor__tanggal">
+        {{ hariIni | date: 'EEEE, d MMMM yyyy' }} ·
+        {{ 'dashboard__ringkasan' | translate }}
+      </p>
+    </div>
+    <span class="dasbor__peran">
+      <i class="ph ph-shield-check" aria-hidden="true"></i>
+      {{ peran }}
+    </span>
+  </div>
+
+  <div class="dasbor__ubin-kisi" *ngIf="!isLoading">
+    <!-- Ubin tanpa rute bukan tautan; kursornya pun dibiarkan biasa. -->
+    <div
+      class="dasbor__ubin"
+      *ngFor="let u of ubin; trackBy: lacakUbin"
+      [class.dasbor__ubin--diam]="!u.rute"
+      (click)="buka(u.rute)"
+    >
+      <div class="dasbor__ubin-ikon">
+        <i [class]="'ph ' + u.ikon" aria-hidden="true"></i>
+      </div>
+      <div class="dasbor__ubin-isi">
+        <div class="dasbor__ubin-label">{{ u.label | translate }}</div>
+        <div class="dasbor__ubin-nilai" *ngIf="u.jenis === 'uang'">
+          Rp {{ u.nilai | number: '1.0-0' }}
+        </div>
+        <div class="dasbor__ubin-nilai" *ngIf="u.jenis === 'jumlah'">
+          {{ 'dashboard__kartu__promosi-nilai' | translate: { n: u.nilai } }}
+        </div>
+        <div class="dasbor__ubin-sub" *ngIf="u.subNilai !== null">
+          {{ u.subLabel | translate }} Rp {{ u.subNilai | number: '1.0-0' }}
+        </div>
+        <div class="dasbor__ubin-sub" *ngIf="u.subNilai === null">
+          {{ u.subLabel | translate }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kartu dasbor__kartu" *ngIf="!isLoading">
+    <div class="dasbor__kartu-judul dasbor__kartu-judul--renggang">
+      {{ 'dashboard__aksi__judul' | translate }}
+    </div>
+    <div class="dasbor__aksi">
+      <button
+        type="button"
+        class="btn btn--kedua"
+        *ngFor="let a of aksi"
+        (click)="buka(a.rute)"
+      >
+        <i [class]="'ph ' + a.ikon" aria-hidden="true"></i>
+        {{ a.label | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div class="dasbor__memuat" *ngIf="isLoading">
+    <i class="ph ph-circle-notch dasbor__putar" aria-hidden="true"></i>
+  </div>
+</div>

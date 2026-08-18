@@ -1,0 +1,536 @@
+/*
+  Anatomi dasbor bersama — dipakai dashboard administrator DAN dashboard
+  peran (sales, purchasing, umum). Diangkat dari administrator-dashboard
+  ketika dashboard peran dibangun; ubah di sini, keduanya ikut.
+*/
+
+/*
+  Dashboard administrator — layar 9c. Anatomi kartunya meminjam pola
+  laporan (kartu bersurface + divider), ubinnya milik layar ini sendiri.
+*/
+@use "laporan";
+
+.dasbor {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ---------------------------------------------------------------- */
+/* Kepala: sapaan + tanggal + lencana peran                          */
+/* ---------------------------------------------------------------- */
+
+.dasbor__kepala {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.dasbor__sapaan {
+  margin: 0 0 4px;
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.dasbor__tanggal {
+  margin: 0;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.dasbor__peran {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--color-text) 65%, transparent);
+  box-shadow: inset 0 0 0 1px var(--color-divider);
+  white-space: nowrap;
+
+  i {
+    font-size: 13px;
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Empat ubin angka                                                  */
+/* ---------------------------------------------------------------- */
+
+.dasbor__ubin-kisi {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+.dasbor__ubin {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 150px;
+  padding: 22px 24px;
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-divider);
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 0 0 1px var(--color-accent);
+  }
+}
+
+.dasbor__ubin-ikon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--color-active);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  color: var(--color-accent);
+
+  i {
+    font-size: 24px;
+  }
+}
+
+.dasbor__ubin-isi {
+  margin-top: auto;
+}
+
+.dasbor__ubin-label {
+  margin-bottom: 6px;
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.dasbor__ubin-nilai {
+  margin-bottom: 4px;
+  font-size: 22px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.dasbor__ubin-sub {
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Kisi utama: grafik+faktur di kiri, promosi+aksi di kanan          */
+/* ---------------------------------------------------------------- */
+
+/*
+  align-items sengaja dibiarkan stretch (bawaan grid): dasar kedua kolom
+  harus RATA. Dengan align-items: start, kolom kanan berhenti setinggi
+  isinya dan dasar halaman tampak bergerigi — pemiliknya tidak suka itu.
+*/
+.dasbor__kisi {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 20px;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dasbor__kolom {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  /*
+    Kartu promosi menyerap sisa tinggi sehingga kartu aksi cepat duduk
+    tepat di dasar, sejajar dengan dasar kartu grafik di kirinya.
+  */
+  > .dasbor__kartu:first-child {
+    flex: 1;
+  }
+}
+
+/* Kartu di layar ini memakai padding sendiri, bukan bawaan .kartu. */
+.dasbor__kartu {
+  gap: 0;
+  padding: 22px 26px;
+}
+
+.dasbor__kartu-kepala {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.dasbor__kartu-judul {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.dasbor__kartu-judul--renggang {
+  margin-bottom: 14px;
+}
+
+.dasbor__kartu-sub {
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.dasbor__tautan {
+  margin-left: auto;
+  border: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--color-accent);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- */
+/* Grafik tujuh hari                                                 */
+/* ---------------------------------------------------------------- */
+
+.dasbor__grafik {
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  height: 150px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.dasbor__grafik-kolom {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+  min-width: 0;
+}
+
+/*
+  Tooltip grafik — digambar sendiri, bukan atribut title: title bawaan
+  browser baru muncul setelah jeda dan tidak ikut tema. Muncul seketika
+  saat kolomnya disentuh, di atas batangnya.
+*/
+.dasbor__tip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(2px);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 8px 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  white-space: nowrap;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease;
+  z-index: 5;
+
+  strong {
+    font-size: 13px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-accent);
+  }
+
+  span {
+    font-size: 11.5px;
+    color: color-mix(in srgb, var(--color-text) 58%, transparent);
+  }
+}
+
+.dasbor__grafik-kolom:hover .dasbor__tip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.dasbor__batang {
+  width: 100%;
+  max-width: 56px;
+  border-radius: 6px 6px 0 0;
+  background: color-mix(in srgb, var(--color-accent) 45%, transparent);
+  transition: background-color 0.12s ease;
+}
+
+/*
+  Batang yang sedang ditunjuk ikut menyala penuh — pasangan tooltipnya:
+  tanpa ini tidak jelas batang mana yang sedang dibaca angkanya.
+*/
+.dasbor__grafik-kolom:hover .dasbor__batang {
+  background: var(--color-accent);
+}
+
+/* Hari ini bicara paling keras. */
+.dasbor__batang--kini {
+  background: var(--color-accent);
+}
+
+.dasbor__grafik-hari {
+  display: flex;
+  gap: 18px;
+  padding-top: 8px;
+
+  .dasbor__grafik-kolom {
+    height: auto;
+    font-size: 12px;
+    text-align: center;
+    color: color-mix(in srgb, var(--color-text) 45%, transparent);
+  }
+}
+
+.dasbor__pemisah {
+  height: 1px;
+  margin: 16px 0 4px;
+  background: var(--color-divider);
+}
+
+/* ---------------------------------------------------------------- */
+/* Lima faktur terakhir                                              */
+/* ---------------------------------------------------------------- */
+
+.dasbor__faktur {
+  display: flex;
+  flex-direction: column;
+}
+
+.dasbor__faktur-baris {
+  display: grid;
+  grid-template-columns: 150px 1fr 110px 110px;
+  gap: 14px;
+  align-items: center;
+  padding: 9px 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-text) 5%, transparent);
+  }
+}
+
+.dasbor__faktur-nama {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dasbor__faktur-pelanggan {
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dasbor__faktur-total {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.dasbor__faktur-status {
+  text-align: right;
+}
+
+.dasbor__pil {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px 3px 7px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  i {
+    font-size: 13px;
+  }
+}
+
+.dasbor__pil--lunas {
+  color: #3f9d63;
+  background: color-mix(in srgb, #3f9d63 13%, transparent);
+}
+
+.dasbor__pil--belum {
+  color: color-mix(in srgb, var(--color-text) 60%, transparent);
+  box-shadow: inset 0 0 0 1px var(--color-divider);
+}
+
+/* ---------------------------------------------------------------- */
+/* Promosi berjalan                                                  */
+/* ---------------------------------------------------------------- */
+
+.dasbor__promosi {
+  display: flex;
+  flex-direction: column;
+}
+
+.dasbor__promosi-baris {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-text) 5%, transparent);
+  }
+
+  > i {
+    flex: none;
+    font-size: 17px;
+    color: var(--color-accent);
+  }
+}
+
+.dasbor__promosi-isi {
+  flex: 1;
+  min-width: 0;
+}
+
+.dasbor__promosi-nama {
+  font-size: 13.5px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dasbor__promosi-sub {
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+.dasbor__promosi-kosong {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Aksi cepat                                                        */
+/* ---------------------------------------------------------------- */
+
+.dasbor__aksi {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+
+  .btn {
+    min-height: 42px;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Memuat                                                            */
+/* ---------------------------------------------------------------- */
+
+.dasbor__memuat {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  font-size: 24px;
+  color: var(--color-accent);
+}
+
+.dasbor__putar {
+  animation: dasbor-putar 0.9s linear infinite;
+}
+
+@keyframes dasbor-putar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Baris pintasan laporan                                            */
+/* ---------------------------------------------------------------- */
+
+.dasbor__laporan {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 560px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.dasbor__laporan-pintas {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+
+  > i:first-child {
+    flex: none;
+    font-size: 18px;
+    color: var(--color-accent);
+  }
+
+  span {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+    background: var(--color-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.dasbor__laporan-panah {
+  font-size: 14px;
+  opacity: 0.45;
+}

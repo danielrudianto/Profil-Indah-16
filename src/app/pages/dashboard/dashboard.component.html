@@ -48,7 +48,19 @@
         -->
         <app-administrator-dashboard *ngIf="adalahAdministrator" />
 
-        <h1 class="dashboard__greeting" *ngIf="!adalahAdministrator">
+        <!--
+          Sales, purchasing, dan umum mendapat ringkasan miliknya sendiri —
+          angka hari ini dan bulan ini dari endpoint perannya, bukan angka
+          seluruh toko.
+        -->
+        <app-role-dashboard
+          *ngIf="!adalahAdministrator && adalahPeranOperasional"
+        />
+
+        <h1
+          class="dashboard__greeting"
+          *ngIf="!adalahAdministrator && !adalahPeranOperasional"
+        >
           {{ 'dashboard__greeting' | translate }}{{ nama ? ', ' + nama : '' }}
         </h1>
 

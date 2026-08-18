@@ -16,6 +16,8 @@ import { NAV_ITEMS } from 'src/app/constants/navigation.constant';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PageBloomComponent } from 'src/app/components/page-bloom/page-bloom.component';
 import { AdministratorDashboardComponent } from './administrator-dashboard/administrator-dashboard.component';
+import { RoleDashboardComponent } from './role-dashboard/role-dashboard.component';
+import { Role } from 'src/app/constants/role.constant';
 
 /**
  * Dashboard utama — layar pertama setelah masuk.
@@ -34,6 +36,7 @@ import { AdministratorDashboardComponent } from './administrator-dashboard/admin
   styleUrls: ['./dashboard.component.scss'],
   imports: [PageBloomComponent,
     AdministratorDashboardComponent,
+    RoleDashboardComponent,
     NgIf,
     AsyncPipe,
     MatDrawerContainer,
@@ -105,6 +108,16 @@ export class DashboardComponent {
   /** Peran 5 dan 7 mendapat dashboard 9c, bukan sekadar sapaan. */
   get adalahAdministrator(): boolean {
     return this.authService.isAdministrator();
+  }
+
+  /** Peran 1, 2, dan 3 mendapat ringkasan perannya sendiri. */
+  get adalahPeranOperasional(): boolean {
+    const peran = this.authService.getUserInfo()?.role;
+    return (
+      peran === Role.Purchasing ||
+      peran === Role.Sales ||
+      peran === Role.General
+    );
   }
 
   get punyaNavigasi(): boolean {

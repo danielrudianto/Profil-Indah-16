@@ -1,0 +1,11 @@
+/* Anatomi dasbor tinggal di partial bersama. */
+@use "../../../styles/dasbor";
+
+/* Ubin tanpa rute bukan tautan — kursor dan sorot pinggirnya diam. */
+.dasbor__ubin--diam {
+  cursor: default;
+
+  &:hover {
+    box-shadow: 0 0 0 1px var(--color-divider);
+  }
+}
