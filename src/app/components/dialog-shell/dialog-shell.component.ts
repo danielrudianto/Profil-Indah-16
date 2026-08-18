@@ -39,6 +39,12 @@ export class DialogShellComponent {
   /** Tombol utama dimatikan selama formulirnya belum sah. */
   @Input() canSubmit = false;
 
+  /*
+    Dialog pemberitahuan murni (kredensial sekali tampil, misalnya) tidak
+    punya apa pun untuk dibatalkan — tombol Batal di sana berbohong.
+  */
+  @Input() hideCancel = false;
+
   @Output() close = new EventEmitter<void>();
   @Output() submitted = new EventEmitter<void>();
 }

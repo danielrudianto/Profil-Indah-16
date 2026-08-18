@@ -17,12 +17,12 @@
   <table class="tabel">
     <thead>
       <tr>
-        <th>{{ 'user__list__name' | translate }}</th>
-        <th>{{ 'user__list__username' | translate }}</th>
-        <th>{{ 'user__list__NIK' | translate }}</th>
-        <th>{{ 'user__list__role' | translate }}</th>
+        <th>{{ "user__list__name" | translate }}</th>
+        <th>{{ "user__list__username" | translate }}</th>
+        <th>{{ "user__list__NIK" | translate }}</th>
+        <th>{{ "user__list__role" | translate }}</th>
         <th class="tabel__aksi-kepala">
-          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+          <span class="sr-only">{{ "general__actions" | translate }}</span>
         </th>
       </tr>
     </thead>
@@ -36,7 +36,9 @@
         <td class="tabel__utama">{{ item.name }}</td>
         <td class="tabel__redup">{{ item.username }}</td>
         <td class="tabel__redup">{{ item.nik }}</td>
-        <td><span class="tag-netral">{{ item.roleText }}</span></td>
+        <td>
+          <span class="tag-netral">{{ item.roleText }}</span>
+        </td>
         <td class="tabel__aksi" (click)="$event.stopPropagation()">
           <button
             type="button"
@@ -47,13 +49,24 @@
           >
             <i class="ph ph-pencil-simple" aria-hidden="true"></i>
           </button>
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="resetSandi(item)"
+            [title]="'user__reset__action' | translate"
+            [attr.aria-label]="'user__reset__action' | translate"
+          >
+            <i class="ph ph-key" aria-hidden="true"></i>
+          </button>
         </td>
       </tr>
     </tbody>
 
     <tbody *ngIf="isLoading">
       <tr>
-        <td colspan="5" class="tabel__pesan">{{ 'general__loading' | translate }}</td>
+        <td colspan="5" class="tabel__pesan">
+          {{ "general__loading" | translate }}
+        </td>
       </tr>
     </tbody>
 

@@ -1501,7 +1501,8 @@
     "password": {
       "required": "Password is required",
       "currentRequired": "Current password is required",
-      "currentWrong": "Current password is incorrect"
+      "currentWrong": "Current password is incorrect",
+      "resetForbidden": "Only a superadministrator may reset an administrator’s password."
     },
     "userRole": {
       "required": "User role required"
@@ -2251,10 +2252,16 @@
   "user__create__submit": "Save user",
   "user__edit__lede": "Edit the details, or delete when they no longer work here.",
   "user__status__title": "User saved",
-  "user__status__lede": "Write the password down NOW — for security it will never be shown again.",
+  "user__status__lede": "The account is ready — hand these credentials to their owner.",
   "user__status__password": "Password",
   "user__status__copy": "Copy all",
   "user__status__copied": "User details copied to the clipboard.",
+  "user__status__once": "This password is shown only once. Once this dialog closes, it cannot be viewed again.",
+  "user__status__copy-one": "Copy",
+  "user__status__copied-one": "Copied to clipboard.",
+  "user__reset__action": "Reset password",
+  "user__reset__confirm": "Generate a new password for this user? Their old password stops working immediately.",
+  "user__reset__title": "Password has been reset",
   "user__status__done": "Noted",
   "supplier-report__title": "Purchase report",
   "supplier-report__lede": "What is bought from this supplier, how often, and for how much.",

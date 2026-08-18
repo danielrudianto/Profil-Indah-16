@@ -39,12 +39,13 @@
 
     <div class="dialog__kaki">
       <button
+        *ngIf="!hideCancel"
         type="button"
         class="btn btn--kedua"
         (click)="close.emit()"
         [disabled]="submitting"
       >
-        {{ 'general__cancel' | translate }}
+        {{ "general__cancel" | translate }}
       </button>
 
       <button

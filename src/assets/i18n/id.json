@@ -1493,7 +1493,8 @@
     "password": {
       "required": "Password tidak boleh kosong.",
       "currentRequired": "Kata sandi saat ini tidak boleh kosong.",
-      "currentWrong": "Kata sandi saat ini salah."
+      "currentWrong": "Kata sandi saat ini salah.",
+      "resetForbidden": "Hanya superadministrator yang boleh me-reset kata sandi administrator."
     },
     "userRole": {
       "required": "Role pengguna tidak boleh kosong."
@@ -2251,10 +2252,16 @@
   "user__create__submit": "Simpan pengguna",
   "user__edit__lede": "Ubah datanya, atau hapus bila tidak lagi bekerja di sini.",
   "user__status__title": "Pengguna tersimpan",
-  "user__status__lede": "Catat kata sandinya SEKARANG — demi keamanan, ia tidak akan pernah ditampilkan lagi.",
+  "user__status__lede": "Akun siap dipakai — serahkan kredensial ini kepada pemiliknya.",
   "user__status__password": "Kata sandi",
   "user__status__copy": "Salin semua",
   "user__status__copied": "Data pengguna tersalin ke papan klip.",
+  "user__status__once": "Kata sandi hanya ditampilkan sekali ini. Setelah dialog ditutup, ia tidak bisa dilihat lagi.",
+  "user__status__copy-one": "Salin",
+  "user__status__copied-one": "Tersalin ke papan klip.",
+  "user__reset__action": "Reset kata sandi",
+  "user__reset__confirm": "Buatkan kata sandi baru untuk pengguna ini? Sandi lamanya langsung tidak berlaku.",
+  "user__reset__title": "Kata sandi di-reset",
   "user__status__done": "Sudah kucatat",
   "supplier-report__title": "Laporan belanja",
   "supplier-report__lede": "Apa saja yang dibeli dari supplier ini, seberapa sering, dan senilai berapa.",

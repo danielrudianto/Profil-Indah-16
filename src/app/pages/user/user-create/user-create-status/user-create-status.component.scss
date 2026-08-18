@@ -1,29 +1,128 @@
 @use "../../../../styles/form-buat";
 
-/*
-  Kata sandi dibingkai aksen dan diketik monospace besar: satu-satunya
-  kesempatan membacanya, jadi ia tidak boleh tenggelam di antara baris lain.
-*/
-.sandi {
+/* Kepala identitas: pengguna barunya sebagai orang, bukan baris data. */
+.identitas {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.identitas__teks {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin: 16px 0;
-  padding: 14px;
-  border-radius: 10px;
-  background: var(--color-active);
-  box-shadow: inset 0 0 0 1px var(--color-accent);
+  gap: 4px;
+  min-width: 0;
 }
 
-.sandi__label {
+.identitas__nama {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.identitas__bawah {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.identitas__nik {
   font-size: 12px;
-  color: var(--color-accent);
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
-.sandi__nilai {
+/*
+  Kartu kredensial: dua baris yang bisa disalin sendiri-sendiri. Kata sandi
+  diberi latar dan warna aksen — satu-satunya kesempatan membacanya, jadi ia
+  tidak boleh tenggelam di antara baris lain.
+*/
+.kredensial {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.kredensial__baris {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+
+  & + & {
+    border-top: 1px solid var(--color-border);
+  }
+}
+
+.kredensial__teks {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.kredensial__label {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+/* Warna ditulis eksplisit: <code> global berwarna merah bawaan. */
+.kredensial__nilai {
   font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", monospace;
-  font-size: 20px;
-  letter-spacing: 1px;
+  font-size: 14px;
+  color: var(--color-text);
   user-select: all;
   overflow-wrap: anywhere;
+}
+
+.kredensial__baris--sandi {
+  background: var(--color-active);
+
+  .kredensial__label {
+    color: var(--color-accent);
+  }
+
+  .kredensial__nilai {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--color-accent);
+  }
+}
+
+.kredensial__salin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font-size: 16px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+}
+
+/* Fakta yang tidak bisa diulang berhak atas barisnya sendiri. */
+.sekali {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 12px 0 14px;
+  font-size: 12.5px;
+  color: #c98f3d;
+
+  i {
+    font-size: 15px;
+    margin-top: 1px;
+  }
 }

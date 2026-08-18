@@ -1,27 +1,70 @@
 <app-dialog-shell
   icon="ph ph-key"
-  [heading]="'user__status__title' | translate"
+  [heading]="judul | translate"
   [lede]="'user__status__lede' | translate"
   [submitLabel]="'user__status__done' | translate"
   [canSubmit]="true"
+  [hideCancel]="true"
   (submitted)="selesai()"
   (close)="selesai()"
 >
-  <dl class="ringkas">
-    <div *ngFor="let b of baris">
-      <dt>{{ b.kunci | translate }}</dt>
-      <dd>{{ b.nilai }}</dd>
+  <!-- Siapa yang barusan dibuat — wajah dulu, baru kredensialnya. -->
+  <div class="identitas">
+    <app-circle-avatar [name]="data?.name ?? ''" [size]="44" />
+    <div class="identitas__teks">
+      <span class="identitas__nama">{{ data?.name }}</span>
+      <span class="identitas__bawah">
+        <span class="tag-netral">{{ data?.role }}</span>
+        <span class="identitas__nik">NIK {{ data?.nik }}</span>
+      </span>
     </div>
-  </dl>
-
-  <!-- Kata sandinya MENCOLOK — inilah alasan dialog ini ada. -->
-  <div class="sandi">
-    <span class="sandi__label">{{ 'user__status__password' | translate }}</span>
-    <code class="sandi__nilai">{{ data?.password }}</code>
   </div>
+
+  <div class="kredensial">
+    <div class="kredensial__baris">
+      <div class="kredensial__teks">
+        <span class="kredensial__label">
+          {{ "user__create__username" | translate }}
+        </span>
+        <code class="kredensial__nilai">{{ data?.username }}</code>
+      </div>
+      <button
+        type="button"
+        class="kredensial__salin"
+        (click)="salinSatu(data?.username)"
+        [title]="'user__status__copy-one' | translate"
+        [attr.aria-label]="'user__status__copy-one' | translate"
+      >
+        <i class="ph ph-copy" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div class="kredensial__baris kredensial__baris--sandi">
+      <div class="kredensial__teks">
+        <span class="kredensial__label">
+          {{ "user__status__password" | translate }}
+        </span>
+        <code class="kredensial__nilai">{{ data?.password }}</code>
+      </div>
+      <button
+        type="button"
+        class="kredensial__salin"
+        (click)="salinSatu(data?.password)"
+        [title]="'user__status__copy-one' | translate"
+        [attr.aria-label]="'user__status__copy-one' | translate"
+      >
+        <i class="ph ph-copy" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <p class="sekali">
+    <i class="ph ph-warning" aria-hidden="true"></i>
+    {{ "user__status__once" | translate }}
+  </p>
 
   <button type="button" class="btn btn--kedua btn--blok" (click)="salin()">
     <i class="ph ph-copy" aria-hidden="true"></i>
-    {{ 'user__status__copy' | translate }}
+    {{ "user__status__copy" | translate }}
   </button>
 </app-dialog-shell>
