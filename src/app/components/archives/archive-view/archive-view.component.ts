@@ -19,6 +19,7 @@ import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
+import { namaBerkasDokumen } from 'src/app/utils/file-name.utils';
 
 // pdfmake 0.2.23 mengekspor objek vfs-nya langsung (module.exports = vfs).
 // Sampai 0.2.10 yang diekspor masih pembungkus, sehingga jalur lamanya
@@ -28,12 +29,19 @@ import { TranslatePipe } from '@ngx-translate/core';
 pdfMake.vfs = pdfFonts;
 
 @Component({
-    selector: 'app-archive-view',
-    templateUrl: './archive-view.component.html',
-    styleUrls: ['./archive-view.component.scss'],
-    animations: [panelAnimation],
-    encapsulation: ViewEncapsulation.None,
-    imports: [MatDialogTitle, MatIconButton, NgIf, MatIcon, MatProgressSpinner, TranslatePipe]
+  selector: 'app-archive-view',
+  templateUrl: './archive-view.component.html',
+  styleUrls: ['./archive-view.component.scss'],
+  animations: [panelAnimation],
+  encapsulation: ViewEncapsulation.None,
+  imports: [
+    MatDialogTitle,
+    MatIconButton,
+    NgIf,
+    MatIcon,
+    MatProgressSpinner,
+    TranslatePipe,
+  ],
 })
 export class ArchiveViewComponent {
   constructor(
@@ -42,7 +50,7 @@ export class ArchiveViewComponent {
     private apiService: ApiService,
     private alertService: AlertService,
     private decimalPipe: DecimalPipe,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
   ) {
     this._hotKeysService.add([
       new Hotkey('esc', (event: KeyboardEvent): boolean => {
@@ -123,7 +131,7 @@ export class ArchiveViewComponent {
                 {
                   text: this.datePipe.transform(
                     this.dataSource.date,
-                    'dd MMM yyyy'
+                    'dd MMM yyyy',
                   ),
                   style: 'value',
                   margin: [0, 0, 0, 10] as Margins,
@@ -146,8 +154,8 @@ export class ArchiveViewComponent {
                     this.dataSource.is_delete
                       ? 'Deleted'
                       : this.dataSource.is_confirm
-                      ? 'Confirmed'
-                      : 'Waiting for confirmation'
+                        ? 'Confirmed'
+                        : 'Waiting for confirmation'
                   }`,
                   style: 'value',
                   margin: [0, 0, 0, 10] as Margins,
@@ -182,7 +190,7 @@ export class ArchiveViewComponent {
                 {
                   text: this.datePipe.transform(
                     this.dataSource.created_at,
-                    'dd MMM yyyy HH:mm'
+                    'dd MMM yyyy HH:mm',
                   ),
                   margin: [0, 0, 0, 10] as Margins,
                 },
@@ -233,26 +241,26 @@ export class ArchiveViewComponent {
                                   style: 'value',
                                 },
                               ];
-                            }
+                            },
                           ),
                         },
                       ],
                       {
                         text: `${this.decimalPipe.transform(
                           item.quantity,
-                          '1.0-2'
+                          '1.0-2',
                         )}`,
                       },
                       {
                         text: `${this.decimalPipe.transform(
                           item.price,
-                          '1.2-2'
+                          '1.2-2',
                         )}`,
                       },
                       {
                         text: `${this.decimalPipe.transform(
                           item.discount,
-                          '1.2-2'
+                          '1.2-2',
                         )}`,
                       },
                       {
@@ -260,13 +268,13 @@ export class ArchiveViewComponent {
                           item.price == 0
                             ? 0
                             : (item.discount * 100) / item.price,
-                          '1.0-2'
+                          '1.0-2',
                         )}%`,
                       },
                       {
                         text: `${this.decimalPipe.transform(
                           (item.price - item.discount) * item.quantity,
-                          '1.2-2'
+                          '1.2-2',
                         )}`,
                       },
                     ];
@@ -285,7 +293,7 @@ export class ArchiveViewComponent {
                       {
                         text: `${this.decimalPipe.transform(
                           item.quantity,
-                          '1.0-2'
+                          '1.0-2',
                         )} ${
                           item.item_unit == null
                             ? item.item.unit
@@ -295,13 +303,13 @@ export class ArchiveViewComponent {
                       {
                         text: `${this.decimalPipe.transform(
                           item.price,
-                          '1.2-2'
+                          '1.2-2',
                         )}`,
                       },
                       {
                         text: `${this.decimalPipe.transform(
                           item.discount,
-                          '1.2-2'
+                          '1.2-2',
                         )}`,
                       },
                       {
@@ -309,13 +317,13 @@ export class ArchiveViewComponent {
                           item.price == 0
                             ? 0
                             : (item.discount * 100) / item.price,
-                          '1.0-2'
+                          '1.0-2',
                         )}%`,
                       },
                       {
                         text: `${this.decimalPipe.transform(
                           (item.price - item.discount) * item.quantity,
-                          '1.2-2'
+                          '1.2-2',
                         )}`,
                       },
                     ];
@@ -334,7 +342,7 @@ export class ArchiveViewComponent {
                   {
                     text: `${this.decimalPipe.transform(
                       this.dataSource.subTotal,
-                      '1.2-2'
+                      '1.2-2',
                     )}`,
                     style: 'value',
                   },
@@ -351,7 +359,7 @@ export class ArchiveViewComponent {
                   {
                     text: `${this.decimalPipe.transform(
                       this.dataSource.discount,
-                      '1.2-2'
+                      '1.2-2',
                     )}`,
                     style: 'value',
                   },
@@ -368,7 +376,7 @@ export class ArchiveViewComponent {
                   {
                     text: `${this.decimalPipe.transform(
                       this.dataSource.service,
-                      '1.2-2'
+                      '1.2-2',
                     )}`,
                     style: 'value',
                   },
@@ -385,7 +393,7 @@ export class ArchiveViewComponent {
                   {
                     text: `${this.decimalPipe.transform(
                       this.dataSource.delivery,
-                      '1.2-2'
+                      '1.2-2',
                     )}`,
                     style: 'value',
                   },
@@ -405,7 +413,7 @@ export class ArchiveViewComponent {
                         this.dataSource.discount +
                         this.dataSource.service +
                         this.dataSource.delivery,
-                      '1.2-2'
+                      '1.2-2',
                     )}`,
                     style: 'value',
                   },
@@ -483,6 +491,8 @@ export class ArchiveViewComponent {
 
     pdfMake
       .createPdf(documentDefinition)
-      .download(`${fileName}${new Date().getTime()}.pdf`);
+      .download(
+        `${namaBerkasDokumen(this.dataSource?.name, fileName + new Date().getTime())}.pdf`,
+      );
   }
 }

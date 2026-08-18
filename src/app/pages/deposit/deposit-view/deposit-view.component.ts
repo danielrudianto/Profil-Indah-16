@@ -15,6 +15,7 @@ import {
 } from 'pdfmake/interfaces';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { namaBerkasDokumen } from 'src/app/utils/file-name.utils';
 
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -471,6 +472,8 @@ export class DepositViewComponent implements OnInit {
        pdfmake tidak sanggup, jadi pemeriksaan tipe dilonggarkan di sini. */
     pdfMake
       .createPdf(documentDefinition as TDocumentDefinitions)
-      .download(`${fileName}${new Date().getTime()}.pdf`);
+      .download(
+        `${namaBerkasDokumen(this.dokumen?.name, fileName + new Date().getTime())}.pdf`,
+      );
   }
 }

@@ -14,6 +14,7 @@ import {
 } from 'pdfmake/interfaces';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { namaBerkasDokumen } from 'src/app/utils/file-name.utils';
 
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
 import { AlertService } from 'src/app/services/alert.service';
@@ -187,9 +188,7 @@ export class SalesInvoiceViewComponent implements OnInit {
   }
 
   labelAksi(aksi: string): string {
-    return this.translateService.instant(
-      `sales-invoice__view__aksi__${aksi}`,
-    );
+    return this.translateService.instant(`sales-invoice__view__aksi__${aksi}`);
   }
 
   /** Ringkasan perubahan: "field: nilai" — `from` memang tidak dicatat. */
@@ -533,6 +532,8 @@ export class SalesInvoiceViewComponent implements OnInit {
     */
     pdfMake
       .createPdf(documentDefinition as TDocumentDefinitions)
-      .download(`${fileName}${new Date().getTime()}.pdf`);
+      .download(
+        `${namaBerkasDokumen(this.dokumen?.name, fileName + new Date().getTime())}.pdf`,
+      );
   }
 }
