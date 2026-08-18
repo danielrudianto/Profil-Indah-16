@@ -123,11 +123,15 @@
 /* Kisi utama: grafik+faktur di kiri, promosi+aksi di kanan          */
 /* ---------------------------------------------------------------- */
 
+/*
+  align-items sengaja dibiarkan stretch (bawaan grid): dasar kedua kolom
+  harus RATA. Dengan align-items: start, kolom kanan berhenti setinggi
+  isinya dan dasar halaman tampak bergerigi — pemiliknya tidak suka itu.
+*/
 .dasbor__kisi {
   display: grid;
   grid-template-columns: 1.6fr 1fr;
   gap: 20px;
-  align-items: start;
 
   @media (max-width: 1100px) {
     grid-template-columns: 1fr;
@@ -138,6 +142,14 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  /*
+    Kartu promosi menyerap sisa tinggi sehingga kartu aksi cepat duduk
+    tepat di dasar, sejajar dengan dasar kartu grafik di kirinya.
+  */
+  > .dasbor__kartu:first-child {
+    flex: 1;
+  }
 }
 
 /* Kartu di layar ini memakai padding sendiri, bukan bawaan .kartu. */
