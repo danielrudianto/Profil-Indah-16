@@ -2435,6 +2435,7 @@
   "sorotan__proyeksi": "Sales so far {{total}}; at the current pace, projected month-end around {{proyeksi}} (last month {{totalLalu}}).",
   "sorotan__banding__naik": "Total {{total}}, up {{persen}}% from last month ({{totalLalu}}).",
   "sorotan__banding__turun": "Total {{total}}, down {{persen}}% from last month ({{totalLalu}}).",
+  "sorotan__pelanggan": "Biggest customer: {{nama}} — {{nilai}} ({{persen}}% of non-retail sales).",
   "sorotan__hari-terbaik": "Best day: {{tanggal}} — {{nilai}}.",
   "report-sales__by-brand": "Sales by brand",
   "report-sales__by-type": "Sales by type",

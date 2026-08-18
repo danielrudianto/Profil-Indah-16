@@ -208,6 +208,7 @@ export class ReportSalesComponent implements OnInit {
           name:
             x.name ?? this.translateService.instant('sales-invoice__retail'),
         }));
+        this.susunSorotan();
       },
     });
   }
@@ -438,7 +439,30 @@ export class ReportSalesComponent implements OnInit {
       }
     }
 
-    /* 4. Hari terbaik bulan ini. */
+    /*
+      4. Pelanggan terbesar — retail DIKELUARKAN dari hitungan atas
+      permintaan pemilik: retail itu gabungan ribuan pembeli anonim,
+      menang terus, dan tidak bisa ditindaklanjuti sebagai pelanggan.
+      Pangsanya dihitung terhadap penjualan non-retail.
+    */
+    const nonRetail = (this.pelanggan as any[]).filter((x) => x.id !== null);
+    if (nonRetail.length > 0) {
+      const juaraPelanggan = nonRetail[0];
+      const totalNonRetail = nonRetail.reduce(
+        (a, b) => a + Number(b.value),
+        0,
+      );
+      hasil.push({
+        ikon: 'ph-user-circle-check',
+        teks: t('sorotan__pelanggan', {
+          nama: juaraPelanggan.name,
+          nilai: this.rupiahRingkas(Number(juaraPelanggan.value)),
+          persen: angka((Number(juaraPelanggan.value) / totalNonRetail) * 100),
+        }),
+      });
+    }
+
+    /* 5. Hari terbaik bulan ini. */
     if (this.chart.length > 0) {
       const terbaik = [...this.chart].sort(
         (a, b) => Number(b.value) - Number(a.value),

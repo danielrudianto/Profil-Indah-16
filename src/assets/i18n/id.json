@@ -2435,6 +2435,7 @@
   "sorotan__proyeksi": "Penjualan berjalan {{total}}; dengan laju saat ini, proyeksi akhir bulan sekitar {{proyeksi}} (bulan lalu {{totalLalu}}).",
   "sorotan__banding__naik": "Total {{total}}, naik {{persen}}% dari bulan lalu ({{totalLalu}}).",
   "sorotan__banding__turun": "Total {{total}}, turun {{persen}}% dari bulan lalu ({{totalLalu}}).",
+  "sorotan__pelanggan": "Pelanggan terbesar: {{nama}} — {{nilai}} ({{persen}}% dari penjualan non-retail).",
   "sorotan__hari-terbaik": "Hari terbaik: {{tanggal}} — {{nilai}}.",
   "report-sales__by-brand": "Penjualan per merek",
   "report-sales__by-type": "Penjualan per tipe",
