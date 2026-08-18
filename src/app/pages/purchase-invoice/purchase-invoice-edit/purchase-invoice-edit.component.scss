@@ -1,32 +1,492 @@
-h5 {
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-size: 1.2rem;
-  color: #041e49;
-  margin-bottom: 2rem;
+@use "../../../styles/form-buat";
+
+/*
+  Ubah faktur pembelian — salinan anatomi buat penerimaan barang.
+  Kedua halaman memang satu formulir yang sama dalam dua waktu:
+  penerimaan saat barang datang, penyuntingan saat fakturnya dibenahi.
+*/
+
+/*
+  Buat penerimaan barang — sistem desain Nocturne.
+
+  Kosakata kelasnya sengaja sama dengan halaman Buat Barang: keduanya formulir
+  dua-kartu dengan kolom ringkasan di kanan, dan menyamakan namanya membuat
+  keduanya bisa dibaca bergantian tanpa menerjemahkan ulang.
+*/
+
+/*
+  Dua kolom yang DI-CENTER, bukan melebar penuh. Kolom formulir berhenti di
+  1080px; kolom kanan tetap 320px dan sejajar mulai dari atas formulir, bukan
+  menempel di pojok layar.
+*/
+.buat {
+  display: grid;
+  grid-template-columns: minmax(0, 1080px) 320px;
+  justify-content: center;
+  gap: 32px;
+  align-items: start;
+  font-family: "Montserrat", system-ui, sans-serif;
+  color: var(--color-text);
 }
 
-.add-button {
+.buat__utama {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.buat__samping {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+}
+
+.buat__head {
+  margin-bottom: 2px;
+}
+
+.buat__title {
+  font-size: 28px;
+  font-weight: 500;
+  margin: 0 0 4px;
+}
+
+.buat__lede {
+  margin: 0;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Kartu                                                             */
+/* ---------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------- */
+/* Kolom isian                                                       */
+/* ---------------------------------------------------------------- */
+
+.kisi {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--color-text) 78%, transparent);
+}
+
+.input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
   outline: none;
-  border: none;
-  color: white;
-  font-weight: 400;
-  background-color: #005cbb;
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.25rem;
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--color-text) 38%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+select.input {
+  appearance: none;
+  padding-right: 10px;
   cursor: pointer;
 }
 
-.purchase-invoice__action-wrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+.input--sempit {
+  max-width: 420px;
 }
 
-.purchase-invoice__save-indicator {
-  color: #0b57d0;
+.input--area {
+  min-height: 84px;
+  padding: 10px 14px;
+  resize: vertical;
+}
+
+.input--angka,
+.input--kanan {
+  font-variant-numeric: tabular-nums;
+}
+
+.input--kanan {
+  text-align: right;
+}
+
+.input--tengah {
+  text-align: center;
   font-weight: 500;
-  outline: none;
-  border: none;
-  background-color: transparent;
+}
+
+.input--kecil {
+  min-height: 38px;
+  font-size: 13px;
+}
+
+/* ---------------------------------------------------------------- */
+/* Petunjuk                                                          */
+
+/* ---------------------------------------------------------------- */
+/* Baris satuan                                                      */
+/* ---------------------------------------------------------------- */
+
+/*
+  Tujuh kolom isian tidak muat pada layar yang lebih sempit dari desainnya —
+  yang dibuat untuk 1920px. Alih-alih memampatkan tiap kotak sampai selebar
+  dua huruf, bagian ini menggulung mendatar di dalam kartunya sendiri, dengan
+  lebar terkecil yang sama untuk baris judul dan baris isian supaya keduanya
+  tidak pernah bergeser sendiri-sendiri.
+*/
+.periksa {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13.5px;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  }
+
+  i {
+    font-size: 17px;
+    flex: none;
+    line-height: 1.35;
+  }
+}
+
+/*
+  Yang belum beres: LINGKARAN KOSONG bergaris (bobot regular Phosphor).
+  Yang sudah: lingkaran terisi penuh beraksen (bobot fill).
+
+  Keduanya harus berbeda BENTUK, bukan cuma warna — pada layar redup atau bagi
+  yang tidak membedakan warna, dua lingkaran padat berbeda warna terbaca sama
+  saja. Sebelumnya keduanya memakai bobot fill, jadi yang belum beres pun
+  tergambar sebagai bulatan padat.
+*/
+.periksa--ok {
+  color: var(--color-text);
+
+  i {
+    color: var(--color-accent);
+  }
+}
+
+/*
+  Di bawah lebar ini kolom kanan turun ke bawah, dan baris satuannya berhenti
+  memakai kisi: tujuh kolom pada layar sempit membuat tiap kotak isian selebar
+  dua huruf.
+*/
+@media (max-width: 1100px) {
+  .buat {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .buat__samping {
+    position: static;
+  }
+}
+
+
+/* ---------------------------------------------------------------- */
+/* Tabel barang diterima                                             */
+/* ---------------------------------------------------------------- */
+
+.gulir {
+  overflow-x: auto;
+}
+
+.ke-kanan {
+  text-align: right;
+}
+
+.barang__ref {
+  display: block;
+  font-weight: 500;
+}
+
+.barang__desc {
+  display: block;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.barang__stok {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+.jumlah {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .input {
+    width: 110px;
+    min-height: 40px;
+  }
+}
+
+.jumlah__satuan {
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+/* "3 box = 300 pcs" — hanya muncul bila satuannya bukan satuan dasar. */
+.jumlah__konversi {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+.tabel .input {
+  min-height: 40px;
+}
+
+/*
+  Penanda simpan-harga. Bentuknya tanda buku, sama seperti pada faktur
+  penjualan, supaya artinya tidak perlu dipelajari dua kali.
+*/
+/* .simpan-harga kini tinggal di _form-buat.scss. */
+
+/* ---------------------------------------------------------------- */
+/* Keadaan dokumen                                                   */
+/* ---------------------------------------------------------------- */
+
+.keadaan {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/*
+  Ikon di KIRI, teks di sampingnya — bukan ikon di atas. Kartu terpilih memakai
+  ground aktif berikut ring 1px, bukan isian terang.
+*/
+
+/* ---------------------------------------------------------------- */
+/* Kartu faktur                                                      */
+/* ---------------------------------------------------------------- */
+
+/*
+  Tingginya dipesan supaya menekan pilihan keadaan tidak membuat sisa form
+  melompat. 148px adalah tinggi kartu faktur yang terisi, sesuai berkas desain.
+*/
+/*
+  Slot isi kartu faktur. Tingginya dipesan supaya berpindah antara "surat jalan
+  saja" dan "dokumen lengkap" tidak membuat kartu di bawahnya melompat.
+*/
+.faktur__isi {
+  min-height: 128px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px dashed var(--color-divider);
+  border-radius: 12px;
+  padding: 16px 22px;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+/* Begitu terisi, garis putus-putusnya hilang — ia bukan tempat kosong lagi. */
+.faktur__isi--aktif {
+  border-style: solid;
+  border-color: transparent;
+  padding: 0;
+  animation: faktur-muncul 0.22s ease;
+}
+
+@keyframes faktur-muncul {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.faktur__kosong {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+
+  i {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 820px) {
+  .keadaan {
+    grid-template-columns: 1fr;
+  }
+}
+
+/*
+  Pill "×N" pada baris yang barangnya berulang.
+
+  Abu, bukan merah atau amber: ini BUKAN peringatan. Barang yang sama memang
+  boleh berkali-kali. cursor: help menandakan ada keterangan bila disentuh.
+*/
+.ulang {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--color-divider);
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: help;
+}
+
+/* ---------------------------------------------------------------- */
+/* Ringkasan uang                                                    */
+/* ---------------------------------------------------------------- */
+
+.baris__total {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/*
+  .ringkas dan .ringkas__total kini tinggal di _form-buat.scss — anatomi
+  halaman ini yang dijadikan bentuk bersamanya, jadi salinan lokalnya
+  dibuang.
+*/
+
+/* ---------------------------------------------------------------- */
+/* Penanda mode, tag nomor otomatis, tombol tambah di kepala kartu    */
+/* ---------------------------------------------------------------- */
+
+.mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+
+  i {
+    font-size: 14px;
+  }
+}
+
+.buat__title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tag-otomatis {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--color-active);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  color: var(--color-accent);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0;
+
+  i {
+    font-size: 12px;
+  }
+}
+
+.kartu__baris {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tambah-atas {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 16px;
+  padding: 7px 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  cursor: pointer;
+
+  i {
+    font-size: 14px;
+  }
+
+  &:hover {
+    color: var(--color-text);
+    border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+/* Placeholder faktur: judul di atas, keterangan konsekuensinya di bawah. */
+.faktur__kosong {
+  align-items: flex-start;
+  text-align: left;
+  gap: 10px;
+
+  > span {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  strong {
+    font-size: 13px;
+    font-weight: 500;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  }
 }

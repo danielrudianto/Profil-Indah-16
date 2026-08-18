@@ -1,347 +1,382 @@
-<div class="d-flex mt-4">
-  <div class="d-flex position-relative">
-    <app-vertical-divider></app-vertical-divider>
-    <app-box-stepper step="1" [valid]="metaFormGroup.valid"></app-box-stepper>
-  </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <h5>{{ "purchase-invoice__edit__general-data" | translate }}</h5>
-    <app-autocomplete-search
-      routeName="supplier"
-      [label]="'purchase-invoice__edit__supplier' | translate"
-      placeholder="Ex. Bing Jaya"
-      [selected]="metaFormGroup.controls['supplier_id'].valid"
-      [defaultValue]="metaFormGroup.controls['supplier_name'].value"
-      (onSelectData)="onSelectSupplier($event)"
-      (onUnselectData)="onUnselectSupplier()"
-    ></app-autocomplete-search>
+<!--
+  Ubah faktur pembelian — anatomi yang sama dengan buat penerimaan barang.
+  Dokumen di sini sudah lengkap, jadi kartu faktur supplier selalu tampil.
+-->
+<div class="buat">
+  <div class="buat__utama">
+    <header class="buat__head">
+      <h1 class="buat__title">
+        {{ 'purchase-invoice__edit__title' | translate }}
+        <span class="tag-otomatis" *ngIf="documentFormGroup.value.name">
+          <i class="ph ph-file-text" aria-hidden="true"></i>
+          {{ documentFormGroup.value.name }}
+        </span>
+      </h1>
+      <p class="buat__lede">{{ 'purchase-invoice__edit__lede' | translate }}</p>
+    </header>
 
-    <app-autocomplete-search
-      routeName="company"
-      [label]="'purchase-invoice__edit__company' | translate"
-      placeholder="Ex. Toko Profil Indah"
-      [selected]="metaFormGroup.controls['company_id'].valid"
-      [defaultValue]="metaFormGroup.value.company_name"
-      (onSelectData)="onSelectCompany($event)"
-      (onUnselectData)="onUnselectCompany()"
-    ></app-autocomplete-search>
-  </div>
-</div>
+    <!-- Data umum ------------------------------------------------------ -->
+    <section class="kartu" [formGroup]="documentFormGroup">
+      <h2 class="kartu__label">
+        {{ 'good-receipt__create__general' | translate }}
+      </h2>
 
-<div class="d-flex">
-  <div class="d-flex position-relative">
-    <app-vertical-divider></app-vertical-divider>
-    <app-box-stepper
-      step="2"
-      [valid]="documentFormGroup.valid"
-    ></app-box-stepper>
-  </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <form [formGroup]="documentFormGroup">
-      <h5>
-        {{ "purchase-invoice__edit__purchase-data" | translate }}
-      </h5>
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{ "purchase-invoice__edit__date" | translate }}</mat-label>
-        <input
-          matInput
-          type="text"
-          placeholder="Ex. 30/12/2023"
-          [matDatepicker]="picker"
-          formControlName="date"
-          autocomplete="off"
-          (click)="picker.open()"
-        />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{
-          "purchase-invoice__edit__delivery-order-name" | translate
-        }}</mat-label>
-        <input
-          type="text"
-          matInput
-          placeholder="Ex. 123456"
-          formControlName="name"
-          maxlength="100"
-          autocomplete="off"
-        />
-      </mat-form-field>
+      <div class="kisi">
+        <div class="field">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ 'purchase-invoice__edit__date' | translate }}</mat-label>
+            <input
+              matInput
+              [matDatepicker]="piPicker"
+              formControlName="date"
+              (click)="piPicker.open()"
+            />
+            <button
+              type="button"
+              matSuffix
+              class="buka-kalender"
+              (click)="piPicker.open()"
+              [attr.aria-label]="'general__pick-date' | translate"
+            >
+              <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+            </button>
+            <mat-datepicker #piPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
 
-      <mat-divider></mat-divider>
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{
-          "purchase-invoice__edit__invoice-name" | translate
-        }}</mat-label>
-        <input
-          matInput
-          type="text"
-          placeholder="Ex. 123456"
-          formControlName="invoice_name"
-          maxlength="191"
-          autocomplete="off"
-        />
-      </mat-form-field>
+        <div class="field">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>
+              {{ 'purchase-invoice__edit__delivery-order-name' | translate }}
+            </mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="name"
+              maxlength="100"
+              autocomplete="off"
+            />
+          </mat-form-field>
+        </div>
 
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{
-          "purchase-invoice__edit__tax-invoice-name" | translate
-        }}</mat-label>
-        <input
-          matInput
-          type="text"
-          formControlName="faktur"
-          inputmode="numeric"
-          maxlength="16"
-          [attr.placeholder]="'tax-invoice__placeholder' | translate"
-          autocomplete="off"
-        />
-      </mat-form-field>
-    </form>
-  </div>
-</div>
-<div class="d-flex">
-  <div class="d-flex position-relative">
-    <app-vertical-divider></app-vertical-divider>
-    <app-box-stepper step="3" [valid]="itemFormGroup.valid"></app-box-stepper>
-  </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <button
-      mat-stroked-button
-      color="primary"
-      style="letter-spacing: 0"
-      type="button"
-      (click)="openItemSelector()"
-    >
-      {{ "purchase-invoice__edit__add-item" | translate }}
-    </button>
-    <form [formGroup]="itemFormGroup">
-      <table class="table w-100 mb-2">
-        <thead>
-          <tr>
-            <th style="width: 300px">
-              {{ "purchase-invoice__edit__item__product" | translate }}
-            </th>
-            <th style="width: 150px" class="text-center">
-              {{ "purchase-invoice__edit__item__price" | translate }}
-            </th>
-            <th style="width: 250px" class="text-center">
-              {{ "purchase-invoice__edit__item__discount" | translate }}
-            </th>
-            <th style="width: 200px" class="text-center">
-              {{ "purchase-invoice__edit__item__quantity" | translate }}
-            </th>
-            <th style="width: 200px" class="text-center">
-              {{ "purchase-invoice__edit__item__total" | translate }}
-            </th>
-            <th style="width: 150px" class="text-center">
-              {{ "purchase-invoice__edit__item__action" | translate }}
-            </th>
-          </tr>
-        </thead>
-        <tbody *ngIf="t.controls.length > 0">
-          <tr
-            *ngFor="let itemForm of t.controls; index as i"
-            [formGroup]="getFormGroupAt(i)"
-          >
-            <td>
-              <p>{{ itemForm.get("reference")?.value }}</p>
-              <div class="text-clamp-2">
-                {{ itemForm.get("description")?.value }}
-              </div>
-            </td>
-            <td class="text-center" (click)="openEditData(i)">
-              Rp.&nbsp;{{ itemForm.get("price")?.value | number : "0.0-2" }}
-            </td>
-            <td class="text-center" (click)="openEditData(i)">
-              Rp.&nbsp;{{ itemForm.get("discount")?.value | number : "0.2-2" }}
-            </td>
-            <td>
-              <mat-form-field appearance="outline">
-                <mat-label>Quantity</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  class="text-center"
-                  mask="separator"
-                  thousandSeparator=" "
-                  formControlName="quantity"
-                  autocomplete="off"
-                  placeholder="Ex. 20"
-                />
-                <mat-hint *ngIf="itemForm.get('conversion')?.value == 1">{{
-                  itemForm.get("unit")?.value
-                }}</mat-hint>
-                <mat-hint *ngIf="itemForm.get('conversion')?.value != 1"
-                  >{{ itemForm.get("unit")?.value }} -
-                  {{
-                    itemForm.get("quantity")?.value *
-                      itemForm.get("conversion")?.value | number : "0.0-2"
-                  }}
-                  {{ itemForm.get("default_unit")?.value }}</mat-hint
+        <div class="field">
+          <app-combo-search
+            [label]="'purchase-invoice__edit__supplier' | translate"
+            inputId="pi-supplier"
+            route="supplier"
+            [initial]="namaSupplier"
+            [disabled]="isSubmitting"
+            (pick)="onSelectSupplier($event)"
+            (clear)="onUnselectSupplier()"
+          />
+        </div>
+
+        <div class="field">
+          <app-combo-search
+            [label]="'purchase-invoice__edit__company' | translate"
+            inputId="pi-company"
+            route="company"
+            [initial]="namaPerusahaan"
+            [disabled]="isSubmitting"
+            (pick)="onSelectCompany($event)"
+            (clear)="onUnselectCompany()"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Faktur supplier ------------------------------------------------ -->
+    <section class="kartu" [formGroup]="documentFormGroup">
+      <h2 class="kartu__label">{{ 'good-receipt__invoice' | translate }}</h2>
+
+      <div class="kisi">
+        <div class="field">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>
+              {{ 'good-receipt__invoice__name' | translate }}
+            </mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="invoice_name"
+              maxlength="191"
+              autocomplete="off"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="field">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ 'good-receipt__invoice__tax' | translate }}</mat-label>
+            <input
+              matInput
+              type="text"
+              inputmode="numeric"
+              maxlength="16"
+              formControlName="faktur"
+              autocomplete="off"
+              [attr.placeholder]="'tax-invoice__placeholder' | translate"
+            />
+            <mat-hint>{{ 'tax-invoice__hint' | translate }}</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="field">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>
+              {{ 'good-receipt__invoice__discount' | translate }}
+            </mat-label>
+            <input
+              matInput
+              type="text"
+              [formControl]="discountControl"
+              mask="separator.2"
+              thousandSeparator=" "
+            />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <p class="petunjuk">
+        <i class="ph ph-info" aria-hidden="true"></i>
+        {{ 'good-receipt__invoice__discount__note' | translate }}
+      </p>
+    </section>
+
+    <!-- Barang --------------------------------------------------------- -->
+    <section class="kartu">
+      <div class="kartu__baris">
+        <h2 class="kartu__label">
+          {{ 'good-receipt__create__items' | translate }}
+        </h2>
+        <button type="button" class="tambah-atas" (click)="openItemSelector()">
+          <i class="ph ph-plus" aria-hidden="true"></i>
+          {{ 'good-receipt__create__add-item-short' | translate }}
+        </button>
+      </div>
+
+      <div class="gulir" [formGroup]="itemFormGroup">
+        <table class="tabel" formArrayName="items">
+          <thead>
+            <tr>
+              <th>{{ 'good-receipt__create__item' | translate }}</th>
+              <th>{{ 'good-receipt__create__quantity' | translate }}</th>
+              <th class="ke-kanan" *ngIf="bolehUbahHarga">
+                {{ 'product__add__unit__purchase-price' | translate }}
+              </th>
+              <th class="ke-kanan" *ngIf="bolehUbahHarga">
+                {{ 'product__add__unit__purchase-discount' | translate }}
+              </th>
+              <th class="ke-kanan" *ngIf="bolehUbahHarga">
+                {{ 'good-receipt__create__line-total' | translate }}
+              </th>
+              <th class="tabel__aksi-kepala">
+                <span class="sr-only">{{ 'general__actions' | translate }}</span>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="t.length > 0">
+            <tr *ngFor="let itemForm of t.controls; index as i" [formGroupName]="i">
+              <td>
+                <span class="barang__ref">
+                  {{ itemForm.get('reference')?.value }}
+                  <span
+                    class="ulang"
+                    *ngIf="jumlahBaris(itemForm.get('product_id')?.value) > 1"
+                    [title]="'good-receipt__create__duplicate' | translate"
+                  >
+                    ×{{ jumlahBaris(itemForm.get('product_id')?.value) }}
+                  </span>
+                </span>
+                <span class="barang__desc">
+                  {{ itemForm.get('description')?.value }}
+                </span>
+              </td>
+
+              <td>
+                <div class="jumlah">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <input
+                      matInput
+                      type="text"
+                      formControlName="quantity"
+                      mask="separator.2"
+                      thousandSeparator=" "
+                    />
+                  </mat-form-field>
+                  <span class="jumlah__satuan">{{ itemForm.get('unit')?.value }}</span>
+                </div>
+                <span
+                  class="jumlah__konversi"
+                  *ngIf="itemForm.get('conversion')?.value != 1"
                 >
-              </mat-form-field>
-            </td>
-            <td>
-              Rp.&nbsp;{{
-                itemForm.get("quantity")?.value *
-                  (itemForm.get("price")?.value -
-                    (itemForm.get("discountType")?.value == "absolute"
-                      ? itemForm.get("discount")?.value
-                      : (itemForm.get("discountPercentage")?.value *
-                          itemForm.get("price")?.value) /
-                        100)) | number : "0.2-2"
-              }}
-            </td>
-            <td class="text-nowrap text-center">
-              <div class="purchase-invoice__action-wrapper">
-                <button mat-icon-button (click)="deleteItem(i)">
-                  <mat-icon>delete</mat-icon>
+                  {{
+                    itemForm.get('quantity')?.value * itemForm.get('conversion')?.value
+                      | number: '0.0-2'
+                  }}
+                  {{ itemForm.get('default_unit')?.value }}
+                </span>
+              </td>
+
+              <!--
+                Harga dan diskon dibuka lewat bottom sheet, bukan diketik di
+                tabel — dua kolom isian membuat tabelnya harus digulir
+                mendatar. Pola yang sama dengan faktur penjualan.
+              -->
+              <td class="ke-kanan" *ngIf="bolehUbahHarga">
+                <button type="button" class="nilai-btn" (click)="ubahHarga(i)">
+                  Rp {{ itemForm.get('price')?.value | number: '1.0-0' }}
                 </button>
+              </td>
+
+              <td class="ke-kanan" *ngIf="bolehUbahHarga">
+                <button type="button" class="nilai-btn" (click)="ubahHarga(i)">
+                  Rp {{ itemForm.get('discount')?.value | number: '1.0-0' }}
+                </button>
+              </td>
+
+              <td class="ke-kanan baris__total" *ngIf="bolehUbahHarga">
+                Rp {{ totalBaris(i) | number: '1.0-0' }}
+              </td>
+
+              <td class="tabel__aksi">
+                <!--
+                  Bookmark = harga baru ikut disimpan ke master barang.
+                  Terisi beraksen berarti disimpan, garis abu berarti hanya
+                  berlaku di dokumen ini.
+                -->
                 <button
-                  class="purchase-invoice__save-indicator"
-                  [matTooltip]="
-                    itemForm.get('save_price')?.value
-                      ? 'New price and discount will be saved.'
-                      : 'New price and discount will be discarded.'
+                  type="button"
+                  class="simpan-harga"
+                  *ngIf="bolehUbahHarga"
+                  [class.simpan-harga--on]="simpanHarga(i)"
+                  (click)="toggleSimpanHarga(i)"
+                  [attr.aria-pressed]="simpanHarga(i)"
+                  [title]="
+                    (simpanHarga(i)
+                      ? 'good-receipt__create__save-price__on'
+                      : 'good-receipt__create__save-price__off'
+                    ) | translate
                   "
                 >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    *ngIf="itemForm.get('save_price')?.value"
-                  >
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g
-                      id="SVGRepo_tracerCarrier"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    ></g>
-                    <g id="SVGRepo_iconCarrier">
-                      <path
-                        opacity="0.4"
-                        d="M12.89 5.87988H5.10999C3.39999 5.87988 2 7.27987 2 8.98987V20.3499C2 21.7999 3.04 22.4199 4.31 21.7099L8.23999 19.5199C8.65999 19.2899 9.34 19.2899 9.75 19.5199L13.68 21.7099C14.95 22.4199 15.99 21.7999 15.99 20.3499V8.98987C16 7.27987 14.6 5.87988 12.89 5.87988Z"
-                        fill="#5985e1"
-                      ></path>
-                      <path
-                        d="M22 5.10999V16.47C22 17.92 20.96 18.53 19.69 17.83L16 15.77V8.98999C16 7.27999 14.6 5.88 12.89 5.88H8V5.10999C8 3.39999 9.39999 2 11.11 2H18.89C20.6 2 22 3.39999 22 5.10999Z"
-                        fill="#5985e1"
-                      ></path>
-                    </g>
-                  </svg>
-                  <svg
-                    *ngIf="!itemForm.get('save_price')?.value"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                  >
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g
-                      id="SVGRepo_tracerCarrier"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    ></g>
-                    <g id="SVGRepo_iconCarrier">
-                      <path
-                        opacity="0.4"
-                        d="M12.89 5.87988H5.10999C3.39999 5.87988 2 7.27987 2 8.98987V20.3499C2 21.7999 3.04 22.4199 4.31 21.7099L8.23999 19.5199C8.65999 19.2899 9.34 19.2899 9.75 19.5199L13.68 21.7099C14.95 22.4199 15.99 21.7999 15.99 20.3499V8.98987C16 7.27987 14.6 5.87988 12.89 5.87988Z"
-                        fill="#c7c7c7"
-                      ></path>
-                      <path
-                        d="M22 5.10999V16.47C22 17.92 20.96 18.53 19.69 17.83L16 15.77V8.98999C16 7.27999 14.6 5.88 12.89 5.88H8V5.10999C8 3.39999 9.39999 2 11.11 2H18.89C20.6 2 22 3.39999 22 5.10999Z"
-                        fill="#c7c7c7"
-                      ></path>
-                    </g>
-                  </svg>
+                  <i class="ph-fill ph-bookmark-simple" aria-hidden="true"></i>
                 </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-        <tbody *ngIf="t.controls.length == 0">
-          <tr>
-            <td colspan="7">
-              <empty-table />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </form>
-  </div>
-</div>
+                <button
+                  type="button"
+                  class="tabel__aksi-btn"
+                  (click)="deleteItem(i)"
+                  [title]="'general__delete' | translate"
+                  [attr.aria-label]="'general__delete' | translate"
+                >
+                  <i class="ph ph-x" aria-hidden="true"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
 
-<div class="d-flex">
-  <div class="d-flex">
-    <app-box-stepper step="4" [valid]="valueFormGroup.valid"></app-box-stepper>
-  </div>
-  <div class="dashboard-card px-3 py-4 mt-0 w-100 ms-5 mb-4">
-    <form [formGroup]="valueFormGroup">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Subtotal</mat-label>
-        <input
-          [readonly]="true"
-          matInput
-          type="text"
-          placeholder="Ex. 1 000 000"
-          formControlName="total"
-          mask="separator"
-          thousandSeparator=" "
-          autocomplete="off"
-        />
-        <div matTextPrefix>Rp.&nbsp;</div>
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Discount</mat-label>
-        <input
-          matInput
-          type="text"
-          placeholder="Ex. 80 000"
-          formControlName="discount"
-          mask="separator"
-          thousandSeparator=" "
-          autocomplete="off"
-        />
-        <div matTextPrefix>Rp.&nbsp;</div>
-      </mat-form-field>
+          <tbody *ngIf="t.length === 0">
+            <tr>
+              <td [attr.colspan]="bolehUbahHarga ? 6 : 3" class="tabel__pesan">
+                {{ 'good-receipt__create__no-item' | translate }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Total</mat-label>
-        <input
-          [readonly]="true"
-          matInput
-          type="text"
-          placeholder="Ex. 920 000"
-          [value]="
-            valueFormGroup.get('total')?.value -
-              valueFormGroup.get('discount')?.value | number : '0.0-2'
-          "
-          mask="separator"
-          thousandSeparator=" "
-          autocomplete="off"
-        />
-        <div matTextPrefix>Rp.&nbsp;</div>
-      </mat-form-field>
+      <button type="button" class="tambah" (click)="openItemSelector()">
+        <i class="ph ph-plus-circle" aria-hidden="true"></i>
+        <span>{{ 'good-receipt__create__add-item' | translate }}</span>
+        <span class="tambah__kunci">Alt + A</span>
+      </button>
+    </section>
+  </div>
+
+  <!-- Kolom kanan ------------------------------------------------------ -->
+  <aside class="buat__samping">
+    <!-- Ringkasan uang — hanya untuk yang boleh melihat harga. -->
+    <section class="kartu" *ngIf="bolehUbahHarga">
+      <h2 class="kartu__label">{{ 'good-receipt__summary' | translate }}</h2>
+
+      <dl class="ringkas">
+        <div>
+          <dt>{{ 'good-receipt__summary__subtotal' | translate }}</dt>
+          <dd>Rp {{ subtotal | number: '1.0-0' }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'good-receipt__summary__item-discount' | translate }}</dt>
+          <dd class="ringkas__kurang">– Rp {{ diskonItem | number: '1.0-0' }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'good-receipt__summary__doc-discount' | translate }}</dt>
+          <dd class="ringkas__kurang">– Rp {{ diskonDokumen | number: '1.0-0' }}</dd>
+        </div>
+      </dl>
+
+      <div class="ringkas__total">
+        <span>{{ 'good-receipt__summary__total' | translate }}</span>
+        <strong>Rp {{ total | number: '1.0-0' }}</strong>
+      </div>
+    </section>
+
+    <section class="kartu">
+      <h2 class="kartu__label">
+        {{ 'product__create__before-save' | translate }}
+      </h2>
+
+      <ul class="periksa">
+        <li [class.periksa--ok]="metaFormGroup.valid && documentFormGroup.valid">
+          <i
+            [class.ph-fill]="metaFormGroup.valid && documentFormGroup.valid"
+            [class.ph-check-circle]="metaFormGroup.valid && documentFormGroup.valid"
+            [class.ph]="!(metaFormGroup.valid && documentFormGroup.valid)"
+            [class.ph-circle]="!(metaFormGroup.valid && documentFormGroup.valid)"
+            aria-hidden="true"
+          ></i>
+          <span>{{ 'good-receipt__create__check-general' | translate }}</span>
+        </li>
+        <li [class.periksa--ok]="t.length > 0">
+          <i
+            [class.ph-fill]="t.length > 0"
+            [class.ph-check-circle]="t.length > 0"
+            [class.ph]="t.length === 0"
+            [class.ph-circle]="t.length === 0"
+            aria-hidden="true"
+          ></i>
+          <span>
+            {{ t.length }} {{ 'good-receipt__create__check-items' | translate }}
+          </span>
+        </li>
+        <li [class.periksa--ok]="itemFormGroup.valid" *ngIf="t.length > 0">
+          <i
+            [class.ph-fill]="itemFormGroup.valid"
+            [class.ph-check-circle]="itemFormGroup.valid"
+            [class.ph]="!itemFormGroup.valid"
+            [class.ph-circle]="!itemFormGroup.valid"
+            aria-hidden="true"
+          ></i>
+          <span>{{ 'good-receipt__create__check-quantity' | translate }}</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="kartu">
+      <h2 class="kartu__label">{{ 'general__actions' | translate }}</h2>
 
       <button
         type="button"
-        class="action-button"
+        class="btn btn--primary btn--blok"
         (click)="submitForm()"
-        [disabled]="
-          !metaFormGroup.valid ||
-          !documentFormGroup.valid ||
-          !itemFormGroup.valid ||
-          !valueFormGroup.valid ||
-          valueFormGroup.get('discount')?.value >
-            valueFormGroup.get('total')?.value
-        "
+        [disabled]="!bolehSimpan"
       >
-        Submit
+        <i class="ph ph-check" aria-hidden="true"></i>
+        {{ 'purchase-invoice__edit__submit' | translate }}
       </button>
-    </form>
-  </div>
+
+      <button type="button" class="btn btn--kedua btn--blok" (click)="batal()">
+        {{ 'general__cancel' | translate }}
+      </button>
+    </section>
+  </aside>
 </div>
