@@ -84,14 +84,14 @@
         <td class="tabel__utama">{{ item.document_name }}</td>
         <!--
           Lawan transaksi: supplier untuk barang masuk, pelanggan untuk
-          barang keluar; faktur tanpa pelanggan berarti Retail. Penyesuaian
-          tidak berlawan — strip.
+          barang keluar; faktur tanpa pelanggan berarti Retail. Mutasi tanpa
+          lawan — penyesuaian, dsb. — INTERNAL, mengikuti jargon faktur.
         -->
         <td class="tabel__redup">
           {{
             item.supplier?.name ??
               item.customer?.name ??
-              (item.sales_invoice_code_id != null ? "Retail" : "—")
+              (item.sales_invoice_code_id != null ? "Retail" : "INTERNAL")
           }}
         </td>
         <td
