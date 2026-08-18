@@ -623,6 +623,7 @@ export class SalesInvoiceCreateComponent {
     const sheet = this.sheet.open(UpdateProductSalesPriceComponent, {
       data: {
         reference: this.getFormGroupAt(i).get('reference')?.value,
+        unit: this.getFormGroupAt(i).get('unit')?.value,
         initial_price: this.getFormGroupAt(i).get('initial_price')?.value,
         initial_discount: this.getFormGroupAt(i).get('initial_discount')?.value,
         price: this.getFormGroupAt(i).get('price')?.value,

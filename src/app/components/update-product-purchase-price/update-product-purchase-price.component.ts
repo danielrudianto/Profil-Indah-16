@@ -15,7 +15,7 @@ import { MatInput } from '@angular/material/input';
 import { NgxMaskDirective } from 'ngx-mask';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { TranslatePipe } from '@ngx-translate/core';
-import { NgIf } from '@angular/common';
+import { NgIf, DecimalPipe } from '@angular/common';
 import { AuthService } from 'src/app/services/auth.service';
 
 /**
@@ -36,6 +36,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./update-product-purchase-price.component.scss'],
   imports: [
     NgIf,
+    DecimalPipe,
     FormsModule,
     ReactiveFormsModule,
     MatFormField,
@@ -90,6 +91,25 @@ export class UpdateProductPurchasePriceComponent implements OnInit {
     this.priceFormGroup.get('price')?.valueChanges.subscribe(() => {
       this.hitungPersen(Number(this.priceFormGroup.value.discount ?? 0));
     });
+
+    this.priceFormGroup.valueChanges.subscribe(() => this.sesuaikanToggle());
+    this.sesuaikanToggle();
+  }
+
+  /**
+   * Toggle simpan-master hanya hidup bila ada perubahan sah untuk disimpan.
+   * Dikelola lewat kontrolnya, bukan [disabled] di template — pengikatan
+   * [disabled] pada kontrol reaktif memang tidak didengarkan Angular.
+   */
+  private sesuaikanToggle(): void {
+    const kontrol = this.priceFormGroup.controls['save_price'];
+    const boleh = !this.tanpaPerubahan && this.priceFormGroup.valid;
+    if (boleh && kontrol.disabled) {
+      kontrol.enable({ emitEvent: false });
+    } else if (!boleh && kontrol.enabled) {
+      kontrol.setValue(false, { emitEvent: false });
+      kontrol.disable({ emitEvent: false });
+    }
   }
 
   private hitungPersen(diskon: number): void {
@@ -109,14 +129,25 @@ export class UpdateProductPurchasePriceComponent implements OnInit {
   }
 
   get tanpaPerubahan(): boolean {
-    const v = this.priceFormGroup.value;
+    const v = this.priceFormGroup.getRawValue();
     return (
       Number(v.initial_price) === Number(v.price) &&
       Number(v.initial_discount) === Number(v.discount)
     );
   }
 
+  /** Harga setelah diskon — pratinjau hidup di bawah isian. */
+  get hargaBersih(): number {
+    const v = this.priceFormGroup.getRawValue();
+    return Number(v.price ?? 0) - Number(v.discount ?? 0);
+  }
+
+  batal(): void {
+    this.sheet.dismiss();
+  }
+
   updatePrice(): void {
-    this.sheet.dismiss(this.priceFormGroup.value);
+    /* getRawValue: save_price yang sedang mati tetap harus terkirim false. */
+    this.sheet.dismiss(this.priceFormGroup.getRawValue());
   }
 }

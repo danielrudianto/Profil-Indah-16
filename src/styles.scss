@@ -1262,6 +1262,27 @@ label {
 }
 
 /* ------------------------------------------------------------------ */
+/* Lembar bawah harga                                                  */
+/*                                                                     */
+/* Wadah bawaan MatBottomSheet selebar layar dan bersudut siku; untuk  */
+/* dua lembar harga ia diganti kartu Nocturne yang bersudut bundar dan */
+/* berhenti di 560px. Dikenali dari isinya, seperti dialog konfirmasi  */
+/* yang pemanggilnya tidak memasang panelClass.                        */
+/* ------------------------------------------------------------------ */
+
+.mat-bottom-sheet-container:has(> app-update-product-purchase-price),
+.mat-bottom-sheet-container:has(> app-update-product-sales-price) {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -18px 48px rgba(0, 0, 0, 0.35);
+  padding: 10px 26px 22px;
+  min-width: 0;
+  width: min(560px, calc(100vw - 24px));
+  max-width: none;
+}
+
+/* ------------------------------------------------------------------ */
 /* Lebar kolom Material                                                */
 /*                                                                     */
 /* w-100 datang dari Bootstrap yang masih ikut termuat; dua di bawah   */

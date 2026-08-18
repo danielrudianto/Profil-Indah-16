@@ -1,9 +1,16 @@
 <form [formGroup]="priceFormGroup" class="lembar" (ngSubmit)="updatePrice()">
-  <h1 class="lembar__judul">
-    {{ "purchase-invoice__confirm__update-price" | translate }}
-  </h1>
-  <!-- Barisnya sudah tidak terlihat di belakang lembar ini; namanya diulang. -->
-  <p class="lembar__barang" *ngIf="data.reference">{{ data.reference }}</p>
+  <!-- Pegangan — penanda bahwa lembar ini bisa diseret/ditutup ke bawah. -->
+  <div class="lembar__grabber" aria-hidden="true"></div>
+
+  <header class="lembar__head">
+    <h1 class="lembar__judul">
+      {{ "purchase-invoice__confirm__update-price" | translate }}
+    </h1>
+    <!-- Barisnya sudah tak terlihat di belakang lembar ini; namanya diulang. -->
+    <span class="lembar__pill" *ngIf="data.reference">
+      {{ data.reference }}
+    </span>
+  </header>
 
   <mat-form-field appearance="outline" class="w-100">
     <mat-label>{{ "purchase-invoice__confirm__price" | translate }}</mat-label>
@@ -48,22 +55,40 @@
     </mat-form-field>
   </div>
 
+  <!-- Pratinjau hidup: yang benar-benar dibayar per satuan. -->
+  <div class="lembar__bersih">
+    <span class="lembar__bersih-label">
+      {{ "price-sheet__net" | translate
+      }}<ng-container *ngIf="data.unit"> / {{ data.unit }}</ng-container>
+    </span>
+    <strong class="lembar__bersih-nilai">
+      Rp {{ hargaBersih | number: "1.0-2" }}
+    </strong>
+  </div>
+
   <!--
     Hanya administrator (peran 5) dan pemilik (peran 7) yang boleh menimpa
-    harga di master barang. Batas yang sama dijaga administratorMiddleware di
-    server; ini sekadar tidak menawarkan pilihan yang pasti ditolak. Mati bila
-    harganya tidak berubah — tidak ada yang perlu disimpan.
+    harga di master barang; administratorMiddleware menjaga batas yang sama di
+    server. Togglenya mati selama harganya belum berubah — tidak ada yang
+    perlu disimpan (dikelola sesuaikanToggle di kelasnya).
   -->
-  <mat-slide-toggle
-    class="w-100"
+  <div
+    class="lembar__master"
     *ngIf="bolehSimpanKeMaster"
-    formControlName="save_price"
-    [disabled]="tanpaPerubahan || priceFormGroup.invalid"
+    [class.lembar__master--mati]="priceFormGroup.controls['save_price'].disabled"
   >
-    {{ "purchase-invoice__confirm__save-price" | translate }}
-  </mat-slide-toggle>
+    <i class="ph-fill ph-bookmark-simple" aria-hidden="true"></i>
+    <span class="lembar__master-teks">
+      <strong>{{ "price-sheet__save-master" | translate }}</strong>
+      <small>{{ "price-sheet__save-master__desc" | translate }}</small>
+    </span>
+    <mat-slide-toggle formControlName="save_price"></mat-slide-toggle>
+  </div>
 
   <div class="lembar__aksi">
+    <button type="button" class="btn btn--kedua" (click)="batal()">
+      {{ "general__cancel" | translate }}
+    </button>
     <button
       type="submit"
       class="btn btn--primary"

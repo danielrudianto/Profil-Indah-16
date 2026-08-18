@@ -310,6 +310,7 @@ export class GoodReceiptCreateComponent {
     const sheet = this.sheet.open(UpdateProductPurchasePriceComponent, {
       data: {
         reference: nilai.reference,
+        unit: nilai.unit,
         price: nilai.price,
         discount: nilai.discount,
         initial_price: nilai.initial_price,

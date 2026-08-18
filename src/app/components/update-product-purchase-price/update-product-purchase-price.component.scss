@@ -1,27 +1,51 @@
 /*
   Lembar bawah pengubah harga beli — sistem desain Nocturne.
-  Warna ikut token tema, bukan angka mati: lembarnya harus terbaca
-  di mode terang maupun gelap.
+
+  Wadah Material-nya sendiri direskin di styles.scss (kartu bundar 560px);
+  yang di sini isi lembarnya. Warna ikut token tema supaya terbaca di mode
+  terang maupun gelap. Kembar dengan update-product-sales-price — ubah
+  keduanya bersamaan.
 */
 .lembar {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 10px 4px 14px;
   font-family: "Montserrat", system-ui, sans-serif;
   color: var(--color-text);
 }
 
+.lembar__grabber {
+  width: 44px;
+  height: 4px;
+  margin: 0 auto 16px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-text) 18%, transparent);
+}
+
+.lembar__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
 .lembar__judul {
-  margin: 0 0 2px;
+  margin: 0;
   font-size: 16px;
   font-weight: 600;
 }
 
-.lembar__barang {
-  margin: 0 0 14px;
-  font-size: 13px;
-  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+/* Pill nama barang — bentuk yang sama dengan tag nomor dokumen. */
+.lembar__pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--color-active);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  color: var(--color-accent);
+  font-size: 11.5px;
+  font-weight: 500;
 }
 
 .lembar__kisi {
@@ -30,8 +54,75 @@
   gap: 12px;
 }
 
+/*
+  Pratinjau harga bersih. Garis putus-putus, bukan kartu penuh: ia
+  keterangan hitungan, bukan isian.
+*/
+.lembar__bersih {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 2px 0 14px;
+  padding: 12px 14px;
+  border: 1px dashed var(--color-divider);
+  border-radius: 10px;
+}
+
+.lembar__bersih-label {
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+.lembar__bersih-nilai {
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+/* Baris simpan-ke-master: bookmark + keterangan + toggle di kanan. */
+.lembar__master {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-divider);
+  border-radius: 10px;
+  transition: opacity 0.15s ease;
+
+  > i {
+    flex: none;
+    font-size: 18px;
+    color: var(--color-accent);
+  }
+}
+
+.lembar__master-teks {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  strong {
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  small {
+    font-size: 12px;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  }
+}
+
+.lembar__master--mati {
+  opacity: 0.55;
+}
+
 .lembar__aksi {
   display: flex;
   justify-content: flex-end;
-  margin-top: 12px;
+  gap: 10px;
+  margin-top: 14px;
 }
