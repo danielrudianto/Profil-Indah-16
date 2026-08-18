@@ -3,20 +3,24 @@
   <header class="buat__head laporan__kepala">
     <div>
       <h1 class="buat__title">{{ laporan.customer.name }}</h1>
-      <p class="buat__lede">{{ 'customer-report__lede' | translate }}</p>
+      <p class="buat__lede">{{ "customer-report__lede" | translate }}</p>
     </div>
 
     <div class="laporan__kendali">
       <button type="button" class="btn btn--kedua" (click)="kembali()">
         <i class="ph ph-arrow-u-up-left" aria-hidden="true"></i>
-        {{ 'customer-report__back' | translate }}
+        {{ "customer-report__back" | translate }}
       </button>
 
       <mat-form-field appearance="outline" class="laporan__tahun">
-        <mat-label>{{ 'customer-report__year' | translate }}</mat-label>
+        <mat-label>{{ "customer-report__year" | translate }}</mat-label>
         <mat-select [ngModel]="tahun" (ngModelChange)="gantiTahun($event)">
-          <mat-option [value]="0">{{ 'customer-report__all-time' | translate }}</mat-option>
-          <mat-option *ngFor="let t of laporan.availableYears" [value]="t">{{ t }}</mat-option>
+          <mat-option [value]="0">{{
+            "customer-report__all-time" | translate
+          }}</mat-option>
+          <mat-option *ngFor="let t of laporan.availableYears" [value]="t">{{
+            t
+          }}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -25,70 +29,116 @@
   <!-- Ringkasan — empat angka yang menjawab "seberapa besar pelanggan ini". -->
   <div class="hero">
     <div class="hero__kartu hero__kartu--utama">
-      <span class="hero__label">{{ 'customer-report__total-value' | translate }}</span>
-      <strong class="hero__nilai">Rp {{ laporan.summary.totalValue | number: '1.0-0' }}</strong>
+      <span class="hero__label">{{
+        "customer-report__total-value" | translate
+      }}</span>
+      <strong class="hero__nilai"
+        >Rp {{ laporan.summary.totalValue | number: "1.0-0" }}</strong
+      >
     </div>
     <div class="hero__kartu">
-      <span class="hero__label">{{ 'customer-report__documents' | translate }}</span>
-      <strong class="hero__nilai">{{ laporan.summary.documentCount | number }}</strong>
+      <span class="hero__label">{{
+        "customer-report__documents" | translate
+      }}</span>
+      <strong class="hero__nilai">{{
+        laporan.summary.documentCount | number
+      }}</strong>
     </div>
     <div class="hero__kartu">
-      <span class="hero__label">{{ 'customer-report__unique-products' | translate }}</span>
-      <strong class="hero__nilai">{{ laporan.summary.uniqueProducts | number }}</strong>
+      <span class="hero__label">{{
+        "customer-report__unique-products" | translate
+      }}</span>
+      <strong class="hero__nilai">{{
+        laporan.summary.uniqueProducts | number
+      }}</strong>
     </div>
     <div class="hero__kartu">
-      <span class="hero__label">{{ 'customer-report__last-sale' | translate }}</span>
+      <span class="hero__label">{{
+        "customer-report__last-sale" | translate
+      }}</span>
       <strong class="hero__nilai hero__nilai--tanggal">
-        {{ laporan.summary.lastDate ? (laporan.summary.lastDate | date: 'dd MMM yyyy') : '—' }}
+        {{
+          laporan.summary.lastDate
+            ? (laporan.summary.lastDate | date: "dd MMM yyyy")
+            : "—"
+        }}
       </strong>
       <span class="hero__sub" *ngIf="laporan.summary.firstDate">
-        {{ 'customer-report__since' | translate }} {{ laporan.summary.firstDate | date: 'dd MMM yyyy' }}
+        {{ "customer-report__since" | translate }}
+        {{ laporan.summary.firstDate | date: "dd MMM yyyy" }}
       </span>
     </div>
   </div>
 
+  <!-- Sorotan: kalimat terhitung, hanya klaim yang datanya buktikan. -->
+  <section class="kartu sorotan" *ngIf="sorotan.length > 0">
+    <h2 class="kartu__label">{{ "sorotan-entitas__judul" | translate }}</h2>
+    <ul class="sorotan__daftar">
+      <li *ngFor="let baris of sorotan">
+        <span class="sorotan__ikon" aria-hidden="true">
+          <i [class]="'ph ' + baris.ikon"></i>
+        </span>
+        {{ baris.teks }}
+      </li>
+    </ul>
+  </section>
+
   <!-- Merek yang dibeli -->
   <section class="kartu">
-    <h2 class="kartu__label">{{ 'customer-report__brands' | translate }}</h2>
+    <h2 class="kartu__label">{{ "customer-report__brands" | translate }}</h2>
 
     <div class="gulir" *ngIf="laporan.brands.length > 0">
       <table class="tabel">
         <thead>
           <tr>
-            <th>{{ 'customer-report__brand' | translate }}</th>
-            <th class="ke-kanan">{{ 'customer-report__products' | translate }}</th>
-            <th class="ke-kanan">{{ 'customer-report__quantity' | translate }}</th>
-            <th class="ke-kanan">{{ 'customer-report__value' | translate }}</th>
+            <th>{{ "customer-report__brand" | translate }}</th>
+            <th class="ke-kanan">
+              {{ "customer-report__products" | translate }}
+            </th>
+            <th class="ke-kanan">
+              {{ "customer-report__quantity" | translate }}
+            </th>
+            <th class="ke-kanan">{{ "customer-report__value" | translate }}</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let merek of laporan.brands">
             <td class="tabel__utama">{{ merek.name }}</td>
             <td class="ke-kanan">{{ merek.uniqueProducts | number }}</td>
-            <td class="ke-kanan baris__total">{{ merek.quantity | number: '1.0-2' }}</td>
-            <td class="ke-kanan baris__total">Rp {{ merek.value | number: '1.0-0' }}</td>
+            <td class="ke-kanan baris__total">
+              {{ merek.quantity | number: "1.0-2" }}
+            </td>
+            <td class="ke-kanan baris__total">
+              Rp {{ merek.value | number: "1.0-0" }}
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <p class="tabel__pesan" *ngIf="laporan.brands.length === 0">
-      {{ 'customer-report__empty' | translate }}
+      {{ "customer-report__empty" | translate }}
     </p>
   </section>
 
   <!-- Barang paling sering dibeli -->
   <section class="kartu">
-    <h2 class="kartu__label">{{ 'customer-report__top-products' | translate }}</h2>
+    <h2 class="kartu__label">
+      {{ "customer-report__top-products" | translate }}
+    </h2>
 
     <div class="gulir" *ngIf="laporan.topProducts.length > 0">
       <table class="tabel">
         <thead>
           <tr>
-            <th>{{ 'customer-report__product' | translate }}</th>
-            <th class="ke-kanan">{{ 'customer-report__documents' | translate }}</th>
-            <th class="ke-kanan">{{ 'customer-report__quantity' | translate }}</th>
-            <th class="ke-kanan">{{ 'customer-report__value' | translate }}</th>
+            <th>{{ "customer-report__product" | translate }}</th>
+            <th class="ke-kanan">
+              {{ "customer-report__documents" | translate }}
+            </th>
+            <th class="ke-kanan">
+              {{ "customer-report__quantity" | translate }}
+            </th>
+            <th class="ke-kanan">{{ "customer-report__value" | translate }}</th>
           </tr>
         </thead>
         <tbody>
@@ -99,18 +149,22 @@
             </td>
             <td class="ke-kanan">{{ barang.documentCount | number }}</td>
             <td class="ke-kanan baris__total">
-              {{ barang.quantity | number: '1.0-2' }} {{ barang.unit }}
+              {{ barang.quantity | number: "1.0-2" }} {{ barang.unit }}
             </td>
-            <td class="ke-kanan baris__total">Rp {{ barang.value | number: '1.0-0' }}</td>
+            <td class="ke-kanan baris__total">
+              Rp {{ barang.value | number: "1.0-0" }}
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <p class="tabel__pesan" *ngIf="laporan.topProducts.length === 0">
-      {{ 'customer-report__empty' | translate }}
+      {{ "customer-report__empty" | translate }}
     </p>
   </section>
 </div>
 
-<p class="tabel__pesan" *ngIf="isLoading">{{ 'general__loading' | translate }}</p>
+<p class="tabel__pesan" *ngIf="isLoading">
+  {{ "general__loading" | translate }}
+</p>
