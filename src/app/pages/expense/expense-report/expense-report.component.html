@@ -1,86 +1,148 @@
-<div class="row">
-  <div class="col-12"></div>
-</div>
-<div class="row">
-  <div class="col-12">
-    <div class="dashboard-card mt-0">
-      <div class="row">
-        <div class="col-12">
-          <div class="expense-report__header">
-            <mat-form-field appearance="outline" style="min-width: 170px">
-              <mat-label>{{
-                "expense__report__month-year" | translate
-              }}</mat-label>
-              <input matInput [matDatepicker]="dp" [formControl]="date" />
-              <mat-hint>MM/YYYY</mat-hint>
-              <mat-datepicker-toggle
-                matIconSuffix
-                [for]="dp"
-              ></mat-datepicker-toggle>
-              <mat-datepicker
-                #dp
-                startView="multi-year"
-                (monthSelected)="setMonthAndYear($event, dp)"
-                panelClass="example-month-picker"
-              >
-              </mat-datepicker>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>{{
-                "expense__report__view-by" | translate
-              }}</mat-label>
-              <mat-select
-                (selectionChange)="onViewByChange($event)"
-                [value]="'company'"
-              >
-                <mat-option [value]="'company'">{{
-                  "expense__report__view-by__company" | translate
-                }}</mat-option>
-                <mat-option [value]="'type'">{{
-                  "expense__report__view-by__type" | translate
-                }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="table-responsive">
-          <table class="table" *ngIf="selectedIndex == 0">
-            <thead>
-              <tr>
-                <th>{{ "expense__report__company" | translate }}</th>
-                <th>{{ "expense__report__value" | translate }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let company of companies">
-                <td>{{ company.name }}</td>
-                <td>{{ company.value | number : "0.2-2" }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <table class="table" *ngIf="selectedIndex == 1">
-            <thead>
-              <tr>
-                <th>{{ "expense__report__type" | translate }}</th>
-                <th>{{ "expense__report__value" | translate }}</th>
-              </tr>
-            </thead>
-            <!-- Induk baku dicetak tebal sebagai gulungan seluruh anaknya. -->
-            <tbody *ngFor="let type of types">
-              <tr>
-                <td>{{ type.name }}</td>
-                <td>
-                  <b>{{ type.value | number : "0.2-2" }}</b>
-                </td>
-              </tr>
-              <tr *ngFor="let child of type.children">
-                <td class="ps-5">{{ child.name }}</td>
-                <td>{{ child.value | number : "0.2-2" }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+<!-- Laporan pengeluaran sebulan — per perusahaan atau per tipe pengeluaran. -->
+<div class="laporan">
+  <header class="laporan__kepala">
+    <div>
+      <h1 class="laporan__judul">{{ 'expense__report__title' | translate }}</h1>
+      <p class="laporan__lede">{{ 'expense__report__lede' | translate }}</p>
+    </div>
+
+    <div class="laporan__kendali">
+      <div class="seg" role="group">
+        <button
+          type="button"
+          class="seg__tombol"
+          [class.seg__tombol--on]="kelompok === 'company'"
+          (click)="setKelompok('company')"
+        >
+          {{ 'expense__report__seg__company' | translate }}
+        </button>
+        <button
+          type="button"
+          class="seg__tombol"
+          [class.seg__tombol--on]="kelompok === 'type'"
+          (click)="setKelompok('type')"
+        >
+          {{ 'expense__report__seg__type' | translate }}
+        </button>
+      </div>
+
+      <div class="laporan__bulan-kendali">
+        <!-- Jangkar datepicker; kendali yang terlihat adalah tombolnya. -->
+        <input
+          class="laporan__bulan-jangkar"
+          [matDatepicker]="bulanPicker"
+          [formControl]="date"
+          readonly
+          tabindex="-1"
+          aria-hidden="true"
+        />
+        <button
+          type="button"
+          class="btn btn--kedua"
+          (click)="bulanPicker.open()"
+          [attr.aria-label]="'expense__report__month-year' | translate"
+        >
+          <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+          {{ namaBulan }}
+        </button>
+        <mat-datepicker
+          #bulanPicker
+          startView="multi-year"
+          (monthSelected)="setMonthAndYear($event, bulanPicker)"
+        ></mat-datepicker>
       </div>
     </div>
-  </div>
+  </header>
+
+  <ng-container *ngIf="!isLoading">
+    <!-- Per perusahaan -->
+    <section class="kartu" *ngIf="kelompok === 'company' && companies.length > 0">
+      <h2 class="kartu__label">
+        {{ 'expense__report__seg__company' | translate }}
+      </h2>
+
+      <div class="gulir">
+        <table class="tabel tabel--rapat">
+          <thead>
+            <tr>
+              <th>{{ 'expense__report__company' | translate }}</th>
+              <th class="tabel__nilai-kepala">
+                {{ 'expense__report__value' | translate }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let company of companies">
+              <td class="tabel__utama">{{ company.name }}</td>
+              <td class="tabel__nilai">
+                Rp {{ company.value | number: '1.0-0' }}
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td class="tabel__utama">
+                {{ 'expense__report__total' | translate }}
+              </td>
+              <td class="tabel__nilai baris__total">
+                Rp {{ total | number: '1.0-0' }}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+
+    <!-- Per tipe pengeluaran: induk digulung dari anak-anaknya. -->
+    <section class="kartu" *ngIf="kelompok === 'type' && types.length > 0">
+      <h2 class="kartu__label">
+        {{ 'expense__report__seg__type' | translate }}
+      </h2>
+
+      <div class="gulir">
+        <table class="tabel tabel--rapat">
+          <thead>
+            <tr>
+              <th>{{ 'expense__report__type' | translate }}</th>
+              <th class="tabel__nilai-kepala">
+                {{ 'expense__report__value' | translate }}
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let type of types">
+            <tr>
+              <td class="tabel__utama">{{ type.name }}</td>
+              <td class="tabel__nilai baris__total">
+                Rp {{ type.value | number: '1.0-0' }}
+              </td>
+            </tr>
+            <tr *ngFor="let child of type.children" class="baris-anak">
+              <td class="tabel__redup">{{ child.name }}</td>
+              <td class="tabel__nilai">
+                Rp {{ child.value | number: '1.0-0' }}
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td class="tabel__utama">
+                {{ 'expense__report__total' | translate }}
+              </td>
+              <td class="tabel__nilai baris__total">
+                Rp {{ total | number: '1.0-0' }}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+
+    <section class="kartu" *ngIf="kelompokKosong">
+      <p class="laporan__kosong">{{ 'expense__report__empty' | translate }}</p>
+    </section>
+  </ng-container>
+
+  <section class="kartu" *ngIf="isLoading">
+    <p class="tabel__pesan">{{ 'general__loading' | translate }}</p>
+  </section>
 </div>

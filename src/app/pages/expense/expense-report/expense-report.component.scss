@@ -1,11 +1,10 @@
-.expense-report__header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
+/* Seluruh anatomi halaman laporan tinggal di partial bersama. */
+@use "../../../styles/laporan";
 
-.expense-report__header {
-  width: auto;
+/*
+  Anak tipe pengeluaran menjorok di bawah induknya — pohonnya cuma dua
+  tingkat, jadi indentasi saja sudah cukup sebagai peta.
+*/
+.baris-anak td:first-child {
+  padding-left: 32px;
 }

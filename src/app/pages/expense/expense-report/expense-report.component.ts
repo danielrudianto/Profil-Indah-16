@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ApiService } from 'src/app/services/api.service';
-import { AlertService } from 'src/app/services/alert.service';
-import { default as _rollupMoment, Moment } from 'moment';
-import * as _moment from 'moment';
-import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
+import {
+  MatDatepicker,
+  MatDatepickerInput,
+} from '@angular/material/datepicker';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -14,84 +14,110 @@ import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
   MomentDateAdapter,
 } from '@angular/material-moment-adapter';
-import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
-import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
+import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatSelect, MatOption } from '@angular/material/select';
-import { NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import * as _moment from 'moment';
+import { default as _rollupMoment, Moment } from 'moment';
+
+import { ApiService } from 'src/app/services/api.service';
+import { AlertService } from 'src/app/services/alert.service';
+import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
 
 const moment = _rollupMoment || _moment;
 
+/**
+ * Laporan pengeluaran sebulan — dua cara pandang atas angka yang sama:
+ * per perusahaan pembayar, atau per pohon tipe pengeluaran (induk baku
+ * digulung dari seluruh anaknya; pengeluaran memang dicatat ke anak).
+ *
+ * Adapter tanggalnya dipasang di komponen ini, bukan global: mode
+ * bulan-tahun hanya dipakai halaman-halaman laporan.
+ */
 @Component({
-    selector: 'app-expense-report',
-    templateUrl: './expense-report.component.html',
-    styleUrls: ['./expense-report.component.scss'],
-    providers: [
-        {
-            provide: DateAdapter,
-            useClass: MomentDateAdapter,
-            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-        },
-        { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
-    ],
-    imports: [MatFormField, MatLabel, MatInput, MatDatepickerInput, FormsModule, ReactiveFormsModule, MatHint, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, NgIf, NgFor, DecimalPipe, TranslatePipe]
+  selector: 'app-expense-report',
+  templateUrl: './expense-report.component.html',
+  styleUrls: ['./expense-report.component.scss'],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MONTH_AND_YEAR_FORMAT },
+  ],
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatInput,
+    MatDatepicker,
+    MatDatepickerInput,
+    TranslatePipe,
+  ],
 })
-export class ExpenseReportComponent {
+export class ExpenseReportComponent implements OnInit {
   constructor(
     private apiService: ApiService,
-    private alertService: AlertService
+    private alertService: AlertService,
   ) {}
 
   date = new FormControl(moment());
   isLoading: boolean = true;
   companies: any[] = [];
   types: any[] = [];
+  total: number = 0;
 
-  // If selected index is 0, user is viewing report by company
-  selectedIndex: number = 0;
+  kelompok: 'company' | 'type' = 'company';
 
   ngOnInit(): void {
     this.fetchReport();
   }
 
-  setMonthAndYear(
-    normalizedMonthAndYear: Moment,
-    datepicker: MatDatepicker<Moment>
-  ) {
-    const ctrlValue = this.date.value ?? moment();
-    ctrlValue.month(normalizedMonthAndYear.month());
-    ctrlValue.year(normalizedMonthAndYear.year());
-    this.date.setValue(ctrlValue);
+  /** "Agustus 2026" — dibaca tombol pemilih bulan di kepala halaman. */
+  get namaBulan(): string {
+    return (this.date.value ?? moment()).format('MMMM YYYY');
+  }
+
+  setKelompok(nilai: 'company' | 'type'): void {
+    this.kelompok = nilai;
+  }
+
+  get kelompokKosong(): boolean {
+    return this.kelompok === 'company'
+      ? this.companies.length === 0
+      : this.types.length === 0;
+  }
+
+  setMonthAndYear(pilihan: Moment, datepicker: MatDatepicker<Moment>): void {
+    const nilai = this.date.value ?? moment();
+    nilai.month(pilihan.month());
+    nilai.year(pilihan.year());
+    this.date.setValue(nilai);
     datepicker.close();
 
     this.fetchReport();
   }
 
-  fetchReport() {
-    const month = this.date.value?.format('MM');
-    const year = this.date.value?.format('YYYY');
+  fetchReport(): void {
+    this.isLoading = true;
     this.apiService
       .get(`expense`, {
-        month: Number(month),
-        year: Number(year),
+        month: Number(this.date.value?.format('MM')),
+        year: Number(this.date.value?.format('YYYY')),
       })
       .subscribe({
         next: (data: any) => {
-          this.isLoading = false;
           this.companies = data.company;
           this.types = data.expenseTypes;
 
-          // insert to corresponding company and expense type
-
           for (let i = 0; i < this.companies.length; i++) {
-            const value = data.result.filter(
-              (x: any) => x.company_id === this.companies[i].id
-            );
-            this.companies[i].value = value.reduce(
-              (a: number, b: any) => a + b.value,
-              0
-            );
+            this.companies[i].value = data.result
+              .filter((x: any) => x.company_id === this.companies[i].id)
+              .reduce((a: number, b: any) => a + b.value, 0);
           }
 
           /*
@@ -102,32 +128,29 @@ export class ExpenseReportComponent {
             const anak = this.types[i].children ?? [];
 
             for (let j = 0; j < anak.length; j++) {
-              const value = data.result.filter(
-                (x: any) => x.expense_type_id === anak[j].id
-              );
-              anak[j].value = value.reduce(
-                (a: number, b: any) => a + b.value,
-                0
-              );
+              anak[j].value = data.result
+                .filter((x: any) => x.expense_type_id === anak[j].id)
+                .reduce((a: number, b: any) => a + b.value, 0);
             }
 
             this.types[i].value = anak.reduce(
               (a: number, b: any) => a + b.value,
-              0
+              0,
             );
           }
+
+          /* Kedua cara pandang menjumlah ke angka yang sama. */
+          this.total = this.companies.reduce(
+            (a: number, b: any) => a + b.value,
+            0,
+          );
         },
         error: (error) => {
           this.alertService.showError(error);
         },
+      })
+      .add(() => {
+        this.isLoading = false;
       });
-  }
-
-  onViewByChange(event: any) {
-    if (event.value === 'company') {
-      this.selectedIndex = 0;
-    } else {
-      this.selectedIndex = 1;
-    }
   }
 }

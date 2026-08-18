@@ -1,182 +1,180 @@
-<app-feature-background />
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <app-feature-header
-        [title]="
-          ('promotion__title' | translate) +
-          '&nbsp;/&nbsp;' +
-          ('promotion__title__update' | translate)
-        "
-        [isBackAvailable]="true"
-      ></app-feature-header>
-      <div class="dashboard-card">
-        <form [formGroup]="promotionFormGroup">
-          <mat-form-field class="w-100" appearance="outline">
-            <mat-label>{{ "promotion__add__name" | translate }}</mat-label>
-            <input
-              [disabled]="isSubmitting"
-              matInput
-              type="text"
-              formControlName="name"
-            />
-          </mat-form-field>
-          <mat-form-field class="w-100" appearance="outline">
-            <mat-label>{{
-              "promotion__add__description" | translate
-            }}</mat-label>
-            <textarea
-              [disabled]="isSubmitting"
-              matInput
-              type="text"
-              formControlName="description"
-            ></textarea>
-          </mat-form-field>
-          <mat-form-field class="w-100" appearance="outline">
-            <mat-label>{{
-              "promotion__add__start-date" | translate
-            }}</mat-label>
-            <input
-              [disabled]="isSubmitting"
-              matInput
-              formControlName="start_date"
-              [matDatepicker]="startpicker"
-            />
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="startpicker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #startpicker></mat-datepicker>
-          </mat-form-field>
-          <mat-form-field class="w-100" appearance="outline">
-            <mat-label>{{ "promotion__add__end-date" | translate }}</mat-label>
-            <input
-              [disabled]="isSubmitting"
-              matInput
-              formControlName="end_date"
-              [matDatepicker]="picker"
-            />
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="picker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-          <mat-form-field class="w-100" appearance="outline">
-            <mat-label>{{ "promotion__add__target" | translate }}</mat-label>
-            <input
-              [disabled]="isSubmitting"
-              matInput
-              type="text"
-              formControlName="target"
-              mask="separator.2"
-              thousandSeparator=" "
-              placeholder="Ex. 800"
-            />
-          </mat-form-field>
+<!-- Ubah promosi — kembaran anatomi buat promosi (17a/17b). -->
+<div class="buat" [formGroup]="promotionFormGroup">
+  <div class="kisi">
+    <div class="buat__utama">
+      <header class="buat__head">
+        <h1 class="buat__title">{{ 'promotion__update__title' | translate }}</h1>
+        <p class="buat__lede">{{ 'promotion__update__lede' | translate }}</p>
+      </header>
 
-          <app-autocomplete-search
-            [label]="'promotion__add__brand' | translate"
-            routeName="product-brand"
-            (onSelectData)="onSelectBrand($event)"
-            [reset]="true"
-          ></app-autocomplete-search>
+      <!-- Info -->
+      <section class="kartu">
+        <h2 class="kartu__label">{{ 'promotion__create__info' | translate }}</h2>
 
-          <mat-chip-set class="mb-5" *ngIf="u.controls.length > 0">
-            <mat-chip
-              *ngFor="let brand of u.controls; index as i"
-              (click)="onRemoveBrand(i)"
-              >{{ brand.get("name")?.value }}</mat-chip
-            >
-          </mat-chip-set>
+        <div class="kartu__baris">
+          <div class="field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'promotion__add__name' | translate }}</mat-label>
+              <input matInput type="text" formControlName="name" autocomplete="off" />
+            </mat-form-field>
+          </div>
+          <div class="field">
+            <app-combo-search
+              [label]="'promotion__add__supplier' | translate"
+              route="supplier"
+              [initial]="namaSupplier"
+              [disabled]="isSubmitting"
+              (pick)="onSelectSupplier($event)"
+              (clear)="onUnselectSupplier()"
+            />
+          </div>
+        </div>
 
-          <app-autocomplete-search
-            [label]="'promotion__add__supplier' | translate"
-            routeName="supplier"
-            [defaultValue]="promotionFormGroup.controls['supplier_name'].value"
-            (onSelectData)="onSelectSupplier($event)"
-            (onUnselectData)="onUnselectSupplier()"
-            [selected]="promotionFormGroup.controls['supplier'].valid"
-          ></app-autocomplete-search>
+        <div class="field">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ 'promotion__add__description' | translate }}</mat-label>
+            <textarea matInput rows="2" formControlName="description"></textarea>
+          </mat-form-field>
+        </div>
 
-          <button
-            type="button"
-            mat-stroked-button
-            color="primary"
-            style="letter-spacing: 0"
-            (click)="addRule()"
-          >
-            {{ "promotion__add__add-rule" | translate }}
-          </button>
-          <div class="table-responsive">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>{{ "promotion__add__rule" | translate }}</th>
-                  <th>{{ "promotion__add__rule-type" | translate }}</th>
-                  <th>{{ "promotion__add__rule-value" | translate }}</th>
-                  <th>{{ "promotion__add__action" | translate }}</th>
-                </tr>
-              </thead>
-              <tbody *ngIf="t.controls.length == 0">
-                <tr>
-                  <td colspan="4">
-                    <empty-table />
-                  </td>
-                </tr>
-              </tbody>
-              <tbody *ngIf="t.controls.length > 0">
-                <tr *ngFor="let control of t.controls; let i = index">
-                  <td>{{ i + 1 }}</td>
-                  <td>
-                    <span [ngSwitch]="control.value.rule">
-                      <span *ngSwitchCase="'Starts with'">{{
-                        "promotion__add__rule-starts-with" | translate
-                      }}</span>
-                      <span *ngSwitchCase="'Ends with'">
-                        {{ "promotion__add__rule-ends-with" | translate }}
-                      </span>
-                      <span *ngSwitchCase="'Contains'">
-                        {{ "promotion__add__rule-contains" | translate }}
-                      </span>
-                      <span *ngSwitchCase="'Does not start with'">{{
-                        "promotion__add__rule-not-starts-with" | translate
-                      }}</span>
-                      <span *ngSwitchCase="'Does not end with'">{{
-                        "promotion__add__rule-not-ends-with" | translate
-                      }}</span>
-                      <span *ngSwitchCase="'Does not contain'">
-                        {{ "promotion__add__rule-not-contains" | translate }}
-                      </span>
-                    </span>
-                  </td>
-                  <td>{{ control.value.value }}</td>
-                  <td>
-                    <button
-                      mat-icon-button
-                      (click)="removeRule(i)"
-                      [disabled]="isSubmitting"
-                    >
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+        <div class="kartu__baris">
+          <div class="field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'promotion__add__start-date' | translate }}</mat-label>
+              <input matInput [matDatepicker]="pMulai" formControlName="start_date" (click)="pMulai.open()" />
+              <button type="button" matSuffix class="buka-kalender" (click)="pMulai.open()"
+                [attr.aria-label]="'general__pick-date' | translate">
+                <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+              </button>
+              <mat-datepicker #pMulai></mat-datepicker>
+            </mat-form-field>
           </div>
 
-          <button
-            type="submit"
-            mat-stroked-button
-            color="primary"
-            style="letter-spacing: 0"
-            (click)="submitForm()"
-            [disabled]="isSubmitting || !promotionFormGroup.valid"
-          >
-            {{ "promotion__add__submit" | translate }}
+          <div class="field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'promotion__add__end-date' | translate }}</mat-label>
+              <input matInput [matDatepicker]="pAkhir" formControlName="end_date" (click)="pAkhir.open()" />
+              <button type="button" matSuffix class="buka-kalender" (click)="pAkhir.open()"
+                [attr.aria-label]="'general__pick-date' | translate">
+                <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+              </button>
+              <mat-datepicker #pAkhir></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="kartu__baris">
+          <div class="field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{ 'promotion__add__target' | translate }}</mat-label>
+              <input matInput type="text" class="input--kanan" mask="separator" thousandSeparator="." formControlName="target" autocomplete="off" />
+              <span matTextPrefix>Rp&nbsp;</span>
+            </mat-form-field>
+          </div>
+          <div class="field"></div>
+        </div>
+
+        <p class="petunjuk">
+          <i class="ph ph-info" aria-hidden="true"></i>
+          {{ 'promotion__create__optional-note' | translate }}
+        </p>
+      </section>
+
+      <!-- Merek peserta: autocomplete + chip ✕ -->
+      <section class="kartu">
+        <h2 class="kartu__label">{{ 'promotion__create__brands' | translate }}</h2>
+
+        <div class="field">
+          <app-combo-search
+            [label]="'promotion__add__brand' | translate"
+            route="product-brand"
+            [disabled]="isSubmitting"
+            (pick)="onSelectBrand($event)"
+          />
+        </div>
+
+        <div class="chip-kumpul" *ngIf="brands.length > 0">
+          <span class="saringan__kapsul" *ngFor="let b of brands; index as i">
+            {{ b.name }}
+            <button type="button" (click)="removeBrand(i)" [attr.aria-label]="'general__delete' | translate">
+              <i class="ph ph-x" aria-hidden="true"></i>
+            </button>
+          </span>
+        </div>
+        <p class="field__bantu-diam" *ngIf="brands.length === 0">
+          {{ 'promotion__create__brands-empty' | translate }}
+        </p>
+      </section>
+
+      <!-- Aturan SKU -->
+      <section class="kartu">
+        <div class="kartu__kepala">
+          <h2 class="kartu__label">{{ 'promotion__create__rules' | translate }}</h2>
+          <span class="tag-otomatis">
+            <i class="ph ph-intersect" aria-hidden="true"></i>
+            {{ 'promotion__create__rules-and' | translate }}
+          </span>
+        </div>
+
+        <div class="aturan" *ngFor="let baris of t.controls; index as i" [formGroup]="ruleAt(i)">
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="rule">
+              <mat-option value="Starts with">{{ 'promotion__add__rule-starts-with' | translate }}</mat-option>
+              <mat-option value="Ends with">{{ 'promotion__add__rule-ends-with' | translate }}</mat-option>
+              <mat-option value="Contains">{{ 'promotion__add__rule-contains' | translate }}</mat-option>
+              <mat-option value="Does not start with">{{ 'promotion__add__rule-not-starts-with' | translate }}</mat-option>
+              <mat-option value="Does not end with">{{ 'promotion__add__rule-not-ends-with' | translate }}</mat-option>
+              <mat-option value="Does not contain">{{ 'promotion__add__rule-not-contains' | translate }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="aturan__nilai">
+            <mat-label>{{ 'promotion__create__rule-value' | translate }}</mat-label>
+            <input matInput type="text" formControlName="value" autocomplete="off" />
+          </mat-form-field>
+
+          <button type="button" class="tabel__aksi-btn" (click)="removeRule(i)"
+            [title]="'general__delete' | translate" [attr.aria-label]="'general__delete' | translate">
+            <i class="ph ph-trash" aria-hidden="true"></i>
           </button>
-        </form>
-      </div>
+        </div>
+
+        <p class="aturan__kosong" *ngIf="t.controls.length === 0">
+          {{ 'promotion__create__rules-empty' | translate }}
+        </p>
+
+        <button type="button" class="tambah" (click)="addRule()">
+          <i class="ph ph-plus-circle" aria-hidden="true"></i>
+          <span>{{ 'promotion__create__add-rule' | translate }}</span>
+        </button>
+      </section>
     </div>
+
+    <aside class="buat__samping">
+      <section class="kartu">
+        <h2 class="kartu__label">{{ 'promotion__create__before-save' | translate }}</h2>
+        <ul class="periksa">
+          <li *ngFor="let c of checklist" [class.periksa--on]="c.selesai">
+            <span class="periksa__bulat" aria-hidden="true">
+              <i class="ph ph-check" *ngIf="c.selesai"></i>
+            </span>
+            {{ c.kunci | translate }}
+          </li>
+        </ul>
+      </section>
+
+      <section class="kartu">
+        <h2 class="kartu__label">{{ 'promotion__create__actions' | translate }}</h2>
+        <button type="button" class="btn btn--primary btn--blok"
+          [disabled]="isSubmitting || isLoading || !promotionFormGroup.valid || brands.length === 0"
+          (click)="submitForm()">
+          <i class="ph ph-check" aria-hidden="true"></i>
+          {{ 'promotion__update__save' | translate }}
+        </button>
+        <button type="button" class="btn btn--kedua btn--blok" (click)="batal()">
+          {{ 'general__cancel' | translate }}
+        </button>
+      </section>
+    </aside>
   </div>
 </div>
