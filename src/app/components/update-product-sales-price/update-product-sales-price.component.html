@@ -1,7 +1,10 @@
-<form [formGroup]="priceFormGroup" class="mt-3" (ngSubmit)="updatePrice()">
-  <h1>
+<form [formGroup]="priceFormGroup" class="lembar" (ngSubmit)="updatePrice()">
+  <h1 class="lembar__judul">
     {{ "update-product-sales-price__title" | translate }}
   </h1>
+  <!-- Barisnya sudah tidak terlihat di belakang lembar ini; namanya diulang. -->
+  <p class="lembar__barang" *ngIf="data.reference">{{ data.reference }}</p>
+
   <mat-form-field appearance="outline" class="w-100">
     <mat-label>
       {{ "update-product-sales-price__price" | translate }}</mat-label
@@ -9,7 +12,6 @@
     <input
       type="text"
       matInput
-      type="text"
       mask="separator.2"
       thousandSeparator=" "
       formControlName="price"
@@ -24,7 +26,6 @@
     <input
       type="text"
       matInput
-      type="text"
       mask="separator.2"
       thousandSeparator=" "
       formControlName="discount"
@@ -32,7 +33,6 @@
     />
   </mat-form-field>
 
-  <!-- Slide toggle, disabled if initialPrice is same with price -->
   <!--
     Hanya administrator (peran 5) dan pemilik (peran 7) yang boleh menimpa
     harga di master barang. Batas yang sama dijaga administratorMiddleware di
@@ -53,16 +53,15 @@
     {{ "update-product-sales-price__save-price" | translate }}
   </mat-slide-toggle>
 
-  <!-- Button to save -->
-  <div class="update-price__button-wrapper">
+  <div class="lembar__aksi">
     <button
+      type="submit"
+      class="btn btn--primary"
       [disabled]="
         priceFormGroup.invalid ||
         priceFormGroup.controls['discount'].value >
           priceFormGroup.controls['price'].value
       "
-      class="button-default"
-      type="submit"
     >
       {{ "update-product-sales-price__save" | translate }}
     </button>

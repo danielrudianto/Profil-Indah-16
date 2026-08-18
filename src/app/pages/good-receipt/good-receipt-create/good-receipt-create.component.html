@@ -278,12 +278,21 @@
                 </span>
               </td>
 
-              <td *ngIf="bolehUbahHarga">
-                <mat-form-field appearance="outline" class="w-100"><input matInput type="text" formControlName="price" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+              <!--
+                Harga dan diskon dibuka lewat bottom sheet, bukan diketik di
+                tabel — dua kolom isian membuat tabelnya harus digulir
+                mendatar. Pola yang sama dengan faktur penjualan.
+              -->
+              <td class="ke-kanan" *ngIf="bolehUbahHarga">
+                <button type="button" class="nilai-btn" (click)="ubahHarga(i)">
+                  Rp {{ itemForm.get("price")?.value | number: "1.0-0" }}
+                </button>
               </td>
 
-              <td *ngIf="bolehUbahHarga">
-                <mat-form-field appearance="outline" class="w-100"><input matInput type="text" formControlName="discount" mask="separator.2" thousandSeparator=" " /></mat-form-field>
+              <td class="ke-kanan" *ngIf="bolehUbahHarga">
+                <button type="button" class="nilai-btn" (click)="ubahHarga(i)">
+                  Rp {{ itemForm.get("discount")?.value | number: "1.0-0" }}
+                </button>
               </td>
 
               <td class="ke-kanan baris__total" *ngIf="bolehUbahHarga">

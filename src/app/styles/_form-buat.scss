@@ -868,3 +868,34 @@
   border-color: var(--color-accent);
   color: var(--color-accent);
 }
+
+/*
+  Angka harga/diskon yang bisa ditekan — membuka bottom sheet pengubah harga.
+
+  Diketik langsung di tabel dulunya, tetapi dua kolom isian membuat tabelnya
+  harus digulir mendatar. Bentuknya tetap angka biasa sampai disentuh, supaya
+  kolomnya terbaca sebagai nilai. Dipakai faktur penjualan, penerimaan barang,
+  dan ubah faktur pembelian.
+*/
+.nilai-btn {
+  padding: 4px 8px;
+  font: inherit;
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: inherit;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--color-divider);
+    background: var(--color-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 1px;
+  }
+}

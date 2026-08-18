@@ -2,6 +2,7 @@ import { DatePipe, NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import {
@@ -18,6 +19,7 @@ import { DeleteConfirmationComponent } from '../../../components/delete-confirma
 import { SubmitConfirmationComponent } from '../../../components/submit-confirmation/submit-confirmation.component';
 import { NgxMaskDirective } from 'ngx-mask';
 import { ComboSearchComponent } from 'src/app/components/combo-search/combo-search.component';
+import { UpdateProductPurchasePriceComponent } from 'src/app/components/update-product-purchase-price/update-product-purchase-price.component';
 import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {
@@ -61,6 +63,7 @@ export class GoodReceiptCreateComponent {
     private translateService: TranslateService,
     private _hotKeysService: HotkeysService,
     private dialog: MatDialog,
+    private sheet: MatBottomSheet,
     private router: Router
   ) {
     this._hotKeysService.add([
@@ -242,6 +245,16 @@ export class GoodReceiptCreateComponent {
         discount: [
           sub == null ? data.purchase_discount : sub.purchase_discount,
         ],
+        /*
+          Acuan matinya toggle simpan-harga di bottom sheet: harga master saat
+          baris dibuat. Belum berubah dari master = tidak ada yang disimpan.
+        */
+        initial_price: [
+          Number(sub == null ? data.purchase_price : sub.purchase_price),
+        ],
+        initial_discount: [
+          Number(sub == null ? data.purchase_discount : sub.purchase_discount),
+        ],
         default_unit: [data.unit],
         stock: [data.stock ?? null],
         save_price: [false],
@@ -280,6 +293,41 @@ export class GoodReceiptCreateComponent {
 
   batal(): void {
     this.router.navigate(['/Good-receipt/Archive']);
+  }
+
+  /*
+    Harga dan diskon dibuka lewat bottom sheet, bukan diketik di tabel —
+    dua kolom isian membuat tabelnya harus digulir mendatar. Pola yang sama
+    dengan faktur penjualan dan ubah faktur pembelian.
+  */
+  ubahHarga(i: number): void {
+    if (!this.bolehUbahHarga) {
+      return;
+    }
+
+    const baris = this.t.at(i) as FormGroup;
+    const nilai = baris.value;
+    const sheet = this.sheet.open(UpdateProductPurchasePriceComponent, {
+      data: {
+        reference: nilai.reference,
+        price: nilai.price,
+        discount: nilai.discount,
+        initial_price: nilai.initial_price,
+        initial_discount: nilai.initial_discount,
+        save_price: nilai.save_price,
+      },
+    });
+
+    sheet.afterDismissed().subscribe((data) => {
+      if (data) {
+        baris.patchValue({
+          price: Number(data.price ?? 0),
+          discount: Number(data.discount ?? 0),
+          save_price: data.save_price,
+        });
+        this.itemFormGroup.markAsDirty();
+      }
+    });
   }
 
   private simpanHargaMaster(): void {

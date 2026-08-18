@@ -1,8 +1,37 @@
-h1 {
-  font-family: "Poppins", sans-serif;
+/*
+  Lembar bawah pengubah harga beli — sistem desain Nocturne.
+  Warna ikut token tema, bukan angka mati: lembarnya harus terbaca
+  di mode terang maupun gelap.
+*/
+.lembar {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 4px 14px;
+  font-family: "Montserrat", system-ui, sans-serif;
+  color: var(--color-text);
+}
+
+.lembar__judul {
+  margin: 0 0 2px;
+  font-size: 16px;
   font-weight: 600;
-  font-size: 1rem;
-  color: #041e49;
-  margin-top: 0.75rem;
-  margin-bottom: 1.25rem;
+}
+
+.lembar__barang {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+.lembar__kisi {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.lembar__aksi {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
 }

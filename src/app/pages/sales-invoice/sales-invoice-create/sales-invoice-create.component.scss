@@ -102,27 +102,7 @@
   disimpan kembali ke master barang, dan keputusan itu perlu ruang. Bentuknya
   tetap angka biasa sampai disentuh, supaya kolomnya terbaca sebagai nilai.
 */
-.nilai-btn {
-  padding: 4px 8px;
-  font: inherit;
-  font-size: 13.5px;
-  font-variant-numeric: tabular-nums;
-  color: inherit;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  cursor: pointer;
-
-  &:hover {
-    border-color: var(--color-divider);
-    background: var(--color-hover);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 1px;
-  }
-}
+/* .nilai-btn kini tinggal di _form-buat.scss — dipakai juga di sisi pembelian. */
 
 .jumlah {
   display: flex;

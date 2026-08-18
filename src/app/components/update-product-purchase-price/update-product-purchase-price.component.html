@@ -1,74 +1,79 @@
-<h2 mat-dialog-title>
-  {{ "purchase-invoice__confirm__update-price" | translate }}
-</h2>
+<form [formGroup]="priceFormGroup" class="lembar" (ngSubmit)="updatePrice()">
+  <h1 class="lembar__judul">
+    {{ "purchase-invoice__confirm__update-price" | translate }}
+  </h1>
+  <!-- Barisnya sudah tidak terlihat di belakang lembar ini; namanya diulang. -->
+  <p class="lembar__barang" *ngIf="data.reference">{{ data.reference }}</p>
 
-<form [formGroup]="priceFormGroup" (ngSubmit)="savePurchasePrice()">
-  <mat-dialog-content>
-    <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{
-        "purchase-invoice__confirm__price" | translate
-      }}</mat-label>
-      <input
-        #price
-        type="text"
-        matInput
-        mask="separator.2"
-        thousandSeparator=" "
-        placeholder="Ex. 8 000"
-        formControlName="price"
-      />
-    </mat-form-field>
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>{{ "purchase-invoice__confirm__price" | translate }}</mat-label>
+    <input
+      type="text"
+      matInput
+      mask="separator.2"
+      thousandSeparator=" "
+      formControlName="price"
+      placeholder="Ex. 8 000"
+    />
+  </mat-form-field>
 
+  <!-- Rupiah dan persen saling menghitung — supplier memakai keduanya. -->
+  <div class="lembar__kisi">
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label
-        >{{
-          "purchase-invoice__confirm__discount" | translate
-        }}
-        (Rp.)</mat-label
-      >
+      <mat-label>
+        {{ "purchase-invoice__confirm__discount" | translate }} (Rp.)
+      </mat-label>
       <input
         type="text"
         matInput
         mask="separator.2"
         thousandSeparator=" "
-        placeholder="Ex. 800"
         formControlName="discount"
+        placeholder="Ex. 800"
       />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label
-        >{{ "purchase-invoice__confirm__discount" | translate }} (%)</mat-label
-      >
+      <mat-label>
+        {{ "purchase-invoice__confirm__discount" | translate }} (%)
+      </mat-label>
       <input
         type="text"
         matInput
         mask="separator.2"
         thousandSeparator=" "
-        placeholder="Ex. 800"
         formControlName="discountPercentage"
+        placeholder="Ex. 10"
       />
     </mat-form-field>
+  </div>
 
-    <!-- Slide toggle, disabled if initialPrice is same with price -->
-    <mat-slide-toggle
-      class="w-100"
-      color="primary"
-      formControlName="save_price"
-    >
-      {{ "purchase-invoice__confirm__save-price" | translate }}
-    </mat-slide-toggle>
-  </mat-dialog-content>
+  <!--
+    Hanya administrator (peran 5) dan pemilik (peran 7) yang boleh menimpa
+    harga di master barang. Batas yang sama dijaga administratorMiddleware di
+    server; ini sekadar tidak menawarkan pilihan yang pasti ditolak. Mati bila
+    harganya tidak berubah — tidak ada yang perlu disimpan.
+  -->
+  <mat-slide-toggle
+    class="w-100"
+    *ngIf="bolehSimpanKeMaster"
+    formControlName="save_price"
+    [disabled]="tanpaPerubahan || priceFormGroup.invalid"
+  >
+    {{ "purchase-invoice__confirm__save-price" | translate }}
+  </mat-slide-toggle>
 
-  <mat-dialog-actions align="end">
+  <div class="lembar__aksi">
     <button
-      mat-stroked-button
-      color="primary"
-      style="letter-spacing: 0"
       type="submit"
-      [disabled]="!priceFormGroup.valid"
+      class="btn btn--primary"
+      [disabled]="
+        priceFormGroup.invalid ||
+        priceFormGroup.controls['discount'].value >
+          priceFormGroup.controls['price'].value
+      "
     >
       {{ "purchase-invoice__confirm__save" | translate }}
     </button>
-  </mat-dialog-actions>
+  </div>
 </form>
