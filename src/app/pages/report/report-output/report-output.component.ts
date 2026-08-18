@@ -87,6 +87,16 @@ export class ReportOutputComponent implements OnInit {
   merek: ComboItem[] = [];
   tipe: ComboItem[] = [];
 
+  /* Id yang sudah jadi kapsul — saran yang sama dimatikan di daftarnya. */
+  get idMerek(): number[] {
+    return this.merek.map((x) => x.id);
+  }
+
+  get idTipe(): number[] {
+    return this.tipe.map((x) => x.id);
+  }
+
+
   /**
    * Bawaan: hanya barang yang bergerak bulan itu. Data asli berisi
    * ±6.700 barang dan dua pertiganya diam — menggambar semuanya cuma

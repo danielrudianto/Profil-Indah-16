@@ -85,3 +85,21 @@
   background: var(--color-active);
   color: var(--color-accent);
 }
+
+/*
+  Saran yang sudah jadi kapsul: tetap tampil supaya orang tahu barangnya
+  ada, tetapi mati dan bercentang — memilihnya dua kali memang tidak bisa.
+*/
+.combo__opt--mati {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.combo__opt-centang {
+  font-size: 13px;
+  color: var(--color-accent);
+}

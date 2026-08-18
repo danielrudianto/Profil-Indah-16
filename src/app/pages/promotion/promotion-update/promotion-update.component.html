@@ -3,19 +3,28 @@
   <div class="kisi">
     <div class="buat__utama">
       <header class="buat__head">
-        <h1 class="buat__title">{{ 'promotion__update__title' | translate }}</h1>
-        <p class="buat__lede">{{ 'promotion__update__lede' | translate }}</p>
+        <h1 class="buat__title">
+          {{ "promotion__update__title" | translate }}
+        </h1>
+        <p class="buat__lede">{{ "promotion__update__lede" | translate }}</p>
       </header>
 
       <!-- Info -->
       <section class="kartu">
-        <h2 class="kartu__label">{{ 'promotion__create__info' | translate }}</h2>
+        <h2 class="kartu__label">
+          {{ "promotion__create__info" | translate }}
+        </h2>
 
         <div class="kartu__baris">
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ 'promotion__add__name' | translate }}</mat-label>
-              <input matInput type="text" formControlName="name" autocomplete="off" />
+              <mat-label>{{ "promotion__add__name" | translate }}</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="name"
+                autocomplete="off"
+              />
             </mat-form-field>
           </div>
           <div class="field">
@@ -32,18 +41,36 @@
 
         <div class="field">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{ 'promotion__add__description' | translate }}</mat-label>
-            <textarea matInput rows="2" formControlName="description"></textarea>
+            <mat-label>{{
+              "promotion__add__description" | translate
+            }}</mat-label>
+            <textarea
+              matInput
+              rows="2"
+              formControlName="description"
+            ></textarea>
           </mat-form-field>
         </div>
 
         <div class="kartu__baris">
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ 'promotion__add__start-date' | translate }}</mat-label>
-              <input matInput [matDatepicker]="pMulai" formControlName="start_date" (click)="pMulai.open()" />
-              <button type="button" matSuffix class="buka-kalender" (click)="pMulai.open()"
-                [attr.aria-label]="'general__pick-date' | translate">
+              <mat-label>{{
+                "promotion__add__start-date" | translate
+              }}</mat-label>
+              <input
+                matInput
+                [matDatepicker]="pMulai"
+                formControlName="start_date"
+                (click)="pMulai.open()"
+              />
+              <button
+                type="button"
+                matSuffix
+                class="buka-kalender"
+                (click)="pMulai.open()"
+                [attr.aria-label]="'general__pick-date' | translate"
+              >
                 <i class="ph ph-calendar-blank" aria-hidden="true"></i>
               </button>
               <mat-datepicker #pMulai></mat-datepicker>
@@ -52,10 +79,22 @@
 
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ 'promotion__add__end-date' | translate }}</mat-label>
-              <input matInput [matDatepicker]="pAkhir" formControlName="end_date" (click)="pAkhir.open()" />
-              <button type="button" matSuffix class="buka-kalender" (click)="pAkhir.open()"
-                [attr.aria-label]="'general__pick-date' | translate">
+              <mat-label>{{
+                "promotion__add__end-date" | translate
+              }}</mat-label>
+              <input
+                matInput
+                [matDatepicker]="pAkhir"
+                formControlName="end_date"
+                (click)="pAkhir.open()"
+              />
+              <button
+                type="button"
+                matSuffix
+                class="buka-kalender"
+                (click)="pAkhir.open()"
+                [attr.aria-label]="'general__pick-date' | translate"
+              >
                 <i class="ph ph-calendar-blank" aria-hidden="true"></i>
               </button>
               <mat-datepicker #pAkhir></mat-datepicker>
@@ -66,8 +105,16 @@
         <div class="kartu__baris">
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ 'promotion__add__target' | translate }}</mat-label>
-              <input matInput type="text" class="input--kanan" mask="separator" thousandSeparator="." formControlName="target" autocomplete="off" />
+              <mat-label>{{ "promotion__add__target" | translate }}</mat-label>
+              <input
+                matInput
+                type="text"
+                class="input--kanan"
+                mask="separator"
+                thousandSeparator="."
+                formControlName="target"
+                autocomplete="off"
+              />
               <span matTextPrefix>Rp&nbsp;</span>
             </mat-form-field>
           </div>
@@ -76,19 +123,23 @@
 
         <p class="petunjuk">
           <i class="ph ph-info" aria-hidden="true"></i>
-          {{ 'promotion__create__optional-note' | translate }}
+          {{ "promotion__create__optional-note" | translate }}
         </p>
       </section>
 
       <!-- Merek peserta: autocomplete + chip ✕ -->
       <section class="kartu">
-        <h2 class="kartu__label">{{ 'promotion__create__brands' | translate }}</h2>
+        <h2 class="kartu__label">
+          {{ "promotion__create__brands" | translate }}
+        </h2>
 
         <div class="field">
           <app-combo-search
             [label]="'promotion__add__brand' | translate"
             route="product-brand"
             [disabled]="isSubmitting"
+            [kosongkanSetelahPilih]="true"
+            [terpakai]="idMerekTerpilih"
             (pick)="onSelectBrand($event)"
           />
         </div>
@@ -96,63 +147,99 @@
         <div class="chip-kumpul" *ngIf="brands.length > 0">
           <span class="saringan__kapsul" *ngFor="let b of brands; index as i">
             {{ b.name }}
-            <button type="button" (click)="removeBrand(i)" [attr.aria-label]="'general__delete' | translate">
+            <button
+              type="button"
+              (click)="removeBrand(i)"
+              [attr.aria-label]="'general__delete' | translate"
+            >
               <i class="ph ph-x" aria-hidden="true"></i>
             </button>
           </span>
         </div>
         <p class="field__bantu-diam" *ngIf="brands.length === 0">
-          {{ 'promotion__create__brands-empty' | translate }}
+          {{ "promotion__create__brands-empty" | translate }}
         </p>
       </section>
 
       <!-- Aturan SKU -->
       <section class="kartu">
         <div class="kartu__kepala">
-          <h2 class="kartu__label">{{ 'promotion__create__rules' | translate }}</h2>
+          <h2 class="kartu__label">
+            {{ "promotion__create__rules" | translate }}
+          </h2>
           <span class="tag-otomatis">
             <i class="ph ph-intersect" aria-hidden="true"></i>
-            {{ 'promotion__create__rules-and' | translate }}
+            {{ "promotion__create__rules-and" | translate }}
           </span>
         </div>
 
-        <div class="aturan" *ngFor="let baris of t.controls; index as i" [formGroup]="ruleAt(i)">
+        <div
+          class="aturan"
+          *ngFor="let baris of t.controls; index as i"
+          [formGroup]="ruleAt(i)"
+        >
           <mat-form-field appearance="outline">
             <mat-select formControlName="rule">
-              <mat-option value="Starts with">{{ 'promotion__add__rule-starts-with' | translate }}</mat-option>
-              <mat-option value="Ends with">{{ 'promotion__add__rule-ends-with' | translate }}</mat-option>
-              <mat-option value="Contains">{{ 'promotion__add__rule-contains' | translate }}</mat-option>
-              <mat-option value="Does not start with">{{ 'promotion__add__rule-not-starts-with' | translate }}</mat-option>
-              <mat-option value="Does not end with">{{ 'promotion__add__rule-not-ends-with' | translate }}</mat-option>
-              <mat-option value="Does not contain">{{ 'promotion__add__rule-not-contains' | translate }}</mat-option>
+              <mat-option value="Starts with">{{
+                "promotion__add__rule-starts-with" | translate
+              }}</mat-option>
+              <mat-option value="Ends with">{{
+                "promotion__add__rule-ends-with" | translate
+              }}</mat-option>
+              <mat-option value="Contains">{{
+                "promotion__add__rule-contains" | translate
+              }}</mat-option>
+              <mat-option value="Does not start with">{{
+                "promotion__add__rule-not-starts-with" | translate
+              }}</mat-option>
+              <mat-option value="Does not end with">{{
+                "promotion__add__rule-not-ends-with" | translate
+              }}</mat-option>
+              <mat-option value="Does not contain">{{
+                "promotion__add__rule-not-contains" | translate
+              }}</mat-option>
             </mat-select>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="aturan__nilai">
-            <mat-label>{{ 'promotion__create__rule-value' | translate }}</mat-label>
-            <input matInput type="text" formControlName="value" autocomplete="off" />
+            <mat-label>{{
+              "promotion__create__rule-value" | translate
+            }}</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="value"
+              autocomplete="off"
+            />
           </mat-form-field>
 
-          <button type="button" class="tabel__aksi-btn" (click)="removeRule(i)"
-            [title]="'general__delete' | translate" [attr.aria-label]="'general__delete' | translate">
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="removeRule(i)"
+            [title]="'general__delete' | translate"
+            [attr.aria-label]="'general__delete' | translate"
+          >
             <i class="ph ph-trash" aria-hidden="true"></i>
           </button>
         </div>
 
         <p class="aturan__kosong" *ngIf="t.controls.length === 0">
-          {{ 'promotion__create__rules-empty' | translate }}
+          {{ "promotion__create__rules-empty" | translate }}
         </p>
 
         <button type="button" class="tambah" (click)="addRule()">
           <i class="ph ph-plus-circle" aria-hidden="true"></i>
-          <span>{{ 'promotion__create__add-rule' | translate }}</span>
+          <span>{{ "promotion__create__add-rule" | translate }}</span>
         </button>
       </section>
     </div>
 
     <aside class="buat__samping">
       <section class="kartu">
-        <h2 class="kartu__label">{{ 'promotion__create__before-save' | translate }}</h2>
+        <h2 class="kartu__label">
+          {{ "promotion__create__before-save" | translate }}
+        </h2>
         <ul class="periksa">
           <li *ngFor="let c of checklist" [class.periksa--on]="c.selesai">
             <span class="periksa__bulat" aria-hidden="true">
@@ -164,15 +251,29 @@
       </section>
 
       <section class="kartu">
-        <h2 class="kartu__label">{{ 'promotion__create__actions' | translate }}</h2>
-        <button type="button" class="btn btn--primary btn--blok"
-          [disabled]="isSubmitting || isLoading || !promotionFormGroup.valid || brands.length === 0"
-          (click)="submitForm()">
+        <h2 class="kartu__label">
+          {{ "promotion__create__actions" | translate }}
+        </h2>
+        <button
+          type="button"
+          class="btn btn--primary btn--blok"
+          [disabled]="
+            isSubmitting ||
+            isLoading ||
+            !promotionFormGroup.valid ||
+            brands.length === 0
+          "
+          (click)="submitForm()"
+        >
           <i class="ph ph-check" aria-hidden="true"></i>
-          {{ 'promotion__update__save' | translate }}
+          {{ "promotion__update__save" | translate }}
         </button>
-        <button type="button" class="btn btn--kedua btn--blok" (click)="batal()">
-          {{ 'general__cancel' | translate }}
+        <button
+          type="button"
+          class="btn btn--kedua btn--blok"
+          (click)="batal()"
+        >
+          {{ "general__cancel" | translate }}
         </button>
       </section>
     </aside>

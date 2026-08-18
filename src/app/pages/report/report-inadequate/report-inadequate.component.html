@@ -21,7 +21,7 @@
     (click)="download()"
   >
     <i class="ph ph-file-xls" aria-hidden="true"></i>
-    {{ 'report-sales__download' | translate }}
+    {{ "report-sales__download" | translate }}
   </button>
 
   <!-- Saringan merek/tipe — kosong berarti semua, sama seperti laporan barang. -->
@@ -31,6 +31,8 @@
         [label]="'report-inadequate__brand' | translate"
         route="product-brand"
         [disabled]="isLoading"
+        [kosongkanSetelahPilih]="true"
+        [terpakai]="idMerek"
         (pick)="pilihMerek($event)"
       />
       <div class="chip-kumpul" *ngIf="merek.length > 0">
@@ -52,6 +54,8 @@
         [label]="'report-inadequate__type' | translate"
         route="product-type"
         [disabled]="isLoading"
+        [kosongkanSetelahPilih]="true"
+        [terpakai]="idTipe"
         (pick)="pilihTipe($event)"
       />
       <div class="chip-kumpul" *ngIf="tipe.length > 0">
@@ -72,18 +76,18 @@
   <table class="tabel">
     <thead>
       <tr>
-        <th>{{ 'report-inadequate__reference' | translate }}</th>
-        <th>{{ 'report-inadequate__description' | translate }}</th>
-        <th>{{ 'report-inadequate__brand' | translate }}</th>
-        <th>{{ 'report-inadequate__type' | translate }}</th>
+        <th>{{ "report-inadequate__reference" | translate }}</th>
+        <th>{{ "report-inadequate__description" | translate }}</th>
+        <th>{{ "report-inadequate__brand" | translate }}</th>
+        <th>{{ "report-inadequate__type" | translate }}</th>
         <th class="tabel__nilai-kepala">
-          {{ 'report-inadequate__stock' | translate }}
+          {{ "report-inadequate__stock" | translate }}
         </th>
         <th class="tabel__nilai-kepala">
-          {{ 'report-inadequate__minimum-stock' | translate }}
+          {{ "report-inadequate__minimum-stock" | translate }}
         </th>
         <th class="tabel__nilai-kepala">
-          {{ 'report-inadequate__shortage' | translate }}
+          {{ "report-inadequate__shortage" | translate }}
         </th>
       </tr>
     </thead>
@@ -95,13 +99,13 @@
         <td>{{ item.product_brand.name }}</td>
         <td>{{ item.product_type.name }}</td>
         <td class="tabel__nilai">
-          {{ item.product_stock.stock | number: '1.0-2' }} {{ item.unit }}
+          {{ item.product_stock.stock | number: "1.0-2" }} {{ item.unit }}
         </td>
         <td class="tabel__nilai">
-          {{ item.minimum_stock | number: '1.0-2' }} {{ item.unit }}
+          {{ item.minimum_stock | number: "1.0-2" }} {{ item.unit }}
         </td>
         <td class="tabel__nilai kurang">
-          − {{ kekurangan(item) | number: '1.0-2' }} {{ item.unit }}
+          − {{ kekurangan(item) | number: "1.0-2" }} {{ item.unit }}
         </td>
       </tr>
     </tbody>
@@ -109,7 +113,7 @@
     <tbody *ngIf="isLoading">
       <tr>
         <td colspan="7" class="tabel__pesan">
-          {{ 'general__loading' | translate }}
+          {{ "general__loading" | translate }}
         </td>
       </tr>
     </tbody>

@@ -64,6 +64,12 @@ export class PromotionCreateComponent {
 
   brands: any[] = [];
 
+  /* Id merek yang sudah jadi kapsul — sarannya dimatikan di daftarnya. */
+  get idMerekTerpilih(): number[] {
+    return this.brands.map((x: any) => x.id);
+  }
+
+
   ngOnInit(): void {
     this.perbaruiChecklist();
     this.promotionFormGroup.valueChanges.subscribe(() => this.perbaruiChecklist());

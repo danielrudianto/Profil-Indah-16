@@ -62,6 +62,12 @@ export class UserCreateComponent implements OnInit {
 
   roles: any[] = availableRoles.filter((r) => r.available);
   tipeTerpilih: any[] = [];
+
+  /* Id tipe yang sudah jadi kapsul — sarannya dimatikan di daftarnya. */
+  get idTipeTerpilih(): number[] {
+    return this.tipeTerpilih.map((x: any) => x.id);
+  }
+
   isSubmitting = false;
 
   ngOnInit(): void {

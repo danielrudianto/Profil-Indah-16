@@ -10,22 +10,34 @@
 >
   <div [formGroup]="userFormGroup" *ngIf="!isLoading">
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'user__edit__name' | translate }}</mat-label>
+      <mat-label>{{ "user__edit__name" | translate }}</mat-label>
       <input matInput type="text" formControlName="name" autocomplete="off" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'user__edit__nik' | translate }}</mat-label>
-      <input matInput type="text" mask="0000000000000000" formControlName="nik" autocomplete="off" inputmode="numeric" />
+      <mat-label>{{ "user__edit__nik" | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        mask="0000000000000000"
+        formControlName="nik"
+        autocomplete="off"
+        inputmode="numeric"
+      />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'user__edit__username' | translate }}</mat-label>
-      <input matInput type="text" formControlName="username" autocomplete="off" />
+      <mat-label>{{ "user__edit__username" | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="username"
+        autocomplete="off"
+      />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'user__edit__role' | translate }}</mat-label>
+      <mat-label>{{ "user__edit__role" | translate }}</mat-label>
       <mat-select formControlName="role">
         <mat-option *ngFor="let peran of roles" [value]="peran.id">
           {{ peran.name }}
@@ -37,7 +49,7 @@
     <ng-container *ngIf="peranGudang">
       <p class="petunjuk">
         <i class="ph ph-info" aria-hidden="true"></i>
-        {{ 'user__edit__role__error' | translate }}
+        {{ "user__edit__role__error" | translate }}
       </p>
 
       <app-combo-search
@@ -45,13 +57,22 @@
         inputId="user-edit-types"
         route="product-type"
         [disabled]="isSubmitting"
+        [kosongkanSetelahPilih]="true"
+        [terpakai]="idTipeTerpilih"
         (pick)="onSelectType($event)"
       />
 
       <div class="chip-kumpul" *ngIf="tipeTerpilih.length > 0">
-        <span class="saringan__kapsul" *ngFor="let tipe of tipeTerpilih; index as i">
+        <span
+          class="saringan__kapsul"
+          *ngFor="let tipe of tipeTerpilih; index as i"
+        >
           {{ tipe.name }}
-          <button type="button" (click)="onRemoveType(i)" [attr.aria-label]="'general__delete' | translate">
+          <button
+            type="button"
+            (click)="onRemoveType(i)"
+            [attr.aria-label]="'general__delete' | translate"
+          >
             <i class="ph ph-x" aria-hidden="true"></i>
           </button>
         </span>
@@ -66,7 +87,7 @@
       (click)="delete()"
     >
       <i class="ph ph-trash" aria-hidden="true"></i>
-      {{ 'user__edit__delete' | translate }}
+      {{ "user__edit__delete" | translate }}
     </button>
   </div>
 </app-dialog-shell>

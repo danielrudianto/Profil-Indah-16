@@ -57,6 +57,16 @@ export class ReportInadequateComponent implements OnInit {
   merek: ComboItem[] = [];
   tipe: ComboItem[] = [];
 
+  /* Id yang sudah jadi kapsul — saran yang sama dimatikan di daftarnya. */
+  get idMerek(): number[] {
+    return this.merek.map((x) => x.id);
+  }
+
+  get idTipe(): number[] {
+    return this.tipe.map((x) => x.id);
+  }
+
+
   ngOnInit(): void {
     this.ambilData();
   }

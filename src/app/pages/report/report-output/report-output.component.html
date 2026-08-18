@@ -2,8 +2,8 @@
 <div class="laporan">
   <header class="laporan__kepala">
     <div>
-      <h1 class="laporan__judul">{{ 'report-output__title' | translate }}</h1>
-      <p class="laporan__lede">{{ 'report-output__lede' | translate }}</p>
+      <h1 class="laporan__judul">{{ "report-output__title" | translate }}</h1>
+      <p class="laporan__lede">{{ "report-output__lede" | translate }}</p>
     </div>
 
     <div class="laporan__kendali">
@@ -14,7 +14,7 @@
           [class.seg__tombol--on]="kelompok === 'brand'"
           (click)="setKelompok('brand')"
         >
-          {{ 'report-output__seg__brand' | translate }}
+          {{ "report-output__seg__brand" | translate }}
         </button>
         <button
           type="button"
@@ -22,7 +22,7 @@
           [class.seg__tombol--on]="kelompok === 'type'"
           (click)="setKelompok('type')"
         >
-          {{ 'report-output__seg__type' | translate }}
+          {{ "report-output__seg__type" | translate }}
         </button>
       </div>
 
@@ -59,7 +59,7 @@
         (click)="downloadExcel()"
       >
         <i class="ph ph-file-xls" aria-hidden="true"></i>
-        {{ 'report-sales__download' | translate }}
+        {{ "report-sales__download" | translate }}
       </button>
 
       <button
@@ -69,7 +69,7 @@
         (click)="downloadPdf()"
       >
         <i class="ph ph-file-pdf" aria-hidden="true"></i>
-        {{ 'report-output__download-pdf' | translate }}
+        {{ "report-output__download-pdf" | translate }}
       </button>
     </div>
   </header>
@@ -77,7 +77,7 @@
   <!-- Saringan merek/tipe — kosong berarti semua. -->
   <section class="kartu">
     <div class="kartu__kepala">
-      <h2 class="kartu__label">{{ 'report-output__saringan' | translate }}</h2>
+      <h2 class="kartu__label">{{ "report-output__saringan" | translate }}</h2>
 
       <!-- Bawaan hanya yang bergerak; ribuan barang diam cuma menenggelamkan mutasi. -->
       <button
@@ -92,7 +92,12 @@
           [class.ph-funnel-x]="!hanyaBergerak"
           aria-hidden="true"
         ></i>
-        {{ (hanyaBergerak ? 'report-output__show-all' : 'report-output__only-moving') | translate }}
+        {{
+          (hanyaBergerak
+            ? "report-output__show-all"
+            : "report-output__only-moving"
+          ) | translate
+        }}
       </button>
     </div>
 
@@ -102,6 +107,8 @@
           [label]="'report-output__filter__brand' | translate"
           route="product-brand"
           [disabled]="isLoading"
+          [kosongkanSetelahPilih]="true"
+          [terpakai]="idMerek"
           (pick)="pilihMerek($event)"
         />
         <div class="chip-kumpul" *ngIf="merek.length > 0">
@@ -123,6 +130,8 @@
           [label]="'report-output__filter__type' | translate"
           route="product-type"
           [disabled]="isLoading"
+          [kosongkanSetelahPilih]="true"
+          [terpakai]="idTipe"
           (pick)="pilihTipe($event)"
         />
         <div class="chip-kumpul" *ngIf="tipe.length > 0">
@@ -142,7 +151,7 @@
 
     <p class="petunjuk" *ngIf="merek.length === 0 && tipe.length === 0">
       <i class="ph ph-info" aria-hidden="true"></i>
-      {{ 'report-output__filter-hint' | translate }}
+      {{ "report-output__filter-hint" | translate }}
     </p>
   </section>
 
@@ -155,36 +164,36 @@
         <table class="tabel tabel--rapat">
           <thead>
             <tr>
-              <th>{{ 'report-output__col__reference' | translate }}</th>
-              <th>{{ 'report-output__col__description' | translate }}</th>
+              <th>{{ "report-output__col__reference" | translate }}</th>
+              <th>{{ "report-output__col__description" | translate }}</th>
               <th *ngIf="kelompok === 'brand'">
-                {{ 'report-output__filter__type' | translate }}
+                {{ "report-output__filter__type" | translate }}
               </th>
               <th *ngIf="kelompok === 'type'">
-                {{ 'report-output__filter__brand' | translate }}
+                {{ "report-output__filter__brand" | translate }}
               </th>
               <th class="tabel__nilai-kepala">
-                {{ 'report-output__col__initial' | translate }}
+                {{ "report-output__col__initial" | translate }}
               </th>
               <th class="tabel__nilai-kepala">
-                {{ 'report-output__col__purchase' | translate }}
+                {{ "report-output__col__purchase" | translate }}
               </th>
               <th class="tabel__nilai-kepala">
-                {{ 'report-output__col__adj-plus' | translate }}
+                {{ "report-output__col__adj-plus" | translate }}
               </th>
               <th class="tabel__nilai-kepala">
-                {{ 'report-output__col__adj-minus' | translate }}
+                {{ "report-output__col__adj-minus" | translate }}
               </th>
               <th class="tabel__nilai-kepala">
-                {{ 'report-output__col__sales' | translate }}
+                {{ "report-output__col__sales" | translate }}
               </th>
               <th class="tabel__nilai-kepala">
-                {{ 'report-output__col__return' | translate }}
+                {{ "report-output__col__return" | translate }}
               </th>
               <th class="tabel__nilai-kepala">
-                {{ 'report-output__col__final' | translate }}
+                {{ "report-output__col__final" | translate }}
               </th>
-              <th>{{ 'report-output__col__unit' | translate }}</th>
+              <th>{{ "report-output__col__unit" | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -193,30 +202,30 @@
               <td class="tabel__redup">{{ b.description }}</td>
               <td *ngIf="kelompok === 'brand'">{{ b.product_type.name }}</td>
               <td *ngIf="kelompok === 'type'">{{ b.product_brand.name }}</td>
-              <td class="tabel__nilai">{{ b.stock | number: '1.0-2' }}</td>
+              <td class="tabel__nilai">{{ b.stock | number: "1.0-2" }}</td>
               <td class="tabel__nilai">
-                {{ b.report.good_receipt | number: '1.0-2' }}
+                {{ b.report.good_receipt | number: "1.0-2" }}
               </td>
               <td class="tabel__nilai">
-                {{ b.report.adjustment_case_found | number: '1.0-2' }}
+                {{ b.report.adjustment_case_found | number: "1.0-2" }}
               </td>
               <td
                 class="tabel__nilai"
                 [class.keluar]="b.report.adjustment_case_lost < 0"
               >
-                {{ b.report.adjustment_case_lost | number: '1.0-2' }}
+                {{ b.report.adjustment_case_lost | number: "1.0-2" }}
               </td>
               <td
                 class="tabel__nilai"
                 [class.keluar]="b.report.sales_invoice < 0"
               >
-                {{ b.report.sales_invoice | number: '1.0-2' }}
+                {{ b.report.sales_invoice | number: "1.0-2" }}
               </td>
               <td class="tabel__nilai">
-                {{ b.report.sales_return | number: '1.0-2' }}
+                {{ b.report.sales_return | number: "1.0-2" }}
               </td>
               <td class="tabel__nilai baris__total">
-                {{ stokAkhir(b) | number: '1.0-2' }}
+                {{ stokAkhir(b) | number: "1.0-2" }}
               </td>
               <td>{{ b.unit }}</td>
             </tr>
@@ -226,11 +235,11 @@
     </section>
 
     <section class="kartu" *ngIf="kelompokTampil.length === 0">
-      <p class="laporan__kosong">{{ 'report-output__empty' | translate }}</p>
+      <p class="laporan__kosong">{{ "report-output__empty" | translate }}</p>
     </section>
   </ng-container>
 
   <section class="kartu" *ngIf="isLoading">
-    <p class="tabel__pesan">{{ 'general__loading' | translate }}</p>
+    <p class="tabel__pesan">{{ "general__loading" | translate }}</p>
   </section>
 </div>

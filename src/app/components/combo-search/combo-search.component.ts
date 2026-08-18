@@ -81,6 +81,21 @@ export class ComboSearchComponent implements OnInit {
     this.control.setValue(nama, { emitEvent: false });
   }
 
+  /**
+   * Kosongkan kolom begitu sarannya dipilih — untuk pemilih berkumpulan
+   * chip: yang dipilih pindah menjadi kapsul, kolomnya siap mencari lagi.
+   * Tanpa ini nama pilihan terakhir tertinggal di kolom dan terlihat
+   * seperti belum diapa-apakan.
+   */
+  @Input() kosongkanSetelahPilih = false;
+
+  /**
+   * Id yang sudah terpakai (sudah jadi kapsul). Sarannya tetap tampil
+   * supaya orang tahu barangnya ada, tetapi mati — tidak bisa dipilih dua
+   * kali.
+   */
+  @Input() terpakai: number[] = [];
+
   @Output() pick = new EventEmitter<ComboItem>();
   @Output() clear = new EventEmitter<void>();
 
@@ -149,7 +164,23 @@ export class ComboSearchComponent implements OnInit {
     }
   }
 
+  sudahTerpakai(item: ComboItem): boolean {
+    return this.terpakai.includes(item.id);
+  }
+
   pilih(item: ComboItem): void {
+    if (this.sudahTerpakai(item)) {
+      return;
+    }
+
+    if (this.kosongkanSetelahPilih) {
+      this.terpilih = null;
+      this.control.setValue('', { emitEvent: false });
+      this.tutup();
+      this.pick.emit(item);
+      return;
+    }
+
     this.terpilih = item.name;
     /* emitEvent: false — ini bukan ketikan pengguna, jadi jangan cari ulang. */
     this.control.setValue(item.name, { emitEvent: false });

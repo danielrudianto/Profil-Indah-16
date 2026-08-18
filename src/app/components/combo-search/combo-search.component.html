@@ -15,12 +15,19 @@
       *ngFor="let item of items; index as i"
       role="option"
       [attr.aria-selected]="i === sorot"
-      [class.combo__opt--sorot]="i === sorot"
+      [attr.aria-disabled]="sudahTerpakai(item)"
+      [class.combo__opt--sorot]="i === sorot && !sudahTerpakai(item)"
+      [class.combo__opt--mati]="sudahTerpakai(item)"
       class="combo__opt"
       (mousedown)="pilih(item)"
       (mouseenter)="sorot = i"
     >
       {{ item.name }}
+      <i
+        class="ph ph-check combo__opt-centang"
+        *ngIf="sudahTerpakai(item)"
+        aria-hidden="true"
+      ></i>
     </li>
   </ul>
 </div>
