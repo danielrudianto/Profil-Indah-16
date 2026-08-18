@@ -186,6 +186,23 @@ export class StockCardComponent implements OnInit {
     this.fetchStockCard(1);
   }
 
+  /*
+    Lawan transaksi baris: supplier untuk barang masuk, pelanggan untuk
+    barang keluar, Retail untuk faktur tanpa pelanggan, INTERNAL untuk
+    mutasi yang memang tidak berlawan (penyesuaian dsb.).
+  */
+  lawanBaris(item: any): string {
+    return (
+      item.supplier?.name ??
+      item.customer?.name ??
+      (item.sales_invoice_code_id != null ? 'Retail' : 'INTERNAL')
+    );
+  }
+
+  inisial(nama: string | null | undefined): string {
+    return (nama ?? '?').trim().charAt(0).toUpperCase() || '?';
+  }
+
   lacak = (_: number, item: any): number => item.id ?? 0;
 
   onBackButtonPressed() {

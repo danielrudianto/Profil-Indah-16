@@ -82,17 +82,16 @@
       >
         <td class="tabel__tanggal">{{ item.date | date: "dd MMM yyyy" }}</td>
         <td class="tabel__utama">{{ item.document_name }}</td>
-        <!--
-          Lawan transaksi: supplier untuk barang masuk, pelanggan untuk
-          barang keluar; faktur tanpa pelanggan berarti Retail. Mutasi tanpa
-          lawan — penyesuaian, dsb. — INTERNAL, mengikuti jargon faktur.
-        -->
-        <td class="tabel__redup">
-          {{
-            item.supplier?.name ??
-              item.customer?.name ??
-              (item.sales_invoice_code_id != null ? "Retail" : "INTERNAL")
-          }}
+        <!-- Lawan transaksi beravatar inisial — seanatomi kolom entitas lain. -->
+        <td>
+          <div class="sel-entitas">
+            <span class="avatar-inisial" aria-hidden="true">
+              {{ inisial(lawanBaris(item)) }}
+            </span>
+            <span class="sel-entitas__teks">
+              <span class="sel-entitas__utama">{{ lawanBaris(item) }}</span>
+            </span>
+          </div>
         </td>
         <td
           class="tabel__nilai"
