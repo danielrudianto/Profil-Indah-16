@@ -49,6 +49,19 @@ const routes: Routes = [
               ),
           },
           {
+            /*
+              Laporan penjualan per pelanggan — nilai penjualan adalah angka
+              sensitif, jadi hanya super administrator; server mengunci
+              endpoint-nya dengan middleware yang sama.
+            */
+            path: 'Customer/Report/:id',
+            canActivate: [SuperAdministratorGuard],
+            loadComponent: () =>
+              import('./pages/customer/customer-report/customer-report.component').then(
+                (m) => m.CustomerReportComponent,
+              ),
+          },
+          {
             path: 'Package',
             canActivate: [OperationalGuard],
             loadComponent: () =>

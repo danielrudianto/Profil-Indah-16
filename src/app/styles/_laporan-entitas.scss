@@ -1,0 +1,88 @@
+@use "form-buat";
+
+/*
+  Anatomi laporan per entitas (supplier-report & customer-report):
+  kepala dengan kendali tahun, empat kartu hero, lalu kartu-kartu tabel.
+  Dipakai lewat @use dari scss masing-masing halaman.
+*/
+
+/* Judul di kiri, kendali (kembali + tahun) di kanan. */
+.laporan__kepala {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.laporan__kendali {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.laporan__tahun {
+  width: 160px;
+}
+
+/*
+  Empat kartu angka — mengikuti arah hero card laporan 9a: yang utama
+  disorot ground aksen, sisanya polos.
+*/
+.hero {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.hero__kartu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-divider);
+}
+
+.hero__kartu--utama {
+  background: var(--color-active);
+  box-shadow: 0 0 0 1px var(--color-accent);
+
+  .hero__nilai {
+    color: var(--color-accent);
+  }
+}
+
+.hero__label {
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 58%, transparent);
+}
+
+.hero__nilai {
+  font-size: 22px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.hero__nilai--tanggal {
+  font-size: 17px;
+}
+
+.hero__sub {
+  font-size: 11.5px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+/* .buat polos tidak memberi jarak antar seksi — kartu yang berurutan nempel. */
+.kartu + .kartu {
+  margin-top: 16px;
+}
+
+@media (max-width: 1100px) {
+  .hero {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

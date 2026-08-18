@@ -47,6 +47,8 @@ import { importProvidersFrom, LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeId from '@angular/common/locales/id';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import moment from 'moment';
+import 'moment/locale/id';
 
 /*
   Tanggal mengikuti bahasa aplikasi, bukan bahasa peramban. Tanpa data
@@ -61,6 +63,15 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 registerLocaleData(localeId);
 const bahasaTersimpan = localStorage.getItem('lang') ?? 'id';
 const localeAktif = bahasaTersimpan === 'en' ? 'en-US' : 'id-ID';
+
+/*
+  LOCALE_ID hanya mengatur DatePipe/formatDate — moment membawa locale-nya
+  sendiri dan tanpa ini semua label .format('MMMM YYYY') (pemilih bulan
+  laporan, mutasi biaya, keterangan Excel) selamanya "August 2026" walau
+  antarmuka berbahasa Indonesia. Impor data locale-nya lalu setel global;
+  format angka murni (YYYY-MM-DD dsb.) tidak terpengaruh.
+*/
+moment.locale(bahasaTersimpan === 'en' ? 'en' : 'id');
 
 bootstrapApplication(AppComponent, {
     providers: [

@@ -4,8 +4,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { NgxMaskPipe } from 'ngx-mask';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { Router } from '@angular/router';
+
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 import { CustomerCreateComponent } from './customer-create/customer-create.component';
@@ -31,10 +34,13 @@ export class CustomerComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
+    private authService: AuthService,
     private dialog: MatDialog,
+    private router: Router,
   ) {}
 
   isLoading = true;
+  isSuperAdministrator = false;
   dataSource: any[] = [];
   dataCount = 0;
   page = 1;
@@ -42,7 +48,13 @@ export class CustomerComponent implements OnInit {
   keyword = '';
 
   ngOnInit(): void {
+    this.isSuperAdministrator = this.authService.isSuperAdministrator();
     this.ambilData();
+  }
+
+  /** Laporan penjualan — nilai penjualan per pelanggan hanya untuk super admin. */
+  laporan(item: any): void {
+    this.router.navigate(['/Customer/Report', item.id]);
   }
 
   lacakPelanggan = (_: number, item: any): number => item.id;
