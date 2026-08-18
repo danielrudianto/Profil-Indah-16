@@ -61,6 +61,61 @@
     </div>
   </div>
 
+  <!-- Sorotan hari ini — kalimat yang dihitung dari angka, bukan dikarang. -->
+  <section class="kartu sorotan" *ngIf="sorotan.length > 0">
+    <h2 class="kartu__label">{{ 'sorotan-uang__judul' | translate }}</h2>
+    <ul class="sorotan__daftar">
+      <li *ngFor="let baris of sorotan">
+        <span class="sorotan__ikon" aria-hidden="true">
+          <i [class]="'ph ' + baris.ikon"></i>
+        </span>
+        {{ baris.teks }}
+      </li>
+    </ul>
+  </section>
+
+  <!-- Tren 30 hari — uang masuk bersih per hari, berakhir di tanggal terpilih. -->
+  <section class="kartu" *ngIf="tren.length > 0">
+    <div class="kartu__kepala">
+      <div>
+        <h2 class="kartu__label">{{ 'report-money__chart' | translate }}</h2>
+        <p class="grafik__sub">{{ 'report-money__chart__sub' | translate }}</p>
+      </div>
+    </div>
+
+    <!--
+      Tooltip digambar sendiri dan batangnya ikut menyala saat ditunjuk —
+      title bawaan browser lamban dan tak bertema, padahal tooltip pada
+      grafik itu wajib.
+    -->
+    <div class="grafik grafik--nilai">
+      <div class="grafik__hari" *ngFor="let b of tren">
+        <div class="grafik-tip" role="tooltip">
+          <strong>Rp {{ bersihBaris(b) | number: '1.0-0' }}</strong>
+          <span>{{ 'report-money__hero__in' | translate }} Rp {{ b.masuk | number: '1.0-0' }}</span>
+          <span>{{ 'report-money__hero__out' | translate }} Rp {{ b.keluar | number: '1.0-0' }}</span>
+          <small>{{ tanggalPenuh(b) }}</small>
+        </div>
+        <span
+          class="grafik__nilai"
+          [style.height.%]="tinggiTren(b)"
+          aria-hidden="true"
+        ></span>
+        <span class="grafik__tanggal">{{ labelHari(b) }}</span>
+      </div>
+    </div>
+
+    <div class="grafik__kaki">
+      <div class="grafik__legenda">
+        <span>
+          <i class="grafik__legenda--nilai" aria-hidden="true"></i>
+          {{ 'report-money__hero__net' | translate }}
+        </span>
+      </div>
+      <span class="grafik__rentang">{{ rentangTren }}</span>
+    </div>
+  </section>
+
   <section class="kartu">
     <h2 class="kartu__label">{{ 'report-money__by-method' | translate }}</h2>
 

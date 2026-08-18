@@ -1,5 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
+import { Component, inject, LOCALE_ID, OnInit } from '@angular/core';
+import {
+  formatDate,
+  NgIf,
+  NgFor,
+  DecimalPipe,
+  DatePipe,
+} from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -49,12 +55,19 @@ export class ReportMoneyComponent implements OnInit {
 
   isLoading = true;
   isDownloading = false;
+  localeId = inject(LOCALE_ID);
 
   date = new FormControl(new Date());
 
   metode: any[] = [];
   dor: { sales: string | null; salesInvoice: number; salesDeposit: number }[] =
     [];
+
+  /** 30 hari berakhir di tanggal terpilih — bahan grafik dan sorotan. */
+  tren: { date: string; masuk: number; keluar: number }[] = [];
+  sorotan: { ikon: string; teks: string }[] = [];
+  /** Sorotan butuh angka per metode DAN tren; keduanya tiba terpisah. */
+  private utamaSiap = false;
 
   ngOnInit(): void {
     this.ambilData();
@@ -70,6 +83,8 @@ export class ReportMoneyComponent implements OnInit {
 
   ambilData(): void {
     this.isLoading = true;
+    this.utamaSiap = false;
+    this.sorotan = [];
     this.apiService
       .post('report/money-receipt', {
         date: this.datePipe.transform(this.date.value, 'yyyy-MM-dd'),
@@ -78,6 +93,8 @@ export class ReportMoneyComponent implements OnInit {
         next: (data: any) => {
           this.metode = data.filter((x: any) => x.id !== 0);
           this.dor = data.find((x: any) => x.id === 0)?.data ?? [];
+          this.utamaSiap = true;
+          this.susunSorotan();
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -85,6 +102,29 @@ export class ReportMoneyComponent implements OnInit {
       })
       .add(() => {
         this.isLoading = false;
+      });
+
+    this.ambilTren();
+  }
+
+  private ambilTren(): void {
+    this.tren = [];
+    this.apiService
+      .get('report/money-receipt/trend', {
+        date: this.datePipe.transform(this.date.value, 'yyyy-MM-dd'),
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.tren = (data.data ?? []).map((x: any) => ({
+            date: x.date,
+            masuk: Number(x.masuk ?? 0),
+            keluar: Number(x.keluar ?? 0),
+          }));
+          this.susunSorotan();
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
       });
   }
 
@@ -128,6 +168,156 @@ export class ReportMoneyComponent implements OnInit {
     return (
       this.metode.reduce((a, b) => a + this.totalBaris(b), 0) + this.totalDor
     );
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Grafik tren 30 hari                                               */
+  /* ---------------------------------------------------------------- */
+
+  bersihBaris(b: { masuk: number; keluar: number }): number {
+    return b.masuk - b.keluar;
+  }
+
+  private get maksTren(): number {
+    return Math.max(...this.tren.map((x) => this.bersihBaris(x)), 1);
+  }
+
+  /** Hari yang keluarnya lebih besar digambar 0; minusnya jujur di tooltip. */
+  tinggiTren(b: (typeof this.tren)[number]): number {
+    return Math.max(0, (this.bersihBaris(b) / this.maksTren) * 100);
+  }
+
+  labelHari(b: (typeof this.tren)[number]): string {
+    return String(Number(b.date.slice(8, 10)));
+  }
+
+  tanggalPenuh(b: (typeof this.tren)[number]): string {
+    return formatDate(new Date(b.date), 'd MMMM y', this.localeId);
+  }
+
+  get rentangTren(): string {
+    if (this.tren.length === 0) {
+      return '';
+    }
+    const ujung = (b: (typeof this.tren)[number]) =>
+      formatDate(new Date(b.date), 'd MMM y', this.localeId);
+    return `${ujung(this.tren[0])} – ${ujung(this.tren[this.tren.length - 1])}`;
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Sorotan — kalimat yang dihitung dari angka, bukan dikarang        */
+  /* ---------------------------------------------------------------- */
+
+  /** "Rp 10,3 M" / "Rp 702 jt" — angka sorotan tak butuh presisi rupiah. */
+  private rupiahRingkas(nilai: number): string {
+    if (nilai >= 1_000_000_000) {
+      return `Rp ${(nilai / 1_000_000_000).toLocaleString('id-ID', { maximumFractionDigits: 1 })} M`;
+    }
+    if (nilai >= 1_000_000) {
+      return `Rp ${(nilai / 1_000_000).toLocaleString('id-ID', { maximumFractionDigits: 0 })} jt`;
+    }
+    return `Rp ${nilai.toLocaleString('id-ID', { maximumFractionDigits: 0 })}`;
+  }
+
+  private susunSorotan(): void {
+    if (!this.utamaSiap || this.tren.length < 2) {
+      return;
+    }
+
+    const t = (kunci: string, param?: object) =>
+      this.translateService.instant(kunci, param);
+    const hasil: { ikon: string; teks: string }[] = [];
+    const angka = (n: number, d = 1) =>
+      n.toLocaleString('id-ID', { maximumFractionDigits: d });
+
+    /* 1. Metode yang menampung uang masuk terbesar hari itu. */
+    const masukMetode = this.metode
+      .map((m: any) => ({
+        nama: m.name,
+        nilai:
+          Number(m.salesInvoice) +
+          Number(m.salesDeposit) +
+          Number(m.overpayment),
+      }))
+      .sort((a, b) => b.nilai - a.nilai);
+    const totalMasukMetode = masukMetode.reduce((a, b) => a + b.nilai, 0);
+    if (masukMetode.length > 1 && totalMasukMetode > 0) {
+      const juara = masukMetode[0];
+      hasil.push({
+        ikon: 'ph-wallet',
+        teks: t('sorotan-uang__metode', {
+          nama: juara.nama,
+          persen: angka((juara.nilai / totalMasukMetode) * 100),
+          nilai: this.rupiahRingkas(juara.nilai),
+        }),
+      });
+    }
+
+    /*
+      2. Banding kemarin dan rata-rata 30 hari — tanpa merah/biru: uang
+      masuk harian naik-turun mengikuti hari pasar, arahnya bukan
+      baik/buruk dengan sendirinya. Hari tanpa pergerakan sama sekali
+      (belum ada transaksi) tidak dibandingkan — "100% di bawah rata-rata"
+      pada hari kosong itu benar secara angka tapi bukan sorotan.
+    */
+    const kini = this.tren[this.tren.length - 1];
+    const kemarin = this.tren[this.tren.length - 2];
+    const bersihKini = this.bersihBaris(kini);
+    const bersihKemarin = this.bersihBaris(kemarin);
+    const adaPergerakan = kini.masuk > 0 || kini.keluar > 0;
+    if (adaPergerakan && bersihKemarin > 0) {
+      const persen = ((bersihKini - bersihKemarin) / bersihKemarin) * 100;
+      const stabil = Math.abs(persen) < 0.1;
+      hasil.push({
+        ikon: stabil
+          ? 'ph-equals'
+          : persen >= 0
+            ? 'ph-trend-up'
+            : 'ph-trend-down',
+        teks: t(
+          stabil
+            ? 'sorotan-uang__banding__stabil'
+            : persen >= 0
+              ? 'sorotan-uang__banding__naik'
+              : 'sorotan-uang__banding__turun',
+          {
+            total: this.rupiahRingkas(bersihKini),
+            persen: angka(Math.abs(persen)),
+            totalLalu: this.rupiahRingkas(bersihKemarin),
+          },
+        ),
+      });
+    }
+
+    const rata =
+      this.tren.reduce((a, b) => a + this.bersihBaris(b), 0) /
+      this.tren.length;
+    if (adaPergerakan && rata > 0) {
+      const persen = ((bersihKini - rata) / rata) * 100;
+      hasil.push({
+        ikon: 'ph-chart-line',
+        teks: t(
+          persen >= 0 ? 'sorotan-uang__rata__atas' : 'sorotan-uang__rata__bawah',
+          {
+            persen: angka(Math.abs(persen)),
+            rata: this.rupiahRingkas(rata),
+          },
+        ),
+      });
+    }
+
+    /* 3. DOR hari itu — uang yang sudah diterima tapi masih di tangan sales. */
+    if (this.totalDor > 0) {
+      hasil.push({
+        ikon: 'ph-hand-coins',
+        teks: t('sorotan-uang__dor', {
+          nilai: this.rupiahRingkas(this.totalDor),
+          n: this.dor.length,
+        }),
+      });
+    }
+
+    this.sorotan = hasil;
   }
 
   /* ---------------------------------------------------------------- */
