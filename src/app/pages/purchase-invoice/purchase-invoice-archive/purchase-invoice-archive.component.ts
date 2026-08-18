@@ -136,7 +136,8 @@ export class PurchaseInvoiceArchiveComponent {
     }
 
     if (!(v.isPending && v.isActive && v.isDelete)) {
-      if (v.isPending) hasil.push({ kunci: 'menunggu', teks: 'Menunggu faktur' });
+      if (v.isPending)
+        hasil.push({ kunci: 'menunggu', teks: 'Menunggu faktur' });
       if (v.isActive) hasil.push({ kunci: 'lengkap', teks: 'Lengkap' });
       if (v.isDelete) hasil.push({ kunci: 'dihapus', teks: 'Dihapus' });
     }

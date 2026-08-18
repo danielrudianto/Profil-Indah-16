@@ -181,6 +181,7 @@ export class UserEditComponent implements OnInit {
       .open(DeleteConfirmationComponent, {
         data: {
           title: this.translateService.instant('user__delete__message'),
+          document: this.userFormGroup.get('name')?.value,
         },
       })
       .afterClosed()

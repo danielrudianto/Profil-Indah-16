@@ -143,6 +143,7 @@
   "general__delete-confirmation": "Apakah Anda yakin ingin menghapus data ini?",
   "general__delete-successfully": "berhasil dihapus",
   "general__delete-confirmation__submit": "Ya, saya yakin",
+  "general__delete-confirmation__permanent": "Tindakan ini tidak bisa dibatalkan.",
   "general__delete-confirmation__close": "Batal",
   "product__type__title": "Tipe Barang",
   "product__type__help": "Di sini Anda dapat mengelola data tipe produk, membuat, memperbarui, dan menghapus.",

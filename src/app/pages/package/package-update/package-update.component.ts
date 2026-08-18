@@ -10,7 +10,11 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatPrefix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { NgxMaskDirective } from 'ngx-mask';
 
@@ -129,6 +133,7 @@ export class PackageUpdateComponent implements OnInit {
       .open(DeleteConfirmationComponent, {
         data: {
           title: this.translateService.instant('package__delete__confirmation'),
+          document: this.metaFormGroup.get('name')?.value,
         },
       })
       .afterClosed()

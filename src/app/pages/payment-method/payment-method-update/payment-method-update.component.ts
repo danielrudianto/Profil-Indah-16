@@ -1,6 +1,16 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
 import { AlertService } from 'src/app/services/alert.service';
@@ -11,9 +21,9 @@ import { MatInput } from '@angular/material/input';
 import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
 
 @Component({
-    selector: 'app-payment-method-update',
-    templateUrl: './payment-method-update.component.html',
-    imports: [
+  selector: 'app-payment-method-update',
+  templateUrl: './payment-method-update.component.html',
+  imports: [
     DialogShellComponent,
     FormsModule,
     ReactiveFormsModule,
@@ -21,7 +31,7 @@ import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-she
     MatLabel,
     MatInput,
     TranslatePipe,
-  ]
+  ],
 })
 export class PaymentMethodUpdateComponent implements OnInit {
   constructor(
@@ -31,7 +41,7 @@ export class PaymentMethodUpdateComponent implements OnInit {
     private dialogRef: MatDialogRef<PaymentMethodUpdateComponent>,
     private translateService: TranslateService,
     private authService: AuthService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   isAdministrator: boolean = false;
@@ -76,8 +86,9 @@ export class PaymentMethodUpdateComponent implements OnInit {
       .open(DeleteConfirmationComponent, {
         data: {
           title: this.translateService.instant(
-            'payment-method__delete__message'
+            'payment-method__delete__message',
           ),
+          document: this.paymentMethodFormGroup.get('name')?.value,
         },
       })
       .afterClosed()
@@ -95,7 +106,7 @@ export class PaymentMethodUpdateComponent implements OnInit {
         this.apiService.delete(`payment-method/${this.data.id}`).subscribe({
           next: (_) => {
             this.alertService.showSuccess(
-              this.translateService.instant('payment-method__delete__success')
+              this.translateService.instant('payment-method__delete__success'),
             );
 
             this.dialogRef.close('deleted');

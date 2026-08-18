@@ -143,6 +143,7 @@ export class PurchaseInvoiceViewComponent implements OnInit {
           title: this.translateService.instant(
             'purchase-invoice__delete__message',
           ),
+          document: this.dokumen?.name,
         },
       })
       .afterClosed()

@@ -4,7 +4,7 @@
       <i class="ph ph-warning"></i>
     </span>
     <h2 class="konfirmasi__judul">
-      {{ (data.header ?? 'general__delete-confirmation__title') | translate }}
+      {{ data.header ?? "general__delete-confirmation__title" | translate }}
     </h2>
   </div>
 
@@ -15,13 +15,19 @@
     {{ data.document }}
   </p>
 
+  <!-- Sifat permanennya ditulis, bukan dianggap sudah dimengerti. -->
+  <p class="konfirmasi__permanen">
+    <i class="ph ph-warning" aria-hidden="true"></i>
+    {{ "general__delete-confirmation__permanent" | translate }}
+  </p>
+
   <div class="konfirmasi__aksi">
     <button type="button" class="btn btn--kedua" (click)="batal()">
-      {{ 'general__delete-confirmation__close' | translate }}
+      {{ "general__delete-confirmation__close" | translate }}
     </button>
     <button type="button" class="btn btn--bahaya" (click)="setuju()">
       <i class="ph ph-trash" aria-hidden="true"></i>
-      {{ 'general__delete-confirmation__submit' | translate }}
+      {{ "general__delete-confirmation__submit" | translate }}
     </button>
   </div>
 </div>

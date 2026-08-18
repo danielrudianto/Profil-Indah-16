@@ -14,31 +14,33 @@
   <ng-container aksi>
     <button type="button" class="aksi-hantu" (click)="keArsip()">
       <i class="ph ph-archive" aria-hidden="true"></i>
-      {{ 'purchase-invoice__archive' | translate }}
+      {{ "purchase-invoice__archive" | translate }}
     </button>
   </ng-container>
 
   <table class="tabel">
     <thead>
       <tr>
-        <th>{{ 'good-receipt__archive__date' | translate }}</th>
-        <th>{{ 'good-receipt__archive__name' | translate }}</th>
-        <th>{{ 'good-receipt__archive__supplier' | translate }}</th>
-        <th>{{ 'good-receipt__archive__company' | translate }}</th>
-        <th>{{ 'purchase-invoice__confirm__created-by' | translate }}</th>
+        <th>{{ "good-receipt__archive__date" | translate }}</th>
+        <th>{{ "good-receipt__archive__name" | translate }}</th>
+        <th>{{ "good-receipt__archive__supplier" | translate }}</th>
+        <th>{{ "good-receipt__archive__company" | translate }}</th>
+        <th>{{ "purchase-invoice__confirm__created-by" | translate }}</th>
         <th class="tabel__aksi-kepala">
-          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+          <span class="sr-only">{{ "general__actions" | translate }}</span>
         </th>
       </tr>
     </thead>
 
     <tbody *ngIf="!isLoading && dataSource.length > 0">
       <tr *ngFor="let item of dataSource; trackBy: lacakPenerimaan">
-        <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
+        <td class="tabel__tanggal">{{ item.date | date: "dd MMMM yyyy" }}</td>
         <td class="tabel__utama">{{ item.name }}</td>
         <td>
           <div class="sel-entitas">
-            <span class="avatar-inisial" aria-hidden="true">{{ inisial(item.supplier?.name) }}</span>
+            <span class="avatar-inisial" aria-hidden="true">{{
+              inisial(item.supplier?.name)
+            }}</span>
             <span class="sel-entitas__teks">
               <span class="sel-entitas__utama">{{ item.supplier?.name }}</span>
             </span>
@@ -65,7 +67,7 @@
     <tbody *ngIf="isLoading">
       <tr>
         <td colspan="6" class="tabel__pesan">
-          {{ 'general__loading' | translate }}
+          {{ "general__loading" | translate }}
         </td>
       </tr>
     </tbody>

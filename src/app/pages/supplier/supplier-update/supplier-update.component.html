@@ -10,18 +10,30 @@
 >
   <div [formGroup]="supplierFormGroup">
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'supplier__add__name' | translate }}</mat-label>
-      <input matInput type="text" formControlName="name" maxlength="100" autocomplete="off" />
+      <mat-label>{{ "supplier__add__name" | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="name"
+        maxlength="100"
+        autocomplete="off"
+      />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'supplier__add__address' | translate }}</mat-label>
+      <mat-label>{{ "supplier__add__address" | translate }}</mat-label>
       <textarea matInput rows="2" formControlName="address"></textarea>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'supplier__add__npwp' | translate }}</mat-label>
-      <input matInput type="text" mask="00.000.000.0-000.000" formControlName="npwp" autocomplete="off" />
+      <mat-label>{{ "supplier__add__npwp" | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        mask="00.000.000.0-000.000"
+        formControlName="npwp"
+        autocomplete="off"
+      />
     </mat-form-field>
 
     <!--
@@ -41,11 +53,13 @@
     <button
       type="button"
       class="btn btn--bahaya btn--blok"
-      [disabled]="!isAdministrator || !supplierFormGroup.get('can_delete')?.value"
+      [disabled]="
+        !isAdministrator || !supplierFormGroup.get('can_delete')?.value
+      "
       (click)="delete()"
     >
       <i class="ph ph-trash" aria-hidden="true"></i>
-      {{ 'supplier__update__delete' | translate }}
+      {{ "supplier__update__delete" | translate }}
     </button>
   </div>
 </app-dialog-shell>

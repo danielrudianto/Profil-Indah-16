@@ -1,11 +1,29 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { NgIf } from '@angular/common';
-import { MatFormField, MatLabel, MatSuffix, MatPrefix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+  MatPrefix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatDatepicker, MatDatepickerInput } from '@angular/material/datepicker';
+import {
+  MatDatepicker,
+  MatDatepickerInput,
+} from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { NgxMaskDirective } from 'ngx-mask';
 
@@ -122,7 +140,10 @@ export class ExpenseUpdateComponent implements OnInit {
   }
 
   onUnselectExpenseType() {
-    this.expenseFormGroup.patchValue({ expense_type: '', expense_type_name: '' });
+    this.expenseFormGroup.patchValue({
+      expense_type: '',
+      expense_type_name: '',
+    });
   }
 
   submitForm() {
@@ -145,7 +166,8 @@ export class ExpenseUpdateComponent implements OnInit {
             id: this.data.id,
             date: new Date(this.expenseFormGroup.controls['date'].value),
             description: this.expenseFormGroup.controls['description'].value,
-            expense_type_id: this.expenseFormGroup.controls['expense_type'].value,
+            expense_type_id:
+              this.expenseFormGroup.controls['expense_type'].value,
             company_id: this.expenseFormGroup.controls['company'].value,
             value: this.expenseFormGroup.controls['value'].value,
             company: {
@@ -171,6 +193,7 @@ export class ExpenseUpdateComponent implements OnInit {
       .open(DeleteConfirmationComponent, {
         data: {
           title: this.translateService.instant('expense__delete__title'),
+          document: this.expenseFormGroup.get('description')?.value,
         },
       })
       .afterClosed()

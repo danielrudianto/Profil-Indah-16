@@ -10,7 +10,7 @@
 >
   <div [formGroup]="itemFormGroup">
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'product__add__reference' | translate }}</mat-label>
+      <mat-label>{{ "product__add__reference" | translate }}</mat-label>
       <input
         matInput
         type="text"
@@ -22,7 +22,7 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'product__add__description' | translate }}</mat-label>
+      <mat-label>{{ "product__add__description" | translate }}</mat-label>
       <textarea
         matInput
         rows="2"
@@ -55,7 +55,7 @@
     />
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'product__add__unit' | translate }}</mat-label>
+      <mat-label>{{ "product__add__unit" | translate }}</mat-label>
       <mat-select formControlName="unit">
         <mat-option *ngFor="let s of satuanTersedia" [value]="s.value">
           {{ s.label }}
@@ -64,7 +64,7 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'product__add__minimum-stock' | translate }}</mat-label>
+      <mat-label>{{ "product__add__minimum-stock" | translate }}</mat-label>
       <input
         matInput
         type="text"
@@ -77,7 +77,7 @@
     <!-- Harga tidak diubah dari sini — arahkan ke halaman Harga. -->
     <p class="petunjuk">
       <i class="ph ph-info" aria-hidden="true"></i>
-      <span>{{ 'product__update__price-note' | translate }}</span>
+      <span>{{ "product__update__price-note" | translate }}</span>
     </p>
   </div>
 
@@ -85,10 +85,10 @@
   <!-- Satuan tambahan: tambah bebas, rasio terkunci begitu dipakai   -->
   <!-- ------------------------------------------------------------ -->
   <div class="satuan" *ngIf="isAdministrator">
-    <h3 class="satuan__label">{{ 'product__unit__title' | translate }}</h3>
+    <h3 class="satuan__label">{{ "product__unit__title" | translate }}</h3>
     <p class="petunjuk">
       <i class="ph ph-info" aria-hidden="true"></i>
-      <span>{{ 'product__unit__note' | translate }}</span>
+      <span>{{ "product__unit__note" | translate }}</span>
     </p>
 
     <div
@@ -149,14 +149,17 @@
       </button>
     </div>
 
-    <button type="button" class="btn btn--kedua satuan__tambah" (click)="tambahSatuan()">
+    <button
+      type="button"
+      class="btn btn--kedua satuan__tambah"
+      (click)="tambahSatuan()"
+    >
       <i class="ph ph-plus" aria-hidden="true"></i>
-      {{ 'product__unit__add' | translate }}
+      {{ "product__unit__add" | translate }}
     </button>
   </div>
 
   <div>
-
     <!-- Dua penjaga: peran administrator dan can_delete dari server. -->
     <button
       type="button"
@@ -165,7 +168,7 @@
       (click)="delete()"
     >
       <i class="ph ph-trash" aria-hidden="true"></i>
-      {{ 'product__update__delete' | translate }}
+      {{ "product__update__delete" | translate }}
     </button>
   </div>
 </app-dialog-shell>

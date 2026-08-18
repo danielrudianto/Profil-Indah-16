@@ -10,28 +10,58 @@
 >
   <div [formGroup]="customerFormGroup">
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'customer__add__name' | translate }}</mat-label>
-      <input matInput type="text" formControlName="name" maxlength="100" autocomplete="off" />
+      <mat-label>{{ "customer__add__name" | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="name"
+        maxlength="100"
+        autocomplete="off"
+      />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'customer__add__address' | translate }}</mat-label>
-      <textarea matInput rows="2" formControlName="address" maxlength="191"></textarea>
+      <mat-label>{{ "customer__add__address" | translate }}</mat-label>
+      <textarea
+        matInput
+        rows="2"
+        formControlName="address"
+        maxlength="191"
+      ></textarea>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'customer__add__npwp' | translate }}</mat-label>
-      <input matInput type="text" mask="00.000.000.0-000.000" formControlName="npwp" autocomplete="off" />
+      <mat-label>{{ "customer__add__npwp" | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        mask="00.000.000.0-000.000"
+        formControlName="npwp"
+        autocomplete="off"
+      />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'customer__add__pic' | translate }}</mat-label>
-      <input matInput type="text" formControlName="pic" maxlength="100" autocomplete="off" />
+      <mat-label>{{ "customer__add__pic" | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="pic"
+        maxlength="100"
+        autocomplete="off"
+      />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'customer__add__phone_number' | translate }}</mat-label>
-      <input matInput type="tel" inputmode="tel" formControlName="phone_number" maxlength="45" autocomplete="off" />
+      <mat-label>{{ "customer__add__phone_number" | translate }}</mat-label>
+      <input
+        matInput
+        type="tel"
+        inputmode="tel"
+        formControlName="phone_number"
+        maxlength="45"
+        autocomplete="off"
+      />
     </mat-form-field>
 
     <!--
@@ -51,11 +81,13 @@
     <button
       type="button"
       class="btn btn--bahaya btn--blok"
-      [disabled]="!isAdministrator || !customerFormGroup.get('can_delete')?.value"
+      [disabled]="
+        !isAdministrator || !customerFormGroup.get('can_delete')?.value
+      "
       (click)="delete()"
     >
       <i class="ph ph-trash" aria-hidden="true"></i>
-      {{ 'customer__update__delete' | translate }}
+      {{ "customer__update__delete" | translate }}
     </button>
   </div>
 </app-dialog-shell>

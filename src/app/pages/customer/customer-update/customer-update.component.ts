@@ -1,7 +1,20 @@
 import { Component, Inject, Input } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+} from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
 import { AlertService } from 'src/app/services/alert.service';
@@ -15,9 +28,9 @@ import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
 @Component({
-    selector: 'app-customer-update',
-    templateUrl: './customer-update.component.html',
-    imports: [
+  selector: 'app-customer-update',
+  templateUrl: './customer-update.component.html',
+  imports: [
     DialogShellComponent,
     NgIf,
     FormsModule,
@@ -27,7 +40,7 @@ import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-she
     MatInput,
     NgxMaskDirective,
     TranslatePipe,
-  ]
+  ],
 })
 export class CustomerUpdateComponent {
   constructor(
@@ -37,7 +50,7 @@ export class CustomerUpdateComponent {
     private dialogRef: MatDialogRef<CustomerUpdateComponent>,
     private translateService: TranslateService,
     private authService: AuthService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   isAdministrator: boolean = false;
@@ -86,6 +99,7 @@ export class CustomerUpdateComponent {
       .open(DeleteConfirmationComponent, {
         data: {
           title: this.translateService.instant('customer__delete__message'),
+          document: this.customerFormGroup.get('name')?.value,
         },
       })
       .afterClosed()
@@ -103,7 +117,7 @@ export class CustomerUpdateComponent {
         this.apiService.delete(`customer/${this.data.id}`).subscribe({
           next: (_) => {
             this.alertService.showSuccess(
-              this.translateService.instant('customer__delete__success')
+              this.translateService.instant('customer__delete__success'),
             );
 
             this.dialogRef.close('deleted');

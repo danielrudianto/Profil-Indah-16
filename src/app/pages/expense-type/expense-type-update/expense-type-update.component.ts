@@ -1,6 +1,16 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { NgIf } from '@angular/common';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -84,6 +94,7 @@ export class ExpenseTypeUpdateComponent implements OnInit {
       .open(DeleteConfirmationComponent, {
         data: {
           title: this.translateService.instant('expense-type__delete__message'),
+          document: this.expenseTypeFormGroup.get('name')?.value,
         },
       })
       .afterClosed()

@@ -1,6 +1,19 @@
 import { Component, Inject, Input } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+} from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
 import { AlertService } from 'src/app/services/alert.service';
@@ -15,9 +28,9 @@ import { MatIcon } from '@angular/material/icon';
 import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
 
 @Component({
-    selector: 'app-company-update',
-    templateUrl: './company-update.component.html',
-    imports: [
+  selector: 'app-company-update',
+  templateUrl: './company-update.component.html',
+  imports: [
     DialogShellComponent,
     FormsModule,
     ReactiveFormsModule,
@@ -26,7 +39,7 @@ import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-she
     MatInput,
     NgxMaskDirective,
     TranslatePipe,
-  ]
+  ],
 })
 export class CompanyUpdateComponent {
   constructor(
@@ -36,7 +49,7 @@ export class CompanyUpdateComponent {
     private dialogRef: MatDialogRef<CompanyUpdateComponent>,
     private translateService: TranslateService,
     private authService: AuthService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   isSubmitting: boolean = false;
@@ -67,8 +80,9 @@ export class CompanyUpdateComponent {
       .open(DeleteConfirmationComponent, {
         data: {
           title: this.translateService.instant(
-            'company__update__delete__message'
+            'company__update__delete__message',
           ),
+          document: this.companyFormGroup.get('name')?.value,
         },
       })
       .afterClosed()
@@ -77,7 +91,7 @@ export class CompanyUpdateComponent {
           this.apiService.delete(`company/${this.data.id}`).subscribe({
             next: (_) => {
               this.alertService.showSuccess(
-                this.translateService.instant('company__delete__success')
+                this.translateService.instant('company__delete__success'),
               );
               this.dialogRef.close('deleted');
             },

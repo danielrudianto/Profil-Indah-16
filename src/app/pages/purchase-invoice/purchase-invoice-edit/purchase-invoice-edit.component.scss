@@ -213,7 +213,6 @@ select.input {
   }
 }
 
-
 /* ---------------------------------------------------------------- */
 /* Tabel barang diterima                                             */
 /* ---------------------------------------------------------------- */
@@ -316,7 +315,9 @@ select.input {
   border: 1px dashed var(--color-divider);
   border-radius: 12px;
   padding: 16px 22px;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 
 /* Begitu terisi, garis putus-putusnya hilang — ia bukan tempat kosong lagi. */

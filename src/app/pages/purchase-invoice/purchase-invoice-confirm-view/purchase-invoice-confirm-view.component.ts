@@ -18,7 +18,11 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { PageTitleService } from 'src/app/services/page-title.service';
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {
   MatDatepicker,
@@ -128,10 +132,14 @@ export class PurchaseInvoiceConfirmViewComponent implements OnInit {
                 description: [x.product?.description],
                 quantity: [Number(x.quantity)],
                 unit: [
-                  x.product_unit == null ? x.product?.unit : x.product_unit.unit,
+                  x.product_unit == null
+                    ? x.product?.unit
+                    : x.product_unit.unit,
                 ],
                 conversion: [
-                  x.product_unit == null ? 1 : Number(x.product_unit.conversion),
+                  x.product_unit == null
+                    ? 1
+                    : Number(x.product_unit.conversion),
                 ],
                 default_unit: [x.product?.unit],
                 price: [
@@ -310,6 +318,7 @@ export class PurchaseInvoiceConfirmViewComponent implements OnInit {
           title: this.translateService.instant(
             'purchase-invoice__confirm__delete__title',
           ),
+          document: this.penerimaan?.name,
         },
       })
       .afterClosed()

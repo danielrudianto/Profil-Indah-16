@@ -30,7 +30,7 @@
     <ng-container aksi>
       <button type="button" class="aksi-hantu" (click)="backToYear()">
         <i class="ph ph-arrow-u-up-left" aria-hidden="true"></i>
-        {{ 'purchase-invoice__back-to-archive' | translate }}
+        {{ "purchase-invoice__back-to-archive" | translate }}
       </button>
 
       <!--
@@ -44,7 +44,7 @@
         (click)="toggleMenunggu()"
       >
         <i class="ph-fill ph-clock" aria-hidden="true"></i>
-        {{ 'purchase-invoice__status__pending' | translate }}
+        {{ "purchase-invoice__status__pending" | translate }}
       </button>
 
       <button
@@ -79,7 +79,7 @@
           class="saringan__bersih"
           (click)="hapusSemuaSaringan()"
         >
-          {{ 'purchase-invoice__filter__clear' | translate }}
+          {{ "purchase-invoice__filter__clear" | translate }}
         </button>
       </div>
     </ng-container>
@@ -89,13 +89,13 @@
         <tr>
           <th class="tabel__urut">
             <button type="button" (click)="changeSortBy('date')">
-              {{ 'good-receipt__archive__date' | translate }}
+              {{ "good-receipt__archive__date" | translate }}
               <i class="ph" [ngClass]="ikonUrut('date')" aria-hidden="true"></i>
             </button>
           </th>
           <th class="tabel__urut">
             <button type="button" (click)="changeSortBy('invoice-name')">
-              {{ 'good-receipt__archive__invoice-name' | translate }}
+              {{ "good-receipt__archive__invoice-name" | translate }}
               <i
                 class="ph"
                 [ngClass]="ikonUrut('invoice-name')"
@@ -105,13 +105,13 @@
           </th>
           <th class="tabel__urut">
             <button type="button" (click)="changeSortBy('name')">
-              {{ 'good-receipt__archive__name' | translate }}
+              {{ "good-receipt__archive__name" | translate }}
               <i class="ph" [ngClass]="ikonUrut('name')" aria-hidden="true"></i>
             </button>
           </th>
           <th class="tabel__urut">
             <button type="button" (click)="changeSortBy('supplier')">
-              {{ 'good-receipt__archive__supplier' | translate }}
+              {{ "good-receipt__archive__supplier" | translate }}
               <i
                 class="ph"
                 [ngClass]="ikonUrut('supplier')"
@@ -119,10 +119,12 @@
               ></i>
             </button>
           </th>
-          <th>{{ 'purchase-invoice__archive__view__tax-invoice' | translate }}</th>
-          <th>{{ 'purchase-invoice__archive__view__status' | translate }}</th>
+          <th>
+            {{ "purchase-invoice__archive__view__tax-invoice" | translate }}
+          </th>
+          <th>{{ "purchase-invoice__archive__view__status" | translate }}</th>
           <th class="tabel__aksi-kepala">
-            <span class="sr-only">{{ 'general__actions' | translate }}</span>
+            <span class="sr-only">{{ "general__actions" | translate }}</span>
           </th>
         </tr>
       </thead>
@@ -134,22 +136,26 @@
           class="tabel__baris-klik"
           (click)="viewArchive(item.id)"
         >
-          <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
+          <td class="tabel__tanggal">{{ item.date | date: "dd MMMM yyyy" }}</td>
           <!--
             Nomor faktur supplier baru ada setelah dilengkapi; em dash lebih
             jujur daripada kolom kosong.
           -->
-          <td class="tabel__utama">{{ item.invoice_name || '—' }}</td>
+          <td class="tabel__utama">{{ item.invoice_name || "—" }}</td>
           <td class="tabel__redup">{{ item.name }}</td>
           <td>
             <div class="sel-entitas">
-              <span class="avatar-inisial" aria-hidden="true">{{ inisial(item.supplier?.name) }}</span>
+              <span class="avatar-inisial" aria-hidden="true">{{
+                inisial(item.supplier?.name)
+              }}</span>
               <span class="sel-entitas__teks">
-                <span class="sel-entitas__utama">{{ item.supplier?.name }}</span>
+                <span class="sel-entitas__utama">{{
+                  item.supplier?.name
+                }}</span>
               </span>
             </div>
           </td>
-          <td class="tabel__redup">{{ item.faktur || '—' }}</td>
+          <td class="tabel__redup">{{ item.faktur || "—" }}</td>
           <td>
             <span
               class="pill"
@@ -164,7 +170,7 @@
                 [class.ph-trash]="keadaan(item) === 'dihapus'"
                 aria-hidden="true"
               ></i>
-              {{ 'purchase-invoice__status__' + keadaan(item) | translate }}
+              {{ "purchase-invoice__status__" + keadaan(item) | translate }}
             </span>
           </td>
           <td class="tabel__aksi" (click)="$event.stopPropagation()">
@@ -174,7 +180,9 @@
               *ngIf="keadaan(item) === 'menunggu'"
               (click)="lengkapi(item)"
               [title]="'purchase-invoice__queue__complete' | translate"
-              [attr.aria-label]="'purchase-invoice__queue__complete' | translate"
+              [attr.aria-label]="
+                'purchase-invoice__queue__complete' | translate
+              "
             >
               <i class="ph ph-file-plus" aria-hidden="true"></i>
             </button>
@@ -185,7 +193,7 @@
       <tbody *ngIf="isLoading">
         <tr>
           <td colspan="7" class="tabel__pesan">
-            {{ 'general__loading' | translate }}
+            {{ "general__loading" | translate }}
           </td>
         </tr>
       </tbody>

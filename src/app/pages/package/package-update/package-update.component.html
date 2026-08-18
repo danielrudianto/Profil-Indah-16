@@ -3,25 +3,43 @@
   <div class="kisi">
     <div class="buat__utama">
       <header class="buat__head">
-        <h1 class="buat__title">{{ 'package__update__title' | translate }}</h1>
-        <p class="buat__lede">{{ 'package__update__lede' | translate }}</p>
+        <h1 class="buat__title">{{ "package__update__title" | translate }}</h1>
+        <p class="buat__lede">{{ "package__update__lede" | translate }}</p>
       </header>
 
       <!-- Data umum -->
       <section class="kartu" [formGroup]="metaFormGroup">
-        <h2 class="kartu__label">{{ 'package__create__general-data' | translate }}</h2>
+        <h2 class="kartu__label">
+          {{ "package__create__general-data" | translate }}
+        </h2>
 
         <div class="kartu__baris">
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ 'package__create__package-name' | translate }}</mat-label>
-              <input matInput type="text" formControlName="name" maxlength="45" autocomplete="off" />
+              <mat-label>{{
+                "package__create__package-name" | translate
+              }}</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="name"
+                maxlength="45"
+                autocomplete="off"
+              />
             </mat-form-field>
           </div>
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ 'package__price' | translate }}</mat-label>
-              <input matInput type="text" class="input--kanan" mask="separator" thousandSeparator=" " formControlName="price" autocomplete="off" />
+              <mat-label>{{ "package__price" | translate }}</mat-label>
+              <input
+                matInput
+                type="text"
+                class="input--kanan"
+                mask="separator"
+                thousandSeparator=" "
+                formControlName="price"
+                autocomplete="off"
+              />
               <span matTextPrefix>Rp&nbsp;</span>
             </mat-form-field>
           </div>
@@ -29,15 +47,22 @@
 
         <div class="field">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{ 'package__create__package-description' | translate }}</mat-label>
-            <textarea matInput rows="2" formControlName="description" maxlength="200"></textarea>
+            <mat-label>{{
+              "package__create__package-description" | translate
+            }}</mat-label>
+            <textarea
+              matInput
+              rows="2"
+              formControlName="description"
+              maxlength="200"
+            ></textarea>
           </mat-form-field>
         </div>
       </section>
 
       <!-- Isi paket: baca-saja, dengan alasannya tertulis -->
       <section class="kartu">
-        <h2 class="kartu__label">{{ 'package__create__items' | translate }}</h2>
+        <h2 class="kartu__label">{{ "package__create__items" | translate }}</h2>
 
         <!--
           Banner, bukan teks bantu: ketiadaan kolom isian di bawah harus
@@ -47,17 +72,21 @@
         -->
         <p class="petunjuk">
           <i class="ph ph-lock-simple" aria-hidden="true"></i>
-          {{ 'package__update__content-note' | translate }}
+          {{ "package__update__content-note" | translate }}
         </p>
 
         <div class="gulir">
           <table class="tabel">
             <thead>
               <tr>
-                <th>{{ 'package__create__table__item' | translate }}</th>
-                <th>{{ 'package__create__table__quantity' | translate }}</th>
-                <th class="ke-kanan">{{ 'package__create__table__unit-price' | translate }}</th>
-                <th class="ke-kanan">{{ 'package__create__table__total' | translate }}</th>
+                <th>{{ "package__create__table__item" | translate }}</th>
+                <th>{{ "package__create__table__quantity" | translate }}</th>
+                <th class="ke-kanan">
+                  {{ "package__create__table__unit-price" | translate }}
+                </th>
+                <th class="ke-kanan">
+                  {{ "package__create__table__total" | translate }}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -66,10 +95,12 @@
                   <span class="barang__ref">{{ baris.reference }}</span>
                   <span class="barang__desc">{{ baris.description }}</span>
                 </td>
-                <td>{{ baris.quantity | number: '0.0-2' }} {{ baris.unit }}</td>
-                <td class="ke-kanan baris__total">Rp {{ baris.price | number: '1.0-0' }}</td>
+                <td>{{ baris.quantity | number: "0.0-2" }} {{ baris.unit }}</td>
                 <td class="ke-kanan baris__total">
-                  Rp {{ baris.quantity * baris.price | number: '1.0-0' }}
+                  Rp {{ baris.price | number: "1.0-0" }}
+                </td>
+                <td class="ke-kanan baris__total">
+                  Rp {{ baris.quantity * baris.price | number: "1.0-0" }}
                 </td>
               </tr>
             </tbody>
@@ -80,27 +111,27 @@
 
     <aside class="buat__samping">
       <section class="kartu">
-        <h2 class="kartu__label">{{ 'package__summary' | translate }}</h2>
+        <h2 class="kartu__label">{{ "package__summary" | translate }}</h2>
 
         <dl class="ringkas">
           <div>
-            <dt>{{ 'package__summary__net-value' | translate }}</dt>
-            <dd>Rp {{ nilaiIsi | number: '1.0-0' }}</dd>
+            <dt>{{ "package__summary__net-value" | translate }}</dt>
+            <dd>Rp {{ nilaiIsi | number: "1.0-0" }}</dd>
           </div>
           <div>
-            <dt>{{ 'package__summary__package-price' | translate }}</dt>
-            <dd>Rp {{ hargaPaket | number: '1.0-0' }}</dd>
+            <dt>{{ "package__summary__package-price" | translate }}</dt>
+            <dd>Rp {{ hargaPaket | number: "1.0-0" }}</dd>
           </div>
         </dl>
 
         <div class="ringkas__total">
-          <span>{{ 'package__summary__saving' | translate }}</span>
-          <strong>Rp {{ hemat | number: '1.0-0' }}</strong>
+          <span>{{ "package__summary__saving" | translate }}</span>
+          <strong>Rp {{ hemat | number: "1.0-0" }}</strong>
         </div>
       </section>
 
       <section class="kartu">
-        <h2 class="kartu__label">{{ 'general__actions' | translate }}</h2>
+        <h2 class="kartu__label">{{ "general__actions" | translate }}</h2>
 
         <button
           type="button"
@@ -109,10 +140,14 @@
           (click)="submitForm()"
         >
           <i class="ph ph-check" aria-hidden="true"></i>
-          {{ 'package__update__save' | translate }}
+          {{ "package__update__save" | translate }}
         </button>
-        <button type="button" class="btn btn--kedua btn--blok" (click)="batal()">
-          {{ 'general__cancel' | translate }}
+        <button
+          type="button"
+          class="btn btn--kedua btn--blok"
+          (click)="batal()"
+        >
+          {{ "general__cancel" | translate }}
         </button>
 
         <!-- Penghapusan hanya untuk administrator. -->
@@ -123,11 +158,13 @@
           (click)="delete()"
         >
           <i class="ph ph-trash" aria-hidden="true"></i>
-          {{ 'package__update__delete' | translate }}
+          {{ "package__update__delete" | translate }}
         </button>
       </section>
     </aside>
   </div>
 </div>
 
-<p class="tabel__pesan" *ngIf="isLoading">{{ 'general__loading' | translate }}</p>
+<p class="tabel__pesan" *ngIf="isLoading">
+  {{ "general__loading" | translate }}
+</p>

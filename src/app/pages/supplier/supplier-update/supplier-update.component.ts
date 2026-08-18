@@ -1,7 +1,17 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
 import { AlertService } from 'src/app/services/alert.service';
@@ -13,9 +23,9 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
 
 @Component({
-    selector: 'app-supplier-update',
-    templateUrl: './supplier-update.component.html',
-    imports: [
+  selector: 'app-supplier-update',
+  templateUrl: './supplier-update.component.html',
+  imports: [
     DialogShellComponent,
     NgIf,
     FormsModule,
@@ -25,7 +35,7 @@ import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-she
     MatInput,
     NgxMaskDirective,
     TranslatePipe,
-  ]
+  ],
 })
 export class SupplierUpdateComponent implements OnInit {
   constructor(
@@ -35,7 +45,7 @@ export class SupplierUpdateComponent implements OnInit {
     private dialogRef: MatDialogRef<SupplierUpdateComponent>,
     private translateService: TranslateService,
     private authService: AuthService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   isAdministrator: boolean = false;
@@ -82,6 +92,7 @@ export class SupplierUpdateComponent implements OnInit {
       .open(DeleteConfirmationComponent, {
         data: {
           title: this.translateService.instant('supplier__delete__message'),
+          document: this.supplierFormGroup.get('name')?.value,
         },
       })
       .afterClosed()
@@ -99,7 +110,7 @@ export class SupplierUpdateComponent implements OnInit {
         this.apiService.delete(`supplier/${this.data.id}`).subscribe({
           next: (_) => {
             this.alertService.showSuccess(
-              this.translateService.instant('supplier__delete__success')
+              this.translateService.instant('supplier__delete__success'),
             );
 
             this.dialogRef.close('deleted');

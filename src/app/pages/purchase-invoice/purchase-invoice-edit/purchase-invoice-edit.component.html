@@ -6,25 +6,27 @@
   <div class="buat__utama">
     <header class="buat__head">
       <h1 class="buat__title">
-        {{ 'purchase-invoice__edit__title' | translate }}
+        {{ "purchase-invoice__edit__title" | translate }}
         <span class="tag-otomatis" *ngIf="documentFormGroup.value.name">
           <i class="ph ph-file-text" aria-hidden="true"></i>
           {{ documentFormGroup.value.name }}
         </span>
       </h1>
-      <p class="buat__lede">{{ 'purchase-invoice__edit__lede' | translate }}</p>
+      <p class="buat__lede">{{ "purchase-invoice__edit__lede" | translate }}</p>
     </header>
 
     <!-- Data umum ------------------------------------------------------ -->
     <section class="kartu" [formGroup]="documentFormGroup">
       <h2 class="kartu__label">
-        {{ 'good-receipt__create__general' | translate }}
+        {{ "good-receipt__create__general" | translate }}
       </h2>
 
       <div class="kisi">
         <div class="field">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{ 'purchase-invoice__edit__date' | translate }}</mat-label>
+            <mat-label>{{
+              "purchase-invoice__edit__date" | translate
+            }}</mat-label>
             <input
               matInput
               [matDatepicker]="piPicker"
@@ -47,7 +49,7 @@
         <div class="field">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>
-              {{ 'purchase-invoice__edit__delivery-order-name' | translate }}
+              {{ "purchase-invoice__edit__delivery-order-name" | translate }}
             </mat-label>
             <input
               matInput
@@ -87,13 +89,13 @@
 
     <!-- Faktur supplier ------------------------------------------------ -->
     <section class="kartu" [formGroup]="documentFormGroup">
-      <h2 class="kartu__label">{{ 'good-receipt__invoice' | translate }}</h2>
+      <h2 class="kartu__label">{{ "good-receipt__invoice" | translate }}</h2>
 
       <div class="kisi">
         <div class="field">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>
-              {{ 'good-receipt__invoice__name' | translate }}
+              {{ "good-receipt__invoice__name" | translate }}
             </mat-label>
             <input
               matInput
@@ -107,7 +109,9 @@
 
         <div class="field">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{ 'good-receipt__invoice__tax' | translate }}</mat-label>
+            <mat-label>{{
+              "good-receipt__invoice__tax" | translate
+            }}</mat-label>
             <input
               matInput
               type="text"
@@ -117,14 +121,14 @@
               autocomplete="off"
               [attr.placeholder]="'tax-invoice__placeholder' | translate"
             />
-            <mat-hint>{{ 'tax-invoice__hint' | translate }}</mat-hint>
+            <mat-hint>{{ "tax-invoice__hint" | translate }}</mat-hint>
           </mat-form-field>
         </div>
 
         <div class="field">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>
-              {{ 'good-receipt__invoice__discount' | translate }}
+              {{ "good-receipt__invoice__discount" | translate }}
             </mat-label>
             <input
               matInput
@@ -139,7 +143,7 @@
 
       <p class="petunjuk">
         <i class="ph ph-info" aria-hidden="true"></i>
-        {{ 'good-receipt__invoice__discount__note' | translate }}
+        {{ "good-receipt__invoice__discount__note" | translate }}
       </p>
     </section>
 
@@ -147,11 +151,11 @@
     <section class="kartu">
       <div class="kartu__baris">
         <h2 class="kartu__label">
-          {{ 'good-receipt__create__items' | translate }}
+          {{ "good-receipt__create__items" | translate }}
         </h2>
         <button type="button" class="tambah-atas" (click)="openItemSelector()">
           <i class="ph ph-plus" aria-hidden="true"></i>
-          {{ 'good-receipt__create__add-item-short' | translate }}
+          {{ "good-receipt__create__add-item-short" | translate }}
         </button>
       </div>
 
@@ -159,38 +163,43 @@
         <table class="tabel" formArrayName="items">
           <thead>
             <tr>
-              <th>{{ 'good-receipt__create__item' | translate }}</th>
-              <th>{{ 'good-receipt__create__quantity' | translate }}</th>
+              <th>{{ "good-receipt__create__item" | translate }}</th>
+              <th>{{ "good-receipt__create__quantity" | translate }}</th>
               <th class="ke-kanan" *ngIf="bolehUbahHarga">
-                {{ 'product__add__unit__purchase-price' | translate }}
+                {{ "product__add__unit__purchase-price" | translate }}
               </th>
               <th class="ke-kanan" *ngIf="bolehUbahHarga">
-                {{ 'product__add__unit__purchase-discount' | translate }}
+                {{ "product__add__unit__purchase-discount" | translate }}
               </th>
               <th class="ke-kanan" *ngIf="bolehUbahHarga">
-                {{ 'good-receipt__create__line-total' | translate }}
+                {{ "good-receipt__create__line-total" | translate }}
               </th>
               <th class="tabel__aksi-kepala">
-                <span class="sr-only">{{ 'general__actions' | translate }}</span>
+                <span class="sr-only">{{
+                  "general__actions" | translate
+                }}</span>
               </th>
             </tr>
           </thead>
 
           <tbody *ngIf="t.length > 0">
-            <tr *ngFor="let itemForm of t.controls; index as i" [formGroupName]="i">
+            <tr
+              *ngFor="let itemForm of t.controls; index as i"
+              [formGroupName]="i"
+            >
               <td>
                 <span class="barang__ref">
-                  {{ itemForm.get('reference')?.value }}
+                  {{ itemForm.get("reference")?.value }}
                   <span
                     class="ulang"
                     *ngIf="jumlahBaris(itemForm.get('product_id')?.value) > 1"
                     [title]="'good-receipt__create__duplicate' | translate"
                   >
-                    ×{{ jumlahBaris(itemForm.get('product_id')?.value) }}
+                    ×{{ jumlahBaris(itemForm.get("product_id")?.value) }}
                   </span>
                 </span>
                 <span class="barang__desc">
-                  {{ itemForm.get('description')?.value }}
+                  {{ itemForm.get("description")?.value }}
                 </span>
               </td>
 
@@ -205,17 +214,19 @@
                       thousandSeparator=" "
                     />
                   </mat-form-field>
-                  <span class="jumlah__satuan">{{ itemForm.get('unit')?.value }}</span>
+                  <span class="jumlah__satuan">{{
+                    itemForm.get("unit")?.value
+                  }}</span>
                 </div>
                 <span
                   class="jumlah__konversi"
                   *ngIf="itemForm.get('conversion')?.value != 1"
                 >
                   {{
-                    itemForm.get('quantity')?.value * itemForm.get('conversion')?.value
-                      | number: '0.0-2'
+                    itemForm.get("quantity")?.value *
+                      itemForm.get("conversion")?.value | number: "0.0-2"
                   }}
-                  {{ itemForm.get('default_unit')?.value }}
+                  {{ itemForm.get("default_unit")?.value }}
                 </span>
               </td>
 
@@ -226,18 +237,18 @@
               -->
               <td class="ke-kanan" *ngIf="bolehUbahHarga">
                 <button type="button" class="nilai-btn" (click)="ubahHarga(i)">
-                  Rp {{ itemForm.get('price')?.value | number: '1.0-0' }}
+                  Rp {{ itemForm.get("price")?.value | number: "1.0-0" }}
                 </button>
               </td>
 
               <td class="ke-kanan" *ngIf="bolehUbahHarga">
                 <button type="button" class="nilai-btn" (click)="ubahHarga(i)">
-                  Rp {{ itemForm.get('discount')?.value | number: '1.0-0' }}
+                  Rp {{ itemForm.get("discount")?.value | number: "1.0-0" }}
                 </button>
               </td>
 
               <td class="ke-kanan baris__total" *ngIf="bolehUbahHarga">
-                Rp {{ totalBaris(i) | number: '1.0-0' }}
+                Rp {{ totalBaris(i) | number: "1.0-0" }}
               </td>
 
               <td class="tabel__aksi">
@@ -278,7 +289,7 @@
           <tbody *ngIf="t.length === 0">
             <tr>
               <td [attr.colspan]="bolehUbahHarga ? 6 : 3" class="tabel__pesan">
-                {{ 'good-receipt__create__no-item' | translate }}
+                {{ "good-receipt__create__no-item" | translate }}
               </td>
             </tr>
           </tbody>
@@ -287,7 +298,7 @@
 
       <button type="button" class="tambah" (click)="openItemSelector()">
         <i class="ph ph-plus-circle" aria-hidden="true"></i>
-        <span>{{ 'good-receipt__create__add-item' | translate }}</span>
+        <span>{{ "good-receipt__create__add-item" | translate }}</span>
         <span class="tambah__kunci">Alt + A</span>
       </button>
     </section>
@@ -297,44 +308,54 @@
   <aside class="buat__samping">
     <!-- Ringkasan uang — hanya untuk yang boleh melihat harga. -->
     <section class="kartu" *ngIf="bolehUbahHarga">
-      <h2 class="kartu__label">{{ 'good-receipt__summary' | translate }}</h2>
+      <h2 class="kartu__label">{{ "good-receipt__summary" | translate }}</h2>
 
       <dl class="ringkas">
         <div>
-          <dt>{{ 'good-receipt__summary__subtotal' | translate }}</dt>
-          <dd>Rp {{ subtotal | number: '1.0-0' }}</dd>
+          <dt>{{ "good-receipt__summary__subtotal" | translate }}</dt>
+          <dd>Rp {{ subtotal | number: "1.0-0" }}</dd>
         </div>
         <div>
-          <dt>{{ 'good-receipt__summary__item-discount' | translate }}</dt>
-          <dd class="ringkas__kurang">– Rp {{ diskonItem | number: '1.0-0' }}</dd>
+          <dt>{{ "good-receipt__summary__item-discount" | translate }}</dt>
+          <dd class="ringkas__kurang">
+            – Rp {{ diskonItem | number: "1.0-0" }}
+          </dd>
         </div>
         <div>
-          <dt>{{ 'good-receipt__summary__doc-discount' | translate }}</dt>
-          <dd class="ringkas__kurang">– Rp {{ diskonDokumen | number: '1.0-0' }}</dd>
+          <dt>{{ "good-receipt__summary__doc-discount" | translate }}</dt>
+          <dd class="ringkas__kurang">
+            – Rp {{ diskonDokumen | number: "1.0-0" }}
+          </dd>
         </div>
       </dl>
 
       <div class="ringkas__total">
-        <span>{{ 'good-receipt__summary__total' | translate }}</span>
-        <strong>Rp {{ total | number: '1.0-0' }}</strong>
+        <span>{{ "good-receipt__summary__total" | translate }}</span>
+        <strong>Rp {{ total | number: "1.0-0" }}</strong>
       </div>
     </section>
 
     <section class="kartu">
       <h2 class="kartu__label">
-        {{ 'product__create__before-save' | translate }}
+        {{ "product__create__before-save" | translate }}
       </h2>
 
       <ul class="periksa">
-        <li [class.periksa--ok]="metaFormGroup.valid && documentFormGroup.valid">
+        <li
+          [class.periksa--ok]="metaFormGroup.valid && documentFormGroup.valid"
+        >
           <i
             [class.ph-fill]="metaFormGroup.valid && documentFormGroup.valid"
-            [class.ph-check-circle]="metaFormGroup.valid && documentFormGroup.valid"
+            [class.ph-check-circle]="
+              metaFormGroup.valid && documentFormGroup.valid
+            "
             [class.ph]="!(metaFormGroup.valid && documentFormGroup.valid)"
-            [class.ph-circle]="!(metaFormGroup.valid && documentFormGroup.valid)"
+            [class.ph-circle]="
+              !(metaFormGroup.valid && documentFormGroup.valid)
+            "
             aria-hidden="true"
           ></i>
-          <span>{{ 'good-receipt__create__check-general' | translate }}</span>
+          <span>{{ "good-receipt__create__check-general" | translate }}</span>
         </li>
         <li [class.periksa--ok]="t.length > 0">
           <i
@@ -345,7 +366,7 @@
             aria-hidden="true"
           ></i>
           <span>
-            {{ t.length }} {{ 'good-receipt__create__check-items' | translate }}
+            {{ t.length }} {{ "good-receipt__create__check-items" | translate }}
           </span>
         </li>
         <li [class.periksa--ok]="itemFormGroup.valid" *ngIf="t.length > 0">
@@ -356,13 +377,13 @@
             [class.ph-circle]="!itemFormGroup.valid"
             aria-hidden="true"
           ></i>
-          <span>{{ 'good-receipt__create__check-quantity' | translate }}</span>
+          <span>{{ "good-receipt__create__check-quantity" | translate }}</span>
         </li>
       </ul>
     </section>
 
     <section class="kartu">
-      <h2 class="kartu__label">{{ 'general__actions' | translate }}</h2>
+      <h2 class="kartu__label">{{ "general__actions" | translate }}</h2>
 
       <button
         type="button"
@@ -371,11 +392,11 @@
         [disabled]="!bolehSimpan"
       >
         <i class="ph ph-check" aria-hidden="true"></i>
-        {{ 'purchase-invoice__edit__submit' | translate }}
+        {{ "purchase-invoice__edit__submit" | translate }}
       </button>
 
       <button type="button" class="btn btn--kedua btn--blok" (click)="batal()">
-        {{ 'general__cancel' | translate }}
+        {{ "general__cancel" | translate }}
       </button>
     </section>
   </aside>

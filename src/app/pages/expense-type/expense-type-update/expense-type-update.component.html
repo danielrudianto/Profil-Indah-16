@@ -12,26 +12,31 @@
     <!-- Induknya baku — keterangan, bukan pilihan. -->
     <p class="petunjuk">
       <i class="ph ph-lock-simple" aria-hidden="true"></i>
-      {{ 'expense-type__update__parent-note' | translate }} <strong>{{ data.parentName }}</strong>
+      {{ "expense-type__update__parent-note" | translate }}
+      <strong>{{ data.parentName }}</strong>
     </p>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'expense-type__create__name' | translate }}</mat-label>
-      <input matInput type="text" formControlName="name" autocomplete="off" maxlength="100" />
+      <mat-label>{{ "expense-type__create__name" | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="name"
+        autocomplete="off"
+        maxlength="100"
+      />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'expense-type__create__description' | translate }}</mat-label>
+      <mat-label>{{
+        "expense-type__create__description" | translate
+      }}</mat-label>
       <textarea matInput rows="2" formControlName="description"></textarea>
     </mat-form-field>
 
-    <button
-      type="button"
-      class="btn btn--bahaya btn--blok"
-      (click)="delete()"
-    >
+    <button type="button" class="btn btn--bahaya btn--blok" (click)="delete()">
       <i class="ph ph-trash" aria-hidden="true"></i>
-      {{ 'expense-type__update__delete' | translate }}
+      {{ "expense-type__update__delete" | translate }}
     </button>
   </div>
 </app-dialog-shell>

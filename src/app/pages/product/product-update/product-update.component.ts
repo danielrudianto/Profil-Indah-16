@@ -7,7 +7,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { NgxMaskDirective } from 'ngx-mask';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -142,7 +146,12 @@ export class ProductUpdateComponent implements OnInit {
   }
 
   tambahSatuan(): void {
-    this.satuan.push({ unit: '', conversion: null, dipakai: false, baru: true });
+    this.satuan.push({
+      unit: '',
+      conversion: null,
+      dipakai: false,
+      baru: true,
+    });
   }
 
   satuanBerubah(s: (typeof this.satuan)[number]): boolean {
@@ -204,6 +213,7 @@ export class ProductUpdateComponent implements OnInit {
       .open(DeleteConfirmationComponent, {
         data: {
           title: this.translateService.instant('product__unit__delete-confirm'),
+          document: s.unit,
         },
       })
       .afterClosed()
@@ -302,6 +312,7 @@ export class ProductUpdateComponent implements OnInit {
           title: this.translateService.instant(
             'product__update__delete-confirmation-message',
           ),
+          document: this.itemFormGroup.get('reference')?.value,
         },
       })
       .afterClosed()
