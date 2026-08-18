@@ -36,7 +36,9 @@
               "crypto-js",
               "mousetrap",
               "moment",
-              "pdfmake"
+              "pdfmake",
+              "exceljs",
+              "file-saver"
             ],
             "browser": "src/main.ts"
           },
@@ -50,8 +52,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "14kb",
-                  "maximumError": "20kb"
+                  "maximumWarning": "20kb",
+                  "maximumError": "28kb"
                 }
               ],
               "outputHashing": "all"

@@ -27,12 +27,6 @@ import { ExcelService } from 'src/app/services/excel.service';
 import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
 import { ReportRankComponent } from 'src/app/components/report-rank/report-rank.component';
 import {
-  MatFormField,
-  MatLabel,
-  MatSuffix,
-} from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import {
   MatDatepicker,
   MatDatepickerInput,
 } from '@angular/material/datepicker';
@@ -71,10 +65,6 @@ import {
     FormsModule,
     ReactiveFormsModule,
     TranslatePipe,
-    MatFormField,
-    MatLabel,
-    MatSuffix,
-    MatInput,
     MatDatepicker,
     MatDatepickerInput,
   ],

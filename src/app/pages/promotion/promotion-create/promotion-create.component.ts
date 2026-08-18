@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { MatFormField, MatLabel, MatSuffix, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatSelect, MatOption } from '@angular/material/select';
-import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerInput } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ComboSearchComponent } from 'src/app/components/combo-search/combo-search.component';
 
@@ -36,7 +36,6 @@ import { NgxMaskDirective } from 'ngx-mask';
     MatOption,
     MatDatepicker,
     MatDatepickerInput,
-    MatDatepickerToggle,
     TranslatePipe,
   ]
 })

@@ -6,8 +6,6 @@ import {
   MatDatepickerInput,
 } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { MatFormField } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 import moment from 'moment';
@@ -35,8 +33,6 @@ import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-koso
     DatePipe,
     FormsModule,
     ReactiveFormsModule,
-    MatFormField,
-    MatInput,
     MatDatepicker,
     MatDatepickerInput,
     TabelKosongComponent,

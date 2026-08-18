@@ -14,8 +14,6 @@ import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
   MomentDateAdapter,
 } from '@angular/material-moment-adapter';
-import { MatFormField } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
 import { TranslatePipe } from '@ngx-translate/core';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
@@ -52,8 +50,6 @@ const moment = _rollupMoment || _moment;
     DecimalPipe,
     FormsModule,
     ReactiveFormsModule,
-    MatFormField,
-    MatInput,
     MatDatepicker,
     MatDatepickerInput,
     TranslatePipe,

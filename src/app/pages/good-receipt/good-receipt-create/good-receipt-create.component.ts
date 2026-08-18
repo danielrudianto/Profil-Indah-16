@@ -25,7 +25,6 @@ import { MatInput } from '@angular/material/input';
 import {
   MatDatepicker,
   MatDatepickerInput,
-  MatDatepickerToggle,
 } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { Router } from '@angular/router';
@@ -39,7 +38,6 @@ import { Router } from '@angular/router';
     MatSuffix,
     MatDatepicker,
     MatDatepickerInput,
-    MatDatepickerToggle,
     MatHint,
     MatFormField,
     MatLabel,

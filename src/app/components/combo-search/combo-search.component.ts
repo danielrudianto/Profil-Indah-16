@@ -14,7 +14,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
-import { MatSuffix, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 
 export interface ComboItem {
@@ -42,7 +42,6 @@ export interface ComboItem {
     MatFormField,
     MatLabel,
     MatInput,
-    MatSuffix,
     NgIf,
     NgFor,
     ReactiveFormsModule,

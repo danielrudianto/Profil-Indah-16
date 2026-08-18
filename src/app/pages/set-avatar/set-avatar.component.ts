@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor } from '@angular/common';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 
@@ -54,7 +54,6 @@ interface KelompokAvatar {
   styleUrls: ['./set-avatar.component.scss'],
   animations: [panelAnimation],
   imports: [
-    NgIf,
     NgFor,
     FormsModule,
     ReactiveFormsModule,
