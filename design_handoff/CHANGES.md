@@ -2,6 +2,13 @@
 
 > Baca ini dulu; README.md tetap sumber lengkap. Yang tidak disebut di sini tidak berubah.
 
+## 16 Agustus 2026 (push #17 — aset avatar per opsi)
+- **assets/avatar/** — 59 berkas SVG: base.svg + satu berkas per opsi (top-00…14, accessories-00…04, clothes-00…07, eyes-00…10, eyebrows-00…06, mouth-00…11). Dipecah dari src/app/components/avatar/avatar.component.html.
+- **Pendekatan (a)**: tiap berkas SUDAH memuat dasar netral (kepala + wajah + badan) di belakang lapisan opsinya — langsung bisa dipakai sebagai petak 21a tanpa penumpukan.
+- **Nomor = nilai ngSwitchCase persis** (yang tersimpan di DB); jangan digeser. accessories-00 = tanpa aksesori (sumber tidak punya cabang 0 — pilihan "none").
+- **Lingkaran latar TIDAK disertakan**: render div bundar berwarna di belakang petak, warnanya dari penggeser pengguna. viewBox semua berkas 0 0 264 280.
+- Pratinjau semua petak: avatar-tiles-preview.html (di root folder handoff).
+
 ## 15 Agustus 2026 (push #16)
 - **Pengembalian diskon (FITUR BARU, form Buat Faktur Penjualan)** — card baru "Pengembalian diskon" tepat di bawah card Pembayaran. Kasus bisnis: diskon sering dikembalikan sebagai uang cash/transfer ke pelanggan (mis. tukang); selama ini tidak tercatat sehingga rekonsiliasi bank vs laporan tiap sore tidak cocok. Bentuk: banner info penjelas; 2 kartu pilihan "Diskon di faktur saja" (tanpa uang keluar) vs "Dikembalikan ke pelanggan" (uang keluar, tercatat & ikut rekonsiliasi); jika dikembalikan → segmented Cash/Transfer + Nominal Rp (default = total diskon faktur) + Nama penerima (cash) ATAU bank/nama akun/nomor akun (transfer — pola sama dengan Kelebihan Bayar 16a/16b). Pembukuan: uang keluar dicatat sebagai transaksi kas/bank tersendiri yang terikat ke fakturnya.
 - **Topbar SERAGAM & FINAL di semua halaman kerja**: kanan atas SELALU berisi (urutan): ikon dark-mode toggle (ph-moon), lang selector ID/EN (toggle kapsul), lalu kartu profil (avatar inisial + nama + email + caret). 33 topbar yang belum punya sudah ditambahkan. JANGAN diubah-ubah atau dihilangkan per halaman.
