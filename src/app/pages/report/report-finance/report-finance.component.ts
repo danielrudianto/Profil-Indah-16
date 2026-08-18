@@ -228,7 +228,9 @@ export class ReportFinanceComponent implements OnInit {
     if (this.adaBarisTanpaAlokasi) {
       barisPerusahaan.push([
         {
-          text: this.translateService.instant('report-finance__unallocated-row'),
+          text: this.translateService.instant(
+            'report-finance__unallocated-row',
+          ),
           style: 'isi',
         },
         { text: angka(this.pendapatan(null)), style: 'isiAngka' },

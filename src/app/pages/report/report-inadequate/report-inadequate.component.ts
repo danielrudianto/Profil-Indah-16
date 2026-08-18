@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import * as xlsx from 'xlsx';
-import { saveAs } from 'file-saver';
 
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { ExcelService } from 'src/app/services/excel.service';
 import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 import {
@@ -40,6 +39,7 @@ import {
 export class ReportInadequateComponent implements OnInit {
   constructor(
     private apiService: ApiService,
+    private excelService: ExcelService,
     private alertService: AlertService,
     private translateService: TranslateService,
   ) {}
@@ -65,7 +65,6 @@ export class ReportInadequateComponent implements OnInit {
   get idTipe(): number[] {
     return this.tipe.map((x) => x.id);
   }
-
 
   ngOnInit(): void {
     this.ambilData();
@@ -159,34 +158,34 @@ export class ReportInadequateComponent implements OnInit {
       })
       .subscribe({
         next: (data: any) => {
-          const worksheet = xlsx.utils.aoa_to_sheet([
-            ['Reference', 'Description', 'Stock', 'Minimum stock', 'Unit'],
-            ...(data.data as any[]).map((x) => [
-              x.reference,
-              x.description,
-              Number(x.product_stock?.stock ?? 0),
-              Number(x.minimum_stock),
-              x.unit,
-            ]),
-          ]);
-
-          const workbook = xlsx.utils.book_new();
-          xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-          const excelBuffer = xlsx.write(workbook, {
-            bookType: 'xlsx',
-            type: 'array',
-          });
-          saveAs(
-            new Blob([excelBuffer], {
-              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            }),
-            `Inadequate_report_${new Date().getTime()}.xlsx`,
-          );
-          this.alertService.showSuccess(
-            this.translateService.instant(
-              'inadequate-report__export__successful',
-            ),
-          );
+          this.excelService
+            .unduh('Laporan_barang_kurang', [
+              {
+                nama: 'Laporan barang kurang',
+                judul: 'Laporan barang kurang',
+                kolom: [
+                  { judul: 'Reference', lebar: 18 },
+                  { judul: 'Description', lebar: 42 },
+                  { judul: 'Stock', format: 'angka' },
+                  { judul: 'Minimum stock', format: 'angka' },
+                  { judul: 'Unit', lebar: 10 },
+                ],
+                baris: (data.data as any[]).map((x) => [
+                  x.reference,
+                  x.description,
+                  Number(x.product_stock?.stock ?? 0),
+                  Number(x.minimum_stock),
+                  x.unit,
+                ]),
+              },
+            ])
+            .then(() => {
+              this.alertService.showSuccess(
+                this.translateService.instant(
+                  'inadequate-report__export__successful',
+                ),
+              );
+            });
         },
         error: (error) => {
           this.alertService.showError(error);

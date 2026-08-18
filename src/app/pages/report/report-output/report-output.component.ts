@@ -19,11 +19,10 @@ import moment, { Moment } from 'moment';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { PageBreak, TDocumentDefinitions } from 'pdfmake/interfaces';
-import * as xlsx from 'xlsx';
-import { saveAs } from 'file-saver';
 
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { ExcelService } from 'src/app/services/excel.service';
 import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
 import {
   ComboItem,
@@ -71,6 +70,7 @@ pdfMake.vfs = pdfFonts;
 export class ReportOutputComponent implements OnInit {
   constructor(
     private apiService: ApiService,
+    private excelService: ExcelService,
     private alertService: AlertService,
     private translateService: TranslateService,
   ) {}
@@ -95,7 +95,6 @@ export class ReportOutputComponent implements OnInit {
   get idTipe(): number[] {
     return this.tipe.map((x) => x.id);
   }
-
 
   /**
    * Bawaan: hanya barang yang bergerak bulan itu. Data asli berisi
@@ -254,44 +253,38 @@ export class ReportOutputComponent implements OnInit {
   }
 
   downloadExcel(): void {
-    const workbook = xlsx.utils.book_new();
+    const sheets = this.kelompokTampil.map((k) => ({
+      nama: k.nama,
+      judul: `Laporan keluar-masuk barang — ${k.nama}`,
+      keterangan: `Periode ${this.namaBulan}`,
+      kolom: [
+        { judul: 'No', format: 'angka' as const, lebar: 6 },
+        { judul: 'Reference', lebar: 18 },
+        { judul: 'Description', lebar: 42 },
+        { judul: 'Brand', lebar: 16 },
+        { judul: 'Type', lebar: 16 },
+        { judul: 'Initial Stock', format: 'angka' as const },
+        { judul: 'Adjustment Input', format: 'angka' as const },
+        { judul: 'Adjustment Output', format: 'angka' as const },
+        { judul: 'Good Receipt Input', format: 'angka' as const },
+        { judul: 'Bill Output', format: 'angka' as const },
+        { judul: 'Sales Return', format: 'angka' as const },
+        { judul: 'Final Stock', format: 'angka' as const },
+        { judul: 'Unit', lebar: 10 },
+      ],
+      baris: this.barisEkspor(k),
+    }));
 
-    for (const k of this.kelompokTampil) {
-      const worksheet = xlsx.utils.aoa_to_sheet([
-        [
-          'No',
-          'Reference',
-          'Description',
-          'Brand',
-          'Type',
-          'Initial Stock',
-          'Adjustment Input',
-          'Adjustment Output',
-          'Good Receipt Input',
-          'Bill Output',
-          'Sales Return',
-          'Final Stock',
-          'Unit',
-        ],
-        ...this.barisEkspor(k),
-      ]);
-      // Nama lembar Excel dibatasi 31 huruf oleh formatnya sendiri.
-      xlsx.utils.book_append_sheet(workbook, worksheet, k.nama.slice(0, 31));
-    }
-
-    const excelBuffer = xlsx.write(workbook, {
-      bookType: 'xlsx',
-      type: 'array',
-    });
-    saveAs(
-      new Blob([excelBuffer], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      }),
-      `Output_report_${new Date().getTime()}.xlsx`,
-    );
-    this.alertService.showSuccess(
-      this.translateService.instant('report-output__export__successful'),
-    );
+    this.excelService
+      .unduh(
+        `Laporan_keluar_masuk_${this.date.value!.format('YYYY-MM')}`,
+        sheets,
+      )
+      .then(() => {
+        this.alertService.showSuccess(
+          this.translateService.instant('report-output__export__successful'),
+        );
+      });
   }
 
   downloadPdf(): void {
@@ -346,7 +339,10 @@ export class ReportOutputComponent implements OnInit {
                 ],
                 ...this.barisEkspor(k).map((b) =>
                   b.map((nilai, kolom) => ({
-                    text: typeof nilai === 'number' && kolom > 0 ? angka(nilai) : String(nilai ?? ''),
+                    text:
+                      typeof nilai === 'number' && kolom > 0
+                        ? angka(nilai)
+                        : String(nilai ?? ''),
                     style: kolom >= 5 && kolom <= 11 ? 'isiAngka' : 'isi',
                   })),
                 ),

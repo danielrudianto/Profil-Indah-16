@@ -1,36 +1,86 @@
 import { DatePipe, NgFor } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+} from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { saveAs } from 'file-saver';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import * as xlsx from 'xlsx';
+import { ExcelService } from 'src/app/services/excel.service';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { NgxMaskDirective } from 'ngx-mask';
-import { MatList, MatListItem, MatListItemTitle, MatListItemLine } from '@angular/material/list';
+import {
+  MatList,
+  MatListItem,
+  MatListItemTitle,
+  MatListItemLine,
+} from '@angular/material/list';
 import { MatButton } from '@angular/material/button';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-promotion-result',
-    templateUrl: './promotion-result.component.html',
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatList, NgFor, MatListItem, MatListItemTitle, MatListItemLine, MatDialogActions, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatIcon, TranslatePipe]
+  selector: 'app-promotion-result',
+  templateUrl: './promotion-result.component.html',
+  imports: [
+    MatDialogTitle,
+    FormsModule,
+    ReactiveFormsModule,
+    CdkScrollable,
+    MatDialogContent,
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    NgxMaskDirective,
+    MatList,
+    NgFor,
+    MatListItem,
+    MatListItemTitle,
+    MatListItemLine,
+    MatDialogActions,
+    MatButton,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatIcon,
+    TranslatePipe,
+  ],
 })
 export class PromotionResultComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { id: number },
     private apiService: ApiService,
+    private excelService: ExcelService,
     private dialog: MatDialogRef<PromotionResultComponent>,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
     private translateService: TranslateService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
   ) {}
 
   isLoading: boolean = false;
@@ -72,7 +122,7 @@ export class PromotionResultComponent {
                 description: [x.description],
                 product_brand: [x.product_brand.name],
                 product_type: [x.product_type.name],
-              })
+              }),
             );
           });
         },
@@ -93,55 +143,44 @@ export class PromotionResultComponent {
         .get(`promotion/result/sales/${this.data.id}`)
         .subscribe({
           next: (data: any) => {
-            const workbook = xlsx.utils.book_new();
-            const createSheet = (sheetName: string, sheetData: any[]) => {
-              const worksheetData = [
-                [
-                  'Date',
-                  'Name',
-                  'Customer',
-                  'Reference',
-                  'Quantity',
-                  'Price',
-                  'Discount',
-                  'Unit',
-                ],
-              ];
-
-              sheetData.forEach((x, index) => {
-                worksheetData.push([
-                  this.datePipe.transform(new Date(x.date), 'yyyy-MM-dd'),
-                  x.name,
-                  x.reference,
-                  x.customer,
-                  x.quantity,
-                  x.price,
-                  x.discount,
-                  x.unit,
-                ]);
+            /*
+              Urutan lamanya menukar kolom Customer dan Reference —
+              header bilang satu hal, isinya hal lain. Di sini disejajarkan.
+            */
+            this.excelService
+              .unduh('Hasil_promosi_penjualan_' + this.data.id, [
+                {
+                  nama: 'Sales',
+                  judul: 'Hasil promosi — sales',
+                  kolom: [
+                    { judul: 'Date', format: 'tanggal' },
+                    { judul: 'Name', lebar: 24 },
+                    { judul: 'Customer', lebar: 28 },
+                    { judul: 'Reference', lebar: 18 },
+                    { judul: 'Quantity', format: 'angka' },
+                    { judul: 'Price', format: 'uang' },
+                    { judul: 'Discount', format: 'uang' },
+                    { judul: 'Unit', lebar: 10 },
+                  ],
+                  baris: (data.data as any[]).map((x) => [
+                    new Date(x.date),
+                    x.name,
+                    x.customer,
+                    x.reference,
+                    x.quantity,
+                    x.price,
+                    x.discount,
+                    x.unit,
+                  ]),
+                },
+              ])
+              .then(() => {
+                this.alertService.showSuccess(
+                  this.translateService.instant(
+                    'promotion__result__download__success',
+                  ),
+                );
               });
-
-              const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);
-              xlsx.utils.book_append_sheet(workbook, worksheet, sheetName);
-            };
-
-            createSheet('Sales', data.data);
-
-            const excelBuffer = xlsx.write(workbook, {
-              bookType: 'xlsx',
-              type: 'array',
-            });
-
-            const blob = new Blob([excelBuffer], {
-              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            });
-
-            saveAs(blob, `Sales promotion result ${this.data.id}.xlsx`);
-            this.alertService.showSuccess(
-              this.translateService.instant(
-                'promotion__result__download__success'
-              )
-            );
           },
           error: (error) => {
             this.alertService.showError(error);
@@ -157,55 +196,44 @@ export class PromotionResultComponent {
         .get(`promotion/result/purchase/${this.data.id}`)
         .subscribe({
           next: (data: any) => {
-            const workbook = xlsx.utils.book_new();
-            const createSheet = (sheetName: string, sheetData: any[]) => {
-              const worksheetData = [
-                [
-                  'Date',
-                  'Name',
-                  'Supplier',
-                  'Reference',
-                  'Quantity',
-                  'Price',
-                  'Discount',
-                  'Unit',
-                ],
-              ];
-
-              sheetData.forEach((x, index) => {
-                worksheetData.push([
-                  this.datePipe.transform(new Date(x.date), 'yyyy-MM-dd'),
-                  x.name,
-                  x.reference,
-                  x.supplier,
-                  x.quantity,
-                  x.price,
-                  x.discount,
-                  x.unit,
-                ]);
+            /*
+              Urutan lamanya menukar kolom Supplier dan Reference —
+              header bilang satu hal, isinya hal lain. Di sini disejajarkan.
+            */
+            this.excelService
+              .unduh('Hasil_promosi_pembelian_' + this.data.id, [
+                {
+                  nama: 'Purchase',
+                  judul: 'Hasil promosi — purchase',
+                  kolom: [
+                    { judul: 'Date', format: 'tanggal' },
+                    { judul: 'Name', lebar: 24 },
+                    { judul: 'Supplier', lebar: 28 },
+                    { judul: 'Reference', lebar: 18 },
+                    { judul: 'Quantity', format: 'angka' },
+                    { judul: 'Price', format: 'uang' },
+                    { judul: 'Discount', format: 'uang' },
+                    { judul: 'Unit', lebar: 10 },
+                  ],
+                  baris: (data.data as any[]).map((x) => [
+                    new Date(x.date),
+                    x.name,
+                    x.supplier,
+                    x.reference,
+                    x.quantity,
+                    x.price,
+                    x.discount,
+                    x.unit,
+                  ]),
+                },
+              ])
+              .then(() => {
+                this.alertService.showSuccess(
+                  this.translateService.instant(
+                    'promotion__result__download__success',
+                  ),
+                );
               });
-
-              const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);
-              xlsx.utils.book_append_sheet(workbook, worksheet, sheetName);
-            };
-
-            createSheet('Purchase', data.data);
-
-            const excelBuffer = xlsx.write(workbook, {
-              bookType: 'xlsx',
-              type: 'array',
-            });
-
-            const blob = new Blob([excelBuffer], {
-              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            });
-
-            saveAs(blob, `Purchase promotion result ${this.data.id}.xlsx`);
-            this.alertService.showSuccess(
-              this.translateService.instant(
-                'promotion__result__download__success'
-              )
-            );
           },
           error: (error) => {
             this.alertService.showError(error);

@@ -22,11 +22,10 @@ import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ApiService } from 'src/app/services/api.service';
+import { ExcelService } from 'src/app/services/excel.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ExpenseViewComponent } from '../expense-view/expense-view.component';
-import * as xlsx from 'xlsx';
-import { saveAs } from 'file-saver';
 import { TranslateService } from '@ngx-translate/core';
 import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
@@ -79,6 +78,7 @@ const moment = _rollupMoment || _moment;
 export class ExpenseMutationComponent implements OnInit {
   constructor(
     private apiService: ApiService,
+    private excelService: ExcelService,
     private alertService: AlertService,
     private dialog: MatDialog,
     private authService: AuthService,
@@ -219,40 +219,45 @@ export class ExpenseMutationComponent implements OnInit {
       .subscribe({
         next: (data: any) => {
           const baris = (data.data as any[]) ?? [];
-          const worksheet = xlsx.utils.aoa_to_sheet([
-            ['Tanggal', 'Deskripsi', 'Tipe', 'Perusahaan', 'Nilai'],
-            ...baris.map((x) => [
-              x.date == null ? '' : String(x.date).slice(0, 10),
-              x.description,
-              x.expense_type?.name ?? '',
-              x.company?.name ?? '',
-              Number(x.value),
-            ]),
-            ['', '', '', 'TOTAL', baris.reduce((a, b) => a + Number(b.value), 0)],
-          ]);
-          worksheet['!cols'] = [
-            { wpx: 90 },
-            { wpx: 260 },
-            { wpx: 140 },
-            { wpx: 160 },
-            { wpx: 110 },
-          ];
-
-          const workbook = xlsx.utils.book_new();
-          xlsx.utils.book_append_sheet(workbook, worksheet, 'Pengeluaran');
-          const excelBuffer = xlsx.write(workbook, {
-            bookType: 'xlsx',
-            type: 'array',
-          });
-          saveAs(
-            new Blob([excelBuffer], {
-              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            }),
-            `Rekap_pengeluaran_${tahun}-${String(bulan).padStart(2, '0')}_${new Date().getTime()}.xlsx`,
-          );
-          this.alertService.showSuccess(
-            this.translateService.instant('expense__mutation__export__successful'),
-          );
+          this.excelService
+            .unduh(
+              `Rekap_pengeluaran_${tahun}-${String(bulan).padStart(2, '0')}`,
+              [
+                {
+                  nama: 'Pengeluaran',
+                  judul: 'Rekap pengeluaran',
+                  keterangan: this.labelBulan,
+                  kolom: [
+                    { judul: 'Tanggal', format: 'tanggal' },
+                    { judul: 'Deskripsi', lebar: 44 },
+                    { judul: 'Tipe', lebar: 22 },
+                    { judul: 'Perusahaan', lebar: 26 },
+                    { judul: 'Nilai', format: 'uang' },
+                  ],
+                  baris: baris.map((x) => [
+                    x.date == null ? '' : new Date(x.date),
+                    x.description,
+                    x.expense_type?.name ?? '',
+                    x.company?.name ?? '',
+                    Number(x.value),
+                  ]),
+                  totalBaris: [
+                    null,
+                    null,
+                    null,
+                    'TOTAL',
+                    baris.reduce((a, b) => a + Number(b.value), 0),
+                  ],
+                },
+              ],
+            )
+            .then(() => {
+              this.alertService.showSuccess(
+                this.translateService.instant(
+                  'expense__mutation__export__successful',
+                ),
+              );
+            });
         },
         error: (error) => {
           this.alertService.showError(error);

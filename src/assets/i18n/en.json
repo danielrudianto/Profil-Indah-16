@@ -1095,6 +1095,7 @@
   "sales-return__archive__view__discount": "Discount",
   "sales-return__archive__view__total": "Total",
   "daily-report__export__successful": "Successfully exported daily report",
+  "report-money__export__successful": "Successfully exported money receipt report",
   "general__menu-toggle": "Toggle side navigation bar",
   "general__close__side-nav": "Close side navigation bar",
   "customer__title": "Customer",

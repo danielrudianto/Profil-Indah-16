@@ -13,14 +13,17 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import moment, { Moment } from 'moment';
-import * as xlsx from 'xlsx';
-import { saveAs } from 'file-saver';
 
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { ExcelService } from 'src/app/services/excel.service';
 import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
 import { ReportRankComponent } from 'src/app/components/report-rank/report-rank.component';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {
   MatDatepicker,
@@ -71,6 +74,7 @@ import {
 export class ReportSalesComponent implements OnInit {
   constructor(
     private apiService: ApiService,
+    private excelService: ExcelService,
     private alertService: AlertService,
     private translateService: TranslateService,
     private dialog: MatDialog,
@@ -291,117 +295,60 @@ export class ReportSalesComponent implements OnInit {
       })
       .subscribe({
         next: (data: any) => {
-          const worksheetData = [
-            [
-              'No',
-              'Date',
-              'Name',
-              'Customer name',
-              'Value',
-              'Discount',
-              'Service',
-              'Delivery',
-              'Total',
-              'Sales',
-            ],
-          ];
+          const jumlah = (ambil: (y: any) => number) =>
+            (data as any[]).reduce((a, y) => a + ambil(y), 0);
 
-          data.forEach((y: any, index: number) => {
-            const excelDateSerialNumber = xlsx.SSF.parse_date_code(
-              new Date(y.date).getTime() / (24 * 60 * 60 * 1000) + 25569,
-            );
-
-            worksheetData.push([
-              index + 1,
-              excelDateSerialNumber,
-              y.name,
-              y.customer_name,
-              y.value,
-              y.discount,
-              y.service,
-              y.delivery,
-              y.value - y.discount + y.service + y.delivery,
-              y.sales,
-            ]);
-          });
-
-          const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);
-          const range = xlsx.utils.decode_range(worksheet['!ref']!);
-          worksheet['!ref'] = xlsx.utils.encode_range({
-            s: { r: 0, c: 0 },
-            e: { r: range.e.r, c: range.e.c },
-          });
-
-          worksheet['!autofilter'] = {
-            ref: xlsx.utils.encode_range({
-              s: { r: 0, c: 0 },
-              e: { r: 0, c: range.e.c },
-            }),
-          };
-
-          for (let C = 0; C <= range.e.c; ++C) {
-            const address = xlsx.utils.encode_cell({ r: 0, c: C });
-            worksheet[address].s = {
-              font: {
-                bold: true,
-                color: { rgb: 'FFFFFF' },
-                name: 'Calibri',
-                sz: 11,
+          this.excelService
+            .unduh(`Laporan_penjualan_${this.date.value!.format('YYYY-MM')}`, [
+              {
+                nama: 'Penjualan',
+                judul: 'Laporan penjualan',
+                keterangan: `Periode ${this.date.value!.format('MMMM YYYY')}`,
+                kolom: [
+                  { judul: 'No', format: 'angka', lebar: 6 },
+                  { judul: 'Date', format: 'tanggal' },
+                  { judul: 'Name', lebar: 22 },
+                  { judul: 'Customer name', lebar: 30 },
+                  { judul: 'Value', format: 'uang' },
+                  { judul: 'Discount', format: 'uang' },
+                  { judul: 'Service', format: 'uang' },
+                  { judul: 'Delivery', format: 'uang' },
+                  { judul: 'Total', format: 'uang' },
+                  { judul: 'Sales', lebar: 18 },
+                ],
+                baris: (data as any[]).map((y, index) => [
+                  index + 1,
+                  new Date(y.date),
+                  y.name,
+                  y.customer_name,
+                  y.value,
+                  y.discount,
+                  y.service,
+                  y.delivery,
+                  y.value - y.discount + y.service + y.delivery,
+                  y.sales,
+                ]),
+                totalBaris: [
+                  'TOTAL',
+                  null,
+                  null,
+                  null,
+                  jumlah((y) => Number(y.value)),
+                  jumlah((y) => Number(y.discount)),
+                  jumlah((y) => Number(y.service)),
+                  jumlah((y) => Number(y.delivery)),
+                  jumlah((y) => y.value - y.discount + y.service + y.delivery),
+                  null,
+                ],
               },
-              fill: {
-                fgColor: { rgb: '000000' },
-                patternType: 'solid',
-              },
-              alignment: {
-                horizontal: 'center',
-                vertical: 'center',
-              },
-            };
-          }
-
-          worksheet['!cols'] = [
-            { wpx: 40 },
-            { wpx: 120 },
-            { wpx: 120 },
-            { wpx: 200 },
-            { wpx: 120 },
-            { wpx: 120 },
-            { wpx: 120 },
-            { wpx: 120 },
-            { wpx: 120 },
-            { wpx: 120 },
-          ];
-
-          for (let R = 1; R <= range.e.r; ++R) {
-            const dateAddr = xlsx.utils.encode_cell({ r: R, c: 1 });
-            const jsDate = new Date(data[R - 1].date);
-            worksheet[dateAddr] = {
-              t: 'd',
-              v: jsDate,
-              z: 'dd-mmm-yyyy',
-            };
-            [4, 5, 6, 7, 8].forEach((col) => {
-              const addr = xlsx.utils.encode_cell({ r: R, c: col });
-              if (worksheet[addr]) {
-                worksheet[addr].z = '#,##0.00;[Red]-#,##0.00';
-              }
+            ])
+            .then(() => {
+              this.alertService.showSuccess(
+                this.translateService.instant(
+                  'sales-report__export__successful',
+                ),
+              );
             });
-          }
-
-          const workbook = xlsx.utils.book_new();
-          xlsx.utils.book_append_sheet(workbook, worksheet, 'Sales Report');
-
-          const excelBuffer = xlsx.write(workbook, {
-            bookType: 'xlsx',
-            type: 'array',
-          });
-          const blob = new Blob([excelBuffer], {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          });
-          saveAs(blob, `Sales_report_${new Date().getTime()}.xlsx`);
-          this.alertService.showSuccess(
-            this.translateService.instant('sales-report__export__successful'),
-          );
         },
         error: (error) => {
           this.alertService.showError(error);

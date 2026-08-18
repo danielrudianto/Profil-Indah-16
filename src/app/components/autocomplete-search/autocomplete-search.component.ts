@@ -5,24 +5,57 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
-import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
+import { TranslateService } from '@ngx-translate/core';
+import {
+  MatFormField,
+  MatLabel,
+  MatPrefix,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import {
+  MatAutocompleteTrigger,
+  MatAutocomplete,
+} from '@angular/material/autocomplete';
 import { NgIf, NgFor } from '@angular/common';
 import { MatOption } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 
 @Component({
-    selector: 'app-autocomplete-search',
-    templateUrl: './autocomplete-search.component.html',
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatAutocompleteTrigger, MatAutocomplete, NgIf, MatOption, NgFor, MatIcon, MatPrefix, MatIconButton, MatSuffix]
+  selector: 'app-autocomplete-search',
+  templateUrl: './autocomplete-search.component.html',
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    NgIf,
+    MatOption,
+    NgFor,
+    MatIcon,
+    MatPrefix,
+    MatIconButton,
+    MatSuffix,
+  ],
 })
 export class AutocompleteSearchComponent {
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private translateService: TranslateService,
+  ) {}
 
   @Input('routeName') routeName!: string;
   @Input('placeholder') placeholder!: string;
@@ -127,10 +160,16 @@ export class AutocompleteSearchComponent {
         next: (data: any) => {
           switch (this.routeName) {
             case 'customer':
+              /*
+                Opsi retail (tanpa pelanggan) disuntik di sini, satu-satunya:
+                dulu bernama 'Retail customer' hardcoded Inggris sementara
+                buat faktur memasang defaultValue "Retail" — dua opsi untuk
+                satu makna, dan pemiliknya mengira ada data pelanggan siluman.
+              */
               this.items = [
                 {
                   id: 0,
-                  name: 'Retail customer',
+                  name: this.translateService.instant('sales-invoice__retail'),
                 },
                 ...data,
               ];
