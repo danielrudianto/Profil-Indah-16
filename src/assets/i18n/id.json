@@ -2440,6 +2440,7 @@
   "sorotan__dominasi__stabil": "Pangsanya stabil dibanding bulan lalu.",
   "sorotan__dominasi__naik": "Naik {{poin}} poin dibanding bulan lalu.",
   "sorotan__dominasi__turun": "Turun {{poin}} poin dibanding bulan lalu.",
+  "sorotan__streak-min": "Memimpin setidaknya 3 bulan terakhir.",
   "sorotan__streak": "Memimpin {{n}} bulan berturut-turut.",
   "sorotan__tipe-dominasi": "Tipe terlaris: {{tipe}} — {{persen}}% dari penjualan bulan ini.",
   "sorotan__tipe-menguat": "Tipe {{tipe}} menguat ke {{persen}}% dari {{persenLalu}}% bulan lalu.",

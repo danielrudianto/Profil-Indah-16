@@ -2440,6 +2440,7 @@
   "sorotan__dominasi__stabil": "Share steady versus last month.",
   "sorotan__dominasi__naik": "Up {{poin}} points from last month.",
   "sorotan__dominasi__turun": "Down {{poin}} points from last month.",
+  "sorotan__streak-min": "Leading for at least the last 3 months.",
   "sorotan__streak": "Leading for {{n}} months in a row.",
   "sorotan__tipe-dominasi": "Best-selling type: {{tipe}} — {{persen}}% of this month's sales.",
   "sorotan__tipe-menguat": "Type {{tipe}} strengthened to {{persen}}% from {{persenLalu}}% last month.",

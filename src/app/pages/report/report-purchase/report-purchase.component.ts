@@ -363,12 +363,18 @@ export class ReportPurchaseComponent implements OnInit {
     if (pangsaLalu !== null) {
       dominasi += ' ' + this.kalimatSelisih(pangsaKini - pangsaLalu);
     }
+    /*
+      Streak hanya diklaim sejauh yang benar-benar diperiksa: dua bulan ke
+      belakang. Memimpin ketiganya = "setidaknya 3 bulan terakhir" — bulan
+      keempat tidak kita lihat, jadi tidak ikut diaku-aku. Persis dua bulan
+      (bulan ketiga terbukti kalah) barulah "2 bulan berturut-turut".
+    */
     if (this.merekLalu[0]?.name === juara.name) {
       dominasi +=
         ' ' +
-        t('sorotan__streak', {
-          n: this.merekDuaLalu[0]?.name === juara.name ? 3 : 2,
-        });
+        (this.merekDuaLalu[0]?.name === juara.name
+          ? t('sorotan__streak-min')
+          : t('sorotan__streak', { n: 2 }));
     }
     hasil.push({ ikon: 'ph-crown-simple', teks: dominasi });
 
