@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { NgxMaskPipe } from 'ngx-mask';
@@ -39,9 +40,15 @@ export class CompanyComponent implements OnInit {
     private apiService: ApiService,
     private alertService: AlertService,
     private dialog: MatDialog,
+    private router: Router,
   ) {}
 
   isLoading = true;
+
+  /** Laporan bulanan keluar-masuk stok milik badan usaha ini. */
+  laporan(item: any): void {
+    this.router.navigate(['/Company/Report', item.id]);
+  }
   dataSource: CompanyModel[] = [];
   dataCount = 0;
   page = 1;

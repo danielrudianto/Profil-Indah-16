@@ -556,6 +556,20 @@ const routes: Routes = [
               ),
           },
           {
+            /*
+              Laporan bulanan per perusahaan — keluar-masuk stok milik
+              badan usaha itu; kuantitas tanpa rupiah, jadi cukup dijaga
+              guard yang sama dengan daftarnya. Server memakai
+              PERAN_PENJUALAN yang mencakup seluruh peran General.
+            */
+            path: 'Company/Report/:id',
+            canActivate: [GeneralGuard],
+            loadComponent: () =>
+              import('./pages/company/company-report/company-report.component').then(
+                (m) => m.CompanyReportComponent,
+              ),
+          },
+          {
             path: 'Payment-method',
             canActivate: [GeneralGuard],
             loadComponent: () =>

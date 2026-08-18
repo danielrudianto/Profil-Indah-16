@@ -50,6 +50,16 @@
           {{ item.npwp ? (item.npwp | mask: '00.000.000.0-000.000') : '—' }}
         </td>
         <td class="tabel__aksi" (click)="$event.stopPropagation()">
+          <!-- Laporan bulanan: keluar-masuk stok milik badan usaha ini. -->
+          <button
+            type="button"
+            class="tabel__aksi-btn"
+            (click)="laporan(item)"
+            [title]="'company-report__title' | translate"
+            [attr.aria-label]="'company-report__title' | translate"
+          >
+            <i class="ph ph-chart-bar" aria-hidden="true"></i>
+          </button>
           <button
             type="button"
             class="tabel__aksi-btn"

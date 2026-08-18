@@ -1,0 +1,16 @@
+/* Anatomi bersama laporan per entitas — sama dengan supplier/customer-report. */
+@use "../../../styles/laporan-entitas";
+
+/* Jangkar datepicker disembunyikan; kendali yang terlihat tombolnya. */
+.laporan__bulan-kendali {
+  position: relative;
+}
+
+.laporan__bulan-jangkar {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
+}

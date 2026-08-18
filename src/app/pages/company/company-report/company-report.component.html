@@ -1,0 +1,141 @@
+<!-- Laporan per perusahaan — keluar-masuk stok milik satu badan usaha, bulanan. -->
+<div class="buat" *ngIf="!isLoading && laporan">
+  <header class="buat__head laporan__kepala">
+    <div>
+      <h1 class="buat__title">{{ laporan.company.name }}</h1>
+      <p class="buat__lede">{{ 'company-report__lede' | translate }}</p>
+    </div>
+
+    <div class="laporan__kendali">
+      <button type="button" class="btn btn--kedua" (click)="kembali()">
+        <i class="ph ph-arrow-u-up-left" aria-hidden="true"></i>
+        {{ 'company-report__back' | translate }}
+      </button>
+
+      <div class="laporan__bulan-kendali">
+        <input
+          class="laporan__bulan-jangkar"
+          [matDatepicker]="bulanPicker"
+          [formControl]="date"
+          readonly
+          tabindex="-1"
+          aria-hidden="true"
+        />
+        <button
+          type="button"
+          class="btn btn--kedua"
+          (click)="bulanPicker.open()"
+          [attr.aria-label]="'general__pick-date' | translate"
+        >
+          <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+          {{ namaBulan }}
+        </button>
+        <mat-datepicker
+          #bulanPicker
+          startView="multi-year"
+          (monthSelected)="setMonthAndYear($event, bulanPicker)"
+        ></mat-datepicker>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn--kedua"
+        [disabled]="isDownloading || isLoading"
+        (click)="download()"
+      >
+        <i class="ph ph-file-xls" aria-hidden="true"></i>
+        {{ 'company-report__download' | translate }}
+      </button>
+    </div>
+  </header>
+
+  <!-- Ringkasan — kuantitas dan dokumen, dua arah. Tanpa rupiah: memang kuantitas. -->
+  <div class="hero">
+    <div class="hero__kartu hero__kartu--utama">
+      <span class="hero__label">{{ 'company-report__hero__out' | translate }}</span>
+      <strong class="hero__nilai">{{ laporan.summary.outputQuantity | number: '1.0-2' }}</strong>
+      <span class="hero__sub">{{ 'company-report__hero__base-unit' | translate }}</span>
+    </div>
+    <div class="hero__kartu">
+      <span class="hero__label">{{ 'company-report__hero__out-docs' | translate }}</span>
+      <strong class="hero__nilai">{{ laporan.summary.outputDocuments | number }}</strong>
+    </div>
+    <div class="hero__kartu">
+      <span class="hero__label">{{ 'company-report__hero__in' | translate }}</span>
+      <strong class="hero__nilai">{{ laporan.summary.inputQuantity | number: '1.0-2' }}</strong>
+      <span class="hero__sub">{{ 'company-report__hero__base-unit' | translate }}</span>
+    </div>
+    <div class="hero__kartu">
+      <span class="hero__label">{{ 'company-report__hero__in-docs' | translate }}</span>
+      <strong class="hero__nilai">{{ laporan.summary.inputDocuments | number }}</strong>
+    </div>
+  </div>
+
+  <!-- Barang keluar — dijual/keluar dari stok milik perusahaan ini. -->
+  <section class="kartu">
+    <h2 class="kartu__label">{{ 'company-report__out' | translate }}</h2>
+
+    <div class="gulir" *ngIf="laporan.output.length > 0">
+      <table class="tabel tabel--rapat">
+        <thead>
+          <tr>
+            <th>{{ 'company-report__product' | translate }}</th>
+            <th class="ke-kanan">{{ 'company-report__quantity' | translate }}</th>
+            <th class="ke-kanan">{{ 'company-report__documents' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let barang of laporan.output">
+            <td>
+              <span class="barang__ref">{{ barang.reference }}</span>
+              <span class="barang__desc">{{ barang.description }}</span>
+            </td>
+            <td class="ke-kanan baris__total">
+              {{ barang.quantity | number: '1.0-2' }} {{ barang.unit }}
+            </td>
+            <td class="ke-kanan">{{ barang.documents | number }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="tabel__pesan" *ngIf="laporan.output.length === 0">
+      {{ 'company-report__empty' | translate }}
+    </p>
+  </section>
+
+  <!-- Barang masuk — penerimaan + penyesuaian temuan atas nama perusahaan ini. -->
+  <section class="kartu">
+    <h2 class="kartu__label">{{ 'company-report__in' | translate }}</h2>
+
+    <div class="gulir" *ngIf="laporan.input.length > 0">
+      <table class="tabel tabel--rapat">
+        <thead>
+          <tr>
+            <th>{{ 'company-report__product' | translate }}</th>
+            <th class="ke-kanan">{{ 'company-report__quantity' | translate }}</th>
+            <th class="ke-kanan">{{ 'company-report__documents' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let barang of laporan.input">
+            <td>
+              <span class="barang__ref">{{ barang.reference }}</span>
+              <span class="barang__desc">{{ barang.description }}</span>
+            </td>
+            <td class="ke-kanan baris__total">
+              {{ barang.quantity | number: '1.0-2' }} {{ barang.unit }}
+            </td>
+            <td class="ke-kanan">{{ barang.documents | number }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="tabel__pesan" *ngIf="laporan.input.length === 0">
+      {{ 'company-report__empty' | translate }}
+    </p>
+  </section>
+</div>
+
+<p class="tabel__pesan" *ngIf="isLoading">{{ 'general__loading' | translate }}</p>
