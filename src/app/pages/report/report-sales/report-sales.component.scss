@@ -76,6 +76,14 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+  /* Jarak antar kartu di halaman laporan datang dari .kartu + .kartu;
+     pembungkus kisi memutus keberdampingannya, jadi jaraknya ditulis
+     di sini — sama 16px dengan tetangganya. */
+  margin-top: 16px;
+
+  .kartu {
+    margin-top: 0;
+  }
 
   /*
     Aturan global .kartu + .kartu menambah margin-top 16px pada kartu
@@ -153,4 +161,10 @@
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
+}
+
+
+/* Kartu setelah kisi (rincian harian) kehilangan keberdampingannya juga. */
+.peringkat-kisi + .kartu {
+  margin-top: 16px;
 }
