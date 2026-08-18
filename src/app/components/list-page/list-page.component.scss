@@ -16,6 +16,15 @@
   margin-bottom: 22px;
 }
 
+/* Tanpa kolom cari: judul kiri, kelompok tombol kanan — satu baris. */
+.list-page__head--berbaris {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .list-page__title {
   font-size: 28px;
   font-weight: 500;
@@ -102,7 +111,9 @@
   white-space: nowrap;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
 
   i {
     font-size: 15px;
@@ -271,13 +282,4 @@
   .list-page__aksi {
     margin-left: 0;
   }
-}
-
-/*
-  Pengganti kotak cari pada daftar yang tidak punya pencarian. Ia tidak
-  menggambar apa pun; tugasnya hanya mengambil sisa ruang supaya kelompok
-  tombol tetap berada di kanan, persis seperti ketika kotak carinya hadir.
-*/
-.cari-pengganti {
-  flex: 1;
 }

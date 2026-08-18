@@ -1,7 +1,21 @@
 <div class="list-page">
-  <header class="list-page__head">
-    <h1 class="list-page__title">{{ heading }}</h1>
-    <p class="list-page__lede" *ngIf="lede">{{ lede }}</p>
+  <!--
+    Tanpa kolom cari, kelompok tombol NAIK sejajar judul: baris alat yang
+    hanya berisi dua tombol di kanan terbaca sebagai ruang kosong. Kelompok
+    tombolnya satu templat untuk kedua posisi supaya tidak berjalan sendiri.
+  -->
+  <header
+    class="list-page__head"
+    [class.list-page__head--berbaris]="!showSearch"
+  >
+    <div class="list-page__teks">
+      <h1 class="list-page__title">{{ heading }}</h1>
+      <p class="list-page__lede" *ngIf="lede">{{ lede }}</p>
+    </div>
+
+    <div class="list-page__aksi" *ngIf="!showSearch">
+      <ng-container [ngTemplateOutlet]="kelompokAksi"></ng-container>
+    </div>
   </header>
 
   <!--
@@ -9,8 +23,8 @@
     tombolnya, bukan kolom carinya — sehingga menyisipkan keping saringan di
     sebelah kolom cari nanti tidak mengubah apa pun di sini.
   -->
-  <div class="list-page__bar">
-    <div class="cari" *ngIf="showSearch">
+  <div class="list-page__bar" *ngIf="showSearch">
+    <div class="cari">
       <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
       <input
         type="search"
@@ -20,38 +34,36 @@
       />
     </div>
 
-    <!--
-      Tanpa kotak cari, kelompok tombol tetap harus terdorong ke kanan; kotak
-      inilah yang biasanya melakukannya.
-    -->
-    <span class="cari-pengganti" *ngIf="!showSearch"></span>
-
     <div class="list-page__aksi">
-      <!-- Tombol tambahan milik halaman, diletakkan sebelum tombol bakunya. -->
-      <ng-content select="[aksi]"></ng-content>
-
-      <button
-        type="button"
-        class="btn btn--primary"
-        *ngIf="addLabel"
-        (click)="add.emit()"
-      >
-        <i class="ph ph-plus" aria-hidden="true"></i>
-        {{ addLabel }}
-      </button>
-
-      <button
-        type="button"
-        class="btn btn--icon"
-        [disabled]="loading"
-        (click)="refresh.emit()"
-        [title]="'general__refresh' | translate"
-        [attr.aria-label]="'general__refresh' | translate"
-      >
-        <i class="ph ph-arrows-clockwise" aria-hidden="true"></i>
-      </button>
+      <ng-container [ngTemplateOutlet]="kelompokAksi"></ng-container>
     </div>
   </div>
+
+  <ng-template #kelompokAksi>
+    <!-- Tombol tambahan milik halaman, diletakkan sebelum tombol bakunya. -->
+    <ng-content select="[aksi]"></ng-content>
+
+    <button
+      type="button"
+      class="btn btn--primary"
+      *ngIf="addLabel"
+      (click)="add.emit()"
+    >
+      <i class="ph ph-plus" aria-hidden="true"></i>
+      {{ addLabel }}
+    </button>
+
+    <button
+      type="button"
+      class="btn btn--icon"
+      [disabled]="loading"
+      (click)="refresh.emit()"
+      [title]="'general__refresh' | translate"
+      [attr.aria-label]="'general__refresh' | translate"
+    >
+      <i class="ph ph-arrows-clockwise" aria-hidden="true"></i>
+    </button>
+  </ng-template>
 
   <!--
     Banner ringkasan milik halaman — di antara baris kendali dan kartu
@@ -79,7 +91,7 @@
     </div>
 
     <div class="list-page__kaki">
-      <span *ngIf="showPageSize">{{ 'general__per-page' | translate }}</span>
+      <span *ngIf="showPageSize">{{ "general__per-page" | translate }}</span>
 
       <div class="seg" role="group" *ngIf="showPageSize">
         <button
@@ -96,7 +108,7 @@
       </div>
 
       <span class="list-page__jumlah">
-        {{ dari }} – {{ sampai }} {{ 'general__of' | translate }} {{ total }}
+        {{ dari }} – {{ sampai }} {{ "general__of" | translate }} {{ total }}
       </span>
 
       <div class="list-page__nav">

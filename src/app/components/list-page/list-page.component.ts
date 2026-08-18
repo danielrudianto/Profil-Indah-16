@@ -8,7 +8,7 @@ import {
   inject,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { debounceTime } from 'rxjs';
@@ -35,7 +35,7 @@ import { debounceTime } from 'rxjs';
   selector: 'app-list-page',
   templateUrl: './list-page.component.html',
   styleUrls: ['./list-page.component.scss'],
-  imports: [NgIf, NgFor, ReactiveFormsModule, TranslatePipe],
+  imports: [NgIf, NgFor, NgTemplateOutlet, ReactiveFormsModule, TranslatePipe],
 })
 export class ListPageComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
