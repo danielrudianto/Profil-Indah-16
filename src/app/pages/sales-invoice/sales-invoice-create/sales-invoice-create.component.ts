@@ -1,12 +1,41 @@
-import { DatePipe, NgFor, NgIf, NgSwitch, NgSwitchCase, DecimalPipe } from '@angular/common';
+import {
+  DatePipe,
+  NgFor,
+  NgIf,
+  NgSwitch,
+  NgSwitchCase,
+  DecimalPipe,
+} from '@angular/common';
 import { Component, ViewChild, inject } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  MatAutocompleteTrigger,
+  MatAutocomplete,
+} from '@angular/material/autocomplete';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Router } from '@angular/router';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
-import { Observable, Subject, debounceTime, map, of, switchMap, tap } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  debounceTime,
+  map,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { SubmitConfirmationComponent } from 'src/app/components/submit-confirmation/submit-confirmation.component';
 import { PackageSelectorComponent } from 'src/app/components/package-selector/package-selector.component';
 import { PaymentSelectorComponent } from 'src/app/components/payment-selector/payment-selector.component';
@@ -25,9 +54,18 @@ import { v4 } from 'uuid';
 import { VerticalDividerComponent } from '../../../components/vertical-divider/vertical-divider.component';
 import { BoxStepperComponent } from '../../../components/box-stepper/box-stepper.component';
 import { AutocompleteSearchComponent } from '../../../components/autocomplete-search/autocomplete-search.component';
-import { MatFormField, MatLabel, MatSuffix, MatHint, MatPrefix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+  MatHint,
+  MatPrefix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatDatepickerInput, MatDatepicker } from '@angular/material/datepicker';
+import {
+  MatDatepickerInput,
+  MatDatepicker,
+} from '@angular/material/datepicker';
 import { MatSelect, MatOption } from '@angular/material/select';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
@@ -44,15 +82,15 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   providers: [provideNativeDateAdapter()],
-    selector: 'app-sales-invoice-create',
-    templateUrl: './sales-invoice-create.component.html',
-    styleUrls: ['./sales-invoice-create.component.scss'],
-    /*
+  selector: 'app-sales-invoice-create',
+  templateUrl: './sales-invoice-create.component.html',
+  styleUrls: ['./sales-invoice-create.component.scss'],
+  /*
       Kerangka Material dilepas hampir seluruhnya. Yang tersisa hanya
       NgxMaskDirective untuk pemisah ribuan dan app-autocomplete-search untuk
       pemilih pelanggan; sisanya digambar sendiri lewat kelas Nocturne.
     */
-    imports: [
+  imports: [
     MatSuffix,
     MatDatepicker,
     MatDatepickerInput,
@@ -60,16 +98,16 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     MatLabel,
     MatHint,
     MatInput,
-      FormsModule,
-      ReactiveFormsModule,
-      AutocompleteSearchComponent,
-      NgxMaskDirective,
-      NgIf,
-      NgFor,
-      NgClass,
-      DecimalPipe,
-      TranslatePipe,
-    ]
+    FormsModule,
+    ReactiveFormsModule,
+    AutocompleteSearchComponent,
+    NgxMaskDirective,
+    NgIf,
+    NgFor,
+    NgClass,
+    DecimalPipe,
+    TranslatePipe,
+  ],
 })
 export class SalesInvoiceCreateComponent {
   constructor(
@@ -83,7 +121,7 @@ export class SalesInvoiceCreateComponent {
     private dynamicComponentService: DynamicComponentService,
     private translateService: TranslateService,
     private dialog: MatDialog,
-    private pageTitleService: PageTitleService
+    private pageTitleService: PageTitleService,
   ) {
     this._hotkeysService.add([
       new Hotkey('alt+a', (event: KeyboardEvent): boolean => {
@@ -100,7 +138,9 @@ export class SalesInvoiceCreateComponent {
           this.submitForm();
         } else {
           console.error(`[error]: ${this.metaFormGroup.errors}`);
-          this.alertService.showSuccess(this.translateService.instant('general__check-input'));
+          this.alertService.showSuccess(
+            this.translateService.instant('general__check-input'),
+          );
         }
         return false;
       }),
@@ -131,47 +171,31 @@ export class SalesInvoiceCreateComponent {
   @ViewChild('input') input: any;
 
   NotZero: ValidatorFn = (
-    control: AbstractControl
+    control: AbstractControl,
   ): ValidationErrors | null => {
     return Number(control.value) != 0 ? null : { error: true };
   };
 
   paymentValidator: ValidatorFn = (
-    group: AbstractControl
+    group: AbstractControl,
   ): ValidationErrors | null => {
     const payments = (group.get('payments') as FormArray)?.value || [];
     const sales = this.metaFormGroup?.get('sales')?.value;
     const hasInvalidPayment = payments.some(
-      (p: any) => p.payment_method_id === 0
+      (p: any) => p.payment_method_id === 0,
     );
-    const total = this.totalBill ?? 0;
-    const paymentValue = payments.reduce(
-      (a: any, b: any) => a + Number(b.value),
-      0
-    );
-
-    const status = this.paymentsFormGroup?.get('method')?.value;
-
     let invalidInternalPayment =
       (sales === 'INTERNAL' || sales === '' || sales === null) &&
       hasInvalidPayment
         ? this.translateService.instant('sales-invoice__create__payment__dor')
         : null;
 
-    let invalidPaymentStatus =
-      status === 'paid' && total > paymentValue
-        ? this.translateService.instant(
-            'sales-invoice__create__payment__paid-unpaid'
-          )
-        : null;
-
-    if (invalidInternalPayment == null && invalidPaymentStatus == null) {
+    if (invalidInternalPayment == null) {
       return null;
     }
 
     return {
       invalidInternalPayment: invalidInternalPayment,
-      invalidPaymentStatus: invalidPaymentStatus,
     };
   };
 
@@ -206,13 +230,16 @@ export class SalesInvoiceCreateComponent {
     ]),
   });
 
+  /*
+    Tidak ada lagi kontrol `method`: status pembayaran DITURUNKAN dari isi
+    pembayarannya (lihat statusBayar), bukan dipilih. due_time ikut pergi —
+    nilainya tidak pernah dikirim ke server sejak dulu.
+  */
   paymentsFormGroup: FormGroup = new FormGroup(
     {
-      method: new FormControl('', Validators.required),
-      due_time: new FormControl(30, [Validators.required, Validators.min(0)]),
       payments: new FormArray([]),
     },
-    [this.paymentValidator]
+    [this.paymentValidator],
   );
 
   valueFormGroup: FormGroup = new FormGroup({
@@ -268,7 +295,7 @@ export class SalesInvoiceCreateComponent {
   viewSalesman() {
     this.dynamicComponentService.createDynamicComponent(
       SalesmanSelectorComponent,
-      {}
+      {},
     );
   }
 
@@ -309,7 +336,7 @@ export class SalesInvoiceCreateComponent {
         {
           grand_total: subtotal + delivery + service - discount,
         },
-        { emitEvent: false }
+        { emitEvent: false },
       );
 
       /*
@@ -317,12 +344,6 @@ export class SalesInvoiceCreateComponent {
         menyuntingnya sendiri.
       */
       this.autoIsiNominal();
-    });
-
-    this.paymentsFormGroup.controls['method'].valueChanges.subscribe((data) => {
-      if (data === 'unpaid') {
-        this.p.clear();
-      }
     });
 
     this.apiService
@@ -366,7 +387,7 @@ export class SalesInvoiceCreateComponent {
         ProductSelectorComponent,
         {
           type: ProductSelectorType.sales,
-        }
+        },
       );
 
     this.productSelectorSubject.subscribe((result: any) => {
@@ -379,12 +400,12 @@ export class SalesInvoiceCreateComponent {
         const sub = result.sub;
         const check = this.checkExistingProduct(
           data.id,
-          sub == null ? null : sub.id
+          sub == null ? null : sub.id,
         );
 
         if (check) {
           this.alertService.showSuccess(
-            this.translateService.instant('general__item__exists')
+            this.translateService.instant('general__item__exists'),
           );
           return;
         }
@@ -426,7 +447,7 @@ export class SalesInvoiceCreateComponent {
                   default_unit: [data.unit],
                   save_price: [false],
                   stock: [stokProduk],
-                })
+                }),
               );
             } else {
               this.t.push(
@@ -457,7 +478,7 @@ export class SalesInvoiceCreateComponent {
                   default_unit: [data.unit],
                   save_price: [false],
                   stock: [stokProduk],
-                })
+                }),
               );
             }
 
@@ -482,7 +503,7 @@ export class SalesInvoiceCreateComponent {
         });
       } else {
         this.alertService.showSuccess(
-          this.translateService.instant('general__item__exists')
+          this.translateService.instant('general__item__exists'),
         );
       }
     });
@@ -490,7 +511,7 @@ export class SalesInvoiceCreateComponent {
 
   private checkExistingProduct(
     productID: number,
-    productUnitID: number | null
+    productUnitID: number | null,
   ) {
     const result = this.t.value.findIndex((x: any) => {
       return x.product_id == productID && x.product_unit_id == productUnitID;
@@ -513,7 +534,7 @@ export class SalesInvoiceCreateComponent {
           const result = this.checkExistingPackage(data.item.id);
           if (result) {
             this.alertService.showSuccess(
-              this.translateService.instant('general__item__exists')
+              this.translateService.instant('general__item__exists'),
             );
             return;
           }
@@ -532,7 +553,7 @@ export class SalesInvoiceCreateComponent {
                     package_content: [
                       data.item.package_content.map((x: any) => {
                         const index = stock.findIndex(
-                          (y: any) => y.product_id == x.product_id
+                          (y: any) => y.product_id == x.product_id,
                         );
                         return {
                           ...x,
@@ -546,7 +567,7 @@ export class SalesInvoiceCreateComponent {
                     ],
                     discount: [0],
                     save_price: [false],
-                  })
+                  }),
                 );
 
                 this.billFormGroup.patchValue({
@@ -591,8 +612,8 @@ export class SalesInvoiceCreateComponent {
           if (result) {
             this.alertService.showSuccess(
               this.translateService.instant(
-                'sales-invoice__create__payment-method__exists'
-              )
+                'sales-invoice__create__payment-method__exists',
+              ),
             );
             return;
           }
@@ -610,7 +631,7 @@ export class SalesInvoiceCreateComponent {
                 Validators.nullValidator,
                 this.NotZero,
               ]),
-            })
+            }),
           );
         }
       });
@@ -693,7 +714,9 @@ export class SalesInvoiceCreateComponent {
   submitForm() {
     if (!this.isValid) {
       console.error(`[errror]: ${this.metaFormGroup.errors}`);
-      this.alertService.showSuccess(this.translateService.instant('general__check-input'));
+      this.alertService.showSuccess(
+        this.translateService.instant('general__check-input'),
+      );
       return;
     }
 
@@ -701,40 +724,9 @@ export class SalesInvoiceCreateComponent {
       console.error(`[error]: Payment is greater than the sales invoice`);
       this.alertService.showSuccess(
         this.translateService.instant(
-          'sales-invoice__create__payment__greater-error'
-        )
+          'sales-invoice__create__payment__greater-error',
+        ),
       );
-    }
-
-    const paymentMethod = this.paymentsFormGroup.get('method')?.value;
-    if (paymentMethod === 'paid' && this.totalPayment < this.totalBill) {
-      console.error(`[error]: Payment is not sufficient`);
-      this.alertService.showSuccess(
-        this.translateService.instant(
-          'sales-invoice__create__payment__insufficient-error'
-        )
-      );
-      return;
-    }
-
-    if (paymentMethod === 'underpaid' && this.totalPayment >= this.totalBill) {
-      console.error(`[error]: Payment is not sufficient`);
-      this.alertService.showSuccess(
-        this.translateService.instant(
-          'sales-invoice__create__payment__greater-error'
-        )
-      );
-      return;
-    }
-
-    if (paymentMethod === 'unpaid' && this.totalPayment > 0) {
-      console.error(`[error]: Payment is not sufficient`);
-      this.alertService.showSuccess(
-        this.translateService.instant(
-          'sales-invoice__create__payment__parameter'
-        )
-      );
-      return;
     }
 
     this.isSubmitting = true;
@@ -755,7 +747,7 @@ export class SalesInvoiceCreateComponent {
         for (let j = 0; j < package_content.length; j++) {
           const price = package_content[j].price;
           const correctedPrice = ((price * packagePrice) / realValue).toFixed(
-            2
+            2,
           );
           sales_invoice.push({
             price: correctedPrice,
@@ -828,10 +820,7 @@ export class SalesInvoiceCreateComponent {
           value: x.get('value')?.value,
         };
       }),
-      is_paid:
-        this.paymentsFormGroup.controls['method'].value === 'paid'
-          ? true
-          : false,
+      is_paid: this.statusBayar === 'paid',
     };
 
     let submitFunction = null;
@@ -840,7 +829,7 @@ export class SalesInvoiceCreateComponent {
     if (type == 'sales') {
       submitFunction = this.apiService.post(
         'sales-invoice',
-        sales_invoice_code
+        sales_invoice_code,
       );
     } else if (type == 'deposit') {
       submitFunction = this.apiService.post('sales-deposit', {
@@ -862,7 +851,7 @@ export class SalesInvoiceCreateComponent {
               (x) =>
                 this.bolehSimpanKeMaster &&
                 x.get('package_code_id')?.value == null &&
-                x.get('save_price')?.value
+                x.get('save_price')?.value,
             )
             .map((x) => ({
               product_id: x.get('product_id')?.value,
@@ -886,7 +875,7 @@ export class SalesInvoiceCreateComponent {
               (x) =>
                 this.bolehSimpanKeMaster &&
                 x.get('package_code_id')?.value != null &&
-                x.get('save_price')?.value
+                x.get('save_price')?.value,
             )
             .map((x) => ({
               package_code_id: x.get('package_code_id')?.value,
@@ -901,18 +890,18 @@ export class SalesInvoiceCreateComponent {
           }
 
           return of(null);
-        })
+        }),
       )
       .subscribe({
         next: (result: any) => {
           const type = this.metaFormGroup.controls['type'].value;
           if (type == 'sales') {
             this.alertService.showSuccess(
-              this.translateService.instant('sales-invoice__create__success')
+              this.translateService.instant('sales-invoice__create__success'),
             );
           } else {
             this.alertService.showSuccess(
-              this.translateService.instant('sales-deposit__create__success')
+              this.translateService.instant('sales-deposit__create__success'),
             );
           }
 
@@ -933,11 +922,6 @@ export class SalesInvoiceCreateComponent {
             type: 'sales',
           });
 
-          this.paymentsFormGroup.patchValue({
-            method: 'paid',
-            due_time: 30,
-          });
-
           this.p.clear();
         },
         error: (error) => {
@@ -954,7 +938,7 @@ export class SalesInvoiceCreateComponent {
       return false;
     }
 
-    if (this.paymentsFormGroup.controls['method']?.value != 'paid') {
+    if (this.statusBayar !== 'paid') {
       return false;
     }
 
@@ -980,31 +964,14 @@ export class SalesInvoiceCreateComponent {
       return false;
     }
 
-    const paymentMethod = this.paymentsFormGroup.get('method')?.value;
-
     if (this.totalPayment > this.totalBill) {
       return false;
     }
 
-    if (paymentMethod === 'paid' && this.totalPayment < this.totalBill) {
-      return false;
-    }
-
-    if (paymentMethod === 'underpaid' && this.totalPayment >= this.totalBill) {
-      return false;
-    }
-
-    if (paymentMethod === 'underpaid' && this.totalPayment == 0) {
-      return false;
-    }
-
-    if (paymentMethod === 'unpaid' && this.totalPayment > 0) {
-      return false;
-    }
-
+    /* Deposit internal tidak membawa pembayaran; barisnya dibuang saat tipe
+       dipilih, penjaga ini menutup celah sisanya. */
     const type = this.metaFormGroup.get('type')?.value;
-
-    if (type == 'deposit-internal' && paymentMethod != 'unpaid') {
+    if (type == 'deposit-internal' && this.totalPayment > 0) {
       return false;
     }
 
@@ -1064,36 +1031,37 @@ export class SalesInvoiceCreateComponent {
     },
   ];
 
-  readonly metodePembayaran = [
-    { nilai: 'paid', kunci: 'sales-invoice__create__paid-payment', ikon: 'ph-check-circle' },
-    { nilai: 'underpaid', kunci: 'sales-invoice__create__underpaid-payment', ikon: 'ph-percent' },
-    { nilai: 'unpaid', kunci: 'sales-invoice__create__unpaid-payment', ikon: 'ph-clock' },
-  ];
-
-  /** Deposit internal tidak boleh ditandai lunas maupun bayar sebagian. */
+  /** Deposit internal tidak membawa pembayaran sama sekali. */
   get depositInternal(): boolean {
     return this.metaFormGroup.value.type === 'deposit-internal';
+  }
+
+  /*
+    Status pembayaran DITURUNKAN dari isinya: penuh berarti lunas, sebagian
+    cicilan, kosong tanpa pembayaran. Dulu ada tiga kartu pilihan yang wajib
+    diklik cocok dengan isiannya — pekerjaan ganda yang validatornya sendiri
+    menolak bila tidak sinkron, jadi tidak pernah ada informasi tambahan.
+  */
+  get statusBayar(): 'paid' | 'underpaid' | 'unpaid' {
+    if (this.totalPayment <= 0) {
+      return 'unpaid';
+    }
+    return this.totalBill > 0 && this.totalPayment >= this.totalBill
+      ? 'paid'
+      : 'underpaid';
   }
 
   pilihTipe(nilai: string): void {
     this.metaFormGroup.patchValue({ type: nilai });
 
     /*
-      Deposit internal hanya boleh berstatus belum bayar. Membiarkan pilihan
-      lama bertahan membuat formulir tampak sah padahal validatornya menolak,
-      dan yang terlihat pengguna hanyalah tombol terbitkan yang mati tanpa
-      sebab.
+      Deposit internal tidak membawa pembayaran: baris yang telanjur diisi
+      dibuang, bukan disembunyikan — kalau cuma disembunyikan, nilainya ikut
+      terkirim diam-diam saat faktur terbit.
     */
     if (nilai === 'deposit-internal') {
-      this.paymentsFormGroup.patchValue({ method: 'unpaid' });
+      this.p.clear();
     }
-  }
-
-  pilihMetodeBayar(nilai: string): void {
-    if (nilai !== 'unpaid' && this.depositInternal) {
-      return;
-    }
-    this.paymentsFormGroup.patchValue({ method: nilai });
   }
 
   /*
@@ -1430,5 +1398,4 @@ export class SalesInvoiceCreateComponent {
       },
     ];
   }
-
 }

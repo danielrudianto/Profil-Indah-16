@@ -17,14 +17,14 @@
       -->
       <div class="buat__head">
         <h1 class="buat__title">
-          {{ 'sales-invoice__create__title' | translate }}
+          {{ "sales-invoice__create__title" | translate }}
           <span class="tag-otomatis">
             <i class="ph ph-sparkle" aria-hidden="true"></i>
-            {{ 'sales-invoice__create__auto-number' | translate }}
+            {{ "sales-invoice__create__auto-number" | translate }}
           </span>
         </h1>
         <p class="buat__lede">
-          {{ 'sales-invoice__create__lede' | translate }}
+          {{ "sales-invoice__create__lede" | translate }}
         </p>
       </div>
       <!-- ---------------------------------------------------------- -->
@@ -33,25 +33,27 @@
       <!-- diputuskan sebelum satu kolom pun diisi.                    -->
       <!-- ---------------------------------------------------------- -->
       <section class="kartu">
-        <h2 class="kartu__label">{{ 'sales-invoice__create__type' | translate }}</h2>
+        <h2 class="kartu__label">
+          {{ "sales-invoice__create__type" | translate }}
+        </h2>
         <div class="keadaan">
-            <!--
+          <!--
               Anatomi yang sama dengan "Keadaan dokumen" di penerimaan barang:
               judul, deskripsi, lalu AKIBATNYA beraksen — sebab ketiganya
               berlaku sangat berbeda terhadap uang dan stok.
             -->
-            <button
-              type="button"
-              class="keadaan__kartu"
-              *ngFor="let t of tipeTransaksi"
-              [class.keadaan__kartu--on]="metaFormGroup.value.type === t.nilai"
-              (click)="pilihTipe(t.nilai)"
-            >
-              <i class="ph" [ngClass]="t.ikon" aria-hidden="true"></i>
-              <span class="keadaan__judul">{{ t.kunci | translate }}</span>
-              <span class="keadaan__desk">{{ t.desk | translate }}</span>
-              <span class="keadaan__akibat">{{ t.note | translate }}</span>
-            </button>
+          <button
+            type="button"
+            class="keadaan__kartu"
+            *ngFor="let t of tipeTransaksi"
+            [class.keadaan__kartu--on]="metaFormGroup.value.type === t.nilai"
+            (click)="pilihTipe(t.nilai)"
+          >
+            <i class="ph" [ngClass]="t.ikon" aria-hidden="true"></i>
+            <span class="keadaan__judul">{{ t.kunci | translate }}</span>
+            <span class="keadaan__desk">{{ t.desk | translate }}</span>
+            <span class="keadaan__akibat">{{ t.note | translate }}</span>
+          </button>
         </div>
       </section>
 
@@ -60,21 +62,33 @@
       <!-- ---------------------------------------------------------- -->
       <section class="kartu" [formGroup]="metaFormGroup">
         <h2 class="kartu__label">
-          {{ 'sales-invoice__create__info' | translate }}
+          {{ "sales-invoice__create__info" | translate }}
         </h2>
 
         <div class="kartu__baris">
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ 'sales-invoice__create__date' | translate }}</mat-label>
-              <input matInput [matDatepicker]="siPicker1" formControlName="date" (click)="siPicker1.open()" />
+              <mat-label>{{
+                "sales-invoice__create__date" | translate
+              }}</mat-label>
+              <input
+                matInput
+                [matDatepicker]="siPicker1"
+                formControlName="date"
+                (click)="siPicker1.open()"
+              />
               <!--
                 Tombol kalender manual, bukan mat-datepicker-toggle: elemen toggle itu
                 hilang tanpa jejak pada pipeline dev meski utuh di bundel produksi,
                 dan tombol biasa yang memanggil open() berperilaku sama di keduanya.
               -->
-              <button type="button" matSuffix class="buka-kalender" (click)="siPicker1.open()"
-                [attr.aria-label]="'general__pick-date' | translate">
+              <button
+                type="button"
+                matSuffix
+                class="buka-kalender"
+                (click)="siPicker1.open()"
+                [attr.aria-label]="'general__pick-date' | translate"
+              >
                 <i class="ph ph-calendar-blank" aria-hidden="true"></i>
               </button>
               <mat-datepicker #siPicker1></mat-datepicker>
@@ -91,9 +105,9 @@
               (onUnselectData)="onUnselectCustomer()"
             />
             <p class="field__bantu">
-              {{ 'sales-invoice__create__customer-hint' | translate }}
+              {{ "sales-invoice__create__customer-hint" | translate }}
               <button type="button" class="tautan" (click)="tambahPelanggan()">
-                {{ 'sales-invoice__create__customer-add' | translate }}
+                {{ "sales-invoice__create__customer-add" | translate }}
               </button>
             </p>
           </div>
@@ -106,7 +120,17 @@
             nilainya berubah, sehingga kontrol formulirnya menyimpan ejaan lama.
           -->
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{ 'sales-invoice__create__salesman' | translate }}</mat-label><input matInput type="text" list="daftar-sales" formControlName="sales" autocomplete="off" (input)="besarkanSales($event)" /></mat-form-field>
+            <mat-label>{{
+              "sales-invoice__create__salesman" | translate
+            }}</mat-label
+            ><input
+              matInput
+              type="text"
+              list="daftar-sales"
+              formControlName="sales"
+              autocomplete="off"
+              (input)="besarkanSales($event)"
+          /></mat-form-field>
           <datalist id="daftar-sales">
             <option value="INTERNAL"></option>
             <option *ngFor="let s of salesmen" [value]="s"></option>
@@ -117,11 +141,10 @@
           -->
           <p class="field__bantu">
             <button type="button" class="tautan" (click)="viewSalesman()">
-              {{ 'sales-invoice__create__view-salesman' | translate }}
+              {{ "sales-invoice__create__view-salesman" | translate }}
             </button>
           </p>
         </div>
-
       </section>
 
       <!-- ---------------------------------------------------------- -->
@@ -130,13 +153,17 @@
       <section class="kartu" [formGroup]="billFormGroup">
         <div class="kartu__kepala">
           <h2 class="kartu__label">
-            {{ 'sales-invoice__create__items' | translate }}
+            {{ "sales-invoice__create__items" | translate }}
           </h2>
 
           <div class="kartu__kepala-aksi">
-            <button type="button" class="aksi-kecil" (click)="openItemSelector()">
+            <button
+              type="button"
+              class="aksi-kecil"
+              (click)="openItemSelector()"
+            >
               <i class="ph ph-plus" aria-hidden="true"></i>
-              {{ 'sales-invoice__create__add-product' | translate }}
+              {{ "sales-invoice__create__add-product" | translate }}
             </button>
             <button
               type="button"
@@ -144,34 +171,34 @@
               (click)="openPackageSelector()"
             >
               <i class="ph ph-package" aria-hidden="true"></i>
-              {{ 'sales-invoice__create__add-package' | translate }}
+              {{ "sales-invoice__create__add-package" | translate }}
             </button>
           </div>
         </div>
 
         <p class="petunjuk">
           <i class="ph ph-info" aria-hidden="true"></i>
-          {{ 'sales-invoice__create__price-note' | translate }}
+          {{ "sales-invoice__create__price-note" | translate }}
         </p>
 
         <div class="gulir">
           <table class="tabel tabel--rapat">
             <thead>
               <tr>
-                <th>{{ 'sales-invoice__create__item' | translate }}</th>
+                <th>{{ "sales-invoice__create__item" | translate }}</th>
                 <th class="tabel__nilai-kepala">
-                  {{ 'sales-invoice__create__price' | translate }}
+                  {{ "sales-invoice__create__price" | translate }}
                 </th>
                 <th class="tabel__nilai-kepala">
-                  {{ 'sales-invoice__create__discount' | translate }}
+                  {{ "sales-invoice__create__discount" | translate }}
                 </th>
-                <th>{{ 'sales-invoice__create__quantity' | translate }}</th>
+                <th>{{ "sales-invoice__create__quantity" | translate }}</th>
                 <th class="tabel__nilai-kepala">
-                  {{ 'sales-invoice__create__line-total' | translate }}
+                  {{ "sales-invoice__create__line-total" | translate }}
                 </th>
                 <th class="tabel__aksi-kepala">
                   <span class="sr-only">
-                    {{ 'general__actions' | translate }}
+                    {{ "general__actions" | translate }}
                   </span>
                 </th>
               </tr>
@@ -207,10 +234,15 @@
                       *ngIf="bakalMinus(i)"
                       aria-hidden="true"
                     ></i>
-                    {{ 'sales-invoice__create__current-stock' | translate }}:
-                    {{ stokBaris(i) | number: '0.0-2' }}
+                    {{ "sales-invoice__create__current-stock" | translate }}:
+                    {{ stokBaris(i) | number: "0.0-2" }}
                     <span *ngIf="bakalMinus(i)">
-                      · {{ 'sales-invoice__create__stock-minus' | translate: { butuh: (kebutuhanBaris(i) | number: '0.0-2') } }}
+                      ·
+                      {{
+                        "sales-invoice__create__stock-minus"
+                          | translate
+                            : { butuh: (kebutuhanBaris(i) | number: "0.0-2") }
+                      }}
                     </span>
                   </div>
                 </td>
@@ -221,19 +253,36 @@
                   keputusan itu perlu ruang untuk dinyatakan.
                 -->
                 <td class="tabel__nilai">
-                  <button type="button" class="nilai-btn" (click)="ubahHarga(i)">
-                    Rp {{ nilaiBaris(i, 'price') | number: '1.0-0' }}
+                  <button
+                    type="button"
+                    class="nilai-btn"
+                    (click)="ubahHarga(i)"
+                  >
+                    Rp {{ nilaiBaris(i, "price") | number: "1.0-0" }}
                   </button>
                 </td>
                 <td class="tabel__nilai">
-                  <button type="button" class="nilai-btn" (click)="ubahHarga(i)">
-                    Rp {{ nilaiBaris(i, 'discount') | number: '1.0-0' }}
+                  <button
+                    type="button"
+                    class="nilai-btn"
+                    (click)="ubahHarga(i)"
+                  >
+                    Rp {{ nilaiBaris(i, "discount") | number: "1.0-0" }}
                   </button>
                 </td>
 
                 <td [formGroup]="getFormGroupAt(i)">
                   <div class="jumlah">
-                    <mat-form-field appearance="outline" class="w-sempit"><input matInput type="text" mask="separator" thousandSeparator="." formControlName="quantity" autocomplete="off" placeholder="0" /></mat-form-field>
+                    <mat-form-field appearance="outline" class="w-sempit"
+                      ><input
+                        matInput
+                        type="text"
+                        mask="separator"
+                        thousandSeparator="."
+                        formControlName="quantity"
+                        autocomplete="off"
+                        placeholder="0"
+                    /></mat-form-field>
                     <span class="jumlah__satuan">{{ satuanBaris(i) }}</span>
                   </div>
                   <div class="jumlah__konversi" *ngIf="konversiBaris(i)">
@@ -242,7 +291,7 @@
                 </td>
 
                 <td class="tabel__nilai">
-                  Rp {{ totalBaris(i) | number: '1.0-0' }}
+                  Rp {{ totalBaris(i) | number: "1.0-0" }}
                 </td>
 
                 <td class="tabel__aksi">
@@ -288,7 +337,7 @@
             <tbody *ngIf="t.controls.length === 0">
               <tr>
                 <td colspan="6" class="tabel__pesan">
-                  {{ 'sales-invoice__create__no-item' | translate }}
+                  {{ "sales-invoice__create__no-item" | translate }}
                 </td>
               </tr>
             </tbody>
@@ -303,7 +352,7 @@
         -->
         <button type="button" class="tambah" (click)="openItemSelector()">
           <i class="ph ph-plus-circle" aria-hidden="true"></i>
-          <span>{{ 'good-receipt__create__add-item' | translate }}</span>
+          <span>{{ "good-receipt__create__add-item" | translate }}</span>
           <span class="tambah__kunci">Alt + A</span>
         </button>
       </section>
@@ -313,28 +362,58 @@
       <!-- ---------------------------------------------------------- -->
       <section class="kartu" [formGroup]="valueFormGroup">
         <h2 class="kartu__label">
-          {{ 'sales-invoice__create__charges' | translate }}
+          {{ "sales-invoice__create__charges" | translate }}
         </h2>
 
         <div class="kartu__baris">
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ 'sales-invoice__create__doc-discount' | translate }}</mat-label>
-              <input matInput type="text" mask="separator" thousandSeparator="." formControlName="discount" autocomplete="off" placeholder="0" />
+              <mat-label>{{
+                "sales-invoice__create__doc-discount" | translate
+              }}</mat-label>
+              <input
+                matInput
+                type="text"
+                mask="separator"
+                thousandSeparator="."
+                formControlName="discount"
+                autocomplete="off"
+                placeholder="0"
+              />
             </mat-form-field>
           </div>
 
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ 'sales-invoice__create__delivery' | translate }}</mat-label>
-              <input matInput type="text" mask="separator" thousandSeparator="." formControlName="delivery" autocomplete="off" placeholder="0" />
+              <mat-label>{{
+                "sales-invoice__create__delivery" | translate
+              }}</mat-label>
+              <input
+                matInput
+                type="text"
+                mask="separator"
+                thousandSeparator="."
+                formControlName="delivery"
+                autocomplete="off"
+                placeholder="0"
+              />
             </mat-form-field>
           </div>
 
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ 'sales-invoice__create__service' | translate }}</mat-label>
-              <input matInput type="text" mask="separator" thousandSeparator="." formControlName="service" autocomplete="off" placeholder="0" />
+              <mat-label>{{
+                "sales-invoice__create__service" | translate
+              }}</mat-label>
+              <input
+                matInput
+                type="text"
+                mask="separator"
+                thousandSeparator="."
+                formControlName="service"
+                autocomplete="off"
+                placeholder="0"
+              />
             </mat-form-field>
           </div>
         </div>
@@ -345,35 +424,40 @@
       <!-- ---------------------------------------------------------- -->
       <section class="kartu" [formGroup]="paymentsFormGroup">
         <h2 class="kartu__label">
-          {{ 'sales-invoice__create__payment' | translate }}
+          {{ "sales-invoice__create__payment" | translate }}
         </h2>
 
-        <div class="keadaan">
-          <button
-            type="button"
-            class="keadaan__kartu"
-            *ngFor="let m of metodePembayaran"
-            [class.keadaan__kartu--on]="paymentsFormGroup.value.method === m.nilai"
-            [disabled]="m.nilai !== 'unpaid' && depositInternal"
-            (click)="pilihMetodeBayar(m.nilai)"
+        <!--
+          Statusnya DITURUNKAN dari isi pembayaran, bukan dipilih: dulu tiga
+          kartu lunas/dicicil/tanpa-pembayaran wajib diklik cocok dengan
+          isiannya — pekerjaan ganda yang validatornya sendiri menolak bila
+          tidak sinkron.
+        -->
+        <p class="bayar__status" *ngIf="!depositInternal">
+          <span
+            class="pill"
+            [class.pill--hijau]="statusBayar === 'paid'"
+            [class.pill--amber]="statusBayar === 'underpaid'"
+            [class.pill--garis]="statusBayar === 'unpaid'"
           >
-            <i class="ph" [ngClass]="m.ikon" aria-hidden="true"></i>
-            <span class="keadaan__judul">{{ m.kunci | translate }}</span>
-          </button>
-        </div>
-
-        <p class="galat" *ngIf="paymentsFormGroup.errors?.['invalidPaymentStatus']">
-          {{ paymentsFormGroup.errors?.['invalidPaymentStatus'] }}
+            {{
+              (statusBayar === "paid"
+                ? "sales-invoice__create__paid-payment"
+                : statusBayar === "underpaid"
+                  ? "sales-invoice__create__underpaid-payment"
+                  : "sales-invoice__create__unpaid-payment"
+              ) | translate
+            }}
+          </span>
         </p>
 
-        <div class="field" *ngIf="paymentsFormGroup.value.method !== 'paid'">
-          <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ 'sales-invoice__create__due-time' | translate }}</mat-label>
-              <input matInput type="number" formControlName="due_time" min="0" />
-            </mat-form-field>
-        </div>
+        <!-- Deposit internal tidak membawa pembayaran sama sekali. -->
+        <p class="petunjuk" *ngIf="depositInternal">
+          <i class="ph ph-info" aria-hidden="true"></i>
+          {{ "sales-invoice__create__payment__internal-note" | translate }}
+        </p>
 
-        <ng-container *ngIf="paymentsFormGroup.value.method !== 'unpaid'">
+        <ng-container *ngIf="!depositInternal">
           <div class="bayar" *ngFor="let bayar of p.controls; index as i">
             <div class="bayar__nama">
               <strong>{{ namaBayar(i) }}</strong>
@@ -381,7 +465,16 @@
             </div>
 
             <div class="bayar__nilai" [formGroup]="getFormGroupAtPayment(i)">
-              <mat-form-field appearance="outline" class="w-100"><input matInput type="text" mask="separator" thousandSeparator="." formControlName="value" autocomplete="off" placeholder="0" /></mat-form-field>
+              <mat-form-field appearance="outline" class="w-100"
+                ><input
+                  matInput
+                  type="text"
+                  mask="separator"
+                  thousandSeparator="."
+                  formControlName="value"
+                  autocomplete="off"
+                  placeholder="0"
+              /></mat-form-field>
             </div>
 
             <button
@@ -395,18 +488,17 @@
             </button>
           </div>
 
-          <button
-            type="button"
-            class="tambah"
-            (click)="openPaymentSelector()"
-          >
+          <button type="button" class="tambah" (click)="openPaymentSelector()">
             <i class="ph ph-plus" aria-hidden="true"></i>
-            {{ 'sales-invoice__create__item__payment-method__add' | translate }}
+            {{ "sales-invoice__create__item__payment-method__add" | translate }}
           </button>
         </ng-container>
 
-        <p class="galat" *ngIf="paymentsFormGroup.errors?.['invalidInternalPayment']">
-          {{ paymentsFormGroup.errors?.['invalidInternalPayment'] }}
+        <p
+          class="galat"
+          *ngIf="paymentsFormGroup.errors?.['invalidInternalPayment']"
+        >
+          {{ paymentsFormGroup.errors?.["invalidInternalPayment"] }}
         </p>
       </section>
 
@@ -415,12 +507,12 @@
       <!-- ---------------------------------------------------------- -->
       <section class="kartu" [formGroup]="rebateFormGroup">
         <h2 class="kartu__label">
-          {{ 'sales-invoice__rebate' | translate }}
+          {{ "sales-invoice__rebate" | translate }}
         </h2>
 
         <p class="petunjuk">
           <i class="ph ph-info" aria-hidden="true"></i>
-          {{ 'sales-invoice__rebate__note' | translate }}
+          {{ "sales-invoice__rebate__note" | translate }}
         </p>
 
         <!--
@@ -439,10 +531,10 @@
             <i class="ph ph-receipt" aria-hidden="true"></i>
             <span class="keadaan__teks">
               <span class="keadaan__judul">
-                {{ 'sales-invoice__rebate__on-invoice' | translate }}
+                {{ "sales-invoice__rebate__on-invoice" | translate }}
               </span>
               <span class="keadaan__desk">
-                {{ 'sales-invoice__rebate__on-invoice__note' | translate }}
+                {{ "sales-invoice__rebate__on-invoice__note" | translate }}
               </span>
             </span>
           </button>
@@ -456,10 +548,10 @@
             <i class="ph ph-hand-coins" aria-hidden="true"></i>
             <span class="keadaan__teks">
               <span class="keadaan__judul">
-                {{ 'sales-invoice__rebate__returned' | translate }}
+                {{ "sales-invoice__rebate__returned" | translate }}
               </span>
               <span class="keadaan__desk">
-                {{ 'sales-invoice__rebate__returned__note' | translate }}
+                {{ "sales-invoice__rebate__returned__note" | translate }}
               </span>
             </span>
           </button>
@@ -484,7 +576,9 @@
                 (click)="pilihMetodeKembali('Cash')"
               >
                 <i class="ph ph-money" aria-hidden="true"></i>
-                <span class="keadaan__judul">{{ 'overpayment__create__method-cash' | translate }}</span>
+                <span class="keadaan__judul">{{
+                  "overpayment__create__method-cash" | translate
+                }}</span>
               </button>
               <button
                 type="button"
@@ -493,14 +587,16 @@
                 (click)="pilihMetodeKembali('Bank transfer')"
               >
                 <i class="ph ph-bank" aria-hidden="true"></i>
-                <span class="keadaan__judul">{{ 'overpayment__create__method-transfer' | translate }}</span>
+                <span class="keadaan__judul">{{
+                  "overpayment__create__method-transfer" | translate
+                }}</span>
               </button>
             </div>
 
             <div class="kartu__baris">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>
-                  {{ 'sales-invoice__rebate__value' | translate }}
+                  {{ "sales-invoice__rebate__value" | translate }}
                 </mat-label>
                 <input
                   matInput
@@ -516,7 +612,7 @@
                 <span matTextPrefix>Rp&nbsp;</span>
                 <mat-hint>
                   {{
-                    'sales-invoice__rebate__max'
+                    "sales-invoice__rebate__max"
                       | translate: { nilai: (totalBill | number) }
                   }}
                 </mat-hint>
@@ -524,7 +620,7 @@
 
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>
-                  {{ 'sales-invoice__rebate__receiver' | translate }}
+                  {{ "sales-invoice__rebate__receiver" | translate }}
                 </mat-label>
                 <input
                   matInput
@@ -539,7 +635,7 @@
             <div class="kartu__baris" *ngIf="metodeKembali === 'Bank transfer'">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>
-                  {{ 'overpayment__create__return-payment-bank' | translate }}
+                  {{ "overpayment__create__return-payment-bank" | translate }}
                 </mat-label>
                 <input
                   matInput
@@ -551,7 +647,7 @@
 
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>
-                  {{ 'overpayment__create__return-payment-number' | translate }}
+                  {{ "overpayment__create__return-payment-number" | translate }}
                 </mat-label>
                 <input
                   matInput
@@ -572,7 +668,7 @@
     <aside class="buat__samping">
       <section class="kartu">
         <h2 class="kartu__label">
-          {{ 'sales-invoice__create__summary' | translate }}
+          {{ "sales-invoice__create__summary" | translate }}
         </h2>
 
         <!--
@@ -581,42 +677,44 @@
         -->
         <dl class="ringkas">
           <div>
-            <dt>{{ 'sales-invoice__create__subtotal' | translate }}</dt>
-            <dd>Rp {{ subtotal | number: '1.0-0' }}</dd>
+            <dt>{{ "sales-invoice__create__subtotal" | translate }}</dt>
+            <dd>Rp {{ subtotal | number: "1.0-0" }}</dd>
           </div>
 
           <div *ngIf="diskonItem > 0">
-            <dt>{{ 'sales-invoice__create__item-discount' | translate }}</dt>
-            <dd class="ringkas__kurang">– Rp {{ diskonItem | number: '1.0-0' }}</dd>
+            <dt>{{ "sales-invoice__create__item-discount" | translate }}</dt>
+            <dd class="ringkas__kurang">
+              – Rp {{ diskonItem | number: "1.0-0" }}
+            </dd>
           </div>
 
           <div *ngIf="valueFormGroup.value.discount > 0">
-            <dt>{{ 'sales-invoice__create__doc-discount' | translate }}</dt>
+            <dt>{{ "sales-invoice__create__doc-discount" | translate }}</dt>
             <dd class="ringkas__kurang">
-              – Rp {{ valueFormGroup.value.discount | number: '1.0-0' }}
+              – Rp {{ valueFormGroup.value.discount | number: "1.0-0" }}
             </dd>
           </div>
 
           <div *ngIf="valueFormGroup.value.delivery > 0">
-            <dt>{{ 'sales-invoice__create__delivery' | translate }}</dt>
-            <dd>Rp {{ valueFormGroup.value.delivery | number: '1.0-0' }}</dd>
+            <dt>{{ "sales-invoice__create__delivery" | translate }}</dt>
+            <dd>Rp {{ valueFormGroup.value.delivery | number: "1.0-0" }}</dd>
           </div>
 
           <div *ngIf="valueFormGroup.value.service > 0">
-            <dt>{{ 'sales-invoice__create__service' | translate }}</dt>
-            <dd>Rp {{ valueFormGroup.value.service | number: '1.0-0' }}</dd>
+            <dt>{{ "sales-invoice__create__service" | translate }}</dt>
+            <dd>Rp {{ valueFormGroup.value.service | number: "1.0-0" }}</dd>
           </div>
         </dl>
 
         <div class="ringkas__total">
-          <span>{{ 'sales-invoice__create__total' | translate }}</span>
-          <strong>Rp {{ totalBill | number: '1.0-0' }}</strong>
+          <span>{{ "sales-invoice__create__total" | translate }}</span>
+          <strong>Rp {{ totalBill | number: "1.0-0" }}</strong>
         </div>
       </section>
 
       <section class="kartu">
         <h2 class="kartu__label">
-          {{ 'sales-invoice__create__before-issue' | translate }}
+          {{ "sales-invoice__create__before-issue" | translate }}
         </h2>
 
         <!--
@@ -636,7 +734,7 @@
 
       <section class="kartu">
         <h2 class="kartu__label">
-          {{ 'sales-invoice__create__actions' | translate }}
+          {{ "sales-invoice__create__actions" | translate }}
         </h2>
 
         <button
@@ -646,11 +744,15 @@
           (click)="submitForm()"
         >
           <i class="ph ph-check" aria-hidden="true"></i>
-          {{ 'sales-invoice__create__issue' | translate }}
+          {{ "sales-invoice__create__issue" | translate }}
         </button>
 
-        <button type="button" class="btn btn--kedua btn--blok" (click)="batal()">
-          {{ 'general__cancel' | translate }}
+        <button
+          type="button"
+          class="btn btn--kedua btn--blok"
+          (click)="batal()"
+        >
+          {{ "general__cancel" | translate }}
         </button>
       </section>
 
@@ -660,11 +762,15 @@
         ringkasan tetap yang pertama terbaca.
       -->
       <section class="kartu">
-        <h2 class="kartu__label">{{ 'general__other-actions' | translate }}</h2>
+        <h2 class="kartu__label">{{ "general__other-actions" | translate }}</h2>
 
-        <button type="button" class="btn btn--kedua btn--blok" (click)="batal()">
+        <button
+          type="button"
+          class="btn btn--kedua btn--blok"
+          (click)="batal()"
+        >
           <i class="ph ph-list-dashes" aria-hidden="true"></i>
-          {{ 'sales-invoice__view-list' | translate }}
+          {{ "sales-invoice__view-list" | translate }}
         </button>
       </section>
     </aside>
