@@ -1,78 +1,87 @@
-<h2 mat-dialog-title>{{ "promotion__result__title" | translate }}</h2>
-<form [formGroup]="promotionFormGroup">
-  <mat-dialog-content>
-    <mat-accordion>
-      <mat-expansion-panel class="mat-elevation-z0" hideToggle expanded>
-        <mat-expansion-panel-header>
-          <mat-panel-title>{{
-            "promotion__result__result" | translate
-          }}</mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>{{ "promotion__result__sales" | translate }}</mat-label>
-          <input
-            matInput
-            formControlName="sales"
-            mask="separator.2"
-            thousandSeparator=" "
-            placeholder="Ex. 8 000"
-          />
-        </mat-form-field>
+<!-- Tampilan baca hasil promosi — dokumen, bukan formulir. -->
+<div class="lihat">
+  <ng-container *ngIf="!isLoading">
+    <header class="lihat__kepala">
+      <div class="lihat__identitas">
+        <span class="lihat__avatar" aria-hidden="true">
+          <i class="ph ph-list-magnifying-glass"></i>
+        </span>
+        <div>
+          <h2 class="lihat__nama">
+            {{ "promotion__result__title" | translate }}
+          </h2>
+        </div>
+      </div>
+    </header>
 
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>{{ "promotion__result__purchase" | translate }}</mat-label>
-          <input
-            matInput
-            formControlName="purchase"
-            mask="separator.2"
-            thousandSeparator=" "
-            placeholder="Ex. 8 000"
-          />
-        </mat-form-field>
-      </mat-expansion-panel>
-      <mat-expansion-panel class="mat-elevation-z0" hideToggle>
-        <mat-expansion-panel-header>
-          <mat-panel-title>{{
-            "promotion__result__product-list" | translate
-          }}</mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-list>
-          <mat-list-item *ngFor="let item of t.controls">
-            <div matListItemTitle>{{ item.get("reference")?.value }}</div>
-            <div matListItemLine>
-              {{ item.get("description")?.value }}
-            </div>
-          </mat-list-item>
-        </mat-list>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <button
-      mat-stroked-button
-      color="primary"
-      [matMenuTriggerFor]="menu"
-      [disabled]="isDownloading || isLoading"
-    >
-      {{ "promotion__result__download" | translate }}
-    </button>
-    <mat-menu #menu="matMenu">
+    <div class="lihat__isi">
+      <dl class="lihat__kisi">
+        <div>
+          <dt>{{ "promotion__result__sales" | translate }}</dt>
+          <dd>Rp {{ hasil.sales | number: "1.0-2" }}</dd>
+        </div>
+        <div>
+          <dt>{{ "promotion__result__purchase" | translate }}</dt>
+          <dd>Rp {{ hasil.purchase | number: "1.0-2" }}</dd>
+        </div>
+      </dl>
+
+      <h3 class="lihat__label">
+        {{ "promotion__result__product-list" | translate }} ({{
+          barang.length
+        }})
+      </h3>
+      <table class="tabel tabel--rapat">
+        <thead>
+          <tr>
+            <th>{{ "promotion__result__reference" | translate }}</th>
+            <th>{{ "promotion__result__brand" | translate }}</th>
+            <th>{{ "promotion__result__type" | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let b of barang">
+            <td>
+              <span class="barang__ref">{{ b.reference }}</span>
+              <span class="barang__desc">{{ b.description }}</span>
+            </td>
+            <td>{{ b.merek }}</td>
+            <td>{{ b.tipe }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="lihat__kaki">
       <button
-        mat-menu-item
+        type="button"
+        class="btn btn--kedua"
+        [disabled]="isDownloading"
         (click)="downloadReport('sales')"
-        [disabled]="isDownloading || isLoading"
       >
-        <mat-icon>bar_chart</mat-icon>
-        <span>{{ "promotion__result__download__sales" | translate }}</span>
+        <i class="ph ph-file-xls" aria-hidden="true"></i>
+        {{ "promotion__result__download__sales" | translate }}
       </button>
+
       <button
-        mat-menu-item
+        type="button"
+        class="btn btn--kedua"
+        [disabled]="isDownloading"
         (click)="downloadReport('purchase')"
-        [disabled]="isDownloading || isLoading"
       >
-        <mat-icon>candlestick_chart</mat-icon>
-        <span>{{ "promotion__result__download__purchase" | translate }}</span>
+        <i class="ph ph-file-xls" aria-hidden="true"></i>
+        {{ "promotion__result__download__purchase" | translate }}
       </button>
-    </mat-menu>
-  </mat-dialog-actions>
-</form>
+
+      <span class="lihat__renggang"></span>
+
+      <button type="button" class="btn" (click)="tutup()">
+        {{ "general__close" | translate }}
+      </button>
+    </footer>
+  </ng-container>
+
+  <p class="lihat__memuat" *ngIf="isLoading">
+    {{ "general__loading" | translate }}
+  </p>
+</div>

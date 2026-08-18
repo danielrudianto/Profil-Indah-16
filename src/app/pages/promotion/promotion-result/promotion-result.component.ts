@@ -1,107 +1,53 @@
-import { DatePipe, NgFor } from '@angular/common';
-import { Component, Inject } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogRef,
-  MatDialogTitle,
-  MatDialogContent,
-  MatDialogActions,
-} from '@angular/material/dialog';
+import { DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { ExcelService } from 'src/app/services/excel.service';
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import {
-  MatAccordion,
-  MatExpansionPanel,
-  MatExpansionPanelHeader,
-  MatExpansionPanelTitle,
-} from '@angular/material/expansion';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { NgxMaskDirective } from 'ngx-mask';
-import {
-  MatList,
-  MatListItem,
-  MatListItemTitle,
-  MatListItemLine,
-} from '@angular/material/list';
-import { MatButton } from '@angular/material/button';
-import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
-import { MatIcon } from '@angular/material/icon';
 
+/**
+ * Tampilan BACA hasil promosi — dokumen, bukan formulir berbaju input.
+ *
+ * Dulu dua nominalnya tampil sebagai kolom isian bertopeng di dalam
+ * akordeon Material, dan daftar barangnya bersembunyi di panel kedua yang
+ * harus diklik dulu. Kini kisi baca biasa dan tabel yang langsung terlihat.
+ * Unduhan Excel dipertahankan persis, naik dari menu tersembunyi ke kaki
+ * dialog.
+ */
 @Component({
   selector: 'app-promotion-result',
   templateUrl: './promotion-result.component.html',
-  imports: [
-    MatDialogTitle,
-    FormsModule,
-    ReactiveFormsModule,
-    CdkScrollable,
-    MatDialogContent,
-    MatAccordion,
-    MatExpansionPanel,
-    MatExpansionPanelHeader,
-    MatExpansionPanelTitle,
-    MatFormField,
-    MatLabel,
-    MatInput,
-    NgxMaskDirective,
-    MatList,
-    NgFor,
-    MatListItem,
-    MatListItemTitle,
-    MatListItemLine,
-    MatDialogActions,
-    MatButton,
-    MatMenuTrigger,
-    MatMenu,
-    MatMenuItem,
-    MatIcon,
-    TranslatePipe,
-  ],
+  styleUrls: ['./promotion-result.component.scss'],
+  imports: [NgIf, NgFor, DecimalPipe, TranslatePipe],
 })
-export class PromotionResultComponent {
+export class PromotionResultComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { id: number },
     private apiService: ApiService,
     private excelService: ExcelService,
     private dialog: MatDialogRef<PromotionResultComponent>,
     private alertService: AlertService,
-    private formBuilder: FormBuilder,
     private translateService: TranslateService,
-    private datePipe: DatePipe,
   ) {}
 
-  isLoading: boolean = false;
-  isDownloading: boolean = false;
+  isLoading = true;
+  isDownloading = false;
 
-  promotionFormGroup: FormGroup = new FormGroup({
-    sales: new FormControl(0, Validators.required),
-    purchase: new FormControl(0, Validators.required),
-    products: new FormArray([]),
-  });
-
-  get f() {
-    return this.promotionFormGroup.controls;
-  }
-
-  get t(): FormArray {
-    return this.f['products'] as FormArray;
-  }
+  hasil = { sales: 0, purchase: 0 };
+  barang: {
+    reference: string;
+    description: string;
+    merek: string;
+    tipe: string;
+  }[] = [];
 
   ngOnInit(): void {
     this.fetchPromotionResult();
+  }
+
+  tutup(): void {
+    this.dialog.close();
   }
 
   fetchPromotionResult() {
@@ -110,21 +56,16 @@ export class PromotionResultComponent {
       .get(`promotion/result/${this.data.id}`)
       .subscribe({
         next: (data: any) => {
-          this.promotionFormGroup.patchValue({
+          this.hasil = {
             sales: data.result.sales,
             purchase: data.result.purchase,
-          });
-
-          data.products.forEach((x: any) => {
-            this.t.push(
-              this.formBuilder.group({
-                reference: [x.reference],
-                description: [x.description],
-                product_brand: [x.product_brand.name],
-                product_type: [x.product_type.name],
-              }),
-            );
-          });
+          };
+          this.barang = data.products.map((x: any) => ({
+            reference: x.reference,
+            description: x.description,
+            merek: x.product_brand.name,
+            tipe: x.product_type.name,
+          }));
         },
         error: (error) => {
           this.alertService.showError(error);
