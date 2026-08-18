@@ -1315,6 +1315,39 @@ export class SalesInvoiceCreateComponent {
    * dari "tidak tercatat" menjadi "tercatat tetapi tidak bisa ditelusuri", dan
    * sore hari tetap tidak ada yang bisa menjawab siapa yang membawa uangnya.
    */
+  /*
+    Galat yang MENGHALANGI terbit, dalam kalimat — pasangan checklist di
+    panel Sebelum terbit. Checklist menjawab "apa yang belum", daftar ini
+    menjawab "apa yang salah": tanpa keduanya, tombol terbitkan yang mati
+    hanya bisa ditebak-tebak sebabnya.
+  */
+  get galatTerbit(): string[] {
+    const galat: string[] = [];
+
+    if (this.totalPayment > this.totalBill) {
+      galat.push(
+        this.translateService.instant(
+          'sales-invoice__create__overpaid-payment',
+        ),
+      );
+    }
+
+    const dor = this.paymentsFormGroup.errors?.['invalidInternalPayment'];
+    if (dor) {
+      galat.push(dor);
+    }
+
+    if (!this.pengembalianLengkap) {
+      galat.push(
+        this.translateService.instant(
+          'sales-invoice__create__rebate-incomplete',
+        ),
+      );
+    }
+
+    return galat;
+  }
+
   get pengembalianLengkap(): boolean {
     if (this.perlakuanDiskon !== 'kembali') {
       return true;

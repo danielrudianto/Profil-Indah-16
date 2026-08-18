@@ -188,3 +188,21 @@
 :host-context([data-theme="dark"]) .keadaan__kartu--on {
   background: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
 }
+
+/* Galat penghalang terbit — satu bahasa dengan checklist, tetapi merah. */
+.periksa--galat {
+  margin-top: 10px;
+
+  li {
+    color: #e05260;
+  }
+}
+
+.periksa__bulat--galat {
+  border-color: #e05260;
+  color: #e05260;
+
+  i {
+    font-size: 12px;
+  }
+}

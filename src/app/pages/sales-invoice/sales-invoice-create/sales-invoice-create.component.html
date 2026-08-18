@@ -771,6 +771,22 @@
             {{ c.kunci | translate }}
           </li>
         </ul>
+
+        <!--
+          Checklist menjawab "apa yang belum"; daftar ini menjawab "apa yang
+          SALAH" — keadaan yang mematikan tombol terbitkan tanpa terlihat.
+        -->
+        <ul class="periksa periksa--galat" *ngIf="galatTerbit.length > 0">
+          <li *ngFor="let g of galatTerbit">
+            <span
+              class="periksa__bulat periksa__bulat--galat"
+              aria-hidden="true"
+            >
+              <i class="ph ph-warning"></i>
+            </span>
+            {{ g }}
+          </li>
+        </ul>
       </section>
 
       <section class="kartu">

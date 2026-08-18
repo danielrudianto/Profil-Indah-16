@@ -315,6 +315,7 @@
   "sales-invoice__create__paid-payment": "Fully paid",
   "sales-invoice__create__underpaid-payment": "Paid partially",
   "sales-invoice__create__overpaid-payment": "Payment exceeds the invoice total",
+  "sales-invoice__create__rebate-incomplete": "Discount refund details are incomplete",
   "sales-invoice__create__unpaid-payment": "Unpaid",
   "sales-invoice__create__add-payment-method": "Add payment method",
   "sales-invoice__create__payment-method__exists": "This payment method already exists. Please select another one.",
