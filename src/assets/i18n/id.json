@@ -2454,6 +2454,7 @@
   "sorotan-beli__banding__naik": "Total belanja {{total}}, naik {{persen}}% dari bulan lalu ({{totalLalu}}).",
   "sorotan-beli__banding__turun": "Total belanja {{total}}, turun {{persen}}% dari bulan lalu ({{totalLalu}}).",
   "sorotan-beli__supplier": "Supplier terbesar: {{nama}} — {{nilai}} ({{persen}}% dari belanja).",
+  "report-output__group__items": "{{n}} barang",
   "sorotan-uang__judul": "Sorotan hari ini",
   "sorotan-uang__metode": "{{nama}} menampung {{persen}}% uang masuk hari ini ({{nilai}}).",
   "sorotan-uang__banding__naik": "Uang masuk bersih {{total}}, naik {{persen}}% dari kemarin ({{totalLalu}}).",

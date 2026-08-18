@@ -5,3 +5,48 @@
 .keluar {
   color: #e05260;
 }
+
+/* Akordeon per kelompok: kepala satu baris, isi baru digambar saat dibuka. */
+.akordeon {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.akordeon__kepala {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  .kartu__label {
+    margin: 0;
+  }
+}
+
+.akordeon__jumlah {
+  margin-left: auto;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.akordeon__panah {
+  font-size: 16px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  transition: transform 0.18s ease;
+}
+
+.akordeon--buka .akordeon__panah {
+  transform: rotate(180deg);
+}
+
+.akordeon--buka .gulir {
+  padding-bottom: 16px;
+}

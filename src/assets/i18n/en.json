@@ -2454,6 +2454,7 @@
   "sorotan-beli__banding__naik": "Total purchases {{total}}, up {{persen}}% from last month ({{totalLalu}}).",
   "sorotan-beli__banding__turun": "Total purchases {{total}}, down {{persen}}% from last month ({{totalLalu}}).",
   "sorotan-beli__supplier": "Biggest supplier: {{nama}} — {{nilai}} ({{persen}}% of purchases).",
+  "report-output__group__items": "{{n}} items",
   "sorotan-uang__judul": "Today's highlights",
   "sorotan-uang__metode": "{{nama}} carries {{persen}}% of today's money in ({{nilai}}).",
   "sorotan-uang__banding__naik": "Net money in {{total}}, up {{persen}}% from yesterday ({{totalLalu}}).",

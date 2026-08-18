@@ -155,12 +155,31 @@
     </p>
   </section>
 
-  <!-- Satu kartu per merek/tipe, mengikuti seg di kepala halaman. -->
+  <!--
+    Satu kartu per merek/tipe — akordeon: semua tertutup di awal, hanya
+    satu yang terbuka. Daftar penuhnya ribuan baris; yang tertutup cukup
+    memperlihatkan nama dan jumlah barangnya.
+  -->
   <ng-container *ngIf="!isLoading">
-    <section class="kartu" *ngFor="let k of kelompokTampil">
-      <h2 class="kartu__label">{{ k.nama }}</h2>
+    <section
+      class="kartu akordeon"
+      [class.akordeon--buka]="kelompokTerbuka === k.nama"
+      *ngFor="let k of kelompokTampil"
+    >
+      <button
+        type="button"
+        class="akordeon__kepala"
+        (click)="bukaKelompok(k.nama)"
+        [attr.aria-expanded]="kelompokTerbuka === k.nama"
+      >
+        <h2 class="kartu__label">{{ k.nama }}</h2>
+        <span class="akordeon__jumlah">
+          {{ 'report-output__group__items' | translate: { n: (k.baris.length | number) } }}
+        </span>
+        <i class="ph ph-caret-down akordeon__panah" aria-hidden="true"></i>
+      </button>
 
-      <div class="gulir">
+      <div class="gulir" *ngIf="kelompokTerbuka === k.nama">
         <table class="tabel tabel--rapat">
           <thead>
             <tr>

@@ -105,12 +105,24 @@ export class ReportOutputComponent implements OnInit {
 
   baris: any[] = [];
 
+  /*
+    Akordeon: semua kelompok tertutup di awal dan hanya satu yang boleh
+    terbuka — daftar penuhnya ±1.600 baris, menggambar semuanya membuat
+    halaman panjang setengah mati.
+  */
+  kelompokTerbuka: string | null = null;
+
   ngOnInit(): void {
     this.ambilData();
   }
 
+  bukaKelompok(nama: string): void {
+    this.kelompokTerbuka = this.kelompokTerbuka === nama ? null : nama;
+  }
+
   ambilData(): void {
     this.isLoading = true;
+    this.kelompokTerbuka = null;
     this.apiService
       .post('report/output', {
         month: this.date.value!.month() + 1,
@@ -152,6 +164,7 @@ export class ReportOutputComponent implements OnInit {
   /** Ganti kelompok hanya menyusun ulang tampilan — datanya sama. */
   setKelompok(k: 'brand' | 'type'): void {
     this.kelompok = k;
+    this.kelompokTerbuka = null;
   }
 
   pilihMerek(item: ComboItem): void {
