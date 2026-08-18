@@ -1,5 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { Component, LOCALE_ID, OnInit, inject } from '@angular/core';
+import {
+  NgIf,
+  NgFor,
+  DecimalPipe,
+  SlicePipe,
+  formatDate,
+} from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
@@ -10,7 +16,9 @@ import {
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ReportRankComponent } from 'src/app/components/report-rank/report-rank.component';
 import moment, { Moment } from 'moment';
 
 import { AlertService } from 'src/app/services/alert.service';
@@ -56,6 +64,7 @@ import {
     NgIf,
     NgFor,
     DecimalPipe,
+    SlicePipe,
     FormsModule,
     ReactiveFormsModule,
     TranslatePipe,
@@ -73,6 +82,7 @@ export class ReportPurchaseComponent implements OnInit {
     private excelService: ExcelService,
     private alertService: AlertService,
     private translateService: TranslateService,
+    private dialog: MatDialog,
   ) {}
 
   isLoading = true;
@@ -89,6 +99,17 @@ export class ReportPurchaseComponent implements OnInit {
   terbaikTipe: string | null = null;
 
   chart: any[] = [];
+
+  /* Tiga kartu peringkat — cermin laporan penjualan di sisi beli. */
+  supplier: { name: string; value: number }[] = [];
+  merek: { name: string; value: number }[] = [];
+  tipe: { name: string; value: number }[] = [];
+
+  sorotan: { ikon: string; teks: string; warna?: 'merah' }[] = [];
+  private merekLalu: { name: string; value: number }[] | null = null;
+  private merekDuaLalu: { name: string; value: number }[] | null = null;
+  private tipeLalu: { name: string; value: number }[] | null = null;
+  private localeId = inject(LOCALE_ID);
 
   /** Kartu rincian harian di dasar halaman — terlipat sampai diminta. */
   rincianTerbuka = false;
@@ -112,6 +133,7 @@ export class ReportPurchaseComponent implements OnInit {
           this.penerimaan = Number(data.goodReceiptCount);
           this.diskon = Number(data.discount);
           this.chart = data.chart ?? [];
+          this.susunSorotan();
           this.terbaikSupplier = data.supplier;
           this.terbaikMerek = data.brand;
           this.terbaikTipe = data.type;
@@ -123,6 +145,58 @@ export class ReportPurchaseComponent implements OnInit {
       .add(() => {
         this.isLoading = false;
       });
+
+    /* Peringkat supplier/merek/tipe + bahan sorotan — kueri kecil. */
+    const periode = {
+      month: this.date.value!.month() + 1,
+      year: this.date.value!.year(),
+    };
+    const mundur = (n: number) => {
+      const m = this.date.value!.clone().subtract(n, 'month');
+      return { month: m.month() + 1, year: m.year() };
+    };
+
+    this.merekLalu = null;
+    this.merekDuaLalu = null;
+    this.tipeLalu = null;
+    this.sorotan = [];
+
+    this.apiService.get('report/purchase/supplier', periode).subscribe({
+      next: (data: any) => {
+        this.supplier = data.data ?? [];
+        this.susunSorotan();
+      },
+    });
+    this.apiService.get('report/purchase/brand', periode).subscribe({
+      next: (data: any) => {
+        this.merek = data.data ?? [];
+        this.susunSorotan();
+      },
+    });
+    this.apiService.get('report/purchase/type', periode).subscribe({
+      next: (data: any) => {
+        this.tipe = data.data ?? [];
+        this.susunSorotan();
+      },
+    });
+    this.apiService.get('report/purchase/brand', mundur(1)).subscribe({
+      next: (data: any) => {
+        this.merekLalu = data.data ?? [];
+        this.susunSorotan();
+      },
+    });
+    this.apiService.get('report/purchase/brand', mundur(2)).subscribe({
+      next: (data: any) => {
+        this.merekDuaLalu = data.data ?? [];
+        this.susunSorotan();
+      },
+    });
+    this.apiService.get('report/purchase/type', mundur(1)).subscribe({
+      next: (data: any) => {
+        this.tipeLalu = data.data ?? [];
+        this.susunSorotan();
+      },
+    });
   }
 
   setMonthAndYear(pilihan: Moment, datepicker: MatDatepicker<Moment>): void {
@@ -194,6 +268,247 @@ export class ReportPurchaseComponent implements OnInit {
   /* ---------------------------------------------------------------- */
   /* Unduh — bentuk berkasnya dipertahankan apa adanya                 */
   /* ---------------------------------------------------------------- */
+
+  inisial(nama: string): string {
+    return (nama ?? '?').trim().charAt(0).toUpperCase() || '?';
+  }
+
+  lebarDi(daftar: { value: number }[], nilai: number): number {
+    const terbesar = Math.max(...daftar.map((b) => Number(b.value)), 1);
+    return Math.max((Number(nilai) / terbesar) * 100, 2);
+  }
+
+  persenDi(daftar: { value: number }[], nilai: number): number {
+    const total = daftar.reduce((a, b) => a + Number(b.value), 0);
+    return total === 0 ? 0 : (Number(nilai) / total) * 100;
+  }
+
+  private rupiahRingkas(nilai: number): string {
+    if (nilai >= 1_000_000_000) {
+      return `Rp ${(nilai / 1_000_000_000).toLocaleString('id-ID', { maximumFractionDigits: 1 })} M`;
+    }
+    if (nilai >= 1_000_000) {
+      return `Rp ${(nilai / 1_000_000).toLocaleString('id-ID', { maximumFractionDigits: 0 })} jt`;
+    }
+    return `Rp ${nilai.toLocaleString('id-ID', { maximumFractionDigits: 0 })}`;
+  }
+
+  private pangsa(
+    daftar: { name: string; value: number }[],
+    nama: string,
+  ): number | null {
+    const total = daftar.reduce((a, b) => a + Number(b.value), 0);
+    if (total === 0) return null;
+    const baris = daftar.find((x) => x.name === nama);
+    return baris ? (Number(baris.value) / total) * 100 : 0;
+  }
+
+  private kalimatSelisih(selisih: number): string {
+    if (Math.abs(selisih) < 0.1) {
+      return this.translateService.instant('sorotan__dominasi__stabil');
+    }
+    return this.translateService.instant(
+      selisih >= 0 ? 'sorotan__dominasi__naik' : 'sorotan__dominasi__turun',
+      {
+        poin: Math.abs(selisih).toLocaleString('id-ID', {
+          maximumFractionDigits: 1,
+        }),
+      },
+    );
+  }
+
+  private tanggalSorotan(hari: number): string {
+    const d = new Date(this.date.value!.year(), this.date.value!.month(), hari);
+    const bulan = formatDate(d, 'MMMM', this.localeId);
+    if (this.localeId.startsWith('en')) {
+      const sisa = hari % 100;
+      const akhiran =
+        sisa >= 11 && sisa <= 13
+          ? 'th'
+          : ({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[
+              hari % 10
+            ] ?? 'th';
+      return `${hari}${akhiran} of ${bulan}`;
+    }
+    return `${hari} ${bulan}`;
+  }
+
+  /*
+    Sorotan belanja — cermin laporan penjualan: kalimatnya DIHITUNG dari
+    peringkat, bukan dikarang. Supplier terbesar menggantikan pelanggan
+    terbesar (tak ada konsep retail di sisi beli).
+  */
+  private susunSorotan(): void {
+    if (
+      this.merek.length === 0 ||
+      this.merekLalu === null ||
+      this.merekDuaLalu === null
+    ) {
+      return;
+    }
+
+    const t = (kunci: string, param?: object) =>
+      this.translateService.instant(kunci, param);
+    const hasil: { ikon: string; teks: string; warna?: 'merah' }[] = [];
+    const angka = (n: number, d = 1) =>
+      n.toLocaleString('id-ID', { maximumFractionDigits: d });
+
+    const juara = this.merek[0];
+    const pangsaKini = this.pangsa(this.merek, juara.name)!;
+    const pangsaLalu = this.pangsa(this.merekLalu, juara.name);
+    let dominasi = t('sorotan-beli__dominasi', {
+      merek: juara.name,
+      persen: angka(pangsaKini),
+    });
+    if (pangsaLalu !== null) {
+      dominasi += ' ' + this.kalimatSelisih(pangsaKini - pangsaLalu);
+    }
+    if (this.merekLalu[0]?.name === juara.name) {
+      dominasi +=
+        ' ' +
+        t('sorotan__streak', {
+          n: this.merekDuaLalu[0]?.name === juara.name ? 3 : 2,
+        });
+    }
+    hasil.push({ ikon: 'ph-crown-simple', teks: dominasi });
+
+    let menguat: { nama: string; kini: number; lalu: number } | null = null;
+    for (const b of this.merek.slice(0, 8)) {
+      if (b.name === juara.name) continue;
+      const kini = this.pangsa(this.merek, b.name)!;
+      const lalu = this.pangsa(this.merekLalu, b.name);
+      if (lalu === null) continue;
+      const naik = kini - lalu;
+      if (naik >= 1 && (!menguat || naik > menguat.kini - menguat.lalu)) {
+        menguat = { nama: b.name, kini, lalu };
+      }
+    }
+    if (menguat) {
+      hasil.push({
+        ikon: 'ph-trend-up',
+        teks: t('sorotan__menguat', {
+          merek: menguat.nama,
+          persen: angka(menguat.kini),
+          persenLalu: angka(menguat.lalu),
+        }),
+      });
+    }
+
+    if (this.tipe.length > 0 && this.tipeLalu !== null) {
+      const juaraTipe = this.tipe[0];
+      const pangsaTipe = this.pangsa(this.tipe, juaraTipe.name)!;
+      const pangsaTipeLalu = this.pangsa(this.tipeLalu, juaraTipe.name);
+      let kalimatTipe = t('sorotan-beli__tipe-dominasi', {
+        tipe: juaraTipe.name,
+        persen: angka(pangsaTipe),
+      });
+      if (pangsaTipeLalu !== null) {
+        kalimatTipe += ' ' + this.kalimatSelisih(pangsaTipe - pangsaTipeLalu);
+      }
+      hasil.push({ ikon: 'ph-squares-four', teks: kalimatTipe });
+    }
+
+    const totalLalu = this.merekLalu.reduce((a, b) => a + Number(b.value), 0);
+    const totalKini = this.merek.reduce((a, b) => a + Number(b.value), 0);
+    const kini = new Date();
+    const bulanBerjalan =
+      this.date.value!.month() === kini.getMonth() &&
+      this.date.value!.year() === kini.getFullYear();
+    if (totalLalu > 0) {
+      if (bulanBerjalan && kini.getDate() < this.hariDalamBulan.length) {
+        const proyeksi =
+          (totalKini / kini.getDate()) * this.hariDalamBulan.length;
+        const naik = proyeksi >= totalLalu;
+        hasil.push({
+          ikon: naik ? 'ph-trend-up' : 'ph-trend-down',
+          warna: naik ? undefined : 'merah',
+          teks: t('sorotan-beli__proyeksi', {
+            total: this.rupiahRingkas(totalKini),
+            proyeksi: this.rupiahRingkas(proyeksi),
+            totalLalu: this.rupiahRingkas(totalLalu),
+          }),
+        });
+      } else {
+        const persen = ((totalKini - totalLalu) / totalLalu) * 100;
+        hasil.push({
+          ikon: persen >= 0 ? 'ph-trend-up' : 'ph-trend-down',
+          warna: persen >= 0 ? undefined : 'merah',
+          teks: t(
+            persen >= 0
+              ? 'sorotan-beli__banding__naik'
+              : 'sorotan-beli__banding__turun',
+            {
+              total: this.rupiahRingkas(totalKini),
+              persen: angka(Math.abs(persen)),
+              totalLalu: this.rupiahRingkas(totalLalu),
+            },
+          ),
+        });
+      }
+    }
+
+    if (this.supplier.length > 0) {
+      const juaraSupplier = this.supplier[0];
+      hasil.push({
+        ikon: 'ph-truck',
+        teks: t('sorotan-beli__supplier', {
+          nama: juaraSupplier.name,
+          nilai: this.rupiahRingkas(Number(juaraSupplier.value)),
+          persen: angka(this.persenDi(this.supplier, juaraSupplier.value)),
+        }),
+      });
+    }
+
+    if (this.chart.length > 0) {
+      const terbaik = [...this.chart].sort(
+        (a, b) => Number(b.value) - Number(a.value),
+      )[0];
+      if (terbaik && Number(terbaik.value) > 0) {
+        hasil.push({
+          ikon: 'ph-calendar-check',
+          teks: t('sorotan__hari-terbaik', {
+            tanggal: this.tanggalSorotan(Number(terbaik.date)),
+            nilai: this.rupiahRingkas(Number(terbaik.value)),
+          }),
+        });
+      }
+    }
+
+    this.sorotan = hasil;
+  }
+
+  /** Peringkat lengkap sebuah dimensi belanja, di dialog. */
+  rincian(dimensi: 'supplier' | 'brand' | 'type'): void {
+    const judul = {
+      supplier: 'report-purchase__best__supplier',
+      brand: 'report-sales__rank__brand',
+      type: 'report-sales__rank__type',
+    }[dimensi];
+
+    this.apiService
+      .get(`report/purchase/${dimensi}`, {
+        month: this.date.value!.month() + 1,
+        year: this.date.value!.year(),
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.dialog.open(ReportRankComponent, {
+            data: {
+              judul: judul,
+              baris: (data.data ?? []).map((x: any) => ({
+                name: x.name,
+                value: Number(x.value),
+              })),
+            },
+            panelClass: 'nocturne-dialog',
+            backdropClass: 'nocturne-dialog-backdrop',
+          });
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      });
+  }
 
   download(): void {
     this.isSubmitting = true;
