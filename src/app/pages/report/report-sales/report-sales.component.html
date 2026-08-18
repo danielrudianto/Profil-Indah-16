@@ -176,7 +176,11 @@
     <h2 class="kartu__label">{{ 'sorotan__judul' | translate }}</h2>
     <ul class="sorotan__daftar">
       <li *ngFor="let baris of sorotan">
-        <span class="sorotan__ikon" aria-hidden="true">
+        <span
+          class="sorotan__ikon"
+          [class.sorotan__ikon--merah]="baris.warna === 'merah'"
+          aria-hidden="true"
+        >
           <i [class]="'ph ' + baris.ikon"></i>
         </span>
         {{ baris.teks }}

@@ -203,3 +203,10 @@
   color: var(--color-accent);
   font-size: 14px;
 }
+
+
+/* Arah menurun diberi wajah merah redup — meningkat tetap aksen. */
+.sorotan__ikon--merah {
+  background: color-mix(in srgb, #e05260 16%, transparent);
+  color: #e05260;
+}

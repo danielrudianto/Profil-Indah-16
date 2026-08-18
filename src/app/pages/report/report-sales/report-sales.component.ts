@@ -1,5 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { NgIf, NgFor, DecimalPipe, LowerCasePipe, SlicePipe } from '@angular/common';
+import { Component, LOCALE_ID, OnInit, inject } from '@angular/core';
+import {
+  NgIf,
+  NgFor,
+  DecimalPipe,
+  LowerCasePipe,
+  SlicePipe,
+  formatDate,
+} from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
@@ -113,7 +120,8 @@ export class ReportSalesComponent implements OnInit {
    * Bahannya dua panggilan kecil ekstra: peringkat merek satu dan dua
    * bulan sebelumnya.
    */
-  sorotan: { ikon: string; teks: string }[] = [];
+  sorotan: { ikon: string; teks: string; warna?: 'merah' }[] = [];
+  private localeId = inject(LOCALE_ID);
   private merekLalu: { name: string; value: number }[] | null = null;
   private merekDuaLalu: { name: string; value: number }[] | null = null;
   private tipeLalu: { name: string; value: number }[] | null = null;
@@ -359,6 +367,26 @@ export class ReportSalesComponent implements OnInit {
     );
   }
 
+  /**
+   * "6 Agustus" dalam bahasa Indonesia, "6th of August" dalam Inggris —
+   * nama bulannya dari locale aplikasi, bukan bawaan moment yang Inggris.
+   */
+  private tanggalSorotan(hari: number): string {
+    const d = new Date(this.date.value!.year(), this.date.value!.month(), hari);
+    const bulan = formatDate(d, 'MMMM', this.localeId);
+    if (this.localeId.startsWith('en')) {
+      const sisa = hari % 100;
+      const akhiran =
+        sisa >= 11 && sisa <= 13
+          ? 'th'
+          : ({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[
+              hari % 10
+            ] ?? 'th';
+      return `${hari}${akhiran} of ${bulan}`;
+    }
+    return `${hari} ${bulan}`;
+  }
+
   private pangsa(daftar: { name: string; value: number }[], nama: string): number | null {
     const total = daftar.reduce((a, b) => a + Number(b.value), 0);
     if (total === 0) return null;
@@ -378,7 +406,7 @@ export class ReportSalesComponent implements OnInit {
 
     const t = (kunci: string, param?: object) =>
       this.translateService.instant(kunci, param);
-    const hasil: { ikon: string; teks: string }[] = [];
+    const hasil: { ikon: string; teks: string; warna?: 'merah' }[] = [];
     const angka = (n: number, d = 1) =>
       n.toLocaleString('id-ID', { maximumFractionDigits: d });
 
@@ -476,10 +504,13 @@ export class ReportSalesComponent implements OnInit {
       this.date.value!.month() === kini.getMonth() &&
       this.date.value!.year() === kini.getFullYear();
     if (totalLalu > 0) {
+      /* Merah bila arahnya menurun, aksen bila meningkat — sekali lirik. */
       if (bulanBerjalan && kini.getDate() < this.hariDalamBulan.length) {
         const proyeksi = (totalKini / kini.getDate()) * this.hariDalamBulan.length;
+        const naik = proyeksi >= totalLalu;
         hasil.push({
-          ikon: 'ph-compass',
+          ikon: naik ? 'ph-trend-up' : 'ph-trend-down',
+          warna: naik ? undefined : 'merah',
           teks: t('sorotan__proyeksi', {
             total: this.rupiahRingkas(totalKini),
             proyeksi: this.rupiahRingkas(proyeksi),
@@ -490,6 +521,7 @@ export class ReportSalesComponent implements OnInit {
         const persen = ((totalKini - totalLalu) / totalLalu) * 100;
         hasil.push({
           ikon: persen >= 0 ? 'ph-trend-up' : 'ph-trend-down',
+          warna: persen >= 0 ? undefined : 'merah',
           teks: t(persen >= 0 ? 'sorotan__banding__naik' : 'sorotan__banding__turun', {
             total: this.rupiahRingkas(totalKini),
             persen: angka(Math.abs(persen)),
@@ -531,7 +563,7 @@ export class ReportSalesComponent implements OnInit {
         hasil.push({
           ikon: 'ph-calendar-check',
           teks: t('sorotan__hari-terbaik', {
-            tanggal: `${terbaik.date} ${this.date.value!.format('MMMM')}`,
+            tanggal: this.tanggalSorotan(Number(terbaik.date)),
             nilai: this.rupiahRingkas(Number(terbaik.value)),
           }),
         });
