@@ -11,6 +11,7 @@ import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
+import { DepositListDialogComponent } from './deposit-list-dialog/deposit-list-dialog.component';
 
 /**
  * Kartu stok satu produk — riwayat mutasi tersimpan, berhalaman dari
@@ -19,10 +20,18 @@ import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-koso
  * penyesuaian, atau retur).
  */
 @Component({
-    selector: 'app-stock-card',
-    templateUrl: './stock-card.component.html',
-    styleUrls: ['./stock-card.component.scss'],
-    imports: [ListPageComponent, TabelKosongComponent, NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe]
+  selector: 'app-stock-card',
+  templateUrl: './stock-card.component.html',
+  styleUrls: ['./stock-card.component.scss'],
+  imports: [
+    ListPageComponent,
+    TabelKosongComponent,
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    DatePipe,
+    TranslatePipe,
+  ],
 })
 export class StockCardComponent implements OnInit {
   constructor(
@@ -30,7 +39,7 @@ export class StockCardComponent implements OnInit {
     private alertService: AlertService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   isLoadingCard: boolean = false;
@@ -50,11 +59,42 @@ export class StockCardComponent implements OnInit {
    */
   stokKini: number | null = null;
 
+  /*
+    Deposit terbuka produk ini — jumlah yang sudah dibayar pelanggan dan
+    belum diambil. Kotak lamanya berlabel Deposit tetapi berisi stok kini;
+    sekarang keduanya punya kotak masing-masing, dan angka depositnya bisa
+    diklik untuk melihat siapa memegang berapa.
+  */
+  depositTerbuka: number | null = null;
+
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.params['id']);
 
     this.fetchProduct();
     this.fetchStockCard(1);
+    this.fetchDeposit();
+  }
+
+  fetchDeposit(): void {
+    this.apiService.get(`sales-deposit/product/${this.id}`).subscribe({
+      next: (data: any) => {
+        this.depositTerbuka = (data as any[]).reduce(
+          (jumlah, b) => jumlah + Number(b.quantity),
+          0,
+        );
+      },
+      /* Kotak deposit diam di "—" bila gagal; kartunya tetap berguna. */
+      error: () => {},
+    });
+  }
+
+  bukaDeposit(): void {
+    this.dialog.open(DepositListDialogComponent, {
+      data: {
+        productID: this.id,
+        reference: this.productDataSource?.reference ?? '',
+      },
+    });
   }
 
   fetchStockCard(page: number = this.page) {

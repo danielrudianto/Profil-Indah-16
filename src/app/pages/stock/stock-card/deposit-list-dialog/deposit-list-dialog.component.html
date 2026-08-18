@@ -1,0 +1,69 @@
+<!-- Pemegang deposit terbuka — dokumen, bukan formulir. -->
+<div class="lihat">
+  <ng-container *ngIf="!isLoading">
+    <header class="lihat__kepala">
+      <div class="lihat__identitas">
+        <span class="lihat__avatar" aria-hidden="true">
+          <i class="ph ph-hand-deposit"></i>
+        </span>
+        <div>
+          <h2 class="lihat__nama">{{ "deposit-list__title" | translate }}</h2>
+          <p class="lihat__nomor">{{ data.reference }}</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="lihat__isi">
+      <table class="tabel tabel--rapat" *ngIf="baris.length > 0">
+        <thead>
+          <tr>
+            <th>{{ "deposit-list__document" | translate }}</th>
+            <th>{{ "deposit-list__customer" | translate }}</th>
+            <th class="ke-kanan">
+              {{ "deposit-list__quantity" | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let b of baris">
+            <td>
+              <span class="dokumen__nomor">{{ b.document }}</span>
+              <span class="dokumen__tanggal">
+                {{ b.date | date: "dd MMM yyyy" }}
+              </span>
+            </td>
+            <td class="tabel__utama">{{ b.customer ?? "Retail" }}</td>
+            <td class="ke-kanan baris__total">
+              {{ b.quantity | number: "1.0-2" }} {{ b.unit }}
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2" class="tabel__utama">
+              {{ "deposit-list__total" | translate }}
+            </td>
+            <td class="ke-kanan baris__total">
+              {{ total | number: "1.0-2" }}
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <p class="tabel__pesan" *ngIf="baris.length === 0">
+        {{ "deposit-list__empty" | translate }}
+      </p>
+    </div>
+
+    <footer class="lihat__kaki">
+      <span class="lihat__renggang"></span>
+      <button type="button" class="btn" (click)="tutup()">
+        {{ "general__close" | translate }}
+      </button>
+    </footer>
+  </ng-container>
+
+  <p class="lihat__memuat" *ngIf="isLoading">
+    {{ "general__loading" | translate }}
+  </p>
+</div>

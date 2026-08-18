@@ -17,43 +17,58 @@
   <ng-container aksi>
     <button type="button" class="aksi-hantu" (click)="onBackButtonPressed()">
       <i class="ph ph-arrow-u-up-left" aria-hidden="true"></i>
-      {{ 'general__back' | translate }}
+      {{ "general__back" | translate }}
     </button>
   </ng-container>
 
   <!-- Identitas produk: merek, tipe, dan posisi stok — stok yang disorot. -->
   <div hero class="hero" *ngIf="productDataSource">
     <div class="hero__kartu">
-      <span class="hero__label">{{ 'stock-card__brand' | translate }}</span>
+      <span class="hero__label">{{ "stock-card__brand" | translate }}</span>
       <strong class="hero__nilai hero__nilai--tanggal">
         {{ productDataSource.product_brand?.name }}
       </strong>
     </div>
     <div class="hero__kartu">
-      <span class="hero__label">{{ 'stock-card__type' | translate }}</span>
+      <span class="hero__label">{{ "stock-card__type" | translate }}</span>
       <strong class="hero__nilai hero__nilai--tanggal">
         {{ productDataSource.product_type?.name }}
       </strong>
     </div>
     <div class="hero__kartu hero__kartu--utama">
-      <span class="hero__label">{{ 'stock-card__deposit' | translate }}</span>
+      <span class="hero__label">{{ "stock-card__stock-now" | translate }}</span>
       <strong class="hero__nilai" *ngIf="stokKini != null">
-        {{ stokKini | number: '1.0-2' }} {{ productDataSource.unit }}
+        {{ stokKini | number: "1.0-2" }} {{ productDataSource.unit }}
       </strong>
       <strong class="hero__nilai" *ngIf="stokKini == null">—</strong>
     </div>
+    <!-- Angka deposit bisa dirinci: siapa memegang berapa. -->
+    <button
+      type="button"
+      class="hero__kartu hero__kartu--tombol"
+      (click)="bukaDeposit()"
+      [title]="'deposit-list__title' | translate"
+    >
+      <span class="hero__label">{{ "stock-card__deposit" | translate }}</span>
+      <strong class="hero__nilai" *ngIf="depositTerbuka != null">
+        {{ depositTerbuka | number: "1.0-2" }} {{ productDataSource.unit }}
+        <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+      </strong>
+      <strong class="hero__nilai" *ngIf="depositTerbuka == null">—</strong>
+    </button>
   </div>
 
   <table class="tabel">
     <thead>
       <tr>
-        <th>{{ 'stock-card__date' | translate }}</th>
-        <th>{{ 'stock-card__document' | translate }}</th>
+        <th>{{ "stock-card__date" | translate }}</th>
+        <th>{{ "stock-card__document" | translate }}</th>
+        <th>{{ "stock-card__counterparty" | translate }}</th>
         <th class="tabel__nilai-kepala">
-          {{ 'stock-card__quantity' | translate }}
+          {{ "stock-card__quantity" | translate }}
         </th>
         <th class="tabel__nilai-kepala">
-          {{ 'stock-card__stock' | translate }}
+          {{ "stock-card__stock" | translate }}
         </th>
       </tr>
     </thead>
@@ -65,10 +80,25 @@
         class="tabel__baris-klik"
         (click)="viewDocument(item)"
       >
-        <td class="tabel__tanggal">{{ item.date | date: 'dd MMM yyyy' }}</td>
+        <td class="tabel__tanggal">{{ item.date | date: "dd MMM yyyy" }}</td>
         <td class="tabel__utama">{{ item.document_name }}</td>
-        <td class="tabel__nilai" [class.kartu-stok__minus]="item.display_quantity < 0">
-          {{ item.display_quantity | number: '1.0-2' }} {{ item.unit }}
+        <!--
+          Lawan transaksi: supplier untuk barang masuk, pelanggan untuk
+          barang keluar; faktur tanpa pelanggan berarti Retail. Penyesuaian
+          tidak berlawan — strip.
+        -->
+        <td class="tabel__redup">
+          {{
+            item.supplier?.name ??
+              item.customer?.name ??
+              (item.sales_invoice_code_id != null ? "Retail" : "—")
+          }}
+        </td>
+        <td
+          class="tabel__nilai"
+          [class.kartu-stok__minus]="item.display_quantity < 0"
+        >
+          {{ item.display_quantity | number: "1.0-2" }} {{ item.unit }}
         </td>
         <td class="tabel__nilai baris__total">
           <!--
@@ -76,10 +106,10 @@
             sedang berjalan atau menunggu sapuan malam; jujur, bukan nol.
           -->
           <span class="kartu-stok__hitung" *ngIf="item.stock == null">
-            {{ 'stock-card__calculating' | translate }}
+            {{ "stock-card__calculating" | translate }}
           </span>
           <ng-container *ngIf="item.stock != null">
-            {{ item.stock | number: '1.0-2' }} {{ item.defaultUnit }}
+            {{ item.stock | number: "1.0-2" }} {{ item.defaultUnit }}
           </ng-container>
         </td>
       </tr>
@@ -87,15 +117,15 @@
 
     <tbody *ngIf="isLoadingCard">
       <tr>
-        <td colspan="4" class="tabel__pesan">
-          {{ 'general__loading' | translate }}
+        <td colspan="5" class="tabel__pesan">
+          {{ "general__loading" | translate }}
         </td>
       </tr>
     </tbody>
 
     <tbody *ngIf="!isLoadingCard && dataSource.length === 0">
       <tr>
-        <td colspan="4">
+        <td colspan="5">
           <app-tabel-kosong
             ikon="ph-stack"
             [judul]="'stock-card__empty__title' | translate"

@@ -1,0 +1,14 @@
+/* Seluruh anatomi tampilan baca tinggal di partial bersama. */
+@use "../../../../styles/lihat";
+
+/* Nomor dokumen di atas, tanggalnya redup di bawah — dua baris satu sel. */
+.dokumen__nomor {
+  display: block;
+  font-weight: 500;
+}
+
+.dokumen__tanggal {
+  display: block;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}

@@ -10,3 +10,31 @@
   font-style: italic;
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
 }
+
+/*
+  Kotak deposit adalah TOMBOL — angkanya bisa dirinci jadi siapa memegang
+  berapa. Anatomi kotaknya sama dengan hero; yang ditambah hanya sifat
+  tombolnya: kursor, garis fokus, dan kaca pembesar kecil di samping angka.
+*/
+.hero__kartu--tombol {
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border: 0;
+
+  &:hover {
+    box-shadow: inset 0 0 0 1px var(--color-accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .hero__nilai i {
+    font-size: 14px;
+    color: var(--color-accent);
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+}
