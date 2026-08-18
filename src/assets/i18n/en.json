@@ -1364,7 +1364,8 @@
     "discount": {
       "required": "Discount required",
       "numeric": "Discount must be numeric",
-      "greaterThanPrice": "Discount > price"
+      "greaterThanPrice": "Discount > price",
+      "greaterThanTotal": "Invoice discount cannot exceed the total item value"
     },
     "amount": {
       "required": "Amount is required",
