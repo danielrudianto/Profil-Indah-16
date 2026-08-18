@@ -116,6 +116,7 @@ export class ReportSalesComponent implements OnInit {
   sorotan: { ikon: string; teks: string }[] = [];
   private merekLalu: { name: string; value: number }[] | null = null;
   private merekDuaLalu: { name: string; value: number }[] | null = null;
+  private tipeLalu: { name: string; value: number }[] | null = null;
 
   /** Kartu rincian harian di dasar halaman — terlipat sampai diminta. */
   rincianTerbuka = false;
@@ -178,6 +179,7 @@ export class ReportSalesComponent implements OnInit {
 
     this.merekLalu = null;
     this.merekDuaLalu = null;
+    this.tipeLalu = null;
     this.sorotan = [];
 
     this.apiService.get('report/sales/brand', mundur(1)).subscribe({
@@ -194,9 +196,17 @@ export class ReportSalesComponent implements OnInit {
       },
     });
 
+    this.apiService.get('report/sales/type', mundur(1)).subscribe({
+      next: (data: any) => {
+        this.tipeLalu = data.data ?? [];
+        this.susunSorotan();
+      },
+    });
+
     this.apiService.get('report/sales/type', periode).subscribe({
       next: (data: any) => {
         this.tipe = data.data ?? [];
+        this.susunSorotan();
       },
     });
 
@@ -334,6 +344,21 @@ export class ReportSalesComponent implements OnInit {
     return `Rp ${nilai.toLocaleString('id-ID', { maximumFractionDigits: 0 })}`;
   }
 
+  /** "Naik 0 poin" itu janggal; selisih di bawah 0,1 poin disebut stabil. */
+  private kalimatSelisih(selisih: number): string {
+    if (Math.abs(selisih) < 0.1) {
+      return this.translateService.instant('sorotan__dominasi__stabil');
+    }
+    return this.translateService.instant(
+      selisih >= 0 ? 'sorotan__dominasi__naik' : 'sorotan__dominasi__turun',
+      {
+        poin: Math.abs(selisih).toLocaleString('id-ID', {
+          maximumFractionDigits: 1,
+        }),
+      },
+    );
+  }
+
   private pangsa(daftar: { name: string; value: number }[], nama: string): number | null {
     const total = daftar.reduce((a, b) => a + Number(b.value), 0);
     if (total === 0) return null;
@@ -368,13 +393,10 @@ export class ReportSalesComponent implements OnInit {
         persen: angka(pangsaKini),
       });
     } else {
-      const selisih = pangsaKini - pangsaLalu;
       dominasi =
         t('sorotan__dominasi', { merek: juara.name, persen: angka(pangsaKini) }) +
         ' ' +
-        t(selisih >= 0 ? 'sorotan__dominasi__naik' : 'sorotan__dominasi__turun', {
-          poin: angka(Math.abs(selisih)),
-        });
+        this.kalimatSelisih(pangsaKini - pangsaLalu);
     }
     const juaraLalu = this.merekLalu[0]?.name;
     const juaraDuaLalu = this.merekDuaLalu[0]?.name;
@@ -408,7 +430,45 @@ export class ReportSalesComponent implements OnInit {
       });
     }
 
-    /* 3. Banding total: proyeksi bila bulan masih berjalan. */
+    /* 3. Tipe terlaris + tipe yang menguat — cermin logika mereknya. */
+    if (this.tipe.length > 0 && this.tipeLalu !== null) {
+      const juaraTipe = this.tipe[0];
+      const pangsaTipe = this.pangsa(this.tipe, juaraTipe.name)!;
+      const pangsaTipeLalu = this.pangsa(this.tipeLalu, juaraTipe.name);
+      let kalimatTipe = t('sorotan__tipe-dominasi', {
+        tipe: juaraTipe.name,
+        persen: angka(pangsaTipe),
+      });
+      if (pangsaTipeLalu !== null) {
+        kalimatTipe += ' ' + this.kalimatSelisih(pangsaTipe - pangsaTipeLalu);
+      }
+      hasil.push({ ikon: 'ph-squares-four', teks: kalimatTipe });
+
+      let tipeMenguat: { nama: string; kini: number; lalu: number } | null =
+        null;
+      for (const b of this.tipe.slice(0, 8)) {
+        if (b.name === juaraTipe.name) continue;
+        const kini = this.pangsa(this.tipe, b.name)!;
+        const lalu = this.pangsa(this.tipeLalu, b.name);
+        if (lalu === null) continue;
+        const naik = kini - lalu;
+        if (naik >= 1 && (!tipeMenguat || naik > tipeMenguat.kini - tipeMenguat.lalu)) {
+          tipeMenguat = { nama: b.name, kini, lalu };
+        }
+      }
+      if (tipeMenguat) {
+        hasil.push({
+          ikon: 'ph-trend-up',
+          teks: t('sorotan__tipe-menguat', {
+            tipe: tipeMenguat.nama,
+            persen: angka(tipeMenguat.kini),
+            persenLalu: angka(tipeMenguat.lalu),
+          }),
+        });
+      }
+    }
+
+    /* 4. Banding total: proyeksi bila bulan masih berjalan. */
     const totalLalu = this.merekLalu.reduce((a, b) => a + Number(b.value), 0);
     const totalKini = this.merek.reduce((a, b) => a + Number(b.value), 0);
     const kini = new Date();
@@ -440,7 +500,7 @@ export class ReportSalesComponent implements OnInit {
     }
 
     /*
-      4. Pelanggan terbesar — retail DIKELUARKAN dari hitungan atas
+      5. Pelanggan terbesar — retail DIKELUARKAN dari hitungan atas
       permintaan pemilik: retail itu gabungan ribuan pembeli anonim,
       menang terus, dan tidak bisa ditindaklanjuti sebagai pelanggan.
       Pangsanya dihitung terhadap penjualan non-retail.
@@ -462,7 +522,7 @@ export class ReportSalesComponent implements OnInit {
       });
     }
 
-    /* 5. Hari terbaik bulan ini. */
+    /* 6. Hari terbaik bulan ini. */
     if (this.chart.length > 0) {
       const terbaik = [...this.chart].sort(
         (a, b) => Number(b.value) - Number(a.value),
