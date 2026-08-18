@@ -369,19 +369,22 @@ textarea.medan__input {
   color: color-mix(in srgb, var(--color-text) 50%, transparent);
 }
 
-/* Tombol titik tiga di ujung baris. */
+/*
+  Tombol aksi di ujung baris. 40px, bukan 32 — permintaan pemilik: sasaran
+  klik yang kecil membuat aksinya sering meleset.
+*/
 .tabel__aksi-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   padding: 0;
   border: 0;
-  border-radius: 8px;
+  border-radius: 9px;
   background: transparent;
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
 
   &:hover {

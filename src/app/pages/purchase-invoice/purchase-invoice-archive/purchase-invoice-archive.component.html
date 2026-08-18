@@ -128,7 +128,12 @@
       </thead>
 
       <tbody *ngIf="!isLoading && dataSource.length > 0">
-        <tr *ngFor="let item of dataSource; trackBy: lacakDokumen">
+        <!-- Seluruh baris membuka detailnya; ikon mata pensiun. -->
+        <tr
+          *ngFor="let item of dataSource; trackBy: lacakDokumen"
+          class="tabel__baris-klik"
+          (click)="viewArchive(item.id)"
+        >
           <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
           <!--
             Nomor faktur supplier baru ada setelah dilengkapi; em dash lebih
@@ -162,7 +167,7 @@
               {{ 'purchase-invoice__status__' + keadaan(item) | translate }}
             </span>
           </td>
-          <td class="tabel__aksi">
+          <td class="tabel__aksi" (click)="$event.stopPropagation()">
             <button
               type="button"
               class="tabel__aksi-btn"
@@ -172,15 +177,6 @@
               [attr.aria-label]="'purchase-invoice__queue__complete' | translate"
             >
               <i class="ph ph-file-plus" aria-hidden="true"></i>
-            </button>
-            <button
-              type="button"
-              class="tabel__aksi-btn"
-              (click)="viewArchive(item.id)"
-              [title]="'general__view' | translate"
-              [attr.aria-label]="'general__view' | translate"
-            >
-              <i class="ph ph-eye" aria-hidden="true"></i>
             </button>
           </td>
         </tr>
