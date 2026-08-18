@@ -11,7 +11,7 @@
   <div class="peringkat" *ngIf="data.baris.length > 0">
     <div
       class="peringkat__baris"
-      *ngFor="let b of data.baris"
+      *ngFor="let b of tampil"
       [title]="b.name + ' — ' + (persen(b.value) | number: '1.0-1') + '% · Rp ' + (b.value | number: '1.0-0')"
     >
       <span class="avatar-inisial" aria-hidden="true">{{ inisial(b.name) }}</span>
@@ -29,4 +29,29 @@
   <p class="peringkat__kosong" *ngIf="data.baris.length === 0">
     {{ 'report__rank__empty' | translate }}
   </p>
+
+  <!-- Paginasi — dimensi pelanggan bisa seribu baris lebih. -->
+  <div class="peringkat__kaki" *ngIf="halamanTerakhir > 1">
+    <span class="peringkat__rentang">
+      {{ rentang }} / {{ data.baris.length | number }}
+    </span>
+    <button
+      type="button"
+      class="tabel__aksi-btn"
+      [disabled]="page === 1"
+      (click)="bukaHalaman(-1)"
+      [attr.aria-label]="'general__previous' | translate"
+    >
+      <i class="ph ph-caret-left" aria-hidden="true"></i>
+    </button>
+    <button
+      type="button"
+      class="tabel__aksi-btn"
+      [disabled]="page === halamanTerakhir"
+      (click)="bukaHalaman(1)"
+      [attr.aria-label]="'general__next' | translate"
+    >
+      <i class="ph ph-caret-right" aria-hidden="true"></i>
+    </button>
+  </div>
 </app-dialog-shell>

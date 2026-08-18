@@ -159,6 +159,15 @@
           {{ 'report-sales__best__customer-unit' | translate }}
         </span>
       </span>
+      <button
+        type="button"
+        class="tabel__aksi-btn terbaik-kartu__aksi"
+        (click)="rincian('customer')"
+        [title]="'report-sales__best__detail' | translate"
+        [attr.aria-label]="'report-sales__best__detail' | translate"
+      >
+        <i class="ph ph-caret-right" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
 
@@ -250,7 +259,7 @@
         *ngIf="merek.length > 0"
         [class.peringkat--ringkas]="merek.length > 5"
       >
-        <div class="peringkat__baris" *ngFor="let b of merek">
+        <div class="peringkat__baris" *ngFor="let b of merek | slice: 0 : 8">
           <span class="avatar-inisial" aria-hidden="true">{{ inisial(b.name) }}</span>
           <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
           <span class="peringkat__jalur" aria-hidden="true">
@@ -293,7 +302,7 @@
         *ngIf="tipe.length > 0"
         [class.peringkat--ringkas]="tipe.length > 5"
       >
-        <div class="peringkat__baris" *ngFor="let b of tipe">
+        <div class="peringkat__baris" *ngFor="let b of tipe | slice: 0 : 8">
           <span class="avatar-inisial" aria-hidden="true">{{ inisial(b.name) }}</span>
           <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
           <span class="peringkat__jalur" aria-hidden="true">
@@ -338,7 +347,7 @@
         *ngIf="pelanggan.length > 0"
         [class.peringkat--ringkas]="pelanggan.length > 5"
       >
-        <div class="peringkat__baris" *ngFor="let b of pelanggan">
+        <div class="peringkat__baris" *ngFor="let b of pelanggan | slice: 0 : 8">
           <span class="avatar-inisial" aria-hidden="true">{{ inisial(b.name) }}</span>
           <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
           <span class="peringkat__jalur" aria-hidden="true">

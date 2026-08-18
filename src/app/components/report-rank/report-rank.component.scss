@@ -45,3 +45,25 @@
   font-size: 13px;
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
+
+
+/* Kaki paginasi: rentang di kiri, panah di kanan. */
+.peringkat__kaki {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.peringkat__rentang {
+  margin-right: 6px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.tabel__aksi-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}

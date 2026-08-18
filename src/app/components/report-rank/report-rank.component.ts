@@ -29,6 +29,39 @@ export class ReportRankComponent {
     return (nama ?? '?').trim().charAt(0).toUpperCase() || '?';
   }
 
+  /*
+    Paginasi di sisi klien. Dimensi pelanggan bisa seribu baris lebih;
+    menggambar semuanya sekaligus membuat dialognya berat dibuka.
+    Bar dan persen tetap dihitung terhadap SELURUH daftar.
+  */
+  page = 1;
+  readonly ukuranHalaman = 10;
+
+  get tampil(): { name: string; value: number }[] {
+    const mulai = (this.page - 1) * this.ukuranHalaman;
+    return this.data.baris.slice(mulai, mulai + this.ukuranHalaman);
+  }
+
+  get halamanTerakhir(): number {
+    return Math.max(1, Math.ceil(this.data.baris.length / this.ukuranHalaman));
+  }
+
+  get rentang(): string {
+    const mulai = (this.page - 1) * this.ukuranHalaman + 1;
+    const akhir = Math.min(
+      this.page * this.ukuranHalaman,
+      this.data.baris.length,
+    );
+    return `${mulai} – ${akhir}`;
+  }
+
+  bukaHalaman(arah: -1 | 1): void {
+    const tujuan = this.page + arah;
+    if (tujuan >= 1 && tujuan <= this.halamanTerakhir) {
+      this.page = tujuan;
+    }
+  }
+
   get total(): number {
     return this.data.baris.reduce((a, b) => a + Number(b.value), 0);
   }

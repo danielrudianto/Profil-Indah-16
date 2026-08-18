@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgIf, NgFor, DecimalPipe, LowerCasePipe } from '@angular/common';
+import { NgIf, NgFor, DecimalPipe, LowerCasePipe, SlicePipe } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
@@ -60,6 +60,7 @@ import {
     NgFor,
     DecimalPipe,
     LowerCasePipe,
+    SlicePipe,
     FormsModule,
     ReactiveFormsModule,
     TranslatePipe,
