@@ -87,6 +87,31 @@
     </div>
   </div>
 
+  <!-- Satu baris pintasan ke laporan yang paling sering dibuka. -->
+  <div class="kartu dasbor__kartu">
+    <div class="dasbor__kartu-kepala">
+      <div class="dasbor__kartu-judul">
+        {{ 'dashboard__laporan__judul' | translate }}
+      </div>
+      <button type="button" class="dasbor__tautan" (click)="bukaDaftarLaporan()">
+        {{ 'dashboard__aksi__laporan' | translate }} →
+      </button>
+    </div>
+
+    <div class="dasbor__laporan">
+      <button
+        type="button"
+        class="dasbor__laporan-pintas"
+        *ngFor="let l of laporanPintas"
+        (click)="bukaRute(l.rute)"
+      >
+        <i [class]="'ph ' + l.ikon" aria-hidden="true"></i>
+        <span>{{ l.kunci | translate }}</span>
+        <i class="ph ph-arrow-right dasbor__laporan-panah" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
   <div class="dasbor__kisi">
     <!-- Kiri: grafik tujuh hari + lima faktur terakhir. -->
     <div class="kartu dasbor__kartu">

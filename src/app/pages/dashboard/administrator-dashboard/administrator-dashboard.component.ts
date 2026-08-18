@@ -126,6 +126,31 @@ export class AdministratorDashboardComponent implements OnInit {
   lacakFaktur = (_: number, f: any): number => f.id ?? 0;
   lacakPromosi = (_: number, p: any): number => p.id ?? 0;
 
+  /*
+    Pintasan laporan yang paling sering dibuka administrator — permintaan
+    pemilik: barang keluar, uang masuk, barang bermasalah, barang kurang.
+    Kuncinya memakai judul halaman laporannya sendiri supaya nama di sini
+    dan di halamannya tidak pernah berbeda.
+  */
+  laporanPintas = [
+    { kunci: 'report-output__title', ikon: 'ph-truck', rute: '/Report/Output' },
+    { kunci: 'report-money__title', ikon: 'ph-coins', rute: '/Report/Money' },
+    {
+      kunci: 'report-problematic__title',
+      ikon: 'ph-warning-octagon',
+      rute: '/Report/Problematic',
+    },
+    {
+      kunci: 'report-inadequate__title',
+      ikon: 'ph-trend-down',
+      rute: '/Report/Inadequate',
+    },
+  ];
+
+  bukaRute(rute: string): void {
+    this.router.navigate([rute]);
+  }
+
   bukaLaporan(): void {
     this.router.navigate(['/Report/Sales']);
   }

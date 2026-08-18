@@ -396,3 +396,68 @@
     transform: rotate(360deg);
   }
 }
+
+/* ---------------------------------------------------------------- */
+/* Baris pintasan laporan                                            */
+/* ---------------------------------------------------------------- */
+
+.dasbor__laporan {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 560px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.dasbor__laporan-pintas {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+
+  > i:first-child {
+    flex: none;
+    font-size: 18px;
+    color: var(--color-accent);
+  }
+
+  span {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+    background: var(--color-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.dasbor__laporan-panah {
+  font-size: 14px;
+  opacity: 0.45;
+}
