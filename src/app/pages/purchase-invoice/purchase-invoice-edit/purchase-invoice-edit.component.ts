@@ -1,6 +1,8 @@
 import { DatePipe, NgIf, NgFor, DecimalPipe, Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatDialog } from '@angular/material/dialog';
+import { Observable, map } from 'rxjs';
 import {
   FormArray,
   FormBuilder,
@@ -21,6 +23,7 @@ import {
   ProductSelectorType,
 } from 'src/app/components/product-selector/product-selector.component';
 import { ComboSearchComponent } from 'src/app/components/combo-search/combo-search.component';
+import { SubmitConfirmationComponent } from 'src/app/components/submit-confirmation/submit-confirmation.component';
 import { UpdateProductPurchasePriceComponent } from 'src/app/components/update-product-purchase-price/update-product-purchase-price.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -88,6 +91,7 @@ export class PurchaseInvoiceEditComponent implements OnInit, OnDestroy {
     private translateService: TranslateService,
     private pageTitleService: PageTitleService,
     private sheet: MatBottomSheet,
+    private dialog: MatDialog,
   ) {
     this._hotkeysService.add([
       new Hotkey('alt+a', (): boolean => {
@@ -467,6 +471,8 @@ export class PurchaseInvoiceEditComponent implements OnInit, OnDestroy {
               'purchase-invoice__update__success__message',
             ),
           );
+          /* Sudah tersimpan — penjaga keluar tidak perlu bertanya lagi. */
+          this.tersimpan = true;
           this.location.back();
         },
         error: (error) => {
@@ -517,17 +523,32 @@ export class PurchaseInvoiceEditComponent implements OnInit, OnDestroy {
     this.location.back();
   }
 
-  canExit(): boolean {
-    if (
+  /** Dibaca canExit: setelah simpan sukses, formulir kotor pun boleh pergi. */
+  private tersimpan = false;
+
+  /*
+    Dipanggil KeluarTanpaSimpanGuard. Dialog aplikasi sendiri, bukan
+    window.confirm — dialog natif tidak bertema dan pada browser tertanam
+    disupresi diam-diam.
+  */
+  canExit(): boolean | Observable<boolean> {
+    const kotor =
       this.metaFormGroup.dirty ||
       this.documentFormGroup.dirty ||
       this.itemFormGroup.dirty ||
-      this.discountControl.dirty
-    ) {
-      return confirm(
-        this.translateService.instant('general__unsaved-exit-confirm'),
-      );
+      this.discountControl.dirty;
+
+    if (!kotor || this.tersimpan) {
+      return true;
     }
-    return true;
+
+    return this.dialog
+      .open(SubmitConfirmationComponent, {
+        data: {
+          title: this.translateService.instant('general__unsaved-exit-confirm'),
+        },
+      })
+      .afterClosed()
+      .pipe(map((setuju) => !!setuju));
   }
 }

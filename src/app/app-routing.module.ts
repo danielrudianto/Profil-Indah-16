@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
+import { KeluarTanpaSimpanGuard } from './guards/keluar-tanpa-simpan.guard';
 import {
   AdministratorGuard,
   GeneralGuard,
@@ -144,6 +145,7 @@ const routes: Routes = [
               {
                 path: '',
                 canActivate: [SalesGuard],
+                canDeactivate: [KeluarTanpaSimpanGuard],
                 loadComponent: () =>
                   import('./pages/sales-invoice/sales-invoice-create/sales-invoice-create.component').then(
                     (m) => m.SalesInvoiceCreateComponent,
@@ -653,6 +655,7 @@ const routes: Routes = [
               },
               {
                 path: 'Edit/:id',
+                canDeactivate: [KeluarTanpaSimpanGuard],
                 loadComponent: () =>
                   import('./pages/purchase-invoice/purchase-invoice-edit/purchase-invoice-edit.component').then(
                     (m) => m.PurchaseInvoiceEditComponent,

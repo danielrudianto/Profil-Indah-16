@@ -6,7 +6,8 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Router } from '@angular/router';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
-import { Subject, debounceTime, of, switchMap, tap } from 'rxjs';
+import { Observable, Subject, debounceTime, map, of, switchMap, tap } from 'rxjs';
+import { SubmitConfirmationComponent } from 'src/app/components/submit-confirmation/submit-confirmation.component';
 import { PackageSelectorComponent } from 'src/app/components/package-selector/package-selector.component';
 import { PaymentSelectorComponent } from 'src/app/components/payment-selector/payment-selector.component';
 import {
@@ -1005,22 +1006,30 @@ export class SalesInvoiceCreateComponent {
     return true;
   }
 
-  canExit() {
-    if (
+  /*
+    Dipanggil KeluarTanpaSimpanGuard. Dialog aplikasi sendiri, bukan
+    window.confirm — dialog natif tidak bertema, kalimat lamanya pun
+    tertulis mati dalam bahasa Inggris, dan pada browser tertanam ia
+    disupresi diam-diam.
+  */
+  canExit(): boolean | Observable<boolean> {
+    const kotor =
       this.billFormGroup.dirty ||
       this.metaFormGroup.dirty ||
-      this.valueFormGroup.dirty
-    ) {
-      if (
-        confirm('All input will be deleted. Are you sure to exit this page?')
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
+      this.valueFormGroup.dirty;
+
+    if (!kotor) {
       return true;
     }
+
+    return this.dialog
+      .open(SubmitConfirmationComponent, {
+        data: {
+          title: this.translateService.instant('general__unsaved-exit-confirm'),
+        },
+      })
+      .afterClosed()
+      .pipe(map((setuju) => !!setuju));
   }
   /* ---------------------------------------------------------------- */
   /* Pilihan berbentuk kartu                                           */
