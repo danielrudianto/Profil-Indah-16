@@ -391,6 +391,12 @@ export class SalesInvoiceCreateComponent {
 
         this.apiService.get(`product-stock/product/${data.id}`).subscribe({
           next: (stock: any) => {
+            /*
+              Balasannya bersarang: { stock: { product_id, stock } }.
+              Pembacaan lama (stock.stock) mengambil objeknya sehingga
+              angka stok di baris diam-diam kosong sejak dulu.
+            */
+            const stokProduk = Number(stock?.stock?.stock ?? 0);
             if (sub == null) {
               this.t.push(
                 this.formBuilder.group({
@@ -419,7 +425,7 @@ export class SalesInvoiceCreateComponent {
                   conversion: [1],
                   default_unit: [data.unit],
                   save_price: [false],
-                  stock: [stock.stock],
+                  stock: [stokProduk],
                 })
               );
             } else {
@@ -450,7 +456,7 @@ export class SalesInvoiceCreateComponent {
                   conversion: [sub.conversion],
                   default_unit: [data.unit],
                   save_price: [false],
-                  stock: [stock.stock],
+                  stock: [stokProduk],
                 })
               );
             }
@@ -1133,6 +1139,32 @@ export class SalesInvoiceCreateComponent {
   stokBaris(i: number): number | null {
     const stok = this.baris(i).value.stock;
     return stok == null ? null : Number(stok);
+  }
+
+  /*
+    Peringatan stok minus — peringatan, bukan blokir: faktur memang boleh
+    membuat stok minus (barang kadang terjual sebelum penerimaannya
+    tercatat), tapi kasir harus sadar sebelum menyimpan. Kebutuhannya
+    dihitung agregat per produk supaya dua baris barang yang sama saling
+    menjumlah, dalam satuan dasar.
+  */
+  kebutuhanBaris(i: number): number {
+    const productId = this.baris(i).value.product_id;
+    return this.t.controls.reduce((a, x) => {
+      const v = x.value;
+      if (v.product_id !== productId) {
+        return a;
+      }
+      return a + Number(v.quantity ?? 0) * Number(v.conversion ?? 1);
+    }, 0);
+  }
+
+  bakalMinus(i: number): boolean {
+    const stok = this.stokBaris(i);
+    if (stok == null) {
+      return false;
+    }
+    return this.kebutuhanBaris(i) > stok;
   }
 
   nilaiBaris(i: number, ruas: string): number {

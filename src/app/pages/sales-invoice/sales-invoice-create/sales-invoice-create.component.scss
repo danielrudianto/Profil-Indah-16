@@ -79,6 +79,19 @@
 }
 
 /*
+  Baris yang bakal membuat stok minus — amber peringatan, bukan merah
+  galat: menjual melebihi stok tercatat itu sah (barang bisa terjual
+  sebelum penerimaannya diinput), tapi harus disadari.
+*/
+.barang__stok--minus {
+  color: #c98f3d;
+
+  i {
+    margin-right: 4px;
+  }
+}
+
+/*
   Penanda barang yang muncul lebih dari sekali. Sengaja HALUS: pengulangan itu
   sah — bonus supplier, atau harga berbeda dalam satu faktur — jadi ia
   mengingatkan, bukan melarang.

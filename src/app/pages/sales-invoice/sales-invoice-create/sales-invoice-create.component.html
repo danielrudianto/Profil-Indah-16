@@ -196,9 +196,22 @@
                     </span>
                   </div>
                   <div class="barang__desc">{{ deskripsiBaris(i) }}</div>
-                  <div class="barang__stok" *ngIf="stokBaris(i) !== null">
+                  <!-- Peringatan stok minus — memberi tahu, tidak menghalangi. -->
+                  <div
+                    class="barang__stok"
+                    [class.barang__stok--minus]="bakalMinus(i)"
+                    *ngIf="stokBaris(i) !== null"
+                  >
+                    <i
+                      class="ph-fill ph-warning"
+                      *ngIf="bakalMinus(i)"
+                      aria-hidden="true"
+                    ></i>
                     {{ 'sales-invoice__create__current-stock' | translate }}:
                     {{ stokBaris(i) | number: '0.0-2' }}
+                    <span *ngIf="bakalMinus(i)">
+                      · {{ 'sales-invoice__create__stock-minus' | translate: { butuh: (kebutuhanBaris(i) | number: '0.0-2') } }}
+                    </span>
                   </div>
                 </td>
 
