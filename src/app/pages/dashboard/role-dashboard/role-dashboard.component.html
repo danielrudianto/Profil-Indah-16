@@ -59,6 +59,18 @@
         <i [class]="'ph ' + a.ikon" aria-hidden="true"></i>
         {{ a.label | translate }}
       </button>
+
+      <!-- Ritual sore peran umum: Excel mutasi stok komoditas inti hari ini. -->
+      <button
+        type="button"
+        class="btn btn--kedua"
+        *ngIf="bolehRekapHarian"
+        (click)="rekapHarian.unduh()"
+        [disabled]="rekapHarian.sedangUnduh"
+      >
+        <i class="ph ph-file-xls" aria-hidden="true"></i>
+        {{ 'dashboard__aksi__rekap-harian' | translate }}
+      </button>
     </div>
   </div>
 

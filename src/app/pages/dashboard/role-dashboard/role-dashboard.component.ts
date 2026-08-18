@@ -7,6 +7,7 @@ import { forkJoin, of } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { RekapHarianService } from 'src/app/services/rekap-harian.service';
 import { Role } from 'src/app/constants/role.constant';
 
 /** Satu ubin angka; nilai uang atau hitungan biasa. */
@@ -50,11 +51,18 @@ export class RoleDashboardComponent implements OnInit {
     private alertService: AlertService,
     private authService: AuthService,
     private router: Router,
+    public rekapHarian: RekapHarianService,
   ) {}
 
   isLoading = true;
   nama = '';
   peran = '';
+
+  /*
+    Rekap stok harian hanya untuk peran umum — PERAN_UMUM di server memang
+    [3, 5, 7], jadi sales dan purchasing pasti ditolak endpoint-nya.
+  */
+  bolehRekapHarian = false;
 
   hariIni = new Date();
 
@@ -78,6 +86,7 @@ export class RoleDashboardComponent implements OnInit {
     const peran = info?.role ?? null;
     const lihatJual = peran === Role.Sales || peran === Role.General;
     const lihatBeli = peran === Role.Purchasing || peran === Role.General;
+    this.bolehRekapHarian = peran === Role.General;
 
     this.aksi = this.susunAksi(lihatJual, lihatBeli);
 

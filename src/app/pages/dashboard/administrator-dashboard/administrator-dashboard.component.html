@@ -258,6 +258,16 @@
             <i class="ph ph-chart-bar" aria-hidden="true"></i>
             {{ 'dashboard__aksi__laporan' | translate }}
           </button>
+          <!-- Ritual sore: Excel mutasi stok hari ini untuk komoditas inti. -->
+          <button
+            type="button"
+            class="btn btn--kedua"
+            (click)="rekapHarian.unduh()"
+            [disabled]="rekapHarian.sedangUnduh"
+          >
+            <i class="ph ph-file-xls" aria-hidden="true"></i>
+            {{ 'dashboard__aksi__rekap-harian' | translate }}
+          </button>
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { RekapHarianService } from 'src/app/services/rekap-harian.service';
 
 /**
  * Dashboard administrator — layar 9c.
@@ -27,6 +28,7 @@ export class AdministratorDashboardComponent implements OnInit {
     private alertService: AlertService,
     private authService: AuthService,
     private router: Router,
+    public rekapHarian: RekapHarianService,
   ) {}
 
   isLoading = true;
