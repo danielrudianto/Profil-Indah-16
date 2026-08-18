@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
@@ -16,6 +17,7 @@ import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-she
     templateUrl: './supplier-update.component.html',
     imports: [
     DialogShellComponent,
+    NgIf,
     FormsModule,
     ReactiveFormsModule,
     MatFormField,

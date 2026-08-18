@@ -34,6 +34,19 @@
       <input matInput type="tel" inputmode="tel" formControlName="phone_number" maxlength="45" autocomplete="off" />
     </mat-form-field>
 
+    <!--
+      Tombol mati tanpa keterangan terbaca sebagai rusak. Alasannya
+      ditulis: pelanggan yang sudah dipakai transaksi memang tidak boleh
+      dihapus, dan itu keputusan sistem, bukan gangguan.
+    -->
+    <p
+      class="petunjuk"
+      *ngIf="!isLoading && customerFormGroup.get('can_delete')?.value === false"
+    >
+      <i class="ph ph-info" aria-hidden="true"></i>
+      {{ "customer__update__undeletable" | translate }}
+    </p>
+
     <!-- Dua penjaga: peran administrator dan can_delete dari server. -->
     <button
       type="button"
