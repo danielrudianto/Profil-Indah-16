@@ -176,12 +176,21 @@
 
     <ng-container>
       <!-- Dua jalur terpisah, sumbu tanggal sama: nilai di atas, transaksi di bawah. -->
+      <!--
+        Tooltip digambar sendiri dan batangnya ikut menyala saat ditunjuk —
+        title bawaan browser lamban dan tak bertema, padahal tooltip pada
+        grafik itu wajib.
+      -->
       <div class="grafik grafik--nilai">
-        <div
-          class="grafik__hari"
-          *ngFor="let hari of hariDalamBulan"
-          [title]="keteranganHari(hari)"
-        >
+        <div class="grafik__hari" *ngFor="let hari of hariDalamBulan">
+          <div class="grafik-tip" role="tooltip">
+            <strong>Rp {{ dataHari(hari)?.value ?? 0 | number: '1.0-0' }}</strong>
+            <span>
+              {{ dataHari(hari)?.salesInvoiceCount ?? 0 | number }}
+              {{ 'report-sales__chart__transactions' | translate | lowercase }}
+            </span>
+            <small>{{ hari }} {{ namaBulan }}</small>
+          </div>
           <span
             class="grafik__nilai"
             [style.height.%]="tinggiNilai(hari)"
@@ -191,11 +200,15 @@
       </div>
 
       <div class="grafik grafik--transaksi">
-        <div
-          class="grafik__hari"
-          *ngFor="let hari of hariDalamBulan"
-          [title]="keteranganHari(hari)"
-        >
+        <div class="grafik__hari" *ngFor="let hari of hariDalamBulan">
+          <div class="grafik-tip" role="tooltip">
+            <strong>Rp {{ dataHari(hari)?.value ?? 0 | number: '1.0-0' }}</strong>
+            <span>
+              {{ dataHari(hari)?.salesInvoiceCount ?? 0 | number }}
+              {{ 'report-sales__chart__transactions' | translate | lowercase }}
+            </span>
+            <small>{{ hari }} {{ namaBulan }}</small>
+          </div>
           <span
             class="grafik__transaksi"
             [style.height.%]="tinggiTransaksi(hari)"
@@ -222,37 +235,169 @@
 
   </section>
 
-  <!-- Penjualan per merek — bar di atas jalur penuh, seperti mockup. -->
-  <section class="kartu">
-    <div class="kartu__kepala">
-      <h2 class="kartu__label">{{ 'report-sales__by-brand' | translate }}</h2>
-
-      <button type="button" class="kartu__tautan" (click)="rincian('type')">
-        {{ 'report-sales__see-by-type' | translate }}
-        <i class="ph ph-arrow-right" aria-hidden="true"></i>
-      </button>
-    </div>
-
-    <div class="peringkat" *ngIf="merek.length > 0">
-      <!-- Satu baris satu tooltip: nama, porsi, dan nilainya ikut terbaca dari batangnya. -->
-      <div
-        class="peringkat__baris"
-        *ngFor="let b of merek"
-        [title]="b.name + ' — ' + (persenMerek(b.value) | number: '1.0-1') + '% · Rp ' + (b.value | number: '1.0-0')"
-      >
-        <span class="peringkat__nama">{{ b.name }}</span>
-        <span class="peringkat__jalur" aria-hidden="true">
-          <span class="peringkat__bar" [style.width.%]="lebarMerek(b.value)"></span>
-        </span>
-        <span class="peringkat__persen">{{ persenMerek(b.value) | number: '1.0-1' }}%</span>
-        <span class="peringkat__nilai">Rp {{ b.value | number: '1.0-0' }}</span>
+  <!--
+    Tiga kartu peringkat: merek, tipe, pelanggan. Lima teratas tampil;
+    sisanya terlipat di balik kabut dan tombol buka.
+  -->
+  <div class="peringkat-kisi">
+    <section class="kartu">
+      <div class="kartu__kepala">
+        <h2 class="kartu__label">{{ 'report-sales__by-brand' | translate }}</h2>
       </div>
-    </div>
 
-    <p class="laporan__kosong" *ngIf="merek.length === 0">
-      {{ 'report-sales__empty' | translate }}
-    </p>
-  </section>
+      <div
+        class="peringkat"
+        *ngIf="merek.length > 0"
+        [class.peringkat--ringkas]="!bukaSemua.merek && merek.length > 5"
+      >
+        <div class="peringkat__baris" *ngFor="let b of merek">
+          <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
+          <span class="peringkat__jalur" aria-hidden="true">
+            <span
+              class="peringkat__bar"
+              [style.width.%]="lebarDi(merek, b.value)"
+            ></span>
+          </span>
+          <span class="peringkat__persen">
+            {{ persenDi(merek, b.value) | number: '1.0-1' }}%
+          </span>
+          <span class="peringkat__nilai">Rp {{ b.value | number: '1.0-0' }}</span>
+        </div>
+        <div
+          class="peringkat__kabut"
+          *ngIf="!bukaSemua.merek && merek.length > 5"
+        ></div>
+      </div>
+
+      <button
+        type="button"
+        class="peringkat__toggle"
+        *ngIf="merek.length > 5"
+        (click)="bukaSemua.merek = !bukaSemua.merek"
+      >
+        {{
+          (bukaSemua.merek ? 'peringkat__ringkas' : 'peringkat__semua')
+            | translate: { n: merek.length }
+        }}
+        <i
+          class="ph"
+          [class.ph-caret-down]="!bukaSemua.merek"
+          [class.ph-caret-up]="bukaSemua.merek"
+          aria-hidden="true"
+        ></i>
+      </button>
+
+      <p class="laporan__kosong" *ngIf="merek.length === 0">
+        {{ 'report-sales__empty' | translate }}
+      </p>
+    </section>
+
+    <section class="kartu">
+      <div class="kartu__kepala">
+        <h2 class="kartu__label">{{ 'report-sales__by-type' | translate }}</h2>
+      </div>
+
+      <div
+        class="peringkat"
+        *ngIf="tipe.length > 0"
+        [class.peringkat--ringkas]="!bukaSemua.tipe && tipe.length > 5"
+      >
+        <div class="peringkat__baris" *ngFor="let b of tipe">
+          <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
+          <span class="peringkat__jalur" aria-hidden="true">
+            <span
+              class="peringkat__bar"
+              [style.width.%]="lebarDi(tipe, b.value)"
+            ></span>
+          </span>
+          <span class="peringkat__persen">
+            {{ persenDi(tipe, b.value) | number: '1.0-1' }}%
+          </span>
+          <span class="peringkat__nilai">Rp {{ b.value | number: '1.0-0' }}</span>
+        </div>
+        <div
+          class="peringkat__kabut"
+          *ngIf="!bukaSemua.tipe && tipe.length > 5"
+        ></div>
+      </div>
+
+      <button
+        type="button"
+        class="peringkat__toggle"
+        *ngIf="tipe.length > 5"
+        (click)="bukaSemua.tipe = !bukaSemua.tipe"
+      >
+        {{
+          (bukaSemua.tipe ? 'peringkat__ringkas' : 'peringkat__semua')
+            | translate: { n: tipe.length }
+        }}
+        <i
+          class="ph"
+          [class.ph-caret-down]="!bukaSemua.tipe"
+          [class.ph-caret-up]="bukaSemua.tipe"
+          aria-hidden="true"
+        ></i>
+      </button>
+
+      <p class="laporan__kosong" *ngIf="tipe.length === 0">
+        {{ 'report-sales__empty' | translate }}
+      </p>
+    </section>
+
+    <section class="kartu peringkat-kisi__lebar">
+      <div class="kartu__kepala">
+        <h2 class="kartu__label">
+          {{ 'report-sales__by-customer' | translate }}
+        </h2>
+      </div>
+
+      <div
+        class="peringkat"
+        *ngIf="pelanggan.length > 0"
+        [class.peringkat--ringkas]="!bukaSemua.pelanggan && pelanggan.length > 5"
+      >
+        <div class="peringkat__baris" *ngFor="let b of pelanggan">
+          <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
+          <span class="peringkat__jalur" aria-hidden="true">
+            <span
+              class="peringkat__bar"
+              [style.width.%]="lebarDi(pelanggan, b.value)"
+            ></span>
+          </span>
+          <span class="peringkat__persen">
+            {{ persenDi(pelanggan, b.value) | number: '1.0-1' }}%
+          </span>
+          <span class="peringkat__nilai">Rp {{ b.value | number: '1.0-0' }}</span>
+        </div>
+        <div
+          class="peringkat__kabut"
+          *ngIf="!bukaSemua.pelanggan && pelanggan.length > 5"
+        ></div>
+      </div>
+
+      <button
+        type="button"
+        class="peringkat__toggle"
+        *ngIf="pelanggan.length > 5"
+        (click)="bukaSemua.pelanggan = !bukaSemua.pelanggan"
+      >
+        {{
+          (bukaSemua.pelanggan ? 'peringkat__ringkas' : 'peringkat__semua')
+            | translate: { n: pelanggan.length }
+        }}
+        <i
+          class="ph"
+          [class.ph-caret-down]="!bukaSemua.pelanggan"
+          [class.ph-caret-up]="bukaSemua.pelanggan"
+          aria-hidden="true"
+        ></i>
+      </button>
+
+      <p class="laporan__kosong" *ngIf="pelanggan.length === 0">
+        {{ 'report-sales__empty' | translate }}
+      </p>
+    </section>
+  </div>
 
   <!--
     Rincian angka per hari — TERLIPAT dan di dasar halaman. Tabelnya

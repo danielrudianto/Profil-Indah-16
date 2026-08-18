@@ -101,6 +101,15 @@ export class ReportSalesComponent implements OnInit {
 
   chart: any[] = [];
   merek: { name: string; value: number }[] = [];
+  tipe: { name: string; value: number }[] = [];
+  pelanggan: { name: string; value: number }[] = [];
+
+  /*
+    Tiga kartu peringkat memperlihatkan 5 teratas; sisanya terlipat di
+    balik kabut dan tombol buka — daftar merek bisa puluhan baris dan
+    menelan halaman bila digambar penuh.
+  */
+  bukaSemua = { merek: false, tipe: false, pelanggan: false };
 
   /** Kartu rincian harian di dasar halaman — terlipat sampai diminta. */
   rincianTerbuka = false;
@@ -140,17 +149,34 @@ export class ReportSalesComponent implements OnInit {
         this.isLoading = false;
       });
 
-    /* Peringkat merek untuk kartu bar di bawah — endpoint terpisah. */
-    this.apiService
-      .get('report/sales/brand', {
-        month: this.date.value!.month() + 1,
-        year: this.date.value!.year(),
-      })
-      .subscribe({
-        next: (data: any) => {
-          this.merek = data.data ?? [];
-        },
-      });
+    /* Peringkat merek/tipe/pelanggan — tiga endpoint kecil terpisah. */
+    const periode = {
+      month: this.date.value!.month() + 1,
+      year: this.date.value!.year(),
+    };
+
+    this.apiService.get('report/sales/brand', periode).subscribe({
+      next: (data: any) => {
+        this.merek = data.data ?? [];
+      },
+    });
+
+    this.apiService.get('report/sales/type', periode).subscribe({
+      next: (data: any) => {
+        this.tipe = data.data ?? [];
+      },
+    });
+
+    this.apiService.get('report/sales/customer', periode).subscribe({
+      next: (data: any) => {
+        /* Faktur retail tidak menunjuk pelanggan; namanya diisi di sini. */
+        this.pelanggan = (data.data ?? []).map((x: any) => ({
+          ...x,
+          name:
+            x.name ?? this.translateService.instant('sales-invoice__retail'),
+        }));
+      },
+    });
   }
 
   setMonthAndYear(pilihan: Moment, datepicker: MatDatepicker<Moment>): void {
@@ -242,6 +268,17 @@ export class ReportSalesComponent implements OnInit {
 
   lebarMerek(nilai: number): number {
     return Math.max((Number(nilai) / this.merekTerbesar) * 100, 2);
+  }
+
+  /* Versi generik untuk ketiga kartu peringkat. */
+  lebarDi(daftar: { value: number }[], nilai: number): number {
+    const terbesar = Math.max(...daftar.map((b) => Number(b.value)), 1);
+    return Math.max((Number(nilai) / terbesar) * 100, 2);
+  }
+
+  persenDi(daftar: { value: number }[], nilai: number): number {
+    const total = daftar.reduce((a, b) => a + Number(b.value), 0);
+    return total === 0 ? 0 : (Number(nilai) / total) * 100;
   }
 
   persenMerek(nilai: number): number {
