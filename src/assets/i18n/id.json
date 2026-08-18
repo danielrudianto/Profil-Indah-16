@@ -311,6 +311,7 @@
   "sales-invoice__create__overpayment__return-number": "Nomor pembayaran pengembalian",
   "sales-invoice__create__paid-payment": "Dibayar lunas",
   "sales-invoice__create__underpaid-payment": "Dicicil",
+  "sales-invoice__create__overpaid-payment": "Pembayaran melebihi total faktur",
   "sales-invoice__create__unpaid-payment": "Tidak ada pembayaran",
   "sales-invoice__create__add-payment-method": "Tambah metode pembayaran",
   "sales-invoice__create__payment-method__exists": "Metode pembayaran sudah ada.",

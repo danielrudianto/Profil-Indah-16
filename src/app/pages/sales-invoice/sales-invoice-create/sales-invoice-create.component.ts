@@ -933,22 +933,6 @@ export class SalesInvoiceCreateComponent {
       });
   }
 
-  get overPaymentAvailable(): boolean {
-    if (this.metaFormGroup.controls['type']?.value != 'sales') {
-      return false;
-    }
-
-    if (this.statusBayar !== 'paid') {
-      return false;
-    }
-
-    if (this.metaFormGroup.controls['customer_id']?.value == 0) {
-      return false;
-    }
-
-    return true;
-  }
-
   get isValid(): boolean {
     /* Pengembalian yang setengah terisi tidak boleh ikut terbit. */
     if (!this.pengembalianLengkap) {
@@ -1042,13 +1026,19 @@ export class SalesInvoiceCreateComponent {
     diklik cocok dengan isiannya — pekerjaan ganda yang validatornya sendiri
     menolak bila tidak sinkron, jadi tidak pernah ada informasi tambahan.
   */
-  get statusBayar(): 'paid' | 'underpaid' | 'unpaid' {
+  get statusBayar(): 'paid' | 'underpaid' | 'unpaid' | 'over' {
     if (this.totalPayment <= 0) {
       return 'unpaid';
     }
-    return this.totalBill > 0 && this.totalPayment >= this.totalBill
-      ? 'paid'
-      : 'underpaid';
+    /*
+      Melebihi total — termasuk membayar faktur yang totalnya masih nol —
+      bukan cicilan dan bukan lunas: keadaan tidak sah yang harus disebut
+      terang-terangan. Tombol terbitkan mati selama keadaan ini.
+    */
+    if (this.totalPayment > this.totalBill) {
+      return 'over';
+    }
+    return this.totalPayment >= this.totalBill ? 'paid' : 'underpaid';
   }
 
   pilihTipe(nilai: string): void {

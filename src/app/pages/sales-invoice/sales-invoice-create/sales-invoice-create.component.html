@@ -439,13 +439,16 @@
             [class.pill--hijau]="statusBayar === 'paid'"
             [class.pill--amber]="statusBayar === 'underpaid'"
             [class.pill--garis]="statusBayar === 'unpaid'"
+            [class.pill--merah]="statusBayar === 'over'"
           >
             {{
               (statusBayar === "paid"
                 ? "sales-invoice__create__paid-payment"
                 : statusBayar === "underpaid"
                   ? "sales-invoice__create__underpaid-payment"
-                  : "sales-invoice__create__unpaid-payment"
+                  : statusBayar === "over"
+                    ? "sales-invoice__create__overpaid-payment"
+                    : "sales-invoice__create__unpaid-payment"
               ) | translate
             }}
           </span>
