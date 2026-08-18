@@ -92,6 +92,19 @@ export class PromotionListComponent {
     this.router.navigate(['/Promotion/Create']);
   }
 
+  /*
+    Saringan status. Bawaannya yang masih berjalan — itulah yang dicari
+    sehari-hari; yang sudah selesai tinggal sekali tekan. Menekan kapsul
+    yang sedang menyala melepas saringannya (semua baris tampil), pola
+    yang sama dengan chip di arsip kelebihan bayar.
+  */
+  status: 'active' | 'finished' | null = 'active';
+
+  toggleStatus(nilai: 'active' | 'finished'): void {
+    this.status = this.status === nilai ? null : nilai;
+    this.fetch(1);
+  }
+
   fetch(page: number = this.page) {
     this.isLoading = true;
     this.page = page;
@@ -100,6 +113,7 @@ export class PromotionListComponent {
       .get('promotion', {
         keyword: this.keyword,
         page: this.page,
+        ...(this.status ? { status: this.status } : {}),
       })
       .subscribe({
         next: (data: any) => {
@@ -232,22 +246,4 @@ export class PromotionListComponent {
     return 'pill--garis';
   }
 
-  status(data: any) {
-    if (data.is_delete) {
-      return 'Deleted';
-    }
-
-    if (data.endDate == null) {
-      return 'Active';
-    }
-
-    if (
-      data.endDate != null &&
-      new Date(data.endDate).getTime() < new Date().getTime()
-    ) {
-      return 'Expired';
-    }
-
-    return 'Active';
-  }
 }

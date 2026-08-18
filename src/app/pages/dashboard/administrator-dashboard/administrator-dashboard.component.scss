@@ -204,6 +204,7 @@
 }
 
 .dasbor__grafik-kolom {
+  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -211,6 +212,51 @@
   align-items: center;
   height: 100%;
   min-width: 0;
+}
+
+/*
+  Tooltip grafik — digambar sendiri, bukan atribut title: title bawaan
+  browser baru muncul setelah jeda dan tidak ikut tema. Muncul seketika
+  saat kolomnya disentuh, di atas batangnya.
+*/
+.dasbor__tip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(2px);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 8px 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  white-space: nowrap;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease;
+  z-index: 5;
+
+  strong {
+    font-size: 13px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-accent);
+  }
+
+  span {
+    font-size: 11.5px;
+    color: color-mix(in srgb, var(--color-text) 58%, transparent);
+  }
+}
+
+.dasbor__grafik-kolom:hover .dasbor__tip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 .dasbor__batang {

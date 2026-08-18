@@ -17,6 +17,32 @@
   (add)="onAddButtonPressed()"
   (refresh)="fetch()"
 >
+  <!--
+    Saringan status. Bawaannya "Berjalan"; menekan kapsul yang menyala
+    melepas saringannya sehingga semua promosi tampil.
+  -->
+  <ng-container aksi>
+    <button
+      type="button"
+      class="chip-pintas"
+      [class.chip-pintas--on]="status === 'active'"
+      (click)="toggleStatus('active')"
+    >
+      <i class="ph-fill ph-play-circle" aria-hidden="true"></i>
+      {{ 'promotion__status__running' | translate }}
+    </button>
+
+    <button
+      type="button"
+      class="chip-pintas"
+      [class.chip-pintas--on]="status === 'finished'"
+      (click)="toggleStatus('finished')"
+    >
+      <i class="ph-fill ph-flag-checkered" aria-hidden="true"></i>
+      {{ 'promotion__status__finished' | translate }}
+    </button>
+  </ng-container>
+
   <table class="tabel">
     <thead>
       <tr>

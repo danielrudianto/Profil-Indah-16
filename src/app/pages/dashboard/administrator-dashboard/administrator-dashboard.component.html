@@ -131,15 +131,24 @@
       </div>
 
       <div class="dasbor__grafik" *ngIf="!isLoading">
+        <!--
+          Tooltip digambar sendiri, bukan atribut title bawaan browser:
+          title baru muncul setelah jeda sedetan dan tidak ikut tema.
+          Tooltip pada grafik itu wajib — angka pastinya harus terbaca
+          tanpa membuka laporan.
+        -->
         <div
           class="dasbor__grafik-kolom"
           *ngFor="let m of minggu; index as i; trackBy: lacakHari"
         >
+          <div class="dasbor__tip" role="tooltip">
+            <strong>Rp {{ m.nilai | number: '1.0-0' }}</strong>
+            <span>{{ m.tanggal | date: 'EEEE, d MMMM' }}</span>
+          </div>
           <div
             class="dasbor__batang"
             [class.dasbor__batang--kini]="hariTerakhir(i)"
             [style.height.%]="tinggiBatang(m.nilai)"
-            [title]="(m.tanggal | date: 'EEEE, d MMMM') + ' — Rp ' + (m.nilai | number: '1.0-0')"
           ></div>
         </div>
       </div>
