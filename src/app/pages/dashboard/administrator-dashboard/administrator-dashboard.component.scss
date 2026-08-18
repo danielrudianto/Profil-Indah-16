@@ -264,6 +264,15 @@
   max-width: 56px;
   border-radius: 6px 6px 0 0;
   background: color-mix(in srgb, var(--color-accent) 45%, transparent);
+  transition: background-color 0.12s ease;
+}
+
+/*
+  Batang yang sedang ditunjuk ikut menyala penuh — pasangan tooltipnya:
+  tanpa ini tidak jelas batang mana yang sedang dibaca angkanya.
+*/
+.dasbor__grafik-kolom:hover .dasbor__batang {
+  background: var(--color-accent);
 }
 
 /* Hari ini bicara paling keras. */
