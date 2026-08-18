@@ -179,6 +179,7 @@ html {
   keenam belasnya, panel Material-nya dikenali dari isinya.
 */
 .mat-mdc-dialog-surface:has(> app-delete-confirmation),
+.mat-mdc-dialog-surface:has(> app-submit-confirmation),
 .mat-mdc-dialog-surface:has(> app-sales-invoice-view),
 .mat-mdc-dialog-surface:has(> app-promotion-view),
 .mat-mdc-dialog-surface:has(> app-expense-view),
