@@ -1345,6 +1345,22 @@ export class SalesInvoiceCreateComponent {
       );
     }
 
+    if (
+      this.t.controls.length > 0 &&
+      this.t.controls.some((c) => Number(c.value.quantity) <= 0)
+    ) {
+      galat.push(
+        this.translateService.instant('sales-invoice__create__quantity-zero'),
+      );
+    }
+
+    /* Diskon menelan seluruh nilai faktur — totalnya jadi negatif. */
+    if (this.totalBill < 0) {
+      galat.push(
+        this.translateService.instant('validation.discount.greaterThanTotal'),
+      );
+    }
+
     return galat;
   }
 

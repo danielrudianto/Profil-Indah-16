@@ -206,3 +206,34 @@
     font-size: 12px;
   }
 }
+
+/*
+  Deposit internal: seksi pembayarannya kotak putus-putus — seanatomi slot
+  "surat jalan saja" pada kartu faktur di penerimaan barang.
+*/
+.bayar-kosong {
+  min-height: 96px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px dashed var(--color-divider);
+  border-radius: 12px;
+  padding: 16px 22px;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+
+  i {
+    font-size: 18px;
+    flex: none;
+  }
+
+  > span {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  strong {
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  }
+}
