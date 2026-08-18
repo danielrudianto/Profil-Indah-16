@@ -171,6 +171,19 @@
     </div>
   </div>
 
+  <!-- Sorotan bulan ini — kalimat yang dihitung dari angka, bukan dikarang. -->
+  <section class="kartu sorotan" *ngIf="sorotan.length > 0">
+    <h2 class="kartu__label">{{ 'sorotan__judul' | translate }}</h2>
+    <ul class="sorotan__daftar">
+      <li *ngFor="let baris of sorotan">
+        <span class="sorotan__ikon" aria-hidden="true">
+          <i [class]="'ph ' + baris.ikon"></i>
+        </span>
+        {{ baris.teks }}
+      </li>
+    </ul>
+  </section>
+
   <section class="kartu">
     <div class="kartu__kepala">
       <div>

@@ -168,3 +168,38 @@
 .peringkat-kisi + .kartu {
   margin-top: 16px;
 }
+
+
+/* ---------------------------------------------------------------- */
+/* Sorotan bulan ini                                                 */
+/* ---------------------------------------------------------------- */
+
+.sorotan__daftar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+}
+
+.sorotan__ikon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--color-active);
+  color: var(--color-accent);
+  font-size: 14px;
+}

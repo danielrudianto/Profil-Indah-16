@@ -106,6 +106,17 @@ export class ReportSalesComponent implements OnInit {
   pelanggan: { name: string; value: number }[] = [];
 
 
+  /**
+   * Sorotan bulan ini — kalimat yang DIHITUNG, bukan dikarang: dominasi
+   * merek (plus berapa bulan berturut memimpin), merek yang menguat,
+   * banding/proyeksi total terhadap bulan lalu, dan hari terbaik.
+   * Bahannya dua panggilan kecil ekstra: peringkat merek satu dan dua
+   * bulan sebelumnya.
+   */
+  sorotan: { ikon: string; teks: string }[] = [];
+  private merekLalu: { name: string; value: number }[] | null = null;
+  private merekDuaLalu: { name: string; value: number }[] | null = null;
+
   /** Kartu rincian harian di dasar halaman — terlipat sampai diminta. */
   rincianTerbuka = false;
 
@@ -135,6 +146,8 @@ export class ReportSalesComponent implements OnInit {
           this.nilaiRetur = Number(data.returned_value ?? 0);
           this.jumlahRetur = Number(data.returns ?? 0);
           this.jumlahPelanggan = Number(data.customerCount ?? 0);
+          /* Grafiknya bahan kalimat "hari terbaik" — susun ulang. */
+          this.susunSorotan();
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -153,6 +166,31 @@ export class ReportSalesComponent implements OnInit {
     this.apiService.get('report/sales/brand', periode).subscribe({
       next: (data: any) => {
         this.merek = data.data ?? [];
+        this.susunSorotan();
+      },
+    });
+
+    /* Dua bulan ke belakang untuk sorotan — kueri kecil terindeks. */
+    const mundur = (n: number) => {
+      const m = this.date.value!.clone().subtract(n, 'month');
+      return { month: m.month() + 1, year: m.year() };
+    };
+
+    this.merekLalu = null;
+    this.merekDuaLalu = null;
+    this.sorotan = [];
+
+    this.apiService.get('report/sales/brand', mundur(1)).subscribe({
+      next: (data: any) => {
+        this.merekLalu = data.data ?? [];
+        this.susunSorotan();
+      },
+    });
+
+    this.apiService.get('report/sales/brand', mundur(2)).subscribe({
+      next: (data: any) => {
+        this.merekDuaLalu = data.data ?? [];
+        this.susunSorotan();
       },
     });
 
@@ -282,6 +320,141 @@ export class ReportSalesComponent implements OnInit {
 
   persenMerek(nilai: number): number {
     return this.totalMerek === 0 ? 0 : (Number(nilai) / this.totalMerek) * 100;
+  }
+
+  /** "Rp 10,3 M" / "Rp 702 jt" — angka sorotan tak butuh presisi rupiah. */
+  private rupiahRingkas(nilai: number): string {
+    if (nilai >= 1_000_000_000) {
+      return `Rp ${(nilai / 1_000_000_000).toLocaleString('id-ID', { maximumFractionDigits: 1 })} M`;
+    }
+    if (nilai >= 1_000_000) {
+      return `Rp ${(nilai / 1_000_000).toLocaleString('id-ID', { maximumFractionDigits: 0 })} jt`;
+    }
+    return `Rp ${nilai.toLocaleString('id-ID', { maximumFractionDigits: 0 })}`;
+  }
+
+  private pangsa(daftar: { name: string; value: number }[], nama: string): number | null {
+    const total = daftar.reduce((a, b) => a + Number(b.value), 0);
+    if (total === 0) return null;
+    const baris = daftar.find((x) => x.name === nama);
+    return baris ? (Number(baris.value) / total) * 100 : 0;
+  }
+
+  /*
+    Dipanggil setiap salah satu bahannya tiba; baru menyusun ketika
+    ketiganya lengkap. Setiap kalimat dihitung dari angka — tidak ada
+    yang dikarang, jadi tidak pernah keliru gaya "AI".
+  */
+  private susunSorotan(): void {
+    if (this.merek.length === 0 || this.merekLalu === null || this.merekDuaLalu === null) {
+      return;
+    }
+
+    const t = (kunci: string, param?: object) =>
+      this.translateService.instant(kunci, param);
+    const hasil: { ikon: string; teks: string }[] = [];
+    const angka = (n: number, d = 1) =>
+      n.toLocaleString('id-ID', { maximumFractionDigits: d });
+
+    /* 1. Dominasi + berapa bulan berturut memimpin. */
+    const juara = this.merek[0];
+    const pangsaKini = this.pangsa(this.merek, juara.name)!;
+    const pangsaLalu = this.pangsa(this.merekLalu, juara.name);
+    let dominasi: string;
+    if (pangsaLalu === null) {
+      dominasi = t('sorotan__dominasi', {
+        merek: juara.name,
+        persen: angka(pangsaKini),
+      });
+    } else {
+      const selisih = pangsaKini - pangsaLalu;
+      dominasi =
+        t('sorotan__dominasi', { merek: juara.name, persen: angka(pangsaKini) }) +
+        ' ' +
+        t(selisih >= 0 ? 'sorotan__dominasi__naik' : 'sorotan__dominasi__turun', {
+          poin: angka(Math.abs(selisih)),
+        });
+    }
+    const juaraLalu = this.merekLalu[0]?.name;
+    const juaraDuaLalu = this.merekDuaLalu[0]?.name;
+    if (juaraLalu === juara.name) {
+      dominasi +=
+        ' ' +
+        t('sorotan__streak', { n: juaraDuaLalu === juara.name ? 3 : 2 });
+    }
+    hasil.push({ ikon: 'ph-crown-simple', teks: dominasi });
+
+    /* 2. Merek non-juara dengan kenaikan pangsa terbesar (>= 1 poin). */
+    let menguat: { nama: string; kini: number; lalu: number } | null = null;
+    for (const b of this.merek.slice(0, 8)) {
+      if (b.name === juara.name) continue;
+      const kini = this.pangsa(this.merek, b.name)!;
+      const lalu = this.pangsa(this.merekLalu, b.name);
+      if (lalu === null) continue;
+      const naik = kini - lalu;
+      if (naik >= 1 && (!menguat || naik > menguat.kini - menguat.lalu)) {
+        menguat = { nama: b.name, kini, lalu };
+      }
+    }
+    if (menguat) {
+      hasil.push({
+        ikon: 'ph-trend-up',
+        teks: t('sorotan__menguat', {
+          merek: menguat.nama,
+          persen: angka(menguat.kini),
+          persenLalu: angka(menguat.lalu),
+        }),
+      });
+    }
+
+    /* 3. Banding total: proyeksi bila bulan masih berjalan. */
+    const totalLalu = this.merekLalu.reduce((a, b) => a + Number(b.value), 0);
+    const totalKini = this.merek.reduce((a, b) => a + Number(b.value), 0);
+    const kini = new Date();
+    const bulanBerjalan =
+      this.date.value!.month() === kini.getMonth() &&
+      this.date.value!.year() === kini.getFullYear();
+    if (totalLalu > 0) {
+      if (bulanBerjalan && kini.getDate() < this.hariDalamBulan.length) {
+        const proyeksi = (totalKini / kini.getDate()) * this.hariDalamBulan.length;
+        hasil.push({
+          ikon: 'ph-compass',
+          teks: t('sorotan__proyeksi', {
+            total: this.rupiahRingkas(totalKini),
+            proyeksi: this.rupiahRingkas(proyeksi),
+            totalLalu: this.rupiahRingkas(totalLalu),
+          }),
+        });
+      } else {
+        const persen = ((totalKini - totalLalu) / totalLalu) * 100;
+        hasil.push({
+          ikon: persen >= 0 ? 'ph-trend-up' : 'ph-trend-down',
+          teks: t(persen >= 0 ? 'sorotan__banding__naik' : 'sorotan__banding__turun', {
+            total: this.rupiahRingkas(totalKini),
+            persen: angka(Math.abs(persen)),
+            totalLalu: this.rupiahRingkas(totalLalu),
+          }),
+        });
+      }
+    }
+
+    /* 4. Hari terbaik bulan ini. */
+    if (this.chart.length > 0) {
+      const terbaik = [...this.chart].sort(
+        (a, b) => Number(b.value) - Number(a.value),
+      )[0];
+      if (terbaik && Number(terbaik.value) > 0) {
+        hasil.push({
+          ikon: 'ph-calendar-check',
+          teks: t('sorotan__hari-terbaik', {
+            tanggal: `${terbaik.date} ${this.date.value!.format('MMMM')}`,
+            nilai: this.rupiahRingkas(Number(terbaik.value)),
+          }),
+        });
+      }
+    }
+
+    this.sorotan = hasil;
   }
 
   /** Peringkat lengkap sebuah dimensi, di dialog. */
