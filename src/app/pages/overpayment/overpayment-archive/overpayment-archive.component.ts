@@ -9,6 +9,7 @@ import { ListPageComponent } from 'src/app/components/list-page/list-page.compon
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { OverpaymentArchiveViewComponent } from 'src/app/components/document-view/overpayment-archive-view/overpayment-archive-view.component';
+import { SubmitConfirmationComponent } from 'src/app/components/submit-confirmation/submit-confirmation.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
 /**
@@ -219,28 +220,40 @@ export class OverpaymentArchiveComponent implements OnInit {
    * sesuatu yang ternyata gagal tersimpan adalah kesalahan yang tidak
    * terlihat sampai ada yang menagih.
    */
+  /*
+    Dialog aplikasi sendiri, BUKAN window.confirm: confirm bawaan tidak
+    bertema, dan pada browser tertanam (webview/pane) dialog natifnya bisa
+    disupresi diam-diam — confirm mengembalikan false dan tombolnya tampak
+    tidak melakukan apa-apa. Persis itu yang terjadi.
+  */
   tandaiDikembalikan(item: any) {
-    const konfirmasi = this.translateService.instant(
-      'overpayment__resolve__confirm',
-    );
+    this.dialog
+      .open(SubmitConfirmationComponent, {
+        data: {
+          title: this.translateService.instant('overpayment__resolve__confirm'),
+          document: this.nomor(item),
+        },
+      })
+      .afterClosed()
+      .subscribe((setuju) => {
+        if (!setuju) {
+          return;
+        }
 
-    if (!confirm(konfirmasi)) {
-      return;
-    }
-
-    this.apiService.patch(`overpayment/${item.id}/resolve`, {}).subscribe({
-      next: () => {
-        item.is_resolved = true;
-        this.alertService.showSuccess(
-          this.translateService.instant('overpayment__resolve__success'),
-        );
-        /* Penghitung chip ikut berubah, jadi diambil ulang. */
-        this.fetch();
-      },
-      error: (error) => {
-        this.alertService.showError(error);
-      },
-    });
+        this.apiService.patch(`overpayment/${item.id}/resolve`, {}).subscribe({
+          next: () => {
+            item.is_resolved = true;
+            this.alertService.showSuccess(
+              this.translateService.instant('overpayment__resolve__success'),
+            );
+            /* Penghitung chip ikut berubah, jadi diambil ulang. */
+            this.fetch();
+          },
+          error: (error) => {
+            this.alertService.showError(error);
+          },
+        });
+      });
   }
 
   openViewOverpayment(id: number) {
