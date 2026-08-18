@@ -77,8 +77,13 @@ export class PackageSelectorComponent implements OnInit {
       });
   }
 
+  /*
+    setTimeout: fokus dipasang SETELAH giliran render selesai — dipanggil
+    langsung, kolomnya kadang belum bisa menerima fokus ketika dialognya
+    masih menganimasikan diri, dan yang fokus tetap badan halaman.
+  */
   ngAfterViewInit(): void {
-    this.searchBarInput?.nativeElement.focus();
+    setTimeout(() => this.searchBarInput?.nativeElement.focus());
   }
 
   /** Benar bila paketnya sudah menjadi baris di dokumen pemanggil. */

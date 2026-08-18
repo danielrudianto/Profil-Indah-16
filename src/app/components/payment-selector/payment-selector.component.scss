@@ -1,52 +1,93 @@
-.payment-list__wrapper {
-  max-height: 300px;
+/*
+  Lembar bawah pemilih metode pembayaran — sistem desain Nocturne.
+  Wadah Material-nya direskin di styles.scss (kartu bundar 560px, bersama
+  lembar harga); yang di sini isi lembarnya.
+*/
+.lembar {
+  display: flex;
+  flex-direction: column;
+  font-family: "Montserrat", system-ui, sans-serif;
+  color: var(--color-text);
+}
+
+.lembar__grabber {
+  width: 44px;
+  height: 4px;
+  margin: 0 auto 16px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-text) 18%, transparent);
+}
+
+.lembar__judul {
+  margin: 0 0 14px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.metode {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 320px;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
 }
 
-.payment-list__item-wrapper {
+.metode__baris {
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 0.5rem;
-  cursor: pointer;
-  transition: 0.3s all ease;
-  background-color: white;
   align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  font: inherit;
+  text-align: left;
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+    background: var(--color-hover);
+
+    .metode__panah {
+      color: var(--color-accent);
+      opacity: 1;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
 }
 
-.payment-icon {
-  flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  margin-right: 0.5rem;
-  border-radius: 5px;
-}
-
-.payment-text {
+.metode__teks {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  gap: 2px;
+  min-width: 0;
+
+  strong {
+    font-size: 13.5px;
+    font-weight: 500;
+  }
+
+  small {
+    font-size: 12px;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
-.payment-list__item-wrapper:hover {
-  background-color: #f0f0f0;
-}
-
-.payment-list__item-wrapper .payment-name {
-  font-family: "Poppins", sans-serif;
-  font-size: 0.85rem;
-  color: #041e49;
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-}
-
-.payment-list__item-wrapper .payment-description {
-  font-family: "Poppins", sans-serif;
-  font-size: 0.75rem;
-  color: #416cb1;
-  font-weight: 400;
-  margin-bottom: 0.25rem;
+.metode__panah {
+  flex: none;
+  font-size: 14px;
+  opacity: 0.4;
+  transition: opacity 0.15s ease;
 }

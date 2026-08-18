@@ -104,8 +104,13 @@ export class ProductSelectorComponent implements OnInit {
       });
   }
 
+  /*
+    setTimeout: fokus dipasang SETELAH giliran render selesai — dipanggil
+    langsung, kolomnya kadang belum bisa menerima fokus ketika dialognya
+    masih menganimasikan diri, dan yang fokus tetap badan halaman.
+  */
   ngAfterViewInit(): void {
-    this.searchBarInput?.nativeElement.focus();
+    setTimeout(() => this.fokusKeCari());
   }
 
   /** Seluruh baris yang sudah ada di dokumen pemanggil. */
@@ -150,10 +155,22 @@ export class ProductSelectorComponent implements OnInit {
 
     if (this.data?.onTambah) {
       this.data.onTambah(pilihan);
+      /*
+        Fokus kembali ke kolom cari dengan kata kuncinya tersorot: barang
+        berikutnya langsung bisa diketik menimpa yang lama, tanpa meraih
+        tetikus lagi. Tanpa ini fokus tertinggal di tombol tambah.
+      */
+      this.fokusKeCari();
       return;
     }
 
     this.closeDialog(pilihan);
+  }
+
+  private fokusKeCari(): void {
+    const kolom = this.searchBarInput?.nativeElement;
+    kolom?.focus();
+    kolom?.select();
   }
 
   closeDialog(hasil?: any): void {

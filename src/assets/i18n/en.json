@@ -695,6 +695,7 @@
   "update-product-sales-price__discount": "Discount",
   "update-product-sales-price__save-price": "Save price",
   "update-product-sales-price__save": "Save",
+  "payment-selector__title": "Choose a payment method",
   "price-sheet__net": "Net price",
   "price-sheet__save-master": "Save to product master",
   "price-sheet__save-master__desc": "Becomes the reference price for future transactions",

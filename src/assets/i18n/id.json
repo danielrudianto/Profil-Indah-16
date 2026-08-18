@@ -711,6 +711,7 @@
   "update-product-sales-price__discount": "Diskon",
   "update-product-sales-price__save-price": "Simpan harga",
   "update-product-sales-price__save": "Simpan",
+  "payment-selector__title": "Pilih metode pembayaran",
   "price-sheet__net": "Harga bersih",
   "price-sheet__save-master": "Simpan ke master barang",
   "price-sheet__save-master__desc": "Jadi harga acuan untuk transaksi berikutnya",

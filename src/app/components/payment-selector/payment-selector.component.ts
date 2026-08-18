@@ -3,29 +3,28 @@ import {
   MAT_BOTTOM_SHEET_DATA,
   MatBottomSheetRef,
 } from '@angular/material/bottom-sheet';
-import { AlertService } from 'src/app/services/alert.service';
-import { ApiService } from 'src/app/services/api.service';
-import { NgIf, NgFor } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgFor, NgIf } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
+/**
+ * Lembar bawah pemilih metode pembayaran — sistem desain Nocturne, seturut
+ * lembar harga. Daftarnya dioper pemanggil lewat MAT_BOTTOM_SHEET_DATA,
+ * jadi tidak ada pemuatan di sini; ikon uang SVG yang dulu diulang di tiap
+ * baris dibuang — nama dan keterangannya sudah cukup bercerita.
+ */
 @Component({
-    selector: 'app-payment-selector',
-    templateUrl: './payment-selector.component.html',
-    styleUrls: ['./payment-selector.component.scss'],
-    imports: [NgIf, MatProgressSpinner, NgFor]
+  selector: 'app-payment-selector',
+  templateUrl: './payment-selector.component.html',
+  styleUrls: ['./payment-selector.component.scss'],
+  imports: [NgFor, NgIf, TranslatePipe],
 })
 export class PaymentSelectorComponent {
   constructor(
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
-    private sheet: MatBottomSheetRef<PaymentSelectorComponent>
+    private sheet: MatBottomSheetRef<PaymentSelectorComponent>,
   ) {}
 
-  payments: any[] = [];
-  isLoading: boolean = false;
-
-  ngOnInit(): void {}
-
-  selectPayment(payment: any) {
+  selectPayment(payment: any): void {
     this.sheet.dismiss(payment);
   }
 }

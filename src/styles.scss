@@ -1274,7 +1274,8 @@ label {
 /* ------------------------------------------------------------------ */
 
 .mat-bottom-sheet-container:has(> app-update-product-purchase-price),
-.mat-bottom-sheet-container:has(> app-update-product-sales-price) {
+.mat-bottom-sheet-container:has(> app-update-product-sales-price),
+.mat-bottom-sheet-container:has(> app-payment-selector) {
   background: var(--color-surface);
   color: var(--color-text);
   border-radius: 18px 18px 0 0;
