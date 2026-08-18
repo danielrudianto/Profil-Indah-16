@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
+import { Component, inject, LOCALE_ID, OnInit } from '@angular/core';
+import { formatDate, NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
@@ -80,6 +80,7 @@ export class ReportFinanceComponent implements OnInit {
 
   isLoading = true;
   isDownloading = false;
+  localeId = inject(LOCALE_ID);
 
   /** Bulanan atau setahun penuh — server memakai month=0 untuk tahunan. */
   periode: 'bulan' | 'tahun' = 'bulan';
@@ -89,6 +90,18 @@ export class ReportFinanceComponent implements OnInit {
   beban: any[] = [];
   stockOut: { hpp: number; sales: number; company_id: number | null }[] = [];
   takTeralokasi = 0;
+
+  /** 12 bulan berakhir di bulan terpilih — bahan grafik dan sorotan. */
+  tren: {
+    year: number;
+    month: number;
+    sales: number;
+    hpp: number;
+    expense: number;
+  }[] = [];
+  sorotan: { ikon: string; teks: string; warna?: 'merah' }[] = [];
+  /** Sorotan butuh angka bulan ini DAN tren; keduanya tiba terpisah. */
+  private utamaSiap = false;
 
   ngOnInit(): void {
     this.ambilData();
@@ -102,6 +115,8 @@ export class ReportFinanceComponent implements OnInit {
 
   ambilData(): void {
     this.isLoading = true;
+    this.utamaSiap = false;
+    this.sorotan = [];
     this.apiService
       .post('report/profit-loss', {
         month: this.periode === 'bulan' ? this.date.value!.month() + 1 : 0,
@@ -118,6 +133,8 @@ export class ReportFinanceComponent implements OnInit {
             company_id: x.company_id,
           }));
           this.takTeralokasi = Number(data.stockOut?.unallocated ?? 0);
+          this.utamaSiap = true;
+          this.susunSorotan();
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -125,6 +142,33 @@ export class ReportFinanceComponent implements OnInit {
       })
       .add(() => {
         this.isLoading = false;
+      });
+
+    this.ambilTren();
+  }
+
+  /** Tren 12 bulan; tampilan tahunan memakai jendela Januari–Desember. */
+  private ambilTren(): void {
+    this.tren = [];
+    this.apiService
+      .get('report/profit-loss/trend', {
+        month: this.periode === 'bulan' ? this.date.value!.month() + 1 : 12,
+        year: this.date.value!.year(),
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.tren = (data.data ?? []).map((x: any) => ({
+            year: Number(x.year),
+            month: Number(x.month),
+            sales: Number(x.sales ?? 0),
+            hpp: Number(x.hpp ?? 0),
+            expense: Number(x.expense ?? 0),
+          }));
+          this.susunSorotan();
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
       });
   }
 
@@ -204,6 +248,193 @@ export class ReportFinanceComponent implements OnInit {
 
   get totalLabaBersih(): number {
     return this.totalLabaKotor - this.totalBeban;
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Grafik tren 12 bulan                                              */
+  /* ---------------------------------------------------------------- */
+
+  labaBaris(b: { sales: number; hpp: number; expense: number }): number {
+    return b.sales - b.hpp - b.expense;
+  }
+
+  private get maksPendapatan(): number {
+    return Math.max(...this.tren.map((x) => x.sales), 1);
+  }
+
+  private get maksLaba(): number {
+    return Math.max(...this.tren.map((x) => this.labaBaris(x)), 1);
+  }
+
+  tinggiPendapatan(b: (typeof this.tren)[number]): number {
+    return (b.sales / this.maksPendapatan) * 100;
+  }
+
+  /** Bulan merugi digambar 0; angka minusnya tetap jujur di tooltip. */
+  tinggiLaba(b: (typeof this.tren)[number]): number {
+    return Math.max(0, (this.labaBaris(b) / this.maksLaba) * 100);
+  }
+
+  labelBulan(b: (typeof this.tren)[number]): string {
+    return formatDate(new Date(b.year, b.month - 1, 1), 'MMM', this.localeId);
+  }
+
+  bulanPenuh(b: (typeof this.tren)[number]): string {
+    return formatDate(new Date(b.year, b.month - 1, 1), 'MMMM y', this.localeId);
+  }
+
+  get rentangTren(): string {
+    if (this.tren.length === 0) {
+      return '';
+    }
+    const ujung = (b: (typeof this.tren)[number]) =>
+      formatDate(new Date(b.year, b.month - 1, 1), 'MMM y', this.localeId);
+    return `${ujung(this.tren[0])} – ${ujung(this.tren[this.tren.length - 1])}`;
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Sorotan — kalimat yang dihitung dari angka, bukan dikarang        */
+  /* ---------------------------------------------------------------- */
+
+  /** "Rp 10,3 M" / "Rp 702 jt" — angka sorotan tak butuh presisi rupiah. */
+  private rupiahRingkas(nilai: number): string {
+    if (nilai >= 1_000_000_000) {
+      return `Rp ${(nilai / 1_000_000_000).toLocaleString('id-ID', { maximumFractionDigits: 1 })} M`;
+    }
+    if (nilai >= 1_000_000) {
+      return `Rp ${(nilai / 1_000_000).toLocaleString('id-ID', { maximumFractionDigits: 0 })} jt`;
+    }
+    return `Rp ${nilai.toLocaleString('id-ID', { maximumFractionDigits: 0 })}`;
+  }
+
+  /** "Naik 0 poin" itu janggal; selisih di bawah 0,1 poin disebut stabil. */
+  private kalimatSelisih(selisih: number): string {
+    if (Math.abs(selisih) < 0.1) {
+      return this.translateService.instant('sorotan-keu__stabil');
+    }
+    return this.translateService.instant(
+      selisih >= 0 ? 'sorotan__dominasi__naik' : 'sorotan__dominasi__turun',
+      {
+        poin: Math.abs(selisih).toLocaleString('id-ID', {
+          maximumFractionDigits: 1,
+        }),
+      },
+    );
+  }
+
+  /*
+    Dipanggil setiap salah satu bahannya tiba; baru menyusun ketika angka
+    bulan ini dan trennya sama-sama lengkap. Hanya pada tampilan bulanan —
+    seluruh kalimatnya membandingkan bulan dengan bulan.
+  */
+  private susunSorotan(): void {
+    if (this.periode !== 'bulan' || !this.utamaSiap || this.tren.length < 2) {
+      return;
+    }
+
+    const t = (kunci: string, param?: object) =>
+      this.translateService.instant(kunci, param);
+    const hasil: { ikon: string; teks: string; warna?: 'merah' }[] = [];
+    const angka = (n: number, d = 1) =>
+      n.toLocaleString('id-ID', { maximumFractionDigits: d });
+
+    const kini = this.tren[this.tren.length - 1];
+    const lalu = this.tren[this.tren.length - 2];
+
+    /*
+      1. Perusahaan penyumbang laba bersih terbesar. Pangsanya hanya
+      diklaim ketika totalnya utuh: tidak ada perusahaan yang merugi dan
+      tidak ada penjualan tanpa alokasi HPP — di luar itu persentasenya
+      menyesatkan, jadi cukup nama dan nilainya.
+    */
+    const perusahaanLaba = this.perusahaan
+      .map((p: any) => ({ nama: p.name, nilai: this.labaBersih(p.id) }))
+      .sort((a, b) => b.nilai - a.nilai);
+    if (perusahaanLaba.length > 1 && perusahaanLaba[0].nilai > 0) {
+      const juara = perusahaanLaba[0];
+      const pangsaUtuh =
+        this.totalLabaBersih > 0 &&
+        !this.adaBarisTanpaAlokasi &&
+        perusahaanLaba.every((x) => x.nilai >= 0);
+      hasil.push({
+        ikon: 'ph-buildings',
+        teks: pangsaUtuh
+          ? t('sorotan-keu__perusahaan-pangsa', {
+              nama: juara.nama,
+              nilai: this.rupiahRingkas(juara.nilai),
+              persen: angka((juara.nilai / this.totalLabaBersih) * 100),
+            })
+          : t('sorotan-keu__perusahaan', {
+              nama: juara.nama,
+              nilai: this.rupiahRingkas(juara.nilai),
+            }),
+      });
+    }
+
+    /* 2. Margin kotor + arah geraknya dibanding bulan lalu. */
+    if (kini.sales > 0) {
+      const marginKini = ((kini.sales - kini.hpp) / kini.sales) * 100;
+      let teks = t('sorotan-keu__margin', { persen: angka(marginKini) });
+      if (lalu.sales > 0) {
+        const marginLalu = ((lalu.sales - lalu.hpp) / lalu.sales) * 100;
+        teks += ' ' + this.kalimatSelisih(marginKini - marginLalu);
+      }
+      hasil.push({ ikon: 'ph-percent', teks: teks });
+    }
+
+    /* 3. Seberapa besar beban menggerogoti laba kotor. */
+    if (this.totalBeban > 0 && this.totalLabaKotor > 0) {
+      hasil.push({
+        ikon: 'ph-receipt',
+        teks: t('sorotan-keu__beban', {
+          nilai: this.rupiahRingkas(this.totalBeban),
+          persen: angka((this.totalBeban / this.totalLabaKotor) * 100),
+        }),
+      });
+    }
+
+    /* 4. Banding laba bersih: proyeksi bila bulan masih berjalan. */
+    const labaKini = this.labaBaris(kini);
+    const labaLalu = this.labaBaris(lalu);
+    const sekarang = new Date();
+    const bulanBerjalan =
+      this.date.value!.month() === sekarang.getMonth() &&
+      this.date.value!.year() === sekarang.getFullYear();
+    const hariDalamBulan = this.date.value!.daysInMonth();
+    if (labaLalu > 0) {
+      /* Merah bila arahnya menurun, aksen bila meningkat — sekali lirik. */
+      if (bulanBerjalan && sekarang.getDate() < hariDalamBulan) {
+        const proyeksi = (labaKini / sekarang.getDate()) * hariDalamBulan;
+        const naik = proyeksi >= labaLalu;
+        hasil.push({
+          ikon: naik ? 'ph-trend-up' : 'ph-trend-down',
+          warna: naik ? undefined : 'merah',
+          teks: t('sorotan-keu__proyeksi', {
+            total: this.rupiahRingkas(labaKini),
+            proyeksi: this.rupiahRingkas(proyeksi),
+            totalLalu: this.rupiahRingkas(labaLalu),
+          }),
+        });
+      } else {
+        const persen = ((labaKini - labaLalu) / labaLalu) * 100;
+        hasil.push({
+          ikon: persen >= 0 ? 'ph-trend-up' : 'ph-trend-down',
+          warna: persen >= 0 ? undefined : 'merah',
+          teks: t(
+            persen >= 0
+              ? 'sorotan-keu__banding__naik'
+              : 'sorotan-keu__banding__turun',
+            {
+              total: this.rupiahRingkas(labaKini),
+              persen: angka(Math.abs(persen)),
+              totalLalu: this.rupiahRingkas(labaLalu),
+            },
+          ),
+        });
+      }
+    }
+
+    this.sorotan = hasil;
   }
 
   /* ---------------------------------------------------------------- */

@@ -95,6 +95,87 @@
     </div>
   </div>
 
+  <!-- Sorotan bulan ini — kalimat yang dihitung dari angka, bukan dikarang. -->
+  <section class="kartu sorotan" *ngIf="sorotan.length > 0">
+    <h2 class="kartu__label">{{ 'sorotan__judul' | translate }}</h2>
+    <ul class="sorotan__daftar">
+      <li *ngFor="let baris of sorotan">
+        <span
+          class="sorotan__ikon"
+          [class.sorotan__ikon--merah]="baris.warna === 'merah'"
+          aria-hidden="true"
+        >
+          <i [class]="'ph ' + baris.ikon"></i>
+        </span>
+        {{ baris.teks }}
+      </li>
+    </ul>
+  </section>
+
+  <!-- Tren 12 bulan — dua jalur: pendapatan di atas, laba bersih di bawah. -->
+  <section class="kartu" *ngIf="tren.length > 0">
+    <div class="kartu__kepala">
+      <div>
+        <h2 class="kartu__label">{{ 'report-finance__chart' | translate }}</h2>
+        <p class="grafik__sub">{{ 'report-finance__chart__sub' | translate }}</p>
+      </div>
+    </div>
+
+    <!--
+      Tooltip digambar sendiri dan batangnya ikut menyala saat ditunjuk —
+      title bawaan browser lamban dan tak bertema, padahal tooltip pada
+      grafik itu wajib.
+    -->
+    <div class="grafik grafik--nilai">
+      <div class="grafik__hari" *ngFor="let b of tren">
+        <div class="grafik-tip" role="tooltip">
+          <strong>Rp {{ labaBaris(b) | number: '1.0-0' }}</strong>
+          <span>{{ 'report-finance__hero__income' | translate }} Rp {{ b.sales | number: '1.0-0' }}</span>
+          <span>{{ 'report-finance__hero__cogs' | translate }} Rp {{ b.hpp | number: '1.0-0' }}</span>
+          <span>{{ 'report-finance__hero__expenses' | translate }} Rp {{ b.expense | number: '1.0-0' }}</span>
+          <small>{{ bulanPenuh(b) }}</small>
+        </div>
+        <span
+          class="grafik__nilai"
+          [style.height.%]="tinggiPendapatan(b)"
+          aria-hidden="true"
+        ></span>
+      </div>
+    </div>
+
+    <div class="grafik grafik--transaksi">
+      <div class="grafik__hari" *ngFor="let b of tren">
+        <div class="grafik-tip" role="tooltip">
+          <strong>Rp {{ labaBaris(b) | number: '1.0-0' }}</strong>
+          <span>{{ 'report-finance__hero__income' | translate }} Rp {{ b.sales | number: '1.0-0' }}</span>
+          <span>{{ 'report-finance__hero__cogs' | translate }} Rp {{ b.hpp | number: '1.0-0' }}</span>
+          <span>{{ 'report-finance__hero__expenses' | translate }} Rp {{ b.expense | number: '1.0-0' }}</span>
+          <small>{{ bulanPenuh(b) }}</small>
+        </div>
+        <span
+          class="grafik__transaksi"
+          [style.height.%]="tinggiLaba(b)"
+          aria-hidden="true"
+        ></span>
+        <span class="grafik__tanggal">{{ labelBulan(b) }}</span>
+      </div>
+    </div>
+
+    <div class="grafik__kaki">
+      <div class="grafik__legenda">
+        <span>
+          <i class="grafik__legenda--nilai" aria-hidden="true"></i>
+          {{ 'report-finance__hero__income' | translate }}
+        </span>
+        <span>
+          <i class="grafik__legenda--transaksi" aria-hidden="true"></i>
+          {{ 'report-finance__hero__net' | translate }}
+        </span>
+      </div>
+      <span class="grafik__rentang">{{ rentangTren }}</span>
+    </div>
+  </section>
+
   <section class="kartu">
     <h2 class="kartu__label">{{ 'report-finance__by-company' | translate }}</h2>
 
