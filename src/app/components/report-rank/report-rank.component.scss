@@ -7,7 +7,7 @@
 
 .peringkat__baris {
   display: grid;
-  grid-template-columns: minmax(90px, 140px) minmax(0, 1fr) 46px 110px;
+  grid-template-columns: 30px minmax(90px, 140px) minmax(0, 1fr) 46px 110px;
   align-items: center;
   gap: 10px;
   font-size: 13px;

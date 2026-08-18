@@ -25,6 +25,10 @@ export class ReportRankComponent {
     private dialogRef: MatDialogRef<ReportRankComponent>,
   ) {}
 
+  inisial(nama: string): string {
+    return (nama ?? '?').trim().charAt(0).toUpperCase() || '?';
+  }
+
   get total(): number {
     return this.data.baris.reduce((a, b) => a + Number(b.value), 0);
   }

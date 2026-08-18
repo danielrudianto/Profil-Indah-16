@@ -14,6 +14,7 @@
       *ngFor="let b of data.baris"
       [title]="b.name + ' — ' + (persen(b.value) | number: '1.0-1') + '% · Rp ' + (b.value | number: '1.0-0')"
     >
+      <span class="avatar-inisial" aria-hidden="true">{{ inisial(b.name) }}</span>
       <span class="peringkat__nama">{{ b.name }}</span>
       <span
         class="peringkat__bar"

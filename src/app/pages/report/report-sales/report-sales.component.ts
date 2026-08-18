@@ -104,12 +104,6 @@ export class ReportSalesComponent implements OnInit {
   tipe: { name: string; value: number }[] = [];
   pelanggan: { name: string; value: number }[] = [];
 
-  /*
-    Tiga kartu peringkat memperlihatkan 5 teratas; sisanya terlipat di
-    balik kabut dan tombol buka — daftar merek bisa puluhan baris dan
-    menelan halaman bila digambar penuh.
-  */
-  bukaSemua = { merek: false, tipe: false, pelanggan: false };
 
   /** Kartu rincian harian di dasar halaman — terlipat sampai diminta. */
   rincianTerbuka = false;
@@ -270,6 +264,10 @@ export class ReportSalesComponent implements OnInit {
     return Math.max((Number(nilai) / this.merekTerbesar) * 100, 2);
   }
 
+  inisial(nama: string): string {
+    return (nama ?? '?').trim().charAt(0).toUpperCase() || '?';
+  }
+
   /* Versi generik untuk ketiga kartu peringkat. */
   lebarDi(daftar: { value: number }[], nilai: number): number {
     const terbesar = Math.max(...daftar.map((b) => Number(b.value)), 1);
@@ -286,11 +284,12 @@ export class ReportSalesComponent implements OnInit {
   }
 
   /** Peringkat lengkap sebuah dimensi, di dialog. */
-  rincian(dimensi: 'brand' | 'type' | 'sales'): void {
+  rincian(dimensi: 'brand' | 'type' | 'sales' | 'customer'): void {
     const judul = {
       brand: 'report-sales__rank__brand',
       type: 'report-sales__rank__type',
       sales: 'report-sales__rank__sales',
+      customer: 'report-sales__by-customer',
     }[dimensi];
 
     this.apiService
@@ -304,8 +303,15 @@ export class ReportSalesComponent implements OnInit {
             data: {
               judul: judul,
               baris: (data.data ?? []).map((x: any) => ({
-                /* Dimensi sales memakai kolom `sales`, bukan `name`. */
-                name: x.name ?? x.sales ?? 'INTERNAL',
+                /*
+                  Dimensi sales memakai kolom `sales`; pelanggan null
+                  berarti faktur retail.
+                */
+                name:
+                  x.name ??
+                  (dimensi === 'customer'
+                    ? this.translateService.instant('sales-invoice__retail')
+                    : (x.sales ?? 'INTERNAL')),
                 value: Number(x.value),
               })),
             },

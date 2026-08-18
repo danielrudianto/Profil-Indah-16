@@ -248,9 +248,10 @@
       <div
         class="peringkat"
         *ngIf="merek.length > 0"
-        [class.peringkat--ringkas]="!bukaSemua.merek && merek.length > 5"
+        [class.peringkat--ringkas]="merek.length > 5"
       >
         <div class="peringkat__baris" *ngFor="let b of merek">
+          <span class="avatar-inisial" aria-hidden="true">{{ inisial(b.name) }}</span>
           <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
           <span class="peringkat__jalur" aria-hidden="true">
             <span
@@ -263,28 +264,18 @@
           </span>
           <span class="peringkat__nilai">Rp {{ b.value | number: '1.0-0' }}</span>
         </div>
-        <div
-          class="peringkat__kabut"
-          *ngIf="!bukaSemua.merek && merek.length > 5"
-        ></div>
+        <div class="peringkat__kabut" *ngIf="merek.length > 5"></div>
       </div>
 
+      <!-- Daftar lengkapnya di dialog rincian, bukan diulur di tempat. -->
       <button
         type="button"
         class="peringkat__toggle"
         *ngIf="merek.length > 5"
-        (click)="bukaSemua.merek = !bukaSemua.merek"
+        (click)="rincian('brand')"
       >
-        {{
-          (bukaSemua.merek ? 'peringkat__ringkas' : 'peringkat__semua')
-            | translate: { n: merek.length }
-        }}
-        <i
-          class="ph"
-          [class.ph-caret-down]="!bukaSemua.merek"
-          [class.ph-caret-up]="bukaSemua.merek"
-          aria-hidden="true"
-        ></i>
+        {{ 'peringkat__semua' | translate: { n: merek.length } }}
+        <i class="ph ph-arrow-right" aria-hidden="true"></i>
       </button>
 
       <p class="laporan__kosong" *ngIf="merek.length === 0">
@@ -300,9 +291,10 @@
       <div
         class="peringkat"
         *ngIf="tipe.length > 0"
-        [class.peringkat--ringkas]="!bukaSemua.tipe && tipe.length > 5"
+        [class.peringkat--ringkas]="tipe.length > 5"
       >
         <div class="peringkat__baris" *ngFor="let b of tipe">
+          <span class="avatar-inisial" aria-hidden="true">{{ inisial(b.name) }}</span>
           <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
           <span class="peringkat__jalur" aria-hidden="true">
             <span
@@ -315,28 +307,18 @@
           </span>
           <span class="peringkat__nilai">Rp {{ b.value | number: '1.0-0' }}</span>
         </div>
-        <div
-          class="peringkat__kabut"
-          *ngIf="!bukaSemua.tipe && tipe.length > 5"
-        ></div>
+        <div class="peringkat__kabut" *ngIf="tipe.length > 5"></div>
       </div>
 
+      <!-- Daftar lengkapnya di dialog rincian, bukan diulur di tempat. -->
       <button
         type="button"
         class="peringkat__toggle"
         *ngIf="tipe.length > 5"
-        (click)="bukaSemua.tipe = !bukaSemua.tipe"
+        (click)="rincian('type')"
       >
-        {{
-          (bukaSemua.tipe ? 'peringkat__ringkas' : 'peringkat__semua')
-            | translate: { n: tipe.length }
-        }}
-        <i
-          class="ph"
-          [class.ph-caret-down]="!bukaSemua.tipe"
-          [class.ph-caret-up]="bukaSemua.tipe"
-          aria-hidden="true"
-        ></i>
+        {{ 'peringkat__semua' | translate: { n: tipe.length } }}
+        <i class="ph ph-arrow-right" aria-hidden="true"></i>
       </button>
 
       <p class="laporan__kosong" *ngIf="tipe.length === 0">
@@ -354,9 +336,10 @@
       <div
         class="peringkat"
         *ngIf="pelanggan.length > 0"
-        [class.peringkat--ringkas]="!bukaSemua.pelanggan && pelanggan.length > 5"
+        [class.peringkat--ringkas]="pelanggan.length > 5"
       >
         <div class="peringkat__baris" *ngFor="let b of pelanggan">
+          <span class="avatar-inisial" aria-hidden="true">{{ inisial(b.name) }}</span>
           <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
           <span class="peringkat__jalur" aria-hidden="true">
             <span
@@ -369,28 +352,18 @@
           </span>
           <span class="peringkat__nilai">Rp {{ b.value | number: '1.0-0' }}</span>
         </div>
-        <div
-          class="peringkat__kabut"
-          *ngIf="!bukaSemua.pelanggan && pelanggan.length > 5"
-        ></div>
+        <div class="peringkat__kabut" *ngIf="pelanggan.length > 5"></div>
       </div>
 
+      <!-- Daftar lengkapnya di dialog rincian, bukan diulur di tempat. -->
       <button
         type="button"
         class="peringkat__toggle"
         *ngIf="pelanggan.length > 5"
-        (click)="bukaSemua.pelanggan = !bukaSemua.pelanggan"
+        (click)="rincian('customer')"
       >
-        {{
-          (bukaSemua.pelanggan ? 'peringkat__ringkas' : 'peringkat__semua')
-            | translate: { n: pelanggan.length }
-        }}
-        <i
-          class="ph"
-          [class.ph-caret-down]="!bukaSemua.pelanggan"
-          [class.ph-caret-up]="bukaSemua.pelanggan"
-          aria-hidden="true"
-        ></i>
+        {{ 'peringkat__semua' | translate: { n: pelanggan.length } }}
+        <i class="ph ph-arrow-right" aria-hidden="true"></i>
       </button>
 
       <p class="laporan__kosong" *ngIf="pelanggan.length === 0">

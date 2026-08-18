@@ -77,6 +77,24 @@
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 
+  /*
+    Aturan global .kartu + .kartu menambah margin-top 16px pada kartu
+    kedua — di dalam kisi jadinya kartu kanan turun sendiri dan kedua
+    kepala kartunya tidak sejajar. Jarak antar kartu di sini urusan gap.
+  */
+  > .kartu + .kartu {
+    margin-top: 0;
+  }
+
+  /*
+    Baris peringkat di halaman ini beravatar inisial — kolom pertama
+    ekstra dan pitch barisnya lebih longgar supaya enak dibaca.
+  */
+  .peringkat__baris {
+    grid-template-columns: 30px minmax(100px, 180px) minmax(0, 1fr) 48px 130px;
+  }
+
+
   @media (max-width: 1100px) {
     grid-template-columns: 1fr;
   }
@@ -87,12 +105,12 @@
 }
 
 /*
-  Terlipat: kira-kira lima baris pertama; sisanya menghilang di balik
-  kabut yang melarut ke warna kartunya.
+  Lima baris pertama; sisanya menghilang di balik kabut — daftar
+  lengkapnya dibuka lewat dialog rincian, bukan diulur di tempat.
 */
 .peringkat--ringkas {
   position: relative;
-  max-height: 158px;
+  max-height: 192px;
   overflow: hidden;
 }
 
