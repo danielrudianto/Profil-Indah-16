@@ -188,8 +188,3 @@
 :host-context([data-theme="dark"]) .keadaan__kartu--on {
   background: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
 }
-
-/* Pill status pembayaran hasil turunan — bukan kendali, cuma kabar. */
-.bayar__status {
-  margin: 0 0 12px;
-}

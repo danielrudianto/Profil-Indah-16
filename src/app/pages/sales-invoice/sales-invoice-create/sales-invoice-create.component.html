@@ -423,18 +423,18 @@
       <!-- Pembayaran                                                  -->
       <!-- ---------------------------------------------------------- -->
       <section class="kartu" [formGroup]="paymentsFormGroup">
-        <h2 class="kartu__label">
-          {{ "sales-invoice__create__payment" | translate }}
-        </h2>
-
         <!--
-          Statusnya DITURUNKAN dari isi pembayaran, bukan dipilih: dulu tiga
-          kartu lunas/dicicil/tanpa-pembayaran wajib diklik cocok dengan
-          isiannya — pekerjaan ganda yang validatornya sendiri menolak bila
-          tidak sinkron.
+          Status di kepala kartu DITURUNKAN dari isi pembayaran, bukan
+          dipilih: dulu tiga kartu lunas/dicicil/tanpa-pembayaran wajib
+          diklik cocok dengan isiannya — pekerjaan ganda yang validatornya
+          sendiri menolak bila tidak sinkron.
         -->
-        <p class="bayar__status" *ngIf="!depositInternal">
+        <div class="kartu__kepala">
+          <h2 class="kartu__label">
+            {{ "sales-invoice__create__payment" | translate }}
+          </h2>
           <span
+            *ngIf="!depositInternal"
             class="pill"
             [class.pill--hijau]="statusBayar === 'paid'"
             [class.pill--amber]="statusBayar === 'underpaid'"
@@ -449,7 +449,7 @@
               ) | translate
             }}
           </span>
-        </p>
+        </div>
 
         <!-- Deposit internal tidak membawa pembayaran sama sekali. -->
         <p class="petunjuk" *ngIf="depositInternal">
@@ -457,35 +457,73 @@
           {{ "sales-invoice__create__payment__internal-note" | translate }}
         </p>
 
+        <!-- Meja pembayaran seanatomi meja item — kosong pun tetap meja. -->
         <ng-container *ngIf="!depositInternal">
-          <div class="bayar" *ngFor="let bayar of p.controls; index as i">
-            <div class="bayar__nama">
-              <strong>{{ namaBayar(i) }}</strong>
-              <span>{{ deskripsiBayar(i) }}</span>
-            </div>
+          <div class="gulir">
+            <table class="tabel">
+              <thead>
+                <tr>
+                  <th>
+                    {{
+                      "sales-invoice__create__item__payment-method" | translate
+                    }}
+                  </th>
+                  <th class="tabel__nilai-kepala">
+                    {{
+                      "sales-invoice__create__item__payment-method__amount"
+                        | translate
+                    }}
+                  </th>
+                  <th class="tabel__aksi-kepala">
+                    <span class="sr-only">
+                      {{ "general__actions" | translate }}
+                    </span>
+                  </th>
+                </tr>
+              </thead>
 
-            <div class="bayar__nilai" [formGroup]="getFormGroupAtPayment(i)">
-              <mat-form-field appearance="outline" class="w-100"
-                ><input
-                  matInput
-                  type="text"
-                  mask="separator"
-                  thousandSeparator="."
-                  formControlName="value"
-                  autocomplete="off"
-                  placeholder="0"
-              /></mat-form-field>
-            </div>
+              <tbody *ngIf="p.controls.length > 0">
+                <tr *ngFor="let bayar of p.controls; index as i">
+                  <td>
+                    <span class="barang__ref">{{ namaBayar(i) }}</span>
+                    <span class="barang__desc">{{ deskripsiBayar(i) }}</span>
+                  </td>
+                  <td [formGroup]="getFormGroupAtPayment(i)">
+                    <div class="jumlah">
+                      <mat-form-field appearance="outline" class="w-sempit"
+                        ><input
+                          matInput
+                          type="text"
+                          mask="separator"
+                          thousandSeparator="."
+                          formControlName="value"
+                          autocomplete="off"
+                          placeholder="0"
+                      /></mat-form-field>
+                    </div>
+                  </td>
+                  <td class="tabel__aksi">
+                    <button
+                      type="button"
+                      class="tabel__aksi-btn"
+                      (click)="deletePayment(i)"
+                      [title]="'general__delete' | translate"
+                      [attr.aria-label]="'general__delete' | translate"
+                    >
+                      <i class="ph ph-x" aria-hidden="true"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
 
-            <button
-              type="button"
-              class="tabel__aksi-btn"
-              (click)="deletePayment(i)"
-              [title]="'general__delete' | translate"
-              [attr.aria-label]="'general__delete' | translate"
-            >
-              <i class="ph ph-x" aria-hidden="true"></i>
-            </button>
+              <tbody *ngIf="p.controls.length === 0">
+                <tr>
+                  <td colspan="3" class="tabel__pesan">
+                    {{ "sales-invoice__create__no-payment" | translate }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           <button type="button" class="tambah" (click)="openPaymentSelector()">

@@ -2013,6 +2013,7 @@
   "sales-invoice__create__price-note": "Harga dan diskon yang tertera akan diperhitungkan ulang pada saat faktur diterbitkan.",
   "sales-invoice__create__line-total": "Total",
   "sales-invoice__create__no-item": "Belum ada item. Tambahkan lewat tombol di atas.",
+  "sales-invoice__create__no-payment": "Belum ada pembayaran — faktur akan terbit tanpa pembayaran.",
   "sales-invoice__create__duplicate": "Barang yang sama ada di beberapa baris — sengaja? Misalnya bonus atau harga berbeda.",
   "sales-invoice__create__charges": "Biaya lain",
   "sales-invoice__create__doc-discount": "Diskon dokumen",

@@ -2007,6 +2007,7 @@
   "sales-invoice__create__price-note": "The prices and discounts shown will be recalculated when the invoice is issued.",
   "sales-invoice__create__line-total": "Total",
   "sales-invoice__create__no-item": "No items yet. Add one with the button above.",
+  "sales-invoice__create__no-payment": "No payments yet — the invoice will be issued unpaid.",
   "sales-invoice__create__duplicate": "The same item appears on several rows — intended? A bonus or a different price, perhaps.",
   "sales-invoice__create__charges": "Other charges",
   "sales-invoice__create__doc-discount": "Document discount",
