@@ -17,6 +17,7 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { AvatarComponent } from 'src/app/components/avatar/avatar.component';
 import { CircleAvatarComponent } from 'src/app/components/circle-avatar/circle-avatar.component';
 import { SetAvatarComponent } from 'src/app/pages/set-avatar/set-avatar.component';
+import { ResetPasswordDialogComponent } from 'src/app/pages/profile-overview/reset-password-dialog/reset-password-dialog.component';
 
 /**
  * Halaman pengaturan tampilan.
@@ -58,6 +59,14 @@ export class SettingsComponent implements OnInit {
    * Sesudah ditutup, pratinjaunya dibaca ulang supaya perubahannya langsung
    * terlihat tanpa perlu memuat ulang halaman.
    */
+  /** Ganti sandi memakai dialog yang sama dengan halaman profil. */
+  gantiSandi(): void {
+    this.dynamicComponentService.createDynamicComponent(
+      ResetPasswordDialogComponent,
+      {},
+    );
+  }
+
   aturAvatar(): void {
     this.dynamicComponentService
       .createDynamicComponent(SetAvatarComponent, {})

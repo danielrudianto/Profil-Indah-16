@@ -51,7 +51,12 @@ export class ProfileOverviewComponent {
   }
 
   resetPassword() {
-    this.dialog.open(ResetPasswordDialogComponent);
+    /* Dialognya kini bergaya Nocturne dan dibuka lewat jalur yang sama
+       dengan pengatur avatar. */
+    this.dynamicComponentService.createDynamicComponent(
+      ResetPasswordDialogComponent,
+      {},
+    );
   }
 
   openAvatarCustomization() {

@@ -1491,7 +1491,9 @@
       "foundTypeBoolean": "Tipe kasus penyesuaian ditemukan harus berupa boolean."
     },
     "password": {
-      "required": "Password tidak boleh kosong."
+      "required": "Password tidak boleh kosong.",
+      "currentRequired": "Kata sandi saat ini tidak boleh kosong.",
+      "currentWrong": "Kata sandi saat ini salah."
     },
     "userRole": {
       "required": "Role pengguna tidak boleh kosong."
@@ -2584,5 +2586,18 @@
   "report-dor__by-sales": "Per sales",
   "report-dor__hint": "DOR adalah selisih akibat salah memberi harga. Nilainya dicatat atas nama sales yang memberikan harga dan dipotong dari komisinya.",
   "report-dor__deduction": "Potongan komisi",
-  "report-dor__empty": "Tidak ada DOR pada rentang tanggal ini."
+  "report-dor__empty": "Tidak ada DOR pada rentang tanggal ini.",
+  "settings__sandi": "Kata sandi",
+  "settings__sandi_note": "Ganti kata sandi akunmu. Sandi lama wajib dibuktikan dulu.",
+  "settings__sandi_edit": "Ganti kata sandi",
+  "ganti-sandi__title": "Ganti kata sandi",
+  "ganti-sandi__lede": "Buktikan sandi lamamu, lalu tentukan yang baru. Setelah berhasil kamu akan keluar dan masuk lagi dengan sandi baru.",
+  "ganti-sandi__current": "Kata sandi saat ini",
+  "ganti-sandi__new": "Kata sandi baru",
+  "ganti-sandi__confirm": "Ulangi kata sandi baru",
+  "ganti-sandi__mismatch": "Ulangan kata sandi belum sama.",
+  "ganti-sandi__show": "Perlihatkan kata sandi",
+  "ganti-sandi__hide": "Sembunyikan kata sandi",
+  "ganti-sandi__submit": "Simpan sandi baru",
+  "ganti-sandi__success": "Kata sandi berhasil diganti. Silakan masuk lagi."
 }

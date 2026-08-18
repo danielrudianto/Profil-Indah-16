@@ -1499,7 +1499,9 @@
       "required": "Username is required"
     },
     "password": {
-      "required": "Password is required"
+      "required": "Password is required",
+      "currentRequired": "Current password is required",
+      "currentWrong": "Current password is incorrect"
     },
     "userRole": {
       "required": "User role required"
@@ -2584,5 +2586,18 @@
   "report-dor__by-sales": "By salesman",
   "report-dor__hint": "DOR is the shortfall from giving a wrong price. It is recorded against the salesman who gave it and deducted from their commission.",
   "report-dor__deduction": "Commission deduction",
-  "report-dor__empty": "No DOR in this date range."
+  "report-dor__empty": "No DOR in this date range.",
+  "settings__sandi": "Password",
+  "settings__sandi_note": "Change your account password. Your current password is required.",
+  "settings__sandi_edit": "Change password",
+  "ganti-sandi__title": "Change password",
+  "ganti-sandi__lede": "Prove your current password, then set a new one. You will be signed out to sign back in with it.",
+  "ganti-sandi__current": "Current password",
+  "ganti-sandi__new": "New password",
+  "ganti-sandi__confirm": "Repeat new password",
+  "ganti-sandi__mismatch": "The repeated password does not match yet.",
+  "ganti-sandi__show": "Show password",
+  "ganti-sandi__hide": "Hide password",
+  "ganti-sandi__submit": "Save new password",
+  "ganti-sandi__success": "Password changed. Please sign in again."
 }

@@ -38,6 +38,17 @@
     </div>
   </section>
 
+  <!-- Kata sandi — dialognya sama dengan milik halaman profil. -->
+  <section class="settings__card">
+    <h2 class="settings__card-title">{{ 'settings__sandi' | translate }}</h2>
+    <p class="settings__card-note">{{ 'settings__sandi_note' | translate }}</p>
+
+    <button type="button" class="seg__opt seg__opt--tombol" (click)="gantiSandi()">
+      <i class="ph ph-password" aria-hidden="true"></i>
+      {{ 'settings__sandi_edit' | translate }}
+    </button>
+  </section>
+
   <section class="settings__card">
     <h2 class="settings__card-title">{{ 'settings__mode' | translate }}</h2>
     <p class="settings__card-note">{{ 'settings__mode_note' | translate }}</p>
