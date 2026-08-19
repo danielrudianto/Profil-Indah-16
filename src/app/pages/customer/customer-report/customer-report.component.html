@@ -51,6 +51,19 @@
         >Rp {{ laporan.summary.totalValue | number: "1.0-0" }}</strong
       >
     </div>
+    <!-- Piutang BERJALAN — potret sekarang, bukan ikut tahun laporan. -->
+    <div class="hero__kartu">
+      <span class="hero__label">{{
+        "customer-report__receivable" | translate
+      }}</span>
+      <strong class="hero__nilai" *ngIf="piutang != null">
+        Rp {{ piutang | number: "1.0-0" }}
+      </strong>
+      <strong class="hero__nilai" *ngIf="piutang == null">—</strong>
+      <span class="hero__sub">
+        {{ "customer-report__receivable__note" | translate }}
+      </span>
+    </div>
     <div class="hero__kartu">
       <span class="hero__label">{{
         "customer-report__documents" | translate
@@ -98,11 +111,22 @@
     </ul>
   </section>
 
-  <!-- Merek yang dibeli -->
-  <section class="kartu">
-    <h2 class="kartu__label">{{ "customer-report__brands" | translate }}</h2>
+  <!-- Merek yang dibeli — akordeon, tertutup di awal. -->
+  <section class="kartu akordeon" [class.akordeon--buka]="merekTerbuka">
+    <button
+      type="button"
+      class="akordeon__kepala"
+      (click)="merekTerbuka = !merekTerbuka"
+      [attr.aria-expanded]="merekTerbuka"
+    >
+      <h2 class="kartu__label">{{ "customer-report__brands" | translate }}</h2>
+      <span class="akordeon__jumlah">
+        {{ laporan.brands.length | number }}
+      </span>
+      <i class="ph ph-caret-down akordeon__panah" aria-hidden="true"></i>
+    </button>
 
-    <div class="gulir" *ngIf="laporan.brands.length > 0">
+    <div class="gulir" *ngIf="merekTerbuka && laporan.brands.length > 0">
       <table class="tabel">
         <thead>
           <tr>
@@ -131,18 +155,29 @@
       </table>
     </div>
 
-    <p class="tabel__pesan" *ngIf="laporan.brands.length === 0">
+    <p class="tabel__pesan" *ngIf="merekTerbuka && laporan.brands.length === 0">
       {{ "customer-report__empty" | translate }}
     </p>
   </section>
 
-  <!-- Barang paling sering dibeli -->
-  <section class="kartu">
-    <h2 class="kartu__label">
-      {{ "customer-report__top-products" | translate }}
-    </h2>
+  <!-- Barang paling sering dibeli — akordeon, tertutup di awal. -->
+  <section class="kartu akordeon" [class.akordeon--buka]="barangTerbuka">
+    <button
+      type="button"
+      class="akordeon__kepala"
+      (click)="barangTerbuka = !barangTerbuka"
+      [attr.aria-expanded]="barangTerbuka"
+    >
+      <h2 class="kartu__label">
+        {{ "customer-report__top-products" | translate }}
+      </h2>
+      <span class="akordeon__jumlah">
+        {{ laporan.topProducts.length | number }}
+      </span>
+      <i class="ph ph-caret-down akordeon__panah" aria-hidden="true"></i>
+    </button>
 
-    <div class="gulir" *ngIf="laporan.topProducts.length > 0">
+    <div class="gulir" *ngIf="barangTerbuka && laporan.topProducts.length > 0">
       <table class="tabel">
         <thead>
           <tr>
@@ -174,9 +209,106 @@
       </table>
     </div>
 
-    <p class="tabel__pesan" *ngIf="laporan.topProducts.length === 0">
+    <p
+      class="tabel__pesan"
+      *ngIf="barangTerbuka && laporan.topProducts.length === 0"
+    >
       {{ "customer-report__empty" | translate }}
     </p>
+  </section>
+
+  <!-- Faktur pelanggan ini — berhalaman dari server, terbaru dulu. -->
+  <section class="kartu">
+    <div class="kartu__kepala">
+      <h2 class="kartu__label">
+        {{ "customer-report__invoices" | translate }}
+      </h2>
+      <span class="akordeon__jumlah">{{ fakturCount | number }}</span>
+    </div>
+
+    <div class="gulir" *ngIf="faktur.length > 0">
+      <table class="tabel tabel--rapat">
+        <thead>
+          <tr>
+            <th>{{ "customer-report__invoice" | translate }}</th>
+            <th>{{ "customer-report__status" | translate }}</th>
+            <th class="ke-kanan">{{ "customer-report__value" | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let f of faktur">
+            <td>
+              <span class="barang__ref">{{ f.name }}</span>
+              <span class="barang__desc">{{
+                f.date | date: "dd MMM yyyy"
+              }}</span>
+            </td>
+            <td>
+              <span
+                class="pill"
+                [class.pill--hijau]="f.isPaid"
+                [class.pill--garis]="!f.isPaid"
+              >
+                {{
+                  (f.isPaid
+                    ? "customer-report__paid"
+                    : "customer-report__unpaid"
+                  ) | translate
+                }}
+              </span>
+            </td>
+            <td class="ke-kanan baris__total">
+              Rp {{ f.total | number: "1.0-0" }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="tabel__pesan" *ngIf="faktur.length === 0">
+      {{ "customer-report__empty" | translate }}
+    </p>
+
+    <!-- Kaki halaman seturut list-page: ukuran halaman kiri, jangkauan kanan. -->
+    <div class="faktur-kaki" *ngIf="fakturCount > 0">
+      <div class="faktur-kaki__ukuran">
+        <span>{{ "general__rows-per-page" | translate }}</span>
+        <button
+          type="button"
+          *ngFor="let u of ukuranHalaman"
+          class="faktur-kaki__opsi"
+          [class.faktur-kaki__opsi--on]="fakturPageSize === u"
+          (click)="gantiUkuranFaktur(u)"
+        >
+          {{ u }}
+        </button>
+      </div>
+
+      <div class="faktur-kaki__nav">
+        <span>
+          {{ fakturDari | number }} – {{ fakturSampai | number }}
+          {{ "general__of" | translate }} {{ fakturCount | number }}
+        </span>
+        <button
+          type="button"
+          class="tabel__aksi-btn"
+          [disabled]="fakturPage === 1"
+          (click)="ambilFaktur(fakturPage - 1)"
+          [attr.aria-label]="'general__previous' | translate"
+        >
+          <i class="ph ph-caret-left" aria-hidden="true"></i>
+        </button>
+        <button
+          type="button"
+          class="tabel__aksi-btn"
+          [disabled]="fakturHalamanTerakhir"
+          (click)="ambilFaktur(fakturPage + 1)"
+          [attr.aria-label]="'general__next' | translate"
+        >
+          <i class="ph ph-caret-right" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
   </section>
 </div>
 

@@ -117,3 +117,82 @@
   color: var(--color-accent);
   font-size: 14px;
 }
+
+/* Akordeon merek/barang — anatomi kepala seturut laporan pengeluaran. */
+.akordeon__kepala {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.akordeon__jumlah {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-text) 8%, transparent);
+  color: color-mix(in srgb, var(--color-text) 60%, transparent);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.akordeon__panah {
+  margin-left: auto;
+  font-size: 16px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  transition: transform 0.18s ease;
+}
+
+.akordeon--buka .akordeon__panah {
+  transform: rotate(180deg);
+}
+
+.akordeon--buka .akordeon__kepala {
+  margin-bottom: 12px;
+}
+
+/* Kaki kartu faktur — seturut kaki list-page: ukuran kiri, jangkauan kanan. */
+.faktur-kaki {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.faktur-kaki__ukuran,
+.faktur-kaki__nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.faktur-kaki__opsi {
+  min-width: 34px;
+  padding: 4px 8px;
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--color-text) 30%, transparent);
+  }
+}
+
+.faktur-kaki__opsi--on {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}

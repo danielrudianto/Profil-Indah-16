@@ -2339,6 +2339,13 @@
   "customer-report__top-products": "Barang paling sering dibeli",
   "customer-report__product": "Barang",
   "customer-report__empty": "Belum ada penjualan pada rentang ini.",
+  "customer-report__receivable": "Piutang berjalan",
+  "customer-report__receivable__note": "Posisi saat ini, semua tahun",
+  "customer-report__invoices": "Faktur",
+  "customer-report__invoice": "Nomor faktur",
+  "customer-report__status": "Status",
+  "customer-report__paid": "Lunas",
+  "customer-report__unpaid": "Belum lunas",
   "product__update__lede": "Ubah identitas barang. Harga jual dan beli diubah lewat halaman Harga.",
   "product__update__price-note": "Harga tidak diubah dari sini — pakai menu Harga Jual atau Harga Beli.",
   "product__unit__title": "Satuan tambahan",
@@ -2640,5 +2647,6 @@
   "ganti-sandi__show": "Perlihatkan kata sandi",
   "ganti-sandi__hide": "Sembunyikan kata sandi",
   "ganti-sandi__submit": "Simpan sandi baru",
-  "ganti-sandi__success": "Kata sandi berhasil diganti. Silakan masuk lagi."
+  "ganti-sandi__success": "Kata sandi berhasil diganti. Silakan masuk lagi.",
+  "general__rows-per-page": "Baris per halaman"
 }

@@ -2339,6 +2339,13 @@
   "customer-report__top-products": "Most frequently bought items",
   "customer-report__product": "Item",
   "customer-report__empty": "No sales in this range yet.",
+  "customer-report__receivable": "Open receivable",
+  "customer-report__receivable__note": "Current position, all years",
+  "customer-report__invoices": "Invoices",
+  "customer-report__invoice": "Invoice number",
+  "customer-report__status": "Status",
+  "customer-report__paid": "Paid",
+  "customer-report__unpaid": "Unpaid",
   "product__update__lede": "Edit the product identity. Prices are changed on the Price pages.",
   "product__update__price-note": "Prices are not edited here — use the Sales Price or Purchase Price menu.",
   "product__unit__title": "Additional units",
@@ -2640,5 +2647,6 @@
   "ganti-sandi__show": "Show password",
   "ganti-sandi__hide": "Hide password",
   "ganti-sandi__submit": "Save new password",
-  "ganti-sandi__success": "Password changed. Please sign in again."
+  "ganti-sandi__success": "Password changed. Please sign in again.",
+  "general__rows-per-page": "Rows per page"
 }

@@ -44,8 +44,71 @@ export class CustomerReportComponent implements OnInit {
   tahun = 0;
   laporan: any = null;
 
+  /* Piutang berjalan — potret sekarang, sengaja di luar saringan tahun. */
+  piutang: number | null = null;
+
+  /* Akordeon merek & barang: tertutup di awal, dibuka sesuai kebutuhan. */
+  merekTerbuka = false;
+  barangTerbuka = false;
+
+  /* Kartu daftar faktur — berhalaman dari server. */
+  faktur: any[] = [];
+  fakturCount = 0;
+  fakturPage = 1;
+  fakturPageSize = 10;
+  readonly ukuranHalaman = [10, 25, 50];
+
   ngOnInit(): void {
     this.ambilData();
+    this.ambilPiutang();
+    this.ambilFaktur(1);
+  }
+
+  ambilPiutang(): void {
+    this.apiService
+      .get(`customer/${this.activatedRoute.snapshot.params['id']}/receivable`)
+      .subscribe({
+        next: (data: any) => {
+          this.piutang = Number(data.value);
+        },
+        /* Kartunya diam di "—" bila gagal; laporan lain tetap hidup. */
+        error: () => {},
+      });
+  }
+
+  ambilFaktur(halaman: number): void {
+    this.fakturPage = halaman;
+    this.apiService
+      .get(`customer/${this.activatedRoute.snapshot.params['id']}/invoices`, {
+        page: halaman,
+        pageSize: this.fakturPageSize,
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.faktur = data.data;
+          this.fakturCount = data.count;
+        },
+        error: () => {},
+      });
+  }
+
+  gantiUkuranFaktur(ukuran: number): void {
+    this.fakturPageSize = ukuran;
+    this.ambilFaktur(1);
+  }
+
+  get fakturDari(): number {
+    return this.fakturCount === 0
+      ? 0
+      : (this.fakturPage - 1) * this.fakturPageSize + 1;
+  }
+
+  get fakturSampai(): number {
+    return Math.min(this.fakturPage * this.fakturPageSize, this.fakturCount);
+  }
+
+  get fakturHalamanTerakhir(): boolean {
+    return this.fakturPage * this.fakturPageSize >= this.fakturCount;
   }
 
   ambilData(): void {
