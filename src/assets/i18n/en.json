@@ -2191,6 +2191,7 @@
   "promotion__create__success": "successfully created",
   "general__check-input": "Please check your input.",
   "promotion__list__brand-count": "brands",
+  "promotion__download__success": "Promotion results exported successfully",
   "supplier__lede": "Suppliers with their address and tax ID.",
   "supplier__search": "Search supplier name…",
   "supplier__add": "Add supplier",

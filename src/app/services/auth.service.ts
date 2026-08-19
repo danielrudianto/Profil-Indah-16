@@ -199,8 +199,6 @@ export class AuthService {
       ).toString()
     );
 
-    console.log(loginData);
-
     if (loginData.user_avatar != null) {
       localStorage.setItem(
         'user_avatar',

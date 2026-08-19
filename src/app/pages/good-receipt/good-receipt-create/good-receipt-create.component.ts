@@ -159,9 +159,6 @@ export class GoodReceiptCreateComponent {
       tag: 'good-receipt__new',
     });
 
-    this.itemFormGroup.valueChanges.subscribe(() => {
-      console.log(this.itemFormGroup.controls);
-    });
   }
 
   get f() {
