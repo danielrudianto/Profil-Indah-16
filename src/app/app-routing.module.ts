@@ -5,6 +5,7 @@ import { KeluarTanpaSimpanGuard } from './guards/keluar-tanpa-simpan.guard';
 import {
   AdministratorGuard,
   GeneralGuard,
+  WarehouseGuard,
   PurchasingGuard,
   OperationalGuard,
   SalesGuard,
@@ -94,6 +95,19 @@ const routes: Routes = [
                   ),
               },
             ],
+          },
+          {
+            /*
+              Satu-satunya halaman peran Gudang: cek stok tipe yang
+              ditugaskan. Berdiri di luar subpohon /Stock karena subpohon itu
+              dijaga OperationalGuard yang tidak memuat Gudang.
+            */
+            path: 'Stock-check',
+            canActivate: [WarehouseGuard],
+            loadComponent: () =>
+              import('./pages/stock/stock-check/stock-check.component').then(
+                (m) => m.StockCheckComponent,
+              ),
           },
           {
             path: 'Stock',
@@ -725,22 +739,6 @@ const routes: Routes = [
                   ),
               },
             ],
-          },
-        ],
-      },
-      {
-        path: 'Profile',
-        loadComponent: () =>
-          import('./pages/entries/profile/profile.component').then(
-            (m) => m.ProfileComponent,
-          ),
-        children: [
-          {
-            path: '',
-            loadComponent: () =>
-              import('./pages/profile-overview/profile-overview.component').then(
-                (m) => m.ProfileOverviewComponent,
-              ),
           },
         ],
       },

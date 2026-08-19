@@ -73,6 +73,16 @@ export const GeneralGuard = berdasarPeran([
  * satu pun penjaga lama yang menyatakannya. Tanpa ini, menggabungkan rutenya
  * akan diam-diam mempersempit siapa yang boleh membuka Stok.
  */
+/**
+ * Gudang plus admin/pemilik. Halaman cek stok memang milik Gudang, tetapi
+ * admin boleh membukanya untuk memeriksa apa yang dilihat staf gudang.
+ */
+export const WarehouseGuard = berdasarPeran([
+  Role.Warehouse,
+  Role.Administrator,
+  Role.Owner,
+]);
+
 export const OperationalGuard = berdasarPeran([
   Role.Purchasing,
   Role.Sales,

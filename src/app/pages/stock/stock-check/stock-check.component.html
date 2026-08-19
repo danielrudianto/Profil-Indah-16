@@ -1,0 +1,116 @@
+<!--
+  Cek stok gudang — hanya membaca. Tidak ada tombol tambah, tidak ada aksi
+  baris: yang bisa dilakukan cuma mencari dan melihat angkanya.
+-->
+<app-list-page
+  [heading]="'stock-check__title' | translate"
+  [lede]="'stock-check__lede' | translate"
+  [searchPlaceholder]="'stock-check__search' | translate"
+  [keyword]="keyword"
+  [page]="page"
+  [pageSize]="pageSize"
+  [total]="dataCount"
+  [loading]="isLoading"
+  (search)="cari($event)"
+  (pageChange)="ambilData($event)"
+  (pageSizeChange)="gantiUkuran($event)"
+  (refresh)="ambilData()"
+>
+  <!-- Gudang perlu tahu kenapa katalognya "tidak lengkap": memang disaring. -->
+  <p class="petunjuk petunjuk--saringan" *ngIf="adalahGudang">
+    <i class="ph ph-lock-simple" aria-hidden="true"></i>
+    <span>{{ "stock-check__assigned" | translate }}</span>
+  </p>
+
+  <table class="tabel">
+    <thead>
+      <tr>
+        <th>{{ "stock-list__item" | translate }}</th>
+        <th>{{ "product__brand" | translate }}</th>
+        <th>{{ "product__type" | translate }}</th>
+        <th class="tabel__nilai-kepala">{{ "product__stock" | translate }}</th>
+        <th class="tabel__nilai-kepala">
+          {{ "report-inadequate__minimum-stock" | translate }}
+        </th>
+        <th class="tabel__nilai-kepala">
+          {{ "report-inadequate__recommendation" | translate }}
+        </th>
+        <th>{{ "stock-list__condition" | translate }}</th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!isLoading && dataSource.length > 0">
+      <tr *ngFor="let item of dataSource; trackBy: lacakBarang">
+        <td>
+          <div class="sel-entitas">
+            <span class="avatar-inisial" aria-hidden="true">
+              {{ inisial(item.reference) }}
+            </span>
+            <span class="sel-entitas__teks">
+              <span class="sel-entitas__utama">{{ item.reference }}</span>
+              <span class="sel-entitas__sub">{{ item.description }}</span>
+            </span>
+          </div>
+        </td>
+        <td class="tabel__redup">{{ item.product_brand?.name }}</td>
+        <td class="tabel__redup">{{ item.product_type?.name }}</td>
+        <td class="tabel__nilai baris__total">
+          {{ item.product_stock?.stock ?? 0 | number: "1.0-2" }}
+          {{ item.unit }}
+        </td>
+        <td class="tabel__nilai tabel__redup">
+          {{ item.minimum_stock ?? 0 | number: "1.0-2" }}
+        </td>
+        <!-- Rekomendasi sistem; belum terhitung tampil sebagai strip. -->
+        <td class="tabel__nilai tabel__redup">
+          <ng-container *ngIf="item.minimum_stock_recommendation != null">
+            {{ item.minimum_stock_recommendation | number: "1.0-2" }}
+          </ng-container>
+          <ng-container *ngIf="item.minimum_stock_recommendation == null"
+            >&mdash;</ng-container
+          >
+        </td>
+        <td>
+          <!--
+            Baris sehat tidak diberi pill sama sekali — pill "aman" di setiap
+            baris membuat yang bermasalah justru tenggelam.
+          -->
+          <span
+            class="pill"
+            [ngClass]="kelasPill(item)"
+            *ngIf="kondisiBaris(item)"
+          >
+            <i
+              class="ph-fill"
+              [ngClass]="ikonPill(item)"
+              aria-hidden="true"
+            ></i>
+            {{ kunciKondisi(item) | translate }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="isLoading">
+      <tr>
+        <td colspan="7" class="tabel__pesan">
+          {{ "general__loading" | translate }}
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="!isLoading && dataSource.length === 0">
+      <tr>
+        <td colspan="7">
+          <app-tabel-kosong
+            ikon="ph-stack"
+            [judul]="'stock-check__empty__title' | translate"
+            [penjelasan]="'stock-check__empty__desc' | translate"
+            [kataKunci]="keyword"
+            (reset)="resetPencarian()"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</app-list-page>

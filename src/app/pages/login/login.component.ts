@@ -7,12 +7,18 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Role } from 'src/app/constants/role.constant';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
-import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatPrefix,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
 
@@ -34,7 +40,11 @@ import { MatIcon } from '@angular/material/icon';
     MatLabel,
     MatInput,
     MatPrefix,
-    MatSuffix,FormsModule, ReactiveFormsModule, TranslatePipe],
+    MatSuffix,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslatePipe,
+  ],
 })
 export class LoginComponent {
   constructor(
@@ -42,7 +52,7 @@ export class LoginComponent {
     private router: Router,
     private authService: AuthService,
     private alertService: AlertService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
   ) {}
 
   isSubmitting: boolean = false;
@@ -88,7 +98,10 @@ export class LoginComponent {
       .subscribe({
         next: (data) => {
           this.authService.setToken(data);
-          this.router.navigate(['/']);
+          /* Gudang tidak punya dashboard — langsung ke halaman satu-satunya. */
+          const gudang =
+            this.authService.getUserInfo()?.role === Role.Warehouse;
+          this.router.navigate([gudang ? '/Stock-check' : '/']);
         },
         error: (error) => {
           console.error(`[error]: Error on authenticating user`, error);

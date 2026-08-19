@@ -58,40 +58,193 @@ export const NAV_ITEMS: NavItem[] = [
   /* ---------------------------------------------------------------- */
   /* Transaksi                                                        */
   /* ---------------------------------------------------------------- */
-  { label: 'nav__sales_invoice', icon: 'ph ph-receipt', path: 'Sales-invoice', group: 'menu', roles: SALES },
-  { label: 'nav__purchase_invoice', icon: 'ph ph-file-text', path: 'Purchase-invoice', group: 'menu', roles: ADMIN },
-  { label: 'nav__good_receipt', icon: 'ph ph-package', path: 'Good-receipt', group: 'menu', roles: PURCHASING },
-  { label: 'nav__sales_return', icon: 'ph ph-arrow-u-up-left', path: 'Sales-return', group: 'menu', roles: SALES },
-  { label: 'nav__deposit', icon: 'ph ph-hand-coins', path: 'Deposit', group: 'menu', roles: SALES },
-  { label: 'nav__receivable', icon: 'ph ph-notebook', path: 'Receivable', group: 'menu', roles: SALES },
-  { label: 'nav__overpayment', icon: 'ph ph-arrows-counter-clockwise', path: 'Overpayment', group: 'menu', roles: SALES },
-  { label: 'nav__expense', icon: 'ph ph-trend-down', path: 'Expense', group: 'menu', roles: GENERAL },
-  { label: 'nav__adjustment_case', icon: 'ph ph-sliders', path: 'Adjustment-case', group: 'menu', roles: ADMIN },
+  {
+    label: 'nav__sales_invoice',
+    icon: 'ph ph-receipt',
+    path: 'Sales-invoice',
+    group: 'menu',
+    roles: SALES,
+  },
+  {
+    label: 'nav__purchase_invoice',
+    icon: 'ph ph-file-text',
+    path: 'Purchase-invoice',
+    group: 'menu',
+    roles: ADMIN,
+  },
+  {
+    label: 'nav__good_receipt',
+    icon: 'ph ph-package',
+    path: 'Good-receipt',
+    group: 'menu',
+    roles: PURCHASING,
+  },
+  {
+    label: 'nav__sales_return',
+    icon: 'ph ph-arrow-u-up-left',
+    path: 'Sales-return',
+    group: 'menu',
+    roles: SALES,
+  },
+  {
+    label: 'nav__deposit',
+    icon: 'ph ph-hand-coins',
+    path: 'Deposit',
+    group: 'menu',
+    roles: SALES,
+  },
+  {
+    label: 'nav__receivable',
+    icon: 'ph ph-notebook',
+    path: 'Receivable',
+    group: 'menu',
+    roles: SALES,
+  },
+  {
+    label: 'nav__overpayment',
+    icon: 'ph ph-arrows-counter-clockwise',
+    path: 'Overpayment',
+    group: 'menu',
+    roles: SALES,
+  },
+  {
+    label: 'nav__expense',
+    icon: 'ph ph-trend-down',
+    path: 'Expense',
+    group: 'menu',
+    roles: GENERAL,
+  },
+  {
+    label: 'nav__adjustment_case',
+    icon: 'ph ph-sliders',
+    path: 'Adjustment-case',
+    group: 'menu',
+    roles: ADMIN,
+  },
+  /* Satu-satunya menu Gudang — sengaja tidak ditawarkan ke peran lain,
+     mereka sudah punya halaman Stok yang lengkap. */
+  {
+    label: 'nav__stock_check',
+    icon: 'ph ph-stack',
+    path: 'Stock-check',
+    group: 'menu',
+    roles: [Role.Warehouse],
+  },
   /* Perannya menjiplak OperationalGuard di rutenya; muka laporannya sendiri
      menyaring kartu per peran lebih lanjut. */
-  { label: 'nav__report', icon: 'ph ph-chart-bar', path: 'Report', group: 'menu', roles: SEMUA_OPERASIONAL },
+  {
+    label: 'nav__report',
+    icon: 'ph ph-chart-bar',
+    path: 'Report',
+    group: 'menu',
+    roles: SEMUA_OPERASIONAL,
+  },
 
   /* ---------------------------------------------------------------- */
   /* Master                                                            */
   /* ---------------------------------------------------------------- */
-  { label: 'nav__product', icon: 'ph ph-archive', path: 'Product', group: 'master', roles: PURCHASING },
-  { label: 'nav__product_brand', icon: 'ph ph-tag-simple', path: 'Product-brand', group: 'master', roles: PURCHASING },
-  { label: 'nav__product_type', icon: 'ph ph-squares-four', path: 'Product-type', group: 'master', roles: PURCHASING },
-  { label: 'nav__stock', icon: 'ph ph-stack', path: 'Stock', group: 'master', roles: SEMUA_OPERASIONAL },
-  { label: 'nav__package', icon: 'ph ph-shapes', path: 'Package', group: 'master', roles: SEMUA_OPERASIONAL },
-  { label: 'nav__price_sales', icon: 'ph ph-tag', path: 'Price/Sales', group: 'master', roles: SALES },
-  { label: 'nav__price_purchase', icon: 'ph ph-tag', path: 'Price/Purchase', group: 'master', roles: ADMIN },
-  { label: 'nav__promotion', icon: 'ph ph-megaphone', path: 'Promotion', group: 'master', roles: ADMIN },
-  { label: 'nav__customer', icon: 'ph ph-users', path: 'Customer', group: 'master', roles: SALES },
-  { label: 'nav__supplier', icon: 'ph ph-truck', path: 'Supplier', group: 'master', roles: PURCHASING },
+  {
+    label: 'nav__product',
+    icon: 'ph ph-archive',
+    path: 'Product',
+    group: 'master',
+    roles: PURCHASING,
+  },
+  {
+    label: 'nav__product_brand',
+    icon: 'ph ph-tag-simple',
+    path: 'Product-brand',
+    group: 'master',
+    roles: PURCHASING,
+  },
+  {
+    label: 'nav__product_type',
+    icon: 'ph ph-squares-four',
+    path: 'Product-type',
+    group: 'master',
+    roles: PURCHASING,
+  },
+  {
+    label: 'nav__stock',
+    icon: 'ph ph-stack',
+    path: 'Stock',
+    group: 'master',
+    roles: SEMUA_OPERASIONAL,
+  },
+  {
+    label: 'nav__package',
+    icon: 'ph ph-shapes',
+    path: 'Package',
+    group: 'master',
+    roles: SEMUA_OPERASIONAL,
+  },
+  {
+    label: 'nav__price_sales',
+    icon: 'ph ph-tag',
+    path: 'Price/Sales',
+    group: 'master',
+    roles: SALES,
+  },
+  {
+    label: 'nav__price_purchase',
+    icon: 'ph ph-tag',
+    path: 'Price/Purchase',
+    group: 'master',
+    roles: ADMIN,
+  },
+  {
+    label: 'nav__promotion',
+    icon: 'ph ph-megaphone',
+    path: 'Promotion',
+    group: 'master',
+    roles: ADMIN,
+  },
+  {
+    label: 'nav__customer',
+    icon: 'ph ph-users',
+    path: 'Customer',
+    group: 'master',
+    roles: SALES,
+  },
+  {
+    label: 'nav__supplier',
+    icon: 'ph ph-truck',
+    path: 'Supplier',
+    group: 'master',
+    roles: PURCHASING,
+  },
 
   /* ---------------------------------------------------------------- */
   /* Administrator                                                     */
   /* ---------------------------------------------------------------- */
-  { label: 'nav__user', icon: 'ph ph-users-three', path: 'User', group: 'administrator', roles: ADMIN },
-  { label: 'nav__company', icon: 'ph ph-buildings', path: 'Company', group: 'administrator', roles: GENERAL },
-  { label: 'nav__payment_method', icon: 'ph ph-credit-card', path: 'Payment-method', group: 'administrator', roles: GENERAL },
-  { label: 'nav__expense_type', icon: 'ph ph-list-checks', path: 'Expense-type', group: 'administrator', roles: GENERAL },
+  {
+    label: 'nav__user',
+    icon: 'ph ph-users-three',
+    path: 'User',
+    group: 'administrator',
+    roles: ADMIN,
+  },
+  {
+    label: 'nav__company',
+    icon: 'ph ph-buildings',
+    path: 'Company',
+    group: 'administrator',
+    roles: GENERAL,
+  },
+  {
+    label: 'nav__payment_method',
+    icon: 'ph ph-credit-card',
+    path: 'Payment-method',
+    group: 'administrator',
+    roles: GENERAL,
+  },
+  {
+    label: 'nav__expense_type',
+    icon: 'ph ph-list-checks',
+    path: 'Expense-type',
+    group: 'administrator',
+    roles: GENERAL,
+  },
 ];
 
 /** Urutan tampil dan kunci i18n judul tiap grup. */
@@ -134,6 +287,16 @@ export interface NavFooterItem {
  * diperlebar supaya menunya terlihat ramai.
  */
 export const NAV_FOOTER: NavFooterItem[] = [
-  { label: 'nav__settings', icon: 'ph ph-gear', path: '/Settings', roles: [...SEMUA_OPERASIONAL, Role.Warehouse] },
-  { label: 'nav__activity', icon: 'ph ph-pulse', path: '/Activity', roles: ADMIN },
+  {
+    label: 'nav__settings',
+    icon: 'ph ph-gear',
+    path: '/Settings',
+    roles: [...SEMUA_OPERASIONAL, Role.Warehouse],
+  },
+  {
+    label: 'nav__activity',
+    icon: 'ph ph-pulse',
+    path: '/Activity',
+    roles: ADMIN,
+  },
 ];
