@@ -1,4 +1,4 @@
 export const environment = {
-  url: 'https://sandbox.profilindah.id/',
+  url: 'https://v20.service.profilindah.id/',
   key: 'afPeCb4gTj',
 };
