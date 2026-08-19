@@ -192,6 +192,7 @@ html {
 .mat-mdc-dialog-surface:has(> app-stock-list-report),
 .mat-mdc-dialog-surface:has(> app-deposit-list-dialog),
 .mat-mdc-dialog-surface:has(> app-minimum-stock-info-dialog),
+.mat-mdc-dialog-surface:has(> app-category-products-dialog),
 .mat-mdc-dialog-surface:has(> app-activity-view),
 .mat-mdc-dialog-surface:has(> app-purchase-invoice-view) {
   background: transparent;
@@ -1534,6 +1535,33 @@ label {
   background: color-mix(in srgb, #e05260 10%, transparent);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, #e05260 45%, transparent);
   color: #e05260;
+}
+
+/*
+  Angka berjumlah yang bisa dirinci — pil kecil di sel tabel, membuka
+  dialog isi kategorinya. Mati (tanpa garis bawah) saat jumlahnya nol.
+*/
+.jumlah-tautan {
+  min-width: 34px;
+  padding: 3px 10px;
+  border: 1px solid var(--color-divider);
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  &:disabled {
+    cursor: default;
+    color: color-mix(in srgb, var(--color-text) 40%, transparent);
+  }
 }
 
 .chip-kumpul {

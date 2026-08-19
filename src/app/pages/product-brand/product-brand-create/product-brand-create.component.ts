@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import {
   FormControl,
   FormGroup,
@@ -39,9 +42,17 @@ import { MatInput } from '@angular/material/input';
 @Component({
   selector: 'app-product-brand-create',
   templateUrl: './product-brand-create.component.html',
-  imports: [MatFormField, MatLabel, MatInput, ReactiveFormsModule, TranslatePipe, DialogShellComponent],
+  imports: [
+    NgIf,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    ReactiveFormsModule,
+    TranslatePipe,
+    DialogShellComponent,
+  ],
 })
-export class ProductBrandCreateComponent {
+export class ProductBrandCreateComponent implements OnInit, OnDestroy {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
@@ -51,13 +62,48 @@ export class ProductBrandCreateComponent {
 
   isSubmitting = false;
 
+  /*
+    Hasil cek nama kembar sambil mengetik — backend memang menolak nama
+    ganda, tapi memberitahunya SEBELUM tombol ditekan jauh lebih ramah.
+  */
+  namaKembar = false;
+  private langgananNama?: Subscription;
+
   brandFormGroup: FormGroup = new FormGroup({
     /* 45 huruf mengikuti lebar kolom name di tabel product_brand. */
     name: new FormControl('', [Validators.required, Validators.maxLength(45)]),
   });
 
+  ngOnInit(): void {
+    this.langgananNama = this.brandFormGroup
+      .get('name')!
+      .valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap((nilai: string) =>
+          this.apiService.get('product-brand/autocomplete', {
+            keyword: (nilai ?? '').trim(),
+          }),
+        ),
+      )
+      .subscribe({
+        next: (data: any) => {
+          const nama = (this.brandFormGroup.value.name ?? '')
+            .trim()
+            .toLowerCase();
+          this.namaKembar =
+            nama !== '' &&
+            (data as any[]).some((x) => x.name.trim().toLowerCase() === nama);
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.langgananNama?.unsubscribe();
+  }
+
   submitForm(): void {
-    if (this.isSubmitting || !this.brandFormGroup.valid) {
+    if (this.isSubmitting || !this.brandFormGroup.valid || this.namaKembar) {
       return;
     }
 

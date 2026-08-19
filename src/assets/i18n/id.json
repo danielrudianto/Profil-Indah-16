@@ -1655,6 +1655,9 @@
   "brand": {
     "duplicate": "Nama merek sudah ada sebelumnya."
   },
+  "productType": {
+    "duplicate": "Nama tipe barang sudah ada sebelumnya."
+  },
   "invoice": {
     "alreadyConfirmed": "Invoice sudah dikonfirmasi.",
     "alreadyDeleted": "Invoice sudah dihapus.",
@@ -1877,6 +1880,16 @@
   "product__brand__add__example": "mis. Krakatau Steel",
   "product__type__add__lede": "Tipe baru langsung bisa dipakai di formulir barang.",
   "product__type__add__example": "mis. Material",
+  "category-products__lede-type": "Barang bertipe ini",
+  "category-products__lede-brand": "Barang bermerek ini",
+  "category-products__search": "Cari referensi atau deskripsi",
+  "category-products__product": "Barang",
+  "category-products__brand": "Merek",
+  "category-products__type": "Tipe",
+  "category-products__stock": "Stok",
+  "category-products__empty": "Tidak ada barang yang cocok.",
+  "product__type__add__duplicate": "Tipe bernama ini sudah ada — pakai yang lama, jangan buat kembarannya.",
+  "product__brand__add__duplicate": "Merek bernama ini sudah ada — pakai yang lama, jangan buat kembarannya.",
   "product__brand__update__lede": "Perubahan nama langsung berlaku di seluruh barang yang memakainya.",
   "product__type__update__lede": "Perubahan nama langsung berlaku di seluruh barang yang memakainya.",
   "product__type__update__submit": "Simpan perubahan",

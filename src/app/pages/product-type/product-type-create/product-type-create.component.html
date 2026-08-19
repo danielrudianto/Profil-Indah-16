@@ -5,15 +5,29 @@
     [lede]="'product__type__add__lede' | translate"
     [submitLabel]="'product__type__add__submit' | translate"
     [submitting]="isSubmitting"
-    [canSubmit]="typeFormGroup.valid"
+    [canSubmit]="typeFormGroup.valid && !namaKembar"
     (submitted)="submitForm()"
     (close)="closeDialog()"
   >
     <div [formGroup]="typeFormGroup">
-    <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'product__type__name' | translate }}</mat-label>
-      <input matInput #input type="text" formControlName="name" maxlength="45" autocomplete="off" [attr.placeholder]="'product__type__add__example' | translate" />
-    </mat-form-field>
-  </div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{ "product__type__name" | translate }}</mat-label>
+        <input
+          matInput
+          #input
+          type="text"
+          formControlName="name"
+          maxlength="45"
+          autocomplete="off"
+          [attr.placeholder]="'product__type__add__example' | translate"
+        />
+      </mat-form-field>
+
+      <!-- Hasil cek: nama ini sudah hidup — jangan dilahirkan lagi. -->
+      <p class="petunjuk petunjuk--galat" *ngIf="namaKembar">
+        <i class="ph ph-warning-circle" aria-hidden="true"></i>
+        <span>{{ "product__type__add__duplicate" | translate }}</span>
+      </p>
+    </div>
   </app-dialog-shell>
 </app-dynamic-dialog>

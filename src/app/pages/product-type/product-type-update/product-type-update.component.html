@@ -10,10 +10,22 @@
     (close)="closeDialog()"
   >
     <div [formGroup]="typeFormGroup">
-    <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'product__type__name' | translate }}</mat-label>
-      <input matInput #input type="text" formControlName="name" maxlength="45" autocomplete="off" [attr.disabled]="isLoading ? '' : null" [attr.placeholder]=" (isLoading ? 'general__loading' : 'product__type__add__example') | translate " />
-    </mat-form-field>
-  </div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>{{ "product__type__name" | translate }}</mat-label>
+        <input
+          matInput
+          #input
+          type="text"
+          formControlName="name"
+          maxlength="45"
+          autocomplete="off"
+          [attr.disabled]="isLoading ? '' : null"
+          [attr.placeholder]="
+            (isLoading ? 'general__loading' : 'product__type__add__example')
+              | translate
+          "
+        />
+      </mat-form-field>
+    </div>
   </app-dialog-shell>
 </app-dynamic-dialog>

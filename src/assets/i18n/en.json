@@ -1635,6 +1635,9 @@
   "brand": {
     "duplicate": "Brand unique constraint"
   },
+  "productType": {
+    "duplicate": "A product type with this name already exists."
+  },
   "type": {
     "notFound": "Type not found"
   },
@@ -1871,6 +1874,16 @@
   "product__brand__add__example": "e.g. Krakatau Steel",
   "product__type__add__lede": "A new type can be used in the product form right away.",
   "product__type__add__example": "e.g. Material",
+  "category-products__lede-type": "Products of this type",
+  "category-products__lede-brand": "Products of this brand",
+  "category-products__search": "Search reference or description",
+  "category-products__product": "Products",
+  "category-products__brand": "Brand",
+  "category-products__type": "Type",
+  "category-products__stock": "Stock",
+  "category-products__empty": "No matching products.",
+  "product__type__add__duplicate": "A type with this name already exists — use it instead of creating a twin.",
+  "product__brand__add__duplicate": "A brand with this name already exists — use it instead of creating a twin.",
   "product__brand__update__lede": "Renaming applies at once to every product using it.",
   "product__type__update__lede": "Renaming applies at once to every product using it.",
   "product__type__update__submit": "Save changes",

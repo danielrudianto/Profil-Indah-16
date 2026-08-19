@@ -11,6 +11,7 @@ import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmat
 import { ProductBrandCreateComponent } from './product-brand-create/product-brand-create.component';
 import { ProductBrandUpdateComponent } from './product-brand-update/product-brand-update.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
+import { CategoryProductsDialogComponent } from 'src/app/components/category-products-dialog/category-products-dialog.component';
 
 /**
  * Daftar merek barang — sistem desain Nocturne.
@@ -22,7 +23,8 @@ import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-koso
 @Component({
   selector: 'app-product-brand',
   templateUrl: './product-brand.component.html',
-  imports: [TabelKosongComponent, 
+  imports: [
+    TabelKosongComponent,
     NgIf,
     NgFor,
     DatePipe,
@@ -94,6 +96,13 @@ export class ProductBrandComponent implements OnInit {
     this.pageSize = ukuran;
     this.page = 1;
     this.ambilData();
+  }
+
+  /* Angka barang bisa dirinci: barang apa saja yang bermerek ini. */
+  rinci(item: ItemBrand): void {
+    this.dialog.open(CategoryProductsDialogComponent, {
+      data: { mode: 'brand', id: item.id, name: item.name },
+    });
   }
 
   tambah(): void {

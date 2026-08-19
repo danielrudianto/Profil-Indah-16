@@ -1,4 +1,14 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { NgIf } from '@angular/common';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import {
   FormControl,
   FormGroup,
@@ -33,14 +43,20 @@ import { MatInput } from '@angular/material/input';
 @Component({
   selector: 'app-product-type-create',
   templateUrl: './product-type-create.component.html',
-  imports: [MatFormField, MatLabel, MatInput, 
+  imports: [
+    NgIf,
+    MatFormField,
+    MatLabel,
+    MatInput,
     ReactiveFormsModule,
     TranslatePipe,
     DynamicDialogComponent,
     DialogShellComponent,
   ],
 })
-export class ProductTypeCreateComponent implements AfterViewInit {
+export class ProductTypeCreateComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
@@ -53,17 +69,53 @@ export class ProductTypeCreateComponent implements AfterViewInit {
   isOpened = true;
   isSubmitting = false;
 
+  /*
+    Hasil cek nama kembar — tipe bernama sama pernah lahir dua kali
+    (LIGHTING) karena tidak ada yang memberi tahu si pengetik. Dicek
+    sambil mengetik; backend tetap menolak sebagai penjaga terakhir.
+  */
+  namaKembar = false;
+  private langgananNama?: Subscription;
+
   typeFormGroup: FormGroup = new FormGroup({
     /* 45 huruf mengikuti lebar kolom name di tabel product_type. */
     name: new FormControl('', [Validators.required, Validators.maxLength(45)]),
   });
 
+  ngOnInit(): void {
+    this.langgananNama = this.typeFormGroup
+      .get('name')!
+      .valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap((nilai: string) =>
+          this.apiService.get('product-type/autocomplete', {
+            keyword: (nilai ?? '').trim(),
+          }),
+        ),
+      )
+      .subscribe({
+        next: (data: any) => {
+          const nama = (this.typeFormGroup.value.name ?? '')
+            .trim()
+            .toLowerCase();
+          this.namaKembar =
+            nama !== '' &&
+            (data as any[]).some((x) => x.name.trim().toLowerCase() === nama);
+        },
+      });
+  }
+
   ngAfterViewInit(): void {
     this.input?.nativeElement.focus();
   }
 
+  ngOnDestroy(): void {
+    this.langgananNama?.unsubscribe();
+  }
+
   submitForm(): void {
-    if (this.isSubmitting || !this.typeFormGroup.valid) {
+    if (this.isSubmitting || !this.typeFormGroup.valid || this.namaKembar) {
       return;
     }
 

@@ -4,14 +4,27 @@
   [lede]="'product__brand__add__lede' | translate"
   [submitLabel]="'product__brand__add__submit' | translate"
   [submitting]="isSubmitting"
-  [canSubmit]="brandFormGroup.valid"
+  [canSubmit]="brandFormGroup.valid && !namaKembar"
   (submitted)="submitForm()"
   (close)="closeDialog()"
 >
   <div [formGroup]="brandFormGroup">
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'product__brand__name' | translate }}</mat-label>
-      <input matInput type="text" formControlName="name" maxlength="45" autocomplete="off" [attr.placeholder]="'product__brand__add__example' | translate" />
+      <mat-label>{{ "product__brand__name" | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="name"
+        maxlength="45"
+        autocomplete="off"
+        [attr.placeholder]="'product__brand__add__example' | translate"
+      />
     </mat-form-field>
+
+    <!-- Hasil cek: nama ini sudah hidup — jangan dilahirkan lagi. -->
+    <p class="petunjuk petunjuk--galat" *ngIf="namaKembar">
+      <i class="ph ph-warning-circle" aria-hidden="true"></i>
+      <span>{{ "product__brand__add__duplicate" | translate }}</span>
+    </p>
   </div>
 </app-dialog-shell>

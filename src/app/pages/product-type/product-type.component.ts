@@ -12,6 +12,7 @@ import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmat
 import { ProductTypeCreateComponent } from './product-type-create/product-type-create.component';
 import { ProductTypeUpdateComponent } from './product-type-update/product-type-update.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
+import { CategoryProductsDialogComponent } from 'src/app/components/category-products-dialog/category-products-dialog.component';
 
 /**
  * Daftar tipe barang — sistem desain Nocturne.
@@ -27,7 +28,8 @@ import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-koso
 @Component({
   selector: 'app-product-type',
   templateUrl: './product-type.component.html',
-  imports: [TabelKosongComponent, 
+  imports: [
+    TabelKosongComponent,
     NgIf,
     NgFor,
     DatePipe,
@@ -100,6 +102,13 @@ export class ProductTypeComponent implements OnInit {
     this.pageSize = ukuran;
     this.page = 1;
     this.ambilData();
+  }
+
+  /* Angka barang bisa dirinci: barang apa saja yang bertipe ini. */
+  rinci(item: ItemType): void {
+    this.dialog.open(CategoryProductsDialogComponent, {
+      data: { mode: 'type', id: item.id, name: item.name },
+    });
   }
 
   tambah(): void {

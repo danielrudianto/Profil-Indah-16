@@ -1,0 +1,123 @@
+<!-- Isi satu kategori barang — dokumen, bukan formulir. -->
+<div class="lihat">
+  <header class="lihat__kepala">
+    <div class="lihat__identitas">
+      <span class="lihat__avatar" aria-hidden="true">
+        <i
+          [class]="data.mode === 'type' ? 'ph ph-squares-four' : 'ph ph-tag'"
+        ></i>
+      </span>
+      <div>
+        <h2 class="lihat__nama">{{ data.name }}</h2>
+        <p class="lihat__nomor">
+          {{
+            (data.mode === "type"
+              ? "category-products__lede-type"
+              : "category-products__lede-brand"
+            ) | translate
+          }}
+          · {{ count | number }}
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <div class="lihat__isi">
+    <input
+      type="search"
+      class="cari"
+      [formControl]="cari"
+      [placeholder]="'category-products__search' | translate"
+      autocomplete="off"
+    />
+
+    <div class="lihat__gulir" *ngIf="baris.length > 0">
+      <table class="tabel tabel--rapat">
+        <thead>
+          <tr>
+            <th>{{ "category-products__product" | translate }}</th>
+            <th>
+              {{
+                (data.mode === "type"
+                  ? "category-products__brand"
+                  : "category-products__type"
+                ) | translate
+              }}
+            </th>
+            <th class="ke-kanan">
+              {{ "category-products__stock" | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let b of baris">
+            <td>
+              <span class="lihat__ref">{{ b.reference }}</span>
+              <span class="lihat__desk">{{ b.description }}</span>
+            </td>
+            <td class="tabel__redup">{{ b.category }}</td>
+            <td class="ke-kanan baris__total">
+              {{ b.stock | number: "1.0-2" }} {{ b.unit }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="lihat__kosong" *ngIf="!isLoading && baris.length === 0">
+      {{ "category-products__empty" | translate }}
+    </p>
+
+    <p class="lihat__kosong" *ngIf="isLoading && baris.length === 0">
+      {{ "general__loading" | translate }}
+    </p>
+
+    <!-- Kaki halaman seturut daftar faktur pelanggan: ukuran kiri, jangkauan kanan. -->
+    <div class="faktur-kaki" *ngIf="count > 0">
+      <div class="faktur-kaki__ukuran">
+        <span>{{ "general__rows-per-page" | translate }}</span>
+        <button
+          type="button"
+          *ngFor="let u of ukuranHalaman"
+          class="faktur-kaki__opsi"
+          [class.faktur-kaki__opsi--on]="pageSize === u"
+          (click)="gantiUkuran(u)"
+        >
+          {{ u }}
+        </button>
+      </div>
+
+      <div class="faktur-kaki__nav">
+        <span>
+          {{ dari | number }} – {{ sampai | number }}
+          {{ "general__of" | translate }} {{ count | number }}
+        </span>
+        <button
+          type="button"
+          class="tabel__aksi-btn"
+          [disabled]="page === 1"
+          (click)="ambil(page - 1)"
+          [attr.aria-label]="'general__previous' | translate"
+        >
+          <i class="ph ph-caret-left" aria-hidden="true"></i>
+        </button>
+        <button
+          type="button"
+          class="tabel__aksi-btn"
+          [disabled]="halamanTerakhir"
+          (click)="ambil(page + 1)"
+          [attr.aria-label]="'general__next' | translate"
+        >
+          <i class="ph ph-caret-right" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="lihat__kaki">
+    <span class="lihat__renggang"></span>
+    <button type="button" class="btn" (click)="tutup()">
+      {{ "general__close" | translate }}
+    </button>
+  </footer>
+</div>

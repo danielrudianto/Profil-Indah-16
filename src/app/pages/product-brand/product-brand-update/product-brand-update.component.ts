@@ -23,7 +23,14 @@ import { MatInput } from '@angular/material/input';
 @Component({
   selector: 'app-product-brand-update',
   templateUrl: './product-brand-update.component.html',
-  imports: [MatFormField, MatLabel, MatInput, ReactiveFormsModule, TranslatePipe, DialogShellComponent],
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatInput,
+    ReactiveFormsModule,
+    TranslatePipe,
+    DialogShellComponent,
+  ],
 })
 export class ProductBrandUpdateComponent implements OnInit {
   constructor(

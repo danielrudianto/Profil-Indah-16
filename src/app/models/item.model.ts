@@ -17,6 +17,7 @@ export interface ItemBrand {
   created_at?: string;
   user?: DataUser;
   can_delete?: boolean;
+  product_count?: number;
 }
 
 export interface ItemType {
@@ -26,6 +27,7 @@ export interface ItemType {
   created_at?: string;
   user_item_type_created_byTouser?: DataUser;
   can_delete?: boolean;
+  product_count?: number;
 }
 
 export interface Package {

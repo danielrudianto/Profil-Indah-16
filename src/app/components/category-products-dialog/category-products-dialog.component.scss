@@ -1,0 +1,21 @@
+/* Anatomi tampilan baca + kaki berhalaman tinggal di partial bersama. */
+@use "../../styles/lihat";
+@use "../../styles/laporan-entitas";
+
+/* Kotak cari di atas tabel — sederhana, selebar isi dialog. */
+.cari {
+  width: 100%;
+  margin: 0 0 14px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-divider);
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 13.5px;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-accent);
+  }
+}

@@ -37,7 +37,10 @@ import { MatInput } from '@angular/material/input';
 @Component({
   selector: 'app-product-type-update',
   templateUrl: './product-type-update.component.html',
-  imports: [MatFormField, MatLabel, MatInput, 
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatInput,
     ReactiveFormsModule,
     TranslatePipe,
     DynamicDialogComponent,
