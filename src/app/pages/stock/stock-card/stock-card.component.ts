@@ -233,6 +233,28 @@ export class StockCardComponent implements OnInit {
     this.fetchStockCard(1);
   }
 
+  /*
+    Ambang stok minimum EFEKTIF: yang tertinggi antara minimum manual dan
+    rekomendasi hasil hitungan reorder point — sama dengan saringan laporan
+    "di bawah minimum" di server.
+  */
+  get minimumEfektif(): number | null {
+    const manual = Number(this.productDataSource?.minimum_stock ?? 0);
+    const rekomendasi = Number(
+      this.productDataSource?.minimum_stock_recommendation ?? 0,
+    );
+    const ambang = Math.max(manual, rekomendasi);
+    return ambang > 0 ? ambang : null;
+  }
+
+  get minimumDariRekomendasi(): boolean {
+    const manual = Number(this.productDataSource?.minimum_stock ?? 0);
+    const rekomendasi = Number(
+      this.productDataSource?.minimum_stock_recommendation ?? 0,
+    );
+    return rekomendasi > manual;
+  }
+
   /* ---------------------------------------------------------------- */
   /* Grafik saldo — batang per mutasi, tooltip wajib                    */
   /* ---------------------------------------------------------------- */

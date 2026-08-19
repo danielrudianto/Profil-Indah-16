@@ -42,6 +42,22 @@
       </strong>
       <strong class="hero__nilai" *ngIf="stokKini == null">—</strong>
     </div>
+    <!-- Ambang minimum efektif — manual atau rekomendasi, yang tertinggi. -->
+    <div class="hero__kartu">
+      <span class="hero__label">{{ "stock-card__minimum" | translate }}</span>
+      <strong class="hero__nilai" *ngIf="minimumEfektif != null">
+        {{ minimumEfektif | number: "1.0-2" }} {{ productDataSource.unit }}
+      </strong>
+      <strong class="hero__nilai" *ngIf="minimumEfektif == null">—</strong>
+      <span class="hero__sub" *ngIf="minimumEfektif != null">
+        {{
+          (minimumDariRekomendasi
+            ? "stock-card__minimum__recommended"
+            : "stock-card__minimum__manual"
+          ) | translate
+        }}
+      </span>
+    </div>
     <!-- Angka deposit bisa dirinci: siapa memegang berapa. -->
     <button
       type="button"
