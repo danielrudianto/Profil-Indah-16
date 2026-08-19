@@ -58,6 +58,64 @@
     </button>
   </div>
 
+  <!-- Sorotan: klaimnya dibatasi jendela mutasi yang benar-benar diperiksa. -->
+  <section hero class="kartu sorotan" *ngIf="sorotan.length > 0">
+    <h2 class="kartu__label">{{ "sorotan-entitas__judul" | translate }}</h2>
+    <ul class="sorotan__daftar">
+      <li *ngFor="let baris of sorotan">
+        <span class="sorotan__ikon" aria-hidden="true">
+          <i [class]="'ph ' + baris.ikon"></i>
+        </span>
+        {{ baris.teks }}
+      </li>
+    </ul>
+  </section>
+
+  <!-- Pergerakan saldo — batang per mutasi, tooltip wajib. -->
+  <section hero class="kartu" *ngIf="tren.length > 1">
+    <div class="kartu__kepala">
+      <div>
+        <h2 class="kartu__label">{{ "stock-card__chart" | translate }}</h2>
+        <p class="grafik__sub">
+          {{ "stock-card__chart__sub" | translate: { n: jendela.jumlah } }}
+        </p>
+      </div>
+    </div>
+
+    <div class="grafik grafik--nilai">
+      <div class="grafik__hari" *ngFor="let t of tren; index as i">
+        <div class="grafik-tip" role="tooltip">
+          <strong>
+            {{ t.saldo | number: "1.0-2" }} {{ productDataSource?.unit }}
+          </strong>
+          <small>
+            {{ t.tanggal | date: "dd MMM yyyy" }} · {{ t.dokumen }} ({{
+              t.mutasi > 0 ? "+" : ""
+            }}{{ t.mutasi | number: "1.0-2" }})
+          </small>
+        </div>
+        <span
+          class="grafik__nilai"
+          [style.height.%]="tinggiSaldo(t)"
+          aria-hidden="true"
+        ></span>
+        <span class="grafik__tanggal" *ngIf="tampilkanLabel(i)">
+          {{ t.tanggal | date: "dd/M" }}
+        </span>
+      </div>
+    </div>
+
+    <div class="grafik__kaki">
+      <div class="grafik__legenda">
+        <span>
+          <i class="grafik__legenda--nilai" aria-hidden="true"></i>
+          {{ "stock-card__chart__legend" | translate }}
+        </span>
+      </div>
+      <span class="grafik__rentang">{{ rentangTren }}</span>
+    </div>
+  </section>
+
   <table class="tabel">
     <thead>
       <tr>

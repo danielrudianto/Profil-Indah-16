@@ -8,7 +8,7 @@ import { SalesInvoiceViewComponent } from 'src/app/components/document-view/sale
 import { GoodReceiptViewComponent } from 'src/app/components/document-view/good-receipt-view/good-receipt-view.component';
 import { AdjustmentCaseViewComponent } from 'src/app/components/document-view/adjustment-case-view/adjustment-case-view.component';
 import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 import { DepositListDialogComponent } from './deposit-list-dialog/deposit-list-dialog.component';
@@ -40,6 +40,7 @@ export class StockCardComponent implements OnInit {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router,
+    private translateService: TranslateService,
   ) {}
 
   isLoadingCard: boolean = false;
@@ -67,12 +68,51 @@ export class StockCardComponent implements OnInit {
   */
   depositTerbuka: number | null = null;
 
+  /*
+    Jendela mutasi untuk grafik dan sorotan: 50 mutasi TERAKHIR, diambil
+    terpisah dari halaman tabel supaya berpindah halaman tidak mengubah
+    grafiknya. Semua klaim sorotan dibatasi jendela ini — yang tidak
+    diperiksa tidak diaku-aku.
+  */
+  tren: {
+    saldo: number;
+    tanggal: Date;
+    dokumen: string;
+    mutasi: number;
+  }[] = [];
+  jendela: { baris: any[]; jumlah: number } = { baris: [], jumlah: 0 };
+  sorotan: { ikon: string; teks: string }[] = [];
+
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.params['id']);
 
     this.fetchProduct();
     this.fetchStockCard(1);
     this.fetchDeposit();
+    this.fetchTren();
+  }
+
+  fetchTren(): void {
+    this.apiService
+      .get(`product-stock/${this.id}`, { page: 1, pageSize: 50 })
+      .subscribe({
+        next: (data: any) => {
+          const baris = ((data.data as any[]) ?? []).slice();
+          this.jendela = { baris, jumlah: baris.length };
+          this.tren = baris
+            .filter((x) => x.stock != null)
+            .map((x) => ({
+              saldo: Number(x.stock),
+              tanggal: new Date(x.date),
+              dokumen: x.document_name,
+              mutasi: Number(x.display_quantity),
+            }))
+            .reverse();
+          this.susunSorotan();
+        },
+        /* Grafik dan sorotan absen diam-diam bila gagal; tabelnya tetap hidup. */
+        error: () => {},
+      });
   }
 
   fetchDeposit(): void {
@@ -184,6 +224,114 @@ export class StockCardComponent implements OnInit {
   gantiUkuran(ukuran: number): void {
     this.pageSize = ukuran;
     this.fetchStockCard(1);
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Grafik saldo — batang per mutasi, tooltip wajib                    */
+  /* ---------------------------------------------------------------- */
+
+  get minTren(): number {
+    return Math.min(...this.tren.map((t) => t.saldo));
+  }
+
+  get maksTren(): number {
+    return Math.max(...this.tren.map((t) => t.saldo));
+  }
+
+  /*
+    Saldo bisa MINUS, jadi batang diskalakan min–maks (bukan 0–maks seperti
+    grafik nilai di laporan) dengan lantai 4% supaya titik terendah tetap
+    tergambar; angka pastinya selalu ada di tooltip dan rentangnya ditulis
+    di kaki grafik.
+  */
+  tinggiSaldo(t: (typeof this.tren)[number]): number {
+    const bentang = this.maksTren - this.minTren;
+    if (bentang <= 0) {
+      return 50;
+    }
+    return 4 + ((t.saldo - this.minTren) / bentang) * 96;
+  }
+
+  /* 50 label tanggal tidak terbaca — cukup tiap kedelapan dan yang terakhir. */
+  tampilkanLabel(i: number): boolean {
+    return i % 8 === 0 || i === this.tren.length - 1;
+  }
+
+  get rentangTren(): string {
+    if (this.tren.length === 0) {
+      return '';
+    }
+    const angka = (n: number) =>
+      n.toLocaleString('id-ID', { maximumFractionDigits: 2 });
+    return `${angka(this.minTren)} – ${angka(this.maksTren)} ${
+      this.productDataSource?.unit ?? ''
+    }`;
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Sorotan — klaim dibatasi jendela mutasi yang diperiksa            */
+  /* ---------------------------------------------------------------- */
+
+  private susunSorotan(): void {
+    this.sorotan = [];
+    const { baris, jumlah } = this.jendela;
+    if (jumlah === 0) {
+      return;
+    }
+
+    const t = (kunci: string, param?: object) =>
+      this.translateService.instant(kunci, param);
+    const angka = (n: number) =>
+      n.toLocaleString('id-ID', { maximumFractionDigits: 2 });
+    const unit = this.productDataSource?.unit ?? '';
+
+    let masuk = 0;
+    let keluar = 0;
+    for (const x of baris) {
+      const q = Number(x.display_quantity);
+      if (q >= 0) {
+        masuk += q;
+      } else {
+        keluar += -q;
+      }
+    }
+    this.sorotan.push({
+      ikon: 'ph-swap',
+      teks: t('sorotan-kartu-stok__mutasi', {
+        n: jumlah,
+        masuk: angka(masuk),
+        keluar: angka(keluar),
+        unit,
+      }),
+    });
+
+    const hitungan = new Map<string, number>();
+    for (const x of baris) {
+      const nama = this.lawanBaris(x);
+      hitungan.set(nama, (hitungan.get(nama) ?? 0) + 1);
+    }
+    const juara = [...hitungan.entries()].sort((a, b) => b[1] - a[1])[0];
+    if (juara && juara[1] >= 2) {
+      this.sorotan.push({
+        ikon: 'ph-crown-simple',
+        teks: t('sorotan-kartu-stok__lawan', {
+          nama: juara[0],
+          m: juara[1],
+          n: jumlah,
+        }),
+      });
+    }
+
+    if (this.tren.length > 1) {
+      this.sorotan.push({
+        ikon: 'ph-arrows-down-up',
+        teks: t('sorotan-kartu-stok__rentang', {
+          min: angka(this.minTren),
+          maks: angka(this.maksTren),
+          unit,
+        }),
+      });
+    }
   }
 
   /*
