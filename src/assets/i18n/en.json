@@ -1737,7 +1737,7 @@
   "login__submit": "Sign in",
   "login__submitting": "Signing in…",
   "login__forgot": "Forgot your password? Contact an administrator",
-  "login__caption": "Management System · v16",
+  "login__caption": "Management System · v20",
   "login__show_password": "Show password",
   "login__hide_password": "Hide password",
   "nav__search": "Search menu",

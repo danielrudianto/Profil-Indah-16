@@ -17,7 +17,7 @@ export class AppComponent {
   */
   constructor(private settingsService: SettingsService) {}
 
-  title = 'Profil Indah Management System V16';
+  title = 'Profil Indah Management System V20';
 
   ngOnInit(): void {
     const lang = localStorage.getItem('lang');
