@@ -1,4 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import {
   FormControl,
   FormGroup,
@@ -24,6 +27,7 @@ import { MatInput } from '@angular/material/input';
   selector: 'app-product-brand-update',
   templateUrl: './product-brand-update.component.html',
   imports: [
+    NgIf,
     MatFormField,
     MatLabel,
     MatInput,
@@ -32,7 +36,7 @@ import { MatInput } from '@angular/material/input';
     DialogShellComponent,
   ],
 })
-export class ProductBrandUpdateComponent implements OnInit {
+export class ProductBrandUpdateComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { id: number },
     private apiService: ApiService,
@@ -44,6 +48,14 @@ export class ProductBrandUpdateComponent implements OnInit {
   isLoading = true;
   isSubmitting = false;
 
+  /*
+    Cek nama kembar sambil mengetik, seanatomi dialog tambahnya — dengan
+    satu pengecualian: nama dirinya sendiri bukan tabrakan.
+  */
+  namaKembar = false;
+  private namaAwal = '';
+  private langgananNama?: Subscription;
+
   brandFormGroup: FormGroup = new FormGroup({
     id: new FormControl('', Validators.required),
     /* 45 huruf mengikuti lebar kolom name di tabel product_brand. */
@@ -52,6 +64,33 @@ export class ProductBrandUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchByID();
+
+    this.langgananNama = this.brandFormGroup
+      .get('name')!
+      .valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap((nilai: string) =>
+          this.apiService.get('product-brand/autocomplete', {
+            keyword: (nilai ?? '').trim(),
+          }),
+        ),
+      )
+      .subscribe({
+        next: (data: any) => {
+          const nama = (this.brandFormGroup.value.name ?? '')
+            .trim()
+            .toLowerCase();
+          this.namaKembar =
+            nama !== '' &&
+            nama !== this.namaAwal &&
+            (data as any[]).some((x) => x.name.trim().toLowerCase() === nama);
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.langgananNama?.unsubscribe();
   }
 
   fetchByID(): void {
@@ -60,6 +99,7 @@ export class ProductBrandUpdateComponent implements OnInit {
       .subscribe({
         next: (data: any) => {
           this.brandFormGroup.patchValue(data);
+          this.namaAwal = (data.name ?? '').trim().toLowerCase();
         },
         error: (error: any) => {
           this.alertService.showError(error);
@@ -72,7 +112,12 @@ export class ProductBrandUpdateComponent implements OnInit {
   }
 
   submitForm(): void {
-    if (this.isSubmitting || this.isLoading || !this.brandFormGroup.valid) {
+    if (
+      this.isSubmitting ||
+      this.isLoading ||
+      !this.brandFormGroup.valid ||
+      this.namaKembar
+    ) {
       return;
     }
 

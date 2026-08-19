@@ -220,7 +220,7 @@ export class ReportInadequateComponent implements OnInit {
             .then(() => {
               this.alertService.showSuccess(
                 this.translateService.instant(
-                  'inadequate-report__export__successful',
+                  'report-inadequate__export__successful',
                 ),
               );
             });

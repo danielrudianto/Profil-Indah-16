@@ -1,11 +1,15 @@
+import { NgIf } from '@angular/common';
 import {
   AfterViewInit,
   Component,
   ElementRef,
   Input,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import {
   FormControl,
   FormGroup,
@@ -38,6 +42,7 @@ import { MatInput } from '@angular/material/input';
   selector: 'app-product-type-update',
   templateUrl: './product-type-update.component.html',
   imports: [
+    NgIf,
     MatFormField,
     MatLabel,
     MatInput,
@@ -47,7 +52,9 @@ import { MatInput } from '@angular/material/input';
     DialogShellComponent,
   ],
 })
-export class ProductTypeUpdateComponent implements OnInit, AfterViewInit {
+export class ProductTypeUpdateComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
@@ -62,6 +69,14 @@ export class ProductTypeUpdateComponent implements OnInit, AfterViewInit {
   isLoading = true;
   isSubmitting = false;
 
+  /*
+    Cek nama kembar sambil mengetik, seanatomi dialog tambahnya — dengan
+    satu pengecualian: nama dirinya sendiri bukan tabrakan.
+  */
+  namaKembar = false;
+  private namaAwal = '';
+  private langgananNama?: Subscription;
+
   typeFormGroup: FormGroup = new FormGroup({
     id: new FormControl('', Validators.required),
     /* 45 huruf mengikuti lebar kolom name di tabel product_type. */
@@ -70,6 +85,33 @@ export class ProductTypeUpdateComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.fetchByID();
+
+    this.langgananNama = this.typeFormGroup
+      .get('name')!
+      .valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap((nilai: string) =>
+          this.apiService.get('product-type/autocomplete', {
+            keyword: (nilai ?? '').trim(),
+          }),
+        ),
+      )
+      .subscribe({
+        next: (data: any) => {
+          const nama = (this.typeFormGroup.value.name ?? '')
+            .trim()
+            .toLowerCase();
+          this.namaKembar =
+            nama !== '' &&
+            nama !== this.namaAwal &&
+            (data as any[]).some((x) => x.name.trim().toLowerCase() === nama);
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.langgananNama?.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -82,6 +124,7 @@ export class ProductTypeUpdateComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (data: any) => {
           this.typeFormGroup.patchValue(data);
+          this.namaAwal = (data.name ?? '').trim().toLowerCase();
         },
         error: (error: any) => {
           this.alertService.showError(error);
@@ -94,7 +137,12 @@ export class ProductTypeUpdateComponent implements OnInit, AfterViewInit {
   }
 
   submitForm(): void {
-    if (this.isSubmitting || this.isLoading || !this.typeFormGroup.valid) {
+    if (
+      this.isSubmitting ||
+      this.isLoading ||
+      !this.typeFormGroup.valid ||
+      this.namaKembar
+    ) {
       return;
     }
 

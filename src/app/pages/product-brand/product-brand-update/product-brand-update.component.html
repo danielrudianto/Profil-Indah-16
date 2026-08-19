@@ -4,7 +4,7 @@
   [lede]="'product__brand__update__lede' | translate"
   [submitLabel]="'product__brand__update__submit' | translate"
   [submitting]="isSubmitting"
-  [canSubmit]="!isLoading && brandFormGroup.valid"
+  [canSubmit]="!isLoading && brandFormGroup.valid && !namaKembar"
   (submitted)="submitForm()"
   (close)="closeDialog()"
 >
@@ -24,5 +24,11 @@
         "
       />
     </mat-form-field>
+
+    <!-- Hasil cek: nama baru menabrak merek lain yang masih hidup. -->
+    <p class="petunjuk petunjuk--galat" *ngIf="namaKembar">
+      <i class="ph ph-warning-circle" aria-hidden="true"></i>
+      <span>{{ "product__brand__update__duplicate" | translate }}</span>
+    </p>
   </div>
 </app-dialog-shell>
