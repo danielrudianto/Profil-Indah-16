@@ -19,13 +19,7 @@ import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-she
   selector: 'app-adjustment-case-confirm-view',
   templateUrl: './adjustment-case-confirm-view.component.html',
   styleUrls: ['./adjustment-case-confirm-view.component.scss'],
-  imports: [
-    DialogShellComponent,
-    NgIf,
-    NgFor,
-    DecimalPipe,
-    TranslatePipe,
-  ],
+  imports: [DialogShellComponent, NgIf, NgFor, DecimalPipe, TranslatePipe],
 })
 export class AdjustmentCaseConfirmViewComponent implements OnInit {
   constructor(

@@ -8,21 +8,23 @@
   (submitted)="setujui()"
   (close)="closeDialog()"
 >
-  <p class="setujui__memuat" *ngIf="isLoading">{{ 'general__loading' | translate }}</p>
+  <p class="setujui__memuat" *ngIf="isLoading">
+    {{ "general__loading" | translate }}
+  </p>
 
   <ng-container *ngIf="!isLoading && kasus">
     <!-- Ringkasan kasus: apa yang sedang disetujui. -->
     <dl class="ringkas">
       <div>
-        <dt>{{ 'adjustment-case__archive__name' | translate }}</dt>
+        <dt>{{ "adjustment-case__archive__name" | translate }}</dt>
         <dd>{{ kasus.name }}</dd>
       </div>
       <div>
-        <dt>{{ 'adjustment-case__archive__date' | translate }}</dt>
+        <dt>{{ "adjustment-case__archive__date" | translate }}</dt>
         <dd>{{ tanggal }}</dd>
       </div>
       <div>
-        <dt>{{ 'adjustment-case__archive__type' | translate }}</dt>
+        <dt>{{ "adjustment-case__archive__type" | translate }}</dt>
         <dd>
           <span
             class="pill"
@@ -37,26 +39,28 @@
             ></i>
             {{
               (kasus.company != null
-                ? 'adjustment-case__confirm__type__found'
-                : 'adjustment-case__confirm__type__lost'
+                ? "adjustment-case__confirm__type__found"
+                : "adjustment-case__confirm__type__lost"
               ) | translate
             }}
           </span>
         </dd>
       </div>
       <div *ngIf="kasus.company != null">
-        <dt>{{ 'adjustment-case__archive__company' | translate }}</dt>
+        <dt>{{ "adjustment-case__archive__company" | translate }}</dt>
         <dd>{{ kasus.company.name }}</dd>
       </div>
       <div>
-        <dt>{{ 'adjustment-case__archive__created-by' | translate }}</dt>
-        <dd>{{ kasus.user_adjustment_case_code_created_byTouser?.name ?? '—' }}</dd>
+        <dt>{{ "adjustment-case__archive__created-by" | translate }}</dt>
+        <dd>
+          {{ kasus.user_adjustment_case_code_created_byTouser?.name ?? "—" }}
+        </dd>
       </div>
       <div>
-        <dt>{{ 'adjustment-case__approve__items' | translate }}</dt>
+        <dt>{{ "adjustment-case__approve__items" | translate }}</dt>
         <dd>
-          {{ jumlahBaris }} {{ 'adjustment-case__approve__rows' | translate }}
-          · {{ totalJumlah | number: '0.0-2' }}
+          {{ jumlahBaris }} {{ "adjustment-case__approve__rows" | translate }} ·
+          {{ totalJumlah | number: "0.0-2" }}
         </dd>
       </div>
     </dl>
@@ -65,8 +69,10 @@
     <table class="tabel tabel--ringkas">
       <thead>
         <tr>
-          <th>{{ 'adjustment-case__table__item' | translate }}</th>
-          <th class="ke-kanan">{{ 'adjustment-case__table__quantity' | translate }}</th>
+          <th>{{ "adjustment-case__table__item" | translate }}</th>
+          <th class="ke-kanan">
+            {{ "adjustment-case__table__quantity" | translate }}
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -76,8 +82,12 @@
             <span class="barang__desc">{{ baris.product?.description }}</span>
           </td>
           <td class="ke-kanan">
-            {{ baris.quantity | number: '0.0-2' }}
-            {{ baris.product_unit == null ? baris.product?.unit : baris.product_unit.unit }}
+            {{ baris.quantity | number: "0.0-2" }}
+            {{
+              baris.product_unit == null
+                ? baris.product?.unit
+                : baris.product_unit.unit
+            }}
           </td>
         </tr>
       </tbody>
@@ -90,7 +100,7 @@
     -->
     <p class="petunjuk">
       <i class="ph ph-info" aria-hidden="true"></i>
-      {{ 'adjustment-case__approve__note' | translate }}
+      {{ "adjustment-case__approve__note" | translate }}
     </p>
   </ng-container>
 </app-dialog-shell>

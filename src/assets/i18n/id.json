@@ -759,6 +759,7 @@
   "stock-card__empty__title": "Belum ada mutasi",
   "stock-card__empty__desc": "Pergerakan akan tampil di sini begitu ada dokumen yang menyentuh barang ini.",
   "adjustment-case__confirm__title": "Konfirmasi penyesuaian stok",
+  "adjustment-case__confirm__back": "Kembali ke pembuatan",
   "adjustment-case__confirm__date": "Tanggal",
   "adjustment-case__confirm__name": "Nama",
   "adjustment-case__confirm__created-by": "Dibuat oleh",

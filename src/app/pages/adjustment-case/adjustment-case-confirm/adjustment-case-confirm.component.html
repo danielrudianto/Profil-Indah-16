@@ -1,7 +1,6 @@
 <app-list-page
   [heading]="'adjustment-case__confirm__title' | translate"
   [lede]="'adjustment-case__confirm__lede' | translate"
-  [addLabel]="'adjustment-case__create' | translate"
   [page]="page"
   [pageSize]="pageSize"
   [total]="dataCount"
@@ -9,19 +8,29 @@
   [showSearch]="false"
   [showPageSize]="false"
   (pageChange)="bukaHalaman($event)"
-  (add)="buatPenyesuaian()"
   (refresh)="ambilData()"
 >
+  <!--
+    Jalan pulangnya DITULIS, bukan diserahkan ke tombol sidenav: dulu
+    satu-satunya tombol berlabel "Buat penyesuaian" — terbaca sebagai aksi
+    membuat, padahal fungsinya kembali ke halaman pembuatan.
+  -->
+  <ng-container aksi>
+    <button type="button" class="aksi-hantu" (click)="buatPenyesuaian()">
+      <i class="ph ph-arrow-u-up-left" aria-hidden="true"></i>
+      {{ "adjustment-case__confirm__back" | translate }}
+    </button>
+  </ng-container>
   <table class="tabel">
     <thead>
       <tr>
-        <th>{{ 'adjustment-case__confirm__date' | translate }}</th>
-        <th>{{ 'adjustment-case__confirm__name' | translate }}</th>
-        <th>{{ 'adjustment-case__confirm__created-by' | translate }}</th>
-        <th>{{ 'adjustment-case__confirm__type' | translate }}</th>
-        <th>{{ 'adjustment-case__confirm__company' | translate }}</th>
+        <th>{{ "adjustment-case__confirm__date" | translate }}</th>
+        <th>{{ "adjustment-case__confirm__name" | translate }}</th>
+        <th>{{ "adjustment-case__confirm__created-by" | translate }}</th>
+        <th>{{ "adjustment-case__confirm__type" | translate }}</th>
+        <th>{{ "adjustment-case__confirm__company" | translate }}</th>
         <th class="tabel__aksi-kepala">
-          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+          <span class="sr-only">{{ "general__actions" | translate }}</span>
         </th>
       </tr>
     </thead>
@@ -33,12 +42,15 @@
         class="tabel__baris-klik"
         (click)="lihat(item)"
       >
-        <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
+        <td class="tabel__tanggal">{{ item.date | date: "dd MMMM yyyy" }}</td>
         <td class="tabel__utama">{{ item.name }}</td>
         <td>
           <span class="pembuat">
             <app-avatar
-              *ngIf="item.user_adjustment_case_code_created_byTouser?.user_avatar as av"
+              *ngIf="
+                item.user_adjustment_case_code_created_byTouser
+                  ?.user_avatar as av
+              "
               [width]="25"
               [top]="av.top"
               [accessories]="av.accessories"
@@ -49,7 +61,7 @@
               [eyebrows]="av.eyebrows"
               [color]="av.color"
             />
-            {{ item.user_adjustment_case_code_created_byTouser?.name ?? '—' }}
+            {{ item.user_adjustment_case_code_created_byTouser?.name ?? "—" }}
           </span>
         </td>
         <td>
@@ -66,13 +78,13 @@
             ></i>
             {{
               (item.company != null
-                ? 'adjustment-case__confirm__type__found'
-                : 'adjustment-case__confirm__type__lost'
+                ? "adjustment-case__confirm__type__found"
+                : "adjustment-case__confirm__type__lost"
               ) | translate
             }}
           </span>
         </td>
-        <td class="tabel__redup">{{ item.company?.name ?? '—' }}</td>
+        <td class="tabel__redup">{{ item.company?.name ?? "—" }}</td>
         <td class="tabel__aksi" (click)="$event.stopPropagation()">
           <button
             type="button"
@@ -89,7 +101,9 @@
 
     <tbody *ngIf="isLoading">
       <tr>
-        <td colspan="6" class="tabel__pesan">{{ 'general__loading' | translate }}</td>
+        <td colspan="6" class="tabel__pesan">
+          {{ "general__loading" | translate }}
+        </td>
       </tr>
     </tbody>
 

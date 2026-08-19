@@ -743,6 +743,7 @@
   "stock-card__empty__title": "No mutations yet",
   "stock-card__empty__desc": "Movements will appear here once documents touch this product.",
   "adjustment-case__confirm__title": "Confirm adjustment case",
+  "adjustment-case__confirm__back": "Back to create",
   "adjustment-case__confirm__date": "Date",
   "adjustment-case__confirm__name": "Name",
   "adjustment-case__confirm__created-by": "Created by",
