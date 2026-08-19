@@ -71,49 +71,65 @@
     </ul>
   </section>
 
-  <!-- Pergerakan saldo — batang per mutasi, tooltip wajib. -->
-  <section hero class="kartu" *ngIf="tren.length > 1">
-    <div class="kartu__kepala">
+  <!--
+    Pergerakan saldo — batang per mutasi, tooltip wajib. Akordeon tertutup
+    di awal: batangnya baru digambar saat dibuka.
+  -->
+  <section
+    hero
+    class="kartu akordeon"
+    [class.akordeon--buka]="grafikTerbuka"
+    *ngIf="tren.length > 1"
+  >
+    <button
+      type="button"
+      class="akordeon__kepala"
+      (click)="grafikTerbuka = !grafikTerbuka"
+      [attr.aria-expanded]="grafikTerbuka"
+    >
       <div>
         <h2 class="kartu__label">{{ "stock-card__chart" | translate }}</h2>
         <p class="grafik__sub">
           {{ "stock-card__chart__sub" | translate: { n: jendela.jumlah } }}
         </p>
       </div>
-    </div>
+      <i class="ph ph-caret-down akordeon__panah" aria-hidden="true"></i>
+    </button>
 
-    <div class="grafik grafik--nilai">
-      <div class="grafik__hari" *ngFor="let t of tren; index as i">
-        <div class="grafik-tip" role="tooltip">
-          <strong>
-            {{ t.saldo | number: "1.0-2" }} {{ productDataSource?.unit }}
-          </strong>
-          <small>
-            {{ t.tanggal | date: "dd MMM yyyy" }} · {{ t.dokumen }} ({{
-              t.mutasi > 0 ? "+" : ""
-            }}{{ t.mutasi | number: "1.0-2" }})
-          </small>
+    <ng-container *ngIf="grafikTerbuka">
+      <div class="grafik grafik--nilai">
+        <div class="grafik__hari" *ngFor="let t of tren; index as i">
+          <div class="grafik-tip" role="tooltip">
+            <strong>
+              {{ t.saldo | number: "1.0-2" }} {{ productDataSource?.unit }}
+            </strong>
+            <small>
+              {{ t.tanggal | date: "dd MMM yyyy" }} · {{ t.dokumen }} ({{
+                t.mutasi > 0 ? "+" : ""
+              }}{{ t.mutasi | number: "1.0-2" }})
+            </small>
+          </div>
+          <span
+            class="grafik__nilai"
+            [style.height.%]="tinggiSaldo(t)"
+            aria-hidden="true"
+          ></span>
+          <span class="grafik__tanggal" *ngIf="tampilkanLabel(i)">
+            {{ t.tanggal | date: "dd/M" }}
+          </span>
         </div>
-        <span
-          class="grafik__nilai"
-          [style.height.%]="tinggiSaldo(t)"
-          aria-hidden="true"
-        ></span>
-        <span class="grafik__tanggal" *ngIf="tampilkanLabel(i)">
-          {{ t.tanggal | date: "dd/M" }}
-        </span>
       </div>
-    </div>
 
-    <div class="grafik__kaki">
-      <div class="grafik__legenda">
-        <span>
-          <i class="grafik__legenda--nilai" aria-hidden="true"></i>
-          {{ "stock-card__chart__legend" | translate }}
-        </span>
+      <div class="grafik__kaki">
+        <div class="grafik__legenda">
+          <span>
+            <i class="grafik__legenda--nilai" aria-hidden="true"></i>
+            {{ "stock-card__chart__legend" | translate }}
+          </span>
+        </div>
+        <span class="grafik__rentang">{{ rentangTren }}</span>
       </div>
-      <span class="grafik__rentang">{{ rentangTren }}</span>
-    </div>
+    </ng-container>
   </section>
 
   <table class="tabel">

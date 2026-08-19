@@ -83,6 +83,13 @@ export class StockCardComponent implements OnInit {
   jendela: { baris: any[]; jumlah: number } = { baris: [], jumlah: 0 };
   sorotan: { ikon: string; teks: string }[] = [];
 
+  /*
+    Grafik tertutup di awal — sorotan sudah merangkum jendelanya, dan 50
+    batang baru digambar ketika benar-benar diminta. Datanya sendiri tetap
+    sekali ambil karena sorotan memakainya juga.
+  */
+  grafikTerbuka = false;
+
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.params['id']);
 

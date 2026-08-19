@@ -38,3 +38,43 @@
     margin-left: 4px;
   }
 }
+
+/*
+  Zona hero list-page menempel langsung ke kartu tabelnya — kartu yang
+  diproyeksikan menanggung jarak bawahnya sendiri, 16px seperti jarak
+  antar kartu lain. Margin antar saudara melebur, jadi jarak
+  sorotan→grafik tidak mengganda.
+*/
+section.kartu {
+  margin-bottom: 16px;
+}
+
+/* Akordeon grafik — anatomi kepala seturut laporan pengeluaran barang. */
+.akordeon__kepala {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.akordeon__panah {
+  margin-left: auto;
+  font-size: 16px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  transition: transform 0.18s ease;
+}
+
+.akordeon--buka .akordeon__panah {
+  transform: rotate(180deg);
+}
+
+.akordeon--buka .akordeon__kepala {
+  margin-bottom: 12px;
+}
