@@ -102,7 +102,9 @@
   border: 1px solid var(--color-divider);
   border-radius: 8px;
   cursor: pointer;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
 
   i {
     font-size: 16px;
@@ -152,7 +154,9 @@
   border: 1px solid var(--color-divider);
   border-radius: 8px;
   cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
 
   &:hover {
     color: var(--color-text);

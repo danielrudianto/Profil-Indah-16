@@ -1,7 +1,7 @@
 <div class="settings">
   <header class="settings__head">
-    <h1 class="settings__title">{{ 'settings__title' | translate }}</h1>
-    <p class="settings__lede">{{ 'settings__lede' | translate }}</p>
+    <h1 class="settings__title">{{ "settings__title" | translate }}</h1>
+    <p class="settings__lede">{{ "settings__lede" | translate }}</p>
   </header>
 
   <!-- Mode tampilan --------------------------------------------------- -->
@@ -11,8 +11,8 @@
     salinan yang cepat atau lambat berbeda.
   -->
   <section class="settings__card">
-    <h2 class="settings__card-title">{{ 'settings__avatar' | translate }}</h2>
-    <p class="settings__card-note">{{ 'settings__avatar_note' | translate }}</p>
+    <h2 class="settings__card-title">{{ "settings__avatar" | translate }}</h2>
+    <p class="settings__card-note">{{ "settings__avatar_note" | translate }}</p>
 
     <div class="avatar-baris">
       <div class="avatar-baris__pratinjau">
@@ -31,27 +31,35 @@
         <app-circle-avatar *ngIf="!avatar" [name]="nama" [size]="64" />
       </div>
 
-      <button type="button" class="seg__opt seg__opt--tombol" (click)="aturAvatar()">
+      <button
+        type="button"
+        class="seg__opt seg__opt--tombol"
+        (click)="aturAvatar()"
+      >
         <i class="ph ph-pencil-simple" aria-hidden="true"></i>
-        {{ 'settings__avatar_edit' | translate }}
+        {{ "settings__avatar_edit" | translate }}
       </button>
     </div>
   </section>
 
   <!-- Kata sandi — dialognya sama dengan milik halaman profil. -->
   <section class="settings__card">
-    <h2 class="settings__card-title">{{ 'settings__sandi' | translate }}</h2>
-    <p class="settings__card-note">{{ 'settings__sandi_note' | translate }}</p>
+    <h2 class="settings__card-title">{{ "settings__sandi" | translate }}</h2>
+    <p class="settings__card-note">{{ "settings__sandi_note" | translate }}</p>
 
-    <button type="button" class="seg__opt seg__opt--tombol" (click)="gantiSandi()">
+    <button
+      type="button"
+      class="seg__opt seg__opt--tombol"
+      (click)="gantiSandi()"
+    >
       <i class="ph ph-password" aria-hidden="true"></i>
-      {{ 'settings__sandi_edit' | translate }}
+      {{ "settings__sandi_edit" | translate }}
     </button>
   </section>
 
   <section class="settings__card">
-    <h2 class="settings__card-title">{{ 'settings__mode' | translate }}</h2>
-    <p class="settings__card-note">{{ 'settings__mode_note' | translate }}</p>
+    <h2 class="settings__card-title">{{ "settings__mode" | translate }}</h2>
+    <p class="settings__card-note">{{ "settings__mode_note" | translate }}</p>
 
     <div class="seg" role="group">
       <button
@@ -62,7 +70,7 @@
         (click)="pilihMode('light')"
       >
         <i class="ph ph-sun" aria-hidden="true"></i>
-        {{ 'settings__mode_light' | translate }}
+        {{ "settings__mode_light" | translate }}
       </button>
       <button
         type="button"
@@ -72,15 +80,15 @@
         (click)="pilihMode('dark')"
       >
         <i class="ph ph-moon" aria-hidden="true"></i>
-        {{ 'settings__mode_dark' | translate }}
+        {{ "settings__mode_dark" | translate }}
       </button>
     </div>
   </section>
 
   <!-- Warna aksen ----------------------------------------------------- -->
   <section class="settings__card">
-    <h2 class="settings__card-title">{{ 'settings__accent' | translate }}</h2>
-    <p class="settings__card-note">{{ 'settings__accent_note' | translate }}</p>
+    <h2 class="settings__card-title">{{ "settings__accent" | translate }}</h2>
+    <p class="settings__card-note">{{ "settings__accent_note" | translate }}</p>
 
     <div class="accents">
       <button
@@ -100,8 +108,10 @@
 
   <!-- Bahasa ---------------------------------------------------------- -->
   <section class="settings__card">
-    <h2 class="settings__card-title">{{ 'settings__language' | translate }}</h2>
-    <p class="settings__card-note">{{ 'settings__language_note' | translate }}</p>
+    <h2 class="settings__card-title">{{ "settings__language" | translate }}</h2>
+    <p class="settings__card-note">
+      {{ "settings__language_note" | translate }}
+    </p>
 
     <div class="seg" role="group">
       <button
@@ -111,7 +121,7 @@
         [attr.aria-pressed]="bahasa === 'id'"
         (click)="pilihBahasa('id')"
       >
-        {{ 'settings__language_id' | translate }}
+        {{ "settings__language_id" | translate }}
       </button>
       <button
         type="button"
@@ -120,7 +130,7 @@
         [attr.aria-pressed]="bahasa === 'en'"
         (click)="pilihBahasa('en')"
       >
-        {{ 'settings__language_en' | translate }}
+        {{ "settings__language_en" | translate }}
       </button>
     </div>
   </section>

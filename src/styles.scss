@@ -220,6 +220,50 @@ html {
   --mat-menu-item-label-text-weight: 500;
 }
 
+/*
+  Menu profil dari topbar — mat-menu biasa dengan kepala identitas.
+  Gayanya global karena panel menu dirender di overlay.
+*/
+.menu-profil .menu-profil__kepala {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--color-divider);
+  cursor: default;
+}
+
+.menu-profil__identitas {
+  min-width: 0;
+
+  strong {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--color-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  span {
+    display: block;
+    margin-top: 2px;
+    font-size: 12px;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  }
+}
+
+/* Keluar memakai merah baku — aksi yang mengakhiri sesi, bukan navigasi. */
+.menu-profil__keluar {
+  --mat-menu-item-label-text-color: #e05260;
+
+  i {
+    color: #e05260;
+  }
+}
+
 .mat-mdc-menu-panel {
   border: 1px solid var(--color-divider);
   box-shadow: 0 12px 32px rgb(0 0 0 / 0.18);

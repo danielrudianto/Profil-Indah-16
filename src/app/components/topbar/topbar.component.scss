@@ -31,7 +31,9 @@
   color: color-mix(in srgb, var(--color-text) 62%, transparent);
   font-size: 20px;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 
   &:hover {
     background: color-mix(in srgb, var(--color-text) 6%, transparent);

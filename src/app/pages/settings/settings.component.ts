@@ -17,7 +17,7 @@ import { DynamicComponentService } from 'src/app/services/dynamic-component.serv
 import { AvatarComponent } from 'src/app/components/avatar/avatar.component';
 import { CircleAvatarComponent } from 'src/app/components/circle-avatar/circle-avatar.component';
 import { SetAvatarComponent } from 'src/app/pages/set-avatar/set-avatar.component';
-import { ResetPasswordDialogComponent } from 'src/app/pages/profile-overview/reset-password-dialog/reset-password-dialog.component';
+import { ResetPasswordDialogComponent } from './reset-password-dialog/reset-password-dialog.component';
 
 /**
  * Halaman pengaturan tampilan.

@@ -37,7 +37,7 @@
     {{ (konteks?.tag ?? judulHalaman)! | translate }}
   </span>
 
-<div class="topbar__utility">
+  <div class="topbar__utility">
     <app-dark-mode-selector />
     <app-language-selector />
 
@@ -49,7 +49,7 @@
     <button
       type="button"
       class="topbar__user"
-      (click)="isProfileOpened = true"
+      [matMenuTriggerFor]="menuProfil"
       [attr.aria-label]="'topbar__profile' | translate"
     >
       <app-circle-avatar *ngIf="!isAvatarAvailable" [name]="name" [size]="30" />
@@ -76,10 +76,42 @@
   </div>
 </header>
 
-<app-profile-dialog
-  [name]="name"
-  (onClose)="isProfileOpened = false"
-  (onLogoutButtonPressed)="logout()"
-  (onProfileButtonPressed)="navigateToProfile()"
-  *ngIf="isProfileOpened"
-/>
+<!--
+  Menu profil — mat-menu biasa, seanatomi menu aksi baris dan pemilih
+  tahun. Kepalanya identitas (bukan item yang bisa diklik), lalu dua aksi.
+-->
+<mat-menu #menuProfil="matMenu" class="menu-profil" xPosition="before">
+  <div class="menu-profil__kepala" (click)="$event.stopPropagation()">
+    <app-circle-avatar *ngIf="!isAvatarAvailable" [name]="name" [size]="40" />
+    <app-avatar
+      *ngIf="isAvatarAvailable"
+      [width]="40"
+      [top]="avatar.top"
+      [accessories]="avatar.accessories"
+      [circle]="avatar.circle"
+      [color]="avatar.color"
+      [eyebrows]="avatar.eyebrows"
+      [eyes]="avatar.eyes"
+      [mouth]="avatar.mouth"
+      [clothes]="avatar.clothes"
+    />
+    <div class="menu-profil__identitas">
+      <strong>{{ name }}</strong>
+      <span *ngIf="subJudul">{{ subJudul }}</span>
+    </div>
+  </div>
+
+  <button mat-menu-item type="button" (click)="bukaPengaturan()">
+    <i class="ph ph-gear" aria-hidden="true"></i>
+    <span>{{ "nav__settings" | translate }}</span>
+  </button>
+  <button
+    mat-menu-item
+    type="button"
+    class="menu-profil__keluar"
+    (click)="logout()"
+  >
+    <i class="ph ph-sign-out" aria-hidden="true"></i>
+    <span>{{ "profile-dialog__logout" | translate }}</span>
+  </button>
+</mat-menu>

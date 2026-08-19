@@ -2,6 +2,7 @@ import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
 import {
@@ -13,7 +14,6 @@ import { DarkModeSelectorComponent } from './dark-mode-selector/dark-mode-select
 import { LanguageSelectorComponent } from './language-selector/language-selector.component';
 import { CircleAvatarComponent } from '../circle-avatar/circle-avatar.component';
 import { AvatarComponent } from '../avatar/avatar.component';
-import { ProfileDialogComponent } from '../profile-dialog/profile-dialog.component';
 
 /**
  * Topbar — sistem desain Nocturne.
@@ -40,7 +40,9 @@ import { ProfileDialogComponent } from '../profile-dialog/profile-dialog.compone
     RouterLink,
     CircleAvatarComponent,
     AvatarComponent,
-    ProfileDialogComponent,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
   ],
 })
 export class TopbarComponent implements OnInit {
@@ -53,7 +55,6 @@ export class TopbarComponent implements OnInit {
 
   private destroyRef = inject(DestroyRef);
 
-  isProfileOpened: boolean = false;
   isAvatarAvailable: boolean = false;
   avatar: any = null;
   name: string = '';
@@ -91,7 +92,7 @@ export class TopbarComponent implements OnInit {
 
     const userInfo = this.authService.getUserInfo();
     this.name = userInfo?.name ?? '';
-    this.subJudul = userInfo?.username ?? '';
+    this.subJudul = userInfo?.roleText ?? userInfo?.username ?? '';
   }
 
   toggleSideNav(): void {
@@ -99,15 +100,11 @@ export class TopbarComponent implements OnInit {
   }
 
   logout() {
-    setTimeout(() => {
-      this.authService.logout();
-      this.router.navigate(['/Login']);
-    }, 500);
+    this.authService.logout();
+    this.router.navigate(['/Login']);
   }
 
-  navigateToProfile() {
-    setTimeout(() => {
-      this.router.navigate(['/Profile']);
-    }, 500);
+  bukaPengaturan() {
+    this.router.navigate(['/Settings']);
   }
 }
