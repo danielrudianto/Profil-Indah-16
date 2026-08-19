@@ -99,10 +99,21 @@
   </section>
 
   <!-- Merek yang dipasok -->
-  <section class="kartu">
-    <h2 class="kartu__label">{{ "supplier-report__brands" | translate }}</h2>
+  <section class="kartu akordeon" [class.akordeon--buka]="merekTerbuka">
+    <button
+      type="button"
+      class="akordeon__kepala"
+      (click)="merekTerbuka = !merekTerbuka"
+      [attr.aria-expanded]="merekTerbuka"
+    >
+      <h2 class="kartu__label">{{ "supplier-report__brands" | translate }}</h2>
+      <span class="akordeon__jumlah">
+        {{ laporan.brands.length | number }}
+      </span>
+      <i class="ph ph-caret-down akordeon__panah" aria-hidden="true"></i>
+    </button>
 
-    <div class="gulir" *ngIf="laporan.brands.length > 0">
+    <div class="gulir" *ngIf="merekTerbuka && laporan.brands.length > 0">
       <table class="tabel">
         <thead>
           <tr>
@@ -131,18 +142,29 @@
       </table>
     </div>
 
-    <p class="tabel__pesan" *ngIf="laporan.brands.length === 0">
+    <p class="tabel__pesan" *ngIf="merekTerbuka && laporan.brands.length === 0">
       {{ "supplier-report__empty" | translate }}
     </p>
   </section>
 
   <!-- Barang paling sering dibeli -->
-  <section class="kartu">
-    <h2 class="kartu__label">
-      {{ "supplier-report__top-products" | translate }}
-    </h2>
+  <section class="kartu akordeon" [class.akordeon--buka]="barangTerbuka">
+    <button
+      type="button"
+      class="akordeon__kepala"
+      (click)="barangTerbuka = !barangTerbuka"
+      [attr.aria-expanded]="barangTerbuka"
+    >
+      <h2 class="kartu__label">
+        {{ "supplier-report__top-products" | translate }}
+      </h2>
+      <span class="akordeon__jumlah">
+        {{ laporan.topProducts.length | number }}
+      </span>
+      <i class="ph ph-caret-down akordeon__panah" aria-hidden="true"></i>
+    </button>
 
-    <div class="gulir" *ngIf="laporan.topProducts.length > 0">
+    <div class="gulir" *ngIf="barangTerbuka && laporan.topProducts.length > 0">
       <table class="tabel">
         <thead>
           <tr>
@@ -174,7 +196,10 @@
       </table>
     </div>
 
-    <p class="tabel__pesan" *ngIf="laporan.topProducts.length === 0">
+    <p
+      class="tabel__pesan"
+      *ngIf="barangTerbuka && laporan.topProducts.length === 0"
+    >
       {{ "supplier-report__empty" | translate }}
     </p>
   </section>

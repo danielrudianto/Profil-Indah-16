@@ -43,6 +43,10 @@ export class SupplierReportComponent implements OnInit {
   tahun = 0;
   laporan: any = null;
 
+  /* Akordeon merek & barang: tertutup di awal, dibuka sesuai kebutuhan. */
+  merekTerbuka = false;
+  barangTerbuka = false;
+
   ngOnInit(): void {
     this.ambilData();
   }
