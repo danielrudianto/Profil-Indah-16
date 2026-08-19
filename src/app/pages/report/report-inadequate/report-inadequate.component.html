@@ -87,6 +87,9 @@
           {{ "report-inadequate__minimum-stock" | translate }}
         </th>
         <th class="tabel__nilai-kepala">
+          {{ "report-inadequate__recommendation" | translate }}
+        </th>
+        <th class="tabel__nilai-kepala">
           {{ "report-inadequate__shortage" | translate }}
         </th>
       </tr>
@@ -104,6 +107,15 @@
         <td class="tabel__nilai">
           {{ item.minimum_stock | number: "1.0-2" }} {{ item.unit }}
         </td>
+        <td class="tabel__nilai">
+          <ng-container *ngIf="item.minimum_stock_recommendation != null">
+            {{ item.minimum_stock_recommendation | number: "1.0-2" }}
+            {{ item.unit }}
+          </ng-container>
+          <ng-container *ngIf="item.minimum_stock_recommendation == null">
+            —
+          </ng-container>
+        </td>
         <td class="tabel__nilai kurang">
           − {{ kekurangan(item) | number: "1.0-2" }} {{ item.unit }}
         </td>
@@ -112,7 +124,7 @@
 
     <tbody *ngIf="isLoading">
       <tr>
-        <td colspan="7" class="tabel__pesan">
+        <td colspan="8" class="tabel__pesan">
           {{ "general__loading" | translate }}
         </td>
       </tr>
@@ -120,7 +132,7 @@
 
     <tbody *ngIf="!isLoading && dataSource.length === 0">
       <tr>
-        <td colspan="7">
+        <td colspan="8">
           <app-tabel-kosong
             ikon="ph-package"
             [judul]="'report-inadequate__empty' | translate"

@@ -1067,6 +1067,7 @@
   "report-inadequate__type": "Tipe",
   "report-inadequate__stock": "Stok",
   "report-inadequate__minimum-stock": "Stok minimum",
+  "report-inadequate__recommendation": "Min. disarankan",
   "report-inadequate__search": "Cari",
   "sales-invoice__archive__filter__title": "Filter dokumen penjualan",
   "sales-invoice__archive__filter__date-range": "Rentang tanggal",

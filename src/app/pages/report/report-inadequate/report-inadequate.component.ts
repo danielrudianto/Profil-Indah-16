@@ -138,8 +138,19 @@ export class ReportInadequateComponent implements OnInit {
   }
 
   /** Selisih terhadap ambang — seberapa banyak yang perlu dipesan. */
+  /*
+    Ambang EFEKTIF: yang tertinggi antara minimum manual dan rekomendasi
+    hasil hitungan reorder point — sama persis dengan saringan servernya.
+  */
+  ambang(item: any): number {
+    return Math.max(
+      Number(item.minimum_stock),
+      Number(item.minimum_stock_recommendation ?? 0),
+    );
+  }
+
   kekurangan(item: any): number {
-    return Number(item.minimum_stock) - Number(item.product_stock?.stock ?? 0);
+    return this.ambang(item) - Number(item.product_stock?.stock ?? 0);
   }
 
   /* ---------------------------------------------------------------- */
@@ -168,6 +179,8 @@ export class ReportInadequateComponent implements OnInit {
                   { judul: 'Description', lebar: 42 },
                   { judul: 'Stock', format: 'angka' },
                   { judul: 'Minimum stock', format: 'angka' },
+                  { judul: 'Recommended minimum', format: 'angka' },
+                  { judul: 'Shortage', format: 'angka' },
                   { judul: 'Unit', lebar: 10 },
                 ],
                 baris: (data.data as any[]).map((x) => [
@@ -175,6 +188,10 @@ export class ReportInadequateComponent implements OnInit {
                   x.description,
                   Number(x.product_stock?.stock ?? 0),
                   Number(x.minimum_stock),
+                  x.minimum_stock_recommendation == null
+                    ? null
+                    : Number(x.minimum_stock_recommendation),
+                  this.kekurangan(x),
                   x.unit,
                 ]),
               },

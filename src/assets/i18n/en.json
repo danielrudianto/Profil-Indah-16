@@ -1070,6 +1070,7 @@
   "report-inadequate__type": "Type",
   "report-inadequate__stock": "Stock",
   "report-inadequate__minimum-stock": "Minimum stock",
+  "report-inadequate__recommendation": "Recommended min.",
   "report-inadequate__search": "Search",
   "sales-invoice__archive__filter__title": "Filter sales invoice document",
   "sales-invoice__archive__filter__date-range": "Date range",
