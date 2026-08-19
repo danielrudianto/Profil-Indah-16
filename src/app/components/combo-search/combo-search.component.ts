@@ -38,14 +38,7 @@ export interface ComboItem {
   selector: 'app-combo-search',
   templateUrl: './combo-search.component.html',
   styleUrls: ['./combo-search.component.scss'],
-  imports: [
-    MatFormField,
-    MatLabel,
-    MatInput,
-    NgIf,
-    NgFor,
-    ReactiveFormsModule,
-  ],
+  imports: [MatFormField, MatLabel, MatInput, NgIf, NgFor, ReactiveFormsModule],
 })
 export class ComboSearchComponent implements OnInit {
   constructor(

@@ -12,6 +12,8 @@
 
 .combo {
   position: relative;
+  /* Pengganti ruang subscript yang dilepas — tetangganya masih memesan 20px. */
+  margin-bottom: 20px;
 }
 
 .input {

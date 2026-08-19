@@ -1,5 +1,11 @@
 <div class="combo">
-  <mat-form-field appearance="outline" class="w-100">
+  <!--
+    subscriptSizing dynamic: combo tidak pernah menggambar hint/error
+    Material, tetapi ruang cadangannya (20px) tetap dipesan — dan daftar
+    saran yang dipatok ke dasar container ikut melayang 24px di bawah
+    kotaknya. Ruangnya dilepas; irama jarak formulir dijaga margin .combo.
+  -->
+  <mat-form-field appearance="outline" class="w-100" subscriptSizing="dynamic">
     <!--
       TANPA *ngIf. mat-form-field membaca labelnya lewat ContentChild saat
       inisialisasi; label yang baru muncul belakangan tidak pernah terpasang ke
@@ -7,7 +13,20 @@
       label kosong, elemen ini tetap ada dan takiknya sekadar kosong.
     -->
     <mat-label>{{ label }}</mat-label>
-    <input matInput type="text" autocomplete="off" [id]="inputId" [formControl]="control" [attr.placeholder]="placeholder" [attr.disabled]="disabled ? '' : null" [attr.aria-expanded]="terbuka" role="combobox" aria-autocomplete="list" (focus)="fokus()" (keydown)="tombol($event)" />
+    <input
+      matInput
+      type="text"
+      autocomplete="off"
+      [id]="inputId"
+      [formControl]="control"
+      [attr.placeholder]="placeholder"
+      [attr.disabled]="disabled ? '' : null"
+      [attr.aria-expanded]="terbuka"
+      role="combobox"
+      aria-autocomplete="list"
+      (focus)="fokus()"
+      (keydown)="tombol($event)"
+    />
   </mat-form-field>
 
   <ul class="combo__daftar" *ngIf="terbuka" role="listbox">
