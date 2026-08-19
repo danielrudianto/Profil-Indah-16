@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgFor, NgIf, DecimalPipe, DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatSelect, MatOption } from '@angular/material/select';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -27,11 +25,9 @@ import { ApiService } from 'src/app/services/api.service';
     NgFor,
     DecimalPipe,
     DatePipe,
-    FormsModule,
-    MatFormField,
-    MatLabel,
-    MatSelect,
-    MatOption,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
     TranslatePipe,
   ],
 })

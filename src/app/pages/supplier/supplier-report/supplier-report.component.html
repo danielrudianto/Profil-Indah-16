@@ -12,17 +12,32 @@
         {{ "supplier-report__back" | translate }}
       </button>
 
-      <mat-form-field appearance="outline" class="laporan__tahun">
-        <mat-label>{{ "supplier-report__year" | translate }}</mat-label>
-        <mat-select [ngModel]="tahun" (ngModelChange)="gantiTahun($event)">
-          <mat-option [value]="0">{{
-            "supplier-report__all-time" | translate
-          }}</mat-option>
-          <mat-option *ngFor="let t of laporan.availableYears" [value]="t">{{
-            t
-          }}</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <!--
+        Pemilih tahun setampang tombol Kembali — dulu mat-select bergaya
+        kolom isian yang berdiri beda sendiri di baris kendali. Menunya
+        mat-menu yang sudah berkulit Nocturne global.
+      -->
+      <button
+        type="button"
+        class="btn btn--kedua"
+        [matMenuTriggerFor]="menuTahun"
+      >
+        <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+        {{ tahun === 0 ? ("supplier-report__all-time" | translate) : tahun }}
+        <i class="ph ph-caret-down" aria-hidden="true"></i>
+      </button>
+      <mat-menu #menuTahun="matMenu">
+        <button mat-menu-item (click)="gantiTahun(0)">
+          {{ "supplier-report__all-time" | translate }}
+        </button>
+        <button
+          mat-menu-item
+          *ngFor="let t of laporan.availableYears"
+          (click)="gantiTahun(t)"
+        >
+          {{ t }}
+        </button>
+      </mat-menu>
     </div>
   </header>
 
