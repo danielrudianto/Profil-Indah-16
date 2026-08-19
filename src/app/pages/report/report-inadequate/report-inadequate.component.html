@@ -73,6 +73,27 @@
     </div>
   </div>
 
+  <!--
+    Angka rekomendasi bukan kotak hitam: satu kalimat di sini, rumus
+    lengkapnya di dialog. Ujungnya sejajar kolom saringan di atasnya.
+  -->
+  <p class="petunjuk petunjuk--saringan" *ngIf="meta">
+    <i class="ph ph-function" aria-hidden="true"></i>
+    <span>
+      {{ "report-inadequate__meta" | translate: { jendela: meta.windowDays } }}
+      <ng-container *ngIf="meta.lastCalculated">
+        {{ "report-inadequate__meta__updated" | translate }}
+        {{ meta.lastCalculated | date: "dd MMM yyyy HH.mm" }}.
+      </ng-container>
+      <ng-container *ngIf="!meta.lastCalculated">
+        {{ "report-inadequate__meta__never" | translate }}
+      </ng-container>
+    </span>
+    <button type="button" class="petunjuk__tautan" (click)="bukaCara()">
+      {{ "report-inadequate__meta__how" | translate }}
+    </button>
+  </p>
+
   <table class="tabel">
     <thead>
       <tr>

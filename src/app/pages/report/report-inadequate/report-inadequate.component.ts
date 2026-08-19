@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { MatDialog } from '@angular/material/dialog';
 
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -11,6 +12,7 @@ import {
   ComboItem,
   ComboSearchComponent,
 } from 'src/app/components/combo-search/combo-search.component';
+import { MinimumStockInfoDialogComponent } from './minimum-stock-info-dialog/minimum-stock-info-dialog.component';
 
 /**
  * Laporan barang kurang — stok di bawah ambang minimumnya sendiri
@@ -30,6 +32,7 @@ import {
     NgIf,
     NgFor,
     DecimalPipe,
+    DatePipe,
     TranslatePipe,
     ListPageComponent,
     TabelKosongComponent,
@@ -42,12 +45,21 @@ export class ReportInadequateComponent implements OnInit {
     private excelService: ExcelService,
     private alertService: AlertService,
     private translateService: TranslateService,
+    private dialog: MatDialog,
   ) {}
 
   isLoading = true;
   isDownloading = false;
 
   dataSource: any[] = [];
+
+  /* Meta perhitungan rekomendasi — bahan banner: kapan & bagaimana. */
+  meta: {
+    lastCalculated: string | null;
+    windowDays: number;
+    leadDays: number;
+    serviceLevel: number;
+  } | null = null;
   dataCount = 0;
   page = 1;
   pageSize = 10;
@@ -85,6 +97,7 @@ export class ReportInadequateComponent implements OnInit {
         next: (data: any) => {
           this.dataSource = data.data;
           this.dataCount = data.count;
+          this.meta = data.recommendationMeta ?? null;
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -93,6 +106,14 @@ export class ReportInadequateComponent implements OnInit {
       .add(() => {
         this.isLoading = false;
       });
+  }
+
+  /* Banner hanya beriklan satu kalimat; rincian rumusnya di sini. */
+  bukaCara(): void {
+    if (this.meta == null) {
+      return;
+    }
+    this.dialog.open(MinimumStockInfoDialogComponent, { data: this.meta });
   }
 
   cari(kata: string): void {

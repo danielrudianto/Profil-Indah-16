@@ -1,0 +1,84 @@
+<!-- Penjelasan hitungan — dokumen, bukan formulir. -->
+<div class="lihat">
+  <header class="lihat__kepala">
+    <div class="lihat__identitas">
+      <span class="lihat__avatar" aria-hidden="true">
+        <i class="ph ph-function"></i>
+      </span>
+      <div>
+        <h2 class="lihat__nama">
+          {{ "minimum-stock-info__title" | translate }}
+        </h2>
+        <p class="lihat__nomor">
+          {{ "minimum-stock-info__subtitle" | translate }}
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <div class="lihat__isi">
+    <p class="pengantar">{{ "minimum-stock-info__intro" | translate }}</p>
+
+    <!-- Rumusnya sendiri tidak diterjemahkan — matematika satu bahasa. -->
+    <p class="rumus" aria-label="minimum = (d × L) + (z × σ × √L)">
+      minimum&nbsp;=&nbsp;(d&#772; × L) + (z × σ × √L)
+    </p>
+
+    <h3 class="lihat__label">
+      {{ "minimum-stock-info__parameters" | translate }}
+    </h3>
+    <dl class="lihat__kisi">
+      <div>
+        <dt>d&#772; — {{ "minimum-stock-info__mean" | translate }}</dt>
+        <dd>
+          {{
+            "minimum-stock-info__mean__desc"
+              | translate: { jendela: data.windowDays }
+          }}
+        </dd>
+      </div>
+      <div>
+        <dt>L — {{ "minimum-stock-info__lead" | translate }}</dt>
+        <dd>
+          {{
+            "minimum-stock-info__lead__desc"
+              | translate: { lead: data.leadDays }
+          }}
+        </dd>
+      </div>
+      <div>
+        <dt>σ — {{ "minimum-stock-info__sigma" | translate }}</dt>
+        <dd>{{ "minimum-stock-info__sigma__desc" | translate }}</dd>
+      </div>
+      <div>
+        <dt>z — {{ "minimum-stock-info__z" | translate }}</dt>
+        <dd>
+          {{
+            "minimum-stock-info__z__desc" | translate: { z: data.serviceLevel }
+          }}
+        </dd>
+      </div>
+    </dl>
+
+    <h3 class="lihat__label">{{ "minimum-stock-info__notes" | translate }}</h3>
+    <ul class="catatan">
+      <li>{{ "minimum-stock-info__note-data" | translate }}</li>
+      <li>{{ "minimum-stock-info__note-effective" | translate }}</li>
+      <li>{{ "minimum-stock-info__note-schedule" | translate }}</li>
+    </ul>
+  </div>
+
+  <footer class="lihat__kaki">
+    <span class="kaki__waktu" *ngIf="data.lastCalculated">
+      {{ "report-inadequate__meta__updated" | translate }}
+      {{ data.lastCalculated | date: "dd MMM yyyy HH.mm" }}
+    </span>
+    <span class="kaki__waktu" *ngIf="!data.lastCalculated">
+      {{ "report-inadequate__meta__never" | translate }}
+    </span>
+    <span class="lihat__renggang"></span>
+    <button type="button" class="btn" (click)="tutup()">
+      {{ "general__close" | translate }}
+    </button>
+  </footer>
+</div>

@@ -191,6 +191,7 @@ html {
 .mat-mdc-dialog-surface:has(> app-sales-return-archive-view),
 .mat-mdc-dialog-surface:has(> app-stock-list-report),
 .mat-mdc-dialog-surface:has(> app-deposit-list-dialog),
+.mat-mdc-dialog-surface:has(> app-minimum-stock-info-dialog),
 .mat-mdc-dialog-surface:has(> app-activity-view),
 .mat-mdc-dialog-surface:has(> app-purchase-invoice-view) {
   background: transparent;
@@ -479,7 +480,9 @@ textarea.medan__input {
   white-space: nowrap;
   border-radius: 8px;
   cursor: pointer;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
 
   i {
     font-size: 15px;
@@ -588,7 +591,9 @@ textarea.medan__input {
   border: 1px solid var(--color-divider);
   border-radius: 999px;
   cursor: pointer;
-  transition: color 0.15s ease, border-color 0.15s ease,
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
     background-color 0.15s ease;
 
   i {
@@ -871,8 +876,8 @@ app-dashboard {
 */
 .mat-datepicker-content {
   --mat-datepicker-calendar-text-font: "Montserrat", system-ui, sans-serif;
-  --mat-datepicker-calendar-period-button-text-font: "Montserrat", system-ui,
-    sans-serif;
+  --mat-datepicker-calendar-period-button-text-font:
+    "Montserrat", system-ui, sans-serif;
 
   &,
   .mat-calendar,
@@ -961,7 +966,9 @@ Buttons styling
   align-items: center;
   cursor: pointer;
   background-color: rgb(4, 30, 73);
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
   transition: 0.3s all ease;
 }
 
@@ -970,7 +977,9 @@ Buttons styling
 }
 
 .download-button:hover {
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-shadow:
+    0 8px 16px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .download-button.white {
@@ -1081,7 +1090,9 @@ Buttons styling
   width: 100%;
   padding: 1rem;
   border-radius: 8px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.09);
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.1),
+    0 6px 20px 0 rgba(0, 0, 0, 0.09);
   background-color: white;
   overflow-x: auto;
 }
@@ -1412,7 +1423,9 @@ label {
   font-weight: 500;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
 
   i {
     font-size: 16px;
@@ -1549,7 +1562,9 @@ label {
   border: 1px solid var(--color-divider);
   border-radius: 7px;
   cursor: pointer;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
 
   i {
     font-size: 14px;

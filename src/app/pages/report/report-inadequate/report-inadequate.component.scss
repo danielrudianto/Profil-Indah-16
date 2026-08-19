@@ -17,3 +17,25 @@
   color: #e05260;
   font-weight: 600;
 }
+
+/*
+  Banner meta rekomendasi — ujung kiri-kanannya sejajar kolom saringan
+  (saringan-kisi ber-padding 20px); tautannya membuka dialog rumus.
+*/
+.petunjuk--saringan {
+  margin: 0 20px 16px;
+}
+
+.petunjuk__tautan {
+  margin-left: auto;
+  flex: none;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  white-space: nowrap;
+}

@@ -1,0 +1,38 @@
+/* Seluruh anatomi tampilan baca tinggal di partial bersama. */
+@use "../../../../styles/lihat";
+
+.pengantar {
+  margin: 0 0 16px;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+/* Rumus di kotak nilai — mono, satu baris, pusat panggung. */
+.rumus {
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--color-text) 4%, transparent);
+  text-align: center;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 15px;
+  color: var(--color-accent);
+}
+
+.catatan {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 1.6;
+
+  li + li {
+    margin-top: 4px;
+  }
+}
+
+/* Waktu hitung terakhir menempel di kaki, redup. */
+.kaki__waktu {
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  font-variant-numeric: tabular-nums;
+}
