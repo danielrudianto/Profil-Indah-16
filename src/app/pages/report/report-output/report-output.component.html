@@ -55,7 +55,7 @@
       <button
         type="button"
         class="btn btn--kedua"
-        [disabled]="isLoading"
+        [disabled]="isLoading || !adaSaringan"
         (click)="downloadExcel()"
       >
         <i class="ph ph-file-xls" aria-hidden="true"></i>
@@ -65,7 +65,7 @@
       <button
         type="button"
         class="btn btn--kedua"
-        [disabled]="isLoading"
+        [disabled]="isLoading || !adaSaringan"
         (click)="downloadPdf()"
       >
         <i class="ph ph-file-pdf" aria-hidden="true"></i>
@@ -160,7 +160,18 @@
     satu yang terbuka. Daftar penuhnya ribuan baris; yang tertutup cukup
     memperlihatkan nama dan jumlah barangnya.
   -->
-  <ng-container *ngIf="!isLoading">
+  <!-- Belum ada saringan: ajakan, bukan laporan 6.700 barang. -->
+  <section class="kartu" *ngIf="!isLoading && !adaSaringan">
+    <div class="pilih-dulu">
+      <i class="ph ph-funnel" aria-hidden="true"></i>
+      <span>
+        <strong>{{ "report-output__pick-first__title" | translate }}</strong>
+        <span>{{ "report-output__pick-first" | translate }}</span>
+      </span>
+    </div>
+  </section>
+
+  <ng-container *ngIf="!isLoading && adaSaringan">
     <section
       class="kartu akordeon"
       [class.akordeon--buka]="kelompokTerbuka === k.nama"
@@ -174,7 +185,10 @@
       >
         <h2 class="kartu__label">{{ k.nama }}</h2>
         <span class="akordeon__jumlah">
-          {{ 'report-output__group__items' | translate: { n: (k.baris.length | number) } }}
+          {{
+            "report-output__group__items"
+              | translate: { n: (k.baris.length | number) }
+          }}
         </span>
         <i class="ph ph-caret-down akordeon__panah" aria-hidden="true"></i>
       </button>

@@ -50,3 +50,31 @@
 .akordeon--buka .gulir {
   padding-bottom: 16px;
 }
+
+/* Ajakan memilih saringan — kotak putus-putus seperti slot kosong lain. */
+.pilih-dulu {
+  min-height: 112px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px dashed var(--color-divider);
+  border-radius: 12px;
+  padding: 16px 22px;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+
+  i {
+    font-size: 20px;
+    flex: none;
+  }
+
+  > span {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  strong {
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  }
+}

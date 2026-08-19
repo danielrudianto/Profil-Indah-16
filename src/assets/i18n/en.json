@@ -1168,6 +1168,8 @@
   "report-output__col__final": "Closing stock",
   "report-output__col__unit": "Unit",
   "report-output__empty": "No products for these filters and month.",
+  "report-output__pick-first__title": "Pick a brand or type first",
+  "report-output__pick-first": "The full report holds thousands of products — filter first to keep it light and readable.",
   "report-output__only-moving": "Moving items only",
   "report-output__show-all": "Show all items",
   "report-output__export__successful": "Successfully exported output report",

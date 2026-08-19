@@ -1172,6 +1172,8 @@
   "report-output__col__final": "Stok akhir",
   "report-output__col__unit": "Satuan",
   "report-output__empty": "Tidak ada barang untuk saringan dan bulan ini.",
+  "report-output__pick-first__title": "Pilih merek atau tipe dulu",
+  "report-output__pick-first": "Laporan penuh memuat ribuan barang — saring dulu supaya ringan dan terbaca.",
   "report-output__only-moving": "Hanya yang bergerak",
   "report-output__show-all": "Tampilkan semua barang",
   "report-output__export__successful": "Laporan pengeluaran barang berhasil diekspor",

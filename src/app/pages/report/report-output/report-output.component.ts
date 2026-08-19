@@ -75,7 +75,7 @@ export class ReportOutputComponent implements OnInit {
     private translateService: TranslateService,
   ) {}
 
-  isLoading = true;
+  isLoading = false;
   isDownloading = false;
 
   date = new FormControl(moment());
@@ -112,15 +112,30 @@ export class ReportOutputComponent implements OnInit {
   */
   kelompokTerbuka: string | null = null;
 
-  ngOnInit(): void {
-    this.ambilData();
+  /*
+    Tanpa saringan TIDAK ada yang diambil: laporan penuh berisi ±6.700
+    barang — berat diambil dan berat digambar, padahal yang dicari
+    hampir selalu satu-dua merek atau tipe. Halaman dibuka dengan ajakan
+    memilih saringan dulu.
+  */
+  get adaSaringan(): boolean {
+    return this.merek.length > 0 || this.tipe.length > 0;
   }
+
+  ngOnInit(): void {}
 
   bukaKelompok(nama: string): void {
     this.kelompokTerbuka = this.kelompokTerbuka === nama ? null : nama;
   }
 
   ambilData(): void {
+    if (!this.adaSaringan) {
+      this.baris = [];
+      this.kelompokTerbuka = null;
+      this.isLoading = false;
+      return;
+    }
+
     this.isLoading = true;
     this.kelompokTerbuka = null;
     this.apiService
