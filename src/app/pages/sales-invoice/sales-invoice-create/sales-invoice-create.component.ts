@@ -307,6 +307,7 @@ export class SalesInvoiceCreateComponent {
       tag: 'sales-invoice__new',
     });
 
+    this.perbaruiRingkasanBaris();
     this.perbaruiChecklist();
 
     this.metaFormGroup.valueChanges.subscribe(() => this.perbaruiChecklist());
@@ -315,6 +316,7 @@ export class SalesInvoiceCreateComponent {
     );
 
     this.t.valueChanges.subscribe(() => {
+      this.perbaruiRingkasanBaris();
       this.perbaruiChecklist();
       this.valueFormGroup.patchValue({
         total: this.t.value.reduce((a: any, b: any) => {
@@ -1084,6 +1086,54 @@ export class SalesInvoiceCreateComponent {
     return this.t.at(i) as FormGroup;
   }
 
+  /* ---------------------------------------------------------------- */
+  /* Ringkasan lintas baris                                            */
+  /* ---------------------------------------------------------------- */
+
+  /*
+    jumlahDuplikat dan kebutuhanBaris sama-sama menjawab pertanyaan tentang
+    SELURUH dokumen, tetapi template memanggilnya sekali untuk SETIAP baris.
+    Bentuk lamanya menyapu seluruh baris di dalam tiap panggilan, sehingga
+    biayanya kuadratik — dan karena pemanggilnya template, sapuan itu terulang
+    pada setiap siklus deteksi perubahan, yakni setiap ketukan tombol. Faktur
+    berisi lima puluh baris berarti dua ribu lima ratus perbandingan setiap
+    kali kasir menekan satu angka.
+
+    Sekarang keduanya dihitung sekali setiap nilai berubah, lalu dibaca dari
+    peta ini dalam waktu tetap. Hasilnya identik; yang berpindah hanya kapan
+    menghitungnya.
+  */
+  private hitunganKembar = new Map<string, number>();
+  private kebutuhanPerProduk = new Map<unknown, number>();
+
+  /** Paket dan barang biasa dibedakan supaya keduanya tidak saling hitung. */
+  private kunciBarang(nilai: any): string {
+    return nilai.package_code_id
+      ? `p${nilai.package_code_id}`
+      : `b${nilai.product_id}-${nilai.product_unit_id ?? ''}`;
+  }
+
+  private perbaruiRingkasanBaris(): void {
+    const kembar = new Map<string, number>();
+    const kebutuhan = new Map<unknown, number>();
+
+    for (const kontrol of this.t.controls) {
+      const nilai = kontrol.value;
+
+      const kunci = this.kunciBarang(nilai);
+      kembar.set(kunci, (kembar.get(kunci) ?? 0) + 1);
+
+      const perlu = Number(nilai.quantity ?? 0) * Number(nilai.conversion ?? 1);
+      kebutuhan.set(
+        nilai.product_id,
+        (kebutuhan.get(nilai.product_id) ?? 0) + perlu,
+      );
+    }
+
+    this.hitunganKembar = kembar;
+    this.kebutuhanPerProduk = kebutuhan;
+  }
+
   /** Paket memakai `name`, barang biasa memakai `reference`. */
   namaBaris(i: number): string {
     const b = this.baris(i).value;
@@ -1107,14 +1157,7 @@ export class SalesInvoiceCreateComponent {
     menjumlah, dalam satuan dasar.
   */
   kebutuhanBaris(i: number): number {
-    const productId = this.baris(i).value.product_id;
-    return this.t.controls.reduce((a, x) => {
-      const v = x.value;
-      if (v.product_id !== productId) {
-        return a;
-      }
-      return a + Number(v.quantity ?? 0) * Number(v.conversion ?? 1);
-    }, 0);
+    return this.kebutuhanPerProduk.get(this.baris(i).value.product_id) ?? 0;
   }
 
   bakalMinus(i: number): boolean {
@@ -1160,18 +1203,7 @@ export class SalesInvoiceCreateComponent {
    * peringatan halus, bukan larangan.
    */
   jumlahDuplikat(i: number): number {
-    const ini = this.baris(i).value;
-    const kunci = ini.package_code_id
-      ? `p${ini.package_code_id}`
-      : `b${ini.product_id}-${ini.product_unit_id ?? ''}`;
-
-    return this.t.controls.filter((c) => {
-      const v = (c as FormGroup).value;
-      const k = v.package_code_id
-        ? `p${v.package_code_id}`
-        : `b${v.product_id}-${v.product_unit_id ?? ''}`;
-      return k === kunci;
-    }).length;
+    return this.hitunganKembar.get(this.kunciBarang(this.baris(i).value)) ?? 0;
   }
 
   simpanHarga(i: number): boolean {
