@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { KeluarTanpaSimpanGuard } from './guards/keluar-tanpa-simpan.guard';
 import {
@@ -793,8 +793,23 @@ const routes: Routes = [
   },
 ];
 
+/*
+  Seluruh rute di berkas ini lazy, dan tanpa strategi preload setiap menu yang
+  dibuka pertama kali harus menunggu chunk-nya diunduh lebih dulu — jeda yang
+  terasa persis seperti aplikasi yang berat padahal servernya sudah menjawab.
+  PreloadAllModules mengunduh sisanya di latar belakang setelah muatan awal
+  selesai, sehingga perpindahan halaman berikutnya tidak menyentuh jaringan
+  sama sekali.
+
+  Ini baru sepadan karena pdfmake dan exceljs sudah dikeluarkan dari graf rute
+  (lihat PdfService dan ExcelService): keduanya kini diimpor dinamis di dalam
+  metode, jadi preload tidak ikut menyeret 3,3 MB yang hanya dipakai saat
+  mencetak atau mengekspor.
+*/
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

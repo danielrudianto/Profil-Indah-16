@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as ExcelJS from 'exceljs';
+import type * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 
 /**
@@ -43,7 +43,15 @@ export class ExcelService {
   private static readonly FONT = 'Calibri';
 
   async unduh(namaBerkas: string, sheets: SheetExcel[]): Promise<void> {
-    const buku = new ExcelJS.Workbook();
+    /*
+      exceljs berbobot 0,9 MB dan hanya dipakai di dalam metode ini. Impornya
+      dinamis supaya bobot itu baru terunduh ketika seseorang benar-benar
+      menekan Ekspor — bukan ketika halaman yang memuat tombolnya dibuka.
+      Impor di kepala berkas sengaja `import type`: ia hanya memasok tipe dan
+      lenyap saat dikompilasi.
+    */
+    const { Workbook } = await import('exceljs');
+    const buku = new Workbook();
 
     for (const sheet of sheets) {
       this.tulisSheet(buku, sheet);

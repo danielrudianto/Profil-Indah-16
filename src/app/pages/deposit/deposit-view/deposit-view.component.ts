@@ -13,16 +13,12 @@ import {
   PageSize,
   TDocumentDefinitions,
 } from 'pdfmake/interfaces';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { namaBerkasDokumen } from 'src/app/utils/file-name.utils';
 
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { PdfService } from 'src/app/services/pdf.service';
 import { DepositDeleteConfirmationComponent } from '../deposit-delete-confirmation/deposit-delete-confirmation.component';
-
-// pdfmake 0.2.23 mengekspor objek vfs-nya langsung (module.exports = vfs).
-pdfMake.vfs = pdfFonts;
 
 /**
  * Tampilan BACA sebuah deposit — dokumen, bukan formulir accordion
@@ -53,6 +49,7 @@ export class DepositViewComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private dialogRef: MatDialogRef<DepositViewComponent>,
+    private pdfService: PdfService,
   ) {}
 
   isLoading = true;
@@ -470,10 +467,9 @@ export class DepositViewComponent implements OnInit {
 
     /* Sel pertama baris barang berupa larik dua objek; pemodelan tipe
        pdfmake tidak sanggup, jadi pemeriksaan tipe dilonggarkan di sini. */
-    pdfMake
-      .createPdf(documentDefinition as TDocumentDefinitions)
-      .download(
-        `${namaBerkasDokumen(this.dokumen?.name, fileName + new Date().getTime())}.pdf`,
-      );
+    await this.pdfService.unduh(
+      documentDefinition as TDocumentDefinitions,
+      `${namaBerkasDokumen(this.dokumen?.name, fileName + new Date().getTime())}.pdf`,
+    );
   }
 }

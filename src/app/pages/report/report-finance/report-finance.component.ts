@@ -1,5 +1,11 @@
 import { Component, inject, LOCALE_ID, OnInit } from '@angular/core';
-import { formatDate, NgIf, NgFor, DecimalPipe, DatePipe } from '@angular/common';
+import {
+  formatDate,
+  NgIf,
+  NgFor,
+  DecimalPipe,
+  DatePipe,
+} from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
@@ -12,24 +18,16 @@ import {
 } from '@angular/material/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import moment, { Moment } from 'moment';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { PdfService } from 'src/app/services/pdf.service';
 import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
 import {
   MatDatepicker,
   MatDatepickerInput,
 } from '@angular/material/datepicker';
-
-/*
-  pdfmake 0.2.23 mengekspor objek vfs-nya langsung (module.exports = vfs);
-  jalur lama pdfFonts.pdfMake.vfs kini undefined dan PDF gagal dibuat
-  tanpa galat kompilasi.
-*/
-pdfMake.vfs = pdfFonts;
 
 /**
  * Laporan keuangan (laba rugi per perusahaan) — kini HALAMAN, bukan lagi
@@ -76,6 +74,7 @@ export class ReportFinanceComponent implements OnInit {
     private alertService: AlertService,
     private translateService: TranslateService,
     private decimalPipe: DecimalPipe,
+    private pdfService: PdfService,
   ) {}
 
   isLoading = true;
@@ -280,7 +279,11 @@ export class ReportFinanceComponent implements OnInit {
   }
 
   bulanPenuh(b: (typeof this.tren)[number]): string {
-    return formatDate(new Date(b.year, b.month - 1, 1), 'MMMM y', this.localeId);
+    return formatDate(
+      new Date(b.year, b.month - 1, 1),
+      'MMMM y',
+      this.localeId,
+    );
   }
 
   get rentangTren(): string {
@@ -441,7 +444,7 @@ export class ReportFinanceComponent implements OnInit {
   /* Unduh PDF                                                         */
   /* ---------------------------------------------------------------- */
 
-  downloadPdf(): void {
+  async downloadPdf(): Promise<void> {
     this.isDownloading = true;
 
     const angka = (nilai: number) =>
@@ -526,9 +529,10 @@ export class ReportFinanceComponent implements OnInit {
       },
     };
 
-    pdfMake
-      .createPdf(dokumen)
-      .download(`Laba_Rugi_${this.namaBulan.replace(/ /g, '_')}.pdf`);
+    await this.pdfService.unduh(
+      dokumen,
+      `Laba_Rugi_${this.namaBulan.replace(/ /g, '_')}.pdf`,
+    );
     this.isDownloading = false;
   }
 }

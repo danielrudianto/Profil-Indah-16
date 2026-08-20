@@ -16,21 +16,17 @@ import {
 } from '@angular/material/datepicker';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import moment, { Moment } from 'moment';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { PageBreak, TDocumentDefinitions } from 'pdfmake/interfaces';
 
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { ExcelService } from 'src/app/services/excel.service';
+import { PdfService } from 'src/app/services/pdf.service';
 import { MONTH_AND_YEAR_FORMAT } from 'src/app/utils/date-format.utils';
 import {
   ComboItem,
   ComboSearchComponent,
 } from 'src/app/components/combo-search/combo-search.component';
-
-// pdfmake 0.2.23 mengekspor objek vfs-nya langsung (module.exports = vfs).
-pdfMake.vfs = pdfFonts;
 
 /**
  * Laporan keluar-masuk barang sebulan: stok awal, mutasi per sumber
@@ -73,6 +69,7 @@ export class ReportOutputComponent implements OnInit {
     private excelService: ExcelService,
     private alertService: AlertService,
     private translateService: TranslateService,
+    private pdfService: PdfService,
   ) {}
 
   isLoading = false;
@@ -315,7 +312,7 @@ export class ReportOutputComponent implements OnInit {
       });
   }
 
-  downloadPdf(): void {
+  async downloadPdf(): Promise<void> {
     const kelompok = this.kelompokTampil;
     const angka = (nilai: number) => Number(nilai).toLocaleString('id-ID');
 
@@ -392,8 +389,9 @@ export class ReportOutputComponent implements OnInit {
       },
     };
 
-    pdfMake
-      .createPdf(dokumen)
-      .download(`Output_report_${new Date().getTime()}.pdf`);
+    await this.pdfService.unduh(
+      dokumen,
+      `Output_report_${new Date().getTime()}.pdf`,
+    );
   }
 }

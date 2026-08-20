@@ -12,17 +12,13 @@ import {
   PageSize,
   TDocumentDefinitions,
 } from 'pdfmake/interfaces';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { namaBerkasDokumen } from 'src/app/utils/file-name.utils';
 
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
-
-// pdfmake 0.2.23 mengekspor objek vfs-nya langsung (module.exports = vfs).
-pdfMake.vfs = pdfFonts;
+import { PdfService } from 'src/app/services/pdf.service';
 
 /**
  * Tampilan BACA sebuah faktur penjualan — dokumen, bukan formulir.
@@ -56,6 +52,7 @@ export class SalesInvoiceViewComponent implements OnInit {
     private dialogRef: MatDialogRef<SalesInvoiceViewComponent>,
     private datePipe: DatePipe,
     private decimalPipe: DecimalPipe,
+    private pdfService: PdfService,
   ) {}
 
   isAdministrator = false;
@@ -530,10 +527,9 @@ export class SalesInvoiceViewComponent implements OnInit {
       seperti itu; pemodelan tipenya saja yang tidak sanggup, jadi
       pemeriksaan tipe dilonggarkan di titik ini.
     */
-    pdfMake
-      .createPdf(documentDefinition as TDocumentDefinitions)
-      .download(
-        `${namaBerkasDokumen(this.dokumen?.name, fileName + new Date().getTime())}.pdf`,
-      );
+    await this.pdfService.unduh(
+      documentDefinition as TDocumentDefinitions,
+      `${namaBerkasDokumen(this.dokumen?.name, fileName + new Date().getTime())}.pdf`,
+    );
   }
 }

@@ -12,21 +12,13 @@ import { panelAnimation } from 'src/app/animations/panel.animation';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { PdfService } from 'src/app/services/pdf.service';
 import { MatDialogTitle } from '@angular/material/dialog';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 import { namaBerkasDokumen } from 'src/app/utils/file-name.utils';
-
-// pdfmake 0.2.23 mengekspor objek vfs-nya langsung (module.exports = vfs).
-// Sampai 0.2.10 yang diekspor masih pembungkus, sehingga jalur lamanya
-// pdfFonts.pdfMake.vfs. Bentuk lama itu kini menghasilkan undefined, dan
-// pembuatan PDF gagal saat dijalankan tanpa satu pun galat kompilasi —
-// @types/pdfmake harus ikut disamakan versinya agar selisih itu terlihat.
-pdfMake.vfs = pdfFonts;
 
 @Component({
   selector: 'app-archive-view',
@@ -51,6 +43,7 @@ export class ArchiveViewComponent {
     private alertService: AlertService,
     private decimalPipe: DecimalPipe,
     private datePipe: DatePipe,
+    private pdfService: PdfService,
   ) {
     this._hotKeysService.add([
       new Hotkey('esc', (event: KeyboardEvent): boolean => {
@@ -111,7 +104,7 @@ export class ArchiveViewComponent {
     }
   }
 
-  print() {
+  async print(): Promise<void> {
     let title = '';
     let fileName = '';
     let content: any[] = [];
@@ -489,10 +482,9 @@ export class ArchiveViewComponent {
       },
     };
 
-    pdfMake
-      .createPdf(documentDefinition)
-      .download(
-        `${namaBerkasDokumen(this.dataSource?.name, fileName + new Date().getTime())}.pdf`,
-      );
+    await this.pdfService.unduh(
+      documentDefinition,
+      `${namaBerkasDokumen(this.dataSource?.name, fileName + new Date().getTime())}.pdf`,
+    );
   }
 }
