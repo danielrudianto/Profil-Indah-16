@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import type * as ExcelJS from 'exceljs';
+import { isiModul } from 'src/app/utils/dynamic-import.utils';
 import { saveAs } from 'file-saver';
 
 /**
@@ -50,7 +51,18 @@ export class ExcelService {
       Impor di kepala berkas sengaja `import type`: ia hanya memasok tipe dan
       lenyap saat dikompilasi.
     */
-    const { Workbook } = await import('exceljs');
+    const modul = await import('exceljs');
+    /*
+      Bukan destrukturisasi bernama: exceljs dipaketkan sebagai UMD, sehingga
+      impor dinamisnya hanya mengekspor `default` dan `{ Workbook }` menjadi
+      undefined. Lihat dynamic-import.utils.ts.
+    */
+    const { Workbook } = isiModul<typeof ExcelJS>(modul);
+
+    if (typeof Workbook !== 'function') {
+      throw new Error('exceljs termuat tetapi Workbook tidak ditemukan.');
+    }
+
     const buku = new Workbook();
 
     for (const sheet of sheets) {

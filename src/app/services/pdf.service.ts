@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import type { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { isiModul } from 'src/app/utils/dynamic-import.utils';
 
 /**
  * Pemuat pdfmake yang ditunda sampai PDF-nya benar-benar diminta.
@@ -54,8 +55,22 @@ export class PdfService {
         sejak 0.2.23 yang diekspor objek vfs-nya langsung. Memakai jalur lama
         menghasilkan undefined dan PDF gagal dibuat saat dijalankan, tanpa satu
         pun galat kompilasi.
+
+        isiModul() di bawah bukan hiasan, dan sebab yang sama: pdfmake
+        dipaketkan sebagai UMD, sehingga impor dinamisnya menghasilkan
+        namespace ber-`default` saja — akses bernama `modulPdf.createPdf`
+        menghasilkan undefined, dan galatnya baru meledak saat tombol Cetak
+        ditekan. Lihat dynamic-import.utils.ts.
       */
-      return { createPdf: modulPdf.createPdf, vfs: modulFont.default };
+      const pdfMake =
+        isiModul<typeof import('pdfmake/build/pdfmake')>(modulPdf);
+      const vfs = isiModul<{ [berkas: string]: string }>(modulFont);
+
+      if (typeof pdfMake?.createPdf !== 'function') {
+        throw new Error('pdfmake termuat tetapi createPdf tidak ditemukan.');
+      }
+
+      return { createPdf: pdfMake.createPdf, vfs };
     })();
 
     return this.pemuatan;

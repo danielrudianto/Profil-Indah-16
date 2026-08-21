@@ -14,6 +14,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { KOLOM_ISIAN } from 'src/app/utils/keycode.utils';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { NgxMaskDirective } from 'ngx-mask';
 import { v4 } from 'uuid';
@@ -97,11 +98,11 @@ export class PurchaseInvoiceEditComponent implements OnInit, OnDestroy {
       new Hotkey('alt+a', (): boolean => {
         this.openItemSelector();
         return false;
-      }),
+      }, KOLOM_ISIAN),
       new Hotkey('alt+s', (): boolean => {
         this.submitForm();
         return false;
-      }),
+      }, KOLOM_ISIAN),
     ]);
   }
 

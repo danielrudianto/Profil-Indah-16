@@ -12,6 +12,7 @@ import {
 import { Router } from '@angular/router';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { KOLOM_ISIAN } from 'src/app/utils/keycode.utils';
 import { Subject } from 'rxjs';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -78,7 +79,7 @@ export class AdjustmentCaseCreateComponent implements OnInit, OnDestroy {
       new Hotkey('alt+a', (): boolean => {
         this.openItemSelector();
         return false;
-      }),
+      }, KOLOM_ISIAN),
     );
   }
 

@@ -22,6 +22,7 @@ import { PromotionCreateComponent } from '../../pages/promotion/promotion-create
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from 'src/app/services/alert.service';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { KOLOM_ISIAN } from 'src/app/utils/keycode.utils';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { NgIf } from '@angular/common';
@@ -49,7 +50,7 @@ export class FeatureSearchComponent {
         this.onAddButtonPressed.emit(true);
         this.openDialog();
         return false; // Prevent bubbling
-      }),
+      }, KOLOM_ISIAN),
     ]);
   }
 

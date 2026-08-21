@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { NgxMaskDirective } from 'ngx-mask';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { KOLOM_ISIAN } from 'src/app/utils/keycode.utils';
 import { Subject, Subscription } from 'rxjs';
 
 import { AlertService } from 'src/app/services/alert.service';
@@ -100,7 +101,7 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
       new Hotkey('alt+a', (): boolean => {
         this.openItemSelector();
         return false;
-      }),
+      }, KOLOM_ISIAN),
     ]);
   }
 

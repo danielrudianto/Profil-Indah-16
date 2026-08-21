@@ -27,6 +27,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Router } from '@angular/router';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { KOLOM_ISIAN } from 'src/app/utils/keycode.utils';
 import {
   Observable,
   Subject,
@@ -127,7 +128,7 @@ export class SalesInvoiceCreateComponent {
       new Hotkey('alt+a', (event: KeyboardEvent): boolean => {
         this.openItemSelector();
         return false; // Prevent bubbling
-      }),
+      }, KOLOM_ISIAN),
       new Hotkey('alt+s', (event: KeyboardEvent): boolean => {
         if (
           this.billFormGroup.valid &&
@@ -143,7 +144,7 @@ export class SalesInvoiceCreateComponent {
           );
         }
         return false;
-      }),
+      }, KOLOM_ISIAN),
     ]);
 
     const url = this.router.url;

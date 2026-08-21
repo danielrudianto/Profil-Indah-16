@@ -12,6 +12,7 @@ import {
 import { Router } from '@angular/router';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { KOLOM_ISIAN } from 'src/app/utils/keycode.utils';
 import { MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { NgxMaskDirective } from 'ngx-mask';
@@ -64,7 +65,7 @@ export class PackageCreateComponent implements OnInit, OnDestroy {
       new Hotkey('alt+a', (): boolean => {
         this.openItemSelector();
         return false;
-      }),
+      }, KOLOM_ISIAN),
     );
   }
 

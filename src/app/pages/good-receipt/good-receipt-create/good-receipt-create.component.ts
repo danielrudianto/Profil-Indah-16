@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { KOLOM_ISIAN } from 'src/app/utils/keycode.utils';
 import {
   ProductSelectorComponent,
   ProductSelectorType,
@@ -65,10 +66,10 @@ export class GoodReceiptCreateComponent {
     private router: Router
   ) {
     this._hotKeysService.add([
-      new Hotkey('alt + a', (): boolean => {
+      new Hotkey('alt+a', (): boolean => {
         this.openItemSelector();
         return false;
-      }),
+      }, KOLOM_ISIAN),
     ]);
   }
 
