@@ -1942,7 +1942,7 @@
   "good-receipt__invoice__name": "Supplier invoice no.",
   "good-receipt__invoice__tax": "Tax invoice no.",
   "good-receipt__invoice__discount": "Document discount",
-  "good-receipt__invoice__discount__note": "In Rupiah, on top of each line discount.",
+  "good-receipt__invoice__discount__note": "Separate from per-line discounts. Enter rupiah or a percentage — each follows the other, and the percentage applies to the amount after line discounts.",
   "good-receipt__invoice__waiting": "Supplier invoice no., tax invoice no. and document discount are filled in later — open it from the list of receipts marked \"Awaiting invoice\".",
   "good-receipt__check__waiting": "Document awaiting invoice",
   "good-receipt__check__final": "Final document, enters payables",

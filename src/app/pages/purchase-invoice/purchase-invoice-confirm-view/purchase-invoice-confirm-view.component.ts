@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
 import {
   FormArray,
@@ -8,11 +8,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { sinkronDiskonPersen } from 'src/app/utils/diskon-persen.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxMaskDirective } from 'ngx-mask';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { of, switchMap } from 'rxjs';
+import { of, switchMap, Subscription } from 'rxjs';
 
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -63,7 +64,7 @@ import {
   ],
   providers: [DatePipe],
 })
-export class PurchaseInvoiceConfirmViewComponent implements OnInit {
+export class PurchaseInvoiceConfirmViewComponent implements OnInit, OnDestroy {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
@@ -94,7 +95,34 @@ export class PurchaseInvoiceConfirmViewComponent implements OnInit {
     discount: new FormControl(0, [Validators.required, Validators.min(0)]),
   });
 
+  /**
+   * Pendamping persen untuk diskon dokumen; lihat diskon-persen.utils.
+   * TIDAK ikut dikirim — yang tersimpan tetap rupiah.
+   */
+  discountPercentControl = new FormControl(0, [
+    Validators.min(0),
+    Validators.max(100),
+  ]);
+
+  private langgananDiskon?: Subscription;
+
+  /** Nilai yang dikenai persen: sesudah diskon per baris, bukan subtotal mentah. */
+  get dasarDiskonDokumen(): number {
+    return this.subtotal - this.diskonItem;
+  }
+
+  ngOnDestroy(): void {
+    this.langgananDiskon?.unsubscribe();
+  }
+
   ngOnInit(): void {
+    this.langgananDiskon = sinkronDiskonPersen(
+      this.itemsFormGroup.controls['discount'],
+      this.discountPercentControl,
+      () => this.dasarDiskonDokumen,
+      (this.itemsFormGroup.controls['items'] as FormArray).valueChanges,
+    );
+
     this.pageTitleService.pasangKonteks({
       kembaliLabel: 'purchase-invoice__queue__title',
       kembaliJalur: '/Purchase-invoice',

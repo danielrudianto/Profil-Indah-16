@@ -1948,7 +1948,7 @@
   "good-receipt__invoice__name": "No. faktur supplier",
   "good-receipt__invoice__tax": "No. faktur pajak",
   "good-receipt__invoice__discount": "Diskon dokumen",
-  "good-receipt__invoice__discount__note": "Dalam Rupiah, di luar diskon tiap baris barang.",
+  "good-receipt__invoice__discount__note": "Di luar diskon tiap baris barang. Isi Rupiah atau persen — keduanya saling mengikuti, dan persennya dihitung dari nilai sesudah diskon baris.",
   "good-receipt__invoice__waiting": "Nomor faktur supplier, faktur pajak & diskon dokumen diisi nanti — buka dari daftar penerimaan ber-status \"Menunggu faktur\".",
   "good-receipt__check__waiting": "Dokumen menunggu faktur",
   "good-receipt__check__final": "Dokumen final, masuk hutang",

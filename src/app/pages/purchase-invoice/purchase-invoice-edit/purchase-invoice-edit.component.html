@@ -125,10 +125,15 @@
           </mat-form-field>
         </div>
 
+        <!--
+          Rupiah dan persen saling menghitung, pola yang sama dengan lembar
+          harga beli per barang. Persennya dihitung atas nilai SESUDAH diskon
+          per baris — itulah yang benar-benar dipotong.
+        -->
         <div class="field">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>
-              {{ "good-receipt__invoice__discount" | translate }}
+              {{ "good-receipt__invoice__discount" | translate }} (Rp.)
             </mat-label>
             <input
               matInput
@@ -136,6 +141,22 @@
               [formControl]="discountControl"
               mask="separator.2"
               thousandSeparator=" "
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="field">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>
+              {{ "good-receipt__invoice__discount" | translate }} (%)
+            </mat-label>
+            <input
+              matInput
+              type="text"
+              [formControl]="discountPercentControl"
+              mask="separator.2"
+              thousandSeparator=" "
+              placeholder="Ex. 5"
             />
           </mat-form-field>
         </div>

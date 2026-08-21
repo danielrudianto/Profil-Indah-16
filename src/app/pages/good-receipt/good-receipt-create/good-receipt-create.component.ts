@@ -1,5 +1,5 @@
 import { DatePipe, NgIf, NgFor, DecimalPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -9,6 +9,8 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { sinkronDiskonPersen } from 'src/app/utils/diskon-persen.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
@@ -65,7 +67,7 @@ import { Router } from '@angular/router';
     ComboSearchComponent,
   ],
 })
-export class GoodReceiptCreateComponent {
+export class GoodReceiptCreateComponent implements OnDestroy {
   constructor(
     private dynamicComponentService: DynamicComponentService,
     private alertService: AlertService,
@@ -108,6 +110,22 @@ export class GoodReceiptCreateComponent {
     document_discount: new FormControl(0),
     items: new FormArray([]),
   });
+
+  /**
+   * Pendamping persen untuk document_discount; lihat diskon-persen.utils.
+   * TIDAK ikut dikirim — yang tersimpan tetap rupiah.
+   */
+  discountPercentControl = new FormControl(0, [
+    Validators.min(0),
+    Validators.max(100),
+  ]);
+
+  private langgananDiskon?: Subscription;
+
+  /** Nilai yang dikenai persen: sesudah diskon per baris, bukan subtotal mentah. */
+  get dasarDiskonDokumen(): number {
+    return this.subtotal - this.diskonItem;
+  }
 
   itemFormGroup: FormGroup = new FormGroup({
     items: new FormArray([]),
@@ -166,7 +184,18 @@ export class GoodReceiptCreateComponent {
 
   private pageTitleService = inject(PageTitleService);
 
+  ngOnDestroy(): void {
+    this.langgananDiskon?.unsubscribe();
+  }
+
   ngOnInit(): void {
+    this.langgananDiskon = sinkronDiskonPersen(
+      this.metaFormGroup.controls['document_discount'],
+      this.discountPercentControl,
+      () => this.dasarDiskonDokumen,
+      this.itemFormGroup.valueChanges,
+    );
+
     /*
       Tag topbar untuk halaman ini "Penerimaan baru", bukan nama menunya —
       yang dilihat pengguna dokumen yang sedang dibuat, bukan daftar asalnya.

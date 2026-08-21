@@ -12,7 +12,6 @@
       <p class="buat__lede">{{ "good-receipt__create__lede" | translate }}</p>
     </header>
 
-
     <!--
       Keadaan dokumen — hanya peran 5 dan 7. Pilihannya bukan "form panjang vs
       pendek": surat jalan saja berarti dokumen ini BELUM SELESAI dan menunggu
@@ -29,9 +28,15 @@
           (click)="pilihKeadaan('surat-jalan')"
         >
           <i class="ph ph-truck" aria-hidden="true"></i>
-          <span class="keadaan__judul">{{ "good-receipt__state__do" | translate }}</span>
-          <span class="keadaan__desk">{{ "good-receipt__state__do__desk" | translate }}</span>
-          <span class="keadaan__akibat">{{ "good-receipt__state__do__note" | translate }}</span>
+          <span class="keadaan__judul">{{
+            "good-receipt__state__do" | translate
+          }}</span>
+          <span class="keadaan__desk">{{
+            "good-receipt__state__do__desk" | translate
+          }}</span>
+          <span class="keadaan__akibat">{{
+            "good-receipt__state__do__note" | translate
+          }}</span>
         </button>
 
         <button
@@ -41,16 +46,24 @@
           (click)="pilihKeadaan('lengkap')"
         >
           <i class="ph ph-receipt" aria-hidden="true"></i>
-          <span class="keadaan__judul">{{ "good-receipt__state__full" | translate }}</span>
-          <span class="keadaan__desk">{{ "good-receipt__state__full__desk" | translate }}</span>
-          <span class="keadaan__akibat">{{ "good-receipt__state__full__note" | translate }}</span>
+          <span class="keadaan__judul">{{
+            "good-receipt__state__full" | translate
+          }}</span>
+          <span class="keadaan__desk">{{
+            "good-receipt__state__full__desk" | translate
+          }}</span>
+          <span class="keadaan__akibat">{{
+            "good-receipt__state__full__note" | translate
+          }}</span>
         </button>
       </div>
     </section>
 
     <!-- Data umum ------------------------------------------------------ -->
     <section class="kartu" [formGroup]="metaFormGroup">
-      <h2 class="kartu__label">{{ "good-receipt__create__general" | translate }}</h2>
+      <h2 class="kartu__label">
+        {{ "good-receipt__create__general" | translate }}
+      </h2>
 
       <div class="kisi">
         <div class="field">
@@ -61,24 +74,46 @@
             dikirim ke server.
           -->
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{ "good-receipt__create__date" | translate }}</mat-label><input matInput [matDatepicker]="grPicker1" formControlName="date" (click)="grPicker1.open()" />
-              <!--
+            <mat-label>{{ "good-receipt__create__date" | translate }}</mat-label
+            ><input
+              matInput
+              [matDatepicker]="grPicker1"
+              formControlName="date"
+              (click)="grPicker1.open()" />
+            <!--
                 Tombol kalender manual, bukan mat-datepicker-toggle: elemen toggle itu
                 hilang tanpa jejak pada pipeline dev meski utuh di bundel produksi,
                 dan tombol biasa yang memanggil open() berperilaku sama di keduanya.
               -->
-              <button type="button" matSuffix class="buka-kalender" (click)="grPicker1.open()"
-                [attr.aria-label]="'general__pick-date' | translate">
-                <i class="ph ph-calendar-blank" aria-hidden="true"></i>
-              </button>
-              <mat-datepicker #grPicker1></mat-datepicker></mat-form-field>
+            <button
+              type="button"
+              matSuffix
+              class="buka-kalender"
+              (click)="grPicker1.open()"
+              [attr.aria-label]="'general__pick-date' | translate"
+            >
+              <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+            </button>
+            <mat-datepicker #grPicker1></mat-datepicker
+          ></mat-form-field>
         </div>
 
         <div class="field">
           <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ "good-receipt__create__delivery-order" | translate }}</mat-label>
-              <input matInput type="text" formControlName="delivery_order" maxlength="100" autocomplete="off" [attr.placeholder]="'good-receipt__create__delivery-order__example' | translate" />
-            </mat-form-field>
+            <mat-label>{{
+              "good-receipt__create__delivery-order" | translate
+            }}</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="delivery_order"
+              maxlength="100"
+              autocomplete="off"
+              [attr.placeholder]="
+                'good-receipt__create__delivery-order__example' | translate
+              "
+            />
+          </mat-form-field>
         </div>
 
         <div class="field">
@@ -105,7 +140,6 @@
       </div>
     </section>
 
-
     <!--
       Kartu faktur supplier.
 
@@ -130,14 +164,24 @@
         <div class="kisi" *ngIf="dokumenLengkap">
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ "good-receipt__invoice__name" | translate }}</mat-label>
-              <input matInput type="text" formControlName="invoice_name" maxlength="191" autocomplete="off" />
+              <mat-label>{{
+                "good-receipt__invoice__name" | translate
+              }}</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="invoice_name"
+                maxlength="191"
+                autocomplete="off"
+              />
             </mat-form-field>
           </div>
 
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ "good-receipt__invoice__tax" | translate }}</mat-label>
+              <mat-label>{{
+                "good-receipt__invoice__tax" | translate
+              }}</mat-label>
               <!--
                 TANPA tanda hubung dan titik. Nomornya memang 16 digit; format
                 bertitik yang dulu dipakai membuat yang menyalin dari faktur
@@ -153,14 +197,43 @@
                 autocomplete="off"
                 [attr.placeholder]="'tax-invoice__placeholder' | translate"
               />
-              <mat-hint>{{ 'tax-invoice__hint' | translate }}</mat-hint>
+              <mat-hint>{{ "tax-invoice__hint" | translate }}</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <!--
+            Rupiah dan persen saling menghitung; yang dikirim tetap rupiah.
+            Persennya dihitung atas nilai SESUDAH diskon per baris — itulah
+            yang benar-benar dipotong.
+          -->
+          <div class="field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>
+                {{ "good-receipt__invoice__discount" | translate }} (Rp.)
+              </mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="document_discount"
+                mask="separator.2"
+                thousandSeparator=" "
+              />
             </mat-form-field>
           </div>
 
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ "good-receipt__invoice__discount" | translate }}</mat-label>
-              <input matInput type="text" formControlName="document_discount" mask="separator.2" thousandSeparator=" " />
+              <mat-label>
+                {{ "good-receipt__invoice__discount" | translate }} (%)
+              </mat-label>
+              <input
+                matInput
+                type="text"
+                [formControl]="discountPercentControl"
+                mask="separator.2"
+                thousandSeparator=" "
+                placeholder="Ex. 5"
+              />
             </mat-form-field>
           </div>
         </div>
@@ -179,7 +252,9 @@
         <div class="faktur__kosong" *ngIf="!dokumenLengkap">
           <i class="ph ph-clock" aria-hidden="true"></i>
           <span>
-            <strong>{{ "good-receipt__invoice__waiting-title" | translate }}</strong>
+            <strong>{{
+              "good-receipt__invoice__waiting-title" | translate
+            }}</strong>
             <span>{{ "good-receipt__invoice__waiting" | translate }}</span>
           </span>
         </div>
@@ -231,13 +306,18 @@
                 {{ "good-receipt__create__line-total" | translate }}
               </th>
               <th class="tabel__aksi-kepala">
-                <span class="sr-only">{{ "general__actions" | translate }}</span>
+                <span class="sr-only">{{
+                  "general__actions" | translate
+                }}</span>
               </th>
             </tr>
           </thead>
 
           <tbody *ngIf="t.length > 0">
-            <tr *ngFor="let itemForm of t.controls; index as i" [formGroupName]="i">
+            <tr
+              *ngFor="let itemForm of t.controls; index as i"
+              [formGroupName]="i"
+            >
               <td>
                 <span class="barang__ref">
                   {{ itemForm.get("reference")?.value }}
@@ -254,8 +334,13 @@
                     ×{{ jumlahBaris(itemForm.get("product_id")?.value) }}
                   </span>
                 </span>
-                <span class="barang__desc">{{ itemForm.get("description")?.value }}</span>
-                <span class="barang__stok" *ngIf="itemForm.get('stock')?.value as stok">
+                <span class="barang__desc">{{
+                  itemForm.get("description")?.value
+                }}</span>
+                <span
+                  class="barang__stok"
+                  *ngIf="itemForm.get('stock')?.value as stok"
+                >
                   {{ "good-receipt__create__current-stock" | translate }}:
                   {{ stok.stock | number: "0.0-2" }}
                   {{ itemForm.get("default_unit")?.value }}
@@ -264,16 +349,31 @@
 
               <td>
                 <div class="jumlah">
-                  <mat-form-field appearance="outline" class="w-100"><input matInput type="text" formControlName="quantity" mask="separator.2" thousandSeparator=" " /></mat-form-field>
-                  <span class="jumlah__satuan">{{ itemForm.get("unit")?.value }}</span>
+                  <mat-form-field appearance="outline" class="w-100"
+                    ><input
+                      matInput
+                      type="text"
+                      formControlName="quantity"
+                      mask="separator.2"
+                      thousandSeparator=" "
+                  /></mat-form-field>
+                  <span class="jumlah__satuan">{{
+                    itemForm.get("unit")?.value
+                  }}</span>
                 </div>
                 <!--
                   Petunjuk konversi hanya muncul bila satuannya bukan satuan
                   dasar — "3 box = 300 pcs". Pada satuan dasar kalimatnya
                   mengulang apa yang sudah tertulis di sebelahnya.
                 -->
-                <span class="jumlah__konversi" *ngIf="itemForm.get('conversion')?.value != 1">
-                  {{ itemForm.get("quantity")?.value * itemForm.get("conversion")?.value | number: "0.0-2" }}
+                <span
+                  class="jumlah__konversi"
+                  *ngIf="itemForm.get('conversion')?.value != 1"
+                >
+                  {{
+                    itemForm.get("quantity")?.value *
+                      itemForm.get("conversion")?.value | number: "0.0-2"
+                  }}
                   {{ itemForm.get("default_unit")?.value }}
                 </span>
               </td>
@@ -305,7 +405,11 @@
                   class="simpan-harga"
                   *ngIf="bolehUbahHarga"
                   [class.simpan-harga--on]="itemForm.get('save_price')?.value"
-                  (click)="itemForm.get('save_price')?.setValue(!itemForm.get('save_price')?.value)"
+                  (click)="
+                    itemForm
+                      .get('save_price')
+                      ?.setValue(!itemForm.get('save_price')?.value)
+                  "
                   [attr.aria-pressed]="itemForm.get('save_price')?.value"
                   [title]="
                     (itemForm.get('save_price')?.value
@@ -366,11 +470,15 @@
         </div>
         <div>
           <dt>{{ "good-receipt__summary__item-discount" | translate }}</dt>
-          <dd class="ringkas__kurang">– Rp {{ diskonItem | number: "1.0-0" }}</dd>
+          <dd class="ringkas__kurang">
+            – Rp {{ diskonItem | number: "1.0-0" }}
+          </dd>
         </div>
         <div *ngIf="dokumenLengkap">
           <dt>{{ "good-receipt__summary__doc-discount" | translate }}</dt>
-          <dd class="ringkas__kurang">– Rp {{ diskonDokumen | number: "1.0-0" }}</dd>
+          <dd class="ringkas__kurang">
+            – Rp {{ diskonDokumen | number: "1.0-0" }}
+          </dd>
         </div>
       </dl>
 
@@ -381,7 +489,9 @@
     </section>
 
     <section class="kartu">
-      <h2 class="kartu__label">{{ "product__create__before-save" | translate }}</h2>
+      <h2 class="kartu__label">
+        {{ "product__create__before-save" | translate }}
+      </h2>
 
       <ul class="periksa">
         <li [class.periksa--ok]="metaFormGroup.valid">
@@ -402,7 +512,10 @@
             [class.ph-circle]="t.length === 0"
             aria-hidden="true"
           ></i>
-          <span>{{ t.length }} {{ "good-receipt__create__check-items" | translate }}</span>
+          <span
+            >{{ t.length }}
+            {{ "good-receipt__create__check-items" | translate }}</span
+          >
         </li>
         <li [class.periksa--ok]="itemFormGroup.valid" *ngIf="t.length > 0">
           <i
@@ -446,7 +559,12 @@
         type="button"
         class="btn btn--primary btn--blok"
         (click)="submitForm()"
-        [disabled]="!metaFormGroup.valid || !itemFormGroup.valid || isSubmitting || (dokumenLengkap && !fakturTerisi)"
+        [disabled]="
+          !metaFormGroup.valid ||
+          !itemFormGroup.valid ||
+          isSubmitting ||
+          (dokumenLengkap && !fakturTerisi)
+        "
       >
         <i class="ph ph-check" aria-hidden="true"></i>
         {{ "good-receipt__create__submit" | translate }}

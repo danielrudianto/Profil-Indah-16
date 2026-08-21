@@ -2,7 +2,7 @@ import { DatePipe, NgIf, NgFor, DecimalPipe, Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, map } from 'rxjs';
+import { Observable, Subscription, map } from 'rxjs';
 import {
   FormArray,
   FormBuilder,
@@ -12,6 +12,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { sinkronDiskonPersen } from 'src/app/utils/diskon-persen.utils';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { KOLOM_ISIAN } from 'src/app/utils/keycode.utils';
@@ -95,14 +96,22 @@ export class PurchaseInvoiceEditComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
   ) {
     this._hotkeysService.add([
-      new Hotkey('alt+a', (): boolean => {
-        this.openItemSelector();
-        return false;
-      }, KOLOM_ISIAN),
-      new Hotkey('alt+s', (): boolean => {
-        this.submitForm();
-        return false;
-      }, KOLOM_ISIAN),
+      new Hotkey(
+        'alt+a',
+        (): boolean => {
+          this.openItemSelector();
+          return false;
+        },
+        KOLOM_ISIAN,
+      ),
+      new Hotkey(
+        'alt+s',
+        (): boolean => {
+          this.submitForm();
+          return false;
+        },
+        KOLOM_ISIAN,
+      ),
     ]);
   }
 
@@ -141,11 +150,48 @@ export class PurchaseInvoiceEditComponent implements OnInit, OnDestroy {
     Validators.min(0),
   ]);
 
+  /**
+   * Isian persen untuk diskon dokumen; pasangan dua arah discountControl.
+   *
+   * HANYA ALAT ISIAN. Yang tersimpan tetap rupiah — payload mengirim
+   * `discount: this.diskonDokumen` dan skema server tidak berubah sedikit pun.
+   * Supplier menyebut potongannya dalam persen ("diskon 5%"), dan menghitung
+   * sendiri lalu mengetik hasilnya adalah tempat orang salah ketik.
+   *
+   * Polanya sama persis dengan lembar harga beli per barang, yang sejak awal
+   * sudah menyediakan kedua satuan — bukan pola baru.
+   */
+  discountPercentControl = new FormControl(0, [
+    Validators.min(0),
+    Validators.max(100),
+  ]);
+
+  private langgananDiskon?: Subscription;
+
+  /**
+   * Nilai yang dipotong diskon dokumen.
+   *
+   * Sesudah diskon per baris, BUKAN subtotal mentah: total dihitung sebagai
+   * subtotal - diskonItem - diskonDokumen, jadi inilah angka yang benar-benar
+   * dikenai persennya. Memakai subtotal mentah membuat "5%" di layar tidak
+   * sama dengan 5% yang dipotong.
+   */
+  get dasarDiskonDokumen(): number {
+    return this.subtotal - this.diskonItem;
+  }
+
   get t(): FormArray {
     return this.itemFormGroup.controls['items'] as FormArray;
   }
 
   ngOnInit(): void {
+    this.langgananDiskon = sinkronDiskonPersen(
+      this.discountControl,
+      this.discountPercentControl,
+      () => this.dasarDiskonDokumen,
+      this.itemFormGroup.valueChanges,
+    );
+
     this.pageTitleService.pasangKonteks({
       kembaliLabel: 'purchase-invoice__title',
       kembaliJalur: '/Purchase-invoice',
@@ -197,6 +243,7 @@ export class PurchaseInvoiceEditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._hotkeysService.reset();
+    this.langgananDiskon?.unsubscribe();
   }
 
   private buatBaris(x: any): FormGroup {
