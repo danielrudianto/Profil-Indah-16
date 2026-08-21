@@ -2413,7 +2413,7 @@
   "sales-return__empty__title": "Belum ada retur di bulan ini",
   "sales-return__empty__desc": "Retur yang dibuat dari faktur penjualan akan tampil di sini.",
   "sales-return__create__auto-number": "Nomor otomatis",
-  "sales-return__create__payment-method-hint": "Kosongkan bila tidak ada uang yang dikembalikan ke pelanggan.",
+  "sales-return__create__payment-method-hint": "Tunai tersimpan tanpa metode bernama, dan di laporan uang masuk nilainya masuk ke baris Cash.",
   "sales-return__create__add-item": "Tambah barang",
   "sales-return__create__no-item": "Belum ada barang. Tambahkan lewat tombol di atas atau Alt + A.",
   "sales-return__create__no-line": "Tidak ada baris cocok",
@@ -2704,5 +2704,6 @@
   "settings__text-size__small": "Kecil",
   "settings__text-size__normal": "Normal",
   "settings__text-size__large": "Besar",
-  "settings__text-size__larger": "Sangat besar"
+  "settings__text-size__larger": "Sangat besar",
+  "sales-return__create__payment-method-other": "Transfer / metode lain"
 }

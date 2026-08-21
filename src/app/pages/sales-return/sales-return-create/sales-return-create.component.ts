@@ -29,7 +29,11 @@ import {
   ComboSearchComponent,
 } from 'src/app/components/combo-search/combo-search.component';
 import { SalesInvoiceViewComponent } from 'src/app/components/document-view/sales-invoice-view/sales-invoice-view.component';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatSelect, MatOption } from '@angular/material/select';
 import {
@@ -57,8 +61,10 @@ import {
  * - Pesan galat "meta lu salah" / "kosong atuh bos". Checklist di kolom
  *   kanan menyatakan hal yang sama tanpa perlu kalimat itu sampai ke
  *   pengguna.
- * - payment_method null saat tak diisi. Skema server menuntut angka;
- *   "tanpa metode" dikirim sebagai 0 dan server yang memetakannya ke null.
+ * - payment_method null saat tak diisi. Skema server menuntut angka; TUNAI
+ *   dikirim sebagai 0 dan server yang memetakannya ke null — bukan "tanpa
+ *   metode", melainkan metode yang memang tidak bernama. Lihat
+ *   pilihJenisMetode().
  */
 @Component({
   selector: 'app-sales-return-create',
@@ -98,10 +104,14 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
     private pageTitleService: PageTitleService,
   ) {
     this.hotkeysService.add([
-      new Hotkey('alt+a', (): boolean => {
-        this.openItemSelector();
-        return false;
-      }, KOLOM_ISIAN),
+      new Hotkey(
+        'alt+a',
+        (): boolean => {
+          this.openItemSelector();
+          return false;
+        },
+        KOLOM_ISIAN,
+      ),
     ]);
   }
 
@@ -163,6 +173,36 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
   /* ---------------------------------------------------------------- */
   /* Metode pengembalian                                               */
   /* ---------------------------------------------------------------- */
+
+  /**
+   * Tunai atau metode bernama.
+   *
+   * DI BASIS DATA, TUNAI ADALAH METODE YANG KOSONG. Server memetakan
+   * payment_method_id 0 menjadi null, dan laporan uang masuk mengumpulkan
+   * bucket null itu ke baris bernama "Cash" — jadi retur yang metodenya tidak
+   * diisi memang SUDAH terhitung sebagai pengembalian tunai selama ini.
+   *
+   * Yang hilang cuma tombolnya. Bentuk sebelumnya hanya menyediakan kotak cari
+   * metode, sehingga tunai hanya bisa dicapai dengan TIDAK melakukan apa pun —
+   * dan tidak melakukan apa pun tidak pernah terbaca sebagai sebuah pilihan.
+   * Petunjuk lamanya bahkan menyebut kosong berarti "tidak ada uang yang
+   * dikembalikan", yang berlawanan dengan yang dilakukan laporannya.
+   */
+  jenisMetode: 'tunai' | 'lainnya' = 'tunai';
+
+  pilihJenisMetode(jenis: 'tunai' | 'lainnya'): void {
+    this.jenisMetode = jenis;
+
+    /*
+      Berpindah ke tunai MENGOSONGKAN metode yang sempat dipilih. Tanpa ini
+      kartunya menyala "Tunai" sementara id metode bank masih tersimpan, dan
+      retur terkirim dengan metode yang tidak lagi terlihat siapa pun.
+    */
+    if (jenis === 'tunai') {
+      this.metaFormGroup.patchValue({ payment_method_id: 0 });
+      this.comboMetode?.reset();
+    }
+  }
 
   pilihMetode(item: ComboItem): void {
     this.metaFormGroup.patchValue({ payment_method_id: item.id });
@@ -422,7 +462,22 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
       this.metaFormGroup.valid &&
       this.productFormGroup.valid &&
       this.selectedBill != null &&
-      this.semuaTerpetakan
+      this.semuaTerpetakan &&
+      this.metodeLengkap
+    );
+  }
+
+  /**
+   * "Transfer / metode lain" yang dipilih tetapi metodenya belum diisi.
+   *
+   * Tanpa penjaga ini, kartunya menyala "Transfer" sementara
+   * payment_method_id masih 0 — dan retur tersimpan sebagai TUNAI, diam-diam,
+   * berlawanan dengan yang barusan ditekan orangnya.
+   */
+  get metodeLengkap(): boolean {
+    return (
+      this.jenisMetode === 'tunai' ||
+      Number(this.metaFormGroup.value.payment_method_id ?? 0) > 0
     );
   }
 
@@ -468,6 +523,7 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
             payment_method_id: 0,
           });
           this.comboMetode?.reset();
+          this.jenisMetode = 'tunai';
           this.resetPencarianFaktur();
         },
         error: (error) => {

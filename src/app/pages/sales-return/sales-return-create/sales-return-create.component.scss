@@ -62,3 +62,11 @@
   font-size: calc(12.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
+
+/*
+  Slot kotak cari metode. Muncul hanya ketika "Transfer / metode lain"
+  dipilih; diberi jarak atas supaya tidak menempel pada kartu pilihannya.
+*/
+.metode__slot {
+  margin-top: 12px;
+}

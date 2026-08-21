@@ -2413,7 +2413,7 @@
   "sales-return__empty__title": "No returns this month",
   "sales-return__empty__desc": "Returns created from sales invoices will appear here.",
   "sales-return__create__auto-number": "Automatic number",
-  "sales-return__create__payment-method-hint": "Leave empty if no money is refunded to the customer.",
+  "sales-return__create__payment-method-hint": "Cash is stored without a named method, and appears on the Cash row of the money receipt report.",
   "sales-return__create__add-item": "Add item",
   "sales-return__create__no-item": "No items yet. Add them with the button above or Alt + A.",
   "sales-return__create__no-line": "No matching line",
@@ -2704,5 +2704,6 @@
   "settings__text-size__small": "Small",
   "settings__text-size__normal": "Normal",
   "settings__text-size__large": "Large",
-  "settings__text-size__larger": "Extra large"
+  "settings__text-size__larger": "Extra large",
+  "sales-return__create__payment-method-other": "Transfer / other method"
 }
