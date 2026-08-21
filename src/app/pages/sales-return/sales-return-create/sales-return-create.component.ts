@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
 import {
   FormArray,
@@ -24,10 +24,6 @@ import {
   ProductSelectorComponent,
   ProductSelectorType,
 } from 'src/app/components/product-selector/product-selector.component';
-import {
-  ComboItem,
-  ComboSearchComponent,
-} from 'src/app/components/combo-search/combo-search.component';
 import { SalesInvoiceViewComponent } from 'src/app/components/document-view/sales-invoice-view/sales-invoice-view.component';
 import {
   MatFormField,
@@ -78,7 +74,6 @@ import {
     ReactiveFormsModule,
     NgxMaskDirective,
     TranslatePipe,
-    ComboSearchComponent,
     MatFormField,
     MatLabel,
     MatSuffix,
@@ -115,8 +110,6 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
     ]);
   }
 
-  @ViewChild('comboMetode') comboMetode?: ComboSearchComponent;
-
   productSelectorSubject: Subject<any> = new Subject();
   private langgananTanggal?: Subscription;
 
@@ -150,6 +143,17 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
       memasang langganan baru pada SETIAP baris setiap kali barang berubah
       tanpa melepas yang lama, jadi satu ketikan bisa memicu belasan reset.
     */
+    this.apiService
+      .get('payment-method/all', { keyword: '', page: 1 })
+      .subscribe({
+        next: (data: any) => {
+          this.metodeOpsi = data ?? [];
+        },
+        error: (error) => {
+          this.alertService.showError(error);
+        },
+      });
+
     this.langgananTanggal = this.metaFormGroup.controls[
       'bill_date'
     ].valueChanges.subscribe(() => {
@@ -175,41 +179,36 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
   /* ---------------------------------------------------------------- */
 
   /**
-   * Tunai atau metode bernama.
+   * Metode pengembalian — DAFTAR TETAP, semuanya terlihat tanpa mengetik.
    *
    * DI BASIS DATA, TUNAI ADALAH METODE YANG KOSONG. Server memetakan
-   * payment_method_id 0 menjadi null, dan laporan uang masuk mengumpulkan
-   * bucket null itu ke baris bernama "Cash" — jadi retur yang metodenya tidak
-   * diisi memang SUDAH terhitung sebagai pengembalian tunai selama ini.
+   * payment_method_id 0 menjadi null, dan money-receipt mengumpulkan bucket
+   * null itu ke baris bernama "Cash" — jadi retur yang metodenya tidak diisi
+   * memang SUDAH terhitung sebagai pengembalian tunai selama ini.
    *
-   * Yang hilang cuma tombolnya. Bentuk sebelumnya hanya menyediakan kotak cari
-   * metode, sehingga tunai hanya bisa dicapai dengan TIDAK melakukan apa pun —
-   * dan tidak melakukan apa pun tidak pernah terbaca sebagai sebuah pilihan.
-   * Petunjuk lamanya bahkan menyebut kosong berarti "tidak ada uang yang
-   * dikembalikan", yang berlawanan dengan yang dilakukan laporannya.
+   * Bentuk sebelumnya memakai kotak cari: orang harus mengetik, hasilnya
+   * dibatasi lima teratas, dan tunai tidak pernah muncul karena ia bukan baris
+   * tabel. Akibatnya satu-satunya cara memilih tunai adalah TIDAK melakukan
+   * apa pun — yang tidak pernah terbaca sebagai pilihan, dan membuat orang
+   * ragu apakah returnya tersimpan benar.
+   *
+   * Daftarnya diambil dari /payment-method/all, yang MEMANG sudah menyisipkan
+   * { id: null, name: "Cash" } di depan. Jadi tunai dan metode bernama datang
+   * dari satu sumber, dan tidak ada pilihan yang dikarang di sisi peramban.
    */
-  jenisMetode: 'tunai' | 'lainnya' = 'tunai';
+  metodeOpsi: { id: number | null; name: string }[] = [];
 
-  pilihJenisMetode(jenis: 'tunai' | 'lainnya'): void {
-    this.jenisMetode = jenis;
+  lacakMetode = (_: number, m: { id: number | null }): number => m.id ?? 0;
 
-    /*
-      Berpindah ke tunai MENGOSONGKAN metode yang sempat dipilih. Tanpa ini
-      kartunya menyala "Tunai" sementara id metode bank masih tersimpan, dan
-      retur terkirim dengan metode yang tidak lagi terlihat siapa pun.
-    */
-    if (jenis === 'tunai') {
-      this.metaFormGroup.patchValue({ payment_method_id: 0 });
-      this.comboMetode?.reset();
-    }
+  /** Tunai memakai id null di server, tetapi 0 di formulir; skema menuntut angka. */
+  metodeTerpilih(m: { id: number | null }): boolean {
+    return (
+      Number(this.metaFormGroup.value.payment_method_id ?? 0) === (m.id ?? 0)
+    );
   }
 
-  pilihMetode(item: ComboItem): void {
-    this.metaFormGroup.patchValue({ payment_method_id: item.id });
-  }
-
-  lepasMetode(): void {
-    this.metaFormGroup.patchValue({ payment_method_id: 0 });
+  pilihMetodeTetap(m: { id: number | null }): void {
+    this.metaFormGroup.patchValue({ payment_method_id: m.id ?? 0 });
   }
 
   /* ---------------------------------------------------------------- */
@@ -462,22 +461,7 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
       this.metaFormGroup.valid &&
       this.productFormGroup.valid &&
       this.selectedBill != null &&
-      this.semuaTerpetakan &&
-      this.metodeLengkap
-    );
-  }
-
-  /**
-   * "Transfer / metode lain" yang dipilih tetapi metodenya belum diisi.
-   *
-   * Tanpa penjaga ini, kartunya menyala "Transfer" sementara
-   * payment_method_id masih 0 — dan retur tersimpan sebagai TUNAI, diam-diam,
-   * berlawanan dengan yang barusan ditekan orangnya.
-   */
-  get metodeLengkap(): boolean {
-    return (
-      this.jenisMetode === 'tunai' ||
-      Number(this.metaFormGroup.value.payment_method_id ?? 0) > 0
+      this.semuaTerpetakan
     );
   }
 
@@ -522,8 +506,6 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
             bill_date: '',
             payment_method_id: 0,
           });
-          this.comboMetode?.reset();
-          this.jenisMetode = 'tunai';
           this.resetPencarianFaktur();
         },
         error: (error) => {

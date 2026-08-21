@@ -2704,6 +2704,5 @@
   "settings__text-size__small": "Kecil",
   "settings__text-size__normal": "Normal",
   "settings__text-size__large": "Besar",
-  "settings__text-size__larger": "Sangat besar",
-  "sales-return__create__payment-method-other": "Transfer / metode lain"
+  "settings__text-size__larger": "Sangat besar"
 }

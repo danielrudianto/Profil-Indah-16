@@ -88,49 +88,30 @@
           </span>
 
           <!--
-            Dua kartu keadaan, pola yang sama dengan pengembalian kelebihan
-            bayar di faktur penjualan. Tunai HARUS bisa ditekan: di basis data
-            ia tersimpan sebagai metode kosong, dan tanpa tombol ini orang
-            hanya bisa mencapainya dengan tidak melakukan apa-apa — yang tidak
-            pernah terbaca sebagai sebuah pilihan.
+            DAFTAR TETAP, bukan kotak cari. Kotak cari mengharuskan orang
+            mengetik dan hanya memunculkan lima hasil teratas, sehingga tidak
+            ada cara mengetahui apa saja yang tersedia — dan tunai, yang di
+            basis data adalah metode kosong, tidak muncul sama sekali.
+            Endpoint /payment-method/all sudah menyisipkan Cash di depan
+            daftarnya, jadi semua pilihan datang dari satu sumber.
           -->
-          <div class="keadaan">
+          <div class="keadaan keadaan--metode">
             <button
               type="button"
+              *ngFor="let m of metodeOpsi; trackBy: lacakMetode"
               class="keadaan__kartu"
-              [class.keadaan__kartu--on]="jenisMetode === 'tunai'"
+              [class.keadaan__kartu--on]="metodeTerpilih(m)"
               [disabled]="isSubmitting"
-              (click)="pilihJenisMetode('tunai')"
+              (click)="pilihMetodeTetap(m)"
             >
-              <i class="ph ph-money" aria-hidden="true"></i>
-              <span class="keadaan__judul">
-                {{ "overpayment__create__method-cash" | translate }}
-              </span>
+              <i
+                class="ph"
+                [class.ph-money]="m.id == null"
+                [class.ph-bank]="m.id != null"
+                aria-hidden="true"
+              ></i>
+              <span class="keadaan__judul">{{ m.name }}</span>
             </button>
-            <button
-              type="button"
-              class="keadaan__kartu"
-              [class.keadaan__kartu--on]="jenisMetode === 'lainnya'"
-              [disabled]="isSubmitting"
-              (click)="pilihJenisMetode('lainnya')"
-            >
-              <i class="ph ph-bank" aria-hidden="true"></i>
-              <span class="keadaan__judul">
-                {{ "sales-return__create__payment-method-other" | translate }}
-              </span>
-            </button>
-          </div>
-
-          <div class="metode__slot" *ngIf="jenisMetode === 'lainnya'">
-            <app-combo-search
-              #comboMetode
-              [label]="'sales-return__create__payment-method' | translate"
-              inputId="rj-metode"
-              route="payment-method"
-              [disabled]="isSubmitting"
-              (pick)="pilihMetode($event)"
-              (clear)="lepasMetode()"
-            />
           </div>
 
           <p class="petunjuk">

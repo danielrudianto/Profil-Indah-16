@@ -64,9 +64,9 @@
 }
 
 /*
-  Slot kotak cari metode. Muncul hanya ketika "Transfer / metode lain"
-  dipilih; diberi jarak atas supaya tidak menempel pada kartu pilihannya.
+  Daftar metode pengembalian. Kartunya dibiarkan membungkus ke baris berikutnya
+  supaya jumlah bank berapa pun tetap muat tanpa menggulir mendatar.
 */
-.metode__slot {
-  margin-top: 12px;
+.keadaan--metode {
+  flex-wrap: wrap;
 }
