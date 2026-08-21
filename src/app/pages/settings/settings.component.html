@@ -85,6 +85,35 @@
     </div>
   </section>
 
+  <!-- Ukuran teks ------------------------------------------------------ -->
+  <section class="settings__card">
+    <h2 class="settings__card-title">
+      {{ "settings__text-size" | translate }}
+    </h2>
+    <p class="settings__card-note">
+      {{ "settings__text-size_note" | translate }}
+    </p>
+
+    <!--
+      Tiap tombol ditulis DALAM ukurannya sendiri; itu pratinjaunya. Orang yang
+      memilih ukuran teks justru orang yang paling sulit membaca daftar nama
+      ukuran, jadi contohnya harus terlihat sebelum dipilih, bukan sesudah.
+    -->
+    <div class="seg seg--ukuran" role="group">
+      <button
+        type="button"
+        class="seg__opt"
+        *ngFor="let u of ukuran; trackBy: lacakUkuran"
+        [class.seg__opt--on]="ukuranSekarang.nilai === u.nilai"
+        [attr.aria-pressed]="ukuranSekarang.nilai === u.nilai"
+        [style.fontSize.px]="13 * u.skala"
+        (click)="pilihUkuran(u)"
+      >
+        {{ u.label | translate }}
+      </button>
+    </div>
+  </section>
+
   <!-- Warna aksen ----------------------------------------------------- -->
   <section class="settings__card">
     <h2 class="settings__card-title">{{ "settings__accent" | translate }}</h2>

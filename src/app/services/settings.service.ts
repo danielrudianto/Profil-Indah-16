@@ -5,9 +5,14 @@ import {
   ACCENT_DEFAULT,
   AccentColor,
 } from 'src/app/constants/accent-color.constant';
+import {
+  UKURAN_TEKS,
+  UKURAN_TEKS_DEFAULT,
+  PilihanUkuranTeks,
+} from 'src/app/constants/text-size.constant';
 
 /**
- * Preferensi tampilan: mode gelap dan warna aksen.
+ * Preferensi tampilan: mode gelap, warna aksen, dan ukuran teks.
  *
  * Polanya mengikuti LanguageService — BehaviorSubject supaya komponen bisa
  * berlangganan, dan localStorage supaya pilihannya bertahan antar sesi.
@@ -31,13 +36,16 @@ export type ModeTampilan = 'light' | 'dark';
 export class SettingsService {
   private static readonly KUNCI_MODE = 'settings__mode';
   private static readonly KUNCI_AKSEN = 'settings__accent';
+  private static readonly KUNCI_UKURAN = 'settings__text-size';
 
   public readonly mode: BehaviorSubject<ModeTampilan>;
   public readonly accent: BehaviorSubject<AccentColor>;
+  public readonly ukuranTeks: BehaviorSubject<PilihanUkuranTeks>;
 
   constructor() {
     this.mode = new BehaviorSubject<ModeTampilan>(this.bacaMode());
     this.accent = new BehaviorSubject<AccentColor>(this.bacaAksen());
+    this.ukuranTeks = new BehaviorSubject<PilihanUkuranTeks>(this.bacaUkuran());
 
     this.terapkan();
   }
@@ -50,6 +58,12 @@ export class SettingsService {
 
   toggleMode(): void {
     this.setMode(this.mode.value === 'dark' ? 'light' : 'dark');
+  }
+
+  setUkuranTeks(ukuran: PilihanUkuranTeks): void {
+    localStorage.setItem(SettingsService.KUNCI_UKURAN, ukuran.nilai);
+    this.ukuranTeks.next(ukuran);
+    this.terapkan();
   }
 
   setAccent(warna: AccentColor): void {
@@ -81,6 +95,19 @@ export class SettingsService {
     hari langsung berlaku pada pengguna lama tanpa perlu membersihkan
     localStorage mereka.
   */
+  /*
+    Sama seperti aksen: yang disimpan namanya, lalu dicocokkan kembali ke
+    daftar. Pengali yang disunting lewat peralatan pengembang karenanya tidak
+    pernah sampai ke CSS, dan penyetelan ulang angkanya kelak langsung berlaku
+    pada pengguna lama tanpa perlu membersihkan localStorage mereka.
+  */
+  private bacaUkuran(): PilihanUkuranTeks {
+    const tersimpan = localStorage.getItem(SettingsService.KUNCI_UKURAN);
+    return (
+      UKURAN_TEKS.find((u) => u.nilai === tersimpan) ?? UKURAN_TEKS_DEFAULT
+    );
+  }
+
   private bacaAksen(): AccentColor {
     const tersimpan = localStorage.getItem(SettingsService.KUNCI_AKSEN);
     return ACCENT_COLORS.find((w) => w.base === tersimpan) ?? ACCENT_DEFAULT;
@@ -126,6 +153,12 @@ export class SettingsService {
       groundnya netral.
     */
     const token: Record<string, string> = {
+      /*
+        Pengali tipografi. Dibaca oleh SETIAP deklarasi font-size aplikasi,
+        yang seluruhnya ditulis sebagai calc(<n>px * var(--skala-teks, 1)).
+      */
+      '--skala-teks': String(this.ukuranTeks.value.skala),
+
       '--color-bg': gelap ? '#0d121d' : '#dde7fb',
       '--color-surface': gelap ? '#161b29' : '#f0f5fe',
       '--color-sidebar': gelap ? '#121724' : '#e8eefc',

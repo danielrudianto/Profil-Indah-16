@@ -25,13 +25,13 @@
 
 .laporan__judul {
   margin: 0 0 4px;
-  font-size: 28px;
+  font-size: calc(28px * var(--skala-teks, 1));
   font-weight: 500;
 }
 
 .laporan__lede {
   margin: 0;
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
 
@@ -85,7 +85,7 @@
 .kartu__label {
   /* Jarak bawah = napas antara judul kartu dan isinya. */
   margin: 4px 0 12px;
-  font-size: 11px;
+  font-size: calc(11px * var(--skala-teks, 1));
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -128,12 +128,12 @@
 }
 
 .hero__label {
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
 
 .hero__nilai {
-  font-size: 22px;
+  font-size: calc(22px * var(--skala-teks, 1));
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   /* Angka uang tidak boleh patah dua baris; kisi di atasnya yang mengalah. */
@@ -141,11 +141,11 @@
 }
 
 .hero__nilai--tanggal {
-  font-size: 17px;
+  font-size: calc(17px * var(--skala-teks, 1));
 }
 
 .hero__sub {
-  font-size: 11.5px;
+  font-size: calc(11.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
 }
 
@@ -201,7 +201,7 @@
 }
 
 .grafik__tanggal {
-  font-size: 10px;
+  font-size: calc(10px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
   font-variant-numeric: tabular-nums;
 }
@@ -209,7 +209,7 @@
 .grafik__legenda {
   display: flex;
   gap: 16px;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
 
   span {
@@ -248,7 +248,7 @@
   grid-template-columns: minmax(120px, 200px) minmax(0, 1fr) 52px 130px;
   align-items: center;
   gap: 12px;
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--skala-teks, 1));
 }
 
 .peringkat__nama {
@@ -268,7 +268,7 @@
   text-align: right;
   font-variant-numeric: tabular-nums;
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
 }
 
 .peringkat__nilai {
@@ -298,7 +298,7 @@
 .terbaik__label {
   width: 90px;
   flex-shrink: 0;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
 
@@ -356,7 +356,7 @@
   background: transparent;
   color: color-mix(in srgb, var(--color-text) 60%, transparent);
   font: inherit;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   font-weight: 500;
   cursor: pointer;
 
@@ -374,7 +374,7 @@
 
 .laporan__kosong {
   margin: 0;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
@@ -408,7 +408,7 @@
     (sebelumnya -8px dan keduanya bertumpukan).
   */
   margin: -4px 0 0;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
@@ -420,7 +420,7 @@
 }
 
 .grafik__rentang {
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
 }
 
@@ -455,7 +455,7 @@
   color: var(--color-accent);
 
   i {
-    font-size: 17px;
+    font-size: calc(17px * var(--skala-teks, 1));
   }
 }
 
@@ -466,7 +466,7 @@
   min-width: 0;
 
   small {
-    font-size: 11.5px;
+    font-size: calc(11.5px * var(--skala-teks, 1));
     color: color-mix(in srgb, var(--color-text) 55%, transparent);
   }
 }
@@ -494,13 +494,13 @@
   border: 0;
   background: transparent;
   font: inherit;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   font-weight: 500;
   color: var(--color-accent);
   cursor: pointer;
 
   i {
-    font-size: 14px;
+    font-size: calc(14px * var(--skala-teks, 1));
     transition: transform 0.18s ease;
   }
 
@@ -573,11 +573,11 @@
   gap: 12px;
   padding: 90px 0;
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--skala-teks, 1));
 }
 
 .laporan__putar {
-  font-size: 30px;
+  font-size: calc(30px * var(--skala-teks, 1));
   color: var(--color-accent);
   animation: laporan-putar 0.9s linear infinite;
 }
@@ -619,19 +619,19 @@
   z-index: 5;
 
   strong {
-    font-size: 13px;
+    font-size: calc(13px * var(--skala-teks, 1));
     font-weight: 600;
     font-variant-numeric: tabular-nums;
     color: var(--color-accent);
   }
 
   span {
-    font-size: 11.5px;
+    font-size: calc(11.5px * var(--skala-teks, 1));
     color: color-mix(in srgb, var(--color-text) 58%, transparent);
   }
 
   small {
-    font-size: 10.5px;
+    font-size: calc(10.5px * var(--skala-teks, 1));
     color: color-mix(in srgb, var(--color-text) 42%, transparent);
   }
 }
@@ -727,7 +727,7 @@
   margin-top: 12px;
   padding: 6px 12px;
   font: inherit;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   font-weight: 500;
   color: color-mix(in srgb, var(--color-text) 70%, transparent);
   background: transparent;
@@ -736,7 +736,7 @@
   cursor: pointer;
 
   i {
-    font-size: 13px;
+    font-size: calc(13px * var(--skala-teks, 1));
   }
 
   &:hover {
@@ -773,7 +773,7 @@
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    font-size: 13.5px;
+    font-size: calc(13.5px * var(--skala-teks, 1));
     line-height: 1.55;
   }
 }
@@ -788,7 +788,7 @@
   border-radius: 50%;
   background: var(--color-active);
   color: var(--color-accent);
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
 }
 
 

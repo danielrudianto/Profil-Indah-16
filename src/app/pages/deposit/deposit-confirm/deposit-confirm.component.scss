@@ -16,7 +16,7 @@
   display: flex;
   justify-content: space-between;
   gap: 16px;
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--skala-teks, 1));
 }
 
 .rinci__label {
@@ -26,7 +26,7 @@
 /* Judul kecil pemisah pembayaran lama dan pelunasan baru. */
 .bayar__seksi {
   margin: 4px 0 0;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;

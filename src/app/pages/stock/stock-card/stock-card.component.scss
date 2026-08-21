@@ -6,7 +6,7 @@
 }
 
 .kartu-stok__hitung {
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   font-style: italic;
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
 }
@@ -32,7 +32,7 @@
   }
 
   .hero__nilai i {
-    font-size: 14px;
+    font-size: calc(14px * var(--skala-teks, 1));
     color: var(--color-accent);
     vertical-align: middle;
     margin-left: 4px;
@@ -66,7 +66,7 @@ section.kartu {
 
 .akordeon__panah {
   margin-left: auto;
-  font-size: 16px;
+  font-size: calc(16px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
   transition: transform 0.18s ease;
 }

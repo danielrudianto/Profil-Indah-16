@@ -138,27 +138,27 @@
 
 .login__brand-name {
   font-weight: 500;
-  font-size: 19px;
+  font-size: calc(19px * var(--skala-teks, 1));
   letter-spacing: 0.14em;
   text-transform: uppercase;
   line-height: 1.15;
 }
 
 .login__brand-place {
-  font-size: 10.5px;
+  font-size: calc(10.5px * var(--skala-teks, 1));
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
 .login__title {
-  font-size: 32px;
+  font-size: calc(32px * var(--skala-teks, 1));
   font-weight: 500;
   margin: 0 0 6px;
 }
 
 .login__subtitle {
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
   margin: 0 0 32px;
   color: color-mix(in srgb, var(--color-text) 62%, transparent);
 }
@@ -173,7 +173,7 @@
   label {
     display: block;
     margin-bottom: 6px;
-    font-size: 13px;
+    font-size: calc(13px * var(--skala-teks, 1));
     font-weight: 500;
     color: color-mix(in srgb, var(--color-text) 78%, transparent);
   }
@@ -188,7 +188,7 @@
   left: 13px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 16px;
+  font-size: calc(16px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 50%, transparent);
   pointer-events: none;
 }
@@ -198,7 +198,7 @@
   min-height: 48px;
   padding: 0 14px 0 40px;
   font: inherit;
-  font-size: 15px;
+  font-size: calc(15px * var(--skala-teks, 1));
   color: var(--color-text);
   background: var(--color-bg);
   border: 1px solid var(--color-divider);
@@ -234,7 +234,7 @@
   border-radius: 6px;
   background: transparent;
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
-  font-size: 17px;
+  font-size: calc(17px * var(--skala-teks, 1));
   cursor: pointer;
 
   &:hover {
@@ -287,7 +287,7 @@
 .login__submit {
   width: 100%;
   min-height: 50px;
-  font-size: 15.5px;
+  font-size: calc(15.5px * var(--skala-teks, 1));
   margin-top: 10px;
 }
 
@@ -301,7 +301,7 @@
   justify-content: space-between;
   gap: 12px;
   margin-top: 24px;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
@@ -319,7 +319,7 @@
 .seg__opt {
   padding: 4px 9px;
   font: inherit;
-  font-size: 11.5px;
+  font-size: calc(11.5px * var(--skala-teks, 1));
   color: inherit;
   background: transparent;
   border: 0;
@@ -502,7 +502,7 @@
   bottom: 24px;
   width: 100%;
   text-align: center;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 

@@ -25,14 +25,14 @@
   flex-wrap: wrap;
   gap: 12px;
   margin: 0 0 6px;
-  font-size: 26px;
+  font-size: calc(26px * var(--skala-teks, 1));
   font-weight: 500;
   color: var(--color-text);
 }
 
 .buat__lede {
   margin: 0;
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
   color: var(--color-text-muted, color-mix(in srgb, var(--color-text) 62%, transparent));
 }
 
@@ -45,12 +45,12 @@
   border-radius: 999px;
   background: var(--color-accent-wash);
   color: var(--color-accent);
-  font-size: 11.5px;
+  font-size: calc(11.5px * var(--skala-teks, 1));
   font-weight: 500;
   letter-spacing: 0.02em;
 
   i {
-    font-size: 13px;
+    font-size: calc(13px * var(--skala-teks, 1));
   }
 }
 
@@ -96,7 +96,7 @@
 
 .kartu__label {
   margin: 4px 0 0;
-  font-size: 11px;
+  font-size: calc(11px * var(--skala-teks, 1));
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -151,7 +151,7 @@
 
   label {
     margin-bottom: 6px;
-    font-size: 13px;
+    font-size: calc(13px * var(--skala-teks, 1));
     font-weight: 500;
     color: color-mix(in srgb, var(--color-text) 78%, transparent);
   }
@@ -174,7 +174,7 @@
   left: 0;
   right: 0;
   margin: 0;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   line-height: 1.4;
   white-space: nowrap;
   overflow: hidden;
@@ -187,7 +187,7 @@
   min-height: 44px;
   padding: 0 14px;
   font: inherit;
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
   font-family: "Montserrat", system-ui, sans-serif;
   color: var(--color-text);
   background: var(--color-bg);
@@ -266,7 +266,7 @@
 
   i {
     grid-row: 1 / span 3;
-    font-size: 20px;
+    font-size: calc(20px * var(--skala-teks, 1));
     color: var(--color-text-faint);
     transition: color 0.18s ease;
   }
@@ -293,18 +293,18 @@
 }
 
 .keadaan__judul {
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
   font-weight: 500;
 }
 
 .keadaan__desk {
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: var(--color-text-muted);
 }
 
 /* Konsekuensinya beraksen — itu kalimat yang harus terbaca, bukan catatan kaki. */
 .keadaan__akibat {
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: var(--color-accent);
 }
 
@@ -323,7 +323,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--skala-teks, 1));
 
   div {
     display: flex;
@@ -356,7 +356,7 @@
   border-top: 1px solid var(--color-divider);
 
   span {
-    font-size: 13.5px;
+    font-size: calc(13.5px * var(--skala-teks, 1));
     color: color-mix(in srgb, var(--color-text) 58%, transparent);
   }
 
@@ -367,7 +367,7 @@
     lebih kecil.
   */
   strong {
-    font-size: 18px;
+    font-size: calc(18px * var(--skala-teks, 1));
     font-weight: 500;
     color: var(--color-accent);
     font-variant-numeric: tabular-nums;
@@ -396,14 +396,14 @@
   min-height: 44px;
   padding: 0 16px;
   font: inherit;
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
   font-weight: 500;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.15s ease, border-color 0.15s ease;
 
   i {
-    font-size: 16px;
+    font-size: calc(16px * var(--skala-teks, 1));
   }
 
   &:focus-visible {
@@ -459,7 +459,7 @@
   margin-top: 12px;
   padding: 11px 14px;
   font: inherit;
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--skala-teks, 1));
   font-weight: 500;
   text-align: left;
   color: var(--color-accent);
@@ -470,7 +470,7 @@
   transition: background-color 0.15s ease, border-color 0.15s ease;
 
   i {
-    font-size: 17px;
+    font-size: calc(17px * var(--skala-teks, 1));
   }
 
   &:hover {
@@ -489,7 +489,7 @@
   padding: 2px 8px;
   border: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
   border-radius: 5px;
-  font-size: 11px;
+  font-size: calc(11px * var(--skala-teks, 1));
 }
 
 /* Tombol pembuka kalender di ujung kolom tanggal. */
@@ -500,7 +500,7 @@
   width: 36px;
   height: 36px;
   padding: 0;
-  font-size: 18px;
+  font-size: calc(18px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 60%, transparent);
   background: transparent;
   border: 0;
@@ -539,7 +539,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
 
   li {
     display: flex;
@@ -559,7 +559,7 @@
   border-radius: 50%;
   border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
   color: transparent;
-  font-size: 11px;
+  font-size: calc(11px * var(--skala-teks, 1));
   transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
@@ -588,10 +588,10 @@
   background: var(--color-active);
   box-shadow: inset 0 0 0 1px var(--color-accent);
   color: var(--color-accent);
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
 
   i {
-    font-size: 16px;
+    font-size: calc(16px * var(--skala-teks, 1));
     flex: none;
   }
 }
@@ -642,7 +642,7 @@
 
 .barang__desc {
   display: block;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
   max-width: 320px;
   overflow: hidden;
@@ -652,7 +652,7 @@
 .barang__stok {
   display: block;
   margin-top: 2px;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
 }
 
@@ -668,7 +668,7 @@
 }
 
 .jumlah__satuan {
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
 
@@ -676,7 +676,7 @@
 .jumlah__konversi {
   display: block;
   margin-top: 4px;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
 }
 
@@ -698,7 +698,7 @@
   border-radius: 999px;
   box-shadow: inset 0 0 0 1px var(--color-divider);
   color: color-mix(in srgb, var(--color-text) 50%, transparent);
-  font-size: 11px;
+  font-size: calc(11px * var(--skala-teks, 1));
   font-weight: 600;
   cursor: help;
 }
@@ -711,7 +711,7 @@
   margin-bottom: 16px;
   padding: 7px 14px;
   font: inherit;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   font-weight: 500;
   white-space: nowrap;
   color: color-mix(in srgb, var(--color-text) 70%, transparent);
@@ -721,7 +721,7 @@
   cursor: pointer;
 
   i {
-    font-size: 14px;
+    font-size: calc(14px * var(--skala-teks, 1));
   }
 
   &:hover {
@@ -777,7 +777,7 @@
 }
 
 .harga__satuan-konversi {
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 50%, transparent);
 }
 
@@ -788,7 +788,7 @@
   align-items: center;
   gap: 6px;
   margin: -4px 0 8px;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   /* Merah yang sama dengan .btn--bahaya — satu merah untuk semua. */
   color: #e05260;
 }
@@ -812,19 +812,19 @@
   min-width: 0;
 
   strong {
-    font-size: 13.5px;
+    font-size: calc(13.5px * var(--skala-teks, 1));
     font-weight: 500;
   }
 
   span {
-    font-size: 12px;
+    font-size: calc(12px * var(--skala-teks, 1));
     color: color-mix(in srgb, var(--color-text) 50%, transparent);
   }
 }
 
 .galat {
   margin: 0;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   color: #e05260;
 }
 
@@ -854,7 +854,7 @@
   border-radius: 8px;
   background: transparent;
   color: color-mix(in srgb, var(--color-text) 40%, transparent);
-  font-size: 15px;
+  font-size: calc(15px * var(--skala-teks, 1));
   cursor: pointer;
 
   &:focus-visible {
@@ -880,7 +880,7 @@
 .nilai-btn {
   padding: 4px 8px;
   font: inherit;
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--skala-teks, 1));
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   color: inherit;

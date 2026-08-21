@@ -16,7 +16,7 @@
 }
 
 .identitas__nama {
-  font-size: 15px;
+  font-size: calc(15px * var(--skala-teks, 1));
   font-weight: 600;
 }
 
@@ -27,7 +27,7 @@
 }
 
 .identitas__nik {
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
@@ -62,7 +62,7 @@
 }
 
 .kredensial__label {
-  font-size: 11px;
+  font-size: calc(11px * var(--skala-teks, 1));
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
@@ -71,7 +71,7 @@
 /* Warna ditulis eksplisit: <code> global berwarna merah bawaan. */
 .kredensial__nilai {
   font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", monospace;
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
   color: var(--color-text);
   user-select: all;
   overflow-wrap: anywhere;
@@ -85,7 +85,7 @@
   }
 
   .kredensial__nilai {
-    font-size: 20px;
+    font-size: calc(20px * var(--skala-teks, 1));
     font-weight: 600;
     letter-spacing: 1px;
     color: var(--color-accent);
@@ -103,7 +103,7 @@
   border-radius: 8px;
   background: transparent;
   color: inherit;
-  font-size: 16px;
+  font-size: calc(16px * var(--skala-teks, 1));
   cursor: pointer;
 
   &:hover {
@@ -118,11 +118,11 @@
   align-items: flex-start;
   gap: 8px;
   margin: 12px 0 14px;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   color: #c98f3d;
 
   i {
-    font-size: 15px;
+    font-size: calc(15px * var(--skala-teks, 1));
     margin-top: 1px;
   }
 }

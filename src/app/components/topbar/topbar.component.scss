@@ -29,7 +29,7 @@
   border-radius: 8px;
   background: transparent;
   color: color-mix(in srgb, var(--color-text) 62%, transparent);
-  font-size: 20px;
+  font-size: calc(20px * var(--skala-teks, 1));
   cursor: pointer;
   transition:
     background-color 0.15s ease,
@@ -60,7 +60,7 @@
   /* Tanpa ring — lihat TOKENS.md bagian Top bar. */
   background: var(--color-accent-wash);
   color: var(--color-accent);
-  font-size: 11px;
+  font-size: calc(11px * var(--skala-teks, 1));
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -69,7 +69,7 @@
   text-overflow: ellipsis;
 
   i {
-    font-size: 12px;
+    font-size: calc(12px * var(--skala-teks, 1));
     flex: none;
   }
 }
@@ -114,7 +114,7 @@
   }
 
   > .ph-caret-down {
-    font-size: 12px;
+    font-size: calc(12px * var(--skala-teks, 1));
     color: color-mix(in srgb, var(--color-text) 45%, transparent);
   }
 }
@@ -126,12 +126,12 @@
 }
 
 .topbar__user-name {
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   font-weight: 500;
 }
 
 .topbar__user-sub {
-  font-size: 11px;
+  font-size: calc(11px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
 }
 
@@ -169,12 +169,12 @@
   border-radius: 8px;
   color: var(--color-accent);
   text-decoration: none;
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--skala-teks, 1));
   font-weight: 500;
   white-space: nowrap;
 
   i {
-    font-size: 15px;
+    font-size: calc(15px * var(--skala-teks, 1));
   }
 
   &:hover {
@@ -200,12 +200,12 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: var(--color-text-faint);
   white-space: nowrap;
 
   i {
-    font-size: 14px;
+    font-size: calc(14px * var(--skala-teks, 1));
   }
 }
 

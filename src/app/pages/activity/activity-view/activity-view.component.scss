@@ -7,7 +7,7 @@
 
 .jejak-lihat__entitas {
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
 }
 
 .jejak-lihat__daftar {
@@ -34,20 +34,20 @@
 .jejak-lihat__kolom {
   flex: none;
   min-width: 140px;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 50%, transparent);
   font-family: "JetBrains Mono", ui-monospace, monospace;
 }
 
 .jejak-lihat__nilai {
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   font-weight: 600;
   overflow-wrap: anywhere;
 }
 
 .jejak-lihat__catatan {
   margin: 12px 0 0;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   font-style: italic;
   color: color-mix(in srgb, var(--color-text) 50%, transparent);
 }

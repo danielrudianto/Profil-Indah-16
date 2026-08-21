@@ -49,7 +49,7 @@
   height: 44px;
   flex: none;
   border-radius: 50%;
-  font-size: 18px;
+  font-size: calc(18px * var(--skala-teks, 1));
   font-weight: 600;
   color: var(--color-accent);
   background: var(--color-active);
@@ -57,7 +57,7 @@
 
 .lihat__nama {
   margin: 0;
-  font-size: 17px;
+  font-size: calc(17px * var(--skala-teks, 1));
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -66,7 +66,7 @@
 
 .lihat__nomor {
   margin: 2px 0 0;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
   font-variant-numeric: tabular-nums;
 }
@@ -87,7 +87,7 @@
   margin: 0 0 18px;
 
   dt {
-    font-size: 11px;
+    font-size: calc(11px * var(--skala-teks, 1));
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -96,7 +96,7 @@
 
   dd {
     margin: 3px 0 0;
-    font-size: 14px;
+    font-size: calc(14px * var(--skala-teks, 1));
   }
 }
 
@@ -107,7 +107,7 @@
 
 .lihat__label {
   margin: 20px 0 10px;
-  font-size: 11px;
+  font-size: calc(11px * var(--skala-teks, 1));
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -125,7 +125,7 @@
 
 .lihat__desk {
   display: block;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
   max-width: 260px;
   overflow: hidden;
@@ -145,7 +145,7 @@
     justify-content: space-between;
     gap: 12px;
     padding: 4px 0;
-    font-size: 13.5px;
+    font-size: calc(13.5px * var(--skala-teks, 1));
   }
 
   dt {
@@ -173,7 +173,7 @@
   }
 
   dd {
-    font-size: 17px;
+    font-size: calc(17px * var(--skala-teks, 1));
     font-weight: 700;
     color: var(--color-accent);
   }
@@ -193,7 +193,7 @@
     padding: 10px 0;
     border-bottom: 1px solid
       color-mix(in srgb, var(--color-divider) 60%, transparent);
-    font-size: 13.5px;
+    font-size: calc(13.5px * var(--skala-teks, 1));
 
     &:last-child {
       border-bottom: 0;
@@ -212,13 +212,13 @@
 
 .lihat__bayar-tanggal {
   display: block;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
 .lihat__kosong {
   margin: 0;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
@@ -231,7 +231,7 @@
   li {
     padding: 8px 0 8px 14px;
     border-left: 2px solid var(--color-divider);
-    font-size: 13px;
+    font-size: calc(13px * var(--skala-teks, 1));
 
     + li {
       margin-top: 2px;
@@ -248,14 +248,14 @@
 
 .lihat__riwayat-waktu {
   margin-left: auto;
-  font-size: 11.5px;
+  font-size: calc(11.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 50%, transparent);
   font-variant-numeric: tabular-nums;
 }
 
 .lihat__riwayat-ubahan {
   margin: 3px 0 0;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
   overflow-wrap: anywhere;
 }

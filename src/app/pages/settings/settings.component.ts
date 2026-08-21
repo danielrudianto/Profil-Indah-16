@@ -12,6 +12,11 @@ import {
   ACCENT_DEFAULT,
   AccentColor,
 } from 'src/app/constants/accent-color.constant';
+import {
+  UKURAN_TEKS,
+  UKURAN_TEKS_DEFAULT,
+  PilihanUkuranTeks,
+} from 'src/app/constants/text-size.constant';
 import { AuthService } from 'src/app/services/auth.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
 import { AvatarComponent } from 'src/app/components/avatar/avatar.component';
@@ -78,6 +83,9 @@ export class SettingsComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   readonly warna: AccentColor[] = ACCENT_COLORS;
+  readonly ukuran: PilihanUkuranTeks[] = UKURAN_TEKS;
+
+  ukuranSekarang: PilihanUkuranTeks = UKURAN_TEKS_DEFAULT;
 
   aksenSekarang: AccentColor = ACCENT_DEFAULT;
   mode: ModeTampilan = 'light';
@@ -95,6 +103,10 @@ export class SettingsComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((mode) => (this.mode = mode));
 
+    this.settingsService.ukuranTeks
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((ukuran) => (this.ukuranSekarang = ukuran));
+
     this.languageService.currentLanguage
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((bahasa) => (this.bahasa = bahasa));
@@ -108,6 +120,12 @@ export class SettingsComponent implements OnInit {
 
   pilihMode(mode: ModeTampilan): void {
     this.settingsService.setMode(mode);
+  }
+
+  lacakUkuran = (_: number, ukuran: PilihanUkuranTeks): string => ukuran.nilai;
+
+  pilihUkuran(ukuran: PilihanUkuranTeks): void {
+    this.settingsService.setUkuranTeks(ukuran);
   }
 
   pilihBahasa(bahasa: string): void {

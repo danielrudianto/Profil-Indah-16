@@ -75,7 +75,7 @@
 
 .sidenav__brand-name {
   font-weight: 500;
-  font-size: 17px;
+  font-size: calc(17px * var(--skala-teks, 1));
   letter-spacing: -0.01em;
   white-space: nowrap;
 }
@@ -93,7 +93,7 @@
     left: 11px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 15px;
+    font-size: calc(15px * var(--skala-teks, 1));
     color: color-mix(in srgb, var(--color-text) 45%, transparent);
     pointer-events: none;
   }
@@ -103,7 +103,7 @@
     min-height: 38px;
     padding: 0 10px 0 34px;
     font: inherit;
-    font-size: 13.5px;
+    font-size: calc(13.5px * var(--skala-teks, 1));
     color: var(--color-text);
     background: var(--color-bg);
     border: 1px solid var(--color-divider);
@@ -148,7 +148,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 10px 6px;
-  font-size: 11px;
+  font-size: calc(11px * var(--skala-teks, 1));
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -156,7 +156,7 @@
 }
 
 .sidenav__count {
-  font-size: 10.5px;
+  font-size: calc(10.5px * var(--skala-teks, 1));
   font-weight: 500;
   padding: 1px 6px;
   border-radius: 0;
@@ -192,7 +192,7 @@
   border-radius: 0;
   background: transparent;
   color: color-mix(in srgb, var(--color-text) 40%, transparent);
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.14s ease, color 0.14s ease;
@@ -228,12 +228,12 @@
   text-align: left;
   text-decoration: none;
   font: inherit;
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--skala-teks, 1));
   cursor: pointer;
   transition: background-color 0.14s ease;
 
   i {
-    font-size: 17px;
+    font-size: calc(17px * var(--skala-teks, 1));
     flex: 0 0 auto;
   }
 
@@ -275,7 +275,7 @@
 .sidenav__empty {
   padding: 12px 10px;
   margin: 0;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 

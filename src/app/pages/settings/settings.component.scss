@@ -40,14 +40,14 @@
 }
 
 .settings__title {
-  font-size: 26px;
+  font-size: calc(26px * var(--skala-teks, 1));
   font-weight: 500;
   margin: 0 0 4px;
 }
 
 .settings__lede {
   margin: 0;
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 60%, transparent);
 }
 
@@ -70,14 +70,14 @@
 }
 
 .settings__card-title {
-  font-size: 15px;
+  font-size: calc(15px * var(--skala-teks, 1));
   font-weight: 500;
   margin: 0 0 4px;
 }
 
 .settings__card-note {
   margin: 0 0 16px;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
 
@@ -96,7 +96,7 @@
   gap: 8px;
   padding: 9px 16px;
   font: inherit;
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 70%, transparent);
   background: transparent;
   border: 1px solid var(--color-divider);
@@ -107,7 +107,7 @@
     border-color 0.15s ease;
 
   i {
-    font-size: 16px;
+    font-size: calc(16px * var(--skala-teks, 1));
   }
 
   &:hover {
@@ -147,7 +147,7 @@
   gap: 10px;
   padding: 9px 12px;
   font: inherit;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   text-align: left;
   color: color-mix(in srgb, var(--color-text) 76%, transparent);
   background: transparent;
@@ -193,4 +193,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/*
+  Empat pilihan, dan tiap tombol memakai ukuran hurufnya sendiri sebagai
+  pratinjau — tingginya karenanya berbeda-beda. `align-items: center` menahan
+  supaya deretannya tetap rata di tengah alih-alih menggantung dari atas, dan
+  `flex-wrap` memberinya tempat turun pada layar sempit.
+*/
+.seg--ukuran {
+  flex-wrap: wrap;
+  align-items: center;
 }

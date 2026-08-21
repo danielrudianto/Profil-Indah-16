@@ -17,7 +17,7 @@
   min-height: 44px;
   padding: 0 14px;
   font: inherit;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   font-weight: 600;
   white-space: nowrap;
   color: var(--color-accent);
@@ -28,7 +28,7 @@
   transition: background-color 0.15s ease;
 
   i {
-    font-size: 15px;
+    font-size: calc(15px * var(--skala-teks, 1));
   }
 
   &:hover {
@@ -42,7 +42,7 @@
 }
 
 .chip-bulan__panah {
-  font-size: 12px !important;
+  font-size: calc(12px * var(--skala-teks, 1)) !important;
   opacity: 0.7;
 }
 

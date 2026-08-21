@@ -26,14 +26,14 @@
 }
 
 .dashboard__greeting {
-  font-size: 26px;
+  font-size: calc(26px * var(--skala-teks, 1));
   font-weight: 500;
   margin: 0 0 6px;
 }
 
 .dashboard__empty {
   margin: 0;
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 62%, transparent);
 }
 

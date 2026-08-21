@@ -42,12 +42,12 @@
 }
 
 .kstok__kotak-label {
-  font-size: 11.5px;
+  font-size: calc(11.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
 .kstok__kotak-nilai {
-  font-size: 17px;
+  font-size: calc(17px * var(--skala-teks, 1));
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;

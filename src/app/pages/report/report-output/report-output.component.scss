@@ -32,13 +32,13 @@
 
 .akordeon__jumlah {
   margin-left: auto;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   font-variant-numeric: tabular-nums;
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
 .akordeon__panah {
-  font-size: 16px;
+  font-size: calc(16px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
   transition: transform 0.18s ease;
 }
@@ -60,11 +60,11 @@
   border: 1px dashed var(--color-divider);
   border-radius: 12px;
   padding: 16px 22px;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
 
   i {
-    font-size: 20px;
+    font-size: calc(20px * var(--skala-teks, 1));
     flex: none;
   }
 

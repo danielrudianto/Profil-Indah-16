@@ -26,14 +26,14 @@
 }
 
 .list-page__title {
-  font-size: 28px;
+  font-size: calc(28px * var(--skala-teks, 1));
   font-weight: 500;
   margin: 0 0 4px;
 }
 
 .list-page__lede {
   margin: 0;
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
 
@@ -58,7 +58,7 @@
     left: 12px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 16px;
+    font-size: calc(16px * var(--skala-teks, 1));
     color: color-mix(in srgb, var(--color-text) 45%, transparent);
     pointer-events: none;
   }
@@ -68,7 +68,7 @@
     min-height: 44px;
     padding: 0 12px 0 38px;
     font: inherit;
-    font-size: 14px;
+    font-size: calc(14px * var(--skala-teks, 1));
     color: var(--color-text);
     background: var(--color-surface);
     border: 1px solid var(--color-divider);
@@ -105,7 +105,7 @@
   min-height: 44px;
   padding: 0 18px;
   font: inherit;
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--skala-teks, 1));
   font-weight: 500;
   /* Label pendek seperti "Tambah tipe" jangan sampai patah jadi dua baris. */
   white-space: nowrap;
@@ -116,7 +116,7 @@
     border-color 0.15s ease;
 
   i {
-    font-size: 15px;
+    font-size: calc(15px * var(--skala-teks, 1));
   }
 
   &:focus-visible {
@@ -159,7 +159,7 @@
   min-height: 32px;
 
   i {
-    font-size: 14px;
+    font-size: calc(14px * var(--skala-teks, 1));
   }
 }
 
@@ -221,7 +221,7 @@
   gap: 16px;
   padding: 14px 20px;
   border-top: 1px solid var(--color-divider);
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
 
@@ -243,7 +243,7 @@
   min-width: 32px;
   padding: 4px 8px;
   font: inherit;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   color: inherit;
   background: transparent;
   border: 0;

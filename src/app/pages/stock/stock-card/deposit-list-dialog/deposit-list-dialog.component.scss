@@ -9,6 +9,6 @@
 
 .dokumen__tanggal {
   display: block;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }

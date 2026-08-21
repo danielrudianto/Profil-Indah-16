@@ -33,7 +33,7 @@
   color: var(--color-accent);
 
   i {
-    font-size: 20px;
+    font-size: calc(20px * var(--skala-teks, 1));
   }
 }
 
@@ -44,12 +44,12 @@
 }
 
 .sales__judul {
-  font-size: 15px;
+  font-size: calc(15px * var(--skala-teks, 1));
   font-weight: 600;
 }
 
 .sales__lede {
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
@@ -71,7 +71,7 @@
   }
 
   i {
-    font-size: 16px;
+    font-size: calc(16px * var(--skala-teks, 1));
   }
 }
 
@@ -102,7 +102,7 @@
 .sales__nama {
   flex: 1;
   min-width: 0;
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--skala-teks, 1));
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -132,13 +132,13 @@
   }
 
   i {
-    font-size: 16px;
+    font-size: calc(16px * var(--skala-teks, 1));
   }
 }
 
 .sales__kosong {
   margin: 16px 8px;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 50%, transparent);
 }
 
@@ -146,7 +146,7 @@
   display: flex;
   justify-content: center;
   padding: 28px 0;
-  font-size: 22px;
+  font-size: calc(22px * var(--skala-teks, 1));
   color: var(--color-accent);
 }
 

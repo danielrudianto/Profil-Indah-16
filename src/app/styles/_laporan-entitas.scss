@@ -52,23 +52,23 @@
 }
 
 .hero__label {
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
 
 .hero__nilai {
-  font-size: 22px;
+  font-size: calc(22px * var(--skala-teks, 1));
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
 
 .hero__nilai--tanggal {
-  font-size: 17px;
+  font-size: calc(17px * var(--skala-teks, 1));
 }
 
 .hero__sub {
-  font-size: 11.5px;
+  font-size: calc(11.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
 }
 
@@ -100,7 +100,7 @@
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    font-size: 13.5px;
+    font-size: calc(13.5px * var(--skala-teks, 1));
     line-height: 1.55;
   }
 }
@@ -115,7 +115,7 @@
   border-radius: 50%;
   background: var(--color-active);
   color: var(--color-accent);
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
 }
 
 /* Akordeon merek/barang — anatomi kepala seturut laporan pengeluaran. */
@@ -138,13 +138,13 @@
   border-radius: 999px;
   background: color-mix(in srgb, var(--color-text) 8%, transparent);
   color: color-mix(in srgb, var(--color-text) 60%, transparent);
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   font-weight: 500;
 }
 
 .akordeon__panah {
   margin-left: auto;
-  font-size: 16px;
+  font-size: calc(16px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
   transition: transform 0.18s ease;
 }
@@ -165,7 +165,7 @@
   gap: 12px;
   flex-wrap: wrap;
   margin-top: 14px;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
@@ -184,7 +184,7 @@
   background: none;
   color: inherit;
   font: inherit;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   cursor: pointer;
 
   &:hover {

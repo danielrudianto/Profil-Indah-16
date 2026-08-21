@@ -2698,5 +2698,11 @@
   "ganti-sandi__success": "Kata sandi berhasil diganti. Silakan masuk lagi.",
   "general__rows-per-page": "Baris per halaman",
   "product-selector__already-added": "Sudah ditambahkan",
-  "good-receipt__create__item__duplicate": "{{barang}} sudah ada di daftar. Satu barang hanya boleh satu baris — ubah jumlahnya pada baris yang sudah ada."
+  "good-receipt__create__item__duplicate": "{{barang}} sudah ada di daftar. Satu barang hanya boleh satu baris — ubah jumlahnya pada baris yang sudah ada.",
+  "settings__text-size": "Ukuran teks",
+  "settings__text-size_note": "Memperbesar seluruh tulisan aplikasi. Tersimpan di perangkat ini saja.",
+  "settings__text-size__small": "Kecil",
+  "settings__text-size__normal": "Normal",
+  "settings__text-size__large": "Besar",
+  "settings__text-size__larger": "Sangat besar"
 }

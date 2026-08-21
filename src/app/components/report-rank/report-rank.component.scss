@@ -10,7 +10,7 @@
   grid-template-columns: 30px minmax(90px, 140px) minmax(0, 1fr) 46px 110px;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
 }
 
 .peringkat__nama {
@@ -30,7 +30,7 @@
   text-align: right;
   font-variant-numeric: tabular-nums;
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
 }
 
 .peringkat__nilai {
@@ -42,7 +42,7 @@
 
 .peringkat__kosong {
   margin: 0;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
@@ -58,7 +58,7 @@
 
 .peringkat__rentang {
   margin-right: 6px;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   font-variant-numeric: tabular-nums;
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }

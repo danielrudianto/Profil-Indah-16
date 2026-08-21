@@ -3,7 +3,7 @@
 
 .pengantar {
   margin: 0 0 16px;
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--skala-teks, 1));
   line-height: 1.55;
 }
 
@@ -15,14 +15,14 @@
   background: color-mix(in srgb, var(--color-text) 4%, transparent);
   text-align: center;
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 15px;
+  font-size: calc(15px * var(--skala-teks, 1));
   color: var(--color-accent);
 }
 
 .catatan {
   margin: 0;
   padding-left: 18px;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   line-height: 1.6;
 
   li + li {
@@ -32,7 +32,7 @@
 
 /* Waktu hitung terakhir menempel di kaki, redup. */
 .kaki__waktu {
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
   font-variant-numeric: tabular-nums;
 }

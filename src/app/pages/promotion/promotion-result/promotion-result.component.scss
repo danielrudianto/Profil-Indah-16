@@ -18,7 +18,7 @@
 
 .barang__desc {
   display: block;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
   max-width: 320px;
   overflow: hidden;

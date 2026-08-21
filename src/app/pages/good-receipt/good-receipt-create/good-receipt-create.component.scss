@@ -43,14 +43,14 @@
 }
 
 .buat__title {
-  font-size: 28px;
+  font-size: calc(28px * var(--skala-teks, 1));
   font-weight: 500;
   margin: 0 0 4px;
 }
 
 .buat__lede {
   margin: 0;
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
 
@@ -71,7 +71,7 @@
 .field label {
   display: block;
   margin-bottom: 6px;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   font-weight: 500;
   color: color-mix(in srgb, var(--color-text) 78%, transparent);
 }
@@ -81,7 +81,7 @@
   min-height: 44px;
   padding: 0 14px;
   font: inherit;
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
   color: var(--color-text);
   background: var(--color-bg);
   border: 1px solid var(--color-divider);
@@ -135,7 +135,7 @@ select.input {
 
 .input--kecil {
   min-height: 38px;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
 }
 
 /* ---------------------------------------------------------------- */
@@ -159,7 +159,7 @@ select.input {
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--skala-teks, 1));
 
   li {
     display: flex;
@@ -169,7 +169,7 @@ select.input {
   }
 
   i {
-    font-size: 17px;
+    font-size: calc(17px * var(--skala-teks, 1));
     flex: none;
     line-height: 1.35;
   }
@@ -227,7 +227,7 @@ select.input {
 
 .barang__desc {
   display: block;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
   max-width: 320px;
   overflow: hidden;
@@ -237,7 +237,7 @@ select.input {
 .barang__stok {
   display: block;
   margin-top: 2px;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
 }
 
@@ -253,7 +253,7 @@ select.input {
 }
 
 .jumlah__satuan {
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
 
@@ -261,7 +261,7 @@ select.input {
 .jumlah__konversi {
   display: block;
   margin-top: 4px;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
 }
 
@@ -338,11 +338,11 @@ select.input {
   justify-content: flex-start;
   gap: 8px;
   margin: 0;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
 
   i {
-    font-size: 16px;
+    font-size: calc(16px * var(--skala-teks, 1));
   }
 }
 
@@ -366,7 +366,7 @@ select.input {
   border-radius: 999px;
   box-shadow: inset 0 0 0 1px var(--color-divider);
   color: color-mix(in srgb, var(--color-text) 50%, transparent);
-  font-size: 11px;
+  font-size: calc(11px * var(--skala-teks, 1));
   font-weight: 600;
   cursor: help;
 }
@@ -395,11 +395,11 @@ select.input {
   align-items: center;
   gap: 6px;
   margin-bottom: 10px;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 50%, transparent);
 
   i {
-    font-size: 14px;
+    font-size: calc(14px * var(--skala-teks, 1));
   }
 }
 
@@ -419,12 +419,12 @@ select.input {
   background: var(--color-active);
   box-shadow: inset 0 0 0 1px var(--color-accent);
   color: var(--color-accent);
-  font-size: 11.5px;
+  font-size: calc(11.5px * var(--skala-teks, 1));
   font-weight: 500;
   letter-spacing: 0;
 
   i {
-    font-size: 12px;
+    font-size: calc(12px * var(--skala-teks, 1));
   }
 }
 
@@ -442,7 +442,7 @@ select.input {
   margin-bottom: 16px;
   padding: 7px 14px;
   font: inherit;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   font-weight: 500;
   white-space: nowrap;
   color: color-mix(in srgb, var(--color-text) 70%, transparent);
@@ -452,7 +452,7 @@ select.input {
   cursor: pointer;
 
   i {
-    font-size: 14px;
+    font-size: calc(14px * var(--skala-teks, 1));
   }
 
   &:hover {
@@ -479,7 +479,7 @@ select.input {
   }
 
   strong {
-    font-size: 13px;
+    font-size: calc(13px * var(--skala-teks, 1));
     font-weight: 500;
     color: color-mix(in srgb, var(--color-text) 70%, transparent);
   }

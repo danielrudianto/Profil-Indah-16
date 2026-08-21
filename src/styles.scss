@@ -36,7 +36,7 @@
 .material-icons {
   font-family: "Material Icons", sans-serif;
   /* Ukuran rancangan fontnya; tanpa ini glifnya mengecil ke 16px warisan. */
-  font-size: 24px;
+  font-size: calc(24px * var(--skala-teks, 1));
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -239,7 +239,7 @@ html {
 
   strong {
     display: block;
-    font-size: 13.5px;
+    font-size: calc(13.5px * var(--skala-teks, 1));
     font-weight: 600;
     color: var(--color-text);
     overflow: hidden;
@@ -250,7 +250,7 @@ html {
   span {
     display: block;
     margin-top: 2px;
-    font-size: 12px;
+    font-size: calc(12px * var(--skala-teks, 1));
     color: color-mix(in srgb, var(--color-text) 55%, transparent);
   }
 }
@@ -276,7 +276,7 @@ html {
   /* Ikon Phosphor di dalam butir menu — beri jarak dan warna redup. */
   .ph {
     margin-right: 10px;
-    font-size: 16px;
+    font-size: calc(16px * var(--skala-teks, 1));
     color: color-mix(in srgb, var(--color-text) 55%, transparent);
   }
 
@@ -304,7 +304,7 @@ html {
 .medan label {
   display: block;
   margin-bottom: 6px;
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   font-weight: 500;
   color: color-mix(in srgb, var(--color-text) 78%, transparent);
 }
@@ -314,7 +314,7 @@ html {
   min-height: 44px;
   padding: 0 14px;
   font: inherit;
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
   font-family: "Montserrat", system-ui, sans-serif;
   color: var(--color-text);
   background: var(--color-bg);
@@ -358,13 +358,13 @@ textarea.medan__input {
 .tabel {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
   white-space: nowrap;
 
   th {
     padding: 14px 20px;
     text-align: left;
-    font-size: 11px;
+    font-size: calc(11px * var(--skala-teks, 1));
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -433,7 +433,7 @@ textarea.medan__input {
   border-radius: 9px;
   background: transparent;
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
-  font-size: 18px;
+  font-size: calc(18px * var(--skala-teks, 1));
   cursor: pointer;
 
   &:hover {
@@ -455,14 +455,14 @@ textarea.medan__input {
   background: var(--color-active);
   box-shadow: inset 0 0 0 1px var(--color-accent);
   color: var(--color-accent);
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
 }
 
 .status {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
 }
 
 .status__titik {
@@ -520,7 +520,7 @@ textarea.medan__input {
   gap: 8px;
   min-height: 44px;
   font: inherit;
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--skala-teks, 1));
   font-weight: 500;
   white-space: nowrap;
   border-radius: 8px;
@@ -530,7 +530,7 @@ textarea.medan__input {
     border-color 0.15s ease;
 
   i {
-    font-size: 15px;
+    font-size: calc(15px * var(--skala-teks, 1));
   }
 
   &:focus-visible {
@@ -577,12 +577,12 @@ textarea.medan__input {
   gap: 6px;
   padding: 4px 12px 4px 8px;
   border-radius: 999px;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   font-weight: 600;
   white-space: nowrap;
 
   i {
-    font-size: 15px;
+    font-size: calc(15px * var(--skala-teks, 1));
   }
 }
 
@@ -628,7 +628,7 @@ textarea.medan__input {
   min-height: 44px;
   padding: 0 14px;
   font: inherit;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   font-weight: 600;
   white-space: nowrap;
   color: color-mix(in srgb, var(--color-text) 60%, transparent);
@@ -642,7 +642,7 @@ textarea.medan__input {
     background-color 0.15s ease;
 
   i {
-    font-size: 15px;
+    font-size: calc(15px * var(--skala-teks, 1));
   }
 
   &:focus-visible {
@@ -716,7 +716,7 @@ textarea.medan__input {
   background: var(--color-active);
   box-shadow: inset 0 0 0 1px var(--color-accent);
   color: var(--color-accent);
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   font-weight: 600;
 
   button {
@@ -731,7 +731,7 @@ textarea.medan__input {
     border: 0;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 12px;
+    font-size: calc(12px * var(--skala-teks, 1));
 
     &:hover {
       background: color-mix(in srgb, var(--color-accent) 22%, transparent);
@@ -747,7 +747,7 @@ textarea.medan__input {
 .saringan__bersih {
   padding: 4px 10px;
   font: inherit;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
   background: transparent;
   border: 0;
@@ -799,7 +799,7 @@ textarea.medan__input {
   }
 
   i {
-    font-size: 13px;
+    font-size: calc(13px * var(--skala-teks, 1));
     flex: none;
   }
 }
@@ -895,6 +895,28 @@ body {
 }
 body {
   margin: 0;
+
+  /*
+    Akar pewarisan ukuran teks.
+
+    Elemen yang tidak menyebut ukurannya sendiri — mat-label, isi mat-select,
+    dan sebagian besar sisa Material — mewarisi 16px bawaan peramban, sehingga
+    ia tidak ikut membesar walau seluruh font-size aplikasi sudah berskala.
+    Menyetelnya di sini menutup celah itu sekaligus.
+
+    Sengaja di `body`, BUKAN di `html`: satuan rem mengacu ke <html>, dan
+    berkas ini memakai rem untuk tata letak (top, gap). Menskalakan <html>
+    berarti menggeser posisi, bukan hanya memperbesar tulisan.
+
+    Selektornya `:root body`, bukan `body` saja, dan itu bukan kelebihan:
+    Angular Material memasang kelas .mat-typography pada <body>, dan selektor
+    kelas mengalahkan selektor elemen berapa pun banyaknya. `html body` pun
+    kalah. `:root body` menang tanpa perlu menyebut kelas milik Material,
+    sehingga aturan ini tidak ikut runtuh bila kelas itu kelak berganti nama.
+  */
+  @at-root :root body {
+    font-size: calc(16px * var(--skala-teks, 1));
+  }
   /*
     Latar dan warna teks diambil dari token Nocturne, bukan dibiarkan putih
     bawaan peramban. Halaman memang menutupinya, tetapi celah mana pun yang
@@ -1403,7 +1425,7 @@ label {
   border-radius: 50%;
   background: color-mix(in srgb, var(--color-text) 10%, transparent);
   color: color-mix(in srgb, var(--color-text) 70%, transparent);
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   font-weight: 600;
   text-transform: uppercase;
 }
@@ -1426,7 +1448,7 @@ label {
 */
 .sel-entitas__sub {
   max-width: 38ch;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1440,7 +1462,7 @@ label {
   border-radius: 999px;
   background: color-mix(in srgb, var(--color-text) 8%, transparent);
   color: color-mix(in srgb, var(--color-text) 72%, transparent);
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   font-weight: 500;
   white-space: nowrap;
 }
@@ -1464,7 +1486,7 @@ label {
   min-height: 44px;
   padding: 0 16px;
   font: inherit;
-  font-size: 14px;
+  font-size: calc(14px * var(--skala-teks, 1));
   font-weight: 500;
   border-radius: 8px;
   cursor: pointer;
@@ -1473,7 +1495,7 @@ label {
     border-color 0.15s ease;
 
   i {
-    font-size: 16px;
+    font-size: calc(16px * var(--skala-teks, 1));
   }
 
   &:focus-visible {
@@ -1531,7 +1553,7 @@ label {
   width: 36px;
   height: 36px;
   padding: 0;
-  font-size: 18px;
+  font-size: calc(18px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 60%, transparent);
   background: transparent;
   border: 0;
@@ -1566,10 +1588,10 @@ label {
   background: var(--color-active);
   box-shadow: inset 0 0 0 1px var(--color-accent);
   color: var(--color-accent);
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
 
   i {
-    font-size: 16px;
+    font-size: calc(16px * var(--skala-teks, 1));
     flex: none;
   }
 }
@@ -1593,7 +1615,7 @@ label {
   background: none;
   color: inherit;
   font: inherit;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   font-variant-numeric: tabular-nums;
   cursor: pointer;
 
@@ -1626,7 +1648,7 @@ label {
   min-height: 32px;
   padding: 0 10px;
   font: inherit;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   font-weight: 500;
   white-space: nowrap;
   color: color-mix(in srgb, var(--color-text) 68%, transparent);
@@ -1639,7 +1661,7 @@ label {
     border-color 0.15s ease;
 
   i {
-    font-size: 14px;
+    font-size: calc(14px * var(--skala-teks, 1));
   }
 
   &:hover {

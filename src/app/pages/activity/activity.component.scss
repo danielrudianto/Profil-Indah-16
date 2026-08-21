@@ -7,6 +7,6 @@
 /* Nama tabel + id — teks teknis, monospace supaya terbaca sebagai kode. */
 .jejak__entitas {
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 12px;
+  font-size: calc(12px * var(--skala-teks, 1));
   white-space: nowrap;
 }

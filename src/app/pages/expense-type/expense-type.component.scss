@@ -15,6 +15,6 @@
 
 .anak__kosong {
   padding-left: 34px;
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
 }

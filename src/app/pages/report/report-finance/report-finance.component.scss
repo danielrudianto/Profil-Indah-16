@@ -9,7 +9,7 @@
   margin-bottom: 16px;
   padding: 12px 16px;
   border-radius: 10px;
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--skala-teks, 1));
   line-height: 1.5;
   background: color-mix(in srgb, #a45f00 14%, transparent);
   color: var(--color-text);
@@ -17,7 +17,7 @@
 
   i {
     flex-shrink: 0;
-    font-size: 18px;
+    font-size: calc(18px * var(--skala-teks, 1));
     color: #c98f3d;
     line-height: 1.4;
   }

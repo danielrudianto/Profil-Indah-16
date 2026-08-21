@@ -2698,5 +2698,11 @@
   "ganti-sandi__success": "Password changed. Please sign in again.",
   "general__rows-per-page": "Rows per page",
   "product-selector__already-added": "Already added",
-  "good-receipt__create__item__duplicate": "{{barang}} is already on the list. Each item may appear only once — change the quantity on the existing row."
+  "good-receipt__create__item__duplicate": "{{barang}} is already on the list. Each item may appear only once — change the quantity on the existing row.",
+  "settings__text-size": "Text size",
+  "settings__text-size_note": "Enlarges all text in the app. Saved on this device only.",
+  "settings__text-size__small": "Small",
+  "settings__text-size__normal": "Normal",
+  "settings__text-size__large": "Large",
+  "settings__text-size__larger": "Extra large"
 }

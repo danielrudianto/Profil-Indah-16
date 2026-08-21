@@ -31,7 +31,7 @@
 
 .lembar__judul {
   margin: 0;
-  font-size: 16px;
+  font-size: calc(16px * var(--skala-teks, 1));
   font-weight: 600;
 }
 
@@ -44,7 +44,7 @@
   background: var(--color-active);
   box-shadow: inset 0 0 0 1px var(--color-accent);
   color: var(--color-accent);
-  font-size: 11.5px;
+  font-size: calc(11.5px * var(--skala-teks, 1));
   font-weight: 500;
 }
 
@@ -70,12 +70,12 @@
 }
 
 .lembar__bersih-label {
-  font-size: 13px;
+  font-size: calc(13px * var(--skala-teks, 1));
   color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
 
 .lembar__bersih-nilai {
-  font-size: 15px;
+  font-size: calc(15px * var(--skala-teks, 1));
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: var(--color-accent);
@@ -94,7 +94,7 @@
 
   > i {
     flex: none;
-    font-size: 18px;
+    font-size: calc(18px * var(--skala-teks, 1));
     color: var(--color-accent);
   }
 }
@@ -106,12 +106,12 @@
   gap: 2px;
 
   strong {
-    font-size: 13px;
+    font-size: calc(13px * var(--skala-teks, 1));
     font-weight: 500;
   }
 
   small {
-    font-size: 12px;
+    font-size: calc(12px * var(--skala-teks, 1));
     color: color-mix(in srgb, var(--color-text) 55%, transparent);
   }
 }
