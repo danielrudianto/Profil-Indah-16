@@ -2704,5 +2704,6 @@
   "settings__text-size__small": "Kecil",
   "settings__text-size__normal": "Normal",
   "settings__text-size__large": "Besar",
-  "settings__text-size__larger": "Sangat besar"
+  "settings__text-size__larger": "Sangat besar",
+  "Forbidden": "Akun Anda tidak berhak membuka bagian ini."
 }

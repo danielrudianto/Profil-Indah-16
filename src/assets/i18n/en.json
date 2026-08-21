@@ -2704,5 +2704,6 @@
   "settings__text-size__small": "Small",
   "settings__text-size__normal": "Normal",
   "settings__text-size__large": "Large",
-  "settings__text-size__larger": "Extra large"
+  "settings__text-size__larger": "Extra large",
+  "Forbidden": "Your account is not allowed to open this section."
 }
