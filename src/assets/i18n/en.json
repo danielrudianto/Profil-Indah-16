@@ -2696,5 +2696,7 @@
   "ganti-sandi__hide": "Hide password",
   "ganti-sandi__submit": "Save new password",
   "ganti-sandi__success": "Password changed. Please sign in again.",
-  "general__rows-per-page": "Rows per page"
+  "general__rows-per-page": "Rows per page",
+  "product-selector__already-added": "Already added",
+  "good-receipt__create__item__duplicate": "{{barang}} is already on the list. Each item may appear only once — change the quantity on the existing row."
 }

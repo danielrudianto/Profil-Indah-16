@@ -1,6 +1,14 @@
 import { DatePipe, NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
@@ -21,7 +29,12 @@ import { SubmitConfirmationComponent } from '../../../components/submit-confirma
 import { NgxMaskDirective } from 'ngx-mask';
 import { ComboSearchComponent } from 'src/app/components/combo-search/combo-search.component';
 import { UpdateProductPurchasePriceComponent } from 'src/app/components/update-product-purchase-price/update-product-purchase-price.component';
-import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatHint,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {
   MatDatepicker,
@@ -32,10 +45,10 @@ import { Router } from '@angular/router';
 
 @Component({
   providers: [provideNativeDateAdapter()],
-    selector: 'app-good-receipt-create',
-    templateUrl: './good-receipt-create.component.html',
-    styleUrls: ['./good-receipt-create.component.scss'],
-    imports: [
+  selector: 'app-good-receipt-create',
+  templateUrl: './good-receipt-create.component.html',
+  styleUrls: ['./good-receipt-create.component.scss'],
+  imports: [
     MatSuffix,
     MatDatepicker,
     MatDatepickerInput,
@@ -43,14 +56,14 @@ import { Router } from '@angular/router';
     MatFormField,
     MatLabel,
     MatInput,
-      ReactiveFormsModule,
-      NgIf,
-      NgFor,
-      DecimalPipe,
-      NgxMaskDirective,
-      TranslatePipe,
-      ComboSearchComponent,
-    ]
+    ReactiveFormsModule,
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    NgxMaskDirective,
+    TranslatePipe,
+    ComboSearchComponent,
+  ],
 })
 export class GoodReceiptCreateComponent {
   constructor(
@@ -63,13 +76,17 @@ export class GoodReceiptCreateComponent {
     private _hotKeysService: HotkeysService,
     private dialog: MatDialog,
     private sheet: MatBottomSheet,
-    private router: Router
+    private router: Router,
   ) {
     this._hotKeysService.add([
-      new Hotkey('alt+a', (): boolean => {
-        this.openItemSelector();
-        return false;
-      }, KOLOM_ISIAN),
+      new Hotkey(
+        'alt+a',
+        (): boolean => {
+          this.openItemSelector();
+          return false;
+        },
+        KOLOM_ISIAN,
+      ),
     ]);
   }
 
@@ -159,7 +176,6 @@ export class GoodReceiptCreateComponent {
       kembaliJalur: '/Good-receipt/Archive',
       tag: 'good-receipt__new',
     });
-
   }
 
   get f() {
@@ -206,6 +222,7 @@ export class GoodReceiptCreateComponent {
         type: ProductSelectorType.purchase,
         onTambah: (hasil: any) => this.tambahBaris(hasil),
         barisSaatIni: () => this.t.value,
+        satuBarisPerBarang: true,
       },
     );
   }
@@ -213,19 +230,41 @@ export class GoodReceiptCreateComponent {
   /**
    * Menambah satu baris barang.
    *
-   * BARANG YANG SAMA BOLEH BERULANG, satuan apa pun. Bonus dari supplier
-   * dicatat sebagai baris terpisah dengan harga sendiri — 10 box @150.000 dan
-   * 1 box @0 adalah dua baris dengan barang DAN satuan yang sama.
+   * SATU BARANG SATU BARIS. Penerimaan barang dicocokkan dengan surat jalan
+   * fisik, dan surat jalan menyebut tiap barang sekali — dua baris untuk
+   * barang yang sama membuat pencocokannya menyulitkan orang gudang.
    *
-   * Bentuk sebelumnya menolaknya lewat checkExisting, dan penolakannya bahkan
-   * bergantung urutan mengetik: satuan dasar ditolak bila barangnya sudah ada
-   * dalam satuan apa pun, sementara urutan sebaliknya lolos. Memisahkan
-   * barisnya juga lebih jujur bagi HPP — rata-rata tertimbang dari dua harga
-   * yang sebenarnya, bukan satu harga karangan.
+   * Ini mengembalikan aturan lama, TETAPI bukan bentuk lamanya. `checkExisting`
+   * dulu menolak bergantung urutan mengetik: satuan dasar ditolak bila
+   * barangnya sudah ada dalam satuan apa pun, sementara urutan sebaliknya
+   * lolos. Di sini yang dibandingkan hanya `product_id`, jadi hasilnya sama
+   * ke arah mana pun barisnya dimasukkan.
+   *
+   * Konsekuensinya diketahui dan diterima: bonus supplier — 10 box @150.000
+   * dan 1 box @0 — tidak lagi bisa dicatat sebagai dua baris berharga
+   * berbeda, sehingga harganya perlu dirata-ratakan sendiri sebelum diketik.
+   * Faktur PENJUALAN tetap mengizinkan pengulangan; larangan ini khusus
+   * penerimaan.
    */
   private tambahBaris(hasil: any): void {
     const data = hasil.data;
     const sub = hasil.sub;
+
+    /*
+      Penjaga yang mengikat. Pemilih barang juga menolak lebih dulu demi
+      kenyamanan, tetapi ia komponen bersama — kebenarannya tidak boleh
+      bergantung pada apa yang kebetulan digambar di sana.
+    */
+    /* `controls`, bukan `value`: FormArray.value MEMBUANG kontrol yang
+       dinonaktifkan, sehingga baris nonaktif akan lolos dari penjaga ini. */
+    if (this.t.controls.some((b) => b.value.product_id === data.id)) {
+      this.alertService.showInfo(
+        this.translateService.instant('good-receipt__create__item__duplicate', {
+          barang: data.reference,
+        }),
+      );
+      return;
+    }
 
     this.t.push(
       this.formBuilder.group({
@@ -262,7 +301,6 @@ export class GoodReceiptCreateComponent {
     });
   }
 
-
   /**
    * Menimpa harga beli di master untuk baris yang dicentang.
    *
@@ -284,7 +322,10 @@ export class GoodReceiptCreateComponent {
       return false;
     }
     const v = this.metaFormGroup.value;
-    return !!(v.invoice_name ?? '').toString().trim() && !!(v.faktur ?? '').toString().trim();
+    return (
+      !!(v.invoice_name ?? '').toString().trim() &&
+      !!(v.faktur ?? '').toString().trim()
+    );
   }
 
   batal(): void {
@@ -413,8 +454,10 @@ export class GoodReceiptCreateComponent {
   /** Total satu baris, sesudah diskonnya sendiri. */
   totalBaris(i: number): number {
     const x = this.getFormGroupAt(i);
-    return (this.angka(x, 'price') - this.angka(x, 'discount')) *
-      this.angka(x, 'quantity');
+    return (
+      (this.angka(x, 'price') - this.angka(x, 'discount')) *
+      this.angka(x, 'quantity')
+    );
   }
 
   jumlahBaris(productId: number): number {
@@ -448,7 +491,8 @@ export class GoodReceiptCreateComponent {
               .post('good-receipt', {
                 uuid: this.metaFormGroup.get('uuid')?.value,
                 name: this.metaFormGroup.get('delivery_order')?.value,
-                invoice_name: this.metaFormGroup.get('invoice_name')?.value ?? '',
+                invoice_name:
+                  this.metaFormGroup.get('invoice_name')?.value ?? '',
                 faktur: this.metaFormGroup.get('faktur')?.value || null,
                 discount: Number(
                   this.metaFormGroup.get('document_discount')?.value ?? 0,
@@ -456,7 +500,7 @@ export class GoodReceiptCreateComponent {
                 is_confirm: this.dokumenLengkap,
                 date: this.datePipe.transform(
                   this.metaFormGroup.get('date')?.value,
-                  'yyyy-MM-dd'
+                  'yyyy-MM-dd',
                 ),
                 company_id: this.metaFormGroup.get('company_id')?.value,
                 supplier_id: this.metaFormGroup.get('supplier_id')?.value,
@@ -490,8 +534,8 @@ export class GoodReceiptCreateComponent {
 
                   this.alertService.showSuccess(
                     this.translateService.instant(
-                      'good-receipt__create__success'
-                    )
+                      'good-receipt__create__success',
+                    ),
                   );
                 },
                 error: (error) => {
@@ -509,7 +553,7 @@ export class GoodReceiptCreateComponent {
             .open(SubmitConfirmationComponent, {
               data: {
                 title: this.translateService.instant(
-                  'general__confirm-confirmation__body'
+                  'general__confirm-confirmation__body',
                 ),
                 document: `${data.name}, Supplier ${
                   data.supplier.name
@@ -525,7 +569,7 @@ export class GoodReceiptCreateComponent {
                     name: this.metaFormGroup.get('delivery_order')?.value,
                     date: this.datePipe.transform(
                       this.metaFormGroup.get('date')?.value,
-                      'yyyy-MM-dd'
+                      'yyyy-MM-dd',
                     ),
                     company_id: this.metaFormGroup.get('company_id')?.value,
                     supplier_id: this.metaFormGroup.get('supplier_id')?.value,
@@ -566,8 +610,8 @@ export class GoodReceiptCreateComponent {
 
                       this.alertService.showSuccess(
                         this.translateService.instant(
-                          'good-receipt__create__success'
-                        )
+                          'good-receipt__create__success',
+                        ),
                       );
                     },
                     error: (error) => {

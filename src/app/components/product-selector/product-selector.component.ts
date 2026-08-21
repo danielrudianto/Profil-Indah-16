@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { DecimalPipe, NgFor, NgIf } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { debounceTime } from 'rxjs';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -62,6 +62,7 @@ export class ProductSelectorComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
+    private translateService: TranslateService,
     private dynamicComponentService: DynamicComponentService,
   ) {}
 
@@ -70,6 +71,9 @@ export class ProductSelectorComponent implements OnInit {
    *   type        — jenis harga yang relevan (pembelian/penjualan)
    *   onTambah    — dipanggil sekali untuk tiap baris yang ditambahkan
    *   barisSaatIni— mengembalikan baris dokumen, untuk lencana "N baris"
+   *   satuBarisPerBarang — bila true, barang yang sudah masuk tidak bisa
+   *                 dipilih lagi. Pilihan pemanggil, bukan aturan pemilih:
+   *                 faktur penjualan justru MEMBUTUHKAN pengulangan.
    */
   @Input('data') data: any;
 
@@ -96,12 +100,10 @@ export class ProductSelectorComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchItems();
-    this.cariControl.valueChanges
-      .pipe(debounceTime(500))
-      .subscribe((value) => {
-        this.page = 1;
-        this.fetchItems(1, value ?? '');
-      });
+    this.cariControl.valueChanges.pipe(debounceTime(500)).subscribe((value) => {
+      this.page = 1;
+      this.fetchItems(1, value ?? '');
+    });
   }
 
   /*
@@ -116,6 +118,16 @@ export class ProductSelectorComponent implements OnInit {
   /** Seluruh baris yang sudah ada di dokumen pemanggil. */
   get totalBaris(): number {
     return (this.data?.barisSaatIni?.() ?? []).length;
+  }
+
+  /** Pemanggil melarang satu barang muncul lebih dari sekali? */
+  get satuBarisPerBarang(): boolean {
+    return this.data?.satuBarisPerBarang === true;
+  }
+
+  /** Barang ini sudah dipakai dan pemanggilnya melarang pengulangan. */
+  sudahDipakai(element: any): boolean {
+    return this.satuBarisPerBarang && this.barisUntuk(element).length > 0;
   }
 
   /** Baris dokumen milik barang ini, untuk lencana dan rinciannya. */
@@ -151,6 +163,19 @@ export class ProductSelectorComponent implements OnInit {
    * diam. Jalur lama ini dilepas belakangan, halaman demi halaman.
    */
   tambahBaris(element: any): void {
+    /*
+      Penghalang di sini demi kenyamanan — supaya klik yang percuma tidak
+      diam saja. Yang MENGIKAT adalah penjaga di pemanggil: pemilih ini
+      dipakai belasan halaman dan tidak semuanya melarang pengulangan.
+    */
+    if (this.sudahDipakai(element)) {
+      this.alertService.showInfo(
+        this.translateService.instant('product-selector__already-added'),
+      );
+      this.fokusKeCari();
+      return;
+    }
+
     const pilihan = { data: element, sub: this.satuanAktif(element) };
 
     if (this.data?.onTambah) {

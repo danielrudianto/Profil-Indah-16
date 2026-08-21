@@ -74,6 +74,25 @@
   background: var(--color-active);
 }
 
+/*
+  Dipakai HANYA oleh pemanggil yang melarang barang berulang — penerimaan
+  barang. Barisnya diredupkan dan kursornya menolak, supaya penolakannya
+  terbaca sebelum diklik, bukan sesudahnya lewat pesan galat.
+*/
+.baris--terpakai {
+  border-color: var(--color-divider);
+  background: transparent;
+  opacity: 0.55;
+
+  .baris__utama {
+    cursor: not-allowed;
+
+    &:hover {
+      background: transparent;
+    }
+  }
+}
+
 .baris__utama {
   display: flex;
   align-items: center;

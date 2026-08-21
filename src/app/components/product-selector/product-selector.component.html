@@ -30,12 +30,15 @@
       <div
         class="baris"
         *ngFor="let element of dataSource"
-        [class.baris--masuk]="barisUntuk(element).length > 0"
+        [class.baris--masuk]="
+          barisUntuk(element).length > 0 && !sudahDipakai(element)
+        "
+        [class.baris--terpakai]="sudahDipakai(element)"
       >
         <!--
-          Menekan barisnya langsung menambah SATU baris ke dokumen. Tidak ada
-          tombol "Tambahkan" dan tidak ada keadaan mati: barang yang sama boleh
-          dipilih berkali-kali.
+          Menekan barisnya langsung menambah SATU baris ke dokumen. Barang yang
+          sama boleh dipilih berkali-kali — kecuali pemanggilnya menitipkan
+          satuBarisPerBarang, dan barisnya lalu diredupkan.
         -->
         <div class="baris__utama" (click)="tambahBaris(element)">
           <div class="baris__teks">
@@ -57,8 +60,18 @@
           </span>
 
           <span class="baris__aksi">
-            <i class="ph ph-plus-circle" aria-hidden="true"></i>
-            <span *ngIf="barisUntuk(element).length > 0">
+            <i
+              class="ph"
+              [class.ph-plus-circle]="!sudahDipakai(element)"
+              [class.ph-check-circle]="sudahDipakai(element)"
+              aria-hidden="true"
+            ></i>
+            <span *ngIf="sudahDipakai(element)">
+              {{ "product-selector__already-added" | translate }}
+            </span>
+            <span
+              *ngIf="!sudahDipakai(element) && barisUntuk(element).length > 0"
+            >
               {{ "product-selector__another-line" | translate }}
             </span>
           </span>
@@ -102,8 +115,8 @@
         dan penyesuaian sekaligus.
       -->
       <span>
-        {{ totalBaris }} {{ "product-selector__lines-in-doc" | translate }}
-        · {{ "product-selector__from" | translate }} {{ dataCount }}
+        {{ totalBaris }} {{ "product-selector__lines-in-doc" | translate }} ·
+        {{ "product-selector__from" | translate }} {{ dataCount }}
         {{ "product-selector__items" | translate }}
       </span>
       <span class="kaki__nav">

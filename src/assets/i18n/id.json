@@ -2696,5 +2696,7 @@
   "ganti-sandi__hide": "Sembunyikan kata sandi",
   "ganti-sandi__submit": "Simpan sandi baru",
   "ganti-sandi__success": "Kata sandi berhasil diganti. Silakan masuk lagi.",
-  "general__rows-per-page": "Baris per halaman"
+  "general__rows-per-page": "Baris per halaman",
+  "product-selector__already-added": "Sudah ditambahkan",
+  "good-receipt__create__item__duplicate": "{{barang}} sudah ada di daftar. Satu barang hanya boleh satu baris — ubah jumlahnya pada baris yang sudah ada."
 }
