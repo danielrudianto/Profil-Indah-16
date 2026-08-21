@@ -100,6 +100,7 @@
               [label]="'sales-invoice__create__customer' | translate"
               placeholder="Ex. Bing Jaya"
               routeName="customer"
+              [defaultValue]="'sales-invoice__retail' | translate"
               [selected]="metaFormGroup.controls['customer_id'].valid"
               (onSelectData)="onSelectCustomer($event)"
               (onUnselectData)="onUnselectCustomer()"
@@ -125,16 +126,27 @@
             }}</mat-label
             ><input
               matInput
+              #trigger="matAutocompleteTrigger"
               type="text"
-              list="daftar-sales"
               formControlName="sales"
               autocomplete="off"
+              [matAutocomplete]="autoSales"
               (input)="besarkanSales($event)"
           /></mat-form-field>
-          <datalist id="daftar-sales">
-            <option value="INTERNAL"></option>
-            <option *ngFor="let s of salesmen" [value]="s"></option>
-          </datalist>
+
+          <!--
+            mat-autocomplete, BUKAN <datalist> bawaan peramban. Datalist hanya
+            memunculkan saran setelah orang mengetik, tampilannya di luar tema,
+            dan pada sebagian peramban tidak muncul sama sekali — daftar sales
+            karenanya terasa hilang. Panel ini terbuka begitu ruasnya difokus
+            dan memakai gaya yang sama dengan pemilih lain di halaman ini.
+          -->
+          <mat-autocomplete #autoSales="matAutocomplete">
+            <mat-option value="INTERNAL">INTERNAL</mat-option>
+            <mat-option *ngFor="let s of salesmen" [value]="s">
+              {{ s }}
+            </mat-option>
+          </mat-autocomplete>
           <!--
             Jendela daftar sales — sempat hilang saat halaman ini dirakit
             ulang; viewSalesman() tinggal tanpa satu pun pemanggil.

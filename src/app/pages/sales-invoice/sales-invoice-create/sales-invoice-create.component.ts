@@ -99,6 +99,9 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     MatLabel,
     MatHint,
     MatInput,
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatOption,
     FormsModule,
     ReactiveFormsModule,
     AutocompleteSearchComponent,
@@ -125,26 +128,34 @@ export class SalesInvoiceCreateComponent {
     private pageTitleService: PageTitleService,
   ) {
     this._hotkeysService.add([
-      new Hotkey('alt+a', (event: KeyboardEvent): boolean => {
-        this.openItemSelector();
-        return false; // Prevent bubbling
-      }, KOLOM_ISIAN),
-      new Hotkey('alt+s', (event: KeyboardEvent): boolean => {
-        if (
-          this.billFormGroup.valid &&
-          this.valueFormGroup.valid &&
-          this.paymentsFormGroup.valid &&
-          this.metaFormGroup.valid
-        ) {
-          this.submitForm();
-        } else {
-          console.error(`[error]: ${this.metaFormGroup.errors}`);
-          this.alertService.showSuccess(
-            this.translateService.instant('general__check-input'),
-          );
-        }
-        return false;
-      }, KOLOM_ISIAN),
+      new Hotkey(
+        'alt+a',
+        (event: KeyboardEvent): boolean => {
+          this.openItemSelector();
+          return false; // Prevent bubbling
+        },
+        KOLOM_ISIAN,
+      ),
+      new Hotkey(
+        'alt+s',
+        (event: KeyboardEvent): boolean => {
+          if (
+            this.billFormGroup.valid &&
+            this.valueFormGroup.valid &&
+            this.paymentsFormGroup.valid &&
+            this.metaFormGroup.valid
+          ) {
+            this.submitForm();
+          } else {
+            console.error(`[error]: ${this.metaFormGroup.errors}`);
+            this.alertService.showSuccess(
+              this.translateService.instant('general__check-input'),
+            );
+          }
+          return false;
+        },
+        KOLOM_ISIAN,
+      ),
     ]);
 
     const url = this.router.url;
