@@ -114,4 +114,29 @@
     <i class="ph ph-sign-out" aria-hidden="true"></i>
     <span>{{ "profile-dialog__logout" | translate }}</span>
   </button>
+
+  <!--
+    Kaki menu: versi yang sedang berjalan. Ketika ada rilis lebih baru di
+    server, barisnya BERUBAH menjadi tombol muat ulang — supaya tidak ada lagi
+    yang perlu diberitahu satu per satu untuk menekan Ctrl+Shift+R.
+  -->
+  <div
+    class="menu-profil__versi"
+    *ngIf="versi && !adaVersiBaru"
+    (click)="$event.stopPropagation()"
+  >
+    v{{ versi
+    }}<span *ngIf="dibangun"> · {{ dibangun | date: "d MMM yyyy" }}</span>
+  </div>
+
+  <button
+    mat-menu-item
+    type="button"
+    class="menu-profil__versi-baru"
+    *ngIf="adaVersiBaru"
+    (click)="muatUlang()"
+  >
+    <i class="ph ph-arrow-clockwise" aria-hidden="true"></i>
+    <span>{{ "version__reload" | translate }}</span>
+  </button>
 </mat-menu>

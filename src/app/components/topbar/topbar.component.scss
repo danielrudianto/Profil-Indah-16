@@ -218,3 +218,26 @@
     display: none;
   }
 }
+
+/*
+  Kaki menu profil. Bukan butir menu: ia keterangan, bukan aksi — jadi tidak
+  ikut menyala saat disorot dan tidak menutup menu ketika ditekan.
+*/
+.menu-profil__versi {
+  padding: 8px 16px 10px;
+  font-size: calc(11.5px * var(--skala-teks, 1));
+  color: var(--color-text-faint);
+  border-top: 1px solid var(--color-divider);
+  cursor: default;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sebaliknya, ajakan muat ulang MEMANG aksi — dan diberi warna aksen. */
+.menu-profil__versi-baru {
+  border-top: 1px solid var(--color-divider);
+  color: var(--color-accent);
+
+  .ph {
+    color: var(--color-accent);
+  }
+}

@@ -6,7 +6,8 @@
     "start": "ng serve --port 2100",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "postbuild": "node scripts/stamp-version.js"
   },
   "private": true,
   "dependencies": {
