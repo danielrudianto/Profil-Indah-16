@@ -2507,7 +2507,7 @@
   "purchase-invoice__complete__invoice-date": "Tanggal faktur",
   "purchase-invoice__complete__items": "Barang dan harga",
   "purchase-invoice__complete__items-note": "Jumlah barang tidak bisa diubah di sini — ia sudah tercatat saat penerimaan. Tanda buku menyimpan harga ke master barang.",
-  "purchase-invoice__complete__doc-discount": "Diskon dokumen (Rp)",
+  "purchase-invoice__complete__doc-discount": "Diskon dokumen",
   "purchase-invoice__complete__before-issue": "Sebelum terbit",
   "purchase-invoice__complete__check-invoice": "Nomor faktur supplier terisi",
   "purchase-invoice__complete__check-tax": "Faktur pajak terisi (boleh kosong)",

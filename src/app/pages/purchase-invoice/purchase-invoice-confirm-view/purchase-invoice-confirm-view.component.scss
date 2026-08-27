@@ -27,3 +27,56 @@
   max-width: 260px;
   align-self: flex-end;
 }
+
+/*
+  Pasangan diskon dokumen: rupiah dan persen berdampingan di ujung kanan,
+  sebaris dengan angka total di atasnya. Membungkus ke bawah pada layar sempit.
+*/
+.diskon-dok {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+
+  .w-diskon {
+    align-self: auto;
+  }
+}
+
+/*
+  Tabel barang berhenti menggulir mendatar.
+
+  Staf memakai monitor 1920×1080 dan kolom kirinya hanya sekitar 930px, tetapi
+  tabel ini memaksa lebih: `.tabel` global memasang white-space: nowrap untuk
+  SELURUH selnya, sehingga deskripsi barang menolak membungkus, dan padding
+  bawaannya 20px kiri-kanan dikalikan enam kolom.
+
+  Kolom nilai diberi width: 1% supaya menyusut tepat selebar isinya, dan kolom
+  barang mengambil sisa ruang sambil membungkus — barisnya tumbuh ke bawah,
+  bukan ke samping. Kolom isian sendiri sudah dipersempit lewat .w-sempit di
+  templatenya.
+*/
+.gulir {
+  .tabel {
+    th,
+    td {
+      padding: 10px 12px;
+    }
+
+    th:first-child,
+    td:first-child {
+      white-space: normal;
+    }
+  }
+
+  .ke-kanan,
+  .tabel__aksi,
+  .tabel__aksi-kepala {
+    width: 1%;
+  }
+
+  .barang__desc {
+    white-space: normal;
+    max-width: none;
+  }
+}

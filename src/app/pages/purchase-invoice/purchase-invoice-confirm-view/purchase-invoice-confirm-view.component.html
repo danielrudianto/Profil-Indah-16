@@ -185,7 +185,7 @@
                 </td>
 
                 <td>
-                  <mat-form-field appearance="outline" class="w-100"
+                  <mat-form-field appearance="outline" class="w-sempit"
                     ><input
                       matInput
                       type="text"
@@ -196,7 +196,7 @@
                 </td>
 
                 <td>
-                  <mat-form-field appearance="outline" class="w-100"
+                  <mat-form-field appearance="outline" class="w-sempit"
                     ><input
                       matInput
                       type="text"
@@ -244,37 +244,44 @@
           </table>
         </div>
 
-        <mat-form-field appearance="outline" class="w-diskon">
-          <mat-label>
-            {{ "purchase-invoice__complete__doc-discount" | translate }} (Rp.)
-          </mat-label>
-          <input
-            matInput
-            type="text"
-            class="input--kanan"
-            formControlName="discount"
-            mask="separator.2"
-            thousandSeparator=" "
-            autocomplete="off"
-          />
-        </mat-form-field>
+        <!--
+          Rupiah dan persen berdampingan di ujung kanan, sebaris dengan total.
+          Sebelumnya yang persen memakai w-100 sehingga ia melebar penuh dan
+          jatuh ke baris sendiri di sisi kiri, jauh dari pasangannya.
+        -->
+        <div class="diskon-dok">
+          <mat-form-field appearance="outline" class="w-diskon">
+            <mat-label>
+              {{ "purchase-invoice__complete__doc-discount" | translate }} (Rp.)
+            </mat-label>
+            <input
+              matInput
+              type="text"
+              class="input--kanan"
+              formControlName="discount"
+              mask="separator.2"
+              thousandSeparator=" "
+              autocomplete="off"
+            />
+          </mat-form-field>
 
-        <!-- Pasangan persen; yang dikirim tetap rupiah. -->
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>
-            {{ "purchase-invoice__complete__doc-discount" | translate }} (%)
-          </mat-label>
-          <input
-            matInput
-            type="text"
-            class="input--kanan"
-            [formControl]="discountPercentControl"
-            mask="separator.2"
-            thousandSeparator=" "
-            autocomplete="off"
-            placeholder="Ex. 5"
-          />
-        </mat-form-field>
+          <!-- Pasangan persen; yang dikirim tetap rupiah. -->
+          <mat-form-field appearance="outline" class="w-diskon">
+            <mat-label>
+              {{ "purchase-invoice__complete__doc-discount" | translate }} (%)
+            </mat-label>
+            <input
+              matInput
+              type="text"
+              class="input--kanan"
+              [formControl]="discountPercentControl"
+              mask="separator.2"
+              thousandSeparator=" "
+              autocomplete="off"
+              placeholder="Ex. 5"
+            />
+          </mat-form-field>
+        </div>
       </section>
     </div>
 

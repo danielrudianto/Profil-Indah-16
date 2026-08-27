@@ -2507,7 +2507,7 @@
   "purchase-invoice__complete__invoice-date": "Invoice date",
   "purchase-invoice__complete__items": "Items and prices",
   "purchase-invoice__complete__items-note": "Quantities cannot be changed here — they were recorded at receiving. The bookmark saves the price to the product master.",
-  "purchase-invoice__complete__doc-discount": "Document discount (Rp)",
+  "purchase-invoice__complete__doc-discount": "Document discount",
   "purchase-invoice__complete__before-issue": "Before issuing",
   "purchase-invoice__complete__check-invoice": "Supplier invoice number filled",
   "purchase-invoice__complete__check-tax": "Tax invoice filled (may be empty)",
