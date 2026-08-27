@@ -17,11 +17,8 @@
   <table class="tabel">
     <thead>
       <tr>
-        <th>{{ 'payment-method__name' | translate }}</th>
-        <th>{{ 'payment-method__description' | translate }}</th>
-        <th class="tabel__aksi-kepala">
-          <span class="sr-only">{{ 'general__actions' | translate }}</span>
-        </th>
+        <th>{{ "payment-method__name" | translate }}</th>
+        <th>{{ "payment-method__description" | translate }}</th>
       </tr>
     </thead>
 
@@ -30,33 +27,26 @@
         *ngFor="let item of dataSource; trackBy: lacakMetode"
         [class.tabel__baris-klik]="!!item.id"
         (click)="ubah(item)"
+        tabindex="0"
+        (keydown.enter)="ubah(item)"
+        (keydown.space)="$event.preventDefault(); ubah(item)"
       >
         <td class="tabel__utama">{{ item.name }}</td>
         <td class="tabel__redup">{{ item.description }}</td>
-        <td class="tabel__aksi" (click)="$event.stopPropagation()">
-          <button
-            *ngIf="item.id"
-            type="button"
-            class="tabel__aksi-btn"
-            (click)="ubah(item)"
-            [title]="'general__edit' | translate"
-            [attr.aria-label]="'general__edit' | translate"
-          >
-            <i class="ph ph-pencil-simple" aria-hidden="true"></i>
-          </button>
-        </td>
       </tr>
     </tbody>
 
     <tbody *ngIf="isLoading">
       <tr>
-        <td colspan="3" class="tabel__pesan">{{ 'general__loading' | translate }}</td>
+        <td colspan="2" class="tabel__pesan">
+          {{ "general__loading" | translate }}
+        </td>
       </tr>
     </tbody>
 
     <tbody *ngIf="!isLoading && dataSource.length === 0">
       <tr>
-        <td colspan="3">
+        <td colspan="2">
           <app-tabel-kosong
             ikon="ph-credit-card"
             [judul]="'payment-method__empty__title' | translate"
