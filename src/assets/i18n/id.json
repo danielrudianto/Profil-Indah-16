@@ -2708,5 +2708,7 @@
   "Forbidden": "Akun Anda tidak berhak membuka bagian ini.",
   "version__reload": "Versi baru tersedia — muat ulang",
   "sales-price__discount-percent": "% Diskon",
-  "purchase-price__discount-percent": "% Diskon"
+  "purchase-price__discount-percent": "% Diskon",
+  "general__yes": "ya",
+  "general__no": "tidak"
 }

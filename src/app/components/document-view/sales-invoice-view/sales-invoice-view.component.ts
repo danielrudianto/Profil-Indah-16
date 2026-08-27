@@ -190,14 +190,51 @@ export class SalesInvoiceViewComponent implements OnInit {
     return this.translateService.instant(`sales-invoice__view__aksi__${aksi}`);
   }
 
-  /** Ringkasan perubahan: "field: nilai" — `from` memang tidak dicatat. */
+  /**
+   * Ringkasan perubahan: "field: nilai" — `from` memang tidak dicatat.
+   *
+   * Tiap nilai tersimpan TERBUNGKUS sebagai `{ to: … }` (lihat susunPerubahan
+   * di audit.helper server). Bentuk sebelumnya merangkai pembungkusnya
+   * langsung ke dalam teks, sehingga seluruh baris riwayat terbaca
+   * "is_delete: [object Object]" — kolomnya benar, nilainya tidak pernah
+   * terlihat.
+   */
   ubahanTeks(changes: any): string {
     if (!changes || typeof changes !== 'object') {
       return '';
     }
     return Object.entries(changes)
-      .map(([kunci, nilai]) => `${kunci}: ${nilai}`)
+      .map(([kunci, nilai]) => `${kunci}: ${this.nilaiUbahan(nilai)}`)
       .join(' · ');
+  }
+
+  /** Membuka bungkus `{ to: … }` dan menjadikannya terbaca manusia. */
+  private nilaiUbahan(nilai: any): string {
+    const isi =
+      nilai && typeof nilai === 'object' && 'to' in nilai ? nilai.to : nilai;
+
+    if (isi === null || isi === undefined || isi === '') {
+      return '—';
+    }
+
+    if (typeof isi === 'boolean') {
+      return this.translateService.instant(
+        isi ? 'general__yes' : 'general__no',
+      );
+    }
+
+    /*
+      Tanggal disimpan server sebagai teks ISO (audit.helper mengubah Date
+      menjadi toISOString). Dibiarkan apa adanya ia terbaca
+      "2026-08-21T06:08:00.000Z" di tengah kalimat berbahasa Indonesia.
+    */
+    if (typeof isi === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(isi)) {
+      return this.datePipe.transform(isi, 'd MMM yyyy HH:mm') ?? isi;
+    }
+
+    /* Objek bersarang tidak diharapkan, tetapi lebih baik terbaca daripada
+       kembali menjadi "[object Object]". */
+    return typeof isi === 'object' ? JSON.stringify(isi) : String(isi);
   }
 
   lacakRiwayat = (_: number, item: any): number => item.id;

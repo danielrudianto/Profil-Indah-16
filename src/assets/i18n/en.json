@@ -2708,5 +2708,7 @@
   "Forbidden": "Your account is not allowed to open this section.",
   "version__reload": "New version available — reload",
   "sales-price__discount-percent": "Discount %",
-  "purchase-price__discount-percent": "Discount %"
+  "purchase-price__discount-percent": "Discount %",
+  "general__yes": "yes",
+  "general__no": "no"
 }
