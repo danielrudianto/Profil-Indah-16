@@ -130,6 +130,11 @@ export class SalesReturnArchiveViewComponent implements OnInit {
             .delete(`sales-return/${this.data.id}`)
             .subscribe({
               next: () => {
+                this.alertService.showSuccess(
+                  this.translateService.instant(
+                    'sales-return__delete__success',
+                  ),
+                );
                 this.dialogRef.close('deleted');
               },
               error: (error) => {

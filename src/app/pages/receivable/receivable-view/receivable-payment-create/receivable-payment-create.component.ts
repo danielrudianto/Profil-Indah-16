@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NgxMaskDirective } from 'ngx-mask';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -17,7 +17,11 @@ import {
   ComboItem,
   ComboSearchComponent,
 } from 'src/app/components/combo-search/combo-search.component';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatCheckbox } from '@angular/material/checkbox';
 import {
@@ -59,6 +63,7 @@ export class ReceivablePaymentCreateComponent implements OnInit {
     private alertService: AlertService,
     private datePipe: DatePipe,
     private dialogRef: MatDialogRef<ReceivablePaymentCreateComponent>,
+    private translateService: TranslateService,
   ) {}
 
   isSubmitting = false;
@@ -133,6 +138,9 @@ export class ReceivablePaymentCreateComponent implements OnInit {
       })
       .subscribe({
         next: (data: any) => {
+          this.alertService.showSuccess(
+            this.translateService.instant('receivable__payment__success'),
+          );
           this.dialogRef.close(data);
         },
         error: (error) => {

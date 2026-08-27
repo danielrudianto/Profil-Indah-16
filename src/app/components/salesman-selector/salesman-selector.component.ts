@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DynamicComponentService } from 'src/app/services/dynamic-component.service';
@@ -9,17 +10,18 @@ import { NgIf, NgFor } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-salesman-selector',
-    templateUrl: './salesman-selector.component.html',
-    styleUrls: ['./salesman-selector.component.scss'],
-    imports: [DynamicDialogComponent, NgIf, NgFor, TranslatePipe]
+  selector: 'app-salesman-selector',
+  templateUrl: './salesman-selector.component.html',
+  styleUrls: ['./salesman-selector.component.scss'],
+  imports: [DynamicDialogComponent, NgIf, NgFor, TranslatePipe],
 })
 export class SalesmanSelectorComponent {
   constructor(
     private dynamicComponentService: DynamicComponentService,
     private apiService: ApiService,
     private _hotKeysService: HotkeysService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private translateService: TranslateService,
   ) {
     this._hotKeysService.add([
       new Hotkey('esc', (): boolean => {
@@ -66,6 +68,9 @@ export class SalesmanSelectorComponent {
         next: (_) => {
           const index = this.dataSource.findIndex((x) => x == element);
           this.dataSource.splice(index, 1);
+          this.alertService.showSuccess(
+            this.translateService.instant('salesman__delete__success'),
+          );
         },
         error: (error) => {
           this.alertService.showError(error);

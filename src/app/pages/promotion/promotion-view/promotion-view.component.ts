@@ -1,4 +1,5 @@
 import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { forkJoin, Observable } from 'rxjs';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
@@ -48,101 +49,171 @@ export class PromotionViewComponent implements OnInit {
     this.dialog.close();
   }
 
+  /**
+   * Unduh hasil promosi — penjualan DAN pembelian dalam satu berkas.
+   *
+   * Bentuk sebelumnya memanggil POST /promotion/download, endpoint yang TIDAK
+   * PERNAH ADA di server: `git log -S` atas seluruh riwayat tidak menemukannya
+   * sekali pun. Jadi tombol ini menjawab 404 sejak hari ia ditulis. Pemetaan
+   * kolomnya pun sudah keliru — ia membaca good_receipt_code_name, sementara
+   * barisnya bernama `name`.
+   *
+   * Ditulis ulang di atas dua endpoint yang MEMANG ada dan sudah dipakai
+   * dialog hasil promosi, jadi tidak ada rute baru di server. Keduanya diambil
+   * bersamaan; satu berkas dua lembar lebih berguna daripada dua berkas
+   * terpisah, karena pertanyaan yang dijawab promosi selalu membandingkan
+   * keduanya.
+   *
+   * Berkas versi lama menukar kolomnya — "Customer" berisi kode barang dan
+   * "Reference" berisi nama pelanggan. Di sini header dan isinya disejajarkan.
+   */
   downloadResult(): void {
+    if (!this.promo) {
+      return;
+    }
+
     this.isDownloading = true;
-    this.apiService
-      .post('promotion/download', this.data)
-      .subscribe({
-        next: (data: any) => {
-          this.alertService.showInfo(
-            this.translateService.instant('promotion__download__waiting'),
-          );
+    const t = (kunci: string) => this.translateService.instant(kunci);
 
-          const t = (kunci: string) => this.translateService.instant(kunci);
-          const periode =
-            data.data.end == null
-              ? t('promotion__download__continuous-end')
-              : `${this.datePipe.transform(data.data.start, 'dd MMM yyyy')} – ${this.datePipe.transform(data.data.end, 'dd MMM yyyy')}`;
+    forkJoin({
+      penjualan: this.apiService.get(
+        `promotion/result/sales/${this.data.id}`,
+      ) as Observable<any>,
+      pembelian: this.apiService.get(
+        `promotion/result/purchase/${this.data.id}`,
+      ) as Observable<any>,
+    }).subscribe({
+      next: (jawaban) => {
+        const barisJual: any[] = jawaban.penjualan?.data ?? [];
+        const barisBeli: any[] = jawaban.pembelian?.data ?? [];
 
-          this.excelService
-            .unduh(t('promotion__download__file-name'), [
-              {
-                nama: t('promotion__download__sheet-name'),
-                judul: data.data.name,
-                keterangan: `${data.data.description} · ${data.data.brand.name} · ${data.data.supplier.name} · Target Rp ${Number(data.data.target).toLocaleString('id-ID')} · ${periode}`,
-                kolom: [
-                  { judul: t('promotion__download__date'), format: 'tanggal' },
-                  {
-                    judul: t('promotion__download__good-receipt-name'),
-                    lebar: 28,
-                  },
-                  { judul: t('promotion__download__value'), format: 'uang' },
-                ],
-                baris: (data.result as any[]).map((element) => [
-                  new Date(element.date),
-                  element.good_receipt_code_name,
-                  element.value,
-                ]),
-                totalBaris: [
-                  'TOTAL',
-                  null,
-                  (data.result as any[]).reduce(
-                    (a, b) => a + Number(b.value),
-                    0,
-                  ),
-                ],
-              },
-              {
-                nama: t('promotion__download__sheet-item-name'),
-                judul: t('promotion__download__sheet-item-name'),
-                keterangan: data.data.name,
-                kolom: [
-                  { judul: t('promotion__download__date'), format: 'tanggal' },
-                  {
-                    judul: t('promotion__download__good-receipt-name'),
-                    lebar: 28,
-                  },
-                  { judul: t('promotion__download__reference'), lebar: 18 },
-                  {
-                    judul: t('promotion__download__quantity'),
-                    format: 'angka',
-                  },
-                  { judul: t('promotion__download__unit'), lebar: 10 },
-                  { judul: t('promotion__download__price'), format: 'uang' },
-                  { judul: t('promotion__download__discount'), format: 'uang' },
-                  {
-                    judul: t('promotion__download__total_unit_price'),
-                    format: 'uang',
-                  },
-                  { judul: t('promotion__download__total'), format: 'uang' },
-                ],
-                baris: (data.items as any[]).map((element) => [
-                  new Date(element.date),
-                  element.good_receipt_code_name,
-                  element.reference,
-                  element.quantity,
-                  element.unit,
-                  element.price,
-                  element.discount,
-                  Number(element.price) - Number(element.discount),
-                  (Number(element.price) - Number(element.discount)) *
-                    element.quantity,
-                ]),
-              },
-            ])
-            .then(() => {
-              this.alertService.showSuccess(
-                this.translateService.instant('promotion__download__success'),
-              );
-            });
-        },
-        error: (error) => {
-          this.alertService.showError(error);
-        },
-      })
-      .add(() => {
+        if (barisJual.length === 0 && barisBeli.length === 0) {
+          this.alertService.showInfo(t('promotion__download__empty'));
+          this.isDownloading = false;
+          return;
+        }
+
+        const bersih = (x: any) => Number(x.price) - Number(x.discount);
+        const nilai = (x: any) => bersih(x) * Number(x.quantity);
+
+        const periode =
+          this.promo.endDate == null
+            ? t('promotion__download__continuous-end')
+            : `${this.datePipe.transform(this.promo.startDate, 'dd MMM yyyy')} – ${this.datePipe.transform(this.promo.endDate, 'dd MMM yyyy')}`;
+
+        const keterangan = [
+          this.promo.description,
+          this.merek.join(', '),
+          this.promo.supplierName,
+          `${t('promotion__download__target')} Rp ${Number(this.promo.target).toLocaleString('id-ID')}`,
+          periode,
+        ]
+          .filter((x) => !!x)
+          .join(' · ');
+
+        /* Kedua lembar sebentuk; hanya kolom pihak keduanya yang berbeda. */
+        const lembar = (
+          nama: string,
+          judulPihak: string,
+          ambilPihak: (x: any) => string,
+          judulDokumen: string,
+          data: any[],
+        ) => ({
+          nama,
+          judul: `${this.promo.name} — ${nama}`,
+          keterangan,
+          kolom: [
+            {
+              judul: t('promotion__download__date'),
+              format: 'tanggal' as const,
+            },
+            { judul: judulDokumen, lebar: 26 },
+            { judul: judulPihak, lebar: 26 },
+            { judul: t('promotion__download__reference'), lebar: 18 },
+            {
+              judul: t('promotion__download__quantity'),
+              format: 'angka' as const,
+            },
+            { judul: t('promotion__download__unit'), lebar: 10 },
+            { judul: t('promotion__download__price'), format: 'uang' as const },
+            {
+              judul: t('promotion__download__discount'),
+              format: 'uang' as const,
+            },
+            {
+              judul: t('promotion__download__net-price'),
+              format: 'uang' as const,
+            },
+            { judul: t('promotion__download__total'), format: 'uang' as const },
+          ],
+          baris: data.map((x) => [
+            new Date(x.date),
+            x.name,
+            ambilPihak(x),
+            x.reference,
+            Number(x.quantity),
+            x.unit,
+            Number(x.price),
+            Number(x.discount),
+            bersih(x),
+            nilai(x),
+          ]),
+          totalBaris: [
+            'TOTAL',
+            null,
+            null,
+            null,
+            data.reduce((a, b) => a + Number(b.quantity), 0),
+            null,
+            null,
+            null,
+            null,
+            data.reduce((a, b) => a + nilai(b), 0),
+          ],
+        });
+
+        /* Lembar tanpa satu pun baris dibuang, bukan ditulis kosong. */
+        const sheets = [
+          barisJual.length
+            ? lembar(
+                t('promotion__download__sheet-sales'),
+                t('promotion__download__customer'),
+                (x) => x.customer,
+                t('promotion__download__invoice-name'),
+                barisJual,
+              )
+            : null,
+          barisBeli.length
+            ? lembar(
+                t('promotion__download__sheet-purchase'),
+                t('promotion__download__supplier'),
+                (x) => x.supplier,
+                t('promotion__download__good-receipt-name'),
+                barisBeli,
+              )
+            : null,
+        ].filter((x) => x != null) as any[];
+
+        this.excelService
+          .unduh(
+            `${t('promotion__download__file-name')} ${this.data.id}`,
+            sheets,
+          )
+          .then(() => {
+            this.alertService.showSuccess(t('promotion__download__success'));
+          })
+          .catch((galat) => {
+            this.alertService.showError(galat);
+          })
+          .finally(() => {
+            this.isDownloading = false;
+          });
+      },
+      error: (galat) => {
+        this.alertService.showError(galat);
         this.isDownloading = false;
-      });
+      },
+    });
   }
 
   fetchByID() {

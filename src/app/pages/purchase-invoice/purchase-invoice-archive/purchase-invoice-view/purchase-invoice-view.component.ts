@@ -156,6 +156,11 @@ export class PurchaseInvoiceViewComponent implements OnInit {
             .delete(`good-receipt/${this.data.id}`)
             .subscribe({
               next: () => {
+                this.alertService.showSuccess(
+                  this.translateService.instant(
+                    'good-receipt__delete__success',
+                  ),
+                );
                 this.dialogRef.close('deleted');
               },
               error: (error) => {
