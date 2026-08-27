@@ -78,3 +78,30 @@ section.kartu {
 .akordeon--buka .akordeon__kepala {
   margin-bottom: 12px;
 }
+
+/*
+  Label tanggal DIKELUARKAN dari aliran flex kolomnya.
+
+  .grafik__hari adalah flex kolom dengan justify-content: flex-end, sehingga
+  label yang ikut menjadi anggota flex duduk di DASAR kolom dan mengangkat
+  batang di atasnya setinggi label itu. Akibatnya batang yang kebetulan
+  berlabel berdiri lebih tinggi daripada tetangganya padahal saldonya tidak
+  lebih besar — grafiknya terbaca naik justru di titik-titik bertanggal.
+
+  Grafik laporan lain memakai kelas yang sama tetapi memberi label pada SETIAP
+  batang, sehingga terangkatnya seragam dan tidak menyesatkan. Karena itu
+  perbaikan ini ter-scope di sini, bukan di partial bersama.
+*/
+.grafik--nilai {
+  padding-bottom: 18px;
+
+  .grafik__tanggal {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+}

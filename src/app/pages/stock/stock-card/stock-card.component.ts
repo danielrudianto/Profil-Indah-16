@@ -115,6 +115,7 @@ export class StockCardComponent implements OnInit {
               mutasi: Number(x.display_quantity),
             }))
             .reverse();
+          this.susunLabelTanggal();
           this.susunSorotan();
         },
         /* Grafik dan sorotan absen diam-diam bila gagal; tabelnya tetap hidup. */
@@ -281,9 +282,41 @@ export class StockCardComponent implements OnInit {
     return 4 + ((t.saldo - this.minTren) / bentang) * 96;
   }
 
-  /* 50 label tanggal tidak terbaca — cukup tiap kedelapan dan yang terakhir. */
+  /**
+   * Indeks batang yang mendapat label tanggal — DIHITUNG SEKALI.
+   *
+   * Bentuk sebelumnya memberi label pada posisi ke-8, ke-16, dan seterusnya:
+   * angka yang tidak ada hubungannya dengan tanggal. Akibatnya satu tanggal
+   * bisa muncul dua kali (dua batang berjarak delapan yang kebetulan sehari)
+   * sementara pergantian hari yang sebenarnya tidak ditandai sama sekali.
+   *
+   * Jarak minimum tetap dijaga: lima puluh hari berbeda berarti lima puluh
+   * label, dan deretan itu tak terbaca. Yang dikorbankan hanya labelnya —
+   * tanggal setiap batang tetap ada di tooltip.
+   *
+   * Disimpan sebagai himpunan, bukan dihitung di dalam tampilkanLabel: metode
+   * yang dipanggil template dijalankan ulang pada SETIAP siklus deteksi
+   * perubahan, untuk setiap batang.
+   */
+  private labelTanggal = new Set<number>();
+
+  private susunLabelTanggal(): void {
+    this.labelTanggal = new Set<number>();
+    const hari = (d: Date) => d.toDateString();
+    let terakhir = -99;
+
+    this.tren.forEach((t, i) => {
+      const gantiHari =
+        i === 0 || hari(t.tanggal) !== hari(this.tren[i - 1].tanggal);
+      if (gantiHari && i - terakhir >= 4) {
+        this.labelTanggal.add(i);
+        terakhir = i;
+      }
+    });
+  }
+
   tampilkanLabel(i: number): boolean {
-    return i % 8 === 0 || i === this.tren.length - 1;
+    return this.labelTanggal.has(i);
   }
 
   get rentangTren(): string {
