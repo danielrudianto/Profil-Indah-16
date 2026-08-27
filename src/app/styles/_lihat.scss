@@ -114,8 +114,39 @@
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
+/*
+  Isi dialog lihat-dokumen.
+
+  `overflow-x: auto` DIPERTAHANKAN sebagai jaring pengaman, tetapi seharusnya
+  tidak pernah terpakai lagi: aturan di bawah membuat tabelnya menyusut
+  mengikuti lebar dialog alih-alih memaksa gulir mendatar.
+
+  Caranya, kolom nilai diberi `width: 1%` — trik lama yang membuat sel
+  menyusut tepat selebar isinya — sehingga kolom barang mendapat semua sisa
+  ruang. Sisa itu baru berguna bila deskripsinya boleh MEMBUNGKUS, dan itulah
+  yang dua aturan berikutnya kembalikan: `.tabel` global memasang
+  `white-space: nowrap` untuk seluruh selnya, dan `.lihat__desk` memotong
+  deskripsi pada 260px. Keduanya memaksa baris tumbuh ke samping.
+*/
 .lihat__gulir {
   overflow-x: auto;
+
+  .tabel th:first-child,
+  .tabel td:first-child {
+    white-space: normal;
+  }
+
+  .tabel__nilai,
+  .tabel__nilai-kepala {
+    width: 1%;
+  }
+
+  .lihat__desk {
+    max-width: none;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
 }
 
 .lihat__ref {

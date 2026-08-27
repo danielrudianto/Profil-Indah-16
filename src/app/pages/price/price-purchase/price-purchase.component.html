@@ -15,12 +15,19 @@
   <table class="tabel">
     <thead>
       <tr>
-        <th>{{ 'purchase-price__reference' | translate }}</th>
-        <th>{{ 'purchase-price__description' | translate }}</th>
-        <th class="tabel__nilai-kepala">{{ 'purchase-price__price' | translate }}</th>
-        <th class="tabel__nilai-kepala">{{ 'purchase-price__discount' | translate }}</th>
+        <th>{{ "purchase-price__reference" | translate }}</th>
+        <th>{{ "purchase-price__description" | translate }}</th>
+        <th class="tabel__nilai-kepala">
+          {{ "purchase-price__price" | translate }}
+        </th>
+        <th class="tabel__nilai-kepala">
+          {{ "purchase-price__discount" | translate }}
+        </th>
+        <th class="tabel__nilai-kepala">
+          {{ "purchase-price__discount-percent" | translate }}
+        </th>
         <th class="tabel__aksi-kepala">
-          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+          <span class="sr-only">{{ "general__actions" | translate }}</span>
         </th>
       </tr>
     </thead>
@@ -33,10 +40,25 @@
       >
         <td class="tabel__utama">{{ item.reference }}</td>
         <td class="tabel__redup">{{ item.description }}</td>
-        <td class="tabel__nilai">Rp {{ item.purchase_price | number: '1.0-2' }}</td>
+        <td class="tabel__nilai">
+          Rp {{ item.purchase_price | number: "1.0-2" }}
+        </td>
         <!-- Nol berarti tidak ada diskon — em dash lebih jelas daripada Rp 0. -->
         <td class="tabel__nilai">
-          {{ item.purchase_discount ? 'Rp ' + (item.purchase_discount | number: '1.0-2') : '—' }}
+          {{
+            item.purchase_discount
+              ? "Rp " + (item.purchase_discount | number: "1.0-2")
+              : "—"
+          }}
+        </td>
+        <!--
+          Persen dihitung dari harga sebelum diskon. Tanda pisah, bukan 0%,
+          ketika diskonnya memang tidak ada — sejalan dengan kolom di kirinya.
+        -->
+        <td class="tabel__nilai tabel__redup">
+          {{
+            persen(item) == null ? "—" : (persen(item) | number: "1.0-2") + "%"
+          }}
         </td>
         <td class="tabel__aksi" (click)="$event.stopPropagation()">
           <button
@@ -54,7 +76,9 @@
 
     <tbody *ngIf="isLoading">
       <tr>
-        <td colspan="5" class="tabel__pesan">{{ 'general__loading' | translate }}</td>
+        <td colspan="5" class="tabel__pesan">
+          {{ "general__loading" | translate }}
+        </td>
       </tr>
     </tbody>
 

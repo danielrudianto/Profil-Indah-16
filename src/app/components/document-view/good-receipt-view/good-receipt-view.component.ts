@@ -1,6 +1,8 @@
 import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatTooltip } from '@angular/material/tooltip';
+import { persenDiskon } from 'src/app/utils/diskon-persen.utils';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { AlertService } from 'src/app/services/alert.service';
@@ -15,7 +17,7 @@ import { ApiService } from 'src/app/services/api.service';
   selector: 'app-good-receipt-view',
   templateUrl: './good-receipt-view.component.html',
   styleUrls: ['./good-receipt-view.component.scss'],
-  imports: [NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe],
+  imports: [NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe, MatTooltip],
 })
 export class GoodReceiptViewComponent implements OnInit {
   constructor(
@@ -51,7 +53,8 @@ export class GoodReceiptViewComponent implements OnInit {
             reference: x.product.reference,
             description: x.product.description,
             quantity: Number(x.quantity),
-            unit: x.product_unit_id == null ? x.product.unit : x.product_unit.unit,
+            unit:
+              x.product_unit_id == null ? x.product.unit : x.product_unit.unit,
             price: Number(x.price),
             discount: Number(x.discount),
           }));
@@ -67,7 +70,9 @@ export class GoodReceiptViewComponent implements OnInit {
   }
 
   get inisial(): string {
-    return (this.dokumen?.supplier ?? '?').trim().charAt(0).toUpperCase() || '?';
+    return (
+      (this.dokumen?.supplier ?? '?').trim().charAt(0).toUpperCase() || '?'
+    );
   }
 
   get statusKey(): string {
@@ -96,5 +101,20 @@ export class GoodReceiptViewComponent implements OnInit {
 
   tutup(): void {
     this.dialogRef.close();
+  }
+
+  /**
+   * Persen diskon baris, untuk tooltip pada kolom diskon.
+   *
+   * Mengembalikan teks KOSONG bila persennya tidak punya arti — harga atau
+   * diskon nol. MatTooltip tidak menampilkan apa pun untuk teks kosong, jadi
+   * baris tanpa diskon tidak menumbuhkan tooltip berisi "0%".
+   *
+   * Angkanya diformat di sini, bukan lewat DecimalPipe, karena isi tooltip
+   * berupa string biasa dan bukan bagian dari template.
+   */
+  persenDiskonBaris(b: any): string {
+    const persen = persenDiskon(b?.price, b?.discount);
+    return persen == null ? '' : `${persen.toFixed(2)}%`;
   }
 }

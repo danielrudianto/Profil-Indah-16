@@ -14,6 +14,8 @@ import { PricePurchaseUpdateComponent } from './price-purchase-update/price-purc
  * sampai ke sini (lihat AdministratorGuard pada rutenya). Ukuran halaman
  * ditentukan server lewat process.env.LIMIT, jadi pilihan 10/25/50 dimatikan.
  */
+import { persenDiskon } from 'src/app/utils/diskon-persen.utils';
+
 @Component({
   selector: 'app-price-purchase',
   templateUrl: './price-purchase.component.html',
@@ -106,5 +108,15 @@ export class PricePurchaseComponent implements OnInit {
           this.dataSource[index].purchase_discount = data[0].discount;
         }
       });
+  }
+
+  /**
+   * Diskon sebagai persen dari harga — kolom di sebelah kolom rupiah.
+   *
+   * null berarti persennya memang tidak punya arti (harga atau diskon nol),
+   * dan template menampilkan tanda pisah, sama seperti kolom rupiahnya.
+   */
+  persen(item: any): number | null {
+    return persenDiskon(item?.purchase_price, item?.purchase_discount);
   }
 }

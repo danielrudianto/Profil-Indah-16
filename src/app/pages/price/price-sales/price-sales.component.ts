@@ -15,6 +15,8 @@ import { PriceSalesUpdateComponent } from './price-sales-update/price-sales-upda
  * tidak ada tombol tambah karena barangnya lahir dari halaman produk, di sini
  * hanya harganya yang diubah.
  */
+import { persenDiskon } from 'src/app/utils/diskon-persen.utils';
+
 @Component({
   selector: 'app-price-sales',
   templateUrl: './price-sales.component.html',
@@ -107,5 +109,15 @@ export class PriceSalesComponent implements OnInit {
           this.dataSource[index].sales_discount = data[0].discount;
         }
       });
+  }
+
+  /**
+   * Diskon sebagai persen dari harga — kolom di sebelah kolom rupiah.
+   *
+   * null berarti persennya memang tidak punya arti (harga atau diskon nol),
+   * dan template menampilkan tanda pisah, sama seperti kolom rupiahnya.
+   */
+  persen(item: any): number | null {
+    return persenDiskon(item?.sales_price, item?.sales_discount);
   }
 }

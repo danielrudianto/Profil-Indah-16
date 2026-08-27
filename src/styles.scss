@@ -817,6 +817,20 @@ textarea.medan__input {
   white-space: nowrap;
 }
 
+/*
+  Tabel rapat — dipakai isi dialog lihat-dokumen.
+  Kelasnya sudah lama terpasang di ketiga dialog itu TANPA satu pun aturan,
+  jadi namanya menjanjikan sesuatu yang tidak pernah terjadi. Padding bawaan
+  .tabel adalah 20px kiri-kanan; dikalikan lima kolom, itu saja sudah 200px
+  yang mendorong tabelnya melewati lebar dialog.
+*/
+.tabel--rapat {
+  th,
+  td {
+    padding: 10px 12px;
+  }
+}
+
 /* Kolom nilai uang: rata kanan, angka selebar sama supaya digitnya sejajar. */
 .tabel__nilai {
   text-align: right;

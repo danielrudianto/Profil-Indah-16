@@ -5,6 +5,8 @@ import {
   MatDialog,
   MatDialogRef,
 } from '@angular/material/dialog';
+import { MatTooltip } from '@angular/material/tooltip';
+import { persenDiskon } from 'src/app/utils/diskon-persen.utils';
 import { Router } from '@angular/router';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 
@@ -25,7 +27,7 @@ import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmat
   selector: 'app-purchase-invoice-view',
   templateUrl: './purchase-invoice-view.component.html',
   styleUrls: ['./purchase-invoice-view.component.scss'],
-  imports: [NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe],
+  imports: [NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe, MatTooltip],
 })
 export class PurchaseInvoiceViewComponent implements OnInit {
   constructor(
@@ -165,5 +167,20 @@ export class PurchaseInvoiceViewComponent implements OnInit {
             });
         }
       });
+  }
+
+  /**
+   * Persen diskon baris, untuk tooltip pada kolom diskon.
+   *
+   * Mengembalikan teks KOSONG bila persennya tidak punya arti — harga atau
+   * diskon nol. MatTooltip tidak menampilkan apa pun untuk teks kosong, jadi
+   * baris tanpa diskon tidak menumbuhkan tooltip berisi "0%".
+   *
+   * Angkanya diformat di sini, bukan lewat DecimalPipe, karena isi tooltip
+   * berupa string biasa dan bukan bagian dari template.
+   */
+  persenDiskonBaris(b: any): string {
+    const persen = persenDiskon(b?.price, b?.discount);
+    return persen == null ? '' : `${persen.toFixed(2)}%`;
   }
 }

@@ -62,3 +62,26 @@ export function sinkronDiskonPersen(
 
   return langganan;
 }
+
+/**
+ * Diskon sebagai persen dari harga, untuk DITAMPILKAN.
+ *
+ * Mengembalikan null bila persennya tidak punya arti — harga nol, diskon nol,
+ * atau nilai yang bukan angka. Pemanggil memakai null itu untuk menampilkan
+ * tanda pisah dan untuk mengosongkan tooltip, sehingga tidak ada "0,00%" yang
+ * menghiasi baris tanpa diskon.
+ *
+ * Sengaja mengembalikan ANGKA, bukan teks jadi: pemformatan angka di aplikasi
+ * ini lewat DecimalPipe, yang mengikuti locale aktif. Merangkai teks di sini
+ * berarti memakai titik desimal Inggris di tampilan berbahasa Indonesia.
+ */
+export function persenDiskon(harga: unknown, diskon: unknown): number | null {
+  const h = Number(harga ?? 0);
+  const d = Number(diskon ?? 0);
+
+  if (!Number.isFinite(h) || !Number.isFinite(d) || h <= 0 || d <= 0) {
+    return null;
+  }
+
+  return (d / h) * 100;
+}

@@ -23,25 +23,25 @@
     <div class="lihat__isi">
       <dl class="lihat__kisi">
         <div>
-          <dt>{{ 'sales-invoice__archive__view__date' | translate }}</dt>
-          <dd>{{ dokumen.date | date: 'dd MMMM yyyy' }}</dd>
+          <dt>{{ "sales-invoice__archive__view__date" | translate }}</dt>
+          <dd>{{ dokumen.date | date: "dd MMMM yyyy" }}</dd>
         </div>
         <div>
-          <dt>{{ 'sales-invoice__view__sales' | translate }}</dt>
+          <dt>{{ "sales-invoice__view__sales" | translate }}</dt>
           <dd>{{ dokumen.sales }}</dd>
         </div>
         <div>
-          <dt>{{ 'sales-invoice__view__created-by' | translate }}</dt>
+          <dt>{{ "sales-invoice__view__created-by" | translate }}</dt>
           <dd>{{ dokumen.createdBy }}</dd>
         </div>
         <div>
-          <dt>{{ 'sales-invoice__view__created-at' | translate }}</dt>
-          <dd>{{ dokumen.createdAt | date: 'dd MMMM yyyy HH:mm' }}</dd>
+          <dt>{{ "sales-invoice__view__created-at" | translate }}</dt>
+          <dd>{{ dokumen.createdAt | date: "dd MMMM yyyy HH:mm" }}</dd>
         </div>
       </dl>
 
       <h3 class="lihat__label">
-        {{ 'sales-invoice__archive__view__item__title' | translate }}
+        {{ "sales-invoice__archive__view__item__title" | translate }}
         ({{ barang.length }})
       </h3>
 
@@ -49,11 +49,19 @@
         <table class="tabel tabel--rapat">
           <thead>
             <tr>
-              <th>{{ 'sales-invoice__view__product' | translate }}</th>
-              <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__qty' | translate }}</th>
-              <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__price' | translate }}</th>
-              <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__discount' | translate }}</th>
-              <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__line-total' | translate }}</th>
+              <th>{{ "sales-invoice__view__product" | translate }}</th>
+              <th class="tabel__nilai-kepala">
+                {{ "sales-invoice__view__qty" | translate }}
+              </th>
+              <th class="tabel__nilai-kepala">
+                {{ "sales-invoice__view__price" | translate }}
+              </th>
+              <th class="tabel__nilai-kepala">
+                {{ "sales-invoice__view__discount" | translate }}
+              </th>
+              <th class="tabel__nilai-kepala">
+                {{ "sales-invoice__view__line-total" | translate }}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -62,11 +70,19 @@
                 <span class="lihat__ref">{{ b.reference }}</span>
                 <span class="lihat__desk">{{ b.description }}</span>
               </td>
-              <td class="tabel__nilai">{{ b.quantity | number: '1.0-2' }} {{ b.unit }}</td>
-              <td class="tabel__nilai">Rp {{ b.price | number: '1.0-0' }}</td>
-              <td class="tabel__nilai">Rp {{ b.discount | number: '1.0-0' }}</td>
+              <td class="tabel__nilai">
+                {{ b.quantity | number: "1.0-2" }} {{ b.unit }}
+              </td>
+              <td class="tabel__nilai">Rp {{ b.price | number: "1.0-0" }}</td>
+              <td
+                class="tabel__nilai"
+                [matTooltip]="persenDiskonBaris(b)"
+                matTooltipPosition="above"
+              >
+                Rp {{ b.discount | number: "1.0-0" }}
+              </td>
               <td class="tabel__nilai baris__total">
-                Rp {{ totalBaris(b) | number: '1.0-0' }}
+                Rp {{ totalBaris(b) | number: "1.0-0" }}
               </td>
             </tr>
           </tbody>
@@ -76,29 +92,31 @@
       <!-- Rincian nilai — subtotal sampai total, gaya rincian terrabot. -->
       <dl class="lihat__nilai">
         <div>
-          <dt>{{ 'sales-invoice__view__subtotal' | translate }}</dt>
-          <dd>Rp {{ subtotal | number: '1.0-0' }}</dd>
+          <dt>{{ "sales-invoice__view__subtotal" | translate }}</dt>
+          <dd>Rp {{ subtotal | number: "1.0-0" }}</dd>
         </div>
         <div *ngIf="dokumen.discount > 0">
-          <dt>{{ 'sales-invoice__view__doc-discount' | translate }}</dt>
-          <dd class="lihat__minus">− Rp {{ dokumen.discount | number: '1.0-0' }}</dd>
+          <dt>{{ "sales-invoice__view__doc-discount" | translate }}</dt>
+          <dd class="lihat__minus">
+            − Rp {{ dokumen.discount | number: "1.0-0" }}
+          </dd>
         </div>
         <div *ngIf="dokumen.delivery > 0">
-          <dt>{{ 'sales-invoice__view__delivery' | translate }}</dt>
-          <dd>+ Rp {{ dokumen.delivery | number: '1.0-0' }}</dd>
+          <dt>{{ "sales-invoice__view__delivery" | translate }}</dt>
+          <dd>+ Rp {{ dokumen.delivery | number: "1.0-0" }}</dd>
         </div>
         <div *ngIf="dokumen.service > 0">
-          <dt>{{ 'sales-invoice__view__service' | translate }}</dt>
-          <dd>+ Rp {{ dokumen.service | number: '1.0-0' }}</dd>
+          <dt>{{ "sales-invoice__view__service" | translate }}</dt>
+          <dd>+ Rp {{ dokumen.service | number: "1.0-0" }}</dd>
         </div>
         <div class="lihat__total">
-          <dt>{{ 'sales-invoice__view__grand-total' | translate }}</dt>
-          <dd>Rp {{ grandTotal | number: '1.0-0' }}</dd>
+          <dt>{{ "sales-invoice__view__grand-total" | translate }}</dt>
+          <dd>Rp {{ grandTotal | number: "1.0-0" }}</dd>
         </div>
       </dl>
 
       <h3 class="lihat__label">
-        {{ 'sales-invoice__archive__view__payment__title' | translate }}
+        {{ "sales-invoice__archive__view__payment__title" | translate }}
         ({{ pembayaran.length }})
       </h3>
 
@@ -106,23 +124,23 @@
         <li *ngFor="let p of pembayaran">
           <div>
             <span class="lihat__bayar-metode">
-              {{ p.payment_method == null ? 'Cash' : p.payment_method.name }}
+              {{ p.payment_method == null ? "Cash" : p.payment_method.name }}
             </span>
             <span class="lihat__bayar-tanggal">
-              {{ p.date | date: 'dd MMMM yyyy' }}
+              {{ p.date | date: "dd MMMM yyyy" }}
             </span>
           </div>
-          <strong>Rp {{ p.value | number: '1.0-0' }}</strong>
+          <strong>Rp {{ p.value | number: "1.0-0" }}</strong>
         </li>
       </ul>
       <p class="lihat__kosong" *ngIf="pembayaran.length === 0">
-        {{ 'sales-invoice__archive__view__payments__empty' | translate }}
+        {{ "sales-invoice__archive__view__payments__empty" | translate }}
       </p>
 
       <!-- Riwayat perubahan — jejak audit, tampil bila memang ada isinya. -->
       <ng-container *ngIf="riwayat.length > 0">
         <h3 class="lihat__label">
-          {{ 'sales-invoice__view__history' | translate }}
+          {{ "sales-invoice__view__history" | translate }}
         </h3>
 
         <ol class="lihat__riwayat">
@@ -131,7 +149,7 @@
               <strong>{{ labelAksi(r.action) }}</strong>
               <span *ngIf="r.user?.name"> · {{ r.user.name }}</span>
               <span class="lihat__riwayat-waktu">
-                {{ r.createdAt | date: 'dd MMM yyyy HH:mm' }}
+                {{ r.createdAt | date: "dd MMM yyyy HH:mm" }}
               </span>
             </div>
             <p class="lihat__riwayat-ubahan" *ngIf="ubahanTeks(r.changes)">
@@ -150,23 +168,23 @@
         (click)="openDeleteConfirmation()"
       >
         <i class="ph ph-trash" aria-hidden="true"></i>
-        {{ 'general__delete' | translate }}
+        {{ "general__delete" | translate }}
       </button>
 
       <span class="lihat__renggang"></span>
 
       <button type="button" class="btn btn--kedua" (click)="print()">
         <i class="ph ph-printer" aria-hidden="true"></i>
-        {{ 'general__print' | translate }}
+        {{ "general__print" | translate }}
       </button>
 
       <button type="button" class="btn" (click)="tutup()">
-        {{ 'general__close' | translate }}
+        {{ "general__close" | translate }}
       </button>
     </footer>
   </ng-container>
 
   <p class="lihat__memuat" *ngIf="isLoading">
-    {{ 'general__loading' | translate }}
+    {{ "general__loading" | translate }}
   </p>
 </div>

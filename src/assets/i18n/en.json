@@ -2706,5 +2706,7 @@
   "settings__text-size__large": "Large",
   "settings__text-size__larger": "Extra large",
   "Forbidden": "Your account is not allowed to open this section.",
-  "version__reload": "New version available — reload"
+  "version__reload": "New version available — reload",
+  "sales-price__discount-percent": "Discount %",
+  "purchase-price__discount-percent": "Discount %"
 }

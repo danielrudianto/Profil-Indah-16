@@ -76,7 +76,11 @@
                 {{ b.quantity | number: "1.0-2" }} {{ b.unit }}
               </td>
               <td class="tabel__nilai">Rp {{ b.price | number: "1.0-0" }}</td>
-              <td class="tabel__nilai">
+              <td
+                class="tabel__nilai"
+                [matTooltip]="persenDiskonBaris(b)"
+                matTooltipPosition="above"
+              >
                 Rp {{ b.discount | number: "1.0-0" }}
               </td>
               <td class="tabel__nilai baris__total">
