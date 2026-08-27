@@ -194,7 +194,7 @@
         </p>
 
         <div class="gulir">
-          <table class="tabel tabel--rapat">
+          <table class="tabel tabel--rapat tabel--muat">
             <thead>
               <tr>
                 <th>{{ "sales-invoice__create__item" | translate }}</th>
@@ -379,7 +379,7 @@
 
         <div class="kartu__baris">
           <div class="field">
-            <mat-form-field appearance="outline" class="w-100">
+            <mat-form-field appearance="outline" class="w-sempit">
               <mat-label>{{
                 "sales-invoice__create__doc-discount" | translate
               }}</mat-label>
@@ -485,7 +485,7 @@
         <!-- Meja pembayaran seanatomi meja item — kosong pun tetap meja. -->
         <ng-container *ngIf="!depositInternal">
           <div class="gulir">
-            <table class="tabel">
+            <table class="tabel tabel--muat">
               <thead>
                 <tr>
                   <th>

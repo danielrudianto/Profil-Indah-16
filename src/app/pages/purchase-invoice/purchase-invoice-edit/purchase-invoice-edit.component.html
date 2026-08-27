@@ -181,7 +181,7 @@
       </div>
 
       <div class="gulir" [formGroup]="itemFormGroup">
-        <table class="tabel" formArrayName="items">
+        <table class="tabel tabel--muat" formArrayName="items">
           <thead>
             <tr>
               <th>{{ "good-receipt__create__item" | translate }}</th>
@@ -226,7 +226,7 @@
 
               <td>
                 <div class="jumlah">
-                  <mat-form-field appearance="outline" class="w-100">
+                  <mat-form-field appearance="outline" class="w-sempit">
                     <input
                       matInput
                       type="text"

@@ -13,39 +13,49 @@
       -->
       <div class="buat__head">
         <h1 class="buat__title">
-          {{ 'deposit__confirm__title' | translate }}
+          {{ "deposit__confirm__title" | translate }}
           <span class="tag-otomatis">
             <i class="ph ph-piggy-bank" aria-hidden="true"></i>
             {{ deposit.name }}
           </span>
         </h1>
-        <p class="buat__lede">{{ 'deposit__confirm__lede' | translate }}</p>
+        <p class="buat__lede">{{ "deposit__confirm__lede" | translate }}</p>
       </div>
       <!-- ---------------------------------------------------------- -->
       <!-- Data umum                                                   -->
       <!-- ---------------------------------------------------------- -->
       <section class="kartu" [formGroup]="metaFormGroup">
         <h2 class="kartu__label">
-          {{ 'deposit__confirm__general-data' | translate }}
+          {{ "deposit__confirm__general-data" | translate }}
         </h2>
 
         <div class="rinci">
           <div class="rinci__baris">
-            <span class="rinci__label">{{ 'deposit__confirm__customer' | translate }}</span>
-            <span>{{ deposit.customer?.name ?? ('sales-invoice__retail' | translate) }}</span>
+            <span class="rinci__label">{{
+              "deposit__confirm__customer" | translate
+            }}</span>
+            <span>{{
+              deposit.customer?.name ?? ("sales-invoice__retail" | translate)
+            }}</span>
           </div>
           <div class="rinci__baris">
-            <span class="rinci__label">{{ 'deposit__confirm__salesman' | translate }}</span>
-            <span>{{ deposit.sales || 'INTERNAL' }}</span>
+            <span class="rinci__label">{{
+              "deposit__confirm__salesman" | translate
+            }}</span>
+            <span>{{ deposit.sales || "INTERNAL" }}</span>
           </div>
           <div class="rinci__baris">
-            <span class="rinci__label">{{ 'deposit__confirm__deposit-date' | translate }}</span>
-            <span>{{ deposit.date | date: 'dd MMMM yyyy' }}</span>
+            <span class="rinci__label">{{
+              "deposit__confirm__deposit-date" | translate
+            }}</span>
+            <span>{{ deposit.date | date: "dd MMMM yyyy" }}</span>
           </div>
         </div>
 
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>{{ 'deposit__confirm__invoice-date' | translate }}</mat-label>
+          <mat-label>{{
+            "deposit__confirm__invoice-date" | translate
+          }}</mat-label>
           <input
             matInput
             [matDatepicker]="fakturPicker"
@@ -75,29 +85,29 @@
       <!-- ---------------------------------------------------------- -->
       <section class="kartu">
         <h2 class="kartu__label">
-          {{ 'deposit__confirm__table__item' | translate }}
+          {{ "deposit__confirm__table__item" | translate }}
         </h2>
 
         <!-- Muatan konfirmasi tidak memuat barang; kartu ini kesaksian. -->
         <p class="petunjuk">
           <i class="ph ph-info" aria-hidden="true"></i>
-          <span>{{ 'deposit__confirm__items-note' | translate }}</span>
+          <span>{{ "deposit__confirm__items-note" | translate }}</span>
         </p>
 
         <div class="gulir">
-          <table class="tabel tabel--rapat">
+          <table class="tabel tabel--rapat tabel--muat">
             <thead>
               <tr>
-                <th>{{ 'deposit__confirm__table__item' | translate }}</th>
-                <th>{{ 'deposit__confirm__table__quantity' | translate }}</th>
+                <th>{{ "deposit__confirm__table__item" | translate }}</th>
+                <th>{{ "deposit__confirm__table__quantity" | translate }}</th>
                 <th class="tabel__nilai-kepala">
-                  {{ 'deposit__confirm__table__price' | translate }}
+                  {{ "deposit__confirm__table__price" | translate }}
                 </th>
                 <th class="tabel__nilai-kepala">
-                  {{ 'deposit__confirm__table__discount' | translate }}
+                  {{ "deposit__confirm__table__discount" | translate }}
                 </th>
                 <th class="tabel__nilai-kepala">
-                  {{ 'deposit__confirm__table__total' | translate }}
+                  {{ "deposit__confirm__table__total" | translate }}
                 </th>
               </tr>
             </thead>
@@ -105,15 +115,22 @@
               <tr *ngFor="let barang of deposit.sales_deposit">
                 <td>
                   <div class="barang__ref">{{ barang.product?.reference }}</div>
-                  <div class="barang__desc">{{ barang.product?.description }}</div>
+                  <div class="barang__desc">
+                    {{ barang.product?.description }}
+                  </div>
                 </td>
                 <td>
-                  {{ barang.quantity | number: '1.0-2' }} {{ satuanBaris(barang) }}
+                  {{ barang.quantity | number: "1.0-2" }}
+                  {{ satuanBaris(barang) }}
                 </td>
-                <td class="tabel__nilai">Rp {{ barang.price | number: '1.0-0' }}</td>
-                <td class="tabel__nilai">Rp {{ barang.discount | number: '1.0-0' }}</td>
+                <td class="tabel__nilai">
+                  Rp {{ barang.price | number: "1.0-0" }}
+                </td>
+                <td class="tabel__nilai">
+                  Rp {{ barang.discount | number: "1.0-0" }}
+                </td>
                 <td class="tabel__nilai baris__total">
-                  Rp {{ totalBaris(barang) | number: '1.0-0' }}
+                  Rp {{ totalBaris(barang) | number: "1.0-0" }}
                 </td>
               </tr>
             </tbody>
@@ -126,35 +143,51 @@
       <!-- ---------------------------------------------------------- -->
       <section class="kartu">
         <h2 class="kartu__label">
-          {{ 'deposit__confirm__payment-data' | translate }}
+          {{ "deposit__confirm__payment-data" | translate }}
         </h2>
 
         <!-- Yang tercatat saat deposit dibuat — baca saja. -->
         <ng-container *ngIf="deposit.sales_deposit_payment?.length > 0">
           <h3 class="bayar__seksi">
-            {{ 'deposit__confirm__existing-payment-data' | translate }}
+            {{ "deposit__confirm__existing-payment-data" | translate }}
           </h3>
-          <div class="bayar" *ngFor="let bayar of deposit.sales_deposit_payment">
+          <div
+            class="bayar"
+            *ngFor="let bayar of deposit.sales_deposit_payment"
+          >
             <div class="bayar__nama">
-              <strong>{{ bayar.payment_method?.name ?? 'Cash' }}</strong>
-              <span>{{ bayar.date | date: 'dd MMMM yyyy' }}</span>
+              <strong>{{ bayar.payment_method?.name ?? "Cash" }}</strong>
+              <span>{{ bayar.date | date: "dd MMMM yyyy" }}</span>
             </div>
-            <div class="bayar__tetap">Rp {{ bayar.value | number: '1.0-0' }}</div>
+            <div class="bayar__tetap">
+              Rp {{ bayar.value | number: "1.0-0" }}
+            </div>
           </div>
         </ng-container>
 
         <!-- Pelunasan baru, dicatat pada tanggal faktur. -->
         <h3 class="bayar__seksi">
-          {{ 'deposit__confirm__new-payment' | translate }}
+          {{ "deposit__confirm__new-payment" | translate }}
         </h3>
         <div class="bayar" *ngFor="let bayar of p.controls; index as i">
           <div class="bayar__nama">
-            <strong>{{ getFormGroupAtPayment(i).get('name')?.value }}</strong>
-            <span>{{ getFormGroupAtPayment(i).get('description')?.value }}</span>
+            <strong>{{ getFormGroupAtPayment(i).get("name")?.value }}</strong>
+            <span>{{
+              getFormGroupAtPayment(i).get("description")?.value
+            }}</span>
           </div>
 
           <div class="bayar__nilai" [formGroup]="getFormGroupAtPayment(i)">
-            <mat-form-field appearance="outline" class="w-100"><input matInput type="text" mask="separator" thousandSeparator="." formControlName="value" autocomplete="off" placeholder="0" /></mat-form-field>
+            <mat-form-field appearance="outline" class="w-100"
+              ><input
+                matInput
+                type="text"
+                mask="separator"
+                thousandSeparator="."
+                formControlName="value"
+                autocomplete="off"
+                placeholder="0"
+            /></mat-form-field>
           </div>
 
           <button
@@ -170,11 +203,11 @@
 
         <button type="button" class="tambah" (click)="openPaymentSelector()">
           <i class="ph ph-plus" aria-hidden="true"></i>
-          {{ 'sales-invoice__create__item__payment-method__add' | translate }}
+          {{ "sales-invoice__create__item__payment-method__add" | translate }}
         </button>
 
         <p class="galat" *ngIf="!pembayaranSah">
-          {{ 'deposit__confirm__total-payment' | translate }}
+          {{ "deposit__confirm__total-payment" | translate }}
         </p>
       </section>
     </div>
@@ -185,62 +218,70 @@
     <aside class="buat__samping">
       <section class="kartu">
         <h2 class="kartu__label">
-          {{ 'deposit__confirm__summary' | translate }}
+          {{ "deposit__confirm__summary" | translate }}
         </h2>
 
         <dl class="ringkas">
           <div>
-            <dt>{{ 'deposit__confirm__summary__items' | translate }}</dt>
-            <dd>Rp {{ nilaiBarang | number: '1.0-0' }}</dd>
+            <dt>{{ "deposit__confirm__summary__items" | translate }}</dt>
+            <dd>Rp {{ nilaiBarang | number: "1.0-0" }}</dd>
           </div>
           <div *ngIf="deposit.delivery > 0">
-            <dt>{{ 'deposit__view__table__delivery' | translate }}</dt>
-            <dd>Rp {{ deposit.delivery | number: '1.0-0' }}</dd>
+            <dt>{{ "deposit__view__table__delivery" | translate }}</dt>
+            <dd>Rp {{ deposit.delivery | number: "1.0-0" }}</dd>
           </div>
           <div *ngIf="deposit.service > 0">
-            <dt>{{ 'deposit__view__table__service' | translate }}</dt>
-            <dd>Rp {{ deposit.service | number: '1.0-0' }}</dd>
+            <dt>{{ "deposit__view__table__service" | translate }}</dt>
+            <dd>Rp {{ deposit.service | number: "1.0-0" }}</dd>
           </div>
           <div *ngIf="deposit.discount > 0">
-            <dt>{{ 'deposit__view__table__discount' | translate }}</dt>
-            <dd class="ringkas__kurang">– Rp {{ deposit.discount | number: '1.0-0' }}</dd>
+            <dt>{{ "deposit__view__table__discount" | translate }}</dt>
+            <dd class="ringkas__kurang">
+              – Rp {{ deposit.discount | number: "1.0-0" }}
+            </dd>
           </div>
           <div>
-            <dt>{{ 'deposit__confirm__summary__bill' | translate }}</dt>
-            <dd>Rp {{ totalTagihan | number: '1.0-0' }}</dd>
+            <dt>{{ "deposit__confirm__summary__bill" | translate }}</dt>
+            <dd>Rp {{ totalTagihan | number: "1.0-0" }}</dd>
           </div>
           <div>
-            <dt>{{ 'deposit__confirm__summary__paid' | translate }}</dt>
-            <dd class="ringkas__kurang">– Rp {{ totalPembayaran | number: '1.0-0' }}</dd>
+            <dt>{{ "deposit__confirm__summary__paid" | translate }}</dt>
+            <dd class="ringkas__kurang">
+              – Rp {{ totalPembayaran | number: "1.0-0" }}
+            </dd>
           </div>
         </dl>
 
         <div class="ringkas__total">
-          <span>{{ 'deposit__confirm__summary__remaining' | translate }}</span>
-          <strong>Rp {{ sisa | number: '1.0-0' }}</strong>
+          <span>{{ "deposit__confirm__summary__remaining" | translate }}</span>
+          <strong>Rp {{ sisa | number: "1.0-0" }}</strong>
         </div>
       </section>
 
       <section class="kartu">
         <h2 class="kartu__label">
-          {{ 'deposit__confirm__before-save' | translate }}
+          {{ "deposit__confirm__before-save" | translate }}
         </h2>
 
         <ul class="periksa">
           <li [class.periksa--ok]="metaFormGroup.valid">
             <i
-              [class]="metaFormGroup.valid ? 'ph-fill ph-check-circle' : 'ph ph-circle'"
+              [class]="
+                metaFormGroup.valid ? 'ph-fill ph-check-circle' : 'ph ph-circle'
+              "
               aria-hidden="true"
             ></i>
-            <span>{{ 'deposit__confirm__check-date' | translate }}</span>
+            <span>{{ "deposit__confirm__check-date" | translate }}</span>
           </li>
 
           <li [class.periksa--ok]="pembayaranSah">
             <i
-              [class]="pembayaranSah ? 'ph-fill ph-check-circle' : 'ph ph-circle'"
+              [class]="
+                pembayaranSah ? 'ph-fill ph-check-circle' : 'ph ph-circle'
+              "
               aria-hidden="true"
             ></i>
-            <span>{{ 'deposit__confirm__check-payment' | translate }}</span>
+            <span>{{ "deposit__confirm__check-payment" | translate }}</span>
           </li>
 
           <!--
@@ -252,13 +293,13 @@
               [class]="lunas ? 'ph-fill ph-check-circle' : 'ph ph-circle'"
               aria-hidden="true"
             ></i>
-            <span>{{ 'deposit__confirm__check-paid' | translate }}</span>
+            <span>{{ "deposit__confirm__check-paid" | translate }}</span>
           </li>
         </ul>
       </section>
 
       <section class="kartu">
-        <h2 class="kartu__label">{{ 'general__actions' | translate }}</h2>
+        <h2 class="kartu__label">{{ "general__actions" | translate }}</h2>
 
         <button
           type="button"
@@ -267,7 +308,7 @@
           (click)="submit()"
         >
           <i class="ph ph-seal-check" aria-hidden="true"></i>
-          {{ 'deposit__confirm__submit' | translate }}
+          {{ "deposit__confirm__submit" | translate }}
         </button>
 
         <button
@@ -276,11 +317,13 @@
           (click)="batal()"
           [disabled]="isSubmitting"
         >
-          {{ 'general__cancel' | translate }}
+          {{ "general__cancel" | translate }}
         </button>
       </section>
     </aside>
   </div>
 </div>
 
-<p class="tabel__pesan" *ngIf="isLoading">{{ 'general__loading' | translate }}</p>
+<p class="tabel__pesan" *ngIf="isLoading">
+  {{ "general__loading" | translate }}
+</p>

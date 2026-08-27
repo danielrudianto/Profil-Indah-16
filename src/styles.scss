@@ -831,6 +831,39 @@ textarea.medan__input {
   }
 }
 
+/*
+  Tabel yang HARUS muat tanpa gulir mendatar.
+
+  Dipakai tabel barang pada formulir, yang di monitor staf hanya punya sekitar
+  930px. Tiga hal membuatnya melebar, dan ketiganya bawaan, bukan disengaja:
+  `.tabel` global memasang white-space: nowrap untuk SELURUH selnya sehingga
+  deskripsi barang menolak membungkus; paddingnya 20px kiri-kanan, yang pada
+  sembilan kolom saja sudah 360px; dan kolom angka melebar mengikuti ruang.
+
+  Kolom pertama dibiarkan membungkus dan kolom angka menyusut tepat selebar
+  isinya, sehingga barisnya tumbuh KE BAWAH. Sisa lebar jatuh ke kolom barang,
+  satu-satunya yang isinya memang bisa panjang.
+*/
+.tabel--muat {
+  th,
+  td {
+    padding: 10px 12px;
+  }
+
+  th:first-child,
+  td:first-child {
+    white-space: normal;
+  }
+
+  .tabel__nilai,
+  .tabel__nilai-kepala,
+  .ke-kanan,
+  .tabel__aksi,
+  .tabel__aksi-kepala {
+    width: 1%;
+  }
+}
+
 /* Kolom nilai uang: rata kanan, angka selebar sama supaya digitnya sejajar. */
 .tabel__nilai {
   text-align: right;
