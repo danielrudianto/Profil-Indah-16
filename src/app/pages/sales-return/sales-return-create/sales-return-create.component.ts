@@ -147,7 +147,27 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
       .get('payment-method/all', { keyword: '', page: 1 })
       .subscribe({
         next: (data: any) => {
-          this.metodeOpsi = data ?? [];
+          /*
+            DOR DIBUANG dari daftar retur, dan bukan karena selera.
+
+            DOR adalah payment_method_id 0 — lihat sales-invoice-payment
+            .repository — sementara formulir ini memakai 0 untuk menyatakan
+            "tanpa metode bernama" alias tunai; server memetakan 0 menjadi
+            null di sales-return.controller. Dua makna berbeda pada satu
+            angka yang sama.
+
+            Akibatnya DOR TIDAK PERNAH bisa tersimpan pada retur: memilihnya
+            mengirim 0, dan yang tercatat justru tunai. Membiarkannya berarti
+            menawarkan pilihan yang diam-diam berubah menjadi pilihan lain —
+            sekaligus membuat kartu Cash dan DOR menyala bersamaan, karena
+            keduanya bernilai 0.
+
+            DOR sendiri memang bukan cara mengembalikan uang: ia menandai
+            harga yang salah diberikan, ditanggung sales. Kalau retur ber-DOR
+            ternyata nyata, yang harus berubah kontrak servernya — menerima
+            null secara eksplisit, bukan memakai 0 sebagai sandi.
+          */
+          this.metodeOpsi = (data ?? []).filter((m: any) => m.id !== 0);
         },
         error: (error) => {
           this.alertService.showError(error);

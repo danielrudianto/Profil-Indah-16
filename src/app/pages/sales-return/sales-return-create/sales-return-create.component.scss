@@ -69,4 +69,13 @@
 */
 .keadaan--metode {
   flex-wrap: wrap;
+
+  /*
+    .petunjuk bawaan tidak punya margin atas, sehingga bannernya menempel
+    persis ke deretan kartu dan terbaca sebagai bagian dari kartu terakhir,
+    bukan keterangan atas keseluruhan pilihan.
+  */
+  + .petunjuk {
+    margin-top: 14px;
+  }
 }
