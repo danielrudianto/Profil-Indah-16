@@ -2747,8 +2747,7 @@
   "report-finance__net-profit": "Net profit",
   "report-finance__highlights": "Highlights",
   "report-finance__per-company": "Breakdown by company",
-  "report-finance__expense-breakdown": "Spending — what the money went to",
-  "report-finance__expense-all": "All companies",
+  "report-finance__expense-breakdown": "Expenses (All companies)",
   "report-finance__expense-other": "Other",
   "report-finance__trend": "12-month trend",
   "report-finance__admin-fee-note": "Credit card administration fees are NOT counted as income. They are billed to the customer and passed on to the bank, so cash received will be larger than the income shown here."
