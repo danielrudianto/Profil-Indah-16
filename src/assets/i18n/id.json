@@ -2773,5 +2773,6 @@
   "deposit__list__type__internal": "Internal",
   "deposit__list__type__external": "Eksternal",
   "deposit__list__type__internal__hint": "Belum ada transaksi. Barangnya dijanjikan, uangnya belum diterima, dan stoknya belum berkurang.",
-  "deposit__list__type__external__hint": "Deposit dengan pembayaran dari pelanggan. Uangnya sudah diterima dan tercatat."
+  "deposit__list__type__external__hint": "Deposit dengan pembayaran dari pelanggan. Uangnya sudah diterima dan tercatat.",
+  "sales-deposit__delete__no-payment": "Dokumen ini belum pernah menerima pembayaran, jadi tidak ada uang yang perlu dikembalikan. Menghapusnya hanya membatalkan janji barangnya."
 }

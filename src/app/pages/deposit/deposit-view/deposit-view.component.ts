@@ -182,6 +182,15 @@ export class DepositViewComponent implements OnInit {
       .open(DepositDeleteConfirmationComponent, {
         data: {
           id: this.data.id,
+          /*
+            Yang menentukan perlu-tidaknya pertanyaan pengembalian adalah ADA
+            TIDAKNYA uang yang masuk, bukan tipe dokumennya. Deposit internal
+            memang tidak pernah punya pembayaran, tetapi deposit eksternal
+            yang belum dibayar sepeser pun juga tidak punya apa-apa untuk
+            dikembalikan — dan menanyakannya pada keduanya sama tidak
+            masuk akalnya.
+          */
+          adaPembayaran: this.pembayaran.length > 0,
         },
         disableClose: true,
         panelClass: 'nocturne-dialog',

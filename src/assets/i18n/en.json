@@ -2773,5 +2773,6 @@
   "deposit__list__type__internal": "Internal",
   "deposit__list__type__external": "External",
   "deposit__list__type__internal__hint": "No transaction yet. The goods are promised, no money has been received, and stock is untouched.",
-  "deposit__list__type__external__hint": "A deposit with customer payment. The money has been received and recorded."
+  "deposit__list__type__external__hint": "A deposit with customer payment. The money has been received and recorded.",
+  "sales-deposit__delete__no-payment": "This document has never received a payment, so there is no money to return. Deleting it only cancels the promised goods."
 }

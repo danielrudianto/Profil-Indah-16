@@ -14,14 +14,29 @@
   (close)="tutup()"
 >
   <div [formGroup]="formGroup">
-    <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'sales-deposit__delete__method' | translate }}</mat-label>
+    <!--
+      Dokumen yang tidak pernah menerima uang tidak punya apa pun untuk
+      dikembalikan, sehingga seluruh pertanyaan metode pengembalian tidak
+      berlaku. Menanyakannya membuat orang mengira ada uang yang sedang
+      dipertaruhkan pada tombol hapus — padahal tidak ada, dan keraguan itu
+      justru menahan pekerjaan yang sebetulnya aman.
+
+      Diganti keterangan, bukan dibiarkan kosong: bagian yang lenyap tanpa
+      penjelasan menimbulkan pertanyaan yang sama.
+    -->
+    <p class="petunjuk" *ngIf="!adaPembayaran">
+      <i class="ph ph-info" aria-hidden="true"></i>
+      {{ "sales-deposit__delete__no-payment" | translate }}
+    </p>
+
+    <mat-form-field appearance="outline" class="w-100" *ngIf="adaPembayaran">
+      <mat-label>{{ "sales-deposit__delete__method" | translate }}</mat-label>
       <mat-select formControlName="method">
         <mat-option value="create">
-          {{ 'sales-deposit__delete__create_overpayment' | translate }}
+          {{ "sales-deposit__delete__create_overpayment" | translate }}
         </mat-option>
         <mat-option value="delete">
-          {{ 'sales-deposit__delete__delete_payment' | translate }}
+          {{ "sales-deposit__delete__delete_payment" | translate }}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -31,10 +46,10 @@
       kelebihan bayar; pada "hapus pembayaran" kolom-kolom ini tidak
       berlaku dan dulu hanya digelapkan, bukan disingkirkan.
     -->
-    <ng-container *ngIf="formGroup.value.method === 'create'">
+    <ng-container *ngIf="adaPembayaran && formGroup.value.method === 'create'">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>
-          {{ 'overpayment__create__return-date' | translate }}
+          {{ "overpayment__create__return-date" | translate }}
         </mat-label>
         <input
           matInput
@@ -59,7 +74,7 @@
 
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>
-          {{ 'overpayment__create__return-payment-method' | translate }}
+          {{ "overpayment__create__return-payment-method" | translate }}
         </mat-label>
         <mat-select formControlName="return_payment_method">
           <mat-option [value]="'Cash'">Cash</mat-option>
@@ -69,7 +84,7 @@
 
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>
-          {{ 'overpayment__create__return-payment-name' | translate }}
+          {{ "overpayment__create__return-payment-name" | translate }}
         </mat-label>
         <input matInput formControlName="return_payment_name" />
       </mat-form-field>
@@ -79,7 +94,7 @@
       >
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>
-            {{ 'overpayment__create__return-payment-bank' | translate }}
+            {{ "overpayment__create__return-payment-bank" | translate }}
           </mat-label>
           <input
             matInput
@@ -88,7 +103,7 @@
           />
           <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
             <mat-option
-              *ngFor="let bank of banks; track: bank"
+              *ngFor="let bank of banks; track bank"
               [value]="bank.name"
             >
               {{ bank.name }}
@@ -98,7 +113,7 @@
 
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>
-            {{ 'overpayment__create__return-payment-number' | translate }}
+            {{ "overpayment__create__return-payment-number" | translate }}
           </mat-label>
           <input matInput formControlName="return_payment_number" />
         </mat-form-field>
@@ -109,7 +124,7 @@
         *ngIf="formGroup.errors?.['bankOrNumberRequired']"
       >
         <i class="ph ph-warning" aria-hidden="true"></i>
-        {{ 'overpayment__create__bank-error' | translate }}
+        {{ "overpayment__create__bank-error" | translate }}
       </p>
     </ng-container>
   </div>

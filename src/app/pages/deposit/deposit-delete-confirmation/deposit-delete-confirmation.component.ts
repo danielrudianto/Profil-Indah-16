@@ -1,34 +1,86 @@
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { availableBankSearch, IBank } from 'src/app/utils/bank';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatSelect, MatOption } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
-import { MatDatepickerInput, MatDatepicker } from '@angular/material/datepicker';
-import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import {
+  MatDatepickerInput,
+  MatDatepicker,
+} from '@angular/material/datepicker';
+import {
+  MatAutocompleteTrigger,
+  MatAutocomplete,
+} from '@angular/material/autocomplete';
 import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
 
 @Component({
-    selector: 'app-deposit-delete-confirmation',
-    templateUrl: './deposit-delete-confirmation.component.html',
-    imports: [DialogShellComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatDatepickerInput, MatSuffix, MatDatepicker, MatAutocompleteTrigger, MatAutocomplete, NgFor, NgIf, TranslatePipe]
+  selector: 'app-deposit-delete-confirmation',
+  templateUrl: './deposit-delete-confirmation.component.html',
+  imports: [
+    DialogShellComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatInput,
+    MatDatepickerInput,
+    MatSuffix,
+    MatDatepicker,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    NgFor,
+    NgIf,
+    TranslatePipe,
+  ],
 })
 export class DepositDeleteConfirmationComponent {
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { id: number },
+    @Inject(MAT_DIALOG_DATA)
+    public data: { id: number; adaPembayaran?: boolean },
     private dialog: MatDialogRef<DepositDeleteConfirmationComponent>,
     private apiService: ApiService,
     private alertService: AlertService,
     private translateService: TranslateService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
   ) {}
 
   isSubmitting: boolean = false;
+
+  /**
+   * Benar bila dokumen ini memang pernah menerima uang.
+   *
+   * Bila tidak, seluruh pertanyaan pengembalian tidak berlaku: tidak ada
+   * yang bisa dijadikan kelebihan bayar, dan tidak ada yang bisa
+   * dikembalikan. Menanyakannya membuat orang mengira ada uang yang
+   * sedang dipertaruhkan pada tombol hapus — padahal tidak ada.
+   *
+   * Nilai lamanya `undefined` pada pemanggil yang belum mengirimkannya;
+   * dianggap ADA supaya perilakunya jatuh ke jalur lama, bukan diam-diam
+   * melewati pertanyaan yang mungkin memang perlu.
+   */
+  get adaPembayaran(): boolean {
+    return this.data.adaPembayaran !== false;
+  }
 
   formGroup: FormGroup = new FormGroup(
     {
@@ -42,7 +94,7 @@ export class DepositDeleteConfirmationComponent {
     },
     {
       validators: this.bankValidator,
-    }
+    },
   );
 
   banks: IBank[] = availableBankSearch.search('').splice(0, 5);
@@ -127,6 +179,16 @@ export class DepositDeleteConfirmationComponent {
       id: this.data.id,
     });
 
+    /*
+      Tanpa pembayaran, satu-satunya jalur yang masuk akal adalah "hapus
+      saja". Ditetapkan di sini, bukan dibiarkan kosong lalu kendalinya
+      disembunyikan: kendali wajib yang tak terlihat membuat tombol simpan
+      mati tanpa ada yang bisa ditunjuk sebagai sebabnya.
+    */
+    if (!this.adaPembayaran) {
+      this.formGroup.get('method')?.setValue('delete');
+    }
+
     this.formGroup.controls['method'].valueChanges.subscribe(() => {
       this.onMethodChange();
     });
@@ -134,7 +196,7 @@ export class DepositDeleteConfirmationComponent {
     this.formGroup.controls['return_payment_method'].valueChanges.subscribe(
       () => {
         this.onPaymentMethodChange();
-      }
+      },
     );
   }
 
@@ -152,13 +214,13 @@ export class DepositDeleteConfirmationComponent {
             ? undefined
             : this.datePipe.transform(
                 this.formGroup.get('return_payment_date')?.value,
-                'yyyy-MM-dd'
+                'yyyy-MM-dd',
               ),
       })
       .subscribe({
         next: () => {
           this.alertService.showSuccess(
-            this.translateService.instant('sales-deposit__reject__success')
+            this.translateService.instant('sales-deposit__reject__success'),
           );
           this.dialog.close('reject');
         },
