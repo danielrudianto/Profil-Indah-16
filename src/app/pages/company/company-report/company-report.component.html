@@ -3,13 +3,13 @@
   <header class="buat__head laporan__kepala">
     <div>
       <h1 class="buat__title">{{ laporan.company.name }}</h1>
-      <p class="buat__lede">{{ 'company-report__lede' | translate }}</p>
+      <p class="buat__lede">{{ "company-report__lede" | translate }}</p>
     </div>
 
     <div class="laporan__kendali">
       <button type="button" class="btn btn--kedua" (click)="kembali()">
         <i class="ph ph-arrow-u-up-left" aria-hidden="true"></i>
-        {{ 'company-report__back' | translate }}
+        {{ "company-report__back" | translate }}
       </button>
 
       <div class="laporan__bulan-kendali">
@@ -44,7 +44,7 @@
         (click)="download()"
       >
         <i class="ph ph-file-xls" aria-hidden="true"></i>
-        {{ 'company-report__download' | translate }}
+        {{ "company-report__download" | translate }}
       </button>
     </div>
   </header>
@@ -52,46 +52,169 @@
   <!-- Ringkasan — kuantitas dan dokumen, dua arah. Tanpa rupiah: memang kuantitas. -->
   <div class="hero">
     <div class="hero__kartu hero__kartu--utama">
-      <span class="hero__label">{{ 'company-report__hero__out' | translate }}</span>
-      <strong class="hero__nilai">{{ laporan.summary.outputQuantity | number: '1.0-2' }}</strong>
-      <span class="hero__sub">{{ 'company-report__hero__base-unit' | translate }}</span>
+      <span class="hero__label">{{
+        "company-report__hero__out" | translate
+      }}</span>
+      <strong class="hero__nilai">{{
+        laporan.summary.outputQuantity | number: "1.0-2"
+      }}</strong>
+      <span class="hero__sub">{{
+        "company-report__hero__base-unit" | translate
+      }}</span>
     </div>
     <div class="hero__kartu">
-      <span class="hero__label">{{ 'company-report__hero__out-docs' | translate }}</span>
-      <strong class="hero__nilai">{{ laporan.summary.outputDocuments | number }}</strong>
+      <span class="hero__label">{{
+        "company-report__hero__out-docs" | translate
+      }}</span>
+      <strong class="hero__nilai">{{
+        laporan.summary.outputDocuments | number
+      }}</strong>
     </div>
     <div class="hero__kartu">
-      <span class="hero__label">{{ 'company-report__hero__in' | translate }}</span>
-      <strong class="hero__nilai">{{ laporan.summary.inputQuantity | number: '1.0-2' }}</strong>
-      <span class="hero__sub">{{ 'company-report__hero__base-unit' | translate }}</span>
+      <span class="hero__label">{{
+        "company-report__hero__in" | translate
+      }}</span>
+      <strong class="hero__nilai">{{
+        laporan.summary.inputQuantity | number: "1.0-2"
+      }}</strong>
+      <span class="hero__sub">{{
+        "company-report__hero__base-unit" | translate
+      }}</span>
     </div>
     <div class="hero__kartu">
-      <span class="hero__label">{{ 'company-report__hero__in-docs' | translate }}</span>
-      <strong class="hero__nilai">{{ laporan.summary.inputDocuments | number }}</strong>
+      <span class="hero__label">{{
+        "company-report__hero__in-docs" | translate
+      }}</span>
+      <strong class="hero__nilai">{{
+        laporan.summary.inputDocuments | number
+      }}</strong>
     </div>
   </div>
 
+  <!--
+    Sisi uang, ditaruh sebelum daftar barang. Yang dicari lebih dulu oleh
+    siapa pun yang membuka laporan perusahaan adalah berapa masuk dan berapa
+    keluar; daftar barangnya rincian dari itu, bukan pembukanya.
+  -->
+  <section class="kartu" *ngIf="laporan.finance">
+    <h2 class="kartu__label">{{ "company-report__money" | translate }}</h2>
+
+    <div class="hero hero--rapat">
+      <div class="hero__kartu">
+        <span class="hero__label">{{
+          "company-report__revenue" | translate
+        }}</span>
+        <strong class="hero__nilai"
+          >Rp {{ laporan.finance.sales | number: "1.0-0" }}</strong
+        >
+      </div>
+      <div class="hero__kartu">
+        <span class="hero__label">{{
+          "company-report__cogs" | translate
+        }}</span>
+        <strong class="hero__nilai"
+          >Rp {{ laporan.finance.hpp | number: "1.0-0" }}</strong
+        >
+      </div>
+      <div class="hero__kartu">
+        <span class="hero__label">{{
+          "company-report__gross-profit" | translate
+        }}</span>
+        <strong class="hero__nilai"
+          >Rp {{ laporan.finance.grossProfit | number: "1.0-0" }}</strong
+        >
+      </div>
+      <div class="hero__kartu">
+        <span class="hero__label">{{
+          "company-report__purchase" | translate
+        }}</span>
+        <strong class="hero__nilai"
+          >Rp {{ laporan.finance.purchaseValue | number: "1.0-0" }}</strong
+        >
+        <span class="hero__sub">
+          {{ laporan.finance.purchaseDocuments | number }}
+          {{ "company-report__purchase-docs" | translate }}
+        </span>
+      </div>
+    </div>
+
+    <h3 class="kartu__sublabel">
+      {{ "company-report__expenses" | translate }}
+    </h3>
+
+    <div class="gulir" *ngIf="laporan.finance.expenses.length > 0">
+      <table class="tabel tabel--rapat">
+        <thead>
+          <tr>
+            <th>{{ "company-report__expense-type" | translate }}</th>
+            <th class="ke-kanan">
+              {{ "company-report__expense-value" | translate }}
+            </th>
+            <th class="ke-kanan">
+              {{ "company-report__expense-share" | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let b of laporan.finance.expenses">
+            <td>
+              {{ b.name || ("company-report__expense-other" | translate) }}
+            </td>
+            <td class="ke-kanan baris__total">
+              Rp {{ b.value | number: "1.0-0" }}
+            </td>
+            <td class="ke-kanan">
+              {{
+                laporan.finance.expenseTotal > 0
+                  ? ((b.value / laporan.finance.expenseTotal) * 100
+                    | number: "1.1-1")
+                  : "0,0"
+              }}%
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>{{ "company-report__expense-total" | translate }}</td>
+            <td class="ke-kanan baris__total">
+              Rp {{ laporan.finance.expenseTotal | number: "1.0-0" }}
+            </td>
+            <td class="ke-kanan">100,0%</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <p class="tabel__pesan" *ngIf="laporan.finance.expenses.length === 0">
+      {{ "company-report__expense-empty" | translate }}
+    </p>
+  </section>
+
   <!-- Barang keluar — dijual/keluar dari stok milik perusahaan ini. -->
   <section class="kartu">
-    <h2 class="kartu__label">{{ 'company-report__out' | translate }}</h2>
+    <h2 class="kartu__label">{{ "company-report__out" | translate }}</h2>
 
     <div class="gulir" *ngIf="laporan.output.length > 0">
       <table class="tabel tabel--rapat">
         <thead>
           <tr>
-            <th>{{ 'company-report__product' | translate }}</th>
-            <th class="ke-kanan">{{ 'company-report__quantity' | translate }}</th>
-            <th class="ke-kanan">{{ 'company-report__documents' | translate }}</th>
+            <th>{{ "company-report__product" | translate }}</th>
+            <th class="ke-kanan">
+              {{ "company-report__quantity" | translate }}
+            </th>
+            <th class="ke-kanan">
+              {{ "company-report__documents" | translate }}
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let barang of laporan.output">
+          <tr *ngFor="let barang of barangKeluar">
             <td>
               <span class="barang__ref">{{ barang.reference }}</span>
               <span class="barang__desc">{{ barang.description }}</span>
             </td>
             <td class="ke-kanan baris__total">
-              {{ barang.quantity | number: '1.0-2' }} {{ barang.unit }}
+              {{ barang.quantity | number: "1.0-2" }} {{ barang.unit }}
             </td>
             <td class="ke-kanan">{{ barang.documents | number }}</td>
           </tr>
@@ -99,32 +222,50 @@
       </table>
     </div>
 
+    <button
+      type="button"
+      class="tautan"
+      *ngIf="adaLebih(laporan.output)"
+      (click)="tampilSemuaKeluar = !tampilSemuaKeluar"
+    >
+      {{
+        (tampilSemuaKeluar
+          ? "company-report__show-less"
+          : "company-report__show-all"
+        ) | translate: { jumlah: laporan.output.length }
+      }}
+    </button>
+
     <p class="tabel__pesan" *ngIf="laporan.output.length === 0">
-      {{ 'company-report__empty' | translate }}
+      {{ "company-report__empty" | translate }}
     </p>
   </section>
 
   <!-- Barang masuk — penerimaan + penyesuaian temuan atas nama perusahaan ini. -->
   <section class="kartu">
-    <h2 class="kartu__label">{{ 'company-report__in' | translate }}</h2>
+    <h2 class="kartu__label">{{ "company-report__in" | translate }}</h2>
 
     <div class="gulir" *ngIf="laporan.input.length > 0">
       <table class="tabel tabel--rapat">
         <thead>
           <tr>
-            <th>{{ 'company-report__product' | translate }}</th>
-            <th class="ke-kanan">{{ 'company-report__quantity' | translate }}</th>
-            <th class="ke-kanan">{{ 'company-report__documents' | translate }}</th>
+            <th>{{ "company-report__product" | translate }}</th>
+            <th class="ke-kanan">
+              {{ "company-report__quantity" | translate }}
+            </th>
+            <th class="ke-kanan">
+              {{ "company-report__documents" | translate }}
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let barang of laporan.input">
+          <tr *ngFor="let barang of barangMasuk">
             <td>
               <span class="barang__ref">{{ barang.reference }}</span>
               <span class="barang__desc">{{ barang.description }}</span>
             </td>
             <td class="ke-kanan baris__total">
-              {{ barang.quantity | number: '1.0-2' }} {{ barang.unit }}
+              {{ barang.quantity | number: "1.0-2" }} {{ barang.unit }}
             </td>
             <td class="ke-kanan">{{ barang.documents | number }}</td>
           </tr>
@@ -132,10 +273,26 @@
       </table>
     </div>
 
+    <button
+      type="button"
+      class="tautan"
+      *ngIf="adaLebih(laporan.input)"
+      (click)="tampilSemuaMasuk = !tampilSemuaMasuk"
+    >
+      {{
+        (tampilSemuaMasuk
+          ? "company-report__show-less"
+          : "company-report__show-all"
+        ) | translate: { jumlah: laporan.input.length }
+      }}
+    </button>
+
     <p class="tabel__pesan" *ngIf="laporan.input.length === 0">
-      {{ 'company-report__empty' | translate }}
+      {{ "company-report__empty" | translate }}
     </p>
   </section>
 </div>
 
-<p class="tabel__pesan" *ngIf="isLoading">{{ 'general__loading' | translate }}</p>
+<p class="tabel__pesan" *ngIf="isLoading">
+  {{ "general__loading" | translate }}
+</p>

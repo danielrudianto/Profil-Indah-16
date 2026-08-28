@@ -74,6 +74,33 @@ export class CompanyReportComponent implements OnInit {
   date = new FormControl(moment());
   laporan: any = null;
 
+  /**
+   * Daftar barang dipotong sampai sepuluh baris sampai diminta lebih.
+   *
+   * Sebulan bisa menyentuh ratusan barang, dan daftar sepanjang itu mendorong
+   * seluruh isi laporan lain jauh ke bawah — yang paling sering dicari justru
+   * jadi yang paling jauh dijangkau. Sepuluh teratas sudah menjawab
+   * "apa yang paling banyak", sisanya tinggal sekali klik.
+   */
+  private readonly BATAS = 10;
+  tampilSemuaKeluar = false;
+  tampilSemuaMasuk = false;
+
+  get barangKeluar(): any[] {
+    const semua = this.laporan?.output ?? [];
+    return this.tampilSemuaKeluar ? semua : semua.slice(0, this.BATAS);
+  }
+
+  get barangMasuk(): any[] {
+    const semua = this.laporan?.input ?? [];
+    return this.tampilSemuaMasuk ? semua : semua.slice(0, this.BATAS);
+  }
+
+  /* Tombolnya hanya berarti bila memang ada yang disembunyikan. */
+  adaLebih(daftar: any[] | undefined): boolean {
+    return (daftar?.length ?? 0) > this.BATAS;
+  }
+
   ngOnInit(): void {
     this.ambilData();
   }
@@ -84,6 +111,8 @@ export class CompanyReportComponent implements OnInit {
 
   ambilData(): void {
     this.isLoading = true;
+    this.tampilSemuaKeluar = false;
+    this.tampilSemuaMasuk = false;
     this.apiService
       .get('report/company', {
         company_id: this.activatedRoute.snapshot.params['id'],

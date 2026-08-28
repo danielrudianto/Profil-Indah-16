@@ -2750,5 +2750,20 @@
   "report-finance__expense-breakdown": "Pengeluaran (Seluruh perusahaan)",
   "report-finance__expense-other": "Lainnya",
   "report-finance__trend": "Tren 12 bulan",
-  "report-finance__admin-fee-note": "Biaya administrasi kartu kredit TIDAK dihitung sebagai pendapatan. Nilainya ditagihkan kepada pelanggan lalu diteruskan ke bank, sehingga uang yang masuk akan lebih besar daripada pendapatan pada laporan ini."
+  "report-finance__admin-fee-note": "Biaya administrasi kartu kredit TIDAK dihitung sebagai pendapatan. Nilainya ditagihkan kepada pelanggan lalu diteruskan ke bank, sehingga uang yang masuk akan lebih besar daripada pendapatan pada laporan ini.",
+  "company-report__money": "Ringkasan uang",
+  "company-report__revenue": "Omzet",
+  "company-report__cogs": "HPP",
+  "company-report__gross-profit": "Laba kotor",
+  "company-report__purchase": "Pembelian",
+  "company-report__purchase-docs": "dokumen",
+  "company-report__expenses": "Beban bulan ini",
+  "company-report__expense-type": "Jenis",
+  "company-report__expense-value": "Nilai",
+  "company-report__expense-share": "Porsi",
+  "company-report__expense-total": "Total beban",
+  "company-report__expense-other": "Tanpa jenis",
+  "company-report__expense-empty": "Tidak ada beban tercatat atas nama perusahaan ini bulan itu.",
+  "company-report__show-all": "Tampilkan semua ({{jumlah}})",
+  "company-report__show-less": "Ringkas kembali"
 }

@@ -2750,5 +2750,20 @@
   "report-finance__expense-breakdown": "Expenses (All companies)",
   "report-finance__expense-other": "Other",
   "report-finance__trend": "12-month trend",
-  "report-finance__admin-fee-note": "Credit card administration fees are NOT counted as income. They are billed to the customer and passed on to the bank, so cash received will be larger than the income shown here."
+  "report-finance__admin-fee-note": "Credit card administration fees are NOT counted as income. They are billed to the customer and passed on to the bank, so cash received will be larger than the income shown here.",
+  "company-report__money": "Money summary",
+  "company-report__revenue": "Revenue",
+  "company-report__cogs": "COGS",
+  "company-report__gross-profit": "Gross profit",
+  "company-report__purchase": "Purchases",
+  "company-report__purchase-docs": "documents",
+  "company-report__expenses": "Expenses this month",
+  "company-report__expense-type": "Type",
+  "company-report__expense-value": "Value",
+  "company-report__expense-share": "Share",
+  "company-report__expense-total": "Total expenses",
+  "company-report__expense-other": "Untyped",
+  "company-report__expense-empty": "No expenses recorded for this company that month.",
+  "company-report__show-all": "Show all ({{jumlah}})",
+  "company-report__show-less": "Show less"
 }
