@@ -896,9 +896,18 @@ export class SalesInvoiceCreateComponent {
         sales_invoice_code,
       );
     } else if (type == 'deposit') {
+      /*
+        EXTERNAL, bukan INTERNAL.
+
+        Kedua cabang di bawah ini dulu mengirim nilai yang sama persis,
+        sehingga SETIAP deposit tersimpan sebagai internal — termasuk yang
+        menerima pembayaran. Kolomnya karena itu tidak pernah berarti apa pun,
+        dan tidak ada yang menyadarinya sebab tidak ada satu pun perilaku di
+        server yang membacanya.
+      */
       submitFunction = this.apiService.post('sales-deposit', {
         ...sales_invoice_code,
-        type: 'INTERNAL',
+        type: 'EXTERNAL',
       });
     } else {
       submitFunction = this.apiService.post('sales-deposit', {
