@@ -2722,5 +2722,7 @@
   "promotion__download__net-price": "Net price",
   "promotion__download__empty": "This promotion has no transactions to download yet.",
   "activity__ip": "Address",
-  "activity__ip-none": "Not recorded"
+  "activity__ip-none": "Not recorded",
+  "activity__user-only__on": "User actions only — click to include system work",
+  "activity__user-only__off": "Including system work — click to hide it"
 }

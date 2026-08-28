@@ -2722,5 +2722,7 @@
   "promotion__download__net-price": "Harga bersih",
   "promotion__download__empty": "Promosi ini belum punya transaksi untuk diunduh.",
   "activity__ip": "Alamat",
-  "activity__ip-none": "Tidak tercatat"
+  "activity__ip-none": "Tidak tercatat",
+  "activity__user-only__on": "Hanya perbuatan pengguna — klik untuk menampilkan pekerjaan sistem",
+  "activity__user-only__off": "Termasuk pekerjaan sistem — klik untuk menyembunyikannya"
 }

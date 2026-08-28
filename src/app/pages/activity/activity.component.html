@@ -11,6 +11,34 @@
   (refresh)="fetch(page)"
 >
   <ng-container aksi>
+    <!--
+      Menyala sejak awal. Ikonnya berganti, bukan hanya warnanya: keadaan yang
+      hanya dibedakan warna sulit dibaca sekilas, apalagi pada tombol sekecil
+      ini.
+    -->
+    <button
+      type="button"
+      class="aksi-ikon"
+      [class.aksi-ikon--on]="hanyaPengguna"
+      [attr.aria-pressed]="hanyaPengguna"
+      (click)="alihkanHanyaPengguna()"
+      [title]="
+        (hanyaPengguna ? 'activity__user-only__on' : 'activity__user-only__off')
+          | translate
+      "
+      [attr.aria-label]="
+        (hanyaPengguna ? 'activity__user-only__on' : 'activity__user-only__off')
+          | translate
+      "
+    >
+      <i
+        class="ph"
+        [class.ph-user-focus]="hanyaPengguna"
+        [class.ph-users-three]="!hanyaPengguna"
+        aria-hidden="true"
+      ></i>
+    </button>
+
     <button
       type="button"
       class="aksi-ikon"

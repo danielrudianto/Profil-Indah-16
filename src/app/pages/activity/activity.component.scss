@@ -21,3 +21,10 @@
 .jejak__ip--kosong {
   color: color-mix(in srgb, var(--color-text) 38%, transparent);
 }
+
+/* Tombol saringan hanya-pengguna saat menyala. */
+.aksi-ikon--on {
+  color: var(--color-accent);
+  background: var(--color-accent-wash);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+}

@@ -56,9 +56,29 @@ export class ActivityComponent implements OnInit {
   total = 0;
   page = 1;
   pageSize = 10;
+
+  /**
+   * Sembunyikan jejak yang bukan perbuatan orang — MENYALA sejak awal.
+   *
+   * Penjadwal stok minimum menyentuh belasan ribu baris tiap pekan, dan
+   * seluruhnya tercatat. Tanpa saringan ini halaman Aktivitas terisi hal yang
+   * tidak dilakukan siapa pun, dan pertanyaan yang membuat halaman ini ada —
+   * "apa yang dikerjakan orang hari ini" — justru paling sulit dijawab.
+   *
+   * Pekerjaan latar tetap bisa dilihat dengan mematikannya; ia disembunyikan,
+   * bukan dibuang.
+   */
+  hanyaPengguna = true;
   isLoading = false;
 
   ngOnInit(): void {
+    this.fetch(1);
+  }
+
+  /* Kembali ke halaman satu: jumlah barisnya berubah, jadi halaman ke-N lama
+     bisa saja sudah tidak ada. */
+  alihkanHanyaPengguna(): void {
+    this.hanyaPengguna = !this.hanyaPengguna;
     this.fetch(1);
   }
 
@@ -70,6 +90,8 @@ export class ActivityComponent implements OnInit {
       page: this.page,
       page_size: this.pageSize,
     };
+
+    if (this.hanyaPengguna) params['userOnly'] = 'true';
 
     if (this.entity) params['entity'] = this.entity;
 
