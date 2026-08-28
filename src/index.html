@@ -5,7 +5,13 @@
     <title>Profil Indah Management System V20</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!--
+      SVG lebih dulu: peramban modern memilihnya dan menggambarnya tajam di
+      ukuran berapa pun. favicon.ico tetap ada sebagai cadangan, dan isinya
+      tanda yang SAMA — dirasterisasi pada 16, 32, dan 48 piksel.
+    -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any" />
   </head>
   <body class="mat-typography">
     <app-root></app-root>
