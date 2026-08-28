@@ -84,35 +84,185 @@
 
         <div>
           <span class="kartu__label">
-            {{ "sales-return__create__payment-method" | translate }}
+            {{ "sales-return__create__treatment" | translate }}
           </span>
 
           <!--
-            DAFTAR TETAP, bukan kotak cari. Kotak cari mengharuskan orang
-            mengetik dan hanya memunculkan lima hasil teratas, sehingga tidak
-            ada cara mengetahui apa saja yang tersedia — dan tunai, yang di
-            basis data adalah metode kosong, tidak muncul sama sekali.
-            Endpoint /payment-method/all sudah menyisipkan Cash di depan
-            daftarnya, jadi semua pilihan datang dari satu sumber.
+            Sisa tagihan fakturnya disebut lebih dulu. "Pelanggan ini masih
+            berutang sekian" adalah kalimat yang menentukan pilihan di
+            bawahnya, dan sebelum ini tidak pernah muncul di mana pun —
+            petugas memilih perlakuan tanpa tahu ada utang atau tidak.
           -->
-          <div class="keadaan keadaan--metode">
+          <p class="petunjuk" *ngIf="sisaTagihan">
+            <i class="ph ph-info" aria-hidden="true"></i>
+            <span *ngIf="sisaTagihan.outstanding > 0">
+              {{
+                "sales-return__create__has-receivable"
+                  | translate
+                    : { nilai: (sisaTagihan.outstanding | number: "1.0-0") }
+              }}
+            </span>
+            <span *ngIf="sisaTagihan.outstanding <= 0">
+              {{ "sales-return__create__no-receivable" | translate }}
+            </span>
+          </p>
+
+          <div class="keadaan">
             <button
               type="button"
-              *ngFor="let m of metodeOpsi; trackBy: lacakMetode"
               class="keadaan__kartu"
-              [class.keadaan__kartu--on]="metodeTerpilih(m)"
-              [disabled]="isSubmitting"
-              (click)="pilihMetodeTetap(m)"
+              [class.keadaan__kartu--on]="perlakuan === 'RECEIVABLE'"
+              [disabled]="isSubmitting || (sisaTagihan?.outstanding ?? 0) <= 0"
+              (click)="pilihPerlakuan('RECEIVABLE')"
             >
-              <i
-                class="ph"
-                [class.ph-money]="m.id == null"
-                [class.ph-bank]="m.id != null"
-                aria-hidden="true"
-              ></i>
-              <span class="keadaan__judul">{{ m.name }}</span>
+              <i class="ph ph-receipt-x" aria-hidden="true"></i>
+              <span class="keadaan__teks">
+                <span class="keadaan__judul">
+                  {{
+                    "sales-return__create__treatment__receivable" | translate
+                  }}
+                </span>
+                <span class="keadaan__desk">
+                  {{
+                    "sales-return__create__treatment__receivable__note"
+                      | translate
+                  }}
+                </span>
+              </span>
+            </button>
+
+            <button
+              type="button"
+              class="keadaan__kartu"
+              [class.keadaan__kartu--on]="perlakuan === 'OVERPAYMENT'"
+              [disabled]="isSubmitting"
+              (click)="pilihPerlakuan('OVERPAYMENT')"
+            >
+              <i class="ph ph-hand-coins" aria-hidden="true"></i>
+              <span class="keadaan__teks">
+                <span class="keadaan__judul">
+                  {{
+                    "sales-return__create__treatment__overpayment" | translate
+                  }}
+                </span>
+                <span class="keadaan__desk">
+                  {{
+                    "sales-return__create__treatment__overpayment__note"
+                      | translate
+                  }}
+                </span>
+              </span>
             </button>
           </div>
+
+          <!--
+            Pembagiannya disebut sebelum disimpan, bukan sesudah. Retur yang
+            melebihi sisa tagihan otomatis terbelah, dan pembelahan yang baru
+            ketahuan setelah dokumen terbit terbaca sebagai kesalahan sistem.
+          -->
+          <p
+            class="petunjuk"
+            *ngIf="nilaiRetur > 0 && potongTagihan > 0 && jadiKelebihan > 0"
+          >
+            <i class="ph ph-arrows-split" aria-hidden="true"></i>
+            {{
+              "sales-return__create__split"
+                | translate
+                  : {
+                      potong: (potongTagihan | number: "1.0-0"),
+                      lebih: (jadiKelebihan | number: "1.0-0"),
+                    }
+            }}
+          </p>
+
+          <!--
+            Jadwal pengembalian hanya digambar ketika memang ada uang yang
+            harus kembali. Retur yang habis memotong tagihan tidak
+            mengeluarkan uang sepeser pun.
+          -->
+          <ng-container *ngIf="jadiKelebihan > 0">
+            <span class="kartu__label kartu__label--renggang">
+              {{ "sales-return__create__schedule" | translate }}
+            </span>
+
+            <div class="keadaan keadaan--metode">
+              <button
+                type="button"
+                class="keadaan__kartu"
+                [class.keadaan__kartu--on]="metodeKembali === 'Cash'"
+                [disabled]="isSubmitting"
+                (click)="pilihMetodeKembali('Cash')"
+              >
+                <i class="ph ph-money" aria-hidden="true"></i>
+                <span class="keadaan__judul">
+                  {{ "overpayment__create__method-cash" | translate }}
+                </span>
+              </button>
+              <button
+                type="button"
+                class="keadaan__kartu"
+                [class.keadaan__kartu--on]="metodeKembali === 'Bank transfer'"
+                [disabled]="isSubmitting"
+                (click)="pilihMetodeKembali('Bank transfer')"
+              >
+                <i class="ph ph-bank" aria-hidden="true"></i>
+                <span class="keadaan__judul">
+                  {{ "overpayment__create__method-transfer" | translate }}
+                </span>
+              </button>
+            </div>
+
+            <div class="kartu__baris">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>
+                  {{ "overpayment__create__return-date" | translate }}
+                </mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="returPicker"
+                  formControlName="return_payment_date"
+                  autocomplete="off"
+                  (click)="returPicker.open()"
+                />
+                <mat-datepicker #returPicker></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>
+                  {{ "overpayment__create__receiver-name" | translate }}
+                </mat-label>
+                <input
+                  matInput
+                  formControlName="return_payment_name"
+                  autocomplete="off"
+                />
+              </mat-form-field>
+            </div>
+
+            <div class="kartu__baris" *ngIf="metodeKembali === 'Bank transfer'">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>
+                  {{ "overpayment__create__return-payment-bank" | translate }}
+                </mat-label>
+                <input
+                  matInput
+                  formControlName="return_payment_bank"
+                  autocomplete="off"
+                />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>
+                  {{ "overpayment__create__return-payment-number" | translate }}
+                </mat-label>
+                <input
+                  matInput
+                  formControlName="return_payment_number"
+                  autocomplete="off"
+                />
+              </mat-form-field>
+            </div>
+          </ng-container>
 
           <p class="petunjuk">
             <i class="ph ph-info" aria-hidden="true"></i>

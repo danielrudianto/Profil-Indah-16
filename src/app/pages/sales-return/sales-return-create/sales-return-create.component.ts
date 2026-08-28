@@ -124,6 +124,12 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
     date: new FormControl(new Date(), Validators.required),
     bill_date: new FormControl('', Validators.required),
     payment_method_id: new FormControl(0),
+    /* Jadwal pengembalian — hanya terpakai bila ada sisa yang jadi kelebihan
+       bayar. Kelebihan bayar menuntut ketiganya di basis data. */
+    return_payment_date: new FormControl(''),
+    return_payment_name: new FormControl(''),
+    return_payment_bank: new FormControl(''),
+    return_payment_number: new FormControl(''),
   });
 
   productFormGroup: FormGroup = new FormGroup({
@@ -216,6 +222,119 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
    * { id: null, name: "Cash" } di depan. Jadi tunai dan metode bernama datang
    * dari satu sumber, dan tidak ada pilihan yang dikarang di sisi peramban.
    */
+  /* ---------------------------------------------------------------- */
+  /* Perlakuan nilai retur                                             */
+  /* ---------------------------------------------------------------- */
+
+  /**
+   * Sisa tagihan faktur yang sedang diretur, dibaca dari server.
+   *
+   * Ditampilkan supaya petugas memilih perlakuan dengan sadar — "pelanggan
+   * ini masih berutang sekian" adalah kalimat yang menentukan pilihannya, dan
+   * dulu tidak pernah muncul di mana pun.
+   *
+   * Angka ini untuk DIBACA. Pembagian yang sebenarnya tetap dihitung ulang di
+   * server; yang di sini tidak bisa mengubah utang siapa pun.
+   */
+  sisaTagihan: {
+    total: number;
+    paid: number;
+    returned: number;
+    outstanding: number;
+  } | null = null;
+
+  /** RECEIVABLE = potong tagihan; OVERPAYMENT = seluruhnya jadi kelebihan bayar. */
+  perlakuan: 'RECEIVABLE' | 'OVERPAYMENT' = 'OVERPAYMENT';
+
+  /** 'Cash' atau 'Bank transfer' — ejaan yang sama dengan kolom servernya. */
+  metodeKembali: string = '';
+
+  /** Nilai uang retur menurut harga baris faktur asalnya. */
+  get nilaiRetur(): number {
+    return this.t.controls.reduce(
+      (a, x) =>
+        a +
+        Number(x.get('quantity')?.value ?? 0) *
+          (Number(x.get('price')?.value ?? 0) -
+            Number(x.get('discount')?.value ?? 0)),
+      0,
+    );
+  }
+
+  /*
+    Bayangan dari hitungan server, semata untuk ditampilkan sebelum disimpan.
+    Rumusnya harus sama persis; kalau berbeda, layar menjanjikan pembagian
+    yang bukan yang akan terjadi.
+  */
+  get potongTagihan(): number {
+    if (this.perlakuan !== 'RECEIVABLE') return 0;
+    return Math.min(this.nilaiRetur, this.sisaTagihan?.outstanding ?? 0);
+  }
+
+  get jadiKelebihan(): number {
+    return this.nilaiRetur - this.potongTagihan;
+  }
+
+  /*
+    Bawaannya mengikuti kenyataan: ada tagihan tersisa -> potong tagihan;
+    tidak ada -> kelebihan bayar. Memaksa petugas memilih dari nol pada
+    keadaan yang jawabannya sudah jelas cuma menambah peluang salah.
+  */
+  private ambilSisaTagihan(invoiceID: number): void {
+    this.sisaTagihan = null;
+    this.apiService.get(`receivable/invoice/${invoiceID}`).subscribe({
+      next: (data: any) => {
+        this.sisaTagihan = {
+          total: Number(data?.total ?? 0),
+          paid: Number(data?.paid ?? 0),
+          returned: Number(data?.returned ?? 0),
+          outstanding: Number(data?.outstanding ?? 0),
+        };
+        this.perlakuan =
+          this.sisaTagihan.outstanding > 0 ? 'RECEIVABLE' : 'OVERPAYMENT';
+      },
+      error: () => {
+        /* Gagal membaca sisa tagihan bukan alasan menghentikan retur; server
+           tetap menghitung sendiri saat menyimpan. Layar hanya kehilangan
+           keterangannya. */
+        this.sisaTagihan = null;
+      },
+    });
+  }
+
+  pilihPerlakuan(pilihan: 'RECEIVABLE' | 'OVERPAYMENT'): void {
+    this.perlakuan = pilihan;
+  }
+
+  pilihMetodeKembali(pilihan: string): void {
+    this.metodeKembali = pilihan;
+    if (pilihan === 'Cash') {
+      this.metaFormGroup.patchValue({
+        return_payment_bank: '',
+        return_payment_number: '',
+      });
+    }
+  }
+
+  /**
+   * Benar bila jadwal pengembaliannya sudah cukup untuk disimpan.
+   *
+   * Hanya berlaku ketika ADA yang menjadi kelebihan bayar. Retur yang habis
+   * memotong tagihan tidak mengeluarkan uang sepeser pun, sehingga tidak ada
+   * jadwal yang perlu dibuat.
+   */
+  get jadwalLengkap(): boolean {
+    if (this.jadiKelebihan <= 0) return true;
+
+    const v = this.metaFormGroup.value;
+    if (!this.metodeKembali || !v.return_payment_date || !v.return_payment_name)
+      return false;
+
+    return this.metodeKembali === 'Cash'
+      ? true
+      : !!v.return_payment_bank && !!v.return_payment_number;
+  }
+
   metodeOpsi: { id: number | null; name: string }[] = [];
 
   lacakMetode = (_: number, m: { id: number | null }): number => m.id ?? 0;
@@ -367,6 +486,7 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
 
   pilihFaktur(i: number): void {
     this.selectedBill = this.billOptions[i];
+    this.ambilSisaTagihan(this.selectedBill.id);
 
     this.t.controls.forEach((baris) => {
       const productID = baris.get('product_id')?.value;
@@ -481,7 +601,10 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
       this.metaFormGroup.valid &&
       this.productFormGroup.valid &&
       this.selectedBill != null &&
-      this.semuaTerpetakan
+      this.semuaTerpetakan &&
+      /* Kelebihan bayar menuntut jadwal pengembaliannya; server menolak tanpa
+         itu, dan tombol yang hidup lalu ditolak server adalah kebohongan. */
+      this.jadwalLengkap
     );
   }
 
@@ -509,6 +632,15 @@ export class SalesReturnCreateComponent implements OnInit, OnDestroy {
         payment_method_id: Number(
           this.metaFormGroup.value.payment_method_id ?? 0,
         ),
+        treatment: this.perlakuan,
+        return_payment_date: this.datePipe.transform(
+          this.metaFormGroup.value.return_payment_date,
+          'yyyy-MM-dd',
+        ),
+        return_payment_method: this.metodeKembali,
+        return_payment_name: this.metaFormGroup.value.return_payment_name,
+        return_payment_bank: this.metaFormGroup.value.return_payment_bank,
+        return_payment_number: this.metaFormGroup.value.return_payment_number,
         sales_return: this.t.controls.map((x) => ({
           sales_invoice_id: x.get('sales_invoice_id')?.value,
           quantity: Number(x.get('quantity')?.value),

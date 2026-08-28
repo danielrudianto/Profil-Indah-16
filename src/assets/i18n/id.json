@@ -2774,5 +2774,14 @@
   "deposit__list__type__external": "Eksternal",
   "deposit__list__type__internal__hint": "Belum ada transaksi. Barangnya dijanjikan, uangnya belum diterima, dan stoknya belum berkurang.",
   "deposit__list__type__external__hint": "Deposit dengan pembayaran dari pelanggan. Uangnya sudah diterima dan tercatat.",
-  "sales-deposit__delete__no-payment": "Dokumen ini belum pernah menerima pembayaran, jadi tidak ada uang yang perlu dikembalikan. Menghapusnya hanya membatalkan janji barangnya."
+  "sales-deposit__delete__no-payment": "Dokumen ini belum pernah menerima pembayaran, jadi tidak ada uang yang perlu dikembalikan. Menghapusnya hanya membatalkan janji barangnya.",
+  "sales-return__create__treatment": "Perlakuan nilai retur",
+  "sales-return__create__has-receivable": "Faktur ini masih berutang Rp {{nilai}}.",
+  "sales-return__create__no-receivable": "Faktur ini sudah lunas — tidak ada tagihan yang bisa dipotong.",
+  "sales-return__create__treatment__receivable": "Potong tagihan",
+  "sales-return__create__treatment__receivable__note": "Utang pelanggan berkurang. Tidak ada uang yang keluar.",
+  "sales-return__create__treatment__overpayment": "Jadikan kelebihan bayar",
+  "sales-return__create__treatment__overpayment__note": "Uangnya dijadwalkan dikembalikan ke pelanggan.",
+  "sales-return__create__split": "Rp {{potong}} memotong tagihan sampai lunas; sisanya Rp {{lebih}} menjadi kelebihan bayar.",
+  "sales-return__create__schedule": "Jadwal pengembalian"
 }

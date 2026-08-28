@@ -2774,5 +2774,14 @@
   "deposit__list__type__external": "External",
   "deposit__list__type__internal__hint": "No transaction yet. The goods are promised, no money has been received, and stock is untouched.",
   "deposit__list__type__external__hint": "A deposit with customer payment. The money has been received and recorded.",
-  "sales-deposit__delete__no-payment": "This document has never received a payment, so there is no money to return. Deleting it only cancels the promised goods."
+  "sales-deposit__delete__no-payment": "This document has never received a payment, so there is no money to return. Deleting it only cancels the promised goods.",
+  "sales-return__create__treatment": "What the return value does",
+  "sales-return__create__has-receivable": "This invoice still owes Rp {{nilai}}.",
+  "sales-return__create__no-receivable": "This invoice is fully paid — there is no debt left to offset.",
+  "sales-return__create__treatment__receivable": "Offset the debt",
+  "sales-return__create__treatment__receivable__note": "The customer owes less. No money leaves.",
+  "sales-return__create__treatment__overpayment": "Turn into an overpayment",
+  "sales-return__create__treatment__overpayment__note": "The money is scheduled to be returned to the customer.",
+  "sales-return__create__split": "Rp {{potong}} clears the remaining debt; the other Rp {{lebih}} becomes an overpayment.",
+  "sales-return__create__schedule": "Return schedule"
 }
