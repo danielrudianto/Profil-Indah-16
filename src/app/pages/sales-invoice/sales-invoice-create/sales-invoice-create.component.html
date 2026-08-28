@@ -653,30 +653,24 @@
         <div class="kembali__slot">
           <ng-container *ngIf="perlakuanDiskon === 'kembali'">
             <!--
-              Dua kartu keadaan, persis kelebihan bayar — bukan segmented yang
-              gayanya tidak pernah ada di halaman ini.
+              Satu kartu, bukan dua: yang ditanyakan bukan lagi "tunai atau
+              transfer" melainkan metode mana dari daftar yang dipakai
+              membayar. Lembar bawahnya sama dengan baris pembayaran faktur,
+              jadi daftar sepanjang apa pun tetap muat.
             -->
             <div class="keadaan">
               <button
                 type="button"
                 class="keadaan__kartu"
-                [class.keadaan__kartu--on]="metodeKembali === 'Cash'"
-                (click)="pilihMetodeKembali('Cash')"
+                [class.keadaan__kartu--on]="
+                  rebateFormGroup.value.payment_method_id
+                "
+                (click)="pilihMetodeKembali()"
               >
-                <i class="ph ph-money" aria-hidden="true"></i>
+                <i class="ph ph-wallet" aria-hidden="true"></i>
                 <span class="keadaan__judul">{{
-                  "overpayment__create__method-cash" | translate
-                }}</span>
-              </button>
-              <button
-                type="button"
-                class="keadaan__kartu"
-                [class.keadaan__kartu--on]="metodeKembali === 'Bank transfer'"
-                (click)="pilihMetodeKembali('Bank transfer')"
-              >
-                <i class="ph ph-bank" aria-hidden="true"></i>
-                <span class="keadaan__judul">{{
-                  "overpayment__create__method-transfer" | translate
+                  rebateFormGroup.value.payment_name ||
+                    ("sales-invoice__rebate__method__choose" | translate)
                 }}</span>
               </button>
             </div>
@@ -714,33 +708,6 @@
                   matInput
                   type="text"
                   formControlName="receiver_name"
-                  autocomplete="off"
-                />
-              </mat-form-field>
-            </div>
-
-            <!-- Transfer meminta tujuan; cash tidak punya tujuan apa pun. -->
-            <div class="kartu__baris" *ngIf="metodeKembali === 'Bank transfer'">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>
-                  {{ "overpayment__create__return-payment-bank" | translate }}
-                </mat-label>
-                <input
-                  matInput
-                  type="text"
-                  formControlName="bank_name"
-                  autocomplete="off"
-                />
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>
-                  {{ "overpayment__create__return-payment-number" | translate }}
-                </mat-label>
-                <input
-                  matInput
-                  type="text"
-                  formControlName="account_number"
                   autocomplete="off"
                 />
               </mat-form-field>

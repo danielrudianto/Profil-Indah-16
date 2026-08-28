@@ -2734,5 +2734,6 @@
   "sales-invoice__create__service-type__hint": "Wajib dipilih bila biaya jasa diisi",
   "service-type__cnc": "CNC",
   "service-type__frame": "Frame",
-  "service-type__solid": "Solid"
+  "service-type__solid": "Solid",
+  "sales-invoice__rebate__method__choose": "Pilih metode pembayaran"
 }

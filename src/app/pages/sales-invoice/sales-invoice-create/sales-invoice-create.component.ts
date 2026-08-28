@@ -840,17 +840,14 @@ export class SalesInvoiceCreateComponent {
         this.perlakuanDiskon === 'kembali'
           ? {
               value: this.nominalKembali,
-              payment_method_id: null,
-              method: this.metodeKembali,
+              /*
+                Dulu ditulis null di sini, sementara metodenya dikirim sebagai
+                teks `method` yang tidak dibaca server. Akibatnya setiap
+                pengembalian tersimpan tanpa metode, dan laporan uang keluar —
+                yang memang mengelompokkan per metode — tidak pernah bisa cocok.
+              */
+              payment_method_id: this.rebateFormGroup.value.payment_method_id,
               receiver_name: this.rebateFormGroup.value.receiver_name,
-              bank_name:
-                this.metodeKembali === 'Cash'
-                  ? null
-                  : this.rebateFormGroup.value.bank_name,
-              account_number:
-                this.metodeKembali === 'Cash'
-                  ? null
-                  : this.rebateFormGroup.value.account_number,
             }
           : null,
       sales:
@@ -1304,14 +1301,20 @@ export class SalesInvoiceCreateComponent {
    */
   perlakuanDiskon: 'faktur' | 'kembali' = 'faktur';
 
-  /** 'Cash' atau 'Bank transfer'; ejaannya sama dengan yang dikirim server. */
-  metodeKembali: string = 'Cash';
-
   rebateFormGroup: FormGroup = new FormGroup({
     value: new FormControl(0),
     receiver_name: new FormControl(''),
-    bank_name: new FormControl(''),
-    account_number: new FormControl(''),
+    /*
+      Metode yang dipakai MEMBAYAR pengembalian ini — bukan tujuan transfernya.
+
+      Bank dan nomor rekening penerima dulu ditanyakan di sini dan tidak pernah
+      dipakai siapa pun: pengembalian ini tidak masuk kelebihan bayar, jadi
+      satu-satunya laporan yang membacanya adalah uang keluar, dan yang
+      ditanyakan laporan itu adalah kas mana yang berkurang. Kolomnya di basis
+      data dibiarkan demi riwayat, cuma tidak diisi lagi.
+    */
+    payment_method_id: new FormControl<number | null>(null),
+    payment_name: new FormControl(''),
   });
 
   /**
@@ -1342,8 +1345,8 @@ export class SalesInvoiceCreateComponent {
     this.rebateFormGroup.reset({
       value: 0,
       receiver_name: '',
-      bank_name: '',
-      account_number: '',
+      payment_method_id: null,
+      payment_name: '',
     });
   }
 
@@ -1376,13 +1379,28 @@ export class SalesInvoiceCreateComponent {
     }
   }
 
-  pilihMetodeKembali(pilihan: string): void {
-    this.metodeKembali = pilihan;
-
-    /* Bank dan nomor akun tidak berlaku pada pengembalian tunai. */
-    if (pilihan === 'Cash') {
-      this.rebateFormGroup.patchValue({ bank_name: '', account_number: '' });
-    }
+  /**
+   * Memilih metode pembayaran pengembalian.
+   *
+   * Memakai lembar bawah yang sama dengan baris pembayaran faktur, bukan
+   * daftar Cash/Transfer yang ditulis tangan seperti sebelumnya. Dua nama itu
+   * dulu tidak pernah sampai ke server — mereka cuma menentukan apakah kolom
+   * bank ditampilkan — sehingga metode pengembalian selalu tersimpan NULL dan
+   * laporan uang keluar tidak pernah bisa cocok.
+   */
+  pilihMetodeKembali(): void {
+    this.sheet
+      .open(PaymentSelectorComponent, { data: this.paymentOptions })
+      .afterDismissed()
+      .subscribe((data: any) => {
+        if (!data) {
+          return;
+        }
+        this.rebateFormGroup.patchValue({
+          payment_method_id: data.id,
+          payment_name: data.name,
+        });
+      });
   }
 
   /** Total diskon faktur — nilai bawaan nominal pengembalian. */
@@ -1456,17 +1474,18 @@ export class SalesInvoiceCreateComponent {
     }
 
     const v = this.rebateFormGroup.value;
-    if (
-      this.nominalKembali <= 0 ||
-      this.nominalKembali > Math.max(this.totalBill, 0) ||
-      !v.receiver_name
-    ) {
-      return false;
-    }
-
-    return this.metodeKembali === 'Cash'
-      ? true
-      : !!v.bank_name && !!v.account_number;
+    /*
+      Metodenya WAJIB, sederajat dengan nama penerima. Keduanya menjawab
+      pertanyaan yang berbeda pada rekonsiliasi sore hari — siapa yang membawa
+      uangnya, dan kas mana yang berkurang — dan kehilangan salah satunya
+      membuat selisihnya tetap tidak bisa ditelusuri.
+    */
+    return (
+      this.nominalKembali > 0 &&
+      this.nominalKembali <= Math.max(this.totalBill, 0) &&
+      !!v.receiver_name &&
+      !!v.payment_method_id
+    );
   }
 
   get subtotal(): number {

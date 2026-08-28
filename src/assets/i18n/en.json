@@ -2734,5 +2734,6 @@
   "sales-invoice__create__service-type__hint": "Required when a service fee is entered",
   "service-type__cnc": "CNC",
   "service-type__frame": "Frame",
-  "service-type__solid": "Solid"
+  "service-type__solid": "Solid",
+  "sales-invoice__rebate__method__choose": "Choose payment method"
 }
