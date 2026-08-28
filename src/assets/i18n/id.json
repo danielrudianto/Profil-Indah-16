@@ -2768,5 +2768,10 @@
   "company-report__show-less": "Ringkas kembali",
   "report-finance__recompute": "Hitung ulang",
   "report-finance__recompute__hint": "Abaikan simpanan dan hitung ulang dari data terbaru",
-  "report-finance__computed-at": "Angka dihitung {{waktu}}"
+  "report-finance__computed-at": "Angka dihitung {{waktu}}",
+  "deposit__list__type": "Tipe",
+  "deposit__list__type__internal": "Internal",
+  "deposit__list__type__external": "Eksternal",
+  "deposit__list__type__internal__hint": "Belum ada transaksi. Barangnya dijanjikan, uangnya belum diterima, dan stoknya belum berkurang.",
+  "deposit__list__type__external__hint": "Deposit dengan pembayaran dari pelanggan. Uangnya sudah diterima dan tercatat."
 }

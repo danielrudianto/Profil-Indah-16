@@ -16,22 +16,23 @@
     <!-- Deposit lahir dari formulir faktur; di sini hanya jalan ke arsipnya. -->
     <button type="button" class="aksi-hantu" (click)="keArsip()">
       <i class="ph ph-archive" aria-hidden="true"></i>
-      {{ 'deposit__archive' | translate }}
+      {{ "deposit__archive" | translate }}
     </button>
   </ng-container>
 
   <table class="tabel">
     <thead>
       <tr>
-        <th>{{ 'sales-deposit__archive__date' | translate }}</th>
-        <th>{{ 'sales-deposit__archive__document' | translate }}</th>
-        <th>{{ 'sales-deposit__archive__customer' | translate }}</th>
-        <th>{{ 'sales-deposit__archive__sales' | translate }}</th>
+        <th>{{ "sales-deposit__archive__date" | translate }}</th>
+        <th>{{ "sales-deposit__archive__document" | translate }}</th>
+        <th>{{ "sales-deposit__archive__customer" | translate }}</th>
+        <th>{{ "deposit__list__type" | translate }}</th>
+        <th>{{ "sales-deposit__archive__sales" | translate }}</th>
         <th class="tabel__nilai-kepala">
-          {{ 'sales-deposit__archive__amount' | translate }}
+          {{ "sales-deposit__archive__amount" | translate }}
         </th>
         <th class="tabel__aksi-kepala">
-          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+          <span class="sr-only">{{ "general__actions" | translate }}</span>
         </th>
       </tr>
     </thead>
@@ -43,24 +44,67 @@
         class="tabel__baris-klik"
         (click)="lihat(item)"
       >
-        <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
+        <td class="tabel__tanggal">{{ item.date | date: "dd MMMM yyyy" }}</td>
         <td class="tabel__utama">{{ item.name }}</td>
         <td>
           <div class="sel-entitas">
             <span class="avatar-inisial" aria-hidden="true">
-              {{ inisial(item.customer?.name ?? ('sales-invoice__retail' | translate)) }}
+              {{
+                inisial(
+                  item.customer?.name ?? ("sales-invoice__retail" | translate)
+                )
+              }}
             </span>
             <span class="sel-entitas__teks">
               <span class="sel-entitas__utama">
-                {{ item.customer?.name ?? ('sales-invoice__retail' | translate) }}
+                {{
+                  item.customer?.name ?? ("sales-invoice__retail" | translate)
+                }}
               </span>
             </span>
           </div>
         </td>
-        <td class="tabel__redup">{{ item.sales || 'INTERNAL' }}</td>
-        <td class="tabel__nilai">
-          Rp {{ nilai(item) | number: '1.0-0' }}
+        <!--
+          Tipe dokumen, bukan tebakan dari kolom lain.
+
+          Sebelumnya kolom Sales menulis `item.sales || 'INTERNAL'` — itu
+          cadangan untuk nama sales yang kosong, BUKAN tipe dokumennya.
+          Akibatnya deposit eksternal tanpa nama sales tertulis "INTERNAL",
+          dan deposit internal yang punya nama sales tidak kelihatan
+          internalnya. Dua-duanya salah baca pada dokumen yang perilakunya
+          berbeda jauh.
+
+          Dibedakan warna DAN ikon, mengikuti pil di arsip penerimaan barang.
+        -->
+        <td (click)="$event.stopPropagation()">
+          <span
+            class="pill"
+            [class.pill--amber]="item.type === 'INTERNAL'"
+            [class.pill--garis]="item.type !== 'INTERNAL'"
+            [matTooltip]="
+              (item.type === 'INTERNAL'
+                ? 'deposit__list__type__internal__hint'
+                : 'deposit__list__type__external__hint'
+              ) | translate
+            "
+            matTooltipPosition="above"
+          >
+            <i
+              class="ph-fill"
+              [class.ph-handshake]="item.type === 'INTERNAL'"
+              [class.ph-hand-coins]="item.type !== 'INTERNAL'"
+              aria-hidden="true"
+            ></i>
+            {{
+              (item.type === "INTERNAL"
+                ? "deposit__list__type__internal"
+                : "deposit__list__type__external"
+              ) | translate
+            }}
+          </span>
         </td>
+        <td class="tabel__redup">{{ item.sales || "—" }}</td>
+        <td class="tabel__nilai">Rp {{ nilai(item) | number: "1.0-0" }}</td>
         <td class="tabel__aksi" (click)="$event.stopPropagation()">
           <button
             type="button"
@@ -77,15 +121,15 @@
 
     <tbody *ngIf="isLoading">
       <tr>
-        <td colspan="6" class="tabel__pesan">
-          {{ 'general__loading' | translate }}
+        <td colspan="7" class="tabel__pesan">
+          {{ "general__loading" | translate }}
         </td>
       </tr>
     </tbody>
 
     <tbody *ngIf="!isLoading && dataSource.length === 0">
       <tr>
-        <td colspan="6">
+        <td colspan="7">
           <app-tabel-kosong
             ikon="ph-piggy-bank"
             [judul]="'deposit__list__empty__title' | translate"

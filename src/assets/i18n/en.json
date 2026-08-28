@@ -2768,5 +2768,10 @@
   "company-report__show-less": "Show less",
   "report-finance__recompute": "Recompute",
   "report-finance__recompute__hint": "Ignore the stored copy and recompute from the latest data",
-  "report-finance__computed-at": "Figures computed {{waktu}}"
+  "report-finance__computed-at": "Figures computed {{waktu}}",
+  "deposit__list__type": "Type",
+  "deposit__list__type__internal": "Internal",
+  "deposit__list__type__external": "External",
+  "deposit__list__type__internal__hint": "No transaction yet. The goods are promised, no money has been received, and stock is untouched.",
+  "deposit__list__type__external__hint": "A deposit with customer payment. The money has been received and recorded."
 }

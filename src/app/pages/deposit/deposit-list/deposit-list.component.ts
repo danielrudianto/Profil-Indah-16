@@ -9,6 +9,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 import { DepositViewComponent } from '../deposit-view/deposit-view.component';
+import { MatTooltip } from '@angular/material/tooltip';
 
 /**
  * Daftar deposit yang menunggu konfirmasi — pola app-list-page.
@@ -23,6 +24,7 @@ import { DepositViewComponent } from '../deposit-view/deposit-view.component';
   selector: 'app-deposit-list',
   templateUrl: './deposit-list.component.html',
   imports: [
+    MatTooltip,
     ListPageComponent,
     TabelKosongComponent,
     NgIf,
