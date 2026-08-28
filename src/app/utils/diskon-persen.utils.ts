@@ -22,19 +22,50 @@ import { Observable, Subscription } from 'rxjs';
  *                      yang dikirim, jadi ia tidak boleh bergeser sendiri
  *                      hanya karena seseorang menambah satu baris barang.
  */
+/*
+  Ketelitian yang DITAMPILKAN isian bermask (`separator.2`), dan alasan
+  pembulatan di bawah ada sama sekali.
+
+  Menulis 0,00048 ke isian bermask membuat mask memampatkannya menjadi "0" —
+  lalu memantulkan nilai itu kembali ke kontrolnya. Pantulan itu terbaca
+  sebagai suntingan pengguna, sehingga pasangannya dihitung ulang dari angka
+  yang sudah rusak. Gejalanya asimetris dan membingungkan: mengetik PERSEN
+  bekerja (2% dari 490.620 = 9.812,4 — sudah pas dua desimal, tak ada yang
+  dinormalkan), sementara mengetik RUPIAH selalu berakhir nol, karena
+  persennya hampir selalu pecahan panjang.
+*/
+const DESIMAL = 2;
+const bulatkan = (n: number): number =>
+  Math.round(n * 10 ** DESIMAL) / 10 ** DESIMAL;
+
 export function sinkronDiskonPersen(
   rupiah: AbstractControl,
   persen: AbstractControl,
   dasar: () => number,
   dasarBerubah?: Observable<unknown>,
+  sesudahUbah?: () => void,
 ): Subscription {
+  /*
+    Nilai yang TERAKHIR kita tulis sendiri ke tiap kontrol. Perubahan yang
+    sama persis dengannya diabaikan: itu gema dari tulisan kita, bukan
+    ketikan orang. Penjaga ini memakai NILAI, bukan bendera sesaat, karena
+    pantulan mask bisa datang pada giliran berikutnya — bendera sudah keburu
+    turun, nilainya tidak.
+  */
+  let persenDitulis: number | null = null;
+  let rupiahDitulis: number | null = null;
+
   const hitungPersen = (nilai: number): void => {
     const d = dasar();
-    persen.setValue(d === 0 ? 0 : (nilai * 100) / d, { emitEvent: false });
+    const p = bulatkan(d === 0 ? 0 : (nilai * 100) / d);
+    persenDitulis = p;
+    persen.setValue(p, { emitEvent: false });
   };
 
   const hitungRupiah = (nilai: number): void => {
-    rupiah.setValue((nilai * dasar()) / 100, { emitEvent: false });
+    const r = bulatkan((nilai * dasar()) / 100);
+    rupiahDitulis = r;
+    rupiah.setValue(r, { emitEvent: false });
 
     /*
       emitEvent: false melewati penandaan kotor, sementara `dirty` kontrol
@@ -43,15 +74,29 @@ export function sinkronDiskonPersen(
       peringatan dan kehilangan suntingannya.
     */
     rupiah.markAsDirty();
+    sesudahUbah?.();
   };
+
+  const gema = (nilai: number, ditulis: number | null): boolean =>
+    ditulis !== null && Math.abs(nilai - ditulis) < 1e-9;
 
   const langganan = new Subscription();
 
   langganan.add(
-    rupiah.valueChanges.subscribe((v) => hitungPersen(Number(v ?? 0))),
+    rupiah.valueChanges.subscribe((v) => {
+      const n = Number(v ?? 0);
+      if (gema(n, rupiahDitulis)) return;
+      rupiahDitulis = null;
+      hitungPersen(n);
+    }),
   );
   langganan.add(
-    persen.valueChanges.subscribe((v) => hitungRupiah(Number(v ?? 0))),
+    persen.valueChanges.subscribe((v) => {
+      const n = Number(v ?? 0);
+      if (gema(n, persenDitulis)) return;
+      persenDitulis = null;
+      hitungRupiah(n);
+    }),
   );
 
   if (dasarBerubah) {
@@ -59,6 +104,9 @@ export function sinkronDiskonPersen(
       dasarBerubah.subscribe(() => hitungPersen(Number(rupiah.value ?? 0))),
     );
   }
+
+  /* Persen awal dari rupiah yang sudah ada — tanpa ini kolomnya kosong. */
+  hitungPersen(Number(rupiah.value ?? 0));
 
   return langganan;
 }

@@ -30,6 +30,8 @@ import { AuthService } from 'src/app/services/auth.service';
  * Diskon bisa diketik dalam rupiah ATAU persen — keduanya saling menghitung,
  * karena supplier menyebut diskonnya dalam dua bahasa itu bergantian.
  */
+import { sinkronDiskonPersen } from 'src/app/utils/diskon-persen.utils';
+
 @Component({
   selector: 'app-update-product-purchase-price',
   templateUrl: './update-product-purchase-price.component.html',
@@ -75,22 +77,29 @@ export class UpdateProductPurchasePriceComponent implements OnInit {
 
   ngOnInit(): void {
     this.priceFormGroup.patchValue(this.data);
-    this.hitungPersen(Number(this.data.discount ?? 0));
 
-    this.priceFormGroup.get('discount')?.valueChanges.subscribe((diskon) => {
-      this.hitungPersen(Number(diskon ?? 0));
-    });
+    /*
+      Rupiah dan persen disambungkan lewat utilitas bersama, bukan sepasang
+      metode di kelas ini.
 
-    this.priceFormGroup
-      .get('discountPercentage')
-      ?.valueChanges.subscribe((persen) => {
-        this.hitungRupiah(Number(persen ?? 0));
-      });
+      Salinan yang berdiri sendiri sempat menyimpan bug yang sulit dilihat:
+      nilai yang kita tulis sendiri dipantulkan kembali oleh isian bermask —
+      0,00048 dimampatkan menjadi 0 lalu diemit ulang — dan pantulan itu
+      terbaca sebagai ketikan orang, sehingga mengetik diskon RUPIAH selalu
+      berakhir nol sementara mengetik PERSEN baik-baik saja. Satu tempat,
+      satu penjaga, dan kedua lembar kembar ini tidak bisa lagi menyimpang
+      diam-diam.
 
-    /* Harga berubah = persen yang tertulis tidak lagi benar; rupiah dipegang. */
-    this.priceFormGroup.get('price')?.valueChanges.subscribe(() => {
-      this.hitungPersen(Number(this.priceFormGroup.value.discount ?? 0));
-    });
+      Argumen keempat: harga berubah = persen yang tertulis tidak lagi benar,
+      dan rupiahlah yang dipegang.
+    */
+    sinkronDiskonPersen(
+      this.priceFormGroup.controls['discount'],
+      this.priceFormGroup.controls['discountPercentage'],
+      () => Number(this.priceFormGroup.value.price ?? 0),
+      this.priceFormGroup.controls['price'].valueChanges,
+      () => this.sesuaikanToggle(),
+    );
 
     this.priceFormGroup.valueChanges.subscribe(() => this.sesuaikanToggle());
     this.sesuaikanToggle();
@@ -110,22 +119,6 @@ export class UpdateProductPurchasePriceComponent implements OnInit {
       kontrol.setValue(false, { emitEvent: false });
       kontrol.disable({ emitEvent: false });
     }
-  }
-
-  private hitungPersen(diskon: number): void {
-    const harga = Number(this.priceFormGroup.value.price ?? 0);
-    this.priceFormGroup
-      .get('discountPercentage')
-      ?.setValue(harga === 0 ? 0 : (diskon * 100) / harga, {
-        emitEvent: false,
-      });
-  }
-
-  private hitungRupiah(persen: number): void {
-    const harga = Number(this.priceFormGroup.value.price ?? 0);
-    this.priceFormGroup
-      .get('discount')
-      ?.setValue((persen * harga) / 100, { emitEvent: false });
   }
 
   get tanpaPerubahan(): boolean {
