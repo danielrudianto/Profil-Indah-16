@@ -264,6 +264,13 @@ export class SalesInvoiceCreateComponent {
     delivery: new FormControl(0, [Validators.required, Validators.min(0)]),
     service: new FormControl(0, [Validators.required, Validators.min(0)]),
     /*
+      Biaya administrasi kartu kredit beda bank. MENAMBAH tagihan pelanggan —
+      sederajat ongkos kirim dan jasa — tetapi tidak dihitung sebagai omzet:
+      uangnya diteruskan ke bank, bukan penghasilan toko. Pemisahan itu
+      dikerjakan di laporan; di layar ini ia sekadar menambah tagihan.
+    */
+    admin_fee: new FormControl(0, [Validators.required, Validators.min(0)]),
+    /*
       Jenis jasa. Dimulai mati karena biaya jasanya nol — server menolak jenis
       yang disebutkan tanpa biaya, jadi keadaan awalnya harus kosong dan tidak
       bisa diisi.
@@ -308,12 +315,14 @@ export class SalesInvoiceCreateComponent {
       !this.valueFormGroup.controls['total'] ||
       !this.valueFormGroup.controls['delivery'] ||
       !this.valueFormGroup.controls['service'] ||
+      !this.valueFormGroup.controls['admin_fee'] ||
       !this.valueFormGroup.controls['discount']
     ) {
       return 0;
     }
     return (
       this.valueFormGroup.controls['total'].value +
+      this.valueFormGroup.controls['admin_fee'].value +
       this.valueFormGroup.controls['delivery'].value +
       this.valueFormGroup.controls['service'].value -
       this.valueFormGroup.controls['discount'].value
@@ -361,10 +370,11 @@ export class SalesInvoiceCreateComponent {
       const discount = Number(this.valueFormGroup.value.discount);
       const delivery = Number(this.valueFormGroup.value.delivery);
       const service = Number(this.valueFormGroup.value.service);
+      const adminFee = Number(this.valueFormGroup.value.admin_fee);
 
       this.valueFormGroup.patchValue(
         {
-          grand_total: subtotal + delivery + service - discount,
+          grand_total: subtotal + delivery + service + adminFee - discount,
         },
         { emitEvent: false },
       );
@@ -864,6 +874,7 @@ export class SalesInvoiceCreateComponent {
       discount: this.valueFormGroup.controls['discount'].value,
       delivery: this.valueFormGroup.controls['delivery'].value,
       service: this.valueFormGroup.controls['service'].value,
+      admin_fee: this.valueFormGroup.controls['admin_fee'].value,
       service_type: this.valueFormGroup.controls['service_type'].value ?? null,
       sales_invoice: sales_invoice,
       sales_invoice_payment: this.p.controls.map((x) => {
@@ -1104,6 +1115,17 @@ export class SalesInvoiceCreateComponent {
     */
     if (nilai === 'deposit-internal') {
       this.p.clear();
+
+      /*
+        Dan pengembalian diskonnya ikut dibatalkan. Deposit internal tidak
+        menerima pembayaran sama sekali, sehingga tidak ada uang masuk yang
+        bisa dikembalikan — menawarkan pilihan itu berarti menawarkan
+        mengeluarkan uang atas dokumen yang belum menerima sepeser pun.
+
+        Alasannya sama dengan baris pembayaran di atas: dibatalkan, bukan
+        sekadar disembunyikan. Yang disembunyikan tetap ikut terkirim.
+      */
+      this.pilihPerlakuan('faktur');
     }
   }
 

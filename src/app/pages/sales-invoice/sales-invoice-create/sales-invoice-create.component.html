@@ -430,6 +430,31 @@
           </div>
 
           <!--
+            Nominal, bukan persentase. Angkanya datang dari struk bank apa
+            adanya, jadi menghitungnya ulang dari persen hanya menambah
+            peluang meleset serupiah dua rupiah.
+          -->
+          <div class="field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-invoice__create__admin-fee" | translate
+              }}</mat-label>
+              <input
+                matInput
+                type="text"
+                mask="separator"
+                thousandSeparator="."
+                formControlName="admin_fee"
+                autocomplete="off"
+                placeholder="0"
+              />
+              <mat-hint>{{
+                "sales-invoice__create__admin-fee__hint" | translate
+              }}</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <!--
             Mati selama biaya jasanya nol, dan hidup sendiri begitu diisi.
             Server menolak jenis tanpa biaya maupun biaya tanpa jenis, jadi
             keadaan kendalinya dibuat mencerminkan aturan itu — bukan
@@ -598,122 +623,145 @@
           {{ "sales-invoice__rebate" | translate }}
         </h2>
 
-        <p class="petunjuk">
-          <i class="ph ph-info" aria-hidden="true"></i>
-          {{ "sales-invoice__rebate__note" | translate }}
-        </p>
-
         <!--
+          Deposit internal tidak menerima pembayaran sama sekali, sehingga
+          tidak ada uang masuk yang bisa dikembalikan. Menawarkan pilihannya
+          berarti menawarkan mengeluarkan uang atas dokumen yang belum
+          menerima sepeser pun — dan itu yang selama ini terjadi.
+
+          Bentuknya sama dengan slot pembayaran di atas: keterangan di
+          tempatnya, bukan bagian yang lenyap tanpa penjelasan.
+        -->
+        <div class="bayar-kosong" *ngIf="depositInternal">
+          <i class="ph ph-hand-deposit" aria-hidden="true"></i>
+          <span>
+            <strong>
+              {{ "sales-invoice__rebate__internal-title" | translate }}
+            </strong>
+            <span>
+              {{ "sales-invoice__rebate__internal-note" | translate }}
+            </span>
+          </span>
+        </div>
+
+        <ng-container *ngIf="!depositInternal">
+          <p class="petunjuk">
+            <i class="ph ph-info" aria-hidden="true"></i>
+            {{ "sales-invoice__rebate__note" | translate }}
+          </p>
+
+          <!--
           Dua kartu pilihan yang setara. Keduanya disebut namanya — yang satu
           tidak mengeluarkan uang sama sekali, yang lain mengurangi kas — dan
           akibat sebesar itu tidak boleh diwakili saklar yang hanya menyebut
           salah satunya.
         -->
-        <div class="keadaan">
-          <button
-            type="button"
-            class="keadaan__kartu"
-            [class.keadaan__kartu--on]="perlakuanDiskon === 'faktur'"
-            (click)="pilihPerlakuan('faktur')"
-          >
-            <i class="ph ph-receipt" aria-hidden="true"></i>
-            <span class="keadaan__teks">
-              <span class="keadaan__judul">
-                {{ "sales-invoice__rebate__on-invoice" | translate }}
+          <div class="keadaan">
+            <button
+              type="button"
+              class="keadaan__kartu"
+              [class.keadaan__kartu--on]="perlakuanDiskon === 'faktur'"
+              (click)="pilihPerlakuan('faktur')"
+            >
+              <i class="ph ph-receipt" aria-hidden="true"></i>
+              <span class="keadaan__teks">
+                <span class="keadaan__judul">
+                  {{ "sales-invoice__rebate__on-invoice" | translate }}
+                </span>
+                <span class="keadaan__desk">
+                  {{ "sales-invoice__rebate__on-invoice__note" | translate }}
+                </span>
               </span>
-              <span class="keadaan__desk">
-                {{ "sales-invoice__rebate__on-invoice__note" | translate }}
-              </span>
-            </span>
-          </button>
+            </button>
 
-          <button
-            type="button"
-            class="keadaan__kartu"
-            [class.keadaan__kartu--on]="perlakuanDiskon === 'kembali'"
-            (click)="pilihPerlakuan('kembali')"
-          >
-            <i class="ph ph-hand-coins" aria-hidden="true"></i>
-            <span class="keadaan__teks">
-              <span class="keadaan__judul">
-                {{ "sales-invoice__rebate__returned" | translate }}
+            <button
+              type="button"
+              class="keadaan__kartu"
+              [class.keadaan__kartu--on]="perlakuanDiskon === 'kembali'"
+              (click)="pilihPerlakuan('kembali')"
+            >
+              <i class="ph ph-hand-coins" aria-hidden="true"></i>
+              <span class="keadaan__teks">
+                <span class="keadaan__judul">
+                  {{ "sales-invoice__rebate__returned" | translate }}
+                </span>
+                <span class="keadaan__desk">
+                  {{ "sales-invoice__rebate__returned__note" | translate }}
+                </span>
               </span>
-              <span class="keadaan__desk">
-                {{ "sales-invoice__rebate__returned__note" | translate }}
-              </span>
-            </span>
-          </button>
-        </div>
+            </button>
+          </div>
 
-        <!--
+          <!--
           Tingginya DIPESAN. Berpindah antara kedua pilihan dan antara cash dan
           transfer tidak boleh membuat kartu di bawahnya melompat — pola yang
           sama dengan slot faktur pada penerimaan barang.
         -->
-        <div class="kembali__slot">
-          <ng-container *ngIf="perlakuanDiskon === 'kembali'">
-            <!--
+          <div class="kembali__slot">
+            <ng-container *ngIf="perlakuanDiskon === 'kembali'">
+              <!--
               Satu kartu, bukan dua: yang ditanyakan bukan lagi "tunai atau
               transfer" melainkan metode mana dari daftar yang dipakai
               membayar. Lembar bawahnya sama dengan baris pembayaran faktur,
               jadi daftar sepanjang apa pun tetap muat.
             -->
-            <div class="keadaan">
-              <button
-                type="button"
-                class="keadaan__kartu"
-                [class.keadaan__kartu--on]="
-                  rebateFormGroup.value.payment_method_id
-                "
-                (click)="pilihMetodeKembali()"
-              >
-                <i class="ph ph-wallet" aria-hidden="true"></i>
-                <span class="keadaan__judul">{{
-                  rebateFormGroup.value.payment_name ||
-                    ("sales-invoice__rebate__method__choose" | translate)
-                }}</span>
-              </button>
-            </div>
+              <div class="keadaan">
+                <button
+                  type="button"
+                  class="keadaan__kartu"
+                  [class.keadaan__kartu--on]="
+                    rebateFormGroup.value.payment_method_id
+                  "
+                  (click)="pilihMetodeKembali()"
+                >
+                  <i class="ph ph-wallet" aria-hidden="true"></i>
+                  <span class="keadaan__judul">{{
+                    rebateFormGroup.value.payment_name ||
+                      ("sales-invoice__rebate__method__choose" | translate)
+                  }}</span>
+                </button>
+              </div>
 
-            <div class="kartu__baris">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>
-                  {{ "sales-invoice__rebate__value" | translate }}
-                </mat-label>
-                <input
-                  matInput
-                  type="text"
-                  class="input--kanan"
-                  mask="separator"
-                  thousandSeparator="."
-                  formControlName="value"
-                  autocomplete="off"
-                  (input)="nominalDiedit()"
-                  (blur)="jepitNominal()"
-                />
-                <span matTextPrefix>Rp&nbsp;</span>
-                <mat-hint>
-                  {{
-                    "sales-invoice__rebate__max"
-                      | translate: { nilai: (totalBill | number) }
-                  }}
-                </mat-hint>
-              </mat-form-field>
+              <div class="kartu__baris">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>
+                    {{ "sales-invoice__rebate__value" | translate }}
+                  </mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    class="input--kanan"
+                    mask="separator"
+                    thousandSeparator="."
+                    formControlName="value"
+                    autocomplete="off"
+                    (input)="nominalDiedit()"
+                    (blur)="jepitNominal()"
+                  />
+                  <span matTextPrefix>Rp&nbsp;</span>
+                  <mat-hint>
+                    {{
+                      "sales-invoice__rebate__max"
+                        | translate: { nilai: (totalBill | number) }
+                    }}
+                  </mat-hint>
+                </mat-form-field>
 
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>
-                  {{ "sales-invoice__rebate__receiver" | translate }}
-                </mat-label>
-                <input
-                  matInput
-                  type="text"
-                  formControlName="receiver_name"
-                  autocomplete="off"
-                />
-              </mat-form-field>
-            </div>
-          </ng-container>
-        </div>
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>
+                    {{ "sales-invoice__rebate__receiver" | translate }}
+                  </mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="receiver_name"
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
       </section>
     </div>
 

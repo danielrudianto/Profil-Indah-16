@@ -2735,5 +2735,9 @@
   "service-type__cnc": "CNC",
   "service-type__frame": "Frame",
   "service-type__solid": "Solid",
-  "sales-invoice__rebate__method__choose": "Pilih metode pembayaran"
+  "sales-invoice__rebate__method__choose": "Pilih metode pembayaran",
+  "sales-invoice__create__admin-fee": "Biaya administrasi",
+  "sales-invoice__create__admin-fee__hint": "Kartu kredit beda bank; menambah tagihan, bukan omzet",
+  "sales-invoice__rebate__internal-title": "Tidak ada pengembalian diskon",
+  "sales-invoice__rebate__internal-note": "Deposit internal tidak menerima pembayaran, jadi tidak ada uang yang bisa dikembalikan."
 }
