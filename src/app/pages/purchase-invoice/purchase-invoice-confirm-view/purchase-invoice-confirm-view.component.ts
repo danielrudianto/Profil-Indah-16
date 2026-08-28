@@ -8,6 +8,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { UpdateProductPurchasePriceComponent } from 'src/app/components/update-product-purchase-price/update-product-purchase-price.component';
 import { sinkronDiskonPersen } from 'src/app/utils/diskon-persen.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -75,6 +77,7 @@ export class PurchaseInvoiceConfirmViewComponent implements OnInit, OnDestroy {
     private router: Router,
     private dialog: MatDialog,
     private pageTitleService: PageTitleService,
+    private sheet: MatBottomSheet,
   ) {}
 
   isLoading = true;
@@ -178,6 +181,9 @@ export class PurchaseInvoiceConfirmViewComponent implements OnInit, OnDestroy {
                   Number(x.discount),
                   [Validators.required, Validators.min(0)],
                 ],
+                /* Acuan toggle simpan-ke-master di lembar harga. */
+                initial_price: [Number(x.price)],
+                initial_discount: [Number(x.discount)],
                 save_price: [false],
               }),
             );
@@ -191,6 +197,42 @@ export class PurchaseInvoiceConfirmViewComponent implements OnInit, OnDestroy {
       .add(() => {
         this.isLoading = false;
       });
+  }
+
+  /*
+    Harga dan diskon dibuka lewat bottom sheet, bukan diketik di tabel.
+
+    Bentuk sebelumnya menaruh dua kolom isian di dalam baris, dan itu punya
+    dua ongkos: tabelnya melebar melewati layar 1920 milik staf, dan tidak ada
+    ruang untuk isian PERSEN yang diminta. Lembar ini sudah menyediakan rupiah
+    dan persen berpasangan beserta pratinjau harga bersih — pola yang sama
+    dengan faktur penjualan, buat penerimaan barang, dan sunting faktur
+    pembelian, sehingga halaman ini berhenti menjadi satu-satunya yang berbeda.
+  */
+  ubahHarga(i: number): void {
+    const nilai = (this.t.at(i) as FormGroup).value;
+    const sheet = this.sheet.open(UpdateProductPurchasePriceComponent, {
+      data: {
+        reference: nilai.reference,
+        unit: nilai.unit,
+        price: nilai.price,
+        discount: nilai.discount,
+        initial_price: nilai.initial_price,
+        initial_discount: nilai.initial_discount,
+        save_price: nilai.save_price,
+      },
+    });
+
+    sheet.afterDismissed().subscribe((data) => {
+      if (data) {
+        (this.t.at(i) as FormGroup).patchValue({
+          price: Number(data.price ?? 0),
+          discount: Number(data.discount ?? 0),
+          save_price: data.save_price,
+        });
+        this.itemsFormGroup.markAsDirty();
+      }
+    });
   }
 
   get t(): FormArray {

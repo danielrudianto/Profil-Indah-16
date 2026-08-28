@@ -26,19 +26,36 @@
     />
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="w-100">
-    <mat-label>
-      {{ "update-product-sales-price__discount" | translate }}
-    </mat-label>
-    <input
-      type="text"
-      matInput
-      mask="separator.2"
-      thousandSeparator=" "
-      formControlName="discount"
-      placeholder="Ex. 800"
-    />
-  </mat-form-field>
+  <!-- Rupiah dan persen saling menghitung — pelanggan menyebut keduanya. -->
+  <div class="lembar__kisi">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>
+        {{ "update-product-sales-price__discount" | translate }} (Rp.)
+      </mat-label>
+      <input
+        type="text"
+        matInput
+        mask="separator.2"
+        thousandSeparator=" "
+        formControlName="discount"
+        placeholder="Ex. 800"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>
+        {{ "update-product-sales-price__discount" | translate }} (%)
+      </mat-label>
+      <input
+        type="text"
+        matInput
+        mask="separator.2"
+        thousandSeparator=" "
+        formControlName="discountPercentage"
+        placeholder="Ex. 10"
+      />
+    </mat-form-field>
+  </div>
 
   <!-- Pratinjau hidup: yang benar-benar ditagih per satuan. -->
   <div class="lembar__bersih">
@@ -60,7 +77,9 @@
   <div
     class="lembar__master"
     *ngIf="bolehSimpanKeMaster"
-    [class.lembar__master--mati]="priceFormGroup.controls['save_price'].disabled"
+    [class.lembar__master--mati]="
+      priceFormGroup.controls['save_price'].disabled
+    "
   >
     <i class="ph-fill ph-bookmark-simple" aria-hidden="true"></i>
     <span class="lembar__master-teks">

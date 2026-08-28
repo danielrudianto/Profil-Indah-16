@@ -184,26 +184,24 @@
                   </span>
                 </td>
 
-                <td>
-                  <mat-form-field appearance="outline" class="w-sempit"
-                    ><input
-                      matInput
-                      type="text"
-                      formControlName="price"
-                      mask="separator.2"
-                      thousandSeparator=" "
-                  /></mat-form-field>
+                <td class="ke-kanan">
+                  <button
+                    type="button"
+                    class="nilai-btn"
+                    (click)="ubahHarga(i)"
+                  >
+                    Rp {{ baris.get("price")?.value | number: "1.0-0" }}
+                  </button>
                 </td>
 
-                <td>
-                  <mat-form-field appearance="outline" class="w-sempit"
-                    ><input
-                      matInput
-                      type="text"
-                      formControlName="discount"
-                      mask="separator.2"
-                      thousandSeparator=" "
-                  /></mat-form-field>
+                <td class="ke-kanan">
+                  <button
+                    type="button"
+                    class="nilai-btn"
+                    (click)="ubahHarga(i)"
+                  >
+                    Rp {{ baris.get("discount")?.value | number: "1.0-0" }}
+                  </button>
                 </td>
 
                 <td class="ke-kanan baris__total">

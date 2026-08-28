@@ -56,6 +56,16 @@ export class UpdateProductSalesPriceComponent implements OnInit {
   priceFormGroup: FormGroup = new FormGroup({
     price: new FormControl(0, [Validators.required, Validators.min(0)]),
     discount: new FormControl(0, [Validators.required, Validators.min(0)]),
+    /*
+      Pendamping persen. TIDAK ikut dikirim — updatePrice mengembalikan
+      getRawValue(), dan pemanggilnya hanya membaca price/discount/save_price.
+      Yang tercatat tetap rupiah.
+    */
+    discountPercentage: new FormControl(0, [
+      Validators.required,
+      Validators.min(0),
+      Validators.max(100),
+    ]),
     initial_price: new FormControl(0, [Validators.required, Validators.min(0)]),
     initial_discount: new FormControl(0, [
       Validators.required,
@@ -66,7 +76,54 @@ export class UpdateProductSalesPriceComponent implements OnInit {
 
   ngOnInit(): void {
     this.priceFormGroup.patchValue(this.data);
+    this.hitungPersen(Number(this.data.discount ?? 0));
+
+    this.priceFormGroup.get('discount')?.valueChanges.subscribe((diskon) => {
+      this.hitungPersen(Number(diskon ?? 0));
+    });
+
+    this.priceFormGroup
+      .get('discountPercentage')
+      ?.valueChanges.subscribe((persen) => {
+        this.hitungRupiah(Number(persen ?? 0));
+      });
+
+    /* Harga berubah = persen yang tertulis tidak lagi benar; rupiah dipegang. */
+    this.priceFormGroup.get('price')?.valueChanges.subscribe(() => {
+      this.hitungPersen(Number(this.priceFormGroup.value.discount ?? 0));
+    });
+
     this.priceFormGroup.valueChanges.subscribe(() => this.sesuaikanToggle());
+    this.sesuaikanToggle();
+  }
+
+  /*
+    Sengaja disalin sebentuk dari lembar harga BELI, bukan diringkas ke
+    utilitas bersama: berkas ini menyatakan dirinya kembaran lembar itu dan
+    meminta keduanya diubah bersamaan. Bentuk yang sama persis membuat
+    perbandingannya sepele; satu memakai utilitas dan satunya tidak justru
+    menyembunyikan selisih perilaku bila kelak salah satunya disunting.
+  */
+  private hitungPersen(diskon: number): void {
+    const harga = Number(this.priceFormGroup.value.price ?? 0);
+    this.priceFormGroup
+      .get('discountPercentage')
+      ?.setValue(harga === 0 ? 0 : (diskon * 100) / harga, {
+        emitEvent: false,
+      });
+  }
+
+  private hitungRupiah(persen: number): void {
+    const harga = Number(this.priceFormGroup.value.price ?? 0);
+    this.priceFormGroup
+      .get('discount')
+      ?.setValue((persen * harga) / 100, { emitEvent: false });
+
+    /*
+      emitEvent: false melewati valueChanges grup, dan di situlah
+      sesuaikanToggle dipanggil. Tanpa baris ini, mengetik persen mengubah
+      diskonnya tetapi toggle simpan-ke-master tetap mati.
+    */
     this.sesuaikanToggle();
   }
 
