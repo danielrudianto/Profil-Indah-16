@@ -807,6 +807,17 @@
             <dt>{{ "sales-invoice__create__service" | translate }}</dt>
             <dd>Rp {{ valueFormGroup.value.service | number: "1.0-0" }}</dd>
           </div>
+
+          <!--
+            Biaya admin IKUT total, jadi ia harus punya barisnya sendiri.
+            Tanpa baris ini totalnya lebih besar daripada jumlah yang
+            tertulis di atasnya, dan selisih yang tak dijelaskan membuat
+            seluruh ringkasan ikut diragukan.
+          -->
+          <div *ngIf="valueFormGroup.value.admin_fee > 0">
+            <dt>{{ "sales-invoice__create__admin-fee" | translate }}</dt>
+            <dd>Rp {{ valueFormGroup.value.admin_fee | number: "1.0-0" }}</dd>
+          </div>
         </dl>
 
         <div class="ringkas__total">
