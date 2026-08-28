@@ -428,6 +428,31 @@
               />
             </mat-form-field>
           </div>
+
+          <!--
+            Mati selama biaya jasanya nol, dan hidup sendiri begitu diisi.
+            Server menolak jenis tanpa biaya maupun biaya tanpa jenis, jadi
+            keadaan kendalinya dibuat mencerminkan aturan itu — bukan
+            menunggu galat muncul setelah tombol simpan ditekan.
+          -->
+          <div class="field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-invoice__create__service-type" | translate
+              }}</mat-label>
+              <mat-select formControlName="service_type">
+                <mat-option
+                  *ngFor="let jenis of jenisJasa"
+                  [value]="jenis.value"
+                >
+                  {{ jenis.label | translate }}
+                </mat-option>
+              </mat-select>
+              <mat-hint>{{
+                "sales-invoice__create__service-type__hint" | translate
+              }}</mat-hint>
+            </mat-form-field>
+          </div>
         </div>
       </section>
 

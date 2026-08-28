@@ -80,6 +80,10 @@ import { CustomerCreateComponent } from 'src/app/pages/customer/customer-create/
 import { MatDialog } from '@angular/material/dialog';
 import { NgClass } from '@angular/common';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import {
+  SERVICE_TYPES,
+  ServiceType,
+} from 'src/app/constants/service-type.constant';
 
 @Component({
   providers: [provideNativeDateAdapter()],
@@ -102,6 +106,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     MatAutocomplete,
     MatAutocompleteTrigger,
     MatOption,
+    MatSelect,
     FormsModule,
     ReactiveFormsModule,
     AutocompleteSearchComponent,
@@ -258,10 +263,21 @@ export class SalesInvoiceCreateComponent {
     discount: new FormControl(0, [Validators.required, Validators.min(0)]),
     delivery: new FormControl(0, [Validators.required, Validators.min(0)]),
     service: new FormControl(0, [Validators.required, Validators.min(0)]),
+    /*
+      Jenis jasa. Dimulai mati karena biaya jasanya nol — server menolak jenis
+      yang disebutkan tanpa biaya, jadi keadaan awalnya harus kosong dan tidak
+      bisa diisi.
+    */
+    service_type: new FormControl<ServiceType | null>({
+      value: null,
+      disabled: true,
+    }),
     before: new FormControl(0, [Validators.required, Validators.min(0)]),
     total: new FormControl(0, [Validators.required, Validators.min(0)]),
     grand_total: new FormControl(0, [Validators.required, Validators.min(0)]),
   });
+
+  readonly jenisJasa = SERVICE_TYPES;
 
   get f() {
     return this.billFormGroup.controls;
@@ -358,6 +374,31 @@ export class SalesInvoiceCreateComponent {
         menyuntingnya sendiri.
       */
       this.autoIsiNominal();
+    });
+
+    /*
+      Jenis jasa hanya hidup selama ada biayanya.
+
+      Server menolak dua-duanya: biaya tanpa jenis, dan jenis tanpa biaya.
+      Aturan itu ditegakkan di sini dengan mematikan kendalinya, bukan dengan
+      pesan galat setelah tombol simpan ditekan — bidang yang mati sudah
+      menjelaskan dirinya sendiri, sementara galat yang baru muncul di akhir
+      menuntut orang menebak bidang mana yang dimaksud.
+
+      Jenis yang sempat terisi ikut dikosongkan ketika biayanya kembali nol.
+      Membiarkannya berarti mengirim jenis tanpa biaya — persis bentuk yang
+      ditolak server, tetapi tak terlihat karena kendalinya sudah mati.
+    */
+    this.valueFormGroup.controls['service'].valueChanges.subscribe((nilai) => {
+      const jenis = this.valueFormGroup.controls['service_type'];
+      const adaBiaya = Number(nilai) > 0;
+
+      if (adaBiaya && jenis.disabled) {
+        jenis.enable({ emitEvent: false });
+      } else if (!adaBiaya && jenis.enabled) {
+        jenis.setValue(null, { emitEvent: false });
+        jenis.disable({ emitEvent: false });
+      }
     });
 
     this.apiService
@@ -826,6 +867,7 @@ export class SalesInvoiceCreateComponent {
       discount: this.valueFormGroup.controls['discount'].value,
       delivery: this.valueFormGroup.controls['delivery'].value,
       service: this.valueFormGroup.controls['service'].value,
+      service_type: this.valueFormGroup.controls['service_type'].value ?? null,
       sales_invoice: sales_invoice,
       sales_invoice_payment: this.p.controls.map((x) => {
         return {

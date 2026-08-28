@@ -1623,6 +1623,11 @@
     "user": {
       "nameTooLong": "Nama pengguna maksimal 45 karakter.",
       "nikTooLong": "NIK maksimal 45 karakter."
+    },
+    "serviceType": {
+      "required": "Jenis jasa wajib dipilih ketika biaya jasa diisi.",
+      "invalid": "Jenis jasa tidak dikenal.",
+      "notAllowed": "Jenis jasa tidak boleh diisi ketika biaya jasa kosong."
     }
   },
   "user": {
@@ -2724,5 +2729,10 @@
   "activity__ip": "Alamat",
   "activity__ip-none": "Tidak tercatat",
   "activity__user-only__on": "Hanya perbuatan pengguna — klik untuk menampilkan pekerjaan sistem",
-  "activity__user-only__off": "Termasuk pekerjaan sistem — klik untuk menyembunyikannya"
+  "activity__user-only__off": "Termasuk pekerjaan sistem — klik untuk menyembunyikannya",
+  "sales-invoice__create__service-type": "Jenis jasa",
+  "sales-invoice__create__service-type__hint": "Wajib dipilih bila biaya jasa diisi",
+  "service-type__cnc": "CNC",
+  "service-type__frame": "Frame",
+  "service-type__solid": "Solid"
 }
