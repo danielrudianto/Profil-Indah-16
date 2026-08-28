@@ -2720,5 +2720,7 @@
   "promotion__download__invoice-name": "Invoice",
   "promotion__download__customer": "Customer",
   "promotion__download__net-price": "Net price",
-  "promotion__download__empty": "This promotion has no transactions to download yet."
+  "promotion__download__empty": "This promotion has no transactions to download yet.",
+  "activity__ip": "Address",
+  "activity__ip-none": "Not recorded"
 }

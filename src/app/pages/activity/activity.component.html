@@ -42,7 +42,7 @@
         class="saringan__bersih"
         (click)="hapusSemuaSaringan()"
       >
-        {{ 'general__filter__clear' | translate }}
+        {{ "general__filter__clear" | translate }}
       </button>
     </div>
   </ng-container>
@@ -50,10 +50,11 @@
   <table class="tabel">
     <thead>
       <tr>
-        <th>{{ 'activity__time' | translate }}</th>
-        <th>{{ 'activity__user' | translate }}</th>
-        <th>{{ 'activity__entity' | translate }}</th>
-        <th>{{ 'activity__action' | translate }}</th>
+        <th>{{ "activity__time" | translate }}</th>
+        <th>{{ "activity__user" | translate }}</th>
+        <th>{{ "activity__entity" | translate }}</th>
+        <th>{{ "activity__ip" | translate }}</th>
+        <th>{{ "activity__action" | translate }}</th>
       </tr>
     </thead>
 
@@ -65,7 +66,7 @@
         (click)="lihat(entry)"
       >
         <td class="tabel__tanggal jejak__waktu">
-          {{ entry.createdAt | date: 'dd MMM yyyy HH:mm' }}
+          {{ entry.createdAt | date: "dd MMM yyyy HH:mm" }}
         </td>
 
         <!--
@@ -75,24 +76,63 @@
         -->
         <td>
           <div class="sel-entitas">
-            <span class="avatar-inisial" aria-hidden="true">
+            <!--
+              Avatar sungguhan bila penggunanya pernah mengaturnya; lingkaran
+              inisial hanya sebagai gantinya. Jejak tanpa pemilik tetap memakai
+              lingkaran, karena tidak ada wajah yang bisa digambar.
+            -->
+            <app-avatar
+              *ngIf="entry.userAvatar as av"
+              [width]="28"
+              [top]="av.top"
+              [accessories]="av.accessories"
+              [circle]="av.circle"
+              [color]="av.color"
+              [eyebrows]="av.eyebrows"
+              [eyes]="av.eyes"
+              [mouth]="av.mouth"
+              [clothes]="av.clothes"
+            />
+            <span
+              class="avatar-inisial"
+              *ngIf="!entry.userAvatar"
+              aria-hidden="true"
+            >
               {{ inisial(entry.userName) }}
             </span>
             <span class="sel-entitas__teks">
               <span class="sel-entitas__utama">
-                {{ entry.userName || ('activity__system' | translate) }}
+                {{ entry.userName || ("activity__system" | translate) }}
               </span>
             </span>
           </div>
         </td>
 
         <td class="jejak__entitas">
-          {{ entry.entity }}<span *ngIf="entry.entityID">&nbsp;#{{ entry.entityID }}</span>
+          {{ entry.entity
+          }}<span *ngIf="entry.entityID">&nbsp;#{{ entry.entityID }}</span>
+        </td>
+
+        <!--
+          Tanda pisah, BUKAN 127.0.0.1: baris lama lahir sebelum kolomnya ada,
+          dan jejak dari CLI atau pekerjaan latar memang tidak punya asal.
+          Mengarang alamat membuat baris palsu yang kelak tak bisa dibedakan
+          dari yang sungguhan.
+        -->
+        <td class="jejak__ip">
+          <span *ngIf="entry.ip; else tanpaIp">{{ entry.ip }}</span>
+          <ng-template #tanpaIp>
+            <span class="jejak__ip--kosong">—</span>
+          </ng-template>
         </td>
 
         <td>
           <span class="pill" [ngClass]="kelasTindakan(entry.action)">
-            <i class="ph-fill" [ngClass]="ikonTindakan(entry.action)" aria-hidden="true"></i>
+            <i
+              class="ph-fill"
+              [ngClass]="ikonTindakan(entry.action)"
+              aria-hidden="true"
+            ></i>
             {{ entry.action }}
           </span>
         </td>
@@ -101,15 +141,15 @@
 
     <tbody *ngIf="isLoading">
       <tr>
-        <td colspan="4" class="tabel__pesan">
-          {{ 'general__loading' | translate }}
+        <td colspan="5" class="tabel__pesan">
+          {{ "general__loading" | translate }}
         </td>
       </tr>
     </tbody>
 
     <tbody *ngIf="!isLoading && entries.length === 0">
       <tr>
-        <td colspan="4">
+        <td colspan="5">
           <app-tabel-kosong
             ikon="ph-pulse"
             [judul]="'activity__empty' | translate"

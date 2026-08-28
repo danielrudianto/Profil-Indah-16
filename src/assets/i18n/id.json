@@ -2720,5 +2720,7 @@
   "promotion__download__invoice-name": "Faktur",
   "promotion__download__customer": "Pelanggan",
   "promotion__download__net-price": "Harga bersih",
-  "promotion__download__empty": "Promosi ini belum punya transaksi untuk diunduh."
+  "promotion__download__empty": "Promosi ini belum punya transaksi untuk diunduh.",
+  "activity__ip": "Alamat",
+  "activity__ip-none": "Tidak tercatat"
 }

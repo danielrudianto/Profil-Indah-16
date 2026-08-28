@@ -10,3 +10,14 @@
   font-size: calc(12px * var(--skala-teks, 1));
   white-space: nowrap;
 }
+
+/* Alamat asal — angka, jadi disejajarkan dan diredupkan. */
+.jejak__ip {
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--color-text) 68%, transparent);
+  white-space: nowrap;
+}
+
+.jejak__ip--kosong {
+  color: color-mix(in srgb, var(--color-text) 38%, transparent);
+}

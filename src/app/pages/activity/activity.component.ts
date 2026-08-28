@@ -5,6 +5,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ApiService } from 'src/app/services/api.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { ActivityEntry } from 'src/app/models/activity-entry.model';
+import { AvatarComponent } from 'src/app/components/avatar/avatar.component';
+import { CircleAvatarComponent } from 'src/app/components/circle-avatar/circle-avatar.component';
 import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 import { ActivityFilterComponent } from './activity-filter/activity-filter.component';
@@ -30,6 +32,8 @@ import { ActivityViewComponent } from './activity-view/activity-view.component';
   imports: [
     ListPageComponent,
     TabelKosongComponent,
+    AvatarComponent,
+    CircleAvatarComponent,
     NgIf,
     NgFor,
     NgClass,
@@ -51,7 +55,7 @@ export class ActivityComponent implements OnInit {
   entries: ActivityEntry[] = [];
   total = 0;
   page = 1;
-  pageSize = 25;
+  pageSize = 10;
   isLoading = false;
 
   ngOnInit(): void {
