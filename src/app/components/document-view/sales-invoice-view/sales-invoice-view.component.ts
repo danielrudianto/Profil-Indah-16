@@ -283,7 +283,7 @@ export class SalesInvoiceViewComponent implements OnInit {
   /* Kepala: judul besar di kiri, logo + nama toko + alamat di kanan.  */
   /* Info dokumen berpasangan label-di-atas-nilai, tabel barang        */
   /* berkepala pita abu-abu, blok total menempel kanan, lalu seksi     */
-  /* Payment Record. Watermark DRAFT dipertahankan. Bila logo gagal    */
+  /* Payment Record. Watermark COPY. Bila logo gagal termuat,          */
   /* termuat, kepalanya jatuh ke varian teks — dokumen tetap tercetak. */
   /* ---------------------------------------------------------------- */
 
@@ -476,6 +476,13 @@ export class SalesInvoiceViewComponent implements OnInit {
                   },
                 ],
                 [
+                  { text: 'Admin fee', bold: true, fontSize: 10 },
+                  {
+                    text: `${angka(this.dokumen.adminFee ?? 0, '1.0-0')}`,
+                    fontSize: 10,
+                  },
+                ],
+                [
                   { text: 'Total', bold: true, fontSize: 10 },
                   {
                     text: `${angka(this.grandTotal, '1.0-0')}`,
@@ -544,8 +551,14 @@ export class SalesInvoiceViewComponent implements OnInit {
       pageOrientation: 'portrait' as PageOrientation,
       pageSize: 'A4' as PageSize,
       pageMargins: [36, 36, 36, 36] as Margins,
+      /*
+        COPY, bukan DRAFT. Dokumen yang dicetak dari sini sudah terbit dan
+        sah — "draft" menyiratkan belum jadi, dan pelanggan yang menerimanya
+        wajar ragu apakah angkanya final. Yang benar disampaikan cap ini
+        adalah bahwa lembar itu salinan, bukan aslinya.
+      */
       watermark: {
-        text: 'DRAFT',
+        text: 'COPY',
         color: 'black',
         opacity: 0.12,
         bold: true,

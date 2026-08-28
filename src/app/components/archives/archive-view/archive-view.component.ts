@@ -496,8 +496,14 @@ export class ArchiveViewComponent {
       pageOrientation: 'portrait' as PageOrientation,
       pageSize: 'A4' as PageSize,
       pageMargins: 15,
+      /*
+        COPY, bukan DRAFT. Dokumen yang dicetak dari sini sudah terbit dan
+        sah — "draft" menyiratkan belum jadi, dan pelanggan yang menerimanya
+        wajar ragu apakah angkanya final. Yang benar disampaikan cap ini
+        adalah bahwa lembar itu salinan, bukan aslinya.
+      */
       watermark: {
-        text: 'DRAFT',
+        text: 'COPY',
         color: 'black',
         opacity: 0.3,
         bold: true,
