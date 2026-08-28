@@ -109,6 +109,10 @@
           <dt>{{ "sales-invoice__view__service" | translate }}</dt>
           <dd>+ Rp {{ dokumen.service | number: "1.0-0" }}</dd>
         </div>
+        <div *ngIf="dokumen.adminFee > 0">
+          <dt>{{ "sales-invoice__view__admin-fee" | translate }}</dt>
+          <dd>+ Rp {{ dokumen.adminFee | number: "1.0-0" }}</dd>
+        </div>
         <div class="lihat__total">
           <dt>{{ "sales-invoice__view__grand-total" | translate }}</dt>
           <dd>Rp {{ grandTotal | number: "1.0-0" }}</dd>

@@ -124,7 +124,10 @@ export class ReceivableViewComponent implements OnInit {
     return (
       barang +
       Number(item.delivery ?? 0) +
-      Number(item.service ?? 0) -
+      Number(item.service ?? 0) +
+      /* Biaya admin ditagihkan ke pelanggan, jadi ia bagian dari yang harus
+         dibayar — server menghitungnya begitu, dan layar harus sepakat. */
+      Number(item.adminFee ?? 0) -
       Number(item.discount ?? 0)
     );
   }

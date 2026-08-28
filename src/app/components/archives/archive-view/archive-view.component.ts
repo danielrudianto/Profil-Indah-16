@@ -66,6 +66,27 @@ export class ArchiveViewComponent {
   isLoading: boolean = true;
   dataSource: any = null;
 
+  /**
+   * Sub total dokumen.
+   *
+   * Server TIDAK PERNAH mengirim bidang bernama `subTotal` — modelnya tidak
+   * punya. PDF arsip memakainya apa adanya, sehingga baris Sub total dan
+   * Total pada faktur penjualan tercetak NaN. Dihitung dari barisnya sendiri
+   * di sini, dengan `subTotal` tetap dipakai bila suatu jenis dokumen memang
+   * mengirimnya.
+   */
+  get subTotalDokumen(): number {
+    if (this.dataSource?.subTotal != null) {
+      return Number(this.dataSource.subTotal);
+    }
+
+    return (this.dataSource?.sales_invoice ?? []).reduce(
+      (a: number, b: any) =>
+        a + Number(b.quantity) * (Number(b.price) - Number(b.discount)),
+      0,
+    );
+  }
+
   ngOnInit(): void {
     this.panelState = 'opened';
     this.fetchByID();
@@ -334,7 +355,7 @@ export class ArchiveViewComponent {
                   },
                   {
                     text: `${this.decimalPipe.transform(
-                      this.dataSource.subTotal,
+                      this.subTotalDokumen,
                       '1.2-2',
                     )}`,
                     style: 'value',
@@ -397,14 +418,32 @@ export class ArchiveViewComponent {
                   '',
                   '',
                   {
+                    text: 'Admin fee',
+                    style: 'label',
+                  },
+                  {
+                    text: `${this.decimalPipe.transform(
+                      this.dataSource.adminFee ?? 0,
+                      '1.2-2',
+                    )}`,
+                    style: 'value',
+                  },
+                ],
+                [
+                  '',
+                  '',
+                  '',
+                  '',
+                  {
                     text: 'Total',
                     style: 'label',
                   },
                   {
                     text: `${this.decimalPipe.transform(
-                      this.dataSource.subTotal -
+                      this.subTotalDokumen -
                         this.dataSource.discount +
                         this.dataSource.service +
+                        Number(this.dataSource.adminFee ?? 0) +
                         this.dataSource.delivery,
                       '1.2-2',
                     )}`,

@@ -17,7 +17,11 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { PageTitleService } from 'src/app/services/page-title.service';
 import { PaymentSelectorComponent } from 'src/app/components/payment-selector/payment-selector.component';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {
   MatDatepicker,
@@ -169,7 +173,10 @@ export class DepositConfirmComponent implements OnInit {
     return (
       this.nilaiBarang +
       Number(this.deposit.delivery ?? 0) +
-      Number(this.deposit.service ?? 0) -
+      Number(this.deposit.service ?? 0) +
+      /* Biaya admin ditagihkan ke pelanggan, jadi ia bagian dari yang harus
+         dibayar — server menghitungnya begitu, dan layar harus sepakat. */
+      Number(this.deposit.adminFee ?? 0) -
       Number(this.deposit.discount ?? 0)
     );
   }
@@ -198,7 +205,9 @@ export class DepositConfirmComponent implements OnInit {
 
   get lunas(): boolean {
     /* Kesamaan persis menggantungkan dokumen gara-gara receh pembulatan. */
-    return this.totalTagihan - this.totalPembayaran <= PAYMENT_ROUNDING_TOLERANCE;
+    return (
+      this.totalTagihan - this.totalPembayaran <= PAYMENT_ROUNDING_TOLERANCE
+    );
   }
 
   /** Pembayaran tidak boleh melebihi tagihan — server menolaknya juga. */

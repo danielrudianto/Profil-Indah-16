@@ -140,7 +140,10 @@ export class DepositViewComponent implements OnInit {
     return (
       this.subtotal +
       this.dokumen.delivery +
-      this.dokumen.service -
+      this.dokumen.service +
+      /* Biaya admin ditagihkan ke pelanggan, jadi ia bagian dari yang harus
+         dibayar — server menghitungnya begitu, dan layar harus sepakat. */
+      Number(this.dokumen.adminFee ?? 0) -
       this.dokumen.discount
     );
   }
