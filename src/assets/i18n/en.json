@@ -2740,5 +2740,16 @@
   "sales-invoice__create__admin-fee__hint": "Credit card from another bank; adds to the bill, not to revenue",
   "sales-invoice__rebate__internal-title": "No discount refund",
   "sales-invoice__rebate__internal-note": "An internal deposit takes no payment, so there is no money to give back.",
-  "sales-invoice__view__admin-fee": "Administration fee"
+  "sales-invoice__view__admin-fee": "Administration fee",
+  "report-finance__income": "Income",
+  "report-finance__gross-profit": "Gross profit",
+  "report-finance__expenses": "Expenses",
+  "report-finance__net-profit": "Net profit",
+  "report-finance__highlights": "Highlights",
+  "report-finance__per-company": "Breakdown by company",
+  "report-finance__expense-breakdown": "Spending — what the money went to",
+  "report-finance__expense-all": "All companies",
+  "report-finance__expense-other": "Other",
+  "report-finance__trend": "12-month trend",
+  "report-finance__admin-fee-note": "Credit card administration fees are NOT counted as income. They are billed to the customer and passed on to the bank, so cash received will be larger than the income shown here."
 }

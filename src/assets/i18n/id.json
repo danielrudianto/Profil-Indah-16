@@ -2740,5 +2740,16 @@
   "sales-invoice__create__admin-fee__hint": "Kartu kredit beda bank; menambah tagihan, bukan omzet",
   "sales-invoice__rebate__internal-title": "Tidak ada pengembalian diskon",
   "sales-invoice__rebate__internal-note": "Deposit internal tidak menerima pembayaran, jadi tidak ada uang yang bisa dikembalikan.",
-  "sales-invoice__view__admin-fee": "Biaya administrasi"
+  "sales-invoice__view__admin-fee": "Biaya administrasi",
+  "report-finance__income": "Pendapatan",
+  "report-finance__gross-profit": "Laba kotor",
+  "report-finance__expenses": "Beban",
+  "report-finance__net-profit": "Laba bersih",
+  "report-finance__highlights": "Sorotan",
+  "report-finance__per-company": "Rincian per perusahaan",
+  "report-finance__expense-breakdown": "Pengeluaran — keluar untuk apa saja",
+  "report-finance__expense-all": "Seluruh perusahaan",
+  "report-finance__expense-other": "Lainnya",
+  "report-finance__trend": "Tren 12 bulan",
+  "report-finance__admin-fee-note": "Biaya administrasi kartu kredit TIDAK dihitung sebagai pendapatan. Nilainya ditagihkan kepada pelanggan lalu diteruskan ke bank, sehingga uang yang masuk akan lebih besar daripada pendapatan pada laporan ini."
 }
