@@ -61,6 +61,7 @@ import {
     NgIf,
     NgFor,
     DecimalPipe,
+    DatePipe,
     FormsModule,
     ReactiveFormsModule,
     TranslatePipe,
@@ -90,6 +91,15 @@ export class ReportFinanceComponent implements OnInit {
   stockOut: { hpp: number; sales: number; company_id: number | null }[] = [];
   takTeralokasi = 0;
 
+  /**
+   * Kapan angka di layar ini dihitung server.
+   *
+   * Laporannya disimpan di cache belasan jam, sehingga yang terbaca bisa saja
+   * dihitung tadi pagi. Menampilkan waktunya bukan basa-basi: angka lama yang
+   * tidak menyebut umurnya dikira baru, dan itu yang berbahaya.
+   */
+  dihitungPada: Date | null = null;
+
   /** 12 bulan berakhir di bulan terpilih — bahan grafik dan sorotan. */
   tren: {
     year: number;
@@ -112,7 +122,12 @@ export class ReportFinanceComponent implements OnInit {
       : this.date.value!.format('YYYY');
   }
 
-  ambilData(): void {
+  /* Melewati cache server; dipakai tombol hitung ulang. */
+  hitungUlang(): void {
+    this.ambilData(true);
+  }
+
+  ambilData(paksa = false): void {
     this.isLoading = true;
     this.utamaSiap = false;
     this.sorotan = [];
@@ -121,6 +136,7 @@ export class ReportFinanceComponent implements OnInit {
         month: this.periode === 'bulan' ? this.date.value!.month() + 1 : 0,
         year: this.date.value!.year(),
         report: 0,
+        refresh: paksa,
       })
       .subscribe({
         next: (data: any) => {
@@ -132,6 +148,9 @@ export class ReportFinanceComponent implements OnInit {
             company_id: x.company_id,
           }));
           this.takTeralokasi = Number(data.stockOut?.unallocated ?? 0);
+          this.dihitungPada = data.computedAt
+            ? new Date(data.computedAt)
+            : null;
           this.utamaSiap = true;
           this.susunSorotan();
         },
@@ -143,16 +162,17 @@ export class ReportFinanceComponent implements OnInit {
         this.isLoading = false;
       });
 
-    this.ambilTren();
+    this.ambilTren(paksa);
   }
 
   /** Tren 12 bulan; tampilan tahunan memakai jendela Januari–Desember. */
-  private ambilTren(): void {
+  private ambilTren(paksa = false): void {
     this.tren = [];
     this.apiService
       .get('report/profit-loss/trend', {
         month: this.periode === 'bulan' ? this.date.value!.month() + 1 : 12,
         year: this.date.value!.year(),
+        refresh: paksa,
       })
       .subscribe({
         next: (data: any) => {

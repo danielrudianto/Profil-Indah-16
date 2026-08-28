@@ -37,3 +37,17 @@
 .baris-total td {
   border-top: 2px solid var(--color-divider);
 }
+
+/*
+  Cap umur angka. Sengaja tenang — ini keterangan, bukan peringatan; yang
+  berteriak di halaman ini hanya HPP tak-teralokasi, dan dua hal yang
+  berteriak sama keras membuat keduanya tidak dibaca.
+*/
+.laporan__cap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: -6px 0 14px;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}

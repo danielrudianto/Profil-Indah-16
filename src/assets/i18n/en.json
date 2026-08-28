@@ -2765,5 +2765,8 @@
   "company-report__expense-other": "Untyped",
   "company-report__expense-empty": "No expenses recorded for this company that month.",
   "company-report__show-all": "Show all ({{jumlah}})",
-  "company-report__show-less": "Show less"
+  "company-report__show-less": "Show less",
+  "report-finance__recompute": "Recompute",
+  "report-finance__recompute__hint": "Ignore the stored copy and recompute from the latest data",
+  "report-finance__computed-at": "Figures computed {{waktu}}"
 }

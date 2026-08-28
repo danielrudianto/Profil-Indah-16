@@ -2,8 +2,8 @@
 <div class="laporan">
   <header class="laporan__kepala">
     <div>
-      <h1 class="laporan__judul">{{ 'report-finance__title' | translate }}</h1>
-      <p class="laporan__lede">{{ 'report-finance__lede' | translate }}</p>
+      <h1 class="laporan__judul">{{ "report-finance__title" | translate }}</h1>
+      <p class="laporan__lede">{{ "report-finance__lede" | translate }}</p>
     </div>
 
     <div class="laporan__kendali">
@@ -14,7 +14,7 @@
           [class.seg__tombol--on]="periode === 'bulan'"
           (click)="gantiPeriode('bulan')"
         >
-          {{ 'report-finance__monthly' | translate }}
+          {{ "report-finance__monthly" | translate }}
         </button>
         <button
           type="button"
@@ -22,7 +22,7 @@
           [class.seg__tombol--on]="periode === 'tahun'"
           (click)="gantiPeriode('tahun')"
         >
-          {{ 'report-finance__yearly' | translate }}
+          {{ "report-finance__yearly" | translate }}
         </button>
       </div>
 
@@ -54,14 +54,38 @@
       <button
         type="button"
         class="btn btn--kedua"
+        [disabled]="isLoading"
+        (click)="hitungUlang()"
+        [title]="'report-finance__recompute__hint' | translate"
+      >
+        <i class="ph ph-arrows-clockwise" aria-hidden="true"></i>
+        {{ "report-finance__recompute" | translate }}
+      </button>
+
+      <button
+        type="button"
+        class="btn btn--kedua"
         [disabled]="isDownloading || isLoading"
         (click)="downloadPdf()"
       >
         <i class="ph ph-file-pdf" aria-hidden="true"></i>
-        {{ 'report-finance__download' | translate }}
+        {{ "report-finance__download" | translate }}
       </button>
     </div>
   </header>
+
+  <!--
+    Umur angkanya disebut terang-terangan. Laporan ini disimpan di cache
+    belasan jam demi kecepatan, dan pertukaran itu hanya jujur bila
+    pembacanya tahu ia sedang membaca angka jam berapa.
+  -->
+  <p class="laporan__cap" *ngIf="dihitungPada && !isLoading">
+    <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>
+    {{
+      "report-finance__computed-at"
+        | translate: { waktu: dihitungPada | date: "d MMM yyyy, HH:mm" }
+    }}
+  </p>
 
   <!--
     HPP tak-teralokasi TIDAK disembunyikan: laba di bawah belum final
@@ -70,34 +94,46 @@
   <div class="peringatan" *ngIf="takTeralokasi > 0">
     <i class="ph-fill ph-warning" aria-hidden="true"></i>
     <span>
-      {{ 'report-finance__unallocated-banner' | translate }}
-      <strong>Rp {{ takTeralokasi | number: '1.0-0' }}</strong>
-      {{ 'report-finance__unallocated-banner-2' | translate }}
+      {{ "report-finance__unallocated-banner" | translate }}
+      <strong>Rp {{ takTeralokasi | number: "1.0-0" }}</strong>
+      {{ "report-finance__unallocated-banner-2" | translate }}
     </span>
   </div>
 
   <div class="hero">
     <div class="hero__kartu hero__kartu--utama">
-      <span class="hero__label">{{ 'report-finance__hero__net' | translate }}</span>
-      <strong class="hero__nilai">Rp {{ totalLabaBersih | number: '1.0-0' }}</strong>
+      <span class="hero__label">{{
+        "report-finance__hero__net" | translate
+      }}</span>
+      <strong class="hero__nilai"
+        >Rp {{ totalLabaBersih | number: "1.0-0" }}</strong
+      >
     </div>
     <div class="hero__kartu">
-      <span class="hero__label">{{ 'report-finance__hero__income' | translate }}</span>
-      <strong class="hero__nilai">Rp {{ totalPendapatan | number: '1.0-0' }}</strong>
+      <span class="hero__label">{{
+        "report-finance__hero__income" | translate
+      }}</span>
+      <strong class="hero__nilai"
+        >Rp {{ totalPendapatan | number: "1.0-0" }}</strong
+      >
     </div>
     <div class="hero__kartu">
-      <span class="hero__label">{{ 'report-finance__hero__cogs' | translate }}</span>
-      <strong class="hero__nilai">Rp {{ totalHpp | number: '1.0-0' }}</strong>
+      <span class="hero__label">{{
+        "report-finance__hero__cogs" | translate
+      }}</span>
+      <strong class="hero__nilai">Rp {{ totalHpp | number: "1.0-0" }}</strong>
     </div>
     <div class="hero__kartu">
-      <span class="hero__label">{{ 'report-finance__hero__expenses' | translate }}</span>
-      <strong class="hero__nilai">Rp {{ totalBeban | number: '1.0-0' }}</strong>
+      <span class="hero__label">{{
+        "report-finance__hero__expenses" | translate
+      }}</span>
+      <strong class="hero__nilai">Rp {{ totalBeban | number: "1.0-0" }}</strong>
     </div>
   </div>
 
   <!-- Sorotan bulan ini — kalimat yang dihitung dari angka, bukan dikarang. -->
   <section class="kartu sorotan" *ngIf="sorotan.length > 0">
-    <h2 class="kartu__label">{{ 'sorotan__judul' | translate }}</h2>
+    <h2 class="kartu__label">{{ "sorotan__judul" | translate }}</h2>
     <ul class="sorotan__daftar">
       <li *ngFor="let baris of sorotan">
         <span
@@ -116,8 +152,10 @@
   <section class="kartu" *ngIf="tren.length > 0">
     <div class="kartu__kepala">
       <div>
-        <h2 class="kartu__label">{{ 'report-finance__chart' | translate }}</h2>
-        <p class="grafik__sub">{{ 'report-finance__chart__sub' | translate }}</p>
+        <h2 class="kartu__label">{{ "report-finance__chart" | translate }}</h2>
+        <p class="grafik__sub">
+          {{ "report-finance__chart__sub" | translate }}
+        </p>
       </div>
     </div>
 
@@ -129,10 +167,19 @@
     <div class="grafik grafik--nilai">
       <div class="grafik__hari" *ngFor="let b of tren">
         <div class="grafik-tip" role="tooltip">
-          <strong>Rp {{ labaBaris(b) | number: '1.0-0' }}</strong>
-          <span>{{ 'report-finance__hero__income' | translate }} Rp {{ b.sales | number: '1.0-0' }}</span>
-          <span>{{ 'report-finance__hero__cogs' | translate }} Rp {{ b.hpp | number: '1.0-0' }}</span>
-          <span>{{ 'report-finance__hero__expenses' | translate }} Rp {{ b.expense | number: '1.0-0' }}</span>
+          <strong>Rp {{ labaBaris(b) | number: "1.0-0" }}</strong>
+          <span
+            >{{ "report-finance__hero__income" | translate }} Rp
+            {{ b.sales | number: "1.0-0" }}</span
+          >
+          <span
+            >{{ "report-finance__hero__cogs" | translate }} Rp
+            {{ b.hpp | number: "1.0-0" }}</span
+          >
+          <span
+            >{{ "report-finance__hero__expenses" | translate }} Rp
+            {{ b.expense | number: "1.0-0" }}</span
+          >
           <small>{{ bulanPenuh(b) }}</small>
         </div>
         <span
@@ -146,10 +193,19 @@
     <div class="grafik grafik--transaksi">
       <div class="grafik__hari" *ngFor="let b of tren">
         <div class="grafik-tip" role="tooltip">
-          <strong>Rp {{ labaBaris(b) | number: '1.0-0' }}</strong>
-          <span>{{ 'report-finance__hero__income' | translate }} Rp {{ b.sales | number: '1.0-0' }}</span>
-          <span>{{ 'report-finance__hero__cogs' | translate }} Rp {{ b.hpp | number: '1.0-0' }}</span>
-          <span>{{ 'report-finance__hero__expenses' | translate }} Rp {{ b.expense | number: '1.0-0' }}</span>
+          <strong>Rp {{ labaBaris(b) | number: "1.0-0" }}</strong>
+          <span
+            >{{ "report-finance__hero__income" | translate }} Rp
+            {{ b.sales | number: "1.0-0" }}</span
+          >
+          <span
+            >{{ "report-finance__hero__cogs" | translate }} Rp
+            {{ b.hpp | number: "1.0-0" }}</span
+          >
+          <span
+            >{{ "report-finance__hero__expenses" | translate }} Rp
+            {{ b.expense | number: "1.0-0" }}</span
+          >
           <small>{{ bulanPenuh(b) }}</small>
         </div>
         <span
@@ -165,11 +221,11 @@
       <div class="grafik__legenda">
         <span>
           <i class="grafik__legenda--nilai" aria-hidden="true"></i>
-          {{ 'report-finance__hero__income' | translate }}
+          {{ "report-finance__hero__income" | translate }}
         </span>
         <span>
           <i class="grafik__legenda--transaksi" aria-hidden="true"></i>
-          {{ 'report-finance__hero__net' | translate }}
+          {{ "report-finance__hero__net" | translate }}
         </span>
       </div>
       <span class="grafik__rentang">{{ rentangTren }}</span>
@@ -177,32 +233,52 @@
   </section>
 
   <section class="kartu">
-    <h2 class="kartu__label">{{ 'report-finance__by-company' | translate }}</h2>
+    <h2 class="kartu__label">{{ "report-finance__by-company" | translate }}</h2>
 
     <div class="gulir">
       <table class="tabel">
         <thead>
           <tr>
-            <th>{{ 'report-finance__table__company' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-finance__hero__income' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-finance__hero__cogs' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-finance__table__gross' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-finance__table__margin' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-finance__hero__expenses' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-finance__hero__net' | translate }}</th>
+            <th>{{ "report-finance__table__company" | translate }}</th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-finance__hero__income" | translate }}
+            </th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-finance__hero__cogs" | translate }}
+            </th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-finance__table__gross" | translate }}
+            </th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-finance__table__margin" | translate }}
+            </th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-finance__hero__expenses" | translate }}
+            </th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-finance__hero__net" | translate }}
+            </th>
           </tr>
         </thead>
 
         <tbody *ngIf="!isLoading">
           <tr *ngFor="let p of perusahaan">
             <td class="tabel__utama">{{ p.name }}</td>
-            <td class="tabel__nilai">Rp {{ pendapatan(p.id) | number: '1.0-0' }}</td>
-            <td class="tabel__nilai">Rp {{ hpp(p.id) | number: '1.0-0' }}</td>
-            <td class="tabel__nilai">Rp {{ labaKotor(p.id) | number: '1.0-0' }}</td>
-            <td class="tabel__nilai tabel__redup">{{ margin(p.id) | number: '1.0-1' }}%</td>
-            <td class="tabel__nilai">Rp {{ bebanPerusahaan(p.id) | number: '1.0-0' }}</td>
+            <td class="tabel__nilai">
+              Rp {{ pendapatan(p.id) | number: "1.0-0" }}
+            </td>
+            <td class="tabel__nilai">Rp {{ hpp(p.id) | number: "1.0-0" }}</td>
+            <td class="tabel__nilai">
+              Rp {{ labaKotor(p.id) | number: "1.0-0" }}
+            </td>
+            <td class="tabel__nilai tabel__redup">
+              {{ margin(p.id) | number: "1.0-1" }}%
+            </td>
+            <td class="tabel__nilai">
+              Rp {{ bebanPerusahaan(p.id) | number: "1.0-0" }}
+            </td>
             <td class="tabel__nilai baris__total">
-              Rp {{ labaBersih(p.id) | number: '1.0-0' }}
+              Rp {{ labaBersih(p.id) | number: "1.0-0" }}
             </td>
           </tr>
 
@@ -213,9 +289,11 @@
           <tr *ngIf="adaBarisTanpaAlokasi" class="tanpa-alokasi">
             <td class="tabel__utama">
               <i class="ph-fill ph-warning" aria-hidden="true"></i>
-              {{ 'report-finance__unallocated-row' | translate }}
+              {{ "report-finance__unallocated-row" | translate }}
             </td>
-            <td class="tabel__nilai">Rp {{ pendapatan(null) | number: '1.0-0' }}</td>
+            <td class="tabel__nilai">
+              Rp {{ pendapatan(null) | number: "1.0-0" }}
+            </td>
             <td class="tabel__nilai">—</td>
             <td class="tabel__nilai">—</td>
             <td class="tabel__nilai">—</td>
@@ -225,19 +303,29 @@
 
           <tr class="baris-total">
             <td class="tabel__utama">TOTAL</td>
-            <td class="tabel__nilai baris__total">Rp {{ totalPendapatan | number: '1.0-0' }}</td>
-            <td class="tabel__nilai baris__total">Rp {{ totalHpp | number: '1.0-0' }}</td>
-            <td class="tabel__nilai baris__total">Rp {{ totalLabaKotor | number: '1.0-0' }}</td>
+            <td class="tabel__nilai baris__total">
+              Rp {{ totalPendapatan | number: "1.0-0" }}
+            </td>
+            <td class="tabel__nilai baris__total">
+              Rp {{ totalHpp | number: "1.0-0" }}
+            </td>
+            <td class="tabel__nilai baris__total">
+              Rp {{ totalLabaKotor | number: "1.0-0" }}
+            </td>
             <td class="tabel__nilai"></td>
-            <td class="tabel__nilai baris__total">Rp {{ totalBeban | number: '1.0-0' }}</td>
-            <td class="tabel__nilai baris__total">Rp {{ totalLabaBersih | number: '1.0-0' }}</td>
+            <td class="tabel__nilai baris__total">
+              Rp {{ totalBeban | number: "1.0-0" }}
+            </td>
+            <td class="tabel__nilai baris__total">
+              Rp {{ totalLabaBersih | number: "1.0-0" }}
+            </td>
           </tr>
         </tbody>
 
         <tbody *ngIf="isLoading">
           <tr>
             <td colspan="7" class="tabel__pesan">
-              {{ 'general__loading' | translate }}
+              {{ "general__loading" | translate }}
             </td>
           </tr>
         </tbody>
