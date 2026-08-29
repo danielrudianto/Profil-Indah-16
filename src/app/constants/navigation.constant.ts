@@ -42,7 +42,7 @@ export interface NavItem {
    * tidak berlencana, dan itu disengaja: lencana pada segala sesuatu berhenti
    * berarti apa-apa.
    */
-  badge?: 'overpayment' | 'goodReceipt' | 'adjustment';
+  badge?: 'overpayment' | 'goodReceipt' | 'adjustment' | 'stock';
 }
 
 const SALES = [Role.Sales, Role.General, Role.Administrator, Role.Owner];
@@ -181,6 +181,7 @@ export const NAV_ITEMS: NavItem[] = [
     path: 'Stock',
     group: 'master',
     roles: SEMUA_OPERASIONAL,
+    badge: 'stock',
   },
   {
     label: 'nav__package',

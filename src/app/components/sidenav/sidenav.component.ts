@@ -102,9 +102,9 @@ export class SidenavComponent implements OnInit {
    * Nol mengembalikan null supaya template tidak menggambar lencana kosong:
    * lencana bertuliskan 0 adalah pemberitahuan bahwa tidak ada pemberitahuan.
    */
-  lencana(item: { badge?: 'overpayment' | 'goodReceipt' | 'adjustment' }):
-    | string
-    | null {
+  lencana(item: {
+    badge?: 'overpayment' | 'goodReceipt' | 'adjustment' | 'stock';
+  }): string | null {
     if (!item.badge) {
       return null;
     }

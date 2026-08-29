@@ -49,8 +49,48 @@ export class ReceivableListComponent implements OnInit {
   page = 1;
   pageSize = 10;
 
+  /**
+   * Halaman dan kata kunci disimpan di URL, bukan di dalam komponen.
+   *
+   * Komponen ini dibuat ulang setiap kali orang kembali dari halaman rincian,
+   * sehingga keadaan yang hanya hidup di dalamnya SELALU hilang — dan
+   * penagih yang sedang memeriksa halaman tujuh dilempar balik ke halaman
+   * satu setiap kali membuka satu pelanggan.
+   *
+   * Di URL, keadaannya selamat dari tombol kembali, dari muat ulang, dan
+   * tautannya bisa dikirim ke orang lain apa adanya.
+   */
   ngOnInit(): void {
+    const q = this.route.snapshot.queryParams;
+    const halaman = Number(q['page']);
+    this.page = Number.isInteger(halaman) && halaman > 0 ? halaman : 1;
+    this.keyword = q['q'] ?? '';
+
+    const ukuran = Number(q['size']);
+    if ([10, 25, 50, 100].includes(ukuran)) {
+      this.pageSize = ukuran;
+    }
+
     this.ambilData();
+  }
+
+  /*
+    replaceUrl: riwayat peramban tidak diisi tiap kali orang berpindah
+    halaman. Tanpa itu, satu kali menekan "kembali" dari rincian akan
+    membawanya ke halaman sebelumnya, bukan keluar dari daftar — dan menekan
+    kembali sepuluh kali cuma menyusuri nomor halaman.
+  */
+  private simpanKeadaan(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        page: this.page > 1 ? this.page : null,
+        q: this.keyword || null,
+        size: this.pageSize !== 10 ? this.pageSize : null,
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   ambilData(): void {
@@ -60,7 +100,7 @@ export class ReceivableListComponent implements OnInit {
       .subscribe({
         next: (data: any) => {
           this.dataSource = data;
-          this.saring();
+          this.saring(true);
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -74,18 +114,39 @@ export class ReceivableListComponent implements OnInit {
   cari(kataKunci: string): void {
     this.keyword = kataKunci;
     this.saring();
+    this.simpanKeadaan();
   }
 
   resetPencarian(): void {
     this.cari('');
   }
 
-  private saring(): void {
+  /**
+   * `pertahankanHalaman` dipakai saat memuat pertama.
+   *
+   * Menyaring memang harus mengembalikan ke halaman satu — hasilnya menyusut
+   * dan halaman ke-tujuh bisa saja sudah tidak ada. Tetapi pemanggilan
+   * pertama bukan penyaringan baru, melainkan pemulihan keadaan dari URL,
+   * dan mengembalikannya ke satu di situ justru membatalkan seluruh gunanya.
+   */
+  private saring(pertahankanHalaman = false): void {
     const kunci = this.keyword.toLowerCase();
     this.tersaring = this.dataSource
       .filter((x) => (x.name ?? '').toLowerCase().includes(kunci))
       .sort((a, b) => this.sisa(b) - this.sisa(a));
-    this.page = 1;
+
+    if (!pertahankanHalaman) {
+      this.page = 1;
+      return;
+    }
+
+    /* Halaman dari URL bisa melampaui hasil yang ada — misalnya tautan lama
+       yang dibuka setelah sebagian piutangnya lunas. */
+    const maksimal = Math.max(
+      Math.ceil(this.tersaring.length / this.pageSize),
+      1,
+    );
+    this.page = Math.min(this.page, maksimal);
   }
 
   /** Potongan halaman yang digambar — dari larik yang sudah tersaring. */
@@ -96,11 +157,13 @@ export class ReceivableListComponent implements OnInit {
 
   bukaHalaman(halaman: number): void {
     this.page = halaman;
+    this.simpanKeadaan();
   }
 
   gantiUkuran(ukuran: number): void {
     this.pageSize = ukuran;
     this.page = 1;
+    this.simpanKeadaan();
   }
 
   /*

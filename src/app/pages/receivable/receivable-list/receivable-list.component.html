@@ -12,15 +12,17 @@
   (pageSizeChange)="gantiUkuran($event)"
   (refresh)="ambilData()"
 >
-  <table class="tabel">
+  <table class="tabel piutang__tabel">
     <thead>
       <tr>
-        <th>{{ 'receivable__name' | translate }}</th>
+        <th class="piutang__nama-kepala">
+          {{ "receivable__name" | translate }}
+        </th>
         <th class="piutang__bar-kepala">
-          <span class="sr-only">{{ 'receivable__amount' | translate }}</span>
+          <span class="sr-only">{{ "receivable__amount" | translate }}</span>
         </th>
         <th class="tabel__nilai-kepala">
-          {{ 'receivable__amount' | translate }}
+          {{ "receivable__amount" | translate }}
         </th>
       </tr>
     </thead>
@@ -34,11 +36,11 @@
         <td class="tabel__utama">
           <div class="sel-entitas">
             <span class="avatar-inisial" aria-hidden="true">
-              {{ inisial(item.name ?? ('sales-invoice__retail' | translate)) }}
+              {{ inisial(item.name ?? ("sales-invoice__retail" | translate)) }}
             </span>
             <span class="sel-entitas__teks">
               <span class="sel-entitas__utama">
-                {{ item.name ?? ('sales-invoice__retail' | translate) }}
+                {{ item.name ?? ("sales-invoice__retail" | translate) }}
               </span>
             </span>
           </div>
@@ -50,7 +52,11 @@
         -->
         <td
           class="piutang__bar-sel"
-          [title]="(item.name ?? ('sales-invoice__retail' | translate)) + ' — Rp ' + (sisa(item) | number: '1.0-0')"
+          [title]="
+            (item.name ?? ('sales-invoice__retail' | translate)) +
+            ' — Rp ' +
+            (sisa(item) | number: '1.0-0')
+          "
         >
           <span
             class="piutang__bar"
@@ -59,7 +65,7 @@
           ></span>
         </td>
         <td class="tabel__nilai baris__total">
-          Rp {{ sisa(item) | number: '1.0-0' }}
+          Rp {{ sisa(item) | number: "1.0-0" }}
         </td>
       </tr>
     </tbody>
@@ -67,7 +73,7 @@
     <tbody *ngIf="isLoading">
       <tr>
         <td colspan="3" class="tabel__pesan">
-          {{ 'general__loading' | translate }}
+          {{ "general__loading" | translate }}
         </td>
       </tr>
     </tbody>

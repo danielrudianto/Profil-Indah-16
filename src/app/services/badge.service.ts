@@ -5,6 +5,8 @@ export interface BadgeCounts {
   overpayment: number;
   goodReceipt: number;
   adjustment: number;
+  /** Barang yang stoknya minus atau di bawah ambangnya sendiri. */
+  stock: number;
 }
 
 /**
@@ -25,7 +27,12 @@ export class BadgeService implements OnDestroy {
   private api = inject(ApiService);
 
   /** Nol, bukan null — sebelum jawaban pertama tiba, tidak ada lencana. */
-  counts: BadgeCounts = { overpayment: 0, goodReceipt: 0, adjustment: 0 };
+  counts: BadgeCounts = {
+    overpayment: 0,
+    goodReceipt: 0,
+    adjustment: 0,
+    stock: 0,
+  };
 
   private timer: ReturnType<typeof setInterval> | null = null;
   private readonly JEDA = 60_000;
@@ -66,6 +73,7 @@ export class BadgeService implements OnDestroy {
           overpayment: Number(data?.overpayment ?? 0),
           goodReceipt: Number(data?.goodReceipt ?? 0),
           adjustment: Number(data?.adjustment ?? 0),
+          stock: Number(data?.stock ?? 0),
         };
       },
       /*

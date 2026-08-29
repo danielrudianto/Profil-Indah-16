@@ -1,10 +1,32 @@
 /*
+  Lebar kolom DIPATOK, tidak dihitung dari isinya.
+
+  Dengan tata letak otomatis, lebar tiap kolom ditentukan baris yang kebetulan
+  sedang tampil — sehingga berpindah halaman menggeser seluruh kolom, dan mata
+  harus mencari ulang letak angkanya setiap kali. Nama pelanggan yang panjang
+  di halaman tiga tidak boleh mengubah tampilan halaman empat.
+*/
+.piutang__tabel {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.piutang__nama-kepala {
+  width: 38%;
+}
+
+/*
   Bar sisa piutang, relatif terhadap penunggak terbesar — pola bar
   "penjualan per merek" di laporan: pembanding cepat, angkanya tetap di
   kolom sebelah.
 */
 .piutang__bar-kepala {
   width: 40%;
+}
+
+/* Sisanya untuk angka — cukup lebar bagi nilai terbesar yang mungkin. */
+.piutang__tabel .tabel__nilai-kepala {
+  width: 22%;
 }
 
 .piutang__bar-sel {
