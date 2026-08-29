@@ -3,11 +3,11 @@
   <div class="dasbor__kepala">
     <div>
       <h1 class="dasbor__sapaan">
-        {{ kunciSapaan | translate }}{{ nama ? ', ' + nama : '' }}
+        {{ kunciSapaan | translate }}{{ nama ? ", " + nama : "" }}
       </h1>
       <p class="dasbor__tanggal">
-        {{ hariIni | date: 'EEEE, d MMMM yyyy' }} ·
-        {{ 'dashboard__ringkasan' | translate }}
+        {{ hariIni | date: "EEEE, d MMMM yyyy" }} ·
+        {{ "dashboard__ringkasan" | translate }}
       </p>
     </div>
     <span class="dasbor__peran">
@@ -30,13 +30,13 @@
       <div class="dasbor__ubin-isi">
         <div class="dasbor__ubin-label">{{ u.label | translate }}</div>
         <div class="dasbor__ubin-nilai" *ngIf="u.jenis === 'uang'">
-          Rp {{ u.nilai | number: '1.0-0' }}
+          Rp {{ u.nilai | number: "1.0-0" }}
         </div>
         <div class="dasbor__ubin-nilai" *ngIf="u.jenis === 'jumlah'">
-          {{ 'dashboard__kartu__promosi-nilai' | translate: { n: u.nilai } }}
+          {{ "dashboard__kartu__promosi-nilai" | translate: { n: u.nilai } }}
         </div>
         <div class="dasbor__ubin-sub" *ngIf="u.subNilai !== null">
-          {{ u.subLabel | translate }} Rp {{ u.subNilai | number: '1.0-0' }}
+          {{ u.subLabel | translate }} Rp {{ u.subNilai | number: "1.0-0" }}
         </div>
         <div class="dasbor__ubin-sub" *ngIf="u.subNilai === null">
           {{ u.subLabel | translate }}
@@ -45,9 +45,13 @@
     </div>
   </div>
 
+  <!-- Piutang ditaruh sebelum kartu lain: inilah yang paling mudah terlewat,
+       dan yang paling mahal ketika terlewat. -->
+  <app-receivable-card *ngIf="!isLoading" [data]="piutang" />
+
   <div class="kartu dasbor__kartu" *ngIf="!isLoading">
     <div class="dasbor__kartu-judul dasbor__kartu-judul--renggang">
-      {{ 'dashboard__aksi__judul' | translate }}
+      {{ "dashboard__aksi__judul" | translate }}
     </div>
     <div class="dasbor__aksi">
       <button
@@ -69,7 +73,7 @@
         [disabled]="rekapHarian.sedangUnduh"
       >
         <i class="ph ph-file-xls" aria-hidden="true"></i>
-        {{ 'dashboard__aksi__rekap-harian' | translate }}
+        {{ "dashboard__aksi__rekap-harian" | translate }}
       </button>
     </div>
   </div>

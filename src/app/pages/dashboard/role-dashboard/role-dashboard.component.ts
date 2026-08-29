@@ -9,6 +9,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { RekapHarianService } from 'src/app/services/rekap-harian.service';
 import { Role } from 'src/app/constants/role.constant';
+import {
+  ReceivableCardComponent,
+  RingkasanPiutang,
+} from 'src/app/components/receivable-card/receivable-card.component';
 
 /** Satu ubin angka; nilai uang atau hitungan biasa. */
 interface UbinPeran {
@@ -43,7 +47,14 @@ interface AksiPeran {
   selector: 'app-role-dashboard',
   templateUrl: './role-dashboard.component.html',
   styleUrls: ['./role-dashboard.component.scss'],
-  imports: [NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe],
+  imports: [
+    ReceivableCardComponent,
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    DatePipe,
+    TranslatePipe,
+  ],
 })
 export class RoleDashboardComponent implements OnInit {
   constructor(
@@ -91,9 +102,7 @@ export class RoleDashboardComponent implements OnInit {
     this.aksi = this.susunAksi(lihatJual, lihatBeli);
 
     forkJoin({
-      jual: lihatJual
-        ? this.apiService.post('dashboard/sales', {})
-        : of(null),
+      jual: lihatJual ? this.apiService.post('dashboard/sales', {}) : of(null),
       beli: lihatBeli
         ? this.apiService.post('dashboard/purchasing', {})
         : of(null),
@@ -101,6 +110,9 @@ export class RoleDashboardComponent implements OnInit {
       .subscribe({
         next: ({ jual, beli }: any) => {
           this.ubin = this.susunUbin(jual, beli);
+          /* Hanya dasbor penjualan yang membawanya — yang menagih orang
+             penjualan, bukan pembelian. */
+          this.piutang = jual?.receivable ?? null;
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -110,6 +122,9 @@ export class RoleDashboardComponent implements OnInit {
         this.isLoading = false;
       });
   }
+
+  /** Ringkasan piutang; null berarti perannya memang tidak menagih. */
+  piutang: RingkasanPiutang | null = null;
 
   private susunUbin(jual: any, beli: any): UbinPeran[] {
     const ubin: UbinPeran[] = [];
@@ -185,14 +200,26 @@ export class RoleDashboardComponent implements OnInit {
 
     if (lihatJual) {
       aksi.push(
-        { ikon: 'ph-plus', label: 'dashboard__aksi__faktur', rute: '/Sales-invoice' },
-        { ikon: 'ph-arrow-u-up-left', label: 'nav__sales_return', rute: '/Sales-return' },
+        {
+          ikon: 'ph-plus',
+          label: 'dashboard__aksi__faktur',
+          rute: '/Sales-invoice',
+        },
+        {
+          ikon: 'ph-arrow-u-up-left',
+          label: 'nav__sales_return',
+          rute: '/Sales-return',
+        },
       );
     }
 
     if (lihatBeli) {
       aksi.push(
-        { ikon: 'ph-package', label: 'nav__good_receipt', rute: '/Good-receipt' },
+        {
+          ikon: 'ph-package',
+          label: 'nav__good_receipt',
+          rute: '/Good-receipt',
+        },
         { ikon: 'ph-archive', label: 'nav__product', rute: '/Product' },
       );
     }

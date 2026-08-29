@@ -3,11 +3,11 @@
   <div class="dasbor__kepala">
     <div>
       <h1 class="dasbor__sapaan">
-        {{ kunciSapaan | translate }}{{ nama ? ', ' + nama : '' }}
+        {{ kunciSapaan | translate }}{{ nama ? ", " + nama : "" }}
       </h1>
       <p class="dasbor__tanggal">
-        {{ hariIni | date: 'EEEE, d MMMM yyyy' }} ·
-        {{ 'dashboard__ringkasan' | translate }}
+        {{ hariIni | date: "EEEE, d MMMM yyyy" }} ·
+        {{ "dashboard__ringkasan" | translate }}
       </p>
     </div>
     <span class="dasbor__peran">
@@ -17,6 +17,10 @@
   </div>
 
   <!-- Empat ubin angka hari ini. -->
+  <!-- Piutang ditaruh sebelum kartu lain: inilah yang paling mudah terlewat,
+       dan yang paling mahal ketika terlewat. -->
+  <app-receivable-card [data]="piutang" />
+
   <div class="dasbor__ubin-kisi">
     <div class="dasbor__ubin" (click)="bukaArsipFaktur()">
       <div class="dasbor__ubin-ikon">
@@ -24,12 +28,14 @@
       </div>
       <div class="dasbor__ubin-isi">
         <div class="dasbor__ubin-label">
-          {{ 'dashboard__kartu__penjualan' | translate }}
+          {{ "dashboard__kartu__penjualan" | translate }}
         </div>
-        <div class="dasbor__ubin-nilai">Rp {{ sales.value | number: '1.0-0' }}</div>
+        <div class="dasbor__ubin-nilai">
+          Rp {{ sales.value | number: "1.0-0" }}
+        </div>
         <div class="dasbor__ubin-sub">
           {{
-            'dashboard__kartu__faktur-sub'
+            "dashboard__kartu__faktur-sub"
               | translate: { n: sales.count, m: sales.unpaid }
           }}
         </div>
@@ -42,11 +48,15 @@
       </div>
       <div class="dasbor__ubin-isi">
         <div class="dasbor__ubin-label">
-          {{ 'dashboard__kartu__pembelian' | translate }}
+          {{ "dashboard__kartu__pembelian" | translate }}
         </div>
-        <div class="dasbor__ubin-nilai">Rp {{ purchase.value | number: '1.0-0' }}</div>
+        <div class="dasbor__ubin-nilai">
+          Rp {{ purchase.value | number: "1.0-0" }}
+        </div>
         <div class="dasbor__ubin-sub">
-          {{ 'dashboard__kartu__dokumen-sub' | translate: { n: purchase.count } }}
+          {{
+            "dashboard__kartu__dokumen-sub" | translate: { n: purchase.count }
+          }}
         </div>
       </div>
     </div>
@@ -57,14 +67,17 @@
       </div>
       <div class="dasbor__ubin-isi">
         <div class="dasbor__ubin-label">
-          {{ 'dashboard__kartu__promosi' | translate }}
+          {{ "dashboard__kartu__promosi" | translate }}
         </div>
         <div class="dasbor__ubin-nilai">
-          {{ 'dashboard__kartu__promosi-nilai' | translate: { n: promotion.count } }}
+          {{
+            "dashboard__kartu__promosi-nilai"
+              | translate: { n: promotion.count }
+          }}
         </div>
         <div class="dasbor__ubin-sub">
           {{
-            'dashboard__kartu__promosi-sub'
+            "dashboard__kartu__promosi-sub"
               | translate: { n: promotion.endingSoon }
           }}
         </div>
@@ -77,11 +90,15 @@
       </div>
       <div class="dasbor__ubin-isi">
         <div class="dasbor__ubin-label">
-          {{ 'dashboard__kartu__deposit' | translate }}
+          {{ "dashboard__kartu__deposit" | translate }}
         </div>
-        <div class="dasbor__ubin-nilai">Rp {{ deposit.value | number: '1.0-0' }}</div>
+        <div class="dasbor__ubin-nilai">
+          Rp {{ deposit.value | number: "1.0-0" }}
+        </div>
         <div class="dasbor__ubin-sub">
-          {{ 'dashboard__kartu__dokumen-sub' | translate: { n: deposit.count } }}
+          {{
+            "dashboard__kartu__dokumen-sub" | translate: { n: deposit.count }
+          }}
         </div>
       </div>
     </div>
@@ -91,10 +108,14 @@
   <div class="kartu dasbor__kartu">
     <div class="dasbor__kartu-kepala">
       <div class="dasbor__kartu-judul">
-        {{ 'dashboard__laporan__judul' | translate }}
+        {{ "dashboard__laporan__judul" | translate }}
       </div>
-      <button type="button" class="dasbor__tautan" (click)="bukaDaftarLaporan()">
-        {{ 'dashboard__aksi__laporan' | translate }} →
+      <button
+        type="button"
+        class="dasbor__tautan"
+        (click)="bukaDaftarLaporan()"
+      >
+        {{ "dashboard__aksi__laporan" | translate }} →
       </button>
     </div>
 
@@ -107,7 +128,10 @@
       >
         <i [class]="'ph ' + l.ikon" aria-hidden="true"></i>
         <span>{{ l.kunci | translate }}</span>
-        <i class="ph ph-arrow-right dasbor__laporan-panah" aria-hidden="true"></i>
+        <i
+          class="ph ph-arrow-right dasbor__laporan-panah"
+          aria-hidden="true"
+        ></i>
       </button>
     </div>
   </div>
@@ -118,15 +142,15 @@
       <div class="dasbor__kartu-kepala">
         <div>
           <div class="dasbor__kartu-judul">
-            {{ 'dashboard__grafik__judul' | translate }}
+            {{ "dashboard__grafik__judul" | translate }}
           </div>
           <div class="dasbor__kartu-sub">
-            {{ 'dashboard__grafik__total' | translate }}
-            Rp {{ totalMinggu | number: '1.0-0' }}
+            {{ "dashboard__grafik__total" | translate }}
+            Rp {{ totalMinggu | number: "1.0-0" }}
           </div>
         </div>
         <button type="button" class="dasbor__tautan" (click)="bukaLaporan()">
-          {{ 'dashboard__lihat-laporan' | translate }} →
+          {{ "dashboard__lihat-laporan" | translate }} →
         </button>
       </div>
 
@@ -142,8 +166,8 @@
           *ngFor="let m of minggu; index as i; trackBy: lacakHari"
         >
           <div class="dasbor__tip" role="tooltip">
-            <strong>Rp {{ m.nilai | number: '1.0-0' }}</strong>
-            <span>{{ m.tanggal | date: 'EEEE, d MMMM' }}</span>
+            <strong>Rp {{ m.nilai | number: "1.0-0" }}</strong>
+            <span>{{ m.tanggal | date: "EEEE, d MMMM" }}</span>
           </div>
           <div
             class="dasbor__batang"
@@ -153,8 +177,11 @@
         </div>
       </div>
       <div class="dasbor__grafik-hari" *ngIf="!isLoading">
-        <div class="dasbor__grafik-kolom" *ngFor="let m of minggu; trackBy: lacakHari">
-          {{ m.tanggal | date: 'EEE' }}
+        <div
+          class="dasbor__grafik-kolom"
+          *ngFor="let m of minggu; trackBy: lacakHari"
+        >
+          {{ m.tanggal | date: "EEE" }}
         </div>
       </div>
 
@@ -168,7 +195,9 @@
         >
           <span class="dasbor__faktur-nama">{{ f.name }}</span>
           <span class="dasbor__faktur-pelanggan">{{ f.customer }}</span>
-          <span class="dasbor__faktur-total">Rp {{ f.total | number: '1.0-0' }}</span>
+          <span class="dasbor__faktur-total"
+            >Rp {{ f.total | number: "1.0-0" }}</span
+          >
           <span class="dasbor__faktur-status">
             <span
               class="dasbor__pil"
@@ -180,8 +209,10 @@
                 aria-hidden="true"
               ></i>
               {{
-                (f.isPaid ? 'dashboard__faktur__lunas' : 'dashboard__faktur__belum')
-                  | translate
+                (f.isPaid
+                  ? "dashboard__faktur__lunas"
+                  : "dashboard__faktur__belum"
+                ) | translate
               }}
             </span>
           </span>
@@ -198,10 +229,10 @@
       <div class="kartu dasbor__kartu">
         <div class="dasbor__kartu-kepala">
           <div class="dasbor__kartu-judul">
-            {{ 'dashboard__promosi__judul' | translate }}
+            {{ "dashboard__promosi__judul" | translate }}
           </div>
           <button type="button" class="dasbor__tautan" (click)="bukaPromosi()">
-            {{ 'dashboard__promosi__kelola' | translate }} →
+            {{ "dashboard__promosi__kelola" | translate }} →
           </button>
         </div>
 
@@ -217,12 +248,12 @@
               <div class="dasbor__promosi-sub">
                 <ng-container *ngIf="p.end; else kontinu">
                   {{
-                    'dashboard__promosi__sampai'
-                      | translate: { tanggal: (p.end | date: 'd MMM yyyy') }
+                    "dashboard__promosi__sampai"
+                      | translate: { tanggal: (p.end | date: "d MMM yyyy") }
                   }}
                 </ng-container>
                 <ng-template #kontinu>
-                  {{ 'dashboard__promosi__kontinu' | translate }}
+                  {{ "dashboard__promosi__kontinu" | translate }}
                 </ng-template>
               </div>
             </div>
@@ -232,31 +263,39 @@
             class="dasbor__promosi-kosong"
             *ngIf="!isLoading && promotion.rows.length === 0"
           >
-            {{ 'dashboard__promosi__kosong' | translate }}
+            {{ "dashboard__promosi__kosong" | translate }}
           </p>
         </div>
       </div>
 
       <div class="kartu dasbor__kartu">
         <div class="dasbor__kartu-judul dasbor__kartu-judul--renggang">
-          {{ 'dashboard__aksi__judul' | translate }}
+          {{ "dashboard__aksi__judul" | translate }}
         </div>
         <div class="dasbor__aksi">
           <button type="button" class="btn btn--kedua" (click)="buatFaktur()">
             <i class="ph ph-plus" aria-hidden="true"></i>
-            {{ 'dashboard__aksi__faktur' | translate }}
+            {{ "dashboard__aksi__faktur" | translate }}
           </button>
           <button type="button" class="btn btn--kedua" (click)="tambahBarang()">
             <i class="ph ph-archive" aria-hidden="true"></i>
-            {{ 'dashboard__aksi__barang' | translate }}
+            {{ "dashboard__aksi__barang" | translate }}
           </button>
-          <button type="button" class="btn btn--kedua" (click)="pelangganBaru()">
+          <button
+            type="button"
+            class="btn btn--kedua"
+            (click)="pelangganBaru()"
+          >
             <i class="ph ph-user-plus" aria-hidden="true"></i>
-            {{ 'dashboard__aksi__pelanggan' | translate }}
+            {{ "dashboard__aksi__pelanggan" | translate }}
           </button>
-          <button type="button" class="btn btn--kedua" (click)="bukaDaftarLaporan()">
+          <button
+            type="button"
+            class="btn btn--kedua"
+            (click)="bukaDaftarLaporan()"
+          >
             <i class="ph ph-chart-bar" aria-hidden="true"></i>
-            {{ 'dashboard__aksi__laporan' | translate }}
+            {{ "dashboard__aksi__laporan" | translate }}
           </button>
           <!-- Ritual sore: Excel mutasi stok hari ini untuk komoditas inti. -->
           <button
@@ -266,7 +305,7 @@
             [disabled]="rekapHarian.sedangUnduh"
           >
             <i class="ph ph-file-xls" aria-hidden="true"></i>
-            {{ 'dashboard__aksi__rekap-harian' | translate }}
+            {{ "dashboard__aksi__rekap-harian" | translate }}
           </button>
         </div>
       </div>

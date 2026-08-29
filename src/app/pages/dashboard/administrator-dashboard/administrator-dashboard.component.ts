@@ -7,6 +7,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { RekapHarianService } from 'src/app/services/rekap-harian.service';
+import {
+  ReceivableCardComponent,
+  RingkasanPiutang,
+} from 'src/app/components/receivable-card/receivable-card.component';
 
 /**
  * Dashboard administrator — layar 9c.
@@ -20,7 +24,14 @@ import { RekapHarianService } from 'src/app/services/rekap-harian.service';
   selector: 'app-administrator-dashboard',
   templateUrl: './administrator-dashboard.component.html',
   styleUrls: ['./administrator-dashboard.component.scss'],
-  imports: [NgIf, NgFor, DatePipe, DecimalPipe, TranslatePipe],
+  imports: [
+    ReceivableCardComponent,
+    NgIf,
+    NgFor,
+    DatePipe,
+    DecimalPipe,
+    TranslatePipe,
+  ],
 })
 export class AdministratorDashboardComponent implements OnInit {
   constructor(
@@ -69,6 +80,9 @@ export class AdministratorDashboardComponent implements OnInit {
     return this.minggu.reduce((a, b) => a + b.nilai, 0);
   }
 
+  /** Ringkasan piutang untuk kartunya. */
+  piutang: RingkasanPiutang | null = null;
+
   private ambilData(): void {
     const t = this.hariIni;
     const tanggal = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
@@ -82,6 +96,7 @@ export class AdministratorDashboardComponent implements OnInit {
           this.purchase = data.purchase;
           this.deposit = data.deposit;
           this.promotion = data.promotion;
+          this.piutang = data.receivable ?? null;
           this.faktur = data.invoices ?? [];
           this.susunMinggu(data.week ?? []);
         },
@@ -123,8 +138,7 @@ export class AdministratorDashboardComponent implements OnInit {
     return indeks === this.minggu.length - 1;
   }
 
-  lacakHari = (_: number, m: { tanggal: Date }): number =>
-    m.tanggal.getTime();
+  lacakHari = (_: number, m: { tanggal: Date }): number => m.tanggal.getTime();
   lacakFaktur = (_: number, f: any): number => f.id ?? 0;
   lacakPromosi = (_: number, p: any): number => p.id ?? 0;
 

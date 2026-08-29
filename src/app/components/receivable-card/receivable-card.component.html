@@ -1,0 +1,77 @@
+<!--
+  Kartunya seluruhnya bisa diklik menuju daftar piutang: yang membacanya
+  hampir selalu ingin melihat siapa saja, dan tombol kecil di sudut menambah
+  satu langkah untuk niat yang sudah jelas.
+-->
+<div class="kartu piutang-kartu" (click)="buka()" *ngIf="data">
+  <div class="piutang-kartu__kepala">
+    <span class="piutang-kartu__label">
+      <i class="ph ph-hand-coins" aria-hidden="true"></i>
+      {{ "dashboard__piutang" | translate }}
+    </span>
+    <span class="piutang-kartu__jumlah">
+      {{
+        "dashboard__piutang__jumlah"
+          | translate: { n: data.invoices, m: data.customers }
+      }}
+    </span>
+  </div>
+
+  <div class="piutang-kartu__nilai">Rp {{ total | number: "1.0-0" }}</div>
+
+  <!--
+    Batang bertumpuk: lewat tempo di kiri dengan warna lebih gelap, sisanya
+    lebih terang. Sengaja SATU batang, bukan dua terpisah — yang ingin
+    dibandingkan orang adalah porsinya terhadap keseluruhan.
+
+    Tiap bagian bertooltip karena warnanya saja tidak menyebut angka, dan
+    angka yang harus ditebak dari panjang batang bukan angka.
+  -->
+  <div class="piutang-kartu__batang" *ngIf="total > 0">
+    <span
+      class="piutang-kartu__isi piutang-kartu__isi--lewat"
+      *ngIf="persenLewat > 0"
+      [style.width.%]="persenLewat"
+      [matTooltip]="
+        'dashboard__piutang__lewat-tooltip'
+          | translate
+            : {
+                nilai: (lewatTempo | number: '1.0-0'),
+                n: data.overdueInvoices,
+              }
+      "
+      matTooltipPosition="above"
+    ></span>
+    <span
+      class="piutang-kartu__isi piutang-kartu__isi--belum"
+      [matTooltip]="
+        'dashboard__piutang__belum-tooltip'
+          | translate: { nilai: (belumJatuh | number: '1.0-0') }
+      "
+      matTooltipPosition="above"
+    ></span>
+  </div>
+
+  <!--
+    Kalimat lewat tempo hanya muncul bila memang ada. Baris permanen
+    bertuliskan "Rp 0 lewat jatuh tempo" berhenti dibaca dalam sehari, dan
+    ketika angkanya akhirnya terisi tidak ada yang menyadarinya.
+  -->
+  <p class="piutang-kartu__lewat" *ngIf="lewatTempo > 0">
+    <i class="ph-fill ph-warning-circle" aria-hidden="true"></i>
+    {{
+      "dashboard__piutang__lewat"
+        | translate
+          : {
+              nilai: (lewatTempo | number: "1.0-0"),
+              n: data.overdueInvoices,
+              hari: data.oldestDays,
+            }
+    }}
+  </p>
+
+  <p class="piutang-kartu__aman" *ngIf="lewatTempo <= 0 && total > 0">
+    <i class="ph ph-check-circle" aria-hidden="true"></i>
+    {{ "dashboard__piutang__aman" | translate }}
+  </p>
+</div>

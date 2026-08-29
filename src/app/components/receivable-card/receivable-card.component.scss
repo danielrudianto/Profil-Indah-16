@@ -1,0 +1,86 @@
+.piutang-kartu {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.piutang-kartu__kepala {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.piutang-kartu__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.piutang-kartu__jumlah {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.piutang-kartu__nilai {
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+  Satu batang bertumpuk, bukan dua terpisah: yang dibandingkan orang adalah
+  porsi lewat tempo TERHADAP keseluruhan, dan dua batang sejajar menuntut
+  pembacanya menjumlahkan sendiri.
+*/
+.piutang-kartu__batang {
+  display: flex;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--color-divider);
+}
+
+.piutang-kartu__isi {
+  display: block;
+  height: 100%;
+  flex: 1 1 auto;
+}
+
+/*
+  Lewat tempo LEBIH GELAP, sisanya lebih terang — dua nada dari warna yang
+  sama, bukan dua warna berbeda. Keduanya piutang; yang membedakan cuma
+  mendesak atau belum, dan nada yang sama menyampaikan itu tanpa membuat
+  bagian yang normal terbaca sebagai masalah.
+*/
+.piutang-kartu__isi--lewat {
+  flex: 0 0 auto;
+  background: color-mix(in srgb, var(--color-accent) 100%, #000 35%);
+}
+
+.piutang-kartu__isi--belum {
+  background: color-mix(in srgb, var(--color-accent) 45%, transparent);
+}
+
+.piutang-kartu__lewat,
+.piutang-kartu__aman {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.piutang-kartu__lewat {
+  color: #a45f00;
+}
+
+.piutang-kartu__aman {
+  color: var(--color-text-muted);
+}
