@@ -49,6 +49,15 @@ export class ReceivableListComponent implements OnInit {
   dataSource: any[] = [];
   tersaring: any[] = [];
   keyword = '';
+  /**
+   * Kolom pengurut dan arahnya.
+   *
+   * Bawaannya jumlah menurun — penunggak terbesar di atas — karena itu
+   * pertanyaan pertama hampir semua orang yang membuka halaman ini.
+   */
+  urut: 'jatuhTempo' | 'nama' | 'jumlah' = 'jumlah';
+  arah: 'asc' | 'desc' = 'desc';
+
   page = 1;
   pageSize = 10;
 
@@ -84,6 +93,15 @@ export class ReceivableListComponent implements OnInit {
       this.pageSize = ukuran;
     }
 
+    /* Nilai dari URL tidak dipercaya begitu saja — tautan lama atau yang
+       disunting tangan tidak boleh membuat pengurutannya kacau. */
+    if (['jatuhTempo', 'nama', 'jumlah'].includes(q['sort'])) {
+      this.urut = q['sort'];
+    }
+    if (q['dir'] === 'asc' || q['dir'] === 'desc') {
+      this.arah = q['dir'];
+    }
+
     this.ambilData();
   }
 
@@ -100,6 +118,8 @@ export class ReceivableListComponent implements OnInit {
       page: this.page,
       q: this.keyword,
       size: this.pageSize,
+      sort: this.urut,
+      dir: this.arah,
     });
 
     this.router.navigate([], {
@@ -108,6 +128,8 @@ export class ReceivableListComponent implements OnInit {
         page: this.page > 1 ? this.page : null,
         q: this.keyword || null,
         size: this.pageSize !== 10 ? this.pageSize : null,
+        sort: this.urut !== 'jumlah' ? this.urut : null,
+        dir: this.arah !== 'desc' ? this.arah : null,
       },
       queryParamsHandling: 'merge',
       replaceUrl: true,
@@ -154,7 +176,7 @@ export class ReceivableListComponent implements OnInit {
     const kunci = this.keyword.toLowerCase();
     this.tersaring = this.dataSource
       .filter((x) => (x.name ?? '').toLowerCase().includes(kunci))
-      .sort((a, b) => this.sisa(b) - this.sisa(a));
+      .sort((a, b) => this.bandingkan(a, b));
 
     if (!pertahankanHalaman) {
       this.page = 1;
@@ -195,6 +217,74 @@ export class ReceivableListComponent implements OnInit {
   */
   sisa(item: any): number {
     return Number(item.value);
+  }
+
+  /**
+   * Membandingkan dua baris menurut kolom yang sedang dipilih.
+   *
+   * Nama diurutkan sebagai teks memakai localeCompare, bukan perbandingan
+   * biasa: tanpa itu huruf besar dan kecil terpisah menjadi dua kelompok, dan
+   * "andi" mendarat jauh di bawah "Zainal".
+   *
+   * Pelanggan tanpa nama — Retail — diberi nama tampilnya supaya ia ikut
+   * terurut di tempat yang wajar, bukan selalu terlempar ke ujung.
+   */
+  private bandingkan(a: any, b: any): number {
+    const tanda = this.arah === 'asc' ? 1 : -1;
+
+    if (this.urut === 'nama') {
+      const namaA =
+        a.name ?? this.translateService.instant('sales-invoice__retail');
+      const namaB =
+        b.name ?? this.translateService.instant('sales-invoice__retail');
+      return namaA.localeCompare(namaB, 'id') * tanda;
+    }
+
+    const nilaiA =
+      this.urut === 'jatuhTempo' ? this.lewatTempo(a) : this.sisa(a);
+    const nilaiB =
+      this.urut === 'jatuhTempo' ? this.lewatTempo(b) : this.sisa(b);
+
+    /*
+      Seri dipecah oleh sisa piutang, bukan dibiarkan acak. Mengurutkan
+      berdasarkan jatuh tempo menghasilkan banyak nol yang sama nilainya, dan
+      urutan yang berubah-ubah di antara mereka membuat daftarnya terasa
+      goyah setiap kali dimuat ulang.
+    */
+    if (nilaiA === nilaiB) {
+      return this.sisa(b) - this.sisa(a);
+    }
+
+    return (nilaiA - nilaiB) * tanda;
+  }
+
+  /**
+   * Mengganti kolom pengurut.
+   *
+   * Menekan kolom yang SAMA membalik arahnya; berpindah kolom memakai arah
+   * yang paling sering diinginkan pada kolom itu — angka menurun (yang
+   * terbesar dulu), nama menaik (A lebih dulu). Memaksakan satu arah bawaan
+   * untuk semuanya membuat separuh klik pertama selalu salah.
+   */
+  gantiUrut(kolom: 'jatuhTempo' | 'nama' | 'jumlah'): void {
+    if (this.urut === kolom) {
+      this.arah = this.arah === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.urut = kolom;
+      this.arah = kolom === 'nama' ? 'asc' : 'desc';
+    }
+
+    this.page = 1;
+    this.saring();
+    this.simpanKeadaan();
+  }
+
+  /** Ikon panah pada kepala kolom; kosong bila kolom itu tidak sedang dipakai. */
+  ikonUrut(kolom: 'jatuhTempo' | 'nama' | 'jumlah'): string {
+    if (this.urut !== kolom) {
+      return 'ph-arrows-down-up';
+    }
+    return this.arah === 'asc' ? 'ph-arrow-up' : 'ph-arrow-down';
   }
 
   /** Bagian sisa yang tenggatnya sudah lewat. */

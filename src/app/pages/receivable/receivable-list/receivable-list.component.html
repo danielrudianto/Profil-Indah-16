@@ -15,17 +15,39 @@
   <table class="tabel piutang__tabel">
     <thead>
       <tr>
+        <!--
+          Kepala kolom yang bisa diurutkan adalah TOMBOL, bukan sel dengan
+          click handler: tanpa itu ia tidak bisa dicapai keyboard dan pembaca
+          layar tidak menyebutnya sebagai sesuatu yang bisa ditekan.
+        -->
         <th class="piutang__nama-kepala">
-          {{ "receivable__name" | translate }}
+          <button type="button" class="tabel__urut" (click)="gantiUrut('nama')">
+            {{ "receivable__name" | translate }}
+            <i class="ph {{ ikonUrut('nama') }}" aria-hidden="true"></i>
+          </button>
         </th>
         <th class="piutang__bar-kepala">
           <span class="sr-only">{{ "receivable__amount" | translate }}</span>
         </th>
         <th class="tabel__nilai-kepala piutang__lewat-kepala">
-          {{ "receivable__overdue" | translate }}
+          <button
+            type="button"
+            class="tabel__urut tabel__urut--kanan"
+            (click)="gantiUrut('jatuhTempo')"
+          >
+            {{ "receivable__overdue" | translate }}
+            <i class="ph {{ ikonUrut('jatuhTempo') }}" aria-hidden="true"></i>
+          </button>
         </th>
         <th class="tabel__nilai-kepala">
-          {{ "receivable__amount" | translate }}
+          <button
+            type="button"
+            class="tabel__urut tabel__urut--kanan"
+            (click)="gantiUrut('jumlah')"
+          >
+            {{ "receivable__amount" | translate }}
+            <i class="ph {{ ikonUrut('jumlah') }}" aria-hidden="true"></i>
+          </button>
         </th>
       </tr>
     </thead>

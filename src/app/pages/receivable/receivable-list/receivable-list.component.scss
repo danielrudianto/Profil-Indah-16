@@ -66,3 +66,37 @@
   border-radius: 999px;
   background: color-mix(in srgb, var(--color-accent) 100%, #000 35%);
 }
+
+/*
+  Kepala kolom yang bisa diurutkan.
+
+  Ikonnya SELALU digambar, juga pada kolom yang sedang tidak dipakai — di sana
+  berupa panah dua arah yang redup. Ikon yang muncul-hilang membuat lebar
+  kepalanya bergeser tiap kali pengurutan berpindah, dan itu persis keluhan
+  kolom bergeser yang baru saja dibereskan.
+*/
+.tabel__urut {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+
+  i {
+    font-size: 0.9em;
+    opacity: 0.45;
+  }
+
+  &:hover i {
+    opacity: 0.9;
+  }
+}
+
+.tabel__urut--kanan {
+  justify-content: flex-end;
+  width: 100%;
+}
