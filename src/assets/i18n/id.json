@@ -2795,5 +2795,6 @@
   "nav__badge__adjustment": "{{n}} penyesuaian stok menunggu persetujuan",
   "nav__badge__stock": "{{n}} barang stoknya minus atau di bawah minimum",
   "receivable__bar__aman": "{{nama}} — Rp {{nilai}}, belum ada yang jatuh tempo",
-  "receivable__bar__lewat": "{{nama}} — Rp {{lewat}} lewat jatuh tempo, Rp {{belum}} belum"
+  "receivable__bar__lewat": "{{nama}} — Rp {{lewat}} lewat jatuh tempo, Rp {{belum}} belum",
+  "receivable__overdue": "Jatuh Tempo"
 }

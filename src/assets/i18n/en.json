@@ -2795,5 +2795,6 @@
   "nav__badge__adjustment": "{{n}} stock adjustments awaiting approval",
   "nav__badge__stock": "{{n}} products below minimum or in negative stock",
   "receivable__bar__aman": "{{nama}} — Rp {{nilai}}, nothing overdue yet",
-  "receivable__bar__lewat": "{{nama}} — Rp {{lewat}} overdue, Rp {{belum}} not yet due"
+  "receivable__bar__lewat": "{{nama}} — Rp {{lewat}} overdue, Rp {{belum}} not yet due",
+  "receivable__overdue": "Overdue"
 }

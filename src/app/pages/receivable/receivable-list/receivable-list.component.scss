@@ -12,7 +12,7 @@
 }
 
 .piutang__nama-kepala {
-  width: 38%;
+  width: 30%;
 }
 
 /*
@@ -21,12 +21,22 @@
   kolom sebelah.
 */
 .piutang__bar-kepala {
-  width: 40%;
+  width: 28%;
 }
 
-/* Sisanya untuk angka — cukup lebar bagi nilai terbesar yang mungkin. */
+/* Dua kolom angka, sama lebar — supaya keduanya bisa dibandingkan sekilas. */
 .piutang__tabel .tabel__nilai-kepala {
-  width: 22%;
+  width: 21%;
+}
+
+/*
+  Nominal jatuh tempo memakai warna yang sama dengan bagian gelap batangnya.
+  Angka dan grafik yang menceritakan hal sama harus terlihat sama, kalau tidak
+  pembacanya harus menghubungkan keduanya sendiri.
+*/
+.piutang__lewat-sel span:not(.tabel__redup) {
+  color: color-mix(in srgb, var(--color-accent) 100%, #000 35%);
+  font-weight: 600;
 }
 
 .piutang__bar-sel {

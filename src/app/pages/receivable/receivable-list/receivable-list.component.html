@@ -21,6 +21,9 @@
         <th class="piutang__bar-kepala">
           <span class="sr-only">{{ "receivable__amount" | translate }}</span>
         </th>
+        <th class="tabel__nilai-kepala piutang__lewat-kepala">
+          {{ "receivable__overdue" | translate }}
+        </th>
         <th class="tabel__nilai-kepala">
           {{ "receivable__amount" | translate }}
         </th>
@@ -72,6 +75,20 @@
             ></span>
           </span>
         </td>
+        <!--
+          Nol ditulis sebagai tanda pisah, bukan "Rp 0".
+
+          Kolom penuh angka nol menuntut mata membaca tiap barisnya untuk
+          memastikan tidak ada isinya; tanda pisah membuat baris yang BERISI
+          langsung menonjol, dan itulah satu-satunya yang dicari orang di
+          kolom ini.
+        -->
+        <td class="tabel__nilai piutang__lewat-sel">
+          <span *ngIf="lewatTempo(item) > 0">
+            Rp {{ lewatTempo(item) | number: "1.0-0" }}
+          </span>
+          <span class="tabel__redup" *ngIf="lewatTempo(item) <= 0">—</span>
+        </td>
         <td class="tabel__nilai baris__total">
           Rp {{ sisa(item) | number: "1.0-0" }}
         </td>
@@ -80,7 +97,7 @@
 
     <tbody *ngIf="isLoading">
       <tr>
-        <td colspan="3" class="tabel__pesan">
+        <td colspan="4" class="tabel__pesan">
           {{ "general__loading" | translate }}
         </td>
       </tr>
@@ -88,7 +105,7 @@
 
     <tbody *ngIf="!isLoading && tersaring.length === 0">
       <tr>
-        <td colspan="3">
+        <td colspan="4">
           <app-tabel-kosong
             ikon="ph-hand-coins"
             [judul]="'receivable__empty__title' | translate"
