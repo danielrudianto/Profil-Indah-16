@@ -2,8 +2,10 @@
 <div class="laporan">
   <header class="laporan__kepala">
     <div>
-      <h1 class="laporan__judul">{{ 'report-inventory__title' | translate }}</h1>
-      <p class="laporan__lede">{{ 'report-inventory__lede' | translate }}</p>
+      <h1 class="laporan__judul">
+        {{ "report-inventory__title" | translate }}
+      </h1>
+      <p class="laporan__lede">{{ "report-inventory__lede" | translate }}</p>
     </div>
 
     <div class="laporan__kendali">
@@ -28,117 +30,166 @@
         </button>
         <mat-datepicker #tanggalPicker></mat-datepicker>
       </div>
+
+      <button
+        type="button"
+        class="btn btn--kedua"
+        [disabled]="isLoading"
+        (click)="hitungUlang()"
+        [title]="'report-finance__recompute__hint' | translate"
+      >
+        <i class="ph ph-arrows-clockwise" aria-hidden="true"></i>
+        {{ "report-finance__recompute" | translate }}
+      </button>
     </div>
   </header>
+
+  <!--
+    Umur angkanya disebut terang-terangan. Laporan ini disimpan sehari penuh
+    demi kecepatan, dan pertukaran itu hanya jujur bila pembacanya tahu ia
+    sedang membaca angka jam berapa.
+  -->
+  <p class="laporan__cap" *ngIf="dihitungPada && !isLoading">
+    <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>
+    {{
+      "report-finance__computed-at"
+        | translate: { waktu: dihitungPada | date: "d MMM yyyy, HH:mm" }
+    }}
+  </p>
 
   <!-- Layar memuat menggantikan isi — hero nol selama menunggu itu dusta. -->
   <div class="laporan__memuat" *ngIf="isLoading">
     <i class="ph ph-circle-notch laporan__putar" aria-hidden="true"></i>
-    <span>{{ 'general__loading' | translate }}</span>
+    <span>{{ "general__loading" | translate }}</span>
   </div>
 
   <ng-container *ngIf="!isLoading">
-  <div class="hero">
-    <div class="hero__kartu hero__kartu--utama">
-      <span class="hero__label">{{ 'report-inventory__hero__total' | translate }}</span>
-      <strong class="hero__nilai">Rp {{ total | number: '1.0-0' }}</strong>
-      <span class="hero__sub">{{ teksTanggal }}</span>
-    </div>
-    <div class="hero__kartu" *ngFor="let p of perusahaan">
-      <span class="hero__label">{{ p.company }}</span>
-      <strong class="hero__nilai">Rp {{ p.value | number: '1.0-0' }}</strong>
-      <span class="hero__sub">{{ persen(p.value) | number: '1.0-1' }}% {{ 'report-inventory__of-total' | translate }}</span>
-    </div>
-  </div>
-
-  <!-- Keluaran tanpa harga pokok — jujur, bukan diam-diam nol. -->
-  <p class="peringatan" *ngIf="takBernilai.count > 0">
-    <i class="ph ph-warning" aria-hidden="true"></i>
-    <span>
-      {{ 'report-inventory__unassigned' | translate: { jumlah: (takBernilai.count | number), nilai: (takBernilai.value | number: '1.0-0') } }}
-    </span>
-  </p>
-
-  <!-- Sorotan — kalimat yang dihitung dari angka, bukan dikarang. -->
-  <section class="kartu sorotan" *ngIf="sorotan.length > 0">
-    <h2 class="kartu__label">{{ 'sorotan-inv__judul' | translate }}</h2>
-    <ul class="sorotan__daftar">
-      <li *ngFor="let baris of sorotan">
-        <span class="sorotan__ikon" aria-hidden="true">
-          <i [class]="'ph ' + baris.ikon"></i>
-        </span>
-        {{ baris.teks }}
-      </li>
-    </ul>
-  </section>
-
-  <!-- Tren nilai gudang — satu jalur; tiap titik = akhir bulan itu. -->
-  <section class="kartu" *ngIf="tren.length > 0">
-    <div class="kartu__kepala">
-      <div>
-        <h2 class="kartu__label">{{ 'report-inventory__chart' | translate }}</h2>
-        <p class="grafik__sub">{{ 'report-inventory__chart__sub' | translate }}</p>
+    <div class="hero">
+      <div class="hero__kartu hero__kartu--utama">
+        <span class="hero__label">{{
+          "report-inventory__hero__total" | translate
+        }}</span>
+        <strong class="hero__nilai">Rp {{ total | number: "1.0-0" }}</strong>
+        <span class="hero__sub">{{ teksTanggal }}</span>
+      </div>
+      <div class="hero__kartu" *ngFor="let p of perusahaan">
+        <span class="hero__label">{{ p.company }}</span>
+        <strong class="hero__nilai">Rp {{ p.value | number: "1.0-0" }}</strong>
+        <span class="hero__sub"
+          >{{ persen(p.value) | number: "1.0-1" }}%
+          {{ "report-inventory__of-total" | translate }}</span
+        >
       </div>
     </div>
 
-    <!--
+    <!-- Keluaran tanpa harga pokok — jujur, bukan diam-diam nol. -->
+    <p class="peringatan" *ngIf="takBernilai.count > 0">
+      <i class="ph ph-warning" aria-hidden="true"></i>
+      <span>
+        {{
+          "report-inventory__unassigned"
+            | translate
+              : {
+                  jumlah: (takBernilai.count | number),
+                  nilai: (takBernilai.value | number: "1.0-0"),
+                }
+        }}
+      </span>
+    </p>
+
+    <!-- Sorotan — kalimat yang dihitung dari angka, bukan dikarang. -->
+    <section class="kartu sorotan" *ngIf="sorotan.length > 0">
+      <h2 class="kartu__label">{{ "sorotan-inv__judul" | translate }}</h2>
+      <ul class="sorotan__daftar">
+        <li *ngFor="let baris of sorotan">
+          <span class="sorotan__ikon" aria-hidden="true">
+            <i [class]="'ph ' + baris.ikon"></i>
+          </span>
+          {{ baris.teks }}
+        </li>
+      </ul>
+    </section>
+
+    <!-- Tren nilai gudang — satu jalur; tiap titik = akhir bulan itu. -->
+    <section class="kartu" *ngIf="tren.length > 0">
+      <div class="kartu__kepala">
+        <div>
+          <h2 class="kartu__label">
+            {{ "report-inventory__chart" | translate }}
+          </h2>
+          <p class="grafik__sub">
+            {{ "report-inventory__chart__sub" | translate }}
+          </p>
+        </div>
+      </div>
+
+      <!--
       Tooltip digambar sendiri dan batangnya ikut menyala saat ditunjuk —
       title bawaan browser lamban dan tak bertema, padahal tooltip pada
       grafik itu wajib.
     -->
-    <div class="grafik grafik--nilai">
-      <div class="grafik__hari" *ngFor="let b of tren">
-        <div class="grafik-tip" role="tooltip">
-          <strong>Rp {{ b.value | number: '1.0-0' }}</strong>
-          <small>{{ bulanPenuh(b) }}</small>
+      <div class="grafik grafik--nilai">
+        <div class="grafik__hari" *ngFor="let b of tren">
+          <div class="grafik-tip" role="tooltip">
+            <strong>Rp {{ b.value | number: "1.0-0" }}</strong>
+            <small>{{ bulanPenuh(b) }}</small>
+          </div>
+          <span
+            class="grafik__nilai"
+            [style.height.%]="tinggiTren(b)"
+            aria-hidden="true"
+          ></span>
+          <span class="grafik__tanggal">{{ labelBulan(b) }}</span>
         </div>
-        <span
-          class="grafik__nilai"
-          [style.height.%]="tinggiTren(b)"
-          aria-hidden="true"
-        ></span>
-        <span class="grafik__tanggal">{{ labelBulan(b) }}</span>
       </div>
-    </div>
 
-    <div class="grafik__kaki">
-      <div class="grafik__legenda">
-        <span>
-          <i class="grafik__legenda--nilai" aria-hidden="true"></i>
-          {{ 'report-inventory__hero__total' | translate }}
-        </span>
+      <div class="grafik__kaki">
+        <div class="grafik__legenda">
+          <span>
+            <i class="grafik__legenda--nilai" aria-hidden="true"></i>
+            {{ "report-inventory__hero__total" | translate }}
+          </span>
+        </div>
+        <span class="grafik__rentang">{{ rentangTren }}</span>
       </div>
-      <span class="grafik__rentang">{{ rentangTren }}</span>
-    </div>
-  </section>
+    </section>
 
-  <section class="kartu">
-    <h2 class="kartu__label">{{ 'report-inventory__by-company' | translate }}</h2>
+    <section class="kartu">
+      <h2 class="kartu__label">
+        {{ "report-inventory__by-company" | translate }}
+      </h2>
 
-    <div class="gulir" *ngIf="!isLoading">
-      <table class="tabel">
-        <thead>
-          <tr>
-            <th>{{ 'report-inventory__company' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-inventory__share' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-inventory__value' | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let p of perusahaan">
-            <td class="tabel__utama">{{ p.company }}</td>
-            <td class="tabel__nilai">{{ persen(p.value) | number: '1.0-1' }}%</td>
-            <td class="tabel__nilai">Rp {{ p.value | number: '1.0-0' }}</td>
-          </tr>
-          <tr class="baris-total">
-            <td class="tabel__utama">TOTAL</td>
-            <td></td>
-            <td class="tabel__nilai baris__total">Rp {{ total | number: '1.0-0' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-  </section>
+      <div class="gulir" *ngIf="!isLoading">
+        <table class="tabel">
+          <thead>
+            <tr>
+              <th>{{ "report-inventory__company" | translate }}</th>
+              <th class="tabel__nilai-kepala">
+                {{ "report-inventory__share" | translate }}
+              </th>
+              <th class="tabel__nilai-kepala">
+                {{ "report-inventory__value" | translate }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of perusahaan">
+              <td class="tabel__utama">{{ p.company }}</td>
+              <td class="tabel__nilai">
+                {{ persen(p.value) | number: "1.0-1" }}%
+              </td>
+              <td class="tabel__nilai">Rp {{ p.value | number: "1.0-0" }}</td>
+            </tr>
+            <tr class="baris-total">
+              <td class="tabel__utama">TOTAL</td>
+              <td></td>
+              <td class="tabel__nilai baris__total">
+                Rp {{ total | number: "1.0-0" }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
   </ng-container>
 </div>

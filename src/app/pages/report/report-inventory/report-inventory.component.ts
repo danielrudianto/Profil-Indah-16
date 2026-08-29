@@ -34,6 +34,7 @@ import { ApiService } from 'src/app/services/api.service';
     NgIf,
     NgFor,
     DecimalPipe,
+    DatePipe,
     FormsModule,
     ReactiveFormsModule,
     TranslatePipe,
@@ -73,18 +74,37 @@ export class ReportInventoryComponent implements OnInit {
     return this.datePipe.transform(this.date.value, 'dd MMM yyyy') ?? '—';
   }
 
-  ambilData(): void {
+  /**
+   * Kapan angka di layar ini dihitung server.
+   *
+   * Laporan persediaan disimpan di cache DUA PULUH EMPAT JAM — nilai
+   * persediaan dibaca untuk memutuskan pembelian, bukan untuk tahu detik ini.
+   * Justru karena itu umurnya harus disebutkan: angka lama yang tidak
+   * menyebut umurnya dikira baru.
+   */
+  dihitungPada: Date | null = null;
+
+  /* Melewati simpanan di server; dipakai tombol hitung ulang. */
+  hitungUlang(): void {
+    this.ambilData(true);
+  }
+
+  ambilData(paksa = false): void {
     this.isLoading = true;
     this.utamaSiap = false;
     this.sorotan = [];
     this.apiService
       .get('report/inventory', {
         date: moment(this.date.value).format('YYYY-MM-DD'),
+        refresh: paksa,
       })
       .subscribe({
         next: (data: any) => {
           this.perusahaan = data.companies ?? [];
           this.takBernilai = data.unassigned ?? { count: 0, value: 0 };
+          this.dihitungPada = data.computedAt
+            ? new Date(data.computedAt)
+            : null;
           this.utamaSiap = true;
           this.susunSorotan();
         },
@@ -96,14 +116,15 @@ export class ReportInventoryComponent implements OnInit {
         this.isLoading = false;
       });
 
-    this.ambilTren();
+    this.ambilTren(paksa);
   }
 
-  private ambilTren(): void {
+  private ambilTren(paksa = false): void {
     this.tren = [];
     this.merek = [];
     this.apiService
       .get('report/inventory/trend', {
+        refresh: paksa,
         date: moment(this.date.value).format('YYYY-MM-DD'),
       })
       .subscribe({
@@ -150,7 +171,11 @@ export class ReportInventoryComponent implements OnInit {
   }
 
   bulanPenuh(b: (typeof this.tren)[number]): string {
-    return formatDate(new Date(b.year, b.month - 1, 1), 'MMMM y', this.localeId);
+    return formatDate(
+      new Date(b.year, b.month - 1, 1),
+      'MMMM y',
+      this.localeId,
+    );
   }
 
   get rentangTren(): string {
