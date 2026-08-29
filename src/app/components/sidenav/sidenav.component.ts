@@ -14,6 +14,7 @@ import {
   NavGroup,
   NavItem,
 } from 'src/app/constants/navigation.constant';
+import { BadgeService } from 'src/app/services/badge.service';
 
 /** Satu item yang siap digambar. */
 interface ItemTampil {
@@ -88,7 +89,33 @@ export class SidenavComponent implements OnInit {
     private authService: AuthService,
     private pinnedNavService: PinnedNavService,
     private translateService: TranslateService,
+    public badgeService: BadgeService,
   ) {}
+
+  /**
+   * Angka lencana untuk sebuah menu, dibatasi tampilannya di 9.
+   *
+   * Lebih dari itu ditulis "9+" — bukan karena tempatnya sempit, melainkan
+   * karena selisih antara 14 dan 23 tidak mengubah apa pun yang dilakukan
+   * orang. Yang perlu dibaca sekilas cuma "ada, dan banyak".
+   *
+   * Nol mengembalikan null supaya template tidak menggambar lencana kosong:
+   * lencana bertuliskan 0 adalah pemberitahuan bahwa tidak ada pemberitahuan.
+   */
+  lencana(item: { badge?: 'overpayment' | 'goodReceipt' | 'adjustment' }):
+    | string
+    | null {
+    if (!item.badge) {
+      return null;
+    }
+
+    const nilai = this.badgeService.counts[item.badge];
+    if (!nilai || nilai <= 0) {
+      return null;
+    }
+
+    return nilai > 9 ? '9+' : String(nilai);
+  }
 
   private destroyRef = inject(DestroyRef);
 
@@ -105,6 +132,8 @@ export class SidenavComponent implements OnInit {
   kaki: NavFooterItem[] = [];
 
   ngOnInit(): void {
+    this.badgeService.mulai();
+
     this.cariControl.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((nilai) => {

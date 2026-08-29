@@ -35,6 +35,14 @@ export interface NavItem {
   path: string;
   group: NavGroup;
   roles: Role[];
+  /**
+   * Kunci hitungan pekerjaan yang menunggu, untuk lencana di sebelah label.
+   *
+   * Hanya diisi pada menu yang punya antrean pekerjaan sungguhan. Menu lain
+   * tidak berlencana, dan itu disengaja: lencana pada segala sesuatu berhenti
+   * berarti apa-apa.
+   */
+  badge?: 'overpayment' | 'goodReceipt' | 'adjustment';
 }
 
 const SALES = [Role.Sales, Role.General, Role.Administrator, Role.Owner];
@@ -78,6 +86,7 @@ export const NAV_ITEMS: NavItem[] = [
     path: 'Good-receipt',
     group: 'menu',
     roles: PURCHASING,
+    badge: 'goodReceipt',
   },
   {
     label: 'nav__sales_return',
@@ -106,6 +115,7 @@ export const NAV_ITEMS: NavItem[] = [
     path: 'Overpayment',
     group: 'menu',
     roles: SALES,
+    badge: 'overpayment',
   },
   {
     label: 'nav__expense',
@@ -120,6 +130,7 @@ export const NAV_ITEMS: NavItem[] = [
     path: 'Adjustment-case',
     group: 'menu',
     roles: ADMIN,
+    badge: 'adjustment',
   },
   /* Satu-satunya menu Gudang — sengaja tidak ditawarkan ke peran lain,
      mereka sudah punya halaman Stok yang lengkap. */

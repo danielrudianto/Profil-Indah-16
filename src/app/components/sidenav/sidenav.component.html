@@ -77,6 +77,24 @@
           <span class="sidenav__label" *ngIf="!collapsed">
             {{ entri.item.label | translate }}
           </span>
+
+          <!--
+            Lencana pekerjaan yang menunggu. Digambar hanya bila ada isinya —
+            lencana bertuliskan 0 adalah pemberitahuan bahwa tidak ada
+            pemberitahuan.
+
+            Saat menu diciutkan ia tetap tampil, menempel di sudut ikonnya:
+            justru pada keadaan itu labelnya tidak terbaca, jadi lencana
+            satu-satunya petunjuk bahwa ada yang menunggu.
+          -->
+          <span
+            class="sidenav__badge"
+            [class.sidenav__badge--ciut]="collapsed"
+            *ngIf="lencana(entri.item) as jumlah"
+            [attr.aria-label]="jumlah + ' menunggu'"
+          >
+            {{ jumlah }}
+          </span>
         </a>
 
         <!--
@@ -92,9 +110,7 @@
           [class.sidenav__pin--on]="entri.tersemat"
           *ngIf="!collapsed"
           (click)="togglePin(entri)"
-          [title]="
-            (entri.tersemat ? 'nav__unpin' : 'nav__pin') | translate
-          "
+          [title]="(entri.tersemat ? 'nav__unpin' : 'nav__pin') | translate"
           [attr.aria-label]="
             (entri.tersemat ? 'nav__unpin' : 'nav__pin') | translate
           "
@@ -110,7 +126,7 @@
       daftarnya hanya kosong, dan itu terbaca seperti menu yang gagal dimuat.
     -->
     <p class="sidenav__empty" *ngIf="grup.length === 0 && !collapsed">
-      {{ 'nav__empty' | translate }}
+      {{ "nav__empty" | translate }}
     </p>
   </div>
 
@@ -140,7 +156,7 @@
     >
       <i class="ph ph-sign-out" aria-hidden="true"></i>
       <span class="sidenav__label" *ngIf="!collapsed">
-        {{ 'nav__logout' | translate }}
+        {{ "nav__logout" | translate }}
       </span>
     </button>
   </div>
