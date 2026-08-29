@@ -19,7 +19,11 @@ import { ApiService } from 'src/app/services/api.service';
 import { PageTitleService } from 'src/app/services/page-title.service';
 import { availableBankSearch, IBank } from 'src/app/utils/bank';
 import { CustomerCreateComponent } from 'src/app/pages/customer/customer-create/customer-create.component';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {
   MatDatepicker,
@@ -168,7 +172,22 @@ export class OverpaymentCreateComponent implements OnInit {
         this.pilihMetode(data.return_payment_method);
 
         this.namaPelangganAwal = data.customer?.name ?? 'Retail';
-        this.namaMetodeAwal = data.payment_method?.name ?? undefined;
+        /*
+          TUNAI DI BASIS DATA ADALAH METODE YANG KOSONG — payment_method_id
+          null, tanpa baris di tabel metode.
+
+          Akibatnya pada layar sunting: id-nya menjadi -1 (sentinel tunai,
+          lihat baris pengiriman di bawah) sehingga kendalinya lolos validasi
+          dan tampak TERISI, sementara relasinya null sehingga labelnya
+          kosong. Yang terlihat pengguna: pilihan tercentang tanpa tulisan
+          apa pun, dan tidak ada cara menebak apa yang tersimpan.
+
+          Datanya sendiri selalu benar — yang hilang hanya namanya. Karena itu
+          yang diperbaiki namanya, bukan nilainya.
+        */
+        this.namaMetodeAwal =
+          data.payment_method?.name ??
+          (data.payment_method_id == null ? 'Cash' : undefined);
       },
       error: (error) => {
         this.alertService.showError(error);
