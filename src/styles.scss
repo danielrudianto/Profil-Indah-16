@@ -1392,6 +1392,22 @@ label {
   z-index: 1500 !important;
 }
 
+/*
+  Panel autocomplete lebih tinggi dari bawaan Material (256px).
+
+  Daftar yang cuma memuat empat baris terasa terkurung — apalagi di dalam
+  dialog, di mana ruang di sekitarnya memang sudah sempit. Panelnya sendiri
+  melayang di overlay dan tidak pernah terpotong wadahnya; yang membuatnya
+  terasa sesak hanyalah tingginya sendiri.
+
+  Tidak dibuat setinggi mungkin: daftar yang lebih panjang dari layar menuntut
+  orang menggulir DI DALAM panel sambil panelnya sendiri menutupi formulir
+  yang sedang diisi.
+*/
+.mat-mdc-autocomplete-panel {
+  max-height: 340px !important;
+}
+
 /* ------------------------------------------------------------------ */
 /* Lembar bawah harga                                                  */
 /*                                                                     */

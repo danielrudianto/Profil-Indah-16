@@ -107,7 +107,19 @@
   flex-direction: column;
   gap: 16px;
   padding: 24px;
-  max-height: min(60vh, 520px);
+  /*
+    Lebih longgar dari sebelumnya (60vh / 520px).
+
+    Batas yang terlalu ketat membuat formulir pendek pun punya scrollbar, dan
+    autocomplete yang terbuka di dekat bawah memaksa orang menggulir dialognya
+    untuk melihat pilihan — panelnya sendiri melayang bebas di overlay, tetapi
+    yang terasa adalah dialog yang sempit.
+
+    Tetap dibatasi, bukan dilepas: formulir yang lebih tinggi dari layar
+    membuat tombol simpannya keluar dari pandangan, dan orang tidak menemukan
+    cara menyelesaikan apa yang sedang diisinya.
+  */
+  max-height: min(78vh, 680px);
   overflow-y: auto;
 }
 
