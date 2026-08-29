@@ -326,6 +326,16 @@
 */
 .sidenav__badge {
   margin-left: auto;
+  /*
+    Ruang untuk tombol semat, yang ditempatkan absolut di kanan baris dan
+    muncul saat kursor lewat. Tanpa jarak ini keduanya bertumpuk — dan yang
+    tertutup justru angkanya, bukan tombolnya.
+
+    Ruangnya disisakan PERMANEN meski tombolnya hanya muncul saat hover:
+    kalau jaraknya ikut muncul-hilang, lencananya bergeser tiap kali kursor
+    lewat.
+  */
+  margin-right: 28px;
   min-width: 20px;
   padding: 0 6px;
   border-radius: 999px;
@@ -339,6 +349,8 @@
 
 /* Diciutkan: labelnya hilang, jadi lencananya menempel di sudut ikon. */
 .sidenav__badge--ciut {
+  /* Diciutkan, tombol sematnya tidak digambar — jaraknya tidak perlu. */
+  margin-right: 0;
   position: absolute;
   top: 4px;
   right: 4px;

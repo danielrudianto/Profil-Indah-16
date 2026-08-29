@@ -2789,5 +2789,11 @@
   "dashboard__piutang__lewat": "Rp {{nilai}} overdue across {{n}} invoices — the oldest by {{hari}} days.",
   "dashboard__piutang__lewat-tooltip": "Overdue: Rp {{nilai}} ({{n}} invoices)",
   "dashboard__piutang__belum-tooltip": "Not yet due: Rp {{nilai}}",
-  "dashboard__piutang__aman": "Nothing is overdue."
+  "dashboard__piutang__aman": "Nothing is overdue.",
+  "nav__badge__goodReceipt": "{{n}} good receipts awaiting confirmation",
+  "nav__badge__overpayment": "{{n}} overpayments not yet settled",
+  "nav__badge__adjustment": "{{n}} stock adjustments awaiting approval",
+  "nav__badge__stock": "{{n}} products below minimum or in negative stock",
+  "receivable__bar__aman": "{{nama}} — Rp {{nilai}}, nothing overdue yet",
+  "receivable__bar__lewat": "{{nama}} — Rp {{lewat}} overdue, Rp {{belum}} not yet due"
 }

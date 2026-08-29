@@ -27,6 +27,7 @@
     class="topbar__kembali"
     *ngIf="konteks?.kembaliLabel && konteks?.kembaliJalur"
     [routerLink]="konteks?.kembaliJalur"
+    [queryParams]="konteks?.kembaliParam ?? null"
   >
     <i class="ph ph-arrow-left" aria-hidden="true"></i>
     {{ konteks?.kembaliLabel! | translate }}

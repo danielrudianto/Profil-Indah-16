@@ -91,7 +91,9 @@
             class="sidenav__badge"
             [class.sidenav__badge--ciut]="collapsed"
             *ngIf="lencana(entri.item) as jumlah"
-            [attr.aria-label]="jumlah + ' menunggu'"
+            [matTooltip]="tooltipLencana(entri.item)"
+            matTooltipPosition="right"
+            [attr.aria-label]="tooltipLencana(entri.item)"
           >
             {{ jumlah }}
           </span>

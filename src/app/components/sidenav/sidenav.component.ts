@@ -15,6 +15,7 @@ import {
   NavItem,
 } from 'src/app/constants/navigation.constant';
 import { BadgeService } from 'src/app/services/badge.service';
+import { MatTooltip } from '@angular/material/tooltip';
 
 /** Satu item yang siap digambar. */
 interface ItemTampil {
@@ -76,6 +77,7 @@ interface GrupTampil {
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
   imports: [
+    MatTooltip,
     NgIf,
     NgFor,
     RouterLink,
@@ -115,6 +117,33 @@ export class SidenavComponent implements OnInit {
     }
 
     return nilai > 9 ? '9+' : String(nilai);
+  }
+
+  /**
+   * Kalimat tooltip lencana — menyebut ANGKA SEBENARNYA, bukan "9+".
+   *
+   * Lencananya dibatasi karena selisih 14 dan 23 tidak mengubah tindakan
+   * orang; tooltipnya tidak dibatasi karena orang yang sengaja mengarahkan
+   * kursor ke situ memang sedang menanyakan berapa persisnya.
+   *
+   * Dan yang lebih penting: ia menyebutkan APA yang menunggu. Angka telanjang
+   * di sebelah label menu tidak pernah menjelaskan dirinya sendiri.
+   */
+  tooltipLencana(item: {
+    badge?: 'overpayment' | 'goodReceipt' | 'adjustment' | 'stock';
+  }): string {
+    if (!item.badge) {
+      return '';
+    }
+
+    const nilai = this.badgeService.counts[item.badge];
+    if (!nilai || nilai <= 0) {
+      return '';
+    }
+
+    return this.translateService.instant(`nav__badge__${item.badge}`, {
+      n: nilai,
+    });
   }
 
   private destroyRef = inject(DestroyRef);

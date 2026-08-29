@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { ListPageComponent } from 'src/app/components/list-page/list-page.component';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
+import { DaftarStateService } from 'src/app/services/daftar-state.service';
 
 /**
  * Daftar piutang per pelanggan — pola app-list-page.
@@ -40,6 +41,8 @@ export class ReceivableListComponent implements OnInit {
     private alertService: AlertService,
     private router: Router,
     private route: ActivatedRoute,
+    private translateService: TranslateService,
+    private daftarState: DaftarStateService,
   ) {}
 
   isLoading = true;
@@ -62,6 +65,16 @@ export class ReceivableListComponent implements OnInit {
    */
   ngOnInit(): void {
     const q = this.route.snapshot.queryParams;
+
+    /*
+      Masuk lewat menu berarti alamat tanpa query param sama sekali — dan itu
+      artinya mulai bersih. Ingatan dari kunjungan sebelumnya dibuang di sini,
+      supaya daftar yang dibuka setengah jam kemudian tidak menyodorkan kata
+      kunci yang sudah dilupakan orangnya.
+    */
+    if (Object.keys(q).length === 0) {
+      this.daftarState.lupakan(DaftarStateService.PIUTANG);
+    }
     const halaman = Number(q['page']);
     this.page = Number.isInteger(halaman) && halaman > 0 ? halaman : 1;
     this.keyword = q['q'] ?? '';
@@ -81,6 +94,14 @@ export class ReceivableListComponent implements OnInit {
     kembali sepuluh kali cuma menyusuri nomor halaman.
   */
   private simpanKeadaan(): void {
+    /* Ikut disimpan di ingatan sesi supaya tombol kembali di halaman rincian
+       bisa membawanya pulang — tombol itu memakai jalur, bukan riwayat. */
+    this.daftarState.simpan(DaftarStateService.PIUTANG, {
+      page: this.page,
+      q: this.keyword,
+      size: this.pageSize,
+    });
+
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
@@ -174,6 +195,51 @@ export class ReceivableListComponent implements OnInit {
   */
   sisa(item: any): number {
     return Number(item.value);
+  }
+
+  /** Bagian sisa yang tenggatnya sudah lewat. */
+  lewatTempo(item: any): number {
+    return Math.min(Math.max(Number(item.overdue ?? 0), 0), this.sisa(item));
+  }
+
+  /**
+   * Lebar bagian GELAP di dalam batang, dalam persen dari batang itu sendiri.
+   *
+   * Diberi lantai 3% ketika ada isinya: nominal kecil yang tergambar setipis
+   * nol memberi kesan tidak ada yang lewat tempo, padahal ada — dan itu
+   * kebalikan dari guna warnanya.
+   */
+  persenLewat(item: any): number {
+    const sisa = this.sisa(item);
+    const lewat = this.lewatTempo(item);
+    if (sisa <= 0 || lewat <= 0) {
+      return 0;
+    }
+    return Math.max((lewat / sisa) * 100, 3);
+  }
+
+  /** Kalimat tooltip batang — menyebut pembagiannya, bukan cuma totalnya. */
+  tooltipBar(item: any): string {
+    const nama =
+      item.name ?? this.translateService.instant('sales-invoice__retail');
+    const lewat = this.lewatTempo(item);
+
+    if (lewat <= 0) {
+      return this.translateService.instant('receivable__bar__aman', {
+        nama,
+        nilai: this.rupiah(this.sisa(item)),
+      });
+    }
+
+    return this.translateService.instant('receivable__bar__lewat', {
+      nama,
+      lewat: this.rupiah(lewat),
+      belum: this.rupiah(this.sisa(item) - lewat),
+    });
+  }
+
+  private rupiah(nilai: number): string {
+    return nilai.toLocaleString('id-ID', { maximumFractionDigits: 0 });
   }
 
   /** Lebar bar relatif terhadap penunggak terbesar, dalam persen. */

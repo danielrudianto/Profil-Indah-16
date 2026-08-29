@@ -11,6 +11,7 @@ import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-koso
 import { PageTitleService } from 'src/app/services/page-title.service';
 import { SalesInvoiceViewComponent } from 'src/app/components/document-view/sales-invoice-view/sales-invoice-view.component';
 import { ReceivablePaymentCreateComponent } from './receivable-payment-create/receivable-payment-create.component';
+import { DaftarStateService } from 'src/app/services/daftar-state.service';
 
 /**
  * Piutang satu pelanggan — faktur yang belum lunas beserta sisanya.
@@ -40,6 +41,7 @@ export class ReceivableViewComponent implements OnInit {
     private translateService: TranslateService,
     private route: ActivatedRoute,
     private router: Router,
+    private daftarState: DaftarStateService,
     private dialog: MatDialog,
     private pageTitleService: PageTitleService,
   ) {}
@@ -63,6 +65,9 @@ export class ReceivableViewComponent implements OnInit {
     this.pageTitleService.pasangKonteks({
       kembaliLabel: 'receivable__title',
       kembaliJalur: '/Receivable',
+      /* Pulang ke daftar SEPERTI YANG DITINGGALKAN — halaman, kata kunci, dan
+         ukuran halamannya. */
+      kembaliParam: this.daftarState.ambil(DaftarStateService.PIUTANG),
     });
 
     const id = this.route.snapshot.params['id'];
@@ -179,6 +184,8 @@ export class ReceivableViewComponent implements OnInit {
   }
 
   kembali(): void {
-    this.router.navigate(['/Receivable']);
+    this.router.navigate(['/Receivable'], {
+      queryParams: this.daftarState.ambil(DaftarStateService.PIUTANG),
+    });
   }
 }

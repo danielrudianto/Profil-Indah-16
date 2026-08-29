@@ -50,19 +50,27 @@
           merek" di laporan. Angkanya tetap di kolom sebelah; bar hanya
           mempercepat perbandingan.
         -->
-        <td
-          class="piutang__bar-sel"
-          [title]="
-            (item.name ?? ('sales-invoice__retail' | translate)) +
-            ' — Rp ' +
-            (sisa(item) | number: '1.0-0')
-          "
-        >
+        <td class="piutang__bar-sel" [title]="tooltipBar(item)">
+          <!--
+            Batang dibelah dua: gelap untuk yang sudah lewat jatuh tempo,
+            terang untuk yang belum. Dua nada dari warna yang sama, bukan dua
+            warna berbeda — keduanya sama-sama piutang, yang membedakan hanya
+            mendesak atau belum.
+
+            Panjang keseluruhannya tetap relatif terhadap penunggak terbesar,
+            sehingga perbandingan antarbaris tidak berubah artinya.
+          -->
           <span
             class="piutang__bar"
             [style.width.%]="lebarBar(item)"
             aria-hidden="true"
-          ></span>
+          >
+            <span
+              class="piutang__bar-lewat"
+              *ngIf="persenLewat(item) > 0"
+              [style.width.%]="persenLewat(item)"
+            ></span>
+          </span>
         </td>
         <td class="tabel__nilai baris__total">
           Rp {{ sisa(item) | number: "1.0-0" }}

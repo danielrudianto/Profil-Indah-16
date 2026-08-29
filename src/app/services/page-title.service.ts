@@ -20,6 +20,16 @@ export interface KonteksHalaman {
   /** Kunci i18n label tombol kembali; kosong berarti tidak ada. */
   kembaliLabel?: string;
   kembaliJalur?: string;
+  /**
+   * Query param yang ikut dibawa tombol kembali.
+   *
+   * Halaman rincian yang lahir dari sebuah daftar harus mengembalikan orang ke
+   * daftar SEPERTI YANG IA TINGGALKAN — halaman ketiga, kata kunci yang sedang
+   * diketik, ukuran halaman yang dipilih. Tanpa ini tombolnya memulangkan
+   * orang ke halaman satu, dan pekerjaan memeriksa satu per satu jadi dua kali
+   * lebih lama.
+   */
+  kembaliParam?: Record<string, string | number>;
   /** Kunci i18n tag halaman, menggantikan yang diturunkan dari alamat. */
   tag?: string;
   /** Kunci i18n penanda mode di kanan, misalnya "Mode administrator". */
