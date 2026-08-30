@@ -69,13 +69,17 @@
 */
 .keadaan--metode {
   flex-wrap: wrap;
+}
 
-  /*
-    .petunjuk bawaan tidak punya margin atas, sehingga bannernya menempel
-    persis ke deretan kartu dan terbaca sebagai bagian dari kartu terakhir,
-    bukan keterangan atas keseluruhan pilihan.
-  */
-  + .petunjuk {
-    margin-top: 14px;
-  }
+/*
+  .petunjuk bawaan tidak punya margin atas, sehingga bannernya menempel persis
+  ke deretan kartu dan terbaca sebagai bagian dari kartu terakhir, bukan
+  keterangan atas keseluruhan pilihan.
+
+  Berlaku untuk SETIAP deretan kartu, bukan hanya deretan metode. Aturannya
+  dulu dipatok ke .keadaan--metode saja, sehingga banner di bawah kartu
+  perlakuan tetap menempel.
+*/
+.keadaan + .petunjuk {
+  margin-top: 14px;
 }

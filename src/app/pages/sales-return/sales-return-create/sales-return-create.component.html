@@ -262,14 +262,21 @@
                 />
               </mat-form-field>
             </div>
-          </ng-container>
 
-          <p class="petunjuk">
-            <i class="ph ph-info" aria-hidden="true"></i>
-            <span>{{
-              "sales-return__create__payment-method-hint" | translate
-            }}</span>
-          </p>
+            <!--
+              Keterangan tunai ikut masuk ke dalam blok jadwal. Di luar sini ia
+              tetap tergambar meski deretan metodenya tidak ada — menjelaskan
+              pilihan "Cash" yang tidak kelihatan di layar, sambil menempel ke
+              deretan kartu perlakuan di atasnya seolah keterangan untuk kartu
+              itu.
+            -->
+            <p class="petunjuk">
+              <i class="ph ph-info" aria-hidden="true"></i>
+              <span>{{
+                "sales-return__create__payment-method-hint" | translate
+              }}</span>
+            </p>
+          </ng-container>
         </div>
       </section>
 
