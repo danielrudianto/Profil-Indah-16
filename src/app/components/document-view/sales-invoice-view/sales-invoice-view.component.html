@@ -106,7 +106,12 @@
           <dd>+ Rp {{ dokumen.delivery | number: "1.0-0" }}</dd>
         </div>
         <div *ngIf="dokumen.service > 0">
-          <dt>{{ "sales-invoice__view__service" | translate }}</dt>
+          <dt>
+            {{ "sales-invoice__view__service" | translate }}
+            <span class="rincian__jenis" *ngIf="labelJenisJasa">{{
+              labelJenisJasa
+            }}</span>
+          </dt>
           <dd>+ Rp {{ dokumen.service | number: "1.0-0" }}</dd>
         </div>
         <div *ngIf="dokumen.adminFee > 0">

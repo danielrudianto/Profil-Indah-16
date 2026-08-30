@@ -19,6 +19,7 @@ import { namaBerkasDokumen } from 'src/app/utils/file-name.utils';
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { SERVICE_TYPES } from 'src/app/constants/service-type.constant';
 import { AuthService } from 'src/app/services/auth.service';
 import { PdfService } from 'src/app/services/pdf.service';
 
@@ -91,6 +92,15 @@ export class SalesInvoiceViewComponent implements OnInit {
             discount: Number(data.discount),
             service: Number(data.service),
             delivery: Number(data.delivery),
+            /*
+              adminFee dan serviceType dulu tidak ikut dipetakan. Karena
+              `dokumen` bertipe any, tidak ada yang menangkapnya saat
+              kompilasi — dan akibatnya bukan cuma barisnya hilang di layar:
+              grandTotal memakai `?? 0`, jadi total yang tercetak KURANG
+              sebesar biaya admin yang sudah ditagihkan ke pelanggan.
+            */
+            adminFee: Number(data.adminFee ?? 0),
+            serviceType: data.serviceType ?? null,
             createdBy: data.user_bill_code_created_byTouser.name,
             createdAt: data.createdAt,
           };
@@ -171,6 +181,23 @@ export class SalesInvoiceViewComponent implements OnInit {
       (a, b) => a + b.quantity * (b.price - b.discount),
       0,
     );
+  }
+
+  /**
+   * Label jenis jasa yang ditagih (CNC / Frame / Solid), atau null bila
+   * dokumennya tidak menagih jasa sama sekali.
+   *
+   * Dicocokkan lewat daftar, bukan dirangkai `'service-type__' + nilai`:
+   * nilai yang tidak dikenal akan menghasilkan kunci mentah yang tergambar
+   * apa adanya di layar dan di kertas.
+   */
+  get labelJenisJasa(): string | null {
+    const jenis = this.dokumen?.serviceType;
+    if (!jenis) {
+      return null;
+    }
+    const cocok = SERVICE_TYPES.find((x) => x.value === jenis);
+    return cocok ? this.translateService.instant(cocok.label) : null;
   }
 
   get grandTotal(): number {
@@ -462,7 +489,16 @@ export class SalesInvoiceViewComponent implements OnInit {
                   },
                 ],
                 [
-                  { text: 'Service', bold: true, fontSize: 10 },
+                  /* Jenis jasanya ikut tercetak. Tanpa itu kertas yang
+                     dipegang pelanggan menyebut "Service" tanpa mengatakan
+                     jasa apa yang dikerjakan. */
+                  {
+                    text: this.labelJenisJasa
+                      ? `Service (${this.labelJenisJasa})`
+                      : 'Service',
+                    bold: true,
+                    fontSize: 10,
+                  },
                   {
                     text: `${angka(this.dokumen.service, '1.0-0')}`,
                     fontSize: 10,
