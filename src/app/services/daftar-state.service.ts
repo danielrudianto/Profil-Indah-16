@@ -19,6 +19,9 @@ export class DaftarStateService {
   /** Kunci daftar piutang — dipakai halamannya dan rinciannya. */
   static readonly PIUTANG = 'piutang';
 
+  /** Kunci antrean "menunggu faktur" — dipakai halamannya dan layar lengkapi. */
+  static readonly FAKTUR_PEMBELIAN = 'faktur-pembelian';
+
   private simpanan = new Map<string, Record<string, string | number>>();
 
   simpan(kunci: string, keadaan: Record<string, string | number>): void {

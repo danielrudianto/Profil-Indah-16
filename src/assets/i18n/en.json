@@ -2490,6 +2490,7 @@
   "receivable__payment__none": "No payments on this invoice yet.",
   "purchase-invoice__queue__title": "Awaiting invoice",
   "purchase-invoice__queue__lede": "Receipts whose goods are recorded, waiting for the supplier's invoice to arrive.",
+  "purchase-invoice__queue__search": "Search by document number or supplier",
   "purchase-invoice__queue__complete": "Complete invoice",
   "purchase-invoice__queue__empty__title": "Nothing awaiting an invoice",
   "purchase-invoice__queue__empty__desc": "Every goods receipt has its invoice completed.",

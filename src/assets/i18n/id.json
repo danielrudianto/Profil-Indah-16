@@ -2490,6 +2490,7 @@
   "receivable__payment__none": "Belum ada pembayaran pada faktur ini.",
   "purchase-invoice__queue__title": "Menunggu faktur",
   "purchase-invoice__queue__lede": "Penerimaan yang barangnya sudah tercatat dan menunggu faktur suppliernya tiba.",
+  "purchase-invoice__queue__search": "Cari nomor dokumen atau pemasok",
   "purchase-invoice__queue__complete": "Lengkapi faktur",
   "purchase-invoice__queue__empty__title": "Tidak ada yang menunggu faktur",
   "purchase-invoice__queue__empty__desc": "Semua penerimaan barang sudah lengkap fakturnya.",

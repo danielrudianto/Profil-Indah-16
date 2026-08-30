@@ -1,14 +1,15 @@
 <app-list-page
   [heading]="'purchase-invoice__queue__title' | translate"
   [lede]="'purchase-invoice__queue__lede' | translate"
-  [showSearch]="false"
-  [showPageSize]="false"
-  [keyword]="''"
+  [searchPlaceholder]="'purchase-invoice__queue__search' | translate"
+  [keyword]="keyword"
   [page]="page"
   [pageSize]="pageSize"
   [total]="dataCount"
   [loading]="isLoading"
+  (search)="cari($event)"
   (pageChange)="bukaHalaman($event)"
+  (pageSizeChange)="ubahUkuran($event)"
   (refresh)="ambilData()"
 >
   <ng-container aksi>
@@ -72,7 +73,7 @@
             ikon="ph-file-dashed"
             [judul]="'purchase-invoice__queue__empty__title' | translate"
             [penjelasan]="'purchase-invoice__queue__empty__desc' | translate"
-            [kataKunci]="''"
+            [kataKunci]="keyword"
           />
         </td>
       </tr>

@@ -19,6 +19,7 @@ import { of, switchMap, Subscription } from 'rxjs';
 
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { DaftarStateService } from 'src/app/services/daftar-state.service';
 import { PageTitleService } from 'src/app/services/page-title.service';
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
 import {
@@ -69,6 +70,7 @@ import {
 export class PurchaseInvoiceConfirmViewComponent implements OnInit, OnDestroy {
   constructor(
     private apiService: ApiService,
+    private daftarState: DaftarStateService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
     private translateService: TranslateService,
@@ -129,6 +131,7 @@ export class PurchaseInvoiceConfirmViewComponent implements OnInit, OnDestroy {
     this.pageTitleService.pasangKonteks({
       kembaliLabel: 'purchase-invoice__queue__title',
       kembaliJalur: '/Purchase-invoice',
+      kembaliParam: this.daftarState.ambil(DaftarStateService.FAKTUR_PEMBELIAN),
       tag: 'purchase-invoice__complete__tag',
     });
 
@@ -140,7 +143,7 @@ export class PurchaseInvoiceConfirmViewComponent implements OnInit, OnDestroy {
             this.alertService.showSuccess(
               this.translateService.instant('general__already-confirmed'),
             );
-            this.router.navigate(['/Purchase-invoice']);
+            this.kembaliKeAntrean();
             return;
           }
 
@@ -191,7 +194,7 @@ export class PurchaseInvoiceConfirmViewComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.alertService.showError(error);
-          this.router.navigate(['/Purchase-invoice']);
+          this.kembaliKeAntrean();
         },
       })
       .add(() => {
@@ -314,8 +317,22 @@ export class PurchaseInvoiceConfirmViewComponent implements OnInit, OnDestroy {
   /* Kirim                                                             */
   /* ---------------------------------------------------------------- */
 
+  /**
+   * Pulang ke antrean menunggu faktur, ke tempat orangnya tadi berdiri.
+   *
+   * Query paramnya dibawa dari ingatan daftar, bukan dikosongkan: petugas
+   * yang membuka satu penerimaan dari halaman lima hasil pencarian "Sinar"
+   * harus mendarat kembali di halaman lima hasil pencarian itu — baik ia
+   * membatalkan, maupun setelah fakturnya selesai dilengkapi.
+   */
+  private kembaliKeAntrean(): void {
+    this.router.navigate(['/Purchase-invoice'], {
+      queryParams: this.daftarState.ambil(DaftarStateService.FAKTUR_PEMBELIAN),
+    });
+  }
+
   batal(): void {
-    this.router.navigate(['/Purchase-invoice']);
+    this.kembaliKeAntrean();
   }
 
   terbitkan(): void {
@@ -370,7 +387,7 @@ export class PurchaseInvoiceConfirmViewComponent implements OnInit, OnDestroy {
               'purchase-invoice__confirm__confirm__success',
             ),
           );
-          this.router.navigate(['/Purchase-invoice']);
+          this.kembaliKeAntrean();
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -412,7 +429,7 @@ export class PurchaseInvoiceConfirmViewComponent implements OnInit, OnDestroy {
                   'purchase-invoice__confirm__delete__success',
                 ),
               );
-              this.router.navigate(['/Purchase-invoice']);
+              this.kembaliKeAntrean();
             },
             error: (error) => {
               this.alertService.showError(error);

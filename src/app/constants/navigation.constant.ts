@@ -79,6 +79,15 @@ export const NAV_ITEMS: NavItem[] = [
     path: 'Purchase-invoice',
     group: 'menu',
     roles: ADMIN,
+    /*
+      Lencananya di SINI, bukan di penerimaan barang.
+
+      Angkanya sama — penerimaan yang belum dikonfirmasi — tetapi yang
+      mengerjakannya adalah halaman faktur pembelian, di tab "Menunggu
+      faktur". Lencana pada halaman yang bukan tempat pekerjaannya
+      mengirim orang ke ruangan yang salah.
+    */
+    badge: 'goodReceipt',
   },
   {
     label: 'nav__good_receipt',
@@ -86,7 +95,6 @@ export const NAV_ITEMS: NavItem[] = [
     path: 'Good-receipt',
     group: 'menu',
     roles: PURCHASING,
-    badge: 'goodReceipt',
   },
   {
     label: 'nav__sales_return',
