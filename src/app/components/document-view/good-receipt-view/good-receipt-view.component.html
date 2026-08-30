@@ -100,10 +100,18 @@
           <dt>{{ "sales-invoice__view__subtotal" | translate }}</dt>
           <dd>Rp {{ subtotal | number: "1.0-0" }}</dd>
         </div>
-        <div *ngIf="dokumen.discount > 0">
+        <!--
+          Selalu tergambar, termasuk ketika nol — sama seperti faktur
+          penjualan. Baris yang hilang tidak terbaca sebagai "nol", melainkan
+          sebagai "tidak ada kolomnya", dan orang yang mencari diskon dokumen
+          jadi tidak tahu apakah dokumennya memang tanpa diskon atau
+          diskonnya yang belum diisi.
+        -->
+        <div>
           <dt>{{ "sales-invoice__view__doc-discount" | translate }}</dt>
-          <dd class="lihat__minus">
-            − Rp {{ dokumen.discount | number: "1.0-0" }}
+          <dd [class.lihat__minus]="dokumen.discount > 0">
+            {{ dokumen.discount > 0 ? "− " : "" }}Rp
+            {{ dokumen.discount | number: "1.0-0" }}
           </dd>
         </div>
         <div class="lihat__total">
