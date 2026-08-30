@@ -1,4 +1,5 @@
 import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
@@ -42,7 +43,16 @@ import { PdfService } from 'src/app/services/pdf.service';
   templateUrl: './sales-invoice-view.component.html',
   styleUrls: ['./sales-invoice-view.component.scss'],
   providers: [DatePipe, DecimalPipe],
-  imports: [NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe, MatTooltip],
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    DatePipe,
+    TranslatePipe,
+    MatTooltip,
+    CdkDrag,
+    CdkDragHandle,
+  ],
 })
 export class SalesInvoiceViewComponent implements OnInit {
   constructor(

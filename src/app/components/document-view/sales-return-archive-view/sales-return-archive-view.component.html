@@ -1,7 +1,24 @@
 <!-- Tampilan baca retur penjualan — dokumen, bukan formulir. -->
-<div class="lihat">
+<!--
+  Dialognya bisa digeser. cdkDragRootElement menunjuk .cdk-overlay-pane —
+  tanpa itu yang bergerak hanya isi dialog di dalam panel yang diam, dan
+  isinya keluar dari kotaknya sendiri.
+
+  Batasnya .cdk-overlay-container: elemen fixed yang menutup persis seluruh
+  viewport, jadi dialognya tidak bisa digeser sampai keluar layar dan
+  tertinggal di tempat yang tidak bisa diraih lagi.
+
+  Pegangannya cuma header. Kalau seluruh dialog bisa ditarik, menyorot nomor
+  dokumen untuk disalin justru menggeser dialognya.
+-->
+<div
+  class="lihat"
+  cdkDrag
+  cdkDragRootElement=".cdk-overlay-pane"
+  cdkDragBoundary=".cdk-overlay-container"
+>
   <ng-container *ngIf="!isLoading && dokumen">
-    <header class="lihat__kepala">
+    <header class="lihat__kepala" cdkDragHandle>
       <div class="lihat__identitas">
         <span class="lihat__avatar" aria-hidden="true">{{ inisial }}</span>
         <div>
@@ -17,8 +34,8 @@
       >
         {{
           (dokumen.isDelete
-            ? 'sales-return__status__deleted'
-            : 'sales-return__status__active'
+            ? "sales-return__status__deleted"
+            : "sales-return__status__active"
           ) | translate
         }}
       </span>
@@ -27,36 +44,38 @@
     <div class="lihat__isi">
       <dl class="lihat__kisi">
         <div>
-          <dt>{{ 'sales-return__archive__date' | translate }}</dt>
-          <dd>{{ dokumen.date | date: 'dd MMMM yyyy' }}</dd>
+          <dt>{{ "sales-return__archive__date" | translate }}</dt>
+          <dd>{{ dokumen.date | date: "dd MMMM yyyy" }}</dd>
         </div>
         <div>
-          <dt>{{ 'sales-return__archive__invoice-name' | translate }}</dt>
+          <dt>{{ "sales-return__archive__invoice-name" | translate }}</dt>
           <dd>
             {{ dokumen.invoiceName }}
-            <span class="lihat__desk">{{ dokumen.invoiceDate | date: 'dd MMMM yyyy' }}</span>
+            <span class="lihat__desk">{{
+              dokumen.invoiceDate | date: "dd MMMM yyyy"
+            }}</span>
           </dd>
         </div>
         <div>
-          <dt>{{ 'sales-invoice__view__sales' | translate }}</dt>
+          <dt>{{ "sales-invoice__view__sales" | translate }}</dt>
           <dd>{{ dokumen.sales }}</dd>
         </div>
         <div>
-          <dt>{{ 'report-money__method' | translate }}</dt>
+          <dt>{{ "report-money__method" | translate }}</dt>
           <dd>{{ dokumen.paymentMethod }}</dd>
         </div>
         <div>
-          <dt>{{ 'sales-invoice__view__created-by' | translate }}</dt>
+          <dt>{{ "sales-invoice__view__created-by" | translate }}</dt>
           <dd>{{ dokumen.createdBy }}</dd>
         </div>
         <div>
-          <dt>{{ 'sales-invoice__view__created-at' | translate }}</dt>
-          <dd>{{ dokumen.createdAt | date: 'dd MMMM yyyy HH:mm' }}</dd>
+          <dt>{{ "sales-invoice__view__created-at" | translate }}</dt>
+          <dd>{{ dokumen.createdAt | date: "dd MMMM yyyy HH:mm" }}</dd>
         </div>
       </dl>
 
       <h3 class="lihat__label">
-        {{ 'sales-invoice__archive__view__item__title' | translate }}
+        {{ "sales-invoice__archive__view__item__title" | translate }}
         ({{ barang.length }})
       </h3>
 
@@ -64,10 +83,16 @@
         <table class="tabel tabel--rapat">
           <thead>
             <tr>
-              <th>{{ 'sales-invoice__view__product' | translate }}</th>
-              <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__qty' | translate }}</th>
-              <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__price' | translate }}</th>
-              <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__line-total' | translate }}</th>
+              <th>{{ "sales-invoice__view__product" | translate }}</th>
+              <th class="tabel__nilai-kepala">
+                {{ "sales-invoice__view__qty" | translate }}
+              </th>
+              <th class="tabel__nilai-kepala">
+                {{ "sales-invoice__view__price" | translate }}
+              </th>
+              <th class="tabel__nilai-kepala">
+                {{ "sales-invoice__view__line-total" | translate }}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -76,10 +101,14 @@
                 <span class="lihat__ref">{{ b.reference }}</span>
                 <span class="lihat__desk">{{ b.description }}</span>
               </td>
-              <td class="tabel__nilai">{{ b.quantity | number: '1.0-2' }} {{ b.unit }}</td>
-              <td class="tabel__nilai">Rp {{ b.price - b.discount | number: '1.0-0' }}</td>
+              <td class="tabel__nilai">
+                {{ b.quantity | number: "1.0-2" }} {{ b.unit }}
+              </td>
+              <td class="tabel__nilai">
+                Rp {{ b.price - b.discount | number: "1.0-0" }}
+              </td>
               <td class="tabel__nilai baris__total">
-                Rp {{ totalBaris(b) | number: '1.0-0' }}
+                Rp {{ totalBaris(b) | number: "1.0-0" }}
               </td>
             </tr>
           </tbody>
@@ -88,8 +117,8 @@
 
       <dl class="lihat__nilai">
         <div class="lihat__total">
-          <dt>{{ 'sales-invoice__view__grand-total' | translate }}</dt>
-          <dd>Rp {{ subtotal | number: '1.0-0' }}</dd>
+          <dt>{{ "sales-invoice__view__grand-total" | translate }}</dt>
+          <dd>Rp {{ subtotal | number: "1.0-0" }}</dd>
         </div>
       </dl>
     </div>
@@ -103,18 +132,18 @@
         (click)="delete()"
       >
         <i class="ph ph-trash" aria-hidden="true"></i>
-        {{ 'general__delete' | translate }}
+        {{ "general__delete" | translate }}
       </button>
 
       <span class="lihat__renggang"></span>
 
       <button type="button" class="btn" (click)="tutup()">
-        {{ 'general__close' | translate }}
+        {{ "general__close" | translate }}
       </button>
     </footer>
   </ng-container>
 
   <p class="lihat__memuat" *ngIf="isLoading">
-    {{ 'general__loading' | translate }}
+    {{ "general__loading" | translate }}
   </p>
 </div>

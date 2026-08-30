@@ -32,6 +32,38 @@
   gap: 12px;
   padding: 20px 24px;
   border-bottom: 1px solid var(--color-divider);
+
+  /*
+    Pegangan geser dialog. Kursornya diganti supaya orang tahu bagian ini
+    bisa ditarik tanpa harus mencoba dulu.
+  */
+  cursor: move;
+
+  /*
+    Teks di header tidak ikut tersorot saat ditarik. Tanpa ini, menggeser
+    dialognya menyeret sorotan biru melintasi nama pelanggan dan nomor
+    dokumen — terlihat seperti kerusakan, bukan seperti perpindahan.
+
+    Nomor dokumennya sendiri dikembalikan agar tetap bisa disalin: itu satu-
+    satunya teks di header yang memang dibaca orang untuk diketik ulang.
+  */
+  user-select: none;
+}
+
+.lihat__kepala .lihat__nomor {
+  user-select: text;
+  cursor: text;
+}
+
+/*
+  Saat sedang ditarik, bayangannya diangkat supaya jelas dialognya sedang
+  melayang di atas halaman.
+*/
+.cdk-drag-preview,
+.cdk-overlay-pane.cdk-drag-dragging {
+  box-shadow:
+    0 24px 48px rgb(0 0 0 / 28%),
+    0 8px 16px rgb(0 0 0 / 16%);
 }
 
 .lihat__identitas {

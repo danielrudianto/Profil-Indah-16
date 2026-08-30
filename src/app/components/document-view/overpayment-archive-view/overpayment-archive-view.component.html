@@ -6,7 +6,7 @@
         <span class="lihat__avatar" aria-hidden="true">{{ inisial }}</span>
         <div>
           <h2 class="lihat__nama">{{ namaPelanggan }}</h2>
-          <p class="lihat__nomor">{{ dokumen.date | date: 'dd MMMM yyyy' }}</p>
+          <p class="lihat__nomor">{{ dokumen.date | date: "dd MMMM yyyy" }}</p>
         </div>
       </div>
     </header>
@@ -14,42 +14,42 @@
     <div class="lihat__isi">
       <dl class="lihat__kisi">
         <div>
-          <dt>{{ 'overpayment__view__payment-method' | translate }}</dt>
+          <dt>{{ "overpayment__view__payment-method" | translate }}</dt>
           <dd>{{ dokumen.paymentMethod }}</dd>
         </div>
         <div>
-          <dt>{{ 'overpayment__view__return-date' | translate }}</dt>
-          <dd>{{ dokumen.returnDate | date: 'dd MMMM yyyy' }}</dd>
+          <dt>{{ "overpayment__view__return-date" | translate }}</dt>
+          <dd>{{ dokumen.returnDate | date: "dd MMMM yyyy" }}</dd>
         </div>
       </dl>
 
       <dl class="lihat__nilai">
         <div class="lihat__total">
-          <dt>{{ 'overpayment__view__value' | translate }}</dt>
-          <dd>Rp {{ dokumen.value | number: '1.0-0' }}</dd>
+          <dt>{{ "overpayment__view__value" | translate }}</dt>
+          <dd>Rp {{ dokumen.value | number: "1.0-0" }}</dd>
         </div>
       </dl>
 
       <h3 class="lihat__label">
-        {{ 'overpayment__view__return-payment-method' | translate }}
+        {{ "overpayment__view__return-payment-method" | translate }}
       </h3>
 
       <dl class="lihat__kisi">
         <div>
-          <dt>{{ 'overpayment__view__return-payment-method' | translate }}</dt>
+          <dt>{{ "overpayment__view__return-payment-method" | translate }}</dt>
           <dd>{{ dokumen.returnMethod }}</dd>
         </div>
         <div>
-          <dt>{{ 'overpayment__view__return-payment-name' | translate }}</dt>
+          <dt>{{ "overpayment__view__return-payment-name" | translate }}</dt>
           <dd>{{ dokumen.returnName }}</dd>
         </div>
         <div>
-          <dt>{{ 'overpayment__view__return-payment-bank' | translate }}</dt>
-          <dd>{{ dokumen.returnBank || '—' }}</dd>
+          <dt>{{ "overpayment__view__return-payment-bank" | translate }}</dt>
+          <dd>{{ dokumen.returnBank || "—" }}</dd>
         </div>
         <div>
-          <dt>{{ 'overpayment__view__return-payment-number' | translate }}</dt>
-          <dd>{{ dokumen.returnNumber || '—' }}</dd>
+          <dt>{{ "overpayment__view__return-payment-number" | translate }}</dt>
+          <dd>{{ dokumen.returnNumber || "—" }}</dd>
         </div>
       </dl>
     </div>
@@ -57,12 +57,12 @@
     <footer class="lihat__kaki">
       <span class="lihat__renggang"></span>
       <button type="button" class="btn" (click)="tutup()">
-        {{ 'general__close' | translate }}
+        {{ "general__close" | translate }}
       </button>
     </footer>
   </ng-container>
 
   <p class="lihat__memuat" *ngIf="isLoading">
-    {{ 'general__loading' | translate }}
+    {{ "general__loading" | translate }}
   </p>
 </div>

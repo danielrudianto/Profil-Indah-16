@@ -1,4 +1,5 @@
 import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
@@ -27,7 +28,16 @@ import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmat
   selector: 'app-purchase-invoice-view',
   templateUrl: './purchase-invoice-view.component.html',
   styleUrls: ['./purchase-invoice-view.component.scss'],
-  imports: [NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe, MatTooltip],
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    DatePipe,
+    TranslatePipe,
+    MatTooltip,
+    CdkDrag,
+    CdkDragHandle,
+  ],
 })
 export class PurchaseInvoiceViewComponent implements OnInit {
   constructor(

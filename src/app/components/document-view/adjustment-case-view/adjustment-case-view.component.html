@@ -1,7 +1,24 @@
 <!-- Tampilan baca penyesuaian stok — dokumen, bukan formulir. -->
-<div class="lihat">
+<!--
+  Dialognya bisa digeser. cdkDragRootElement menunjuk .cdk-overlay-pane —
+  tanpa itu yang bergerak hanya isi dialog di dalam panel yang diam, dan
+  isinya keluar dari kotaknya sendiri.
+
+  Batasnya .cdk-overlay-container: elemen fixed yang menutup persis seluruh
+  viewport, jadi dialognya tidak bisa digeser sampai keluar layar dan
+  tertinggal di tempat yang tidak bisa diraih lagi.
+
+  Pegangannya cuma header. Kalau seluruh dialog bisa ditarik, menyorot nomor
+  dokumen untuk disalin justru menggeser dialognya.
+-->
+<div
+  class="lihat"
+  cdkDrag
+  cdkDragRootElement=".cdk-overlay-pane"
+  cdkDragBoundary=".cdk-overlay-container"
+>
   <ng-container *ngIf="!isLoading && dokumen">
-    <header class="lihat__kepala">
+    <header class="lihat__kepala" cdkDragHandle>
       <div class="lihat__identitas">
         <span class="lihat__avatar" aria-hidden="true">{{ inisial }}</span>
         <div>
@@ -23,33 +40,35 @@
     <div class="lihat__isi">
       <dl class="lihat__kisi">
         <div>
-          <dt>{{ 'sales-invoice__archive__view__date' | translate }}</dt>
-          <dd>{{ dokumen.date | date: 'dd MMMM yyyy' }}</dd>
+          <dt>{{ "sales-invoice__archive__view__date" | translate }}</dt>
+          <dd>{{ dokumen.date | date: "dd MMMM yyyy" }}</dd>
         </div>
         <div>
-          <dt>{{ 'adjustment-case__archive__view__company' | translate }}</dt>
-          <dd>{{ dokumen.company || '—' }}</dd>
+          <dt>{{ "adjustment-case__archive__view__company" | translate }}</dt>
+          <dd>{{ dokumen.company || "—" }}</dd>
         </div>
         <div>
-          <dt>{{ 'sales-invoice__view__created-by' | translate }}</dt>
+          <dt>{{ "sales-invoice__view__created-by" | translate }}</dt>
           <dd>{{ dokumen.createdBy }}</dd>
         </div>
         <div>
-          <dt>{{ 'sales-invoice__view__created-at' | translate }}</dt>
-          <dd>{{ dokumen.createdAt | date: 'dd MMMM yyyy HH:mm' }}</dd>
+          <dt>{{ "sales-invoice__view__created-at" | translate }}</dt>
+          <dd>{{ dokumen.createdAt | date: "dd MMMM yyyy HH:mm" }}</dd>
         </div>
       </dl>
 
       <h3 class="lihat__label">
-        {{ 'sales-invoice__archive__view__item__title' | translate }}
+        {{ "sales-invoice__archive__view__item__title" | translate }}
         ({{ barang.length }})
       </h3>
 
       <table class="tabel tabel--rapat">
         <thead>
           <tr>
-            <th>{{ 'sales-invoice__view__product' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'sales-invoice__view__qty' | translate }}</th>
+            <th>{{ "sales-invoice__view__product" | translate }}</th>
+            <th class="tabel__nilai-kepala">
+              {{ "sales-invoice__view__qty" | translate }}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -59,7 +78,7 @@
               <span class="lihat__desk">{{ b.description }}</span>
             </td>
             <td class="tabel__nilai baris__total">
-              {{ b.quantity | number: '1.0-2' }} {{ b.unit }}
+              {{ b.quantity | number: "1.0-2" }} {{ b.unit }}
             </td>
           </tr>
         </tbody>
@@ -75,18 +94,18 @@
         (click)="openDeleteConfirmation()"
       >
         <i class="ph ph-trash" aria-hidden="true"></i>
-        {{ 'general__delete' | translate }}
+        {{ "general__delete" | translate }}
       </button>
 
       <span class="lihat__renggang"></span>
 
       <button type="button" class="btn" (click)="tutup()">
-        {{ 'general__close' | translate }}
+        {{ "general__close" | translate }}
       </button>
     </footer>
   </ng-container>
 
   <p class="lihat__memuat" *ngIf="isLoading">
-    {{ 'general__loading' | translate }}
+    {{ "general__loading" | translate }}
   </p>
 </div>

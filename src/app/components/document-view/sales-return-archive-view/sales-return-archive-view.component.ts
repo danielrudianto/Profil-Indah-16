@@ -1,4 +1,5 @@
 import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
@@ -21,7 +22,15 @@ import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmat
   selector: 'app-sales-return-archive-view',
   templateUrl: './sales-return-archive-view.component.html',
   styleUrls: ['./sales-return-archive-view.component.scss'],
-  imports: [NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe],
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    DatePipe,
+    TranslatePipe,
+    CdkDrag,
+    CdkDragHandle,
+  ],
 })
 export class SalesReturnArchiveViewComponent implements OnInit {
   constructor(

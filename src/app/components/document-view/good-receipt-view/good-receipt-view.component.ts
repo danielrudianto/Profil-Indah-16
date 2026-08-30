@@ -1,4 +1,5 @@
 import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -17,7 +18,16 @@ import { ApiService } from 'src/app/services/api.service';
   selector: 'app-good-receipt-view',
   templateUrl: './good-receipt-view.component.html',
   styleUrls: ['./good-receipt-view.component.scss'],
-  imports: [NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe, MatTooltip],
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    DatePipe,
+    TranslatePipe,
+    MatTooltip,
+    CdkDrag,
+    CdkDragHandle,
+  ],
 })
 export class GoodReceiptViewComponent implements OnInit {
   constructor(
