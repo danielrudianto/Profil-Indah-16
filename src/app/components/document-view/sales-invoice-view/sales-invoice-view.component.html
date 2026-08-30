@@ -95,28 +95,50 @@
           <dt>{{ "sales-invoice__view__subtotal" | translate }}</dt>
           <dd>Rp {{ subtotal | number: "1.0-0" }}</dd>
         </div>
-        <div *ngIf="dokumen.discount > 0">
+        <!--
+          Keempat baris ini SELALU tergambar, termasuk ketika nilainya nol.
+
+          Dulu dipagari `> 0`, dan baris yang hilang tidak terbaca sebagai
+          "nol" — ia terbaca sebagai "tidak ada kolomnya". Orang yang mencari
+          biaya admin pada faktur yang tidak menagihnya jadi tidak tahu apakah
+          sistemnya memang tidak memungutnya atau dokumennya yang belum
+          diisi. Menyebut nol menjawab pertanyaan itu.
+
+          Cetakannya sejak awal memang begini; yang di layar yang beda
+          sendiri.
+        -->
+        <div>
           <dt>{{ "sales-invoice__view__doc-discount" | translate }}</dt>
-          <dd class="lihat__minus">
-            − Rp {{ dokumen.discount | number: "1.0-0" }}
+          <dd [class.lihat__minus]="dokumen.discount > 0">
+            {{ dokumen.discount > 0 ? "− " : "" }}Rp
+            {{ dokumen.discount | number: "1.0-0" }}
           </dd>
         </div>
-        <div *ngIf="dokumen.delivery > 0">
+        <div>
           <dt>{{ "sales-invoice__view__delivery" | translate }}</dt>
-          <dd>+ Rp {{ dokumen.delivery | number: "1.0-0" }}</dd>
+          <dd>
+            {{ dokumen.delivery > 0 ? "+ " : "" }}Rp
+            {{ dokumen.delivery | number: "1.0-0" }}
+          </dd>
         </div>
-        <div *ngIf="dokumen.service > 0">
+        <div>
           <dt>
             {{ "sales-invoice__view__service" | translate }}
             <span class="rincian__jenis" *ngIf="labelJenisJasa">{{
               labelJenisJasa
             }}</span>
           </dt>
-          <dd>+ Rp {{ dokumen.service | number: "1.0-0" }}</dd>
+          <dd>
+            {{ dokumen.service > 0 ? "+ " : "" }}Rp
+            {{ dokumen.service | number: "1.0-0" }}
+          </dd>
         </div>
-        <div *ngIf="dokumen.adminFee > 0">
+        <div>
           <dt>{{ "sales-invoice__view__admin-fee" | translate }}</dt>
-          <dd>+ Rp {{ dokumen.adminFee | number: "1.0-0" }}</dd>
+          <dd>
+            {{ dokumen.adminFee > 0 ? "+ " : "" }}Rp
+            {{ dokumen.adminFee | number: "1.0-0" }}
+          </dd>
         </div>
         <div class="lihat__total">
           <dt>{{ "sales-invoice__view__grand-total" | translate }}</dt>
