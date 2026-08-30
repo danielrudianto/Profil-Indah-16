@@ -203,6 +203,82 @@ html {
 }
 
 /* ------------------------------------------------------------------ */
+/* Dialog lihat-dokumen: ukuran panel, geseran, dan luncurannya        */
+/*                                                                     */
+/* WAJIB DI SINI, bukan di _lihat.scss. Partial itu di-@use dari       */
+/* stylesheet komponen, yang ter-enkapsulasi: setiap selektor di sana  */
+/* dapat imbuhan [_ngcontent-…], sementara .cdk-overlay-pane hidup di  */
+/* luar DOM komponen. Aturannya tetap terkompilasi, tetap lolos build, */
+/* dan tidak pernah cocok dengan apa pun.                              */
+/* ------------------------------------------------------------------ */
+
+:root {
+  /*
+    Satu sumber kebenaran lebar dialog dokumen. Dibaca .lihat di partial
+    DAN panel overlay di bawah; dua angka terpisah akan berpisah diam-diam.
+  */
+  --lihat-lebar: min(720px, calc(100vw - 48px));
+}
+
+/*
+  Panel overlaynya dibuat SEUKURAN dialog yang tergambar.
+
+  Permukaan Material dibuat transparan dengan overflow: visible, sehingga
+  kartu 720px itu meluber keluar dari panel yang lebih sempit. Yang
+  tergambar lebih lebar daripada yang terukur.
+
+  Itulah sebab dialognya hanya tembus di sisi kanan. cdkDragBoundary
+  menghitung batas kiri dari titik pegangan — benar apa adanya — tetapi
+  batas kanan dari LEBAR elemen: `boundary.right - (lebar - pegangan)`.
+  Lebar yang kekecilan membuat batas kanannya kejauhan, persis sebesar
+  selisih yang meluber. Sisi kiri dan atas tidak memakai lebar sama
+  sekali, jadi keduanya berhenti di tempat yang benar.
+*/
+.cdk-overlay-pane:has(.lihat) {
+  width: var(--lihat-lebar);
+  max-width: none;
+
+  /*
+    Perpindahannya diberi waktu supaya dialognya meluncur mengikuti kursor,
+    bukan menempel persis pada pikselnya.
+
+    Dipatok ke panel yang MEMUAT dialog dokumen, bukan ke .cdk-overlay-pane
+    begitu saja. Panel itu dipakai bersama seluruh overlay — autocomplete,
+    menu, tooltip — dan posisinya diatur lewat transform juga; memberi
+    mereka transition membuat daftar autocomplete terlihat melayang ke
+    tempatnya setiap kali muncul.
+
+    120ms linear, bukan ease. CDK memperbarui transform pada setiap gerakan
+    penunjuk, jadi kurva yang melambat di ujung tidak pernah sampai ke
+    ujungnya — yang terasa bukan halus melainkan tersendat. Angka ini
+    satu-satunya yang perlu diubah kalau geserannya terasa terlalu berat.
+  */
+  transition:
+    transform 120ms linear,
+    box-shadow 160ms ease-out;
+}
+
+/*
+  Saat sedang ditarik, bayangannya diangkat supaya jelas dialognya sedang
+  melayang di atas halaman.
+*/
+.cdk-overlay-pane:has(.lihat).cdk-drag-dragging {
+  box-shadow:
+    0 24px 48px rgb(0 0 0 / 28%),
+    0 8px 16px rgb(0 0 0 / 16%);
+}
+
+/*
+  Yang menyetel sistemnya untuk mengurangi gerakan tetap mendapat geseran
+  yang menempel persis — tanpa luncuran sama sekali.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .cdk-overlay-pane:has(.lihat) {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /* Menu Material bergaya Nocturne                                      */
 /*                                                                     */
 /* mat-menu dipakai delapan tempat (aksi baris master barang/merek/    */
