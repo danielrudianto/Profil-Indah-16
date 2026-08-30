@@ -1,12 +1,13 @@
-<h2 mat-dialog-title>
-  {{ "adjustment-case__archive__filter__title" | translate }}
-</h2>
-
-<form
-  [formGroup]="adjustmentCaseArchiveFilterFormGroup"
-  (ngSubmit)="saveFilters()"
+<app-dialog-shell
+  icon="ph ph-funnel"
+  [heading]="'adjustment-case__archive__filter__title' | translate"
+  [lede]="'adjustment-case__archive__filter__lede' | translate"
+  [submitLabel]="'general__save-filter' | translate"
+  [canSubmit]="true"
+  (submitted)="saveFilters()"
+  (close)="close()"
 >
-  <mat-dialog-content>
+  <div [formGroup]="adjustmentCaseArchiveFilterFormGroup">
     <mat-form-field class="w-100" appearance="outline">
       <mat-label>{{
         "adjustment-case__archive__filter__date-range" | translate
@@ -18,88 +19,129 @@
       >
         <input
           matStartDate
-          placeholder="Start date"
           formControlName="startDate"
+          [placeholder]="'general__date-start' | translate"
         />
-        <input matEndDate placeholder="End date" formControlName="endDate" />
+        <input
+          matEndDate
+          formControlName="endDate"
+          [placeholder]="'general__date-end' | translate"
+        />
       </mat-date-range-input>
-      <mat-hint>MM/DD/YYYY - MM/DD/YYYY</mat-hint>
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="picker"
-      ></mat-datepicker-toggle>
-      <mat-date-range-picker
-        #picker
-        [startAt]="minDate"
-      ></mat-date-range-picker>
+
+      <!--
+        Tombol kalender manual, bukan mat-datepicker-toggle: elemen toggle itu
+        hilang tanpa jejak pada pipeline dev meski utuh di bundel produksi.
+      -->
+      <button
+        type="button"
+        matSuffix
+        class="buka-kalender"
+        (click)="picker.open()"
+        [attr.aria-label]="'general__pick-date' | translate"
+      >
+        <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+      </button>
+
+      <mat-date-range-picker #picker [startAt]="minDate" />
     </mat-form-field>
 
-    <mat-divider />
-    <h6>
-      {{ "adjustment-case__archive__filter__document-status" | translate }}
-    </h6>
-    <mat-chip-listbox class="mb-3" selectable multiple>
-      <mat-chip-option
-        [value]="'isReject'"
-        [selected]="filterObject.isReject"
-        (selectionChange)="selectionChange($event)"
-        >{{
-          "adjustment-case__archive__filter__document-status__deleted"
-            | translate
-        }}</mat-chip-option
-      >
-      <mat-chip-option
-        [value]="'isConfirm'"
-        [selected]="filterObject.isConfirm"
-        (selectionChange)="selectionChange($event)"
-        >{{
-          "adjustment-case__archive__filter__document-status__confirm"
-            | translate
-        }}</mat-chip-option
-      >
-      <mat-chip-option
-        [value]="'isPending'"
-        [selected]="filterObject.isPending"
-        (selectionChange)="selectionChange($event)"
-        >{{
-          "adjustment-case__archive__filter__document-status__pending"
-            | translate
-        }}</mat-chip-option
-      >
-    </mat-chip-listbox>
+    <!--
+      Petunjuk formatnya dihapus, bukan diterjemahkan. Bunyinya
+      "MM/DD/YYYY - MM/DD/YYYY" — urutan Amerika, pada aplikasi yang
+      menggambar tanggalnya sebagai 30/8/2026. Petunjuk yang salah lebih
+      buruk daripada tidak ada petunjuk, dan kolomnya diisi lewat kalender.
+    -->
 
-    <h6>
-      {{ "adjustment-case__archive__filter__document-type" | translate }}
-    </h6>
-    <mat-chip-listbox selectable multiple>
-      <mat-chip-option
-        [value]="'isLost'"
-        [selected]="filterObject.isLost"
-        (selectionChange)="selectionChange($event)"
-        >{{
-          "adjustment-case__archive__filter__type__lost" | translate
-        }}</mat-chip-option
-      >
-      <mat-chip-option
-        [value]="'isFound'"
-        [selected]="filterObject.isFound"
-        (selectionChange)="selectionChange($event)"
-        >{{
-          "adjustment-case__archive__filter__type__found" | translate
-        }}</mat-chip-option
-      >
-    </mat-chip-listbox>
-  </mat-dialog-content>
+    <section class="saring__bagian">
+      <h3 class="saring__label">
+        {{ "adjustment-case__archive__filter__document-status" | translate }}
+      </h3>
 
-  <mat-dialog-actions align="end">
-    <button
-      type="submit"
-      mat-stroked-button
-      color="primary"
-      style="letter-spacing: 0"
-      class="mx-1"
-    >
-      {{ "general__save-filter" | translate }}
-    </button>
-  </mat-dialog-actions>
-</form>
+      <div class="saring__pilihan">
+        <button
+          type="button"
+          class="saring__pil"
+          [class.saring__pil--on]="filterObject.isConfirm"
+          [attr.aria-pressed]="filterObject.isConfirm"
+          (click)="alih('isConfirm')"
+        >
+          <i class="ph ph-check-circle" aria-hidden="true"></i>
+          {{
+            "adjustment-case__archive__filter__document-status__confirm"
+              | translate
+          }}
+        </button>
+
+        <button
+          type="button"
+          class="saring__pil"
+          [class.saring__pil--on]="filterObject.isPending"
+          [attr.aria-pressed]="filterObject.isPending"
+          (click)="alih('isPending')"
+        >
+          <i class="ph ph-clock-countdown" aria-hidden="true"></i>
+          {{
+            "adjustment-case__archive__filter__document-status__pending"
+              | translate
+          }}
+        </button>
+
+        <button
+          type="button"
+          class="saring__pil"
+          [class.saring__pil--on]="filterObject.isReject"
+          [attr.aria-pressed]="filterObject.isReject"
+          (click)="alih('isReject')"
+        >
+          <i class="ph ph-trash" aria-hidden="true"></i>
+          {{
+            "adjustment-case__archive__filter__document-status__deleted"
+              | translate
+          }}
+        </button>
+      </div>
+    </section>
+
+    <section class="saring__bagian">
+      <h3 class="saring__label">
+        {{ "adjustment-case__archive__filter__document-type" | translate }}
+      </h3>
+
+      <div class="saring__pilihan">
+        <button
+          type="button"
+          class="saring__pil"
+          [class.saring__pil--on]="filterObject.isFound"
+          [attr.aria-pressed]="filterObject.isFound"
+          (click)="alih('isFound')"
+        >
+          <i class="ph ph-plus-circle" aria-hidden="true"></i>
+          {{ "adjustment-case__archive__filter__type__found" | translate }}
+        </button>
+
+        <button
+          type="button"
+          class="saring__pil"
+          [class.saring__pil--on]="filterObject.isLost"
+          [attr.aria-pressed]="filterObject.isLost"
+          (click)="alih('isLost')"
+        >
+          <i class="ph ph-minus-circle" aria-hidden="true"></i>
+          {{ "adjustment-case__archive__filter__type__lost" | translate }}
+        </button>
+      </div>
+    </section>
+
+    <!--
+      Tidak memilih apa pun berarti tidak menyaring, bukan tidak ada hasil.
+      Dikatakan di layar karena pil-pil yang sama-sama padam mudah terbaca
+      sebagai "semuanya dimatikan" — dan orangnya lalu mengira daftarnya
+      akan kosong.
+    -->
+    <p class="petunjuk" *ngIf="tanpaSaringan">
+      <i class="ph ph-info" aria-hidden="true"></i>
+      <span>{{ "adjustment-case__archive__filter__all" | translate }}</span>
+    </p>
+  </div>
+</app-dialog-shell>

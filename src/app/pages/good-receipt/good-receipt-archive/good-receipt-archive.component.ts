@@ -18,10 +18,18 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-kosong.component';
 
 @Component({
-    selector: 'app-good-receipt-archive',
-    templateUrl: './good-receipt-archive.component.html',
-    animations: [slideInOutAnimation],
-    imports: [TabelKosongComponent, ArchivesComponent, NgIf, NgFor, DatePipe, TranslatePipe, ListPageComponent]
+  selector: 'app-good-receipt-archive',
+  templateUrl: './good-receipt-archive.component.html',
+  animations: [slideInOutAnimation],
+  imports: [
+    TabelKosongComponent,
+    ArchivesComponent,
+    NgIf,
+    NgFor,
+    DatePipe,
+    TranslatePipe,
+    ListPageComponent,
+  ],
 })
 export class GoodReceiptArchiveComponent {
   constructor(
@@ -29,7 +37,7 @@ export class GoodReceiptArchiveComponent {
     private alertService: AlertService,
     private dynamicComponentService: DynamicComponentService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
   ) {}
 
   mode: ArchiveMode = ArchiveMode.year;
@@ -95,10 +103,10 @@ export class GoodReceiptArchiveComponent {
         keyword: this.keyword,
         // Convert to DD-MM-YYYY
         startDate: moment(
-          new Date(this.filterFormGroup.get('startDate')?.value)
+          new Date(this.filterFormGroup.get('startDate')?.value),
         ).format('YYYY-MM-DD'),
         endDate: moment(
-          new Date(this.filterFormGroup.get('endDate')?.value)
+          new Date(this.filterFormGroup.get('endDate')?.value),
         ).format('YYYY-MM-DD'),
         isActive: this.filterFormGroup.get('isActive')?.value,
         isDelete: this.filterFormGroup.get('isDelete')?.value,
@@ -150,7 +158,8 @@ export class GoodReceiptArchiveComponent {
     if (!semua) {
       if (v.isActive) hasil.push({ kunci: 'aktif', teks: 'Aktif' });
       if (v.isDelete) hasil.push({ kunci: 'dihapus', teks: 'Dihapus' });
-      if (v.isPending) hasil.push({ kunci: 'menunggu', teks: 'Menunggu faktur' });
+      if (v.isPending)
+        hasil.push({ kunci: 'menunggu', teks: 'Menunggu faktur' });
     }
 
     return hasil;
@@ -257,6 +266,14 @@ export class GoodReceiptArchiveComponent {
           year: this.year,
           ...this.filterFormGroup.value,
         },
+        /*
+          Dialognya menggambar kartunya sendiri lewat app-dialog-shell, jadi
+          permukaan Material di belakangnya harus ditransparankan. Tanpa
+          panelClass ini kartunya duduk di atas kotak putih kedua yang
+          bersudut dan berbayang sendiri.
+        */
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
       })
       .afterClosed()
       .subscribe((data) => {

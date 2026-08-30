@@ -2801,5 +2801,13 @@
   "general__date-start": "Tanggal mulai",
   "general__date-end": "Tanggal akhir",
   "sales-invoice__archive__filter__lede": "Persempit daftar faktur menurut rentang tanggal, keadaan dokumen, dan keadaan pembayarannya.",
-  "sales-invoice__archive__filter__all": "Tidak ada yang dipilih berarti semuanya ditampilkan."
+  "sales-invoice__archive__filter__all": "Tidak ada yang dipilih berarti semuanya ditampilkan.",
+  "good-receipt__archive__filter__lede": "Persempit arsip penerimaan menurut rentang tanggal dan keadaan dokumennya.",
+  "good-receipt__archive__filter__all": "Tidak ada yang dipilih berarti semuanya ditampilkan.",
+  "deposit__archive__filter__lede": "Persempit arsip deposit menurut rentang tanggal dan keadaan dokumennya.",
+  "deposit__archive__filter__all": "Tidak ada yang dipilih berarti semuanya ditampilkan.",
+  "sales-return__archive__filter__lede": "Persempit arsip retur menurut rentang tanggal dan keadaan dokumennya.",
+  "sales-return__archive__filter__all": "Tidak ada yang dipilih berarti semuanya ditampilkan.",
+  "adjustment-case__archive__filter__lede": "Persempit arsip penyesuaian menurut rentang tanggal, keadaan, dan jenis dokumennya.",
+  "adjustment-case__archive__filter__all": "Tidak ada yang dipilih berarti semuanya ditampilkan."
 }

@@ -1,24 +1,56 @@
-import { ChangeDetectorRef, Component, Inject } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatChipSelectionChange, MatChipListbox, MatChipOption } from '@angular/material/chips';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
-import { MatDateRangeInput, MatStartDate, MatEndDate, MatDatepickerToggle, MatDateRangePicker } from '@angular/material/datepicker';
-import { MatDivider } from '@angular/material/divider';
-import { MatButton } from '@angular/material/button';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
+import {
+  MatDateRangeInput,
+  MatDateRangePicker,
+  MatEndDate,
+  MatStartDate,
+} from '@angular/material/datepicker';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
+
+/** Nama saringan yang bisa dinyalakan dan dipadamkan di layar ini. */
+type Saringan = 'isPending' | 'isDelete';
+
+/**
+ * Penyaring arsip — memakai app-dialog-shell seperti dialog formulir lain.
+ *
+ * Sebelumnya berkulit Material mentah: Poppins dan #041e49 yang ditulis
+ * langsung, mat-chip-listbox, serta petunjuk "MM/DD/YYYY" pada aplikasi yang
+ * menggambar tanggalnya 30/8/2026. Gayanya kini datang dari partial
+ * styles/_saring.scss yang dipakai bersama keenam penyaring.
+ */
 @Component({
-    selector: 'app-deposit-archive-filter',
-    templateUrl: './deposit-archive-filter.component.html',
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatDateRangeInput, MatStartDate, MatEndDate, MatHint, MatDatepickerToggle, MatSuffix, MatDateRangePicker, MatDivider, MatChipListbox, MatChipOption, MatDialogActions, MatButton, TranslatePipe]
+  selector: 'app-deposit-archive-filter',
+  templateUrl: './deposit-archive-filter.component.html',
+  styleUrls: ['./deposit-archive-filter.component.scss'],
+  imports: [
+    DialogShellComponent,
+    NgIf,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSuffix,
+    MatDateRangeInput,
+    MatStartDate,
+    MatEndDate,
+    MatDateRangePicker,
+    TranslatePipe,
+  ],
 })
-export class DepositArchiveFilterComponent {
+export class DepositArchiveFilterComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialogRef<DepositArchiveFilterComponent>,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   maxDate: Date = new Date();
@@ -58,19 +90,21 @@ export class DepositArchiveFilterComponent {
     });
   }
 
-  selectionChange(event: MatChipSelectionChange) {
-    const checked = event.selected;
-    const field = event.source.value;
+  /** Tidak satu pun pil menyala — artinya semuanya ditampilkan. */
+  get tanpaSaringan(): boolean {
+    return !Object.values(this.filterObject).some(Boolean);
+  }
 
-    switch (field) {
-      case 'isDelete':
-        this.filterObject.isDelete = checked;
-        break;
-      case 'isPending':
-        this.filterObject.isPending = checked;
-        break;
-      default:
-        break;
-    }
+  /*
+    Satu penukar untuk semua saringan.
+
+    Menggantikan switch atas MatChipSelectionChange yang membaca nama
+    kolomnya dari event.source.value — nama yang tidak diperiksa siapa pun,
+    sehingga salah ketik satu huruf jatuh diam-diam ke cabang default dan
+    saringannya tidak pernah menyala. Di sini namanya bertipe, jadi salah
+    ketik gagal saat kompilasi.
+  */
+  alih(saringan: Saringan): void {
+    this.filterObject[saringan] = !this.filterObject[saringan];
   }
 }

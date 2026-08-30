@@ -318,6 +318,14 @@ export class AdjustmentCaseArchiveComponent {
           year: this.year,
           ...this.filterFormGroup.value,
         },
+        /*
+          Dialognya menggambar kartunya sendiri lewat app-dialog-shell, jadi
+          permukaan Material di belakangnya harus ditransparankan. Tanpa
+          panelClass ini kartunya duduk di atas kotak putih kedua yang
+          bersudut dan berbayang sendiri.
+        */
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
       })
       .afterClosed()
       .subscribe((data) => {
@@ -346,7 +354,9 @@ export class AdjustmentCaseArchiveComponent {
     if (data.isLost != lama.isLost) return true;
     if (data.isFound != lama.isFound) return true;
 
-    if (new Date(lama.startDate).getTime() != new Date(data.startDate).getTime())
+    if (
+      new Date(lama.startDate).getTime() != new Date(data.startDate).getTime()
+    )
       return true;
     if (new Date(lama.endDate).getTime() != new Date(data.endDate).getTime())
       return true;

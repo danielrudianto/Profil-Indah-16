@@ -2801,5 +2801,13 @@
   "general__date-start": "Start date",
   "general__date-end": "End date",
   "sales-invoice__archive__filter__lede": "Narrow the invoice list by date range, document state, and payment state.",
-  "sales-invoice__archive__filter__all": "Nothing selected means everything is shown."
+  "sales-invoice__archive__filter__all": "Nothing selected means everything is shown.",
+  "good-receipt__archive__filter__lede": "Narrow the receipt archive by date range and document state.",
+  "good-receipt__archive__filter__all": "Nothing selected means everything is shown.",
+  "deposit__archive__filter__lede": "Narrow the deposit archive by date range and document state.",
+  "deposit__archive__filter__all": "Nothing selected means everything is shown.",
+  "sales-return__archive__filter__lede": "Narrow the return archive by date range and document state.",
+  "sales-return__archive__filter__all": "Nothing selected means everything is shown.",
+  "adjustment-case__archive__filter__lede": "Narrow the adjustment archive by date range, state, and document type.",
+  "adjustment-case__archive__filter__all": "Nothing selected means everything is shown."
 }

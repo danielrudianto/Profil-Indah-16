@@ -244,6 +244,14 @@ export class DepositArchiveComponent {
           year: this.year,
           ...this.filterFormGroup.value,
         },
+        /*
+          Dialognya menggambar kartunya sendiri lewat app-dialog-shell, jadi
+          permukaan Material di belakangnya harus ditransparankan. Tanpa
+          panelClass ini kartunya duduk di atas kotak putih kedua yang
+          bersudut dan berbayang sendiri.
+        */
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
       })
       .afterClosed()
       .subscribe((data) => {
