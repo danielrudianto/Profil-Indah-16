@@ -166,9 +166,29 @@ export class StockListComponent implements OnInit {
   }
 
   /**
+   * Ambang "menipis" sebuah barang.
+   *
+   * YANG LEBIH BESAR di antara ambang yang diset orang dan ambang yang
+   * dihitung sistem — persis GREATEST(minimum_stock,
+   * COALESCE(minimum_stock_recommendation, 0)) yang dipakai server untuk
+   * menyaring daftar dan menghitung chip.
+   *
+   * Dulu di sini hanya minimum_stock. Barang yang ambang manualnya belum
+   * diisi tetapi punya rekomendasi ikut tersaring "menipis" oleh server,
+   * lalu digambar TANPA lencana menipis oleh layar — daftar yang isinya
+   * membantah judulnya sendiri.
+   */
+  private ambang(item: any): number {
+    return Math.max(
+      Number(item.minimum_stock ?? 0),
+      Number(item.minimum_stock_recommendation ?? 0),
+    );
+  }
+
+  /**
    * Keadaan sebuah baris, atau '' bila stoknya cukup.
    *
-   * Dihitung DI SINI dari stok dan minimum_stock yang keduanya sudah ikut
+   * Dihitung DI SINI dari stok dan kedua ambang yang semuanya sudah ikut
    * terkirim — bukan diminta sebagai satu ruas jadi. Ambangnya sama persis
    * dengan yang dipakai server menghitung chip, jadi angka pada chip dan pill
    * pada barisnya tidak bisa saling bertentangan.
@@ -179,7 +199,7 @@ export class StockListComponent implements OnInit {
       return 'negative';
     }
 
-    const ambang = Number(item.minimum_stock ?? 0);
+    const ambang = this.ambang(item);
     return ambang > 0 && jumlah < ambang ? 'low' : '';
   }
 
