@@ -27,7 +27,8 @@ import { TabelKosongComponent } from 'src/app/components/tabel-kosong/tabel-koso
   selector: 'app-sales-invoice-archive',
   templateUrl: './sales-invoice-archive.component.html',
   animations: [slideInOutAnimation],
-  imports: [TabelKosongComponent, 
+  imports: [
+    TabelKosongComponent,
     ArchivesComponent,
     ListPageComponent,
     NgIf,
@@ -281,6 +282,14 @@ export class SalesInvoiceArchiveComponent {
           year: this.year,
           ...this.filterFormGroup.value,
         },
+        /*
+          Dialognya menggambar kartunya sendiri lewat app-dialog-shell, jadi
+          permukaan Material di belakangnya harus ditransparankan. Tanpa
+          panelClass ini kartunya duduk di atas kotak putih kedua yang
+          bersudut dan berbayang sendiri.
+        */
+        panelClass: 'nocturne-dialog',
+        backdropClass: 'nocturne-dialog-backdrop',
       })
       .afterClosed()
       .subscribe((data) => {
@@ -308,7 +317,9 @@ export class SalesInvoiceArchiveComponent {
     if (data.isActive != lama.isActive) return true;
     if (data.isDelete != lama.isDelete) return true;
 
-    if (new Date(lama.startDate).getTime() != new Date(data.startDate).getTime())
+    if (
+      new Date(lama.startDate).getTime() != new Date(data.startDate).getTime()
+    )
       return true;
     if (new Date(lama.endDate).getTime() != new Date(data.endDate).getTime())
       return true;

@@ -1,26 +1,56 @@
-import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatChipSelectionChange, MatChipListbox, MatChipOption } from '@angular/material/chips';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
-import { panelAnimation } from 'src/app/animations/panel.animation';
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/form-field';
-import { MatDateRangeInput, MatStartDate, MatEndDate, MatDatepickerToggle, MatDateRangePicker } from '@angular/material/datepicker';
-import { MatDivider } from '@angular/material/divider';
-import { MatButton } from '@angular/material/button';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
+import {
+  MatDateRangeInput,
+  MatDateRangePicker,
+  MatEndDate,
+  MatStartDate,
+} from '@angular/material/datepicker';
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { DialogShellComponent } from 'src/app/components/dialog-shell/dialog-shell.component';
+
+/** Nama saringan yang bisa dinyalakan dan dipadamkan di layar ini. */
+type Saringan = 'isPaid' | 'isUnpaid' | 'isDelete' | 'isActive';
+
+/**
+ * Penyaring arsip faktur penjualan.
+ *
+ * Ditulis ulang memakai app-dialog-shell. Sebelumnya ia satu-satunya dialog
+ * di alur ini yang masih berkulit Material mentah — Poppins, #041e49 yang
+ * ditulis langsung, mat-chip-listbox, dan petunjuk "MM/DD/YYYY" pada
+ * aplikasi yang menggambar tanggalnya 30/8/2026.
+ */
 @Component({
-    selector: 'app-sales-invoice-archive-filter',
-    templateUrl: './sales-invoice-archive-filter.component.html',
-    styleUrls: ['./sales-invoice-archive-filter.component.scss'],
-    animations: [panelAnimation],
-    imports: [MatDialogTitle, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatDateRangeInput, MatStartDate, MatEndDate, MatHint, MatDatepickerToggle, MatSuffix, MatDateRangePicker, MatDivider, MatChipListbox, MatChipOption, MatDialogActions, MatButton, TranslatePipe]
+  selector: 'app-sales-invoice-archive-filter',
+  templateUrl: './sales-invoice-archive-filter.component.html',
+  styleUrls: ['./sales-invoice-archive-filter.component.scss'],
+  imports: [
+    DialogShellComponent,
+    NgIf,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSuffix,
+    MatDateRangeInput,
+    MatStartDate,
+    MatEndDate,
+    MatDateRangePicker,
+    TranslatePipe,
+  ],
 })
-export class SalesInvoiceArchiveFilterComponent {
+export class SalesInvoiceArchiveFilterComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialogRef<SalesInvoiceArchiveFilterComponent>,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   maxDate: Date = new Date();
@@ -53,6 +83,24 @@ export class SalesInvoiceArchiveFilterComponent {
     this.cdr.detectChanges();
   }
 
+  /** Tidak satu pun pil menyala — artinya semuanya ditampilkan. */
+  get tanpaSaringan(): boolean {
+    return !Object.values(this.filterObject).some(Boolean);
+  }
+
+  /*
+    Satu penukar untuk keempat saringan.
+
+    Menggantikan switch atas MatChipSelectionChange yang membaca nama
+    kolomnya dari event.source.value — nama yang tidak diperiksa siapa pun,
+    sehingga salah ketik satu huruf jatuh diam-diam ke cabang default dan
+    saringannya tidak pernah menyala. Di sini namanya bertipe, jadi salah
+    ketik gagal saat kompilasi.
+  */
+  alih(saringan: Saringan): void {
+    this.filterObject[saringan] = !this.filterObject[saringan];
+  }
+
   close(data: any = undefined) {
     this.dialog.close(data);
   }
@@ -62,27 +110,5 @@ export class SalesInvoiceArchiveFilterComponent {
       ...this.salesInvoiceArchiveFilterFormGroup.value,
       ...this.filterObject,
     });
-  }
-
-  selectionChange(event: MatChipSelectionChange) {
-    const checked = event.selected;
-    const field = event.source.value;
-
-    switch (field) {
-      case 'isPaid':
-        this.filterObject.isPaid = checked;
-        break;
-      case 'isUnpaid':
-        this.filterObject.isUnpaid = checked;
-        break;
-      case 'isActive':
-        this.filterObject.isActive = checked;
-        break;
-      case 'isDelete':
-        this.filterObject.isDelete = checked;
-        break;
-      default:
-        break;
-    }
   }
 }

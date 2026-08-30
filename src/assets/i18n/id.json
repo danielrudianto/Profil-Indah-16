@@ -2797,5 +2797,9 @@
   "nav__badge__stock": "{{n}} barang stoknya minus atau di bawah minimum",
   "receivable__bar__aman": "{{nama}} — Rp {{nilai}}, belum ada yang jatuh tempo",
   "receivable__bar__lewat": "{{nama}} — Rp {{lewat}} lewat jatuh tempo, Rp {{belum}} belum",
-  "receivable__overdue": "Jatuh Tempo"
+  "receivable__overdue": "Jatuh Tempo",
+  "general__date-start": "Tanggal mulai",
+  "general__date-end": "Tanggal akhir",
+  "sales-invoice__archive__filter__lede": "Persempit daftar faktur menurut rentang tanggal, keadaan dokumen, dan keadaan pembayarannya.",
+  "sales-invoice__archive__filter__all": "Tidak ada yang dipilih berarti semuanya ditampilkan."
 }

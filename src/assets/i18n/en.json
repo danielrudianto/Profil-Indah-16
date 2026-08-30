@@ -2797,5 +2797,9 @@
   "nav__badge__stock": "{{n}} products below minimum or in negative stock",
   "receivable__bar__aman": "{{nama}} — Rp {{nilai}}, nothing overdue yet",
   "receivable__bar__lewat": "{{nama}} — Rp {{lewat}} overdue, Rp {{belum}} not yet due",
-  "receivable__overdue": "Overdue"
+  "receivable__overdue": "Overdue",
+  "general__date-start": "Start date",
+  "general__date-end": "End date",
+  "sales-invoice__archive__filter__lede": "Narrow the invoice list by date range, document state, and payment state.",
+  "sales-invoice__archive__filter__all": "Nothing selected means everything is shown."
 }

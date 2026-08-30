@@ -1,8 +1,13 @@
-<h2 mat-dialog-title>
-  {{ "sales-invoice__archive__filter__title" | translate }}
-</h2>
-<form [formGroup]="salesInvoiceArchiveFilterFormGroup">
-  <mat-dialog-content>
+<app-dialog-shell
+  icon="ph ph-funnel"
+  [heading]="'sales-invoice__archive__filter__title' | translate"
+  [lede]="'sales-invoice__archive__filter__lede' | translate"
+  [submitLabel]="'general__save-filter' | translate"
+  [canSubmit]="true"
+  (submitted)="saveFilters()"
+  (close)="close()"
+>
+  <div [formGroup]="salesInvoiceArchiveFilterFormGroup">
     <mat-form-field class="w-100" appearance="outline">
       <mat-label>{{
         "sales-invoice__archive__filter__date-range" | translate
@@ -14,77 +19,119 @@
       >
         <input
           matStartDate
-          placeholder="Start date"
           formControlName="startDate"
+          [placeholder]="'general__date-start' | translate"
         />
-        <input matEndDate placeholder="End date" formControlName="endDate" />
+        <input
+          matEndDate
+          formControlName="endDate"
+          [placeholder]="'general__date-end' | translate"
+        />
       </mat-date-range-input>
-      <mat-hint>MM/DD/YYYY - MM/DD/YYYY</mat-hint>
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="picker"
-      ></mat-datepicker-toggle>
-      <mat-date-range-picker
-        #picker
-        [startAt]="minDate"
-      ></mat-date-range-picker>
+
+      <!--
+        Tombol kalender manual, bukan mat-datepicker-toggle: elemen toggle itu
+        hilang tanpa jejak pada pipeline dev meski utuh di bundel produksi.
+      -->
+      <button
+        type="button"
+        matSuffix
+        class="buka-kalender"
+        (click)="picker.open()"
+        [attr.aria-label]="'general__pick-date' | translate"
+      >
+        <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+      </button>
+
+      <mat-date-range-picker #picker [startAt]="minDate" />
     </mat-form-field>
 
-    <mat-divider />
-    <h6>
-      {{ "sales-invoice__archive__filter__document-status" | translate }}
-    </h6>
-    <mat-chip-listbox class="mb-3" selectable multiple>
-      <mat-chip-option
-        [value]="'isDelete'"
-        [selected]="filterObject.isDelete"
-        (selectionChange)="selectionChange($event)"
-        >{{
-          "sales-invoice__archive__filter__document-status__deleted" | translate
-        }}</mat-chip-option
-      >
-      <mat-chip-option
-        [value]="'isActive'"
-        [selected]="filterObject.isActive"
-        (selectionChange)="selectionChange($event)"
-        >{{
-          "sales-invoice__archive__filter__document-status__active" | translate
-        }}</mat-chip-option
-      >
-    </mat-chip-listbox>
+    <!--
+      Petunjuk formatnya dihapus, bukan diterjemahkan. Bunyinya
+      "MM/DD/YYYY - MM/DD/YYYY" — urutan Amerika, pada aplikasi yang
+      menggambar tanggalnya sebagai 30/8/2026. Petunjuk yang salah lebih
+      buruk daripada tidak ada petunjuk, dan kolomnya diisi lewat kalender.
+    -->
 
-    <mat-divider />
-    <h6>
-      {{ "sales-invoice__archive__filter__payment-status" | translate }}
-    </h6>
-    <mat-chip-listbox selectable multiple>
-      <mat-chip-option
-        [value]="'isPaid'"
-        [selected]="filterObject.isPaid"
-        (selectionChange)="selectionChange($event)"
-        >{{
-          "sales-invoice__archive__filter__payment-status__paid" | translate
-        }}</mat-chip-option
-      >
-      <mat-chip-option
-        [value]="'isUnpaid'"
-        [selected]="filterObject.isUnpaid"
-        (selectionChange)="selectionChange($event)"
-        >{{
-          "sales-invoice__archive__filter__payment-status__unpaid" | translate
-        }}</mat-chip-option
-      >
-    </mat-chip-listbox>
-  </mat-dialog-content>
+    <section class="saring__bagian">
+      <h3 class="saring__label">
+        {{ "sales-invoice__archive__filter__document-status" | translate }}
+      </h3>
 
-  <mat-dialog-actions align="end">
-    <button
-      mat-stroked-button
-      color="primary"
-      style="letter-spacing: 0"
-      (click)="saveFilters()"
-    >
-      {{ "general__save-filter" | translate }}
-    </button>
-  </mat-dialog-actions>
-</form>
+      <div class="saring__pilihan">
+        <button
+          type="button"
+          class="saring__pil"
+          [class.saring__pil--on]="filterObject.isActive"
+          [attr.aria-pressed]="filterObject.isActive"
+          (click)="alih('isActive')"
+        >
+          <i class="ph ph-check-circle" aria-hidden="true"></i>
+          {{
+            "sales-invoice__archive__filter__document-status__active"
+              | translate
+          }}
+        </button>
+
+        <button
+          type="button"
+          class="saring__pil"
+          [class.saring__pil--on]="filterObject.isDelete"
+          [attr.aria-pressed]="filterObject.isDelete"
+          (click)="alih('isDelete')"
+        >
+          <i class="ph ph-trash" aria-hidden="true"></i>
+          {{
+            "sales-invoice__archive__filter__document-status__deleted"
+              | translate
+          }}
+        </button>
+      </div>
+    </section>
+
+    <section class="saring__bagian">
+      <h3 class="saring__label">
+        {{ "sales-invoice__archive__filter__payment-status" | translate }}
+      </h3>
+
+      <div class="saring__pilihan">
+        <button
+          type="button"
+          class="saring__pil"
+          [class.saring__pil--on]="filterObject.isPaid"
+          [attr.aria-pressed]="filterObject.isPaid"
+          (click)="alih('isPaid')"
+        >
+          <i class="ph ph-check-circle" aria-hidden="true"></i>
+          {{
+            "sales-invoice__archive__filter__payment-status__paid" | translate
+          }}
+        </button>
+
+        <button
+          type="button"
+          class="saring__pil"
+          [class.saring__pil--on]="filterObject.isUnpaid"
+          [attr.aria-pressed]="filterObject.isUnpaid"
+          (click)="alih('isUnpaid')"
+        >
+          <i class="ph ph-clock-countdown" aria-hidden="true"></i>
+          {{
+            "sales-invoice__archive__filter__payment-status__unpaid" | translate
+          }}
+        </button>
+      </div>
+    </section>
+
+    <!--
+      Tidak memilih apa pun berarti tidak menyaring, bukan tidak ada hasil.
+      Dikatakan di layar karena dua pil yang sama-sama padam mudah terbaca
+      sebagai "semuanya dimatikan" — dan orangnya lalu mengira daftarnya
+      akan kosong.
+    -->
+    <p class="petunjuk" *ngIf="tanpaSaringan">
+      <i class="ph ph-info" aria-hidden="true"></i>
+      <span>{{ "sales-invoice__archive__filter__all" | translate }}</span>
+    </p>
+  </div>
+</app-dialog-shell>
