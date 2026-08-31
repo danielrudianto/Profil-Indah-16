@@ -39,7 +39,17 @@ export class PricePurchaseComponent implements OnInit {
   dataSource: any[] = [];
   dataCount = 0;
   page = 1;
-  pageSize = 20;
+  /*
+    Harus sama dengan LIMIT di lingkungan server — daftar harga memakai
+    endpoint yang sama dengan arsip lain, dan ukuran halamannya ditentukan
+    di sana (product-price-*.controller membacanya dari process.env.LIMIT).
+
+    Angka 20 di sini membuat penomoran halaman menjanjikan 20 baris sementara
+    server hanya mengirim 10: halaman terakhir terhitung dua kali lipat, dan
+    separuh nomor halaman menampilkan tabel kosong. Dua puluh enam daftar lain
+    di aplikasi ini memakai 10; hanya dua halaman harga yang menyimpang.
+  */
+  pageSize = 10;
   keyword = '';
 
   ngOnInit(): void {

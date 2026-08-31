@@ -2793,6 +2793,7 @@
   "sales-return__create__treatment__overpayment__note": "The money is scheduled to be returned to the customer.",
   "sales-return__create__split": "Rp {{potong}} clears the remaining debt; the other Rp {{lebih}} becomes an overpayment.",
   "sales-return__create__schedule": "Return schedule",
+  "sales-return__create__refund-source": "Money comes out of",
   "dashboard__piutang": "Receivables",
   "dashboard__piutang__jumlah": "{{n}} invoices · {{m}} customers",
   "dashboard__piutang__lewat": "Rp {{nilai}} overdue across {{n}} invoices — the oldest by {{hari}} days.",

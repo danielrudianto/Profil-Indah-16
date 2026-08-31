@@ -212,6 +212,45 @@
               </button>
             </div>
 
+            <!--
+              KAS MANA yang berkurang. Pertanyaan ini berbeda dari kartu
+              Cash/Bank transfer di atas: yang itu menyebut CARA uangnya
+              kembali, yang ini menyebut sumber uangnya.
+
+              Daftarnya, penandanya, dan penyimpannya sudah ada sejak lama —
+              metodeOpsi diisi dari /payment-method/all, pilihMetodeTetap
+              menyimpannya, dan payment_method_id ikut terkirim ke server.
+              Hanya markah inilah yang tidak pernah ditulis, sehingga nilainya
+              selamanya 0 dan SETIAP retur tercatat keluar dari tunai —
+              termasuk yang uangnya berangkat dari rekening bank.
+
+              Tunai tidak dikarang di sini: ia datang sebagai { id: null }
+              dari endpoint yang sama, dan pilihMetodeTetap memetakannya ke 0
+              karena skema server menuntut angka.
+            -->
+            <span class="kartu__label kartu__label--renggang">
+              {{ "sales-return__create__refund-source" | translate }}
+            </span>
+
+            <div class="keadaan keadaan--metode">
+              <button
+                type="button"
+                class="keadaan__kartu"
+                *ngFor="let m of metodeOpsi; trackBy: lacakMetode"
+                [class.keadaan__kartu--on]="metodeTerpilih(m)"
+                [disabled]="isSubmitting"
+                (click)="pilihMetodeTetap(m)"
+              >
+                <i
+                  class="ph"
+                  [class.ph-money]="m.id === null"
+                  [class.ph-bank]="m.id !== null"
+                  aria-hidden="true"
+                ></i>
+                <span class="keadaan__judul">{{ m.name }}</span>
+              </button>
+            </div>
+
             <div class="kartu__baris">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>

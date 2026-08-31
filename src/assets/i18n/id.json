@@ -2793,6 +2793,7 @@
   "sales-return__create__treatment__overpayment__note": "Uangnya dijadwalkan dikembalikan ke pelanggan.",
   "sales-return__create__split": "Rp {{potong}} memotong tagihan sampai lunas; sisanya Rp {{lebih}} menjadi kelebihan bayar.",
   "sales-return__create__schedule": "Jadwal pengembalian",
+  "sales-return__create__refund-source": "Uang keluar dari",
   "dashboard__piutang": "Piutang",
   "dashboard__piutang__jumlah": "{{n}} faktur · {{m}} pelanggan",
   "dashboard__piutang__lewat": "Rp {{nilai}} lewat jatuh tempo pada {{n}} faktur — yang terlama {{hari}} hari.",
