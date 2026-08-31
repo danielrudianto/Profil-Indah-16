@@ -98,9 +98,13 @@ export class ExpenseMutationComponent implements OnInit {
   isLoading: boolean = true;
   page: number = 1;
   /*
-    Ditentukan server dan tidak pernah dikirim ke sini; diturunkan dari
-    banyaknya baris pada halaman pertama, dipakai hanya untuk keterangan
-    "1 – 10 dari 79".
+    Dikirim ke server, bukan diturunkan darinya.
+
+    Dulu nilainya diambil dari banyaknya baris halaman pertama — cukup untuk
+    keterangan "1 – 10 dari 79", tetapi menutup pilihan 10/25/50 karena
+    server tidak pernah diberi tahu angka lain. Endpoint expense/mutation
+    sendiri SUDAH menerima pageSize (dipagari 10000 di controller); hanya
+    layar ini yang tidak pernah mengirimnya.
   */
   pageSize: number = 10;
   dataSource: any[] = [];
@@ -146,6 +150,7 @@ export class ExpenseMutationComponent implements OnInit {
     this.apiService
       .get('expense/mutation', {
         page: this.page,
+        pageSize: this.pageSize,
         month: bulan,
         year: tahun,
       })
@@ -153,9 +158,15 @@ export class ExpenseMutationComponent implements OnInit {
         next: (data: any) => {
           this.dataSource = data.data;
           this.dataCount = data.count;
-          if (this.page === 1 && data.data.length > 0) {
-            this.pageSize = data.data.length;
-          }
+          /*
+            pageSize TIDAK lagi diturunkan dari panjang hasil. Menimpanya
+            dengan banyaknya baris yang kebetulan kembali akan MEMBATALKAN
+            pilihan pengguna pada bulan yang isinya lebih sedikit daripada
+            ukuran halamannya: memilih 50 pada bulan berisi tujuh baris
+            menjadikan pageSize 7, keterangannya berubah menjadi "1 – 7 dari
+            7", dan pemilihnya menyorot angka yang tidak pernah dipilih
+            siapa pun.
+          */
         },
         error: (error) => {
           this.alertService.showError(error);
@@ -168,6 +179,12 @@ export class ExpenseMutationComponent implements OnInit {
 
   bukaHalaman(halaman: number) {
     this.fetchReport(halaman);
+  }
+
+  gantiUkuran(ukuran: number): void {
+    this.pageSize = ukuran;
+    /* Kembali ke halaman satu: nomor halaman lama menunjuk potongan lain. */
+    this.fetchReport(1);
   }
 
   /*

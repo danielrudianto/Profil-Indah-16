@@ -6,7 +6,8 @@
   tidak mengubah apa pun membuat pengguna mengira daftarnya rusak — dan ia akan
   mengetik ulang, lebih pelan, mengira dirinya yang salah.
 
-  Ukuran halamannya juga ditentukan server, jadi pilihan 10/25/50 dimatikan.
+  Pilihan 10/25/50 AKTIF. Endpoint yang sama menerima pageSize dan
+  memagarinya di 10000; yang dulu tidak ada hanyalah pengirimannya dari sini.
 -->
 <app-list-page
   [heading]="'expense__title' | translate"
@@ -17,8 +18,8 @@
   [total]="dataCount"
   [loading]="isLoading"
   [showSearch]="false"
-  [showPageSize]="false"
   (pageChange)="bukaHalaman($event)"
+  (pageSizeChange)="gantiUkuran($event)"
   (add)="tambah()"
   (refresh)="fetchReport()"
 >
@@ -39,7 +40,7 @@
       (click)="downloadRekap()"
     >
       <i class="ph ph-file-xls" aria-hidden="true"></i>
-      {{ 'expense__mutation__download' | translate }}
+      {{ "expense__mutation__download" | translate }}
     </button>
 
     <button
@@ -59,12 +60,7 @@
       none membuat panelnya muncul di sudut kiri atas layar.
     -->
     <mat-form-field class="bulan-tersembunyi">
-      <input
-        matInput
-        [matDatepicker]="picker"
-        [formControl]="date"
-        readonly
-      />
+      <input matInput [matDatepicker]="picker" [formControl]="date" readonly />
       <mat-datepicker
         #picker
         startView="multi-year"
@@ -77,13 +73,13 @@
   <table class="tabel">
     <thead>
       <tr>
-        <th>{{ 'expense__date' | translate }}</th>
-        <th>{{ 'expense__description' | translate }}</th>
-        <th>{{ 'expense__type' | translate }}</th>
-        <th>{{ 'expense__company' | translate }}</th>
-        <th class="tabel__nilai-kepala">{{ 'expense__value' | translate }}</th>
+        <th>{{ "expense__date" | translate }}</th>
+        <th>{{ "expense__description" | translate }}</th>
+        <th>{{ "expense__type" | translate }}</th>
+        <th>{{ "expense__company" | translate }}</th>
+        <th class="tabel__nilai-kepala">{{ "expense__value" | translate }}</th>
         <th class="tabel__aksi-kepala">
-          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+          <span class="sr-only">{{ "general__actions" | translate }}</span>
         </th>
       </tr>
     </thead>
@@ -94,13 +90,13 @@
         class="tabel__baris-klik"
         (click)="lihat(i)"
       >
-        <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
+        <td class="tabel__tanggal">{{ item.date | date: "dd MMMM yyyy" }}</td>
         <td class="tabel__utama">{{ item.description }}</td>
         <td>
           <span class="tag">{{ item.expense_type?.name }}</span>
         </td>
         <td class="tabel__redup">{{ item.company?.name }}</td>
-        <td class="tabel__nilai">Rp {{ item.value | number: '1.0-0' }}</td>
+        <td class="tabel__nilai">Rp {{ item.value | number: "1.0-0" }}</td>
         <td class="tabel__aksi" (click)="$event.stopPropagation()">
           <button
             *ngIf="isAdministrator"
@@ -119,7 +115,7 @@
     <tbody *ngIf="isLoading">
       <tr>
         <td colspan="6" class="tabel__pesan">
-          {{ 'general__loading' | translate }}
+          {{ "general__loading" | translate }}
         </td>
       </tr>
     </tbody>
