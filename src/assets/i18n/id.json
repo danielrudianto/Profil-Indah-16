@@ -375,6 +375,8 @@
   "good-receipt__view-list": "Lihat daftar penerimaan",
   "good-receipt__archive__view__invoice-name": "Faktur pembelian",
   "good-receipt__archive__view__tax-invoice-name": "Faktur pajak",
+  "good-receipt__view__copy-number": "Salin nomor surat jalan",
+  "good-receipt__view__number-copied": "Nomor surat jalan tersalin ke papan klip.",
   "good-receipt__archive__edit": "Perbaharui",
   "good-receipt__archive__delete": "Hapus",
   "sales-invoice__delete__confirmation": "Apakah anda yakin untuk menghapus data nota ini?",

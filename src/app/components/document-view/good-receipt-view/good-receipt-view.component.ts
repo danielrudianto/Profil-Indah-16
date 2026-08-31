@@ -1,10 +1,11 @@
 import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
+import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTooltip } from '@angular/material/tooltip';
 import { persenDiskon } from 'src/app/utils/diskon-persen.utils';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -34,6 +35,8 @@ export class GoodReceiptViewComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { id: number },
     private apiService: ApiService,
     private alertService: AlertService,
+    private clipboard: Clipboard,
+    private translateService: TranslateService,
     private dialogRef: MatDialogRef<GoodReceiptViewComponent>,
   ) {}
 
@@ -111,6 +114,31 @@ export class GoodReceiptViewComponent implements OnInit {
 
   tutup(): void {
     this.dialogRef.close();
+  }
+
+  /**
+   * Salin nomor surat jalan ke papan klip.
+   *
+   * Nomor ini yang dicocokkan orang gudang ke faktur pembelian supplier, dan
+   * selama ini disorot tangan dari header — yang mudah meleset satu karakter
+   * pada nomor bertanda hubung. Menyorotnya juga berebut dengan cdkDrag:
+   * pegangan geser memang dibatasi ke header, jadi seretan yang dimaksudkan
+   * untuk memilih teks justru memindahkan dialognya.
+   *
+   * Menyalin nomor kosong tidak dilakukan: papan klip yang berisi string
+   * kosong DIAM-DIAM menghapus isinya yang sebelumnya, dan orang yang menekan
+   * tombol ini menyangka salinannya berhasil.
+   */
+  salinNomor(): void {
+    const nomor = (this.dokumen?.name ?? '').toString().trim();
+    if (!nomor) {
+      return;
+    }
+
+    this.clipboard.copy(nomor);
+    this.alertService.showSuccess(
+      this.translateService.instant('good-receipt__view__number-copied'),
+    );
   }
 
   /**

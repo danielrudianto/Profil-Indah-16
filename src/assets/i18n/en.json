@@ -378,6 +378,8 @@
   "good-receipt__view-list": "View receipt list",
   "good-receipt__archive__view__invoice-name": "Invoice name",
   "good-receipt__archive__view__tax-invoice-name": "Tax invoice name",
+  "good-receipt__view__copy-number": "Copy delivery order number",
+  "good-receipt__view__number-copied": "Delivery order number copied to the clipboard.",
   "good-receipt__archive__edit": "Edit",
   "good-receipt__archive__delete": "Delete",
   "purchase-invoice__confirm__date": "Date",
