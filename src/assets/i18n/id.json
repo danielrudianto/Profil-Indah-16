@@ -2747,6 +2747,8 @@
   "sales-invoice__create__admin-fee__hint": "Kartu kredit beda bank; menambah tagihan, bukan omzet",
   "sales-invoice__rebate__internal-title": "Tidak ada pengembalian diskon",
   "sales-invoice__rebate__internal-note": "Deposit internal tidak menerima pembayaran, jadi tidak ada uang yang bisa dikembalikan.",
+  "sales-invoice__rebate__no-item-title": "Tidak ada pengembalian diskon",
+  "sales-invoice__rebate__no-item-note": "Faktur tanpa barang tidak punya diskon baris, jadi tidak ada yang bisa dikembalikan.",
   "sales-invoice__view__admin-fee": "Biaya administrasi",
   "report-finance__income": "Pendapatan",
   "report-finance__gross-profit": "Laba kotor",

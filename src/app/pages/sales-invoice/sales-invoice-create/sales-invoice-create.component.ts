@@ -357,13 +357,17 @@ export class SalesInvoiceCreateComponent {
     this.perbaruiRingkasanBaris();
     this.perbaruiChecklist();
 
-    this.metaFormGroup.valueChanges.subscribe(() => this.perbaruiChecklist());
+    this.metaFormGroup.valueChanges.subscribe(() => {
+      this.selaraskanPengembalian();
+      this.perbaruiChecklist();
+    });
     this.paymentsFormGroup.valueChanges.subscribe(() =>
       this.perbaruiChecklist(),
     );
 
     this.t.valueChanges.subscribe(() => {
       this.perbaruiRingkasanBaris();
+      this.selaraskanPengembalian();
       this.perbaruiChecklist();
       this.valueFormGroup.patchValue({
         total: this.t.value.reduce((a: any, b: any) => {
@@ -893,8 +897,15 @@ export class SalesInvoiceCreateComponent {
         ruas ini, bukan dari nilai nol, sebab nol bisa berarti "dikembalikan
         tetapi nominalnya belum diisi".
       */
+      /*
+        pengembalianTersedia ikut diperiksa, bukan perlakuanDiskon saja.
+        selaraskanPengembalian sudah mengembalikannya ke 'faktur', tetapi
+        penjaga itu bergantung pada langganan valueChanges — dan ruas ini
+        menentukan apakah uang keluar dari kas. Dua penjaga untuk satu
+        keputusan sebesar itu bukan pemborosan.
+      */
       rebate:
-        this.perlakuanDiskon === 'kembali'
+        this.perlakuanDiskon === 'kembali' && this.pengembalianTersedia
           ? {
               value: this.nominalKembali,
               /*
@@ -1209,6 +1220,37 @@ export class SalesInvoiceCreateComponent {
   /** Deposit internal tidak membawa pembayaran sama sekali. */
   get depositInternal(): boolean {
     return this.metaFormGroup.value.type === 'deposit-internal';
+  }
+
+  /**
+   * Pengembalian diskon hanya masuk akal bila ada yang bisa didiskon.
+   *
+   * Dua keadaan menutupnya. Deposit internal tidak menerima pembayaran, jadi
+   * tidak ada uang yang bisa dikembalikan. Faktur jasa murni tidak punya
+   * baris barang, dan diskon di sistem ini melekat pada baris — totalDiskon
+   * faktur seperti itu selalu nol, sehingga "kembalikan diskon" berarti
+   * mengeluarkan uang tunai atas potongan yang tidak pernah ada.
+   */
+  get pengembalianTersedia(): boolean {
+    return !this.depositInternal && this.adaBarang;
+  }
+
+  /**
+   * Mengembalikan perlakuan ke 'faktur' ketika pengembaliannya tidak lagi
+   * tersedia.
+   *
+   * Menyembunyikan panelnya saja TIDAK cukup, dan itu bug yang sudah ada
+   * sebelum jasa murni diizinkan: memilih "dikembalikan" lalu mengubah tipe
+   * menjadi deposit internal menyembunyikan panelnya sementara
+   * perlakuanDiskon tetap 'kembali'. pengembalianLengkap lalu menjawab false
+   * atas isian yang tidak terlihat lagi, dan tombol terbitkan mati tanpa satu
+   * pun keterangan tentang sebabnya. Menghapus barang dari faktur akan
+   * menghasilkan jalan buntu yang persis sama.
+   */
+  private selaraskanPengembalian(): void {
+    if (!this.pengembalianTersedia && this.perlakuanDiskon === 'kembali') {
+      this.pilihPerlakuan('faktur');
+    }
   }
 
   /*

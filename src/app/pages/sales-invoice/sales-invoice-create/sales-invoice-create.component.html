@@ -644,7 +644,29 @@
           </span>
         </div>
 
-        <ng-container *ngIf="!depositInternal">
+        <!--
+          Faktur jasa murni. Diskon di sistem ini melekat pada baris barang,
+          jadi faktur tanpa baris tidak punya diskon untuk dikembalikan.
+
+          Diberi keterangan di tempatnya, bukan dimatikan dan bukan pula
+          dilenyapkan begitu saja — sama seperti deposit internal di atas.
+          Bidang mati masih menuntut orang menebak sebabnya, sedangkan bagian
+          yang hilang tanpa jejak membuat orang mencari-cari ke mana
+          perginya.
+        -->
+        <div class="bayar-kosong" *ngIf="!depositInternal && !adaBarang">
+          <i class="ph ph-wrench" aria-hidden="true"></i>
+          <span>
+            <strong>
+              {{ "sales-invoice__rebate__no-item-title" | translate }}
+            </strong>
+            <span>
+              {{ "sales-invoice__rebate__no-item-note" | translate }}
+            </span>
+          </span>
+        </div>
+
+        <ng-container *ngIf="pengembalianTersedia">
           <p class="petunjuk">
             <i class="ph ph-info" aria-hidden="true"></i>
             {{ "sales-invoice__rebate__note" | translate }}

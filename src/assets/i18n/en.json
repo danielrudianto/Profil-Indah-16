@@ -2747,6 +2747,8 @@
   "sales-invoice__create__admin-fee__hint": "Credit card from another bank; adds to the bill, not to revenue",
   "sales-invoice__rebate__internal-title": "No discount refund",
   "sales-invoice__rebate__internal-note": "An internal deposit takes no payment, so there is no money to give back.",
+  "sales-invoice__rebate__no-item-title": "No discount refund",
+  "sales-invoice__rebate__no-item-note": "An invoice without items has no line discount, so there is nothing to give back.",
   "sales-invoice__view__admin-fee": "Administration fee",
   "report-finance__income": "Income",
   "report-finance__gross-profit": "Gross profit",
