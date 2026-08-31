@@ -239,12 +239,22 @@ export class SalesInvoiceCreateComponent {
     sales: new FormControl('', Validators.required),
   });
 
+  /*
+    number_of_items TIDAK lagi ber-min(1).
+
+    Penjaga itu dulu menutup dua hal sekaligus tanpa bisa membedakannya:
+    faktur jasa murni yang sah, dan kasir yang lupa memasukkan barang. Yang
+    kedua tetap harus dijaga, tetapi bukan di sini — lihat isValid, yang
+    menuntut ADA BARANG ATAU ADA JASA, dan submitForm, yang meminta
+    konfirmasi ketika barangnya kosong.
+
+    Melepasnya di sini saja tidak cukup dan sempat berbahaya: sampai lima
+    INNER JOIN di sisi server diperbaiki (lihat gabung-baris-faktur.test.ts),
+    faktur tanpa baris HILANG dari daftar piutang alih-alih bernilai nol.
+  */
   billFormGroup: FormGroup = new FormGroup({
     items: new FormArray([]),
-    number_of_items: new FormControl(0, [
-      Validators.required,
-      Validators.min(1),
-    ]),
+    number_of_items: new FormControl(0, [Validators.required]),
   });
 
   /*
@@ -776,6 +786,19 @@ export class SalesInvoiceCreateComponent {
     this.p.removeAt(i);
   }
 
+  /**
+   * Gerbang sebelum pengiriman.
+   *
+   * Faktur tanpa barang SAH — jasa murni memang tidak menggerakkan stok —
+   * tetapi ia juga bentuk yang muncul ketika kasir lupa memasukkan
+   * barangnya. Keduanya tidak bisa dibedakan dari datanya, jadi yang
+   * membedakan harus orangnya. Dialog ini menyebutkan nominalnya, bukan
+   * hanya bertanya: yang berguna bagi kasir adalah melihat angka yang akan
+   * ditagihkan, bukan sekadar diminta menekan "lanjut".
+   *
+   * Faktur yang benar-benar kosong tidak sampai ke sini — isValid sudah
+   * mematikan tombolnya.
+   */
   submitForm() {
     if (!this.isValid) {
       console.error(`[errror]: ${this.metaFormGroup.errors}`);
@@ -785,6 +808,30 @@ export class SalesInvoiceCreateComponent {
       return;
     }
 
+    if (this.adaBarang) {
+      this.kirimFaktur();
+      return;
+    }
+
+    this.dialog
+      .open(SubmitConfirmationComponent, {
+        data: {
+          header: 'sales-invoice__create__no-item-confirm__title',
+          title: this.translateService.instant(
+            'sales-invoice__create__no-item-confirm__body',
+          ),
+          document: this.rincianTanpaBarang,
+        },
+      })
+      .afterClosed()
+      .subscribe((lanjut) => {
+        if (lanjut) {
+          this.kirimFaktur();
+        }
+      });
+  }
+
+  private kirimFaktur() {
     if (this.totalPayment > this.totalBill) {
       console.error(`[error]: Payment is greater than the sales invoice`);
       this.alertService.showSuccess(
@@ -1006,9 +1053,80 @@ export class SalesInvoiceCreateComponent {
       });
   }
 
+  /** Ada sekurang-kurangnya satu baris barang. */
+  get adaBarang(): boolean {
+    return this.t.controls.length > 0;
+  }
+
+  /**
+   * Ada biaya jasa YANG SAH — nominalnya di atas nol DAN jenisnya terisi.
+   *
+   * Keduanya diperiksa, bukan nominalnya saja: server menolak biaya tanpa
+   * jenis, jadi faktur jasa yang jenisnya kosong akan lolos dari layar ini
+   * lalu ditolak di seberang. Kendali jenis memang dimatikan selama biayanya
+   * nol, tetapi yang menentukan sah-tidaknya adalah ISINYA, bukan keadaan
+   * hidup-mati kendalinya.
+   */
+  get adaJasaSah(): boolean {
+    const v = this.valueFormGroup.getRawValue();
+    return Number(v.service) > 0 && !!v.service_type;
+  }
+
+  /**
+   * Rincian biaya faktur tanpa barang, untuk ditampilkan di dialog
+   * konfirmasi.
+   *
+   * Berupa DAFTAR potongan yang masing-masing utuh, bukan kalimat yang
+   * dirakit dari beberapa kunci terjemahan. Susunan kata tiap bahasa berbeda;
+   * kalimat rakitan tidak mungkin benar di keduanya.
+   */
+  get rincianTanpaBarang(): string {
+    const v = this.valueFormGroup.getRawValue();
+    const bagian: string[] = [];
+
+    const rupiah = (n: number) => `Rp ${Number(n).toLocaleString('id-ID')}`;
+
+    if (Number(v.service) > 0) {
+      const jenis = v.service_type ? ` (${v.service_type})` : '';
+      bagian.push(
+        `${this.translateService.instant(
+          'sales-invoice__create__service',
+        )}${jenis}: ${rupiah(v.service)}`,
+      );
+    }
+
+    if (Number(v.delivery) > 0) {
+      bagian.push(
+        `${this.translateService.instant(
+          'sales-invoice__create__delivery',
+        )}: ${rupiah(v.delivery)}`,
+      );
+    }
+
+    if (Number(v.admin_fee) > 0) {
+      bagian.push(
+        `${this.translateService.instant(
+          'sales-invoice__create__admin-fee',
+        )}: ${rupiah(v.admin_fee)}`,
+      );
+    }
+
+    return bagian.join(' · ');
+  }
+
   get isValid(): boolean {
     /* Pengembalian yang setengah terisi tidak boleh ikut terbit. */
     if (!this.pengembalianLengkap) {
+      return false;
+    }
+
+    /*
+      Faktur kosong sama sekali — tanpa barang DAN tanpa jasa — tidak pernah
+      sah. Tombol terbitkan mati, bukan sekadar memunculkan konfirmasi:
+      tidak ada yang perlu dikonfirmasi dari dokumen yang tidak menagih apa
+      pun.
+    */
+    if (!this.adaBarang && !this.adaJasaSah) {
       return false;
     }
 
@@ -1489,6 +1607,18 @@ export class SalesInvoiceCreateComponent {
       );
     }
 
+    /*
+      Faktur tanpa barang DAN tanpa jasa sah. Disebutkan dalam kalimat karena
+      tombol terbitkan yang mati tanpa keterangan hanya bisa ditebak sebabnya
+      — dan tebakan yang paling wajar ("barangnya belum masuk") justru salah
+      ketika yang dimaksud kasir memang faktur jasa.
+    */
+    if (!this.adaBarang && !this.adaJasaSah) {
+      galat.push(
+        this.translateService.instant('sales-invoice__create__empty-invoice'),
+      );
+    }
+
     /* Diskon menelan seluruh nilai faktur — totalnya jadi negatif. */
     if (this.totalBill < 0) {
       galat.push(
@@ -1552,9 +1682,16 @@ export class SalesInvoiceCreateComponent {
 
   private perbaruiChecklist(): void {
     const m = this.metaFormGroup.value;
-    const adaItem = this.t.controls.length > 0;
-    const jumlahTerisi =
-      adaItem && this.t.controls.every((c) => Number(c.value.quantity) > 0);
+    const adaItem = this.adaBarang;
+    /*
+      Faktur jasa murni tidak punya baris, dan daftar jumlah yang kosong
+      TIDAK boleh terbaca sebagai "belum diisi". `every` atas larik kosong
+      mengembalikan true, tetapi `adaItem &&` di depannya membalikkannya
+      menjadi false — sehingga syarat ini dipenuhi lewat jalur jasa.
+    */
+    const jumlahTerisi = adaItem
+      ? this.t.controls.every((c) => Number(c.value.quantity) > 0)
+      : this.adaJasaSah;
 
     this.checklist = [
       {
@@ -1565,7 +1702,10 @@ export class SalesInvoiceCreateComponent {
         kunci: 'sales-invoice__create__check-salesman',
         selesai: !!m.sales,
       },
-      { kunci: 'sales-invoice__create__check-items', selesai: adaItem },
+      {
+        kunci: 'sales-invoice__create__check-items-or-service',
+        selesai: adaItem || this.adaJasaSah,
+      },
       { kunci: 'sales-invoice__create__check-quantity', selesai: jumlahTerisi },
       {
         kunci: 'sales-invoice__create__check-payment',
