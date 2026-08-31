@@ -7,9 +7,9 @@
   [pageSize]="pageSize"
   [total]="dataCount"
   [loading]="isLoading"
-  [showPageSize]="false"
   (search)="cari($event)"
   (pageChange)="bukaHalaman($event)"
+  (pageSizeChange)="gantiUkuran($event)"
   (refresh)="ambilData()"
 >
   <table class="tabel">

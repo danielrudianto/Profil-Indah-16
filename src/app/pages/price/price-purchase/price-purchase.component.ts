@@ -40,14 +40,11 @@ export class PricePurchaseComponent implements OnInit {
   dataCount = 0;
   page = 1;
   /*
-    Harus sama dengan LIMIT di lingkungan server — daftar harga memakai
-    endpoint yang sama dengan arsip lain, dan ukuran halamannya ditentukan
-    di sana (product-price-*.controller membacanya dari process.env.LIMIT).
-
-    Angka 20 di sini membuat penomoran halaman menjanjikan 20 baris sementara
-    server hanya mengirim 10: halaman terakhir terhitung dua kali lipat, dan
-    separuh nomor halaman menampilkan tabel kosong. Dua puluh enam daftar lain
-    di aplikasi ini memakai 10; hanya dua halaman harga yang menyimpang.
+    Sepuluh, sama dengan bawaan translatePageSize di server dan dengan dua
+    puluh enam daftar lain di aplikasi ini. Nilainya kini IKUT TERKIRIM ke
+    server, jadi angka di sini menentukan hasilnya alih-alih menebaknya —
+    dulu dipatok 20 sementara server mengirim 10, dan separuh nomor halaman
+    membuka tabel kosong.
   */
   pageSize = 10;
   keyword = '';
@@ -65,6 +62,7 @@ export class PricePurchaseComponent implements OnInit {
       .get('product-price-purchase', {
         keyword: this.keyword,
         page: this.page,
+        pageSize: this.pageSize,
       })
       .subscribe({
         next: (data: any) => {
@@ -92,6 +90,13 @@ export class PricePurchaseComponent implements OnInit {
 
   bukaHalaman(halaman: number): void {
     this.page = halaman;
+    this.ambilData();
+  }
+
+  gantiUkuran(ukuran: number): void {
+    this.pageSize = ukuran;
+    /* Kembali ke halaman satu: nomor halaman lama menunjuk potongan lain. */
+    this.page = 1;
     this.ambilData();
   }
 
