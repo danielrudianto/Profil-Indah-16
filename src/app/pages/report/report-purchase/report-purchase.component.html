@@ -2,8 +2,8 @@
 <div class="laporan">
   <header class="laporan__kepala">
     <div>
-      <h1 class="laporan__judul">{{ 'report-purchase__title' | translate }}</h1>
-      <p class="laporan__lede">{{ 'report-purchase__lede' | translate }}</p>
+      <h1 class="laporan__judul">{{ "report-purchase__title" | translate }}</h1>
+      <p class="laporan__lede">{{ "report-purchase__lede" | translate }}</p>
     </div>
 
     <div class="laporan__kendali">
@@ -40,7 +40,7 @@
         (click)="download()"
       >
         <i class="ph ph-file-xls" aria-hidden="true"></i>
-        {{ 'report-sales__download' | translate }}
+        {{ "report-sales__download" | translate }}
       </button>
     </div>
   </header>
@@ -48,349 +48,396 @@
   <!-- Layar memuat menggantikan isi — hero nol selama menunggu itu dusta. -->
   <div class="laporan__memuat" *ngIf="isLoading">
     <i class="ph ph-circle-notch laporan__putar" aria-hidden="true"></i>
-    <span>{{ 'general__loading' | translate }}</span>
+    <span>{{ "general__loading" | translate }}</span>
   </div>
 
   <ng-container *ngIf="!isLoading">
-  <div class="hero">
-    <div class="hero__kartu hero__kartu--utama">
-      <span class="hero__label">{{ 'report-purchase__hero__total' | translate }}</span>
-      <strong class="hero__nilai">Rp {{ total | number: '1.0-0' }}</strong>
-    </div>
-    <div class="hero__kartu">
-      <span class="hero__label">{{ 'report-purchase__hero__receipts' | translate }}</span>
-      <strong class="hero__nilai">{{ penerimaan | number }}</strong>
-    </div>
-    <div class="hero__kartu">
-      <span class="hero__label">{{ 'report-purchase__hero__discount' | translate }}</span>
-      <strong class="hero__nilai">Rp {{ diskon | number: '1.0-0' }}</strong>
-    </div>
-    <div class="hero__kartu">
-      <span class="hero__label">{{ 'report-purchase__hero__per-receipt' | translate }}</span>
-      <strong class="hero__nilai">Rp {{ rataRataPenerimaan | number: '1.0-0' }}</strong>
-    </div>
-  </div>
-
-  <!-- Supplier, merek, tipe SATU BARIS TETAP — sejajar dengan laporan penjualan. -->
-  <div class="terbaik-kisi terbaik-kisi--tiga">
-    <div class="terbaik-kartu">
-      <span class="terbaik__ikon" aria-hidden="true">
-        <i class="ph ph-truck"></i>
-      </span>
-      <span class="terbaik__teks">
-        <small>{{ 'report-purchase__best__supplier' | translate }}</small>
-        <span class="terbaik__nama">{{ terbaikSupplier || '—' }}</span>
-      </span>
-      <button
-        type="button"
-        class="tabel__aksi-btn terbaik-kartu__aksi"
-        (click)="rincian('supplier')"
-        [title]="'report-sales__best__detail' | translate"
-        [attr.aria-label]="'report-sales__best__detail' | translate"
-      >
-        <i class="ph ph-caret-right" aria-hidden="true"></i>
-      </button>
-    </div>
-
-    <div class="terbaik-kartu">
-      <span class="terbaik__ikon" aria-hidden="true">
-        <i class="ph ph-tag-simple"></i>
-      </span>
-      <span class="terbaik__teks">
-        <small>{{ 'report-sales__best__brand' | translate }}</small>
-        <span class="terbaik__nama">{{ terbaikMerek || '—' }}</span>
-      </span>
-      <button
-        type="button"
-        class="tabel__aksi-btn terbaik-kartu__aksi"
-        (click)="rincian('brand')"
-        [title]="'report-sales__best__detail' | translate"
-        [attr.aria-label]="'report-sales__best__detail' | translate"
-      >
-        <i class="ph ph-caret-right" aria-hidden="true"></i>
-      </button>
-    </div>
-
-    <div class="terbaik-kartu">
-      <span class="terbaik__ikon" aria-hidden="true">
-        <i class="ph ph-squares-four"></i>
-      </span>
-      <span class="terbaik__teks">
-        <small>{{ 'report-sales__best__type' | translate }}</small>
-        <span class="terbaik__nama">{{ terbaikTipe || '—' }}</span>
-      </span>
-      <button
-        type="button"
-        class="tabel__aksi-btn terbaik-kartu__aksi"
-        (click)="rincian('type')"
-        [title]="'report-sales__best__detail' | translate"
-        [attr.aria-label]="'report-sales__best__detail' | translate"
-      >
-        <i class="ph ph-caret-right" aria-hidden="true"></i>
-      </button>
-    </div>
-  </div>
-
-  <!-- Sorotan bulan ini — kalimat yang dihitung dari angka, bukan dikarang. -->
-  <section class="kartu sorotan" *ngIf="sorotan.length > 0">
-    <h2 class="kartu__label">{{ 'sorotan__judul' | translate }}</h2>
-    <ul class="sorotan__daftar">
-      <li *ngFor="let baris of sorotan">
-        <span
-          class="sorotan__ikon"
-          [class.sorotan__ikon--merah]="baris.warna === 'merah'"
-          aria-hidden="true"
+    <div class="hero">
+      <div class="hero__kartu hero__kartu--utama">
+        <span class="hero__label">{{
+          "report-purchase__hero__total" | translate
+        }}</span>
+        <strong class="hero__nilai">Rp {{ total | number: "1.2-2" }}</strong>
+      </div>
+      <div class="hero__kartu">
+        <span class="hero__label">{{
+          "report-purchase__hero__receipts" | translate
+        }}</span>
+        <strong class="hero__nilai">{{ penerimaan | number }}</strong>
+      </div>
+      <div class="hero__kartu">
+        <span class="hero__label">{{
+          "report-purchase__hero__discount" | translate
+        }}</span>
+        <strong class="hero__nilai">Rp {{ diskon | number: "1.2-2" }}</strong>
+      </div>
+      <div class="hero__kartu">
+        <span class="hero__label">{{
+          "report-purchase__hero__per-receipt" | translate
+        }}</span>
+        <strong class="hero__nilai"
+          >Rp {{ rataRataPenerimaan | number: "1.2-2" }}</strong
         >
-          <i [class]="'ph ' + baris.ikon"></i>
-        </span>
-        {{ baris.teks }}
-      </li>
-    </ul>
-  </section>
-
-  <!-- Grafik harian: batang nilai beraksen + batang penerimaan netral. -->
-  <section class="kartu">
-    <div class="kartu__kepala">
-      <h2 class="kartu__label">{{ 'report-purchase__chart' | translate }}</h2>
-
+      </div>
     </div>
 
-    <ng-container>
-      <!-- Dua jalur terpisah, sumbu tanggal sama: nilai di atas, penerimaan di bawah. -->
-      <!--
+    <!-- Supplier, merek, tipe SATU BARIS TETAP — sejajar dengan laporan penjualan. -->
+    <div class="terbaik-kisi terbaik-kisi--tiga">
+      <div class="terbaik-kartu">
+        <span class="terbaik__ikon" aria-hidden="true">
+          <i class="ph ph-truck"></i>
+        </span>
+        <span class="terbaik__teks">
+          <small>{{ "report-purchase__best__supplier" | translate }}</small>
+          <span class="terbaik__nama">{{ terbaikSupplier || "—" }}</span>
+        </span>
+        <button
+          type="button"
+          class="tabel__aksi-btn terbaik-kartu__aksi"
+          (click)="rincian('supplier')"
+          [title]="'report-sales__best__detail' | translate"
+          [attr.aria-label]="'report-sales__best__detail' | translate"
+        >
+          <i class="ph ph-caret-right" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="terbaik-kartu">
+        <span class="terbaik__ikon" aria-hidden="true">
+          <i class="ph ph-tag-simple"></i>
+        </span>
+        <span class="terbaik__teks">
+          <small>{{ "report-sales__best__brand" | translate }}</small>
+          <span class="terbaik__nama">{{ terbaikMerek || "—" }}</span>
+        </span>
+        <button
+          type="button"
+          class="tabel__aksi-btn terbaik-kartu__aksi"
+          (click)="rincian('brand')"
+          [title]="'report-sales__best__detail' | translate"
+          [attr.aria-label]="'report-sales__best__detail' | translate"
+        >
+          <i class="ph ph-caret-right" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="terbaik-kartu">
+        <span class="terbaik__ikon" aria-hidden="true">
+          <i class="ph ph-squares-four"></i>
+        </span>
+        <span class="terbaik__teks">
+          <small>{{ "report-sales__best__type" | translate }}</small>
+          <span class="terbaik__nama">{{ terbaikTipe || "—" }}</span>
+        </span>
+        <button
+          type="button"
+          class="tabel__aksi-btn terbaik-kartu__aksi"
+          (click)="rincian('type')"
+          [title]="'report-sales__best__detail' | translate"
+          [attr.aria-label]="'report-sales__best__detail' | translate"
+        >
+          <i class="ph ph-caret-right" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Sorotan bulan ini — kalimat yang dihitung dari angka, bukan dikarang. -->
+    <section class="kartu sorotan" *ngIf="sorotan.length > 0">
+      <h2 class="kartu__label">{{ "sorotan__judul" | translate }}</h2>
+      <ul class="sorotan__daftar">
+        <li *ngFor="let baris of sorotan">
+          <span
+            class="sorotan__ikon"
+            [class.sorotan__ikon--merah]="baris.warna === 'merah'"
+            aria-hidden="true"
+          >
+            <i [class]="'ph ' + baris.ikon"></i>
+          </span>
+          {{ baris.teks }}
+        </li>
+      </ul>
+    </section>
+
+    <!-- Grafik harian: batang nilai beraksen + batang penerimaan netral. -->
+    <section class="kartu">
+      <div class="kartu__kepala">
+        <h2 class="kartu__label">{{ "report-purchase__chart" | translate }}</h2>
+      </div>
+
+      <ng-container>
+        <!-- Dua jalur terpisah, sumbu tanggal sama: nilai di atas, penerimaan di bawah. -->
+        <!--
         Tooltip digambar sendiri dan batangnya ikut menyala saat ditunjuk —
         sama persis dengan grafik laporan penjualan.
       -->
-      <div class="grafik grafik--nilai">
-        <div class="grafik__hari" *ngFor="let hari of hariDalamBulan">
-          <div class="grafik-tip" role="tooltip">
-            <strong>Rp {{ dataHari(hari)?.value ?? 0 | number: '1.0-0' }}</strong>
-            <span>
-              {{ dataHari(hari)?.goodReceiptCount ?? 0 | number }}
-              {{ 'report-purchase__chart__receipts' | translate }}
-            </span>
-            <small>{{ hari }} {{ namaBulan }}</small>
+        <div class="grafik grafik--nilai">
+          <div class="grafik__hari" *ngFor="let hari of hariDalamBulan">
+            <div class="grafik-tip" role="tooltip">
+              <strong
+                >Rp {{ dataHari(hari)?.value ?? 0 | number: "1.2-2" }}</strong
+              >
+              <span>
+                {{ dataHari(hari)?.goodReceiptCount ?? 0 | number }}
+                {{ "report-purchase__chart__receipts" | translate }}
+              </span>
+              <small>{{ hari }} {{ namaBulan }}</small>
+            </div>
+            <span
+              class="grafik__nilai"
+              [style.height.%]="tinggiNilai(hari)"
+              aria-hidden="true"
+            ></span>
           </div>
-          <span
-            class="grafik__nilai"
-            [style.height.%]="tinggiNilai(hari)"
-            aria-hidden="true"
-          ></span>
         </div>
-      </div>
 
-      <div class="grafik grafik--transaksi">
-        <div class="grafik__hari" *ngFor="let hari of hariDalamBulan">
-          <div class="grafik-tip" role="tooltip">
-            <strong>Rp {{ dataHari(hari)?.value ?? 0 | number: '1.0-0' }}</strong>
-            <span>
-              {{ dataHari(hari)?.goodReceiptCount ?? 0 | number }}
-              {{ 'report-purchase__chart__receipts' | translate }}
-            </span>
-            <small>{{ hari }} {{ namaBulan }}</small>
+        <div class="grafik grafik--transaksi">
+          <div class="grafik__hari" *ngFor="let hari of hariDalamBulan">
+            <div class="grafik-tip" role="tooltip">
+              <strong
+                >Rp {{ dataHari(hari)?.value ?? 0 | number: "1.2-2" }}</strong
+              >
+              <span>
+                {{ dataHari(hari)?.goodReceiptCount ?? 0 | number }}
+                {{ "report-purchase__chart__receipts" | translate }}
+              </span>
+              <small>{{ hari }} {{ namaBulan }}</small>
+            </div>
+            <span
+              class="grafik__transaksi"
+              [style.height.%]="tinggiPenerimaan(hari)"
+              aria-hidden="true"
+            ></span>
+            <span class="grafik__tanggal">{{ hari }}</span>
           </div>
-          <span
-            class="grafik__transaksi"
-            [style.height.%]="tinggiPenerimaan(hari)"
-            aria-hidden="true"
-          ></span>
-          <span class="grafik__tanggal">{{ hari }}</span>
         </div>
-      </div>
 
-      <div class="grafik__legenda">
-        <span>
-          <i class="grafik__legenda--nilai" aria-hidden="true"></i>
-          {{ 'report-sales__chart__value' | translate }}
-        </span>
-        <span>
-          <i class="grafik__legenda--transaksi" aria-hidden="true"></i>
-          {{ 'report-purchase__chart__receipts' | translate }}
-        </span>
-      </div>
-    </ng-container>
+        <div class="grafik__legenda">
+          <span>
+            <i class="grafik__legenda--nilai" aria-hidden="true"></i>
+            {{ "report-sales__chart__value" | translate }}
+          </span>
+          <span>
+            <i class="grafik__legenda--transaksi" aria-hidden="true"></i>
+            {{ "report-purchase__chart__receipts" | translate }}
+          </span>
+        </div>
+      </ng-container>
+    </section>
 
-  </section>
-
-
-  <!--
+    <!--
     Tiga kartu peringkat belanja: merek dan tipe berdampingan, supplier
     selebar halaman — cermin laporan penjualan.
   -->
-  <div class="peringkat-kisi">
-    <section class="kartu">
-      <div class="kartu__kepala">
-        <h2 class="kartu__label">{{ 'report-purchase__by-brand' | translate }}</h2>
-      </div>
-
-      <div
-        class="peringkat"
-        *ngIf="merek.length > 0"
-        [class.peringkat--ringkas]="merek.length > 5"
-      >
-        <div class="peringkat__baris" *ngFor="let b of merek | slice: 0 : 8">
-          <span class="avatar-inisial" aria-hidden="true">{{ inisial(b.name) }}</span>
-          <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
-          <span class="peringkat__jalur" aria-hidden="true">
-            <span
-              class="peringkat__bar"
-              [style.width.%]="lebarDi(merek, b.value)"
-            ></span>
-          </span>
-          <span class="peringkat__persen">
-            {{ persenDi(merek, b.value) | number: '1.0-1' }}%
-          </span>
-          <span class="peringkat__nilai">Rp {{ b.value | number: '1.0-0' }}</span>
+    <div class="peringkat-kisi">
+      <section class="kartu">
+        <div class="kartu__kepala">
+          <h2 class="kartu__label">
+            {{ "report-purchase__by-brand" | translate }}
+          </h2>
         </div>
-        <div class="peringkat__kabut" *ngIf="merek.length > 5"></div>
-      </div>
 
-      <button
-        type="button"
-        class="peringkat__toggle"
-        *ngIf="merek.length > 5"
-        (click)="rincian('brand')"
-      >
-        {{ 'peringkat__semua' | translate: { n: merek.length } }}
-        <i class="ph ph-arrow-right" aria-hidden="true"></i>
-      </button>
-
-      <p class="laporan__kosong" *ngIf="merek.length === 0">
-        {{ 'report-sales__empty' | translate }}
-      </p>
-    </section>
-
-    <section class="kartu">
-      <div class="kartu__kepala">
-        <h2 class="kartu__label">{{ 'report-purchase__by-type' | translate }}</h2>
-      </div>
-
-      <div
-        class="peringkat"
-        *ngIf="tipe.length > 0"
-        [class.peringkat--ringkas]="tipe.length > 5"
-      >
-        <div class="peringkat__baris" *ngFor="let b of tipe | slice: 0 : 8">
-          <span class="avatar-inisial" aria-hidden="true">{{ inisial(b.name) }}</span>
-          <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
-          <span class="peringkat__jalur" aria-hidden="true">
-            <span
-              class="peringkat__bar"
-              [style.width.%]="lebarDi(tipe, b.value)"
-            ></span>
-          </span>
-          <span class="peringkat__persen">
-            {{ persenDi(tipe, b.value) | number: '1.0-1' }}%
-          </span>
-          <span class="peringkat__nilai">Rp {{ b.value | number: '1.0-0' }}</span>
+        <div
+          class="peringkat"
+          *ngIf="merek.length > 0"
+          [class.peringkat--ringkas]="merek.length > 5"
+        >
+          <div class="peringkat__baris" *ngFor="let b of merek | slice: 0 : 8">
+            <span class="avatar-inisial" aria-hidden="true">{{
+              inisial(b.name)
+            }}</span>
+            <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
+            <span class="peringkat__jalur" aria-hidden="true">
+              <span
+                class="peringkat__bar"
+                [style.width.%]="lebarDi(merek, b.value)"
+              ></span>
+            </span>
+            <span class="peringkat__persen">
+              {{ persenDi(merek, b.value) | number: "1.0-1" }}%
+            </span>
+            <span class="peringkat__nilai"
+              >Rp {{ b.value | number: "1.2-2" }}</span
+            >
+          </div>
+          <div class="peringkat__kabut" *ngIf="merek.length > 5"></div>
         </div>
-        <div class="peringkat__kabut" *ngIf="tipe.length > 5"></div>
-      </div>
 
-      <button
-        type="button"
-        class="peringkat__toggle"
-        *ngIf="tipe.length > 5"
-        (click)="rincian('type')"
-      >
-        {{ 'peringkat__semua' | translate: { n: tipe.length } }}
-        <i class="ph ph-arrow-right" aria-hidden="true"></i>
-      </button>
+        <button
+          type="button"
+          class="peringkat__toggle"
+          *ngIf="merek.length > 5"
+          (click)="rincian('brand')"
+        >
+          {{ "peringkat__semua" | translate: { n: merek.length } }}
+          <i class="ph ph-arrow-right" aria-hidden="true"></i>
+        </button>
 
-      <p class="laporan__kosong" *ngIf="tipe.length === 0">
-        {{ 'report-sales__empty' | translate }}
-      </p>
-    </section>
+        <p class="laporan__kosong" *ngIf="merek.length === 0">
+          {{ "report-sales__empty" | translate }}
+        </p>
+      </section>
 
-    <section class="kartu peringkat-kisi__lebar">
-      <div class="kartu__kepala">
-        <h2 class="kartu__label">{{ 'report-purchase__by-supplier' | translate }}</h2>
-      </div>
-
-      <div
-        class="peringkat"
-        *ngIf="supplier.length > 0"
-        [class.peringkat--ringkas]="supplier.length > 5"
-      >
-        <div class="peringkat__baris" *ngFor="let b of supplier | slice: 0 : 8">
-          <span class="avatar-inisial" aria-hidden="true">{{ inisial(b.name) }}</span>
-          <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
-          <span class="peringkat__jalur" aria-hidden="true">
-            <span
-              class="peringkat__bar"
-              [style.width.%]="lebarDi(supplier, b.value)"
-            ></span>
-          </span>
-          <span class="peringkat__persen">
-            {{ persenDi(supplier, b.value) | number: '1.0-1' }}%
-          </span>
-          <span class="peringkat__nilai">Rp {{ b.value | number: '1.0-0' }}</span>
+      <section class="kartu">
+        <div class="kartu__kepala">
+          <h2 class="kartu__label">
+            {{ "report-purchase__by-type" | translate }}
+          </h2>
         </div>
-        <div class="peringkat__kabut" *ngIf="supplier.length > 5"></div>
-      </div>
 
-      <button
-        type="button"
-        class="peringkat__toggle"
-        *ngIf="supplier.length > 5"
-        (click)="rincian('supplier')"
-      >
-        {{ 'peringkat__semua' | translate: { n: supplier.length } }}
-        <i class="ph ph-arrow-right" aria-hidden="true"></i>
-      </button>
+        <div
+          class="peringkat"
+          *ngIf="tipe.length > 0"
+          [class.peringkat--ringkas]="tipe.length > 5"
+        >
+          <div class="peringkat__baris" *ngFor="let b of tipe | slice: 0 : 8">
+            <span class="avatar-inisial" aria-hidden="true">{{
+              inisial(b.name)
+            }}</span>
+            <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
+            <span class="peringkat__jalur" aria-hidden="true">
+              <span
+                class="peringkat__bar"
+                [style.width.%]="lebarDi(tipe, b.value)"
+              ></span>
+            </span>
+            <span class="peringkat__persen">
+              {{ persenDi(tipe, b.value) | number: "1.0-1" }}%
+            </span>
+            <span class="peringkat__nilai"
+              >Rp {{ b.value | number: "1.2-2" }}</span
+            >
+          </div>
+          <div class="peringkat__kabut" *ngIf="tipe.length > 5"></div>
+        </div>
 
-      <p class="laporan__kosong" *ngIf="supplier.length === 0">
-        {{ 'report-sales__empty' | translate }}
-      </p>
-    </section>
-  </div>
+        <button
+          type="button"
+          class="peringkat__toggle"
+          *ngIf="tipe.length > 5"
+          (click)="rincian('type')"
+        >
+          {{ "peringkat__semua" | translate: { n: tipe.length } }}
+          <i class="ph ph-arrow-right" aria-hidden="true"></i>
+        </button>
 
-  <!-- Rincian angka per hari — terlipat di dasar, seperti laporan penjualan. -->
-  <section class="kartu">
-    <div class="kartu__kepala">
-      <h2 class="kartu__label">{{ 'report__daily-detail' | translate }}</h2>
+        <p class="laporan__kosong" *ngIf="tipe.length === 0">
+          {{ "report-sales__empty" | translate }}
+        </p>
+      </section>
 
-      <button
-        type="button"
-        class="aksi-kecil"
-        (click)="rincianTerbuka = !rincianTerbuka"
-        [attr.aria-expanded]="rincianTerbuka"
-      >
-        <i
-          class="ph"
-          [class.ph-caret-down]="!rincianTerbuka"
-          [class.ph-caret-up]="rincianTerbuka"
-          aria-hidden="true"
-        ></i>
-        {{ (rincianTerbuka ? 'report__daily-detail__hide' : 'report__daily-detail__show') | translate }}
-      </button>
+      <section class="kartu peringkat-kisi__lebar">
+        <div class="kartu__kepala">
+          <h2 class="kartu__label">
+            {{ "report-purchase__by-supplier" | translate }}
+          </h2>
+        </div>
+
+        <div
+          class="peringkat"
+          *ngIf="supplier.length > 0"
+          [class.peringkat--ringkas]="supplier.length > 5"
+        >
+          <div
+            class="peringkat__baris"
+            *ngFor="let b of supplier | slice: 0 : 8"
+          >
+            <span class="avatar-inisial" aria-hidden="true">{{
+              inisial(b.name)
+            }}</span>
+            <span class="peringkat__nama" [title]="b.name">{{ b.name }}</span>
+            <span class="peringkat__jalur" aria-hidden="true">
+              <span
+                class="peringkat__bar"
+                [style.width.%]="lebarDi(supplier, b.value)"
+              ></span>
+            </span>
+            <span class="peringkat__persen">
+              {{ persenDi(supplier, b.value) | number: "1.0-1" }}%
+            </span>
+            <span class="peringkat__nilai"
+              >Rp {{ b.value | number: "1.2-2" }}</span
+            >
+          </div>
+          <div class="peringkat__kabut" *ngIf="supplier.length > 5"></div>
+        </div>
+
+        <button
+          type="button"
+          class="peringkat__toggle"
+          *ngIf="supplier.length > 5"
+          (click)="rincian('supplier')"
+        >
+          {{ "peringkat__semua" | translate: { n: supplier.length } }}
+          <i class="ph ph-arrow-right" aria-hidden="true"></i>
+        </button>
+
+        <p class="laporan__kosong" *ngIf="supplier.length === 0">
+          {{ "report-sales__empty" | translate }}
+        </p>
+      </section>
     </div>
 
-    <div class="gulir" *ngIf="rincianTerbuka">
-      <table class="tabel tabel--rapat">
-        <thead>
-          <tr>
-            <th>{{ 'report-sales__table__date' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-sales__chart__value' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-purchase__hero__discount' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-purchase__chart__receipts' | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let d of chart">
-            <td class="tabel__tanggal">{{ d.date }}</td>
-            <td class="tabel__nilai baris__total">Rp {{ d.value | number: '1.0-0' }}</td>
-            <td class="tabel__nilai">Rp {{ d.discount | number: '1.0-0' }}</td>
-            <td class="tabel__nilai">{{ d.goodReceiptCount | number }}</td>
-          </tr>
-          <tr *ngIf="chart.length === 0">
-            <td colspan="4" class="tabel__pesan">
-              {{ 'report-sales__empty' | translate }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+    <!-- Rincian angka per hari — terlipat di dasar, seperti laporan penjualan. -->
+    <section class="kartu">
+      <div class="kartu__kepala">
+        <h2 class="kartu__label">{{ "report__daily-detail" | translate }}</h2>
+
+        <button
+          type="button"
+          class="aksi-kecil"
+          (click)="rincianTerbuka = !rincianTerbuka"
+          [attr.aria-expanded]="rincianTerbuka"
+        >
+          <i
+            class="ph"
+            [class.ph-caret-down]="!rincianTerbuka"
+            [class.ph-caret-up]="rincianTerbuka"
+            aria-hidden="true"
+          ></i>
+          {{
+            (rincianTerbuka
+              ? "report__daily-detail__hide"
+              : "report__daily-detail__show"
+            ) | translate
+          }}
+        </button>
+      </div>
+
+      <div class="gulir" *ngIf="rincianTerbuka">
+        <table class="tabel tabel--rapat">
+          <thead>
+            <tr>
+              <th>{{ "report-sales__table__date" | translate }}</th>
+              <th class="tabel__nilai-kepala">
+                {{ "report-sales__chart__value" | translate }}
+              </th>
+              <th class="tabel__nilai-kepala">
+                {{ "report-purchase__hero__discount" | translate }}
+              </th>
+              <th class="tabel__nilai-kepala">
+                {{ "report-purchase__chart__receipts" | translate }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let d of chart">
+              <td class="tabel__tanggal">{{ d.date }}</td>
+              <td class="tabel__nilai baris__total">
+                Rp {{ d.value | number: "1.2-2" }}
+              </td>
+              <td class="tabel__nilai">
+                Rp {{ d.discount | number: "1.2-2" }}
+              </td>
+              <td class="tabel__nilai">{{ d.goodReceiptCount | number }}</td>
+            </tr>
+            <tr *ngIf="chart.length === 0">
+              <td colspan="4" class="tabel__pesan">
+                {{ "report-sales__empty" | translate }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
   </ng-container>
 </div>

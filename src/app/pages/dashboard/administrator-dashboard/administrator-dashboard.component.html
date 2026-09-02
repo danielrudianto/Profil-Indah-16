@@ -31,7 +31,7 @@
           {{ "dashboard__kartu__penjualan" | translate }}
         </div>
         <div class="dasbor__ubin-nilai">
-          Rp {{ sales.value | number: "1.0-0" }}
+          Rp {{ sales.value | number: "1.2-2" }}
         </div>
         <div class="dasbor__ubin-sub">
           {{
@@ -51,7 +51,7 @@
           {{ "dashboard__kartu__pembelian" | translate }}
         </div>
         <div class="dasbor__ubin-nilai">
-          Rp {{ purchase.value | number: "1.0-0" }}
+          Rp {{ purchase.value | number: "1.2-2" }}
         </div>
         <div class="dasbor__ubin-sub">
           {{
@@ -93,7 +93,7 @@
           {{ "dashboard__kartu__deposit" | translate }}
         </div>
         <div class="dasbor__ubin-nilai">
-          Rp {{ deposit.value | number: "1.0-0" }}
+          Rp {{ deposit.value | number: "1.2-2" }}
         </div>
         <div class="dasbor__ubin-sub">
           {{
@@ -146,7 +146,7 @@
           </div>
           <div class="dasbor__kartu-sub">
             {{ "dashboard__grafik__total" | translate }}
-            Rp {{ totalMinggu | number: "1.0-0" }}
+            Rp {{ totalMinggu | number: "1.2-2" }}
           </div>
         </div>
         <button type="button" class="dasbor__tautan" (click)="bukaLaporan()">
@@ -166,7 +166,7 @@
           *ngFor="let m of minggu; index as i; trackBy: lacakHari"
         >
           <div class="dasbor__tip" role="tooltip">
-            <strong>Rp {{ m.nilai | number: "1.0-0" }}</strong>
+            <strong>Rp {{ m.nilai | number: "1.2-2" }}</strong>
             <span>{{ m.tanggal | date: "EEEE, d MMMM" }}</span>
           </div>
           <div
@@ -196,7 +196,7 @@
           <span class="dasbor__faktur-nama">{{ f.name }}</span>
           <span class="dasbor__faktur-pelanggan">{{ f.customer }}</span>
           <span class="dasbor__faktur-total"
-            >Rp {{ f.total | number: "1.0-0" }}</span
+            >Rp {{ f.total | number: "1.2-2" }}</span
           >
           <span class="dasbor__faktur-status">
             <span

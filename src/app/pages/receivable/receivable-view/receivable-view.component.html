@@ -3,7 +3,7 @@
   [lede]="
     ('receivable__view__total-receivable' | translate) +
     ': Rp ' +
-    (totalPiutang | number: '1.0-0')
+    (totalPiutang | number: '1.2-2')
   "
   [keyword]="''"
   [page]="page"
@@ -18,26 +18,26 @@
   <ng-container aksi>
     <button type="button" class="aksi-hantu" (click)="kembali()">
       <i class="ph ph-arrow-u-up-left" aria-hidden="true"></i>
-      {{ 'receivable__back' | translate }}
+      {{ "receivable__back" | translate }}
     </button>
   </ng-container>
 
   <table class="tabel">
     <thead>
       <tr>
-        <th>{{ 'receivable__view__date' | translate }}</th>
-        <th>{{ 'receivable__view__name' | translate }}</th>
+        <th>{{ "receivable__view__date" | translate }}</th>
+        <th>{{ "receivable__view__name" | translate }}</th>
         <th class="tabel__nilai-kepala">
-          {{ 'receivable__view__value' | translate }}
+          {{ "receivable__view__value" | translate }}
         </th>
         <th class="tabel__nilai-kepala">
-          {{ 'receivable__view__payment' | translate }}
+          {{ "receivable__view__payment" | translate }}
         </th>
         <th class="tabel__nilai-kepala">
-          {{ 'receivable__view__balance' | translate }}
+          {{ "receivable__view__balance" | translate }}
         </th>
         <th class="tabel__aksi-kepala">
-          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+          <span class="sr-only">{{ "general__actions" | translate }}</span>
         </th>
       </tr>
     </thead>
@@ -53,12 +53,12 @@
         class="tabel__baris-klik"
         (click)="lihatFaktur(item)"
       >
-        <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
+        <td class="tabel__tanggal">{{ item.date | date: "dd MMMM yyyy" }}</td>
         <td class="tabel__utama">{{ item.name }}</td>
-        <td class="tabel__nilai">Rp {{ nilai(item) | number: '1.0-0' }}</td>
-        <td class="tabel__nilai">Rp {{ terbayar(item) | number: '1.0-0' }}</td>
+        <td class="tabel__nilai">Rp {{ nilai(item) | number: "1.2-2" }}</td>
+        <td class="tabel__nilai">Rp {{ terbayar(item) | number: "1.2-2" }}</td>
         <td class="tabel__nilai baris__total">
-          Rp {{ sisa(item) | number: '1.0-0' }}
+          Rp {{ sisa(item) | number: "1.2-2" }}
         </td>
         <td class="tabel__aksi">
           <button
@@ -77,7 +77,7 @@
     <tbody *ngIf="isLoading">
       <tr>
         <td colspan="6" class="tabel__pesan">
-          {{ 'general__loading' | translate }}
+          {{ "general__loading" | translate }}
         </td>
       </tr>
     </tbody>

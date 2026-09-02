@@ -270,7 +270,7 @@
                     class="nilai-btn"
                     (click)="ubahHarga(i)"
                   >
-                    Rp {{ nilaiBaris(i, "price") | number: "1.0-0" }}
+                    Rp {{ nilaiBaris(i, "price") | number: "1.2-2" }}
                   </button>
                 </td>
                 <td class="tabel__nilai">
@@ -279,7 +279,7 @@
                     class="nilai-btn"
                     (click)="ubahHarga(i)"
                   >
-                    Rp {{ nilaiBaris(i, "discount") | number: "1.0-0" }}
+                    Rp {{ nilaiBaris(i, "discount") | number: "1.2-2" }}
                   </button>
                 </td>
 
@@ -303,7 +303,7 @@
                 </td>
 
                 <td class="tabel__nilai">
-                  Rp {{ totalBaris(i) | number: "1.0-0" }}
+                  Rp {{ totalBaris(i) | number: "1.2-2" }}
                 </td>
 
                 <td class="tabel__aksi">
@@ -386,8 +386,9 @@
               <input
                 matInput
                 type="text"
-                mask="separator"
+                mask="separator.2"
                 thousandSeparator="."
+                decimalMarker=","
                 formControlName="discount"
                 autocomplete="off"
                 placeholder="0"
@@ -403,8 +404,9 @@
               <input
                 matInput
                 type="text"
-                mask="separator"
+                mask="separator.2"
                 thousandSeparator="."
+                decimalMarker=","
                 formControlName="delivery"
                 autocomplete="off"
                 placeholder="0"
@@ -420,8 +422,9 @@
               <input
                 matInput
                 type="text"
-                mask="separator"
+                mask="separator.2"
                 thousandSeparator="."
+                decimalMarker=","
                 formControlName="service"
                 autocomplete="off"
                 placeholder="0"
@@ -442,8 +445,9 @@
               <input
                 matInput
                 type="text"
-                mask="separator"
+                mask="separator.2"
                 thousandSeparator="."
+                decimalMarker=","
                 formControlName="admin_fee"
                 autocomplete="off"
                 placeholder="0"
@@ -569,8 +573,9 @@
                         ><input
                           matInput
                           type="text"
-                          mask="separator"
+                          mask="separator.2"
                           thousandSeparator="."
+                          decimalMarker=","
                           formControlName="value"
                           autocomplete="off"
                           placeholder="0"
@@ -753,8 +758,9 @@
                     matInput
                     type="text"
                     class="input--kanan"
-                    mask="separator"
+                    mask="separator.2"
                     thousandSeparator="."
+                    decimalMarker=","
                     formControlName="value"
                     autocomplete="off"
                     (input)="nominalDiedit()"
@@ -803,31 +809,31 @@
         <dl class="ringkas">
           <div>
             <dt>{{ "sales-invoice__create__subtotal" | translate }}</dt>
-            <dd>Rp {{ subtotal | number: "1.0-0" }}</dd>
+            <dd>Rp {{ subtotal | number: "1.2-2" }}</dd>
           </div>
 
           <div *ngIf="diskonItem > 0">
             <dt>{{ "sales-invoice__create__item-discount" | translate }}</dt>
             <dd class="ringkas__kurang">
-              – Rp {{ diskonItem | number: "1.0-0" }}
+              – Rp {{ diskonItem | number: "1.2-2" }}
             </dd>
           </div>
 
           <div *ngIf="valueFormGroup.value.discount > 0">
             <dt>{{ "sales-invoice__create__doc-discount" | translate }}</dt>
             <dd class="ringkas__kurang">
-              – Rp {{ valueFormGroup.value.discount | number: "1.0-0" }}
+              – Rp {{ valueFormGroup.value.discount | number: "1.2-2" }}
             </dd>
           </div>
 
           <div *ngIf="valueFormGroup.value.delivery > 0">
             <dt>{{ "sales-invoice__create__delivery" | translate }}</dt>
-            <dd>Rp {{ valueFormGroup.value.delivery | number: "1.0-0" }}</dd>
+            <dd>Rp {{ valueFormGroup.value.delivery | number: "1.2-2" }}</dd>
           </div>
 
           <div *ngIf="valueFormGroup.value.service > 0">
             <dt>{{ "sales-invoice__create__service" | translate }}</dt>
-            <dd>Rp {{ valueFormGroup.value.service | number: "1.0-0" }}</dd>
+            <dd>Rp {{ valueFormGroup.value.service | number: "1.2-2" }}</dd>
           </div>
 
           <!--
@@ -838,13 +844,13 @@
           -->
           <div *ngIf="valueFormGroup.value.admin_fee > 0">
             <dt>{{ "sales-invoice__create__admin-fee" | translate }}</dt>
-            <dd>Rp {{ valueFormGroup.value.admin_fee | number: "1.0-0" }}</dd>
+            <dd>Rp {{ valueFormGroup.value.admin_fee | number: "1.2-2" }}</dd>
           </div>
         </dl>
 
         <div class="ringkas__total">
           <span>{{ "sales-invoice__create__total" | translate }}</span>
-          <strong>Rp {{ totalBill | number: "1.0-0" }}</strong>
+          <strong>Rp {{ totalBill | number: "1.2-2" }}</strong>
         </div>
       </section>
 

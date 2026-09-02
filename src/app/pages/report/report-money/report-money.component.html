@@ -2,8 +2,8 @@
 <div class="laporan">
   <header class="laporan__kepala">
     <div>
-      <h1 class="laporan__judul">{{ 'report-money__title' | translate }}</h1>
-      <p class="laporan__lede">{{ 'report-money__lede' | translate }}</p>
+      <h1 class="laporan__judul">{{ "report-money__title" | translate }}</h1>
+      <p class="laporan__lede">{{ "report-money__lede" | translate }}</p>
     </div>
 
     <div class="laporan__kendali">
@@ -35,35 +35,51 @@
         (click)="download()"
       >
         <i class="ph ph-file-xls" aria-hidden="true"></i>
-        {{ 'report-sales__download' | translate }}
+        {{ "report-sales__download" | translate }}
       </button>
     </div>
   </header>
 
   <div class="hero">
     <div class="hero__kartu hero__kartu--utama">
-      <span class="hero__label">{{ 'report-money__hero__net' | translate }}</span>
-      <strong class="hero__nilai">Rp {{ totalBersih | number: '1.0-0' }}</strong>
+      <span class="hero__label">{{
+        "report-money__hero__net" | translate
+      }}</span>
+      <strong class="hero__nilai"
+        >Rp {{ totalBersih | number: "1.2-2" }}</strong
+      >
     </div>
     <div class="hero__kartu">
-      <span class="hero__label">{{ 'report-money__hero__in' | translate }}</span>
-      <strong class="hero__nilai">Rp {{ totalMasuk | number: '1.0-0' }}</strong>
+      <span class="hero__label">{{
+        "report-money__hero__in" | translate
+      }}</span>
+      <strong class="hero__nilai">Rp {{ totalMasuk | number: "1.2-2" }}</strong>
     </div>
     <div class="hero__kartu">
-      <span class="hero__label">{{ 'report-money__hero__out' | translate }}</span>
-      <strong class="hero__nilai">Rp {{ totalKeluar | number: '1.0-0' }}</strong>
-      <span class="hero__sub">{{ 'report-money__hero__out-sub' | translate }}</span>
+      <span class="hero__label">{{
+        "report-money__hero__out" | translate
+      }}</span>
+      <strong class="hero__nilai"
+        >Rp {{ totalKeluar | number: "1.2-2" }}</strong
+      >
+      <span class="hero__sub">{{
+        "report-money__hero__out-sub" | translate
+      }}</span>
     </div>
     <div class="hero__kartu">
-      <span class="hero__label">{{ 'report-money__hero__dor' | translate }}</span>
-      <strong class="hero__nilai">Rp {{ totalDor | number: '1.0-0' }}</strong>
-      <span class="hero__sub">{{ 'report-money__hero__dor-sub' | translate }}</span>
+      <span class="hero__label">{{
+        "report-money__hero__dor" | translate
+      }}</span>
+      <strong class="hero__nilai">Rp {{ totalDor | number: "1.2-2" }}</strong>
+      <span class="hero__sub">{{
+        "report-money__hero__dor-sub" | translate
+      }}</span>
     </div>
   </div>
 
   <!-- Sorotan hari ini — kalimat yang dihitung dari angka, bukan dikarang. -->
   <section class="kartu sorotan" *ngIf="sorotan.length > 0">
-    <h2 class="kartu__label">{{ 'sorotan-uang__judul' | translate }}</h2>
+    <h2 class="kartu__label">{{ "sorotan-uang__judul" | translate }}</h2>
     <ul class="sorotan__daftar">
       <li *ngFor="let baris of sorotan">
         <span class="sorotan__ikon" aria-hidden="true">
@@ -78,8 +94,8 @@
   <section class="kartu" *ngIf="tren.length > 0">
     <div class="kartu__kepala">
       <div>
-        <h2 class="kartu__label">{{ 'report-money__chart' | translate }}</h2>
-        <p class="grafik__sub">{{ 'report-money__chart__sub' | translate }}</p>
+        <h2 class="kartu__label">{{ "report-money__chart" | translate }}</h2>
+        <p class="grafik__sub">{{ "report-money__chart__sub" | translate }}</p>
       </div>
     </div>
 
@@ -91,9 +107,15 @@
     <div class="grafik grafik--nilai">
       <div class="grafik__hari" *ngFor="let b of tren">
         <div class="grafik-tip" role="tooltip">
-          <strong>Rp {{ bersihBaris(b) | number: '1.0-0' }}</strong>
-          <span>{{ 'report-money__hero__in' | translate }} Rp {{ b.masuk | number: '1.0-0' }}</span>
-          <span>{{ 'report-money__hero__out' | translate }} Rp {{ b.keluar | number: '1.0-0' }}</span>
+          <strong>Rp {{ bersihBaris(b) | number: "1.2-2" }}</strong>
+          <span
+            >{{ "report-money__hero__in" | translate }} Rp
+            {{ b.masuk | number: "1.2-2" }}</span
+          >
+          <span
+            >{{ "report-money__hero__out" | translate }} Rp
+            {{ b.keluar | number: "1.2-2" }}</span
+          >
           <small>{{ tanggalPenuh(b) }}</small>
         </div>
         <span
@@ -109,7 +131,7 @@
       <div class="grafik__legenda">
         <span>
           <i class="grafik__legenda--nilai" aria-hidden="true"></i>
-          {{ 'report-money__hero__net' | translate }}
+          {{ "report-money__hero__net" | translate }}
         </span>
       </div>
       <span class="grafik__rentang">{{ rentangTren }}</span>
@@ -117,39 +139,57 @@
   </section>
 
   <section class="kartu">
-    <h2 class="kartu__label">{{ 'report-money__by-method' | translate }}</h2>
+    <h2 class="kartu__label">{{ "report-money__by-method" | translate }}</h2>
 
     <div class="gulir">
       <table class="tabel">
         <thead>
           <tr>
-            <th>{{ 'report-money__method' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-money__sales-invoice' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-money__deposit' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-money__sales-return' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-money__overpayment' | translate }}</th>
+            <th>{{ "report-money__method" | translate }}</th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-money__sales-invoice" | translate }}
+            </th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-money__deposit" | translate }}
+            </th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-money__sales-return" | translate }}
+            </th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-money__overpayment" | translate }}
+            </th>
             <!-- Pengembalian diskon faktur — uang keluar lewat metodenya. -->
-            <th class="tabel__nilai-kepala">{{ 'report-money__rebate' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-money__total' | translate }}</th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-money__rebate" | translate }}
+            </th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-money__total" | translate }}
+            </th>
           </tr>
         </thead>
 
         <tbody *ngIf="!isLoading">
           <tr *ngFor="let m of metode">
             <td class="tabel__utama">{{ m.name }}</td>
-            <td class="tabel__nilai">Rp {{ m.salesInvoice | number: '1.0-0' }}</td>
-            <td class="tabel__nilai">Rp {{ m.salesDeposit | number: '1.0-0' }}</td>
+            <td class="tabel__nilai">
+              Rp {{ m.salesInvoice | number: "1.2-2" }}
+            </td>
+            <td class="tabel__nilai">
+              Rp {{ m.salesDeposit | number: "1.2-2" }}
+            </td>
             <td class="tabel__nilai keluar" *ngIf="m.salesReturn > 0">
-              − Rp {{ m.salesReturn | number: '1.0-0' }}
+              − Rp {{ m.salesReturn | number: "1.2-2" }}
             </td>
             <td class="tabel__nilai" *ngIf="m.salesReturn <= 0">Rp 0</td>
-            <td class="tabel__nilai">Rp {{ m.overpayment | number: '1.0-0' }}</td>
+            <td class="tabel__nilai">
+              Rp {{ m.overpayment | number: "1.2-2" }}
+            </td>
             <td class="tabel__nilai keluar" *ngIf="m.rebate > 0">
-              − Rp {{ m.rebate | number: '1.0-0' }}
+              − Rp {{ m.rebate | number: "1.2-2" }}
             </td>
             <td class="tabel__nilai" *ngIf="!(m.rebate > 0)">Rp 0</td>
             <td class="tabel__nilai baris__total">
-              Rp {{ totalBaris(m) | number: '1.0-0' }}
+              Rp {{ totalBaris(m) | number: "1.2-2" }}
             </td>
           </tr>
 
@@ -157,7 +197,7 @@
             <td class="tabel__utama">TOTAL</td>
             <td colspan="5"></td>
             <td class="tabel__nilai baris__total">
-              Rp {{ totalBersih - totalDor | number: '1.0-0' }}
+              Rp {{ totalBersih - totalDor | number: "1.2-2" }}
             </td>
           </tr>
         </tbody>
@@ -165,7 +205,7 @@
         <tbody *ngIf="isLoading">
           <tr>
             <td colspan="7" class="tabel__pesan">
-              {{ 'general__loading' | translate }}
+              {{ "general__loading" | translate }}
             </td>
           </tr>
         </tbody>
@@ -176,10 +216,10 @@
   <!-- DOR — penerimaan per sales yang belum masuk metode mana pun. -->
   <section class="kartu">
     <div class="kartu__kepala">
-      <h2 class="kartu__label">{{ 'report-money__dor' | translate }}</h2>
+      <h2 class="kartu__label">{{ "report-money__dor" | translate }}</h2>
 
       <a class="kartu__tautan" routerLink="Dor">
-        {{ 'report-money__dor__recap' | translate }}
+        {{ "report-money__dor__recap" | translate }}
         <i class="ph ph-arrow-right" aria-hidden="true"></i>
       </a>
     </div>
@@ -188,19 +228,29 @@
       <table class="tabel tabel--rapat">
         <thead>
           <tr>
-            <th>{{ 'report-money__dor__sales' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-money__sales-invoice' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-money__deposit' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-money__total' | translate }}</th>
+            <th>{{ "report-money__dor__sales" | translate }}</th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-money__sales-invoice" | translate }}
+            </th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-money__deposit" | translate }}
+            </th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-money__total" | translate }}
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let d of dor">
-            <td class="tabel__utama">{{ d.sales || 'INTERNAL' }}</td>
-            <td class="tabel__nilai">Rp {{ d.salesInvoice | number: '1.0-0' }}</td>
-            <td class="tabel__nilai">Rp {{ d.salesDeposit | number: '1.0-0' }}</td>
+            <td class="tabel__utama">{{ d.sales || "INTERNAL" }}</td>
+            <td class="tabel__nilai">
+              Rp {{ d.salesInvoice | number: "1.2-2" }}
+            </td>
+            <td class="tabel__nilai">
+              Rp {{ d.salesDeposit | number: "1.2-2" }}
+            </td>
             <td class="tabel__nilai baris__total">
-              Rp {{ d.salesInvoice + d.salesDeposit | number: '1.0-0' }}
+              Rp {{ d.salesInvoice + d.salesDeposit | number: "1.2-2" }}
             </td>
           </tr>
         </tbody>
@@ -208,7 +258,7 @@
     </div>
 
     <p class="laporan__kosong" *ngIf="dor.length === 0">
-      {{ 'report-money__dor__empty' | translate }}
+      {{ "report-money__dor__empty" | translate }}
     </p>
   </section>
 </div>

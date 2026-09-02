@@ -35,8 +35,9 @@
                 matInput
                 type="text"
                 class="input--kanan"
-                mask="separator"
-                thousandSeparator=" "
+                mask="separator.2"
+                thousandSeparator="."
+                decimalMarker=","
                 formControlName="price"
                 autocomplete="off"
               />
@@ -146,7 +147,8 @@
                       class="input--kanan"
                       formControlName="price"
                       mask="separator.2"
-                      thousandSeparator=" "
+                      thousandSeparator="."
+                      decimalMarker=","
                   /></mat-form-field>
                 </td>
 
@@ -158,7 +160,8 @@
                       class="input--kanan"
                       formControlName="discount"
                       mask="separator.2"
-                      thousandSeparator=" "
+                      thousandSeparator="."
+                      decimalMarker=","
                   /></mat-form-field>
                 </td>
 
@@ -168,7 +171,7 @@
                     (itemForm.get("quantity")?.value || 0) *
                       ((itemForm.get("price")?.value || 0) -
                         (itemForm.get("discount")?.value || 0))
-                      | number: "1.0-0"
+                      | number: "1.2-2"
                   }}
                 </td>
 
@@ -211,22 +214,22 @@
         <dl class="ringkas">
           <div>
             <dt>{{ "package__summary__unit-value" | translate }}</dt>
-            <dd>Rp {{ nilaiSatuan | number: "1.0-0" }}</dd>
+            <dd>Rp {{ nilaiSatuan | number: "1.2-2" }}</dd>
           </div>
           <div>
             <dt>{{ "package__summary__net-value" | translate }}</dt>
-            <dd>Rp {{ nilaiNetto | number: "1.0-0" }}</dd>
+            <dd>Rp {{ nilaiNetto | number: "1.2-2" }}</dd>
           </div>
           <div>
             <dt>{{ "package__summary__package-price" | translate }}</dt>
-            <dd>Rp {{ hargaPaket | number: "1.0-0" }}</dd>
+            <dd>Rp {{ hargaPaket | number: "1.2-2" }}</dd>
           </div>
         </dl>
 
         <!-- Selisih netto vs harga paket = nilai jual bundelnya ke pelanggan. -->
         <div class="ringkas__total">
           <span>{{ "package__summary__saving" | translate }}</span>
-          <strong>Rp {{ hemat | number: "1.0-0" }}</strong>
+          <strong>Rp {{ hemat | number: "1.2-2" }}</strong>
         </div>
       </section>
 

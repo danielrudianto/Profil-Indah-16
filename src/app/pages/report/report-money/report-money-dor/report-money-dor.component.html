@@ -2,8 +2,8 @@
 <div class="laporan">
   <header class="laporan__kepala">
     <div>
-      <h1 class="laporan__judul">{{ 'report-dor__title' | translate }}</h1>
-      <p class="laporan__lede">{{ 'report-dor__lede' | translate }}</p>
+      <h1 class="laporan__judul">{{ "report-dor__title" | translate }}</h1>
+      <p class="laporan__lede">{{ "report-dor__lede" | translate }}</p>
     </div>
 
     <div class="laporan__kendali">
@@ -54,37 +54,47 @@
   </header>
 
   <section class="kartu">
-    <h2 class="kartu__label">{{ 'report-dor__by-sales' | translate }}</h2>
+    <h2 class="kartu__label">{{ "report-dor__by-sales" | translate }}</h2>
 
     <p class="petunjuk-dor">
       <i class="ph ph-info" aria-hidden="true"></i>
-      <span>{{ 'report-dor__hint' | translate }}</span>
+      <span>{{ "report-dor__hint" | translate }}</span>
     </p>
 
     <div class="gulir" *ngIf="!isLoading && baris.length > 0">
       <table class="tabel">
         <thead>
           <tr>
-            <th>{{ 'report-money__dor__sales' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-money__sales-invoice' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-money__deposit' | translate }}</th>
-            <th class="tabel__nilai-kepala">{{ 'report-dor__deduction' | translate }}</th>
+            <th>{{ "report-money__dor__sales" | translate }}</th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-money__sales-invoice" | translate }}
+            </th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-money__deposit" | translate }}
+            </th>
+            <th class="tabel__nilai-kepala">
+              {{ "report-dor__deduction" | translate }}
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let b of baris">
-            <td class="tabel__utama">{{ b.sales || 'INTERNAL' }}</td>
-            <td class="tabel__nilai">Rp {{ b.salesInvoice | number: '1.0-0' }}</td>
-            <td class="tabel__nilai">Rp {{ b.salesDeposit | number: '1.0-0' }}</td>
+            <td class="tabel__utama">{{ b.sales || "INTERNAL" }}</td>
+            <td class="tabel__nilai">
+              Rp {{ b.salesInvoice | number: "1.2-2" }}
+            </td>
+            <td class="tabel__nilai">
+              Rp {{ b.salesDeposit | number: "1.2-2" }}
+            </td>
             <td class="tabel__nilai baris__total">
-              Rp {{ totalBaris(b) | number: '1.0-0' }}
+              Rp {{ totalBaris(b) | number: "1.2-2" }}
             </td>
           </tr>
           <tr class="baris-total">
             <td class="tabel__utama">TOTAL</td>
             <td colspan="2"></td>
             <td class="tabel__nilai baris__total">
-              Rp {{ total | number: '1.0-0' }}
+              Rp {{ total | number: "1.2-2" }}
             </td>
           </tr>
         </tbody>
@@ -92,11 +102,11 @@
     </div>
 
     <p class="tabel__pesan" *ngIf="isLoading">
-      {{ 'general__loading' | translate }}
+      {{ "general__loading" | translate }}
     </p>
 
     <p class="laporan__kosong" *ngIf="!isLoading && baris.length === 0">
-      {{ 'report-dor__empty' | translate }}
+      {{ "report-dor__empty" | translate }}
     </p>
   </section>
 </div>

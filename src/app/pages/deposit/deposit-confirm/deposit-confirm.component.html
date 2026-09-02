@@ -124,13 +124,13 @@
                   {{ satuanBaris(barang) }}
                 </td>
                 <td class="tabel__nilai">
-                  Rp {{ barang.price | number: "1.0-0" }}
+                  Rp {{ barang.price | number: "1.2-2" }}
                 </td>
                 <td class="tabel__nilai">
-                  Rp {{ barang.discount | number: "1.0-0" }}
+                  Rp {{ barang.discount | number: "1.2-2" }}
                 </td>
                 <td class="tabel__nilai baris__total">
-                  Rp {{ totalBaris(barang) | number: "1.0-0" }}
+                  Rp {{ totalBaris(barang) | number: "1.2-2" }}
                 </td>
               </tr>
             </tbody>
@@ -160,7 +160,7 @@
               <span>{{ bayar.date | date: "dd MMMM yyyy" }}</span>
             </div>
             <div class="bayar__tetap">
-              Rp {{ bayar.value | number: "1.0-0" }}
+              Rp {{ bayar.value | number: "1.2-2" }}
             </div>
           </div>
         </ng-container>
@@ -182,8 +182,9 @@
               ><input
                 matInput
                 type="text"
-                mask="separator"
+                mask="separator.2"
                 thousandSeparator="."
+                decimalMarker=","
                 formControlName="value"
                 autocomplete="off"
                 placeholder="0"
@@ -224,37 +225,37 @@
         <dl class="ringkas">
           <div>
             <dt>{{ "deposit__confirm__summary__items" | translate }}</dt>
-            <dd>Rp {{ nilaiBarang | number: "1.0-0" }}</dd>
+            <dd>Rp {{ nilaiBarang | number: "1.2-2" }}</dd>
           </div>
           <div *ngIf="deposit.delivery > 0">
             <dt>{{ "deposit__view__table__delivery" | translate }}</dt>
-            <dd>Rp {{ deposit.delivery | number: "1.0-0" }}</dd>
+            <dd>Rp {{ deposit.delivery | number: "1.2-2" }}</dd>
           </div>
           <div *ngIf="deposit.service > 0">
             <dt>{{ "deposit__view__table__service" | translate }}</dt>
-            <dd>Rp {{ deposit.service | number: "1.0-0" }}</dd>
+            <dd>Rp {{ deposit.service | number: "1.2-2" }}</dd>
           </div>
           <div *ngIf="deposit.discount > 0">
             <dt>{{ "deposit__view__table__discount" | translate }}</dt>
             <dd class="ringkas__kurang">
-              – Rp {{ deposit.discount | number: "1.0-0" }}
+              – Rp {{ deposit.discount | number: "1.2-2" }}
             </dd>
           </div>
           <div>
             <dt>{{ "deposit__confirm__summary__bill" | translate }}</dt>
-            <dd>Rp {{ totalTagihan | number: "1.0-0" }}</dd>
+            <dd>Rp {{ totalTagihan | number: "1.2-2" }}</dd>
           </div>
           <div>
             <dt>{{ "deposit__confirm__summary__paid" | translate }}</dt>
             <dd class="ringkas__kurang">
-              – Rp {{ totalPembayaran | number: "1.0-0" }}
+              – Rp {{ totalPembayaran | number: "1.2-2" }}
             </dd>
           </div>
         </dl>
 
         <div class="ringkas__total">
           <span>{{ "deposit__confirm__summary__remaining" | translate }}</span>
-          <strong>Rp {{ sisa | number: "1.0-0" }}</strong>
+          <strong>Rp {{ sisa | number: "1.2-2" }}</strong>
         </div>
       </section>
 

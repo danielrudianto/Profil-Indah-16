@@ -4,14 +4,16 @@
     <div class="buat__utama">
       <header class="buat__head">
         <h1 class="buat__title">
-          {{ 'adjustment-case__create__title' | translate }}
+          {{ "adjustment-case__create__title" | translate }}
           <!-- Nomor dokumennya dibuat server, bukan diketik. -->
           <span class="tag-otomatis">
             <i class="ph ph-sparkle" aria-hidden="true"></i>
-            {{ 'adjustment-case__auto-number' | translate }}
+            {{ "adjustment-case__auto-number" | translate }}
           </span>
         </h1>
-        <p class="buat__lede">{{ 'adjustment-case__create__lede' | translate }}</p>
+        <p class="buat__lede">
+          {{ "adjustment-case__create__lede" | translate }}
+        </p>
       </header>
 
       <!--
@@ -20,7 +22,9 @@
         kartunya sendiri.
       -->
       <section class="kartu">
-        <h2 class="kartu__label">{{ 'adjustment-case__create__type' | translate }}</h2>
+        <h2 class="kartu__label">
+          {{ "adjustment-case__create__type" | translate }}
+        </h2>
 
         <div class="keadaan">
           <button
@@ -30,9 +34,15 @@
             (click)="pilihJenis(0)"
           >
             <i class="ph ph-arrow-circle-up" aria-hidden="true"></i>
-            <span class="keadaan__judul">{{ 'adjustment-case__confirm__type__found' | translate }}</span>
-            <span class="keadaan__desk">{{ 'adjustment-case__type__found__desk' | translate }}</span>
-            <span class="keadaan__akibat">{{ 'adjustment-case__type__found__note' | translate }}</span>
+            <span class="keadaan__judul">{{
+              "adjustment-case__confirm__type__found" | translate
+            }}</span>
+            <span class="keadaan__desk">{{
+              "adjustment-case__type__found__desk" | translate
+            }}</span>
+            <span class="keadaan__akibat">{{
+              "adjustment-case__type__found__note" | translate
+            }}</span>
           </button>
 
           <button
@@ -42,29 +52,47 @@
             (click)="pilihJenis(1)"
           >
             <i class="ph ph-arrow-circle-down" aria-hidden="true"></i>
-            <span class="keadaan__judul">{{ 'adjustment-case__confirm__type__lost' | translate }}</span>
-            <span class="keadaan__desk">{{ 'adjustment-case__type__lost__desk' | translate }}</span>
-            <span class="keadaan__akibat">{{ 'adjustment-case__type__lost__note' | translate }}</span>
+            <span class="keadaan__judul">{{
+              "adjustment-case__confirm__type__lost" | translate
+            }}</span>
+            <span class="keadaan__desk">{{
+              "adjustment-case__type__lost__desk" | translate
+            }}</span>
+            <span class="keadaan__akibat">{{
+              "adjustment-case__type__lost__note" | translate
+            }}</span>
           </button>
         </div>
       </section>
 
       <!-- Data umum -->
       <section class="kartu" [formGroup]="metaFormGroup">
-        <h2 class="kartu__label">{{ 'adjustment-case__general-data' | translate }}</h2>
+        <h2 class="kartu__label">
+          {{ "adjustment-case__general-data" | translate }}
+        </h2>
 
         <div class="kartu__baris">
           <div class="field">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>{{ 'adjustment-case__date' | translate }}</mat-label>
-              <input matInput [matDatepicker]="acPicker" formControlName="date" (click)="acPicker.open()" />
+              <mat-label>{{ "adjustment-case__date" | translate }}</mat-label>
+              <input
+                matInput
+                [matDatepicker]="acPicker"
+                formControlName="date"
+                (click)="acPicker.open()"
+              />
               <!--
                 Tombol kalender manual, bukan mat-datepicker-toggle: elemen
                 toggle itu hilang tanpa jejak pada pipeline dev meski utuh di
                 bundel produksi.
               -->
-              <button type="button" matSuffix class="buka-kalender" (click)="acPicker.open()"
-                [attr.aria-label]="'general__pick-date' | translate">
+              <button
+                type="button"
+                matSuffix
+                class="buka-kalender"
+                (click)="acPicker.open()"
+                [attr.aria-label]="'general__pick-date' | translate"
+              >
                 <i class="ph ph-calendar-blank" aria-hidden="true"></i>
               </button>
               <mat-datepicker #acPicker></mat-datepicker>
@@ -89,10 +117,16 @@
       <!-- Barang disesuaikan -->
       <section class="kartu">
         <div class="kartu__kepala">
-          <h2 class="kartu__label">{{ 'adjustment-case__create__items' | translate }}</h2>
-          <button type="button" class="tambah-atas" (click)="openItemSelector()">
+          <h2 class="kartu__label">
+            {{ "adjustment-case__create__items" | translate }}
+          </h2>
+          <button
+            type="button"
+            class="tambah-atas"
+            (click)="openItemSelector()"
+          >
             <i class="ph ph-plus" aria-hidden="true"></i>
-            {{ 'adjustment-case__create__add-item-short' | translate }}
+            {{ "adjustment-case__create__add-item-short" | translate }}
           </button>
         </div>
 
@@ -101,38 +135,60 @@
           <table class="tabel tabel--muat" formArrayName="items">
             <thead>
               <tr>
-                <th>{{ 'adjustment-case__table__item' | translate }}</th>
-                <th>{{ 'adjustment-case__table__quantity' | translate }}</th>
+                <th>{{ "adjustment-case__table__item" | translate }}</th>
+                <th>{{ "adjustment-case__table__quantity" | translate }}</th>
                 <th class="tabel__aksi-kepala">
-                  <span class="sr-only">{{ 'general__actions' | translate }}</span>
+                  <span class="sr-only">{{
+                    "general__actions" | translate
+                  }}</span>
                 </th>
               </tr>
             </thead>
 
             <tbody *ngIf="t.length > 0">
-              <tr *ngFor="let itemForm of t.controls; index as i" [formGroupName]="i">
+              <tr
+                *ngFor="let itemForm of t.controls; index as i"
+                [formGroupName]="i"
+              >
                 <td>
                   <span class="barang__ref">
-                    {{ itemForm.get('reference')?.value }}
+                    {{ itemForm.get("reference")?.value }}
                     <span
                       class="ulang"
                       *ngIf="jumlahBaris(itemForm.get('product_id')?.value) > 1"
                       [title]="'adjustment-case__create__duplicate' | translate"
                     >
-                      ×{{ jumlahBaris(itemForm.get('product_id')?.value) }}
+                      ×{{ jumlahBaris(itemForm.get("product_id")?.value) }}
                     </span>
                   </span>
-                  <span class="barang__desc">{{ itemForm.get('description')?.value }}</span>
+                  <span class="barang__desc">{{
+                    itemForm.get("description")?.value
+                  }}</span>
                 </td>
 
                 <td>
                   <div class="jumlah">
-                    <mat-form-field appearance="outline" class="w-100"><input matInput type="text" formControlName="quantity" mask="separator.2" thousandSeparator=" " /></mat-form-field>
-                    <span class="jumlah__satuan">{{ itemForm.get('unit')?.value }}</span>
+                    <mat-form-field appearance="outline" class="w-100"
+                      ><input
+                        matInput
+                        type="text"
+                        formControlName="quantity"
+                        mask="separator.2"
+                        thousandSeparator=" "
+                    /></mat-form-field>
+                    <span class="jumlah__satuan">{{
+                      itemForm.get("unit")?.value
+                    }}</span>
                   </div>
-                  <span class="jumlah__konversi" *ngIf="itemForm.get('conversion')?.value != 1">
-                    {{ itemForm.get('quantity')?.value * itemForm.get('conversion')?.value | number: '0.0-2' }}
-                    {{ itemForm.get('default_unit')?.value }}
+                  <span
+                    class="jumlah__konversi"
+                    *ngIf="itemForm.get('conversion')?.value != 1"
+                  >
+                    {{
+                      itemForm.get("quantity")?.value *
+                        itemForm.get("conversion")?.value | number: "0.0-2"
+                    }}
+                    {{ itemForm.get("default_unit")?.value }}
                   </span>
                 </td>
 
@@ -153,7 +209,7 @@
             <tbody *ngIf="t.length === 0">
               <tr>
                 <td colspan="3" class="tabel__pesan">
-                  {{ 'adjustment-case__create__no-item' | translate }}
+                  {{ "adjustment-case__create__no-item" | translate }}
                 </td>
               </tr>
             </tbody>
@@ -162,7 +218,7 @@
 
         <button type="button" class="tambah" (click)="openItemSelector()">
           <i class="ph ph-plus-circle" aria-hidden="true"></i>
-          <span>{{ 'adjustment-case__create__add-item' | translate }}</span>
+          <span>{{ "adjustment-case__create__add-item" | translate }}</span>
           <span class="tambah__kunci">Alt + A</span>
         </button>
       </section>
@@ -170,22 +226,26 @@
 
     <aside class="buat__samping">
       <section class="kartu">
-        <h2 class="kartu__label">{{ 'adjustment-case__summary' | translate }}</h2>
+        <h2 class="kartu__label">
+          {{ "adjustment-case__summary" | translate }}
+        </h2>
 
         <dl class="ringkas">
           <div>
-            <dt>{{ 'adjustment-case__summary__rows' | translate }}</dt>
+            <dt>{{ "adjustment-case__summary__rows" | translate }}</dt>
             <dd>{{ t.length }}</dd>
           </div>
           <div>
-            <dt>{{ 'adjustment-case__summary__quantity' | translate }}</dt>
-            <dd>{{ totalJumlah | number: '0.0-2' }}</dd>
+            <dt>{{ "adjustment-case__summary__quantity" | translate }}</dt>
+            <dd>{{ totalJumlah | number: "0.0-2" }}</dd>
           </div>
         </dl>
       </section>
 
       <section class="kartu">
-        <h2 class="kartu__label">{{ 'adjustment-case__create__before-save' | translate }}</h2>
+        <h2 class="kartu__label">
+          {{ "adjustment-case__create__before-save" | translate }}
+        </h2>
         <ul class="periksa">
           <li *ngFor="let c of checklist" [class.periksa--on]="c.selesai">
             <span class="periksa__bulat" aria-hidden="true">
@@ -197,7 +257,7 @@
       </section>
 
       <section class="kartu">
-        <h2 class="kartu__label">{{ 'general__actions' | translate }}</h2>
+        <h2 class="kartu__label">{{ "general__actions" | translate }}</h2>
 
         <!--
           Banner, bukan teks bantu: kalimat ini mengubah arti tombolnya —
@@ -205,20 +265,29 @@
         -->
         <p class="petunjuk">
           <i class="ph ph-info" aria-hidden="true"></i>
-          {{ 'adjustment-case__create__confirm-note' | translate }}
+          {{ "adjustment-case__create__confirm-note" | translate }}
         </p>
 
         <button
           type="button"
           class="btn btn--primary btn--blok"
-          [disabled]="isSubmitting || !metaFormGroup.valid || !itemFormGroup.valid || t.length === 0"
+          [disabled]="
+            isSubmitting ||
+            !metaFormGroup.valid ||
+            !itemFormGroup.valid ||
+            t.length === 0
+          "
           (click)="submitForm()"
         >
           <i class="ph ph-check" aria-hidden="true"></i>
-          {{ 'adjustment-case__create__submit' | translate }}
+          {{ "adjustment-case__create__submit" | translate }}
         </button>
-        <button type="button" class="btn btn--kedua btn--blok" (click)="batal()">
-          {{ 'general__cancel' | translate }}
+        <button
+          type="button"
+          class="btn btn--kedua btn--blok"
+          (click)="batal()"
+        >
+          {{ "general__cancel" | translate }}
         </button>
       </section>
 
@@ -228,11 +297,15 @@
         terkubur tak terjangkau dari antarmuka.
       -->
       <section class="kartu">
-        <h2 class="kartu__label">{{ 'general__other-actions' | translate }}</h2>
+        <h2 class="kartu__label">{{ "general__other-actions" | translate }}</h2>
 
-        <button type="button" class="btn btn--kedua btn--blok" (click)="bukaArsip()">
+        <button
+          type="button"
+          class="btn btn--kedua btn--blok"
+          (click)="bukaArsip()"
+        >
           <i class="ph ph-archive" aria-hidden="true"></i>
-          {{ 'adjustment-case__create__view-archive' | translate }}
+          {{ "adjustment-case__create__view-archive" | translate }}
         </button>
 
         <button
@@ -242,7 +315,7 @@
           (click)="bukaAntrean()"
         >
           <i class="ph ph-stamp" aria-hidden="true"></i>
-          {{ 'adjustment-case__create__view-confirm' | translate }}
+          {{ "adjustment-case__create__view-confirm" | translate }}
         </button>
       </section>
     </aside>

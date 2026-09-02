@@ -96,7 +96,7 @@
           <span class="tag">{{ item.expense_type?.name }}</span>
         </td>
         <td class="tabel__redup">{{ item.company?.name }}</td>
-        <td class="tabel__nilai">Rp {{ item.value | number: "1.0-0" }}</td>
+        <td class="tabel__nilai">Rp {{ item.value | number: "1.2-2" }}</td>
         <td class="tabel__aksi" (click)="$event.stopPropagation()">
           <button
             *ngIf="isAdministrator"

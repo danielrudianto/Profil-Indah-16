@@ -105,7 +105,7 @@
           "company-report__revenue" | translate
         }}</span>
         <strong class="hero__nilai"
-          >Rp {{ laporan.finance.sales | number: "1.0-0" }}</strong
+          >Rp {{ laporan.finance.sales | number: "1.2-2" }}</strong
         >
       </div>
       <div class="hero__kartu">
@@ -113,7 +113,7 @@
           "company-report__cogs" | translate
         }}</span>
         <strong class="hero__nilai"
-          >Rp {{ laporan.finance.hpp | number: "1.0-0" }}</strong
+          >Rp {{ laporan.finance.hpp | number: "1.2-2" }}</strong
         >
       </div>
       <div class="hero__kartu">
@@ -121,7 +121,7 @@
           "company-report__gross-profit" | translate
         }}</span>
         <strong class="hero__nilai"
-          >Rp {{ laporan.finance.grossProfit | number: "1.0-0" }}</strong
+          >Rp {{ laporan.finance.grossProfit | number: "1.2-2" }}</strong
         >
       </div>
       <div class="hero__kartu">
@@ -129,7 +129,7 @@
           "company-report__purchase" | translate
         }}</span>
         <strong class="hero__nilai"
-          >Rp {{ laporan.finance.purchaseValue | number: "1.0-0" }}</strong
+          >Rp {{ laporan.finance.purchaseValue | number: "1.2-2" }}</strong
         >
         <span class="hero__sub">
           {{ laporan.finance.purchaseDocuments | number }}
@@ -161,7 +161,7 @@
               {{ b.name || ("company-report__expense-other" | translate) }}
             </td>
             <td class="ke-kanan baris__total">
-              Rp {{ b.value | number: "1.0-0" }}
+              Rp {{ b.value | number: "1.2-2" }}
             </td>
             <td class="ke-kanan">
               {{
@@ -177,7 +177,7 @@
           <tr>
             <td>{{ "company-report__expense-total" | translate }}</td>
             <td class="ke-kanan baris__total">
-              Rp {{ laporan.finance.expenseTotal | number: "1.0-0" }}
+              Rp {{ laporan.finance.expenseTotal | number: "1.2-2" }}
             </td>
             <td class="ke-kanan">100,0%</td>
           </tr>

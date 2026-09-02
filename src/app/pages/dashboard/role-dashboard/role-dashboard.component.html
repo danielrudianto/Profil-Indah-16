@@ -30,13 +30,13 @@
       <div class="dasbor__ubin-isi">
         <div class="dasbor__ubin-label">{{ u.label | translate }}</div>
         <div class="dasbor__ubin-nilai" *ngIf="u.jenis === 'uang'">
-          Rp {{ u.nilai | number: "1.0-0" }}
+          Rp {{ u.nilai | number: "1.2-2" }}
         </div>
         <div class="dasbor__ubin-nilai" *ngIf="u.jenis === 'jumlah'">
           {{ "dashboard__kartu__promosi-nilai" | translate: { n: u.nilai } }}
         </div>
         <div class="dasbor__ubin-sub" *ngIf="u.subNilai !== null">
-          {{ u.subLabel | translate }} Rp {{ u.subNilai | number: "1.0-0" }}
+          {{ u.subLabel | translate }} Rp {{ u.subNilai | number: "1.2-2" }}
         </div>
         <div class="dasbor__ubin-sub" *ngIf="u.subNilai === null">
           {{ u.subLabel | translate }}

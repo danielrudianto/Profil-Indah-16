@@ -8,13 +8,19 @@
   (submitted)="submitForm()"
   (close)="closeDialog()"
 >
-  <p class="harga__memuat" *ngIf="isLoading">{{ 'general__loading' | translate }}</p>
+  <p class="harga__memuat" *ngIf="isLoading">
+    {{ "general__loading" | translate }}
+  </p>
 
   <ng-container *ngIf="!isLoading">
     <!-- Barang yang sedang diubah — dibaca, bukan diketik. -->
     <div class="harga__produk">
-      <span class="barang__ref">{{ priceFormGroup.get('reference')?.value }}</span>
-      <span class="barang__desc">{{ priceFormGroup.get('description')?.value }}</span>
+      <span class="barang__ref">{{
+        priceFormGroup.get("reference")?.value
+      }}</span>
+      <span class="barang__desc">{{
+        priceFormGroup.get("description")?.value
+      }}</span>
     </div>
 
     <!-- Satu baris per satuan; satuan dasar selalu paling atas. -->
@@ -24,30 +30,57 @@
       [formGroup]="barisAt(i)"
     >
       <div class="harga__satuan">
-        <span class="harga__satuan-nama">{{ baris.get('unit')?.value }}</span>
-        <span class="harga__satuan-konversi" *ngIf="baris.get('conversion')?.value != 1">
-          = {{ baris.get('conversion')?.value }} {{ priceFormGroup.get('unit')?.value }}
+        <span class="harga__satuan-nama">{{ baris.get("unit")?.value }}</span>
+        <span
+          class="harga__satuan-konversi"
+          *ngIf="baris.get('conversion')?.value != 1"
+        >
+          = {{ baris.get("conversion")?.value }}
+          {{ priceFormGroup.get("unit")?.value }}
         </span>
-        <span class="harga__satuan-konversi" *ngIf="baris.get('conversion')?.value == 1">
-          {{ 'price__base-unit' | translate }}
+        <span
+          class="harga__satuan-konversi"
+          *ngIf="baris.get('conversion')?.value == 1"
+        >
+          {{ "price__base-unit" | translate }}
         </span>
       </div>
 
       <mat-form-field appearance="outline">
-        <mat-label>{{ 'purchase-price__update__price' | translate }}</mat-label>
-        <input matInput type="text" class="input--kanan" mask="separator.2" thousandSeparator=" " formControlName="price" autocomplete="off" />
+        <mat-label>{{ "purchase-price__update__price" | translate }}</mat-label>
+        <input
+          matInput
+          type="text"
+          class="input--kanan"
+          mask="separator.2"
+          thousandSeparator="."
+          decimalMarker=","
+          formControlName="price"
+          autocomplete="off"
+        />
         <span matTextPrefix>Rp&nbsp;</span>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>{{ 'purchase-price__update__discount' | translate }}</mat-label>
-        <input matInput type="text" class="input--kanan" mask="separator.2" thousandSeparator=" " formControlName="discount" autocomplete="off" />
+        <mat-label>{{
+          "purchase-price__update__discount" | translate
+        }}</mat-label>
+        <input
+          matInput
+          type="text"
+          class="input--kanan"
+          mask="separator.2"
+          thousandSeparator="."
+          decimalMarker=","
+          formControlName="discount"
+          autocomplete="off"
+        />
         <span matTextPrefix>Rp&nbsp;</span>
       </mat-form-field>
 
       <p class="harga__galat" *ngIf="baris.hasError('discountTooHigh')">
         <i class="ph ph-warning" aria-hidden="true"></i>
-        {{ 'price__discount-too-high' | translate }}
+        {{ "price__discount-too-high" | translate }}
       </p>
     </div>
   </ng-container>

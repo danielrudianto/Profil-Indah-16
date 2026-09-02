@@ -99,7 +99,7 @@
               {{
                 "sales-return__create__has-receivable"
                   | translate
-                    : { nilai: (sisaTagihan.outstanding | number: "1.0-0") }
+                    : { nilai: (sisaTagihan.outstanding | number: "1.2-2") }
               }}
             </span>
             <span *ngIf="sisaTagihan.outstanding <= 0">
@@ -169,8 +169,8 @@
               "sales-return__create__split"
                 | translate
                   : {
-                      potong: (potongTagihan | number: "1.0-0"),
-                      lebih: (jadiKelebihan | number: "1.0-0"),
+                      potong: (potongTagihan | number: "1.2-2"),
+                      lebih: (jadiKelebihan | number: "1.2-2"),
                     }
             }}
           </p>
@@ -428,7 +428,7 @@
                       {{
                         getFormGroupAt(i).get("price")?.value -
                           getFormGroupAt(i).get("discount")?.value
-                          | number: "1.0-0"
+                          | number: "1.2-2"
                       }}
                     </ng-container>
 
@@ -452,7 +452,7 @@
                           "
                           [value]="opsi"
                         >
-                          Rp {{ opsi.price - opsi.discount | number: "1.0-0" }}
+                          Rp {{ opsi.price - opsi.discount | number: "1.2-2" }}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -460,7 +460,7 @@
                 </td>
 
                 <td class="tabel__nilai">
-                  Rp {{ totalBaris(i) | number: "1.0-0" }}
+                  Rp {{ totalBaris(i) | number: "1.2-2" }}
                 </td>
 
                 <td class="tabel__aksi">
@@ -604,7 +604,7 @@
 
         <div class="ringkas__total">
           <span>{{ "sales-return__create__summary__total" | translate }}</span>
-          <strong>Rp {{ totalRetur | number: "1.0-0" }}</strong>
+          <strong>Rp {{ totalRetur | number: "1.2-2" }}</strong>
         </div>
       </section>
 

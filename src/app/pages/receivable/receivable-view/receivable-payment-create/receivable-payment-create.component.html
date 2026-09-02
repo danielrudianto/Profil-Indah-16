@@ -10,7 +10,7 @@
 >
   <div [formGroup]="paymentFormGroup">
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'receivable__payment__date' | translate }}</mat-label>
+      <mat-label>{{ "receivable__payment__date" | translate }}</mat-label>
       <input
         matInput
         [matDatepicker]="bayarPicker"
@@ -44,14 +44,15 @@
     />
 
     <mat-form-field appearance="outline" class="w-100">
-      <mat-label>{{ 'receivable__payment__amount' | translate }}</mat-label>
+      <mat-label>{{ "receivable__payment__amount" | translate }}</mat-label>
       <input
         matInput
         type="text"
         class="input--kanan"
         formControlName="value"
-        mask="separator"
+        mask="separator.2"
         thousandSeparator="."
+        decimalMarker=","
         autocomplete="off"
         placeholder="0"
       />
@@ -60,13 +61,13 @@
     <p class="petunjuk">
       <i class="ph ph-info" aria-hidden="true"></i>
       <span>
-        {{ 'receivable__payment__remaining' | translate }}
-        Rp {{ data.max | number: '1.0-0' }}
+        {{ "receivable__payment__remaining" | translate }}
+        Rp {{ data.max | number: "1.2-2" }}
       </span>
     </p>
 
     <mat-checkbox formControlName="full_payment">
-      {{ 'receivable__payment__full' | translate }}
+      {{ "receivable__payment__full" | translate }}
     </mat-checkbox>
   </div>
 </app-dialog-shell>

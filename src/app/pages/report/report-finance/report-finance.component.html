@@ -95,7 +95,7 @@
     <i class="ph-fill ph-warning" aria-hidden="true"></i>
     <span>
       {{ "report-finance__unallocated-banner" | translate }}
-      <strong>Rp {{ takTeralokasi | number: "1.0-0" }}</strong>
+      <strong>Rp {{ takTeralokasi | number: "1.2-2" }}</strong>
       {{ "report-finance__unallocated-banner-2" | translate }}
     </span>
   </div>
@@ -106,7 +106,7 @@
         "report-finance__hero__net" | translate
       }}</span>
       <strong class="hero__nilai"
-        >Rp {{ totalLabaBersih | number: "1.0-0" }}</strong
+        >Rp {{ totalLabaBersih | number: "1.2-2" }}</strong
       >
     </div>
     <div class="hero__kartu">
@@ -114,20 +114,20 @@
         "report-finance__hero__income" | translate
       }}</span>
       <strong class="hero__nilai"
-        >Rp {{ totalPendapatan | number: "1.0-0" }}</strong
+        >Rp {{ totalPendapatan | number: "1.2-2" }}</strong
       >
     </div>
     <div class="hero__kartu">
       <span class="hero__label">{{
         "report-finance__hero__cogs" | translate
       }}</span>
-      <strong class="hero__nilai">Rp {{ totalHpp | number: "1.0-0" }}</strong>
+      <strong class="hero__nilai">Rp {{ totalHpp | number: "1.2-2" }}</strong>
     </div>
     <div class="hero__kartu">
       <span class="hero__label">{{
         "report-finance__hero__expenses" | translate
       }}</span>
-      <strong class="hero__nilai">Rp {{ totalBeban | number: "1.0-0" }}</strong>
+      <strong class="hero__nilai">Rp {{ totalBeban | number: "1.2-2" }}</strong>
     </div>
   </div>
 
@@ -167,18 +167,18 @@
     <div class="grafik grafik--nilai">
       <div class="grafik__hari" *ngFor="let b of tren">
         <div class="grafik-tip" role="tooltip">
-          <strong>Rp {{ labaBaris(b) | number: "1.0-0" }}</strong>
+          <strong>Rp {{ labaBaris(b) | number: "1.2-2" }}</strong>
           <span
             >{{ "report-finance__hero__income" | translate }} Rp
-            {{ b.sales | number: "1.0-0" }}</span
+            {{ b.sales | number: "1.2-2" }}</span
           >
           <span
             >{{ "report-finance__hero__cogs" | translate }} Rp
-            {{ b.hpp | number: "1.0-0" }}</span
+            {{ b.hpp | number: "1.2-2" }}</span
           >
           <span
             >{{ "report-finance__hero__expenses" | translate }} Rp
-            {{ b.expense | number: "1.0-0" }}</span
+            {{ b.expense | number: "1.2-2" }}</span
           >
           <small>{{ bulanPenuh(b) }}</small>
         </div>
@@ -193,18 +193,18 @@
     <div class="grafik grafik--transaksi">
       <div class="grafik__hari" *ngFor="let b of tren">
         <div class="grafik-tip" role="tooltip">
-          <strong>Rp {{ labaBaris(b) | number: "1.0-0" }}</strong>
+          <strong>Rp {{ labaBaris(b) | number: "1.2-2" }}</strong>
           <span
             >{{ "report-finance__hero__income" | translate }} Rp
-            {{ b.sales | number: "1.0-0" }}</span
+            {{ b.sales | number: "1.2-2" }}</span
           >
           <span
             >{{ "report-finance__hero__cogs" | translate }} Rp
-            {{ b.hpp | number: "1.0-0" }}</span
+            {{ b.hpp | number: "1.2-2" }}</span
           >
           <span
             >{{ "report-finance__hero__expenses" | translate }} Rp
-            {{ b.expense | number: "1.0-0" }}</span
+            {{ b.expense | number: "1.2-2" }}</span
           >
           <small>{{ bulanPenuh(b) }}</small>
         </div>
@@ -265,20 +265,20 @@
           <tr *ngFor="let p of perusahaan">
             <td class="tabel__utama">{{ p.name }}</td>
             <td class="tabel__nilai">
-              Rp {{ pendapatan(p.id) | number: "1.0-0" }}
+              Rp {{ pendapatan(p.id) | number: "1.2-2" }}
             </td>
-            <td class="tabel__nilai">Rp {{ hpp(p.id) | number: "1.0-0" }}</td>
+            <td class="tabel__nilai">Rp {{ hpp(p.id) | number: "1.2-2" }}</td>
             <td class="tabel__nilai">
-              Rp {{ labaKotor(p.id) | number: "1.0-0" }}
+              Rp {{ labaKotor(p.id) | number: "1.2-2" }}
             </td>
             <td class="tabel__nilai tabel__redup">
               {{ margin(p.id) | number: "1.0-1" }}%
             </td>
             <td class="tabel__nilai">
-              Rp {{ bebanPerusahaan(p.id) | number: "1.0-0" }}
+              Rp {{ bebanPerusahaan(p.id) | number: "1.2-2" }}
             </td>
             <td class="tabel__nilai baris__total">
-              Rp {{ labaBersih(p.id) | number: "1.0-0" }}
+              Rp {{ labaBersih(p.id) | number: "1.2-2" }}
             </td>
           </tr>
 
@@ -292,7 +292,7 @@
               {{ "report-finance__unallocated-row" | translate }}
             </td>
             <td class="tabel__nilai">
-              Rp {{ pendapatan(null) | number: "1.0-0" }}
+              Rp {{ pendapatan(null) | number: "1.2-2" }}
             </td>
             <td class="tabel__nilai">—</td>
             <td class="tabel__nilai">—</td>
@@ -304,20 +304,20 @@
           <tr class="baris-total">
             <td class="tabel__utama">TOTAL</td>
             <td class="tabel__nilai baris__total">
-              Rp {{ totalPendapatan | number: "1.0-0" }}
+              Rp {{ totalPendapatan | number: "1.2-2" }}
             </td>
             <td class="tabel__nilai baris__total">
-              Rp {{ totalHpp | number: "1.0-0" }}
+              Rp {{ totalHpp | number: "1.2-2" }}
             </td>
             <td class="tabel__nilai baris__total">
-              Rp {{ totalLabaKotor | number: "1.0-0" }}
+              Rp {{ totalLabaKotor | number: "1.2-2" }}
             </td>
             <td class="tabel__nilai"></td>
             <td class="tabel__nilai baris__total">
-              Rp {{ totalBeban | number: "1.0-0" }}
+              Rp {{ totalBeban | number: "1.2-2" }}
             </td>
             <td class="tabel__nilai baris__total">
-              Rp {{ totalLabaBersih | number: "1.0-0" }}
+              Rp {{ totalLabaBersih | number: "1.2-2" }}
             </td>
           </tr>
         </tbody>

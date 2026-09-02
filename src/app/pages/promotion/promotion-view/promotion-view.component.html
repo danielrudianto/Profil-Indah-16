@@ -19,8 +19,8 @@
       >
         {{
           (promo.isDelete
-            ? 'promotion__view__status__deleted'
-            : 'promotion__view__status__active'
+            ? "promotion__view__status__deleted"
+            : "promotion__view__status__active"
           ) | translate
         }}
       </span>
@@ -29,48 +29,48 @@
     <div class="lihat__isi">
       <dl class="lihat__kisi">
         <div>
-          <dt>{{ 'promotion__view__target' | translate }}</dt>
-          <dd>Rp {{ promo.target | number: '1.0-0' }}</dd>
+          <dt>{{ "promotion__view__target" | translate }}</dt>
+          <dd>Rp {{ promo.target | number: "1.2-2" }}</dd>
         </div>
         <div>
-          <dt>{{ 'promotion__view__start-date' | translate }}</dt>
-          <dd>{{ promo.startDate | date: 'dd MMMM yyyy' }}</dd>
+          <dt>{{ "promotion__view__start-date" | translate }}</dt>
+          <dd>{{ promo.startDate | date: "dd MMMM yyyy" }}</dd>
         </div>
         <div>
-          <dt>{{ 'promotion__view__created-by' | translate }}</dt>
+          <dt>{{ "promotion__view__created-by" | translate }}</dt>
           <dd>{{ promo.createdBy }}</dd>
         </div>
         <div>
-          <dt>{{ 'promotion__view__end-date' | translate }}</dt>
+          <dt>{{ "promotion__view__end-date" | translate }}</dt>
           <dd>
             {{
               promo.endDate == null
-                ? ('promotion__view__continuous' | translate)
-                : (promo.endDate | date: 'dd MMMM yyyy')
+                ? ("promotion__view__continuous" | translate)
+                : (promo.endDate | date: "dd MMMM yyyy")
             }}
           </dd>
         </div>
         <div class="lihat__lebar" *ngIf="promo.description">
-          <dt>{{ 'promotion__view__description' | translate }}</dt>
+          <dt>{{ "promotion__view__description" | translate }}</dt>
           <dd>{{ promo.description }}</dd>
         </div>
       </dl>
 
       <h3 class="lihat__label">
-        {{ 'promotion__view__brand' | translate }} ({{ merek.length }})
+        {{ "promotion__view__brand" | translate }} ({{ merek.length }})
       </h3>
       <div class="chip-kumpul">
         <span class="tag" *ngFor="let m of merek">{{ m }}</span>
       </div>
 
       <h3 class="lihat__label">
-        {{ 'promotion__view__rules' | translate }} ({{ aturan.length }})
+        {{ "promotion__view__rules" | translate }} ({{ aturan.length }})
       </h3>
       <table class="tabel tabel--rapat">
         <thead>
           <tr>
-            <th>{{ 'promotion__rules__rule' | translate }}</th>
-            <th>{{ 'promotion__rules__value' | translate }}</th>
+            <th>{{ "promotion__rules__rule" | translate }}</th>
+            <th>{{ "promotion__rules__value" | translate }}</th>
           </tr>
         </thead>
         <tbody>
@@ -90,7 +90,7 @@
         (click)="openUpdatePromotion()"
       >
         <i class="ph ph-pencil-simple" aria-hidden="true"></i>
-        {{ 'promotion__view__action__edit' | translate }}
+        {{ "promotion__view__action__edit" | translate }}
       </button>
 
       <span class="lihat__renggang"></span>
@@ -102,7 +102,7 @@
         (click)="downloadResult()"
       >
         <i class="ph ph-file-xls" aria-hidden="true"></i>
-        {{ 'promotion__view__download-button' | translate }}
+        {{ "promotion__view__download-button" | translate }}
       </button>
 
       <button
@@ -112,16 +112,16 @@
         (click)="openPromotionResult()"
       >
         <i class="ph ph-list-magnifying-glass" aria-hidden="true"></i>
-        {{ 'promotion__view__action__view-result' | translate }}
+        {{ "promotion__view__action__view-result" | translate }}
       </button>
 
       <button type="button" class="btn" (click)="tutup()">
-        {{ 'general__close' | translate }}
+        {{ "general__close" | translate }}
       </button>
     </footer>
   </ng-container>
 
   <p class="lihat__memuat" *ngIf="isLoading">
-    {{ 'general__loading' | translate }}
+    {{ "general__loading" | translate }}
   </p>
 </div>

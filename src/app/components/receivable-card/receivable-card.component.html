@@ -17,7 +17,7 @@
     </span>
   </div>
 
-  <div class="piutang-kartu__nilai">Rp {{ total | number: "1.0-0" }}</div>
+  <div class="piutang-kartu__nilai">Rp {{ total | number: "1.2-2" }}</div>
 
   <!--
     Batang bertumpuk: lewat tempo di kiri dengan warna lebih gelap, sisanya
@@ -36,7 +36,7 @@
         'dashboard__piutang__lewat-tooltip'
           | translate
             : {
-                nilai: (lewatTempo | number: '1.0-0'),
+                nilai: (lewatTempo | number: '1.2-2'),
                 n: data.overdueInvoices,
               }
       "
@@ -46,7 +46,7 @@
       class="piutang-kartu__isi piutang-kartu__isi--belum"
       [matTooltip]="
         'dashboard__piutang__belum-tooltip'
-          | translate: { nilai: (belumJatuh | number: '1.0-0') }
+          | translate: { nilai: (belumJatuh | number: '1.2-2') }
       "
       matTooltipPosition="above"
     ></span>
@@ -63,7 +63,7 @@
       "dashboard__piutang__lewat"
         | translate
           : {
-              nilai: (lewatTempo | number: "1.0-0"),
+              nilai: (lewatTempo | number: "1.2-2"),
               n: data.overdueInvoices,
               hari: data.oldestDays,
             }

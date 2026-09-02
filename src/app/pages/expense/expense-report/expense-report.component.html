@@ -2,8 +2,8 @@
 <div class="laporan">
   <header class="laporan__kepala">
     <div>
-      <h1 class="laporan__judul">{{ 'expense__report__title' | translate }}</h1>
-      <p class="laporan__lede">{{ 'expense__report__lede' | translate }}</p>
+      <h1 class="laporan__judul">{{ "expense__report__title" | translate }}</h1>
+      <p class="laporan__lede">{{ "expense__report__lede" | translate }}</p>
     </div>
 
     <div class="laporan__kendali">
@@ -14,7 +14,7 @@
           [class.seg__tombol--on]="kelompok === 'company'"
           (click)="setKelompok('company')"
         >
-          {{ 'expense__report__seg__company' | translate }}
+          {{ "expense__report__seg__company" | translate }}
         </button>
         <button
           type="button"
@@ -22,7 +22,7 @@
           [class.seg__tombol--on]="kelompok === 'type'"
           (click)="setKelompok('type')"
         >
-          {{ 'expense__report__seg__type' | translate }}
+          {{ "expense__report__seg__type" | translate }}
         </button>
       </div>
 
@@ -56,18 +56,21 @@
 
   <ng-container *ngIf="!isLoading">
     <!-- Per perusahaan -->
-    <section class="kartu" *ngIf="kelompok === 'company' && companies.length > 0">
+    <section
+      class="kartu"
+      *ngIf="kelompok === 'company' && companies.length > 0"
+    >
       <h2 class="kartu__label">
-        {{ 'expense__report__seg__company' | translate }}
+        {{ "expense__report__seg__company" | translate }}
       </h2>
 
       <div class="gulir">
         <table class="tabel tabel--rapat">
           <thead>
             <tr>
-              <th>{{ 'expense__report__company' | translate }}</th>
+              <th>{{ "expense__report__company" | translate }}</th>
               <th class="tabel__nilai-kepala">
-                {{ 'expense__report__value' | translate }}
+                {{ "expense__report__value" | translate }}
               </th>
             </tr>
           </thead>
@@ -75,17 +78,17 @@
             <tr *ngFor="let company of companies">
               <td class="tabel__utama">{{ company.name }}</td>
               <td class="tabel__nilai">
-                Rp {{ company.value | number: '1.0-0' }}
+                Rp {{ company.value | number: "1.2-2" }}
               </td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
               <td class="tabel__utama">
-                {{ 'expense__report__total' | translate }}
+                {{ "expense__report__total" | translate }}
               </td>
               <td class="tabel__nilai baris__total">
-                Rp {{ total | number: '1.0-0' }}
+                Rp {{ total | number: "1.2-2" }}
               </td>
             </tr>
           </tfoot>
@@ -96,16 +99,16 @@
     <!-- Per tipe pengeluaran: induk digulung dari anak-anaknya. -->
     <section class="kartu" *ngIf="kelompok === 'type' && types.length > 0">
       <h2 class="kartu__label">
-        {{ 'expense__report__seg__type' | translate }}
+        {{ "expense__report__seg__type" | translate }}
       </h2>
 
       <div class="gulir">
         <table class="tabel tabel--rapat">
           <thead>
             <tr>
-              <th>{{ 'expense__report__type' | translate }}</th>
+              <th>{{ "expense__report__type" | translate }}</th>
               <th class="tabel__nilai-kepala">
-                {{ 'expense__report__value' | translate }}
+                {{ "expense__report__value" | translate }}
               </th>
             </tr>
           </thead>
@@ -113,23 +116,23 @@
             <tr>
               <td class="tabel__utama">{{ type.name }}</td>
               <td class="tabel__nilai baris__total">
-                Rp {{ type.value | number: '1.0-0' }}
+                Rp {{ type.value | number: "1.2-2" }}
               </td>
             </tr>
             <tr *ngFor="let child of type.children" class="baris-anak">
               <td class="tabel__redup">{{ child.name }}</td>
               <td class="tabel__nilai">
-                Rp {{ child.value | number: '1.0-0' }}
+                Rp {{ child.value | number: "1.2-2" }}
               </td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
               <td class="tabel__utama">
-                {{ 'expense__report__total' | translate }}
+                {{ "expense__report__total" | translate }}
               </td>
               <td class="tabel__nilai baris__total">
-                Rp {{ total | number: '1.0-0' }}
+                Rp {{ total | number: "1.2-2" }}
               </td>
             </tr>
           </tfoot>
@@ -138,11 +141,11 @@
     </section>
 
     <section class="kartu" *ngIf="kelompokKosong">
-      <p class="laporan__kosong">{{ 'expense__report__empty' | translate }}</p>
+      <p class="laporan__kosong">{{ "expense__report__empty" | translate }}</p>
     </section>
   </ng-container>
 
   <section class="kartu" *ngIf="isLoading">
-    <p class="tabel__pesan">{{ 'general__loading' | translate }}</p>
+    <p class="tabel__pesan">{{ "general__loading" | translate }}</p>
   </section>
 </div>

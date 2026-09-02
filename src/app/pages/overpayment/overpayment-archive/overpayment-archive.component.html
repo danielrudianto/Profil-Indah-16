@@ -27,7 +27,7 @@
       (click)="toggleStatus('waiting')"
     >
       <i class="ph-fill ph-clock" aria-hidden="true"></i>
-      {{ ringkasan.waiting }} {{ 'overpayment__chip__waiting' | translate }}
+      {{ ringkasan.waiting }} {{ "overpayment__chip__waiting" | translate }}
     </button>
 
     <button
@@ -37,7 +37,7 @@
       (click)="toggleStatus('overdue')"
     >
       <i class="ph-fill ph-warning-circle" aria-hidden="true"></i>
-      {{ ringkasan.overdue }} {{ 'overpayment__chip__overdue' | translate }}
+      {{ ringkasan.overdue }} {{ "overpayment__chip__overdue" | translate }}
     </button>
   </ng-container>
 
@@ -49,35 +49,35 @@
   <div hero class="hero">
     <div class="hero__kartu hero__kartu--utama">
       <span class="hero__label">
-        {{ 'overpayment__hero__waiting' | translate }}
+        {{ "overpayment__hero__waiting" | translate }}
       </span>
       <strong class="hero__nilai">
-        Rp {{ ringkasan.waitingValue | number: '1.0-0' }}
+        Rp {{ ringkasan.waitingValue | number: "1.2-2" }}
       </strong>
       <span class="hero__sub">
-        {{ 'overpayment__hero__docs' | translate: { n: ringkasan.waiting } }}
+        {{ "overpayment__hero__docs" | translate: { n: ringkasan.waiting } }}
       </span>
     </div>
     <div class="hero__kartu">
       <span class="hero__label">
-        {{ 'overpayment__hero__overdue' | translate }}
+        {{ "overpayment__hero__overdue" | translate }}
       </span>
       <strong class="hero__nilai hero__nilai--merah">
-        Rp {{ ringkasan.overdueValue | number: '1.0-0' }}
+        Rp {{ ringkasan.overdueValue | number: "1.2-2" }}
       </strong>
       <span class="hero__sub">
-        {{ 'overpayment__hero__docs' | translate: { n: ringkasan.overdue } }}
+        {{ "overpayment__hero__docs" | translate: { n: ringkasan.overdue } }}
       </span>
     </div>
     <div class="hero__kartu">
       <span class="hero__label">
-        {{ 'overpayment__hero__resolved' | translate }}
+        {{ "overpayment__hero__resolved" | translate }}
       </span>
       <strong class="hero__nilai">
-        Rp {{ ringkasan.resolvedValue | number: '1.0-0' }}
+        Rp {{ ringkasan.resolvedValue | number: "1.2-2" }}
       </strong>
       <span class="hero__sub">
-        {{ 'overpayment__hero__docs' | translate: { n: ringkasan.resolved } }}
+        {{ "overpayment__hero__docs" | translate: { n: ringkasan.resolved } }}
       </span>
     </div>
   </div>
@@ -87,28 +87,32 @@
       <tr>
         <th class="tabel__urut">
           <button type="button" (click)="changeSortBy('date')">
-            {{ 'overpayment__archive__date' | translate }}
+            {{ "overpayment__archive__date" | translate }}
             <i class="ph" [ngClass]="ikonUrut('date')" aria-hidden="true"></i>
           </button>
         </th>
-        <th>{{ 'overpayment__archive__number' | translate }}</th>
-        <th>{{ 'overpayment__archive__customer' | translate }}</th>
+        <th>{{ "overpayment__archive__number" | translate }}</th>
+        <th>{{ "overpayment__archive__customer" | translate }}</th>
         <th class="tabel__nilai-kepala tabel__urut">
-          <button type="button" class="ke-kanan" (click)="changeSortBy('value')">
-            {{ 'overpayment__archive__value' | translate }}
+          <button
+            type="button"
+            class="ke-kanan"
+            (click)="changeSortBy('value')"
+          >
+            {{ "overpayment__archive__value" | translate }}
             <i class="ph" [ngClass]="ikonUrut('value')" aria-hidden="true"></i>
           </button>
         </th>
         <th class="tabel__urut">
           <button type="button" (click)="changeSortBy('return')">
-            {{ 'overpayment__archive__due' | translate }}
+            {{ "overpayment__archive__due" | translate }}
             <i class="ph" [ngClass]="ikonUrut('return')" aria-hidden="true"></i>
           </button>
         </th>
-        <th>{{ 'overpayment__archive__method' | translate }}</th>
-        <th>{{ 'overpayment__archive__status' | translate }}</th>
+        <th>{{ "overpayment__archive__method" | translate }}</th>
+        <th>{{ "overpayment__archive__status" | translate }}</th>
         <th class="tabel__aksi-kepala">
-          <span class="sr-only">{{ 'general__actions' | translate }}</span>
+          <span class="sr-only">{{ "general__actions" | translate }}</span>
         </th>
       </tr>
     </thead>
@@ -124,19 +128,23 @@
         class="tabel__baris-klik"
         (click)="openViewOverpayment(item.id)"
       >
-        <td class="tabel__tanggal">{{ item.date | date: 'dd MMM yyyy' }}</td>
+        <td class="tabel__tanggal">{{ item.date | date: "dd MMM yyyy" }}</td>
         <td class="tabel__utama">{{ nomor(item) }}</td>
         <td>
-          {{ item.customer?.name ?? ('sales-invoice__retail' | translate) }}
+          {{ item.customer?.name ?? ("sales-invoice__retail" | translate) }}
         </td>
-        <td class="tabel__nilai">Rp {{ item.value | number: '1.0-0' }}</td>
+        <td class="tabel__nilai">Rp {{ item.value | number: "1.2-2" }}</td>
         <td class="tabel__tanggal">
-          {{ item.return_payment_date | date: 'dd MMM yyyy' }}
+          {{ item.return_payment_date | date: "dd MMM yyyy" }}
         </td>
         <td class="tabel__redup">{{ item.return_payment_method }}</td>
         <td>
           <span class="pill" [ngClass]="kelasPill(item)">
-            <i class="ph-fill" [ngClass]="ikonPill(item)" aria-hidden="true"></i>
+            <i
+              class="ph-fill"
+              [ngClass]="ikonPill(item)"
+              aria-hidden="true"
+            ></i>
             {{ kunciStatus(item) | translate }}
           </span>
         </td>
@@ -153,10 +161,10 @@
 
           <mat-menu #menu="matMenu">
             <button mat-menu-item (click)="openViewOverpayment(item.id)">
-              {{ 'overpayment__action__view' | translate }}
+              {{ "overpayment__action__view" | translate }}
             </button>
             <button mat-menu-item (click)="ubah(item.id)">
-              {{ 'overpayment__action__update' | translate }}
+              {{ "overpayment__action__update" | translate }}
             </button>
             <!--
               Hanya muncul bila belum dikembalikan: menawarkan tindakan yang
@@ -168,7 +176,7 @@
               *ngIf="!item.is_resolved"
               (click)="tandaiDikembalikan(item)"
             >
-              {{ 'overpayment__action__resolve' | translate }}
+              {{ "overpayment__action__resolve" | translate }}
             </button>
           </mat-menu>
         </td>
@@ -178,7 +186,7 @@
     <tbody *ngIf="isLoading">
       <tr>
         <td colspan="8" class="tabel__pesan">
-          {{ 'general__loading' | translate }}
+          {{ "general__loading" | translate }}
         </td>
       </tr>
     </tbody>

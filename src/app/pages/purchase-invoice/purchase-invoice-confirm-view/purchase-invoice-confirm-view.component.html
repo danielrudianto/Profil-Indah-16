@@ -190,7 +190,7 @@
                     class="nilai-btn"
                     (click)="ubahHarga(i)"
                   >
-                    Rp {{ baris.get("price")?.value | number: "1.0-0" }}
+                    Rp {{ baris.get("price")?.value | number: "1.2-2" }}
                   </button>
                 </td>
 
@@ -200,12 +200,12 @@
                     class="nilai-btn"
                     (click)="ubahHarga(i)"
                   >
-                    Rp {{ baris.get("discount")?.value | number: "1.0-0" }}
+                    Rp {{ baris.get("discount")?.value | number: "1.2-2" }}
                   </button>
                 </td>
 
                 <td class="ke-kanan baris__total">
-                  Rp {{ totalBaris(i) | number: "1.0-0" }}
+                  Rp {{ totalBaris(i) | number: "1.2-2" }}
                 </td>
 
                 <td class="tabel__aksi">
@@ -258,7 +258,8 @@
               class="input--kanan"
               formControlName="discount"
               mask="separator.2"
-              thousandSeparator=" "
+              thousandSeparator="."
+              decimalMarker=","
               autocomplete="off"
             />
           </mat-form-field>
@@ -293,25 +294,25 @@
         <dl class="ringkas">
           <div>
             <dt>{{ "good-receipt__summary__subtotal" | translate }}</dt>
-            <dd>Rp {{ subtotal | number: "1.0-0" }}</dd>
+            <dd>Rp {{ subtotal | number: "1.2-2" }}</dd>
           </div>
           <div *ngIf="diskonItem > 0">
             <dt>{{ "good-receipt__summary__item-discount" | translate }}</dt>
             <dd class="ringkas__kurang">
-              – Rp {{ diskonItem | number: "1.0-0" }}
+              – Rp {{ diskonItem | number: "1.2-2" }}
             </dd>
           </div>
           <div *ngIf="diskonDokumen > 0">
             <dt>{{ "good-receipt__summary__doc-discount" | translate }}</dt>
             <dd class="ringkas__kurang">
-              – Rp {{ diskonDokumen | number: "1.0-0" }}
+              – Rp {{ diskonDokumen | number: "1.2-2" }}
             </dd>
           </div>
         </dl>
 
         <div class="ringkas__total">
           <span>{{ "good-receipt__summary__total" | translate }}</span>
-          <strong>Rp {{ total | number: "1.0-0" }}</strong>
+          <strong>Rp {{ total | number: "1.2-2" }}</strong>
         </div>
       </section>
 

@@ -460,8 +460,8 @@ export class SalesInvoiceViewComponent implements OnInit {
                   text: `${angka(item.quantity, '1.0-2')} ${item.unit}`,
                   fontSize: 10,
                 },
-                { text: `${angka(item.price, '1.0-0')}`, fontSize: 10 },
-                { text: `${angka(item.discount, '1.0-0')}`, fontSize: 10 },
+                { text: `${angka(item.price, '1.2-2')}`, fontSize: 10 },
+                { text: `${angka(item.discount, '1.2-2')}`, fontSize: 10 },
                 {
                   text: `${angka(
                     item.price == 0 ? 0 : (item.discount * 100) / item.price,
@@ -470,7 +470,7 @@ export class SalesInvoiceViewComponent implements OnInit {
                   fontSize: 10,
                 },
                 {
-                  text: `${angka(this.totalBaris(item), '1.0-0')}`,
+                  text: `${angka(this.totalBaris(item), '1.2-2')}`,
                   fontSize: 10,
                 },
               ];
@@ -489,12 +489,12 @@ export class SalesInvoiceViewComponent implements OnInit {
               body: [
                 [
                   { text: 'Subtotal', bold: true, fontSize: 10 },
-                  { text: `${angka(this.subtotal, '1.0-0')}`, fontSize: 10 },
+                  { text: `${angka(this.subtotal, '1.2-2')}`, fontSize: 10 },
                 ],
                 [
                   { text: 'Discount', bold: true, fontSize: 10 },
                   {
-                    text: `${angka(this.dokumen.discount, '1.0-0')}`,
+                    text: `${angka(this.dokumen.discount, '1.2-2')}`,
                     fontSize: 10,
                   },
                 ],
@@ -510,28 +510,28 @@ export class SalesInvoiceViewComponent implements OnInit {
                     fontSize: 10,
                   },
                   {
-                    text: `${angka(this.dokumen.service, '1.0-0')}`,
+                    text: `${angka(this.dokumen.service, '1.2-2')}`,
                     fontSize: 10,
                   },
                 ],
                 [
                   { text: 'Delivery', bold: true, fontSize: 10 },
                   {
-                    text: `${angka(this.dokumen.delivery, '1.0-0')}`,
+                    text: `${angka(this.dokumen.delivery, '1.2-2')}`,
                     fontSize: 10,
                   },
                 ],
                 [
                   { text: 'Admin fee', bold: true, fontSize: 10 },
                   {
-                    text: `${angka(this.dokumen.adminFee ?? 0, '1.0-0')}`,
+                    text: `${angka(this.dokumen.adminFee ?? 0, '1.2-2')}`,
                     fontSize: 10,
                   },
                 ],
                 [
                   { text: 'Total', bold: true, fontSize: 10 },
                   {
-                    text: `${angka(this.grandTotal, '1.0-0')}`,
+                    text: `${angka(this.grandTotal, '1.2-2')}`,
                     bold: true,
                     fontSize: 10,
                   },
@@ -585,7 +585,7 @@ export class SalesInvoiceViewComponent implements OnInit {
                           : item.payment_method.name,
                       fontSize: 10,
                     },
-                    { text: `${angka(item.value, '1.0-0')}`, fontSize: 10 },
+                    { text: `${angka(item.value, '1.2-2')}`, fontSize: 10 },
                   ];
                 })),
           ],

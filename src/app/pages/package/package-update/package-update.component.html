@@ -35,8 +35,9 @@
                 matInput
                 type="text"
                 class="input--kanan"
-                mask="separator"
-                thousandSeparator=" "
+                mask="separator.2"
+                thousandSeparator="."
+                decimalMarker=","
                 formControlName="price"
                 autocomplete="off"
               />
@@ -97,10 +98,10 @@
                 </td>
                 <td>{{ baris.quantity | number: "0.0-2" }} {{ baris.unit }}</td>
                 <td class="ke-kanan baris__total">
-                  Rp {{ baris.price | number: "1.0-0" }}
+                  Rp {{ baris.price | number: "1.2-2" }}
                 </td>
                 <td class="ke-kanan baris__total">
-                  Rp {{ baris.quantity * baris.price | number: "1.0-0" }}
+                  Rp {{ baris.quantity * baris.price | number: "1.2-2" }}
                 </td>
               </tr>
             </tbody>
@@ -116,17 +117,17 @@
         <dl class="ringkas">
           <div>
             <dt>{{ "package__summary__net-value" | translate }}</dt>
-            <dd>Rp {{ nilaiIsi | number: "1.0-0" }}</dd>
+            <dd>Rp {{ nilaiIsi | number: "1.2-2" }}</dd>
           </div>
           <div>
             <dt>{{ "package__summary__package-price" | translate }}</dt>
-            <dd>Rp {{ hargaPaket | number: "1.0-0" }}</dd>
+            <dd>Rp {{ hargaPaket | number: "1.2-2" }}</dd>
           </div>
         </dl>
 
         <div class="ringkas__total">
           <span>{{ "package__summary__saving" | translate }}</span>
-          <strong>Rp {{ hemat | number: "1.0-0" }}</strong>
+          <strong>Rp {{ hemat | number: "1.2-2" }}</strong>
         </div>
       </section>
 

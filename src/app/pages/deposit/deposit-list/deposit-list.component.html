@@ -104,7 +104,7 @@
           </span>
         </td>
         <td class="tabel__redup">{{ item.sales || "—" }}</td>
-        <td class="tabel__nilai">Rp {{ nilai(item) | number: "1.0-0" }}</td>
+        <td class="tabel__nilai">Rp {{ nilai(item) | number: "1.2-2" }}</td>
         <td class="tabel__aksi" (click)="$event.stopPropagation()">
           <button
             type="button"

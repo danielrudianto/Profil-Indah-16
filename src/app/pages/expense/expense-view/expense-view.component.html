@@ -16,27 +16,27 @@
     <div class="lihat__isi">
       <dl class="lihat__kisi">
         <div>
-          <dt>{{ 'expense__create__date' | translate }}</dt>
-          <dd>{{ pengeluaran.date | date: 'dd MMMM yyyy' }}</dd>
+          <dt>{{ "expense__create__date" | translate }}</dt>
+          <dd>{{ pengeluaran.date | date: "dd MMMM yyyy" }}</dd>
         </div>
         <div>
-          <dt>{{ 'expense__create__company' | translate }}</dt>
-          <dd>{{ pengeluaran.company?.name || '—' }}</dd>
+          <dt>{{ "expense__create__company" | translate }}</dt>
+          <dd>{{ pengeluaran.company?.name || "—" }}</dd>
         </div>
         <div>
-          <dt>{{ 'expense__view__created-by' | translate }}</dt>
-          <dd>{{ pengeluaran.user_expense_created_byTouser?.name || '—' }}</dd>
+          <dt>{{ "expense__view__created-by" | translate }}</dt>
+          <dd>{{ pengeluaran.user_expense_created_byTouser?.name || "—" }}</dd>
         </div>
         <div>
-          <dt>{{ 'expense__view__created-at' | translate }}</dt>
-          <dd>{{ pengeluaran.created_at | date: 'dd MMMM yyyy HH:mm' }}</dd>
+          <dt>{{ "expense__view__created-at" | translate }}</dt>
+          <dd>{{ pengeluaran.created_at | date: "dd MMMM yyyy HH:mm" }}</dd>
         </div>
       </dl>
 
       <dl class="lihat__nilai">
         <div class="lihat__total">
-          <dt>{{ 'expense__create__value' | translate }}</dt>
-          <dd>Rp {{ pengeluaran.value | number: '1.0-0' }}</dd>
+          <dt>{{ "expense__create__value" | translate }}</dt>
+          <dd>Rp {{ pengeluaran.value | number: "1.2-2" }}</dd>
         </div>
       </dl>
     </div>
@@ -49,18 +49,18 @@
         (click)="ubah()"
       >
         <i class="ph ph-pencil-simple" aria-hidden="true"></i>
-        {{ 'general__edit' | translate }}
+        {{ "general__edit" | translate }}
       </button>
 
       <span class="lihat__renggang"></span>
 
       <button type="button" class="btn" (click)="tutup()">
-        {{ 'general__close' | translate }}
+        {{ "general__close" | translate }}
       </button>
     </footer>
   </ng-container>
 
   <p class="lihat__memuat" *ngIf="isLoading">
-    {{ 'general__loading' | translate }}
+    {{ "general__loading" | translate }}
   </p>
 </div>

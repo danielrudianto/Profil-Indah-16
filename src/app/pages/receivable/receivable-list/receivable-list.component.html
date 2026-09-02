@@ -107,12 +107,12 @@
         -->
         <td class="tabel__nilai piutang__lewat-sel">
           <span *ngIf="lewatTempo(item) > 0">
-            Rp {{ lewatTempo(item) | number: "1.0-0" }}
+            Rp {{ lewatTempo(item) | number: "1.2-2" }}
           </span>
           <span class="tabel__redup" *ngIf="lewatTempo(item) <= 0">—</span>
         </td>
         <td class="tabel__nilai baris__total">
-          Rp {{ sisa(item) | number: "1.0-0" }}
+          Rp {{ sisa(item) | number: "1.2-2" }}
         </td>
       </tr>
     </tbody>

@@ -3,9 +3,9 @@
   <header class="laporan__kepala">
     <div>
       <h1 class="laporan__judul">
-        {{ 'overpayment__return__title' | translate }}
+        {{ "overpayment__return__title" | translate }}
       </h1>
-      <p class="laporan__lede">{{ 'overpayment__return__lede' | translate }}</p>
+      <p class="laporan__lede">{{ "overpayment__return__lede" | translate }}</p>
     </div>
 
     <div class="laporan__kendali">
@@ -38,11 +38,11 @@
       <table class="tabel">
         <thead>
           <tr>
-            <th>{{ 'overpayment__return__transaction-date' | translate }}</th>
-            <th>{{ 'overpayment__return__return-date' | translate }}</th>
-            <th>{{ 'overpayment__return__name' | translate }}</th>
+            <th>{{ "overpayment__return__transaction-date" | translate }}</th>
+            <th>{{ "overpayment__return__return-date" | translate }}</th>
+            <th>{{ "overpayment__return__name" | translate }}</th>
             <th class="tabel__nilai-kepala">
-              {{ 'overpayment__return__value' | translate }}
+              {{ "overpayment__return__value" | translate }}
             </th>
           </tr>
         </thead>
@@ -53,19 +53,21 @@
             class="tabel__baris-klik"
             (click)="openOverpaymentView(item.id)"
           >
-            <td class="tabel__tanggal">{{ item.date | date: 'dd MMM yyyy' }}</td>
             <td class="tabel__tanggal">
-              {{ item.return_payment_date | date: 'dd MMM yyyy' }}
+              {{ item.date | date: "dd MMM yyyy" }}
+            </td>
+            <td class="tabel__tanggal">
+              {{ item.return_payment_date | date: "dd MMM yyyy" }}
             </td>
             <td class="tabel__utama">{{ item.return_payment_name }}</td>
-            <td class="tabel__nilai">Rp {{ item.value | number: '1.0-0' }}</td>
+            <td class="tabel__nilai">Rp {{ item.value | number: "1.2-2" }}</td>
           </tr>
         </tbody>
 
         <tbody *ngIf="isLoading">
           <tr>
             <td colspan="4" class="tabel__pesan">
-              {{ 'general__loading' | translate }}
+              {{ "general__loading" | translate }}
             </td>
           </tr>
         </tbody>
@@ -86,10 +88,10 @@
         <tfoot *ngIf="!isLoading && dataSource.length > 0">
           <tr>
             <td colspan="3" class="tabel__utama">
-              {{ 'overpayment__return__total' | translate }}
+              {{ "overpayment__return__total" | translate }}
             </td>
             <td class="tabel__nilai baris__total">
-              Rp {{ total | number: '1.0-0' }}
+              Rp {{ total | number: "1.2-2" }}
             </td>
           </tr>
         </tfoot>

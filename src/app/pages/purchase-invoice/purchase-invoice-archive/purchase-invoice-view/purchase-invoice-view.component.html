@@ -92,16 +92,16 @@
               <td class="tabel__nilai">
                 {{ b.quantity | number: "1.0-2" }} {{ b.unit }}
               </td>
-              <td class="tabel__nilai">Rp {{ b.price | number: "1.0-0" }}</td>
+              <td class="tabel__nilai">Rp {{ b.price | number: "1.2-2" }}</td>
               <td
                 class="tabel__nilai"
                 [matTooltip]="persenDiskonBaris(b)"
                 matTooltipPosition="above"
               >
-                Rp {{ b.discount | number: "1.0-0" }}
+                Rp {{ b.discount | number: "1.2-2" }}
               </td>
               <td class="tabel__nilai baris__total">
-                Rp {{ totalBaris(b) | number: "1.0-0" }}
+                Rp {{ totalBaris(b) | number: "1.2-2" }}
               </td>
             </tr>
           </tbody>
@@ -111,7 +111,7 @@
       <dl class="lihat__nilai">
         <div>
           <dt>{{ "sales-invoice__view__subtotal" | translate }}</dt>
-          <dd>Rp {{ subtotal | number: "1.0-0" }}</dd>
+          <dd>Rp {{ subtotal | number: "1.2-2" }}</dd>
         </div>
         <!--
           Selalu tergambar, termasuk ketika nol — sama seperti faktur
@@ -124,12 +124,12 @@
           <dt>{{ "sales-invoice__view__doc-discount" | translate }}</dt>
           <dd [class.lihat__minus]="dokumen.discount > 0">
             {{ dokumen.discount > 0 ? "− " : "" }}Rp
-            {{ dokumen.discount | number: "1.0-0" }}
+            {{ dokumen.discount | number: "1.2-2" }}
           </dd>
         </div>
         <div class="lihat__total">
           <dt>{{ "sales-invoice__view__grand-total" | translate }}</dt>
-          <dd>Rp {{ grandTotal | number: "1.0-0" }}</dd>
+          <dd>Rp {{ grandTotal | number: "1.2-2" }}</dd>
         </div>
       </dl>
     </div>

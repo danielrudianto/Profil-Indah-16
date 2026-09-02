@@ -41,7 +41,10 @@
           <div class="baris__teks">
             <span class="baris__ref">{{ element.name }}</span>
             <span class="baris__desc">{{ element.description }}</span>
-            <span class="baris__rincian" *ngIf="element.package_content?.length">
+            <span
+              class="baris__rincian"
+              *ngIf="element.package_content?.length"
+            >
               {{ ringkasIsi(element) }}
             </span>
           </div>
@@ -51,7 +54,9 @@
           </span>
 
           <span class="baris__aksi">
-            <span class="pilih__harga">Rp {{ element.price | number: "1.0-0" }}</span>
+            <span class="pilih__harga"
+              >Rp {{ element.price | number: "1.2-2" }}</span
+            >
             <i class="ph ph-plus-circle" aria-hidden="true"></i>
           </span>
         </div>

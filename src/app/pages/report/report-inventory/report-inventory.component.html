@@ -69,12 +69,12 @@
         <span class="hero__label">{{
           "report-inventory__hero__total" | translate
         }}</span>
-        <strong class="hero__nilai">Rp {{ total | number: "1.0-0" }}</strong>
+        <strong class="hero__nilai">Rp {{ total | number: "1.2-2" }}</strong>
         <span class="hero__sub">{{ teksTanggal }}</span>
       </div>
       <div class="hero__kartu" *ngFor="let p of perusahaan">
         <span class="hero__label">{{ p.company }}</span>
-        <strong class="hero__nilai">Rp {{ p.value | number: "1.0-0" }}</strong>
+        <strong class="hero__nilai">Rp {{ p.value | number: "1.2-2" }}</strong>
         <span class="hero__sub"
           >{{ persen(p.value) | number: "1.0-1" }}%
           {{ "report-inventory__of-total" | translate }}</span
@@ -91,7 +91,7 @@
             | translate
               : {
                   jumlah: (takBernilai.count | number),
-                  nilai: (takBernilai.value | number: "1.0-0"),
+                  nilai: (takBernilai.value | number: "1.2-2"),
                 }
         }}
       </span>
@@ -131,7 +131,7 @@
       <div class="grafik grafik--nilai">
         <div class="grafik__hari" *ngFor="let b of tren">
           <div class="grafik-tip" role="tooltip">
-            <strong>Rp {{ b.value | number: "1.0-0" }}</strong>
+            <strong>Rp {{ b.value | number: "1.2-2" }}</strong>
             <small>{{ bulanPenuh(b) }}</small>
           </div>
           <span
@@ -178,13 +178,13 @@
               <td class="tabel__nilai">
                 {{ persen(p.value) | number: "1.0-1" }}%
               </td>
-              <td class="tabel__nilai">Rp {{ p.value | number: "1.0-0" }}</td>
+              <td class="tabel__nilai">Rp {{ p.value | number: "1.2-2" }}</td>
             </tr>
             <tr class="baris-total">
               <td class="tabel__utama">TOTAL</td>
               <td></td>
               <td class="tabel__nilai baris__total">
-                Rp {{ total | number: "1.0-0" }}
+                Rp {{ total | number: "1.2-2" }}
               </td>
             </tr>
           </tbody>

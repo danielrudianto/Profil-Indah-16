@@ -33,7 +33,7 @@
     <ng-container aksi>
       <button type="button" class="aksi-hantu" (click)="backToYear()">
         <i class="ph ph-arrow-u-up-left" aria-hidden="true"></i>
-        {{ 'sales-invoice__back-to-archive' | translate }}
+        {{ "sales-invoice__back-to-archive" | translate }}
       </button>
 
       <!--
@@ -47,7 +47,7 @@
         (click)="toggleBelumLunas()"
       >
         <i class="ph-fill ph-clock" aria-hidden="true"></i>
-        {{ 'sales-invoice__status__unpaid' | translate }}
+        {{ "sales-invoice__status__unpaid" | translate }}
       </button>
 
       <button
@@ -82,7 +82,7 @@
           class="saringan__bersih"
           (click)="hapusSemuaSaringan()"
         >
-          {{ 'sales-invoice__filter__clear' | translate }}
+          {{ "sales-invoice__filter__clear" | translate }}
         </button>
       </div>
     </ng-container>
@@ -97,19 +97,19 @@
           -->
           <th class="tabel__urut">
             <button type="button" (click)="changeSortBy('date')">
-              {{ 'sales-invoice__archive__date' | translate }}
+              {{ "sales-invoice__archive__date" | translate }}
               <i class="ph" [ngClass]="ikonUrut('date')" aria-hidden="true"></i>
             </button>
           </th>
           <th class="tabel__urut">
             <button type="button" (click)="changeSortBy('name')">
-              {{ 'sales-invoice__archive__name' | translate }}
+              {{ "sales-invoice__archive__name" | translate }}
               <i class="ph" [ngClass]="ikonUrut('name')" aria-hidden="true"></i>
             </button>
           </th>
           <th class="tabel__urut">
             <button type="button" (click)="changeSortBy('customer')">
-              {{ 'sales-invoice__archive__customer' | translate }}
+              {{ "sales-invoice__archive__customer" | translate }}
               <i
                 class="ph"
                 [ngClass]="ikonUrut('customer')"
@@ -119,7 +119,7 @@
           </th>
           <th class="tabel__urut">
             <button type="button" (click)="changeSortBy('sales')">
-              {{ 'sales-invoice__archive__sales' | translate }}
+              {{ "sales-invoice__archive__sales" | translate }}
               <i
                 class="ph"
                 [ngClass]="ikonUrut('sales')"
@@ -128,10 +128,10 @@
             </button>
           </th>
           <th class="tabel__nilai-kepala">
-            {{ 'sales-invoice__archive__total' | translate }}
+            {{ "sales-invoice__archive__total" | translate }}
           </th>
-          <th>{{ 'sales-invoice__archive__status' | translate }}</th>
-          <th>{{ 'sales-invoice__archive__payment-status' | translate }}</th>
+          <th>{{ "sales-invoice__archive__status" | translate }}</th>
+          <th>{{ "sales-invoice__archive__payment-status" | translate }}</th>
         </tr>
       </thead>
 
@@ -142,7 +142,7 @@
           class="tabel__baris-klik"
           (click)="viewArchive(item.id)"
         >
-          <td class="tabel__tanggal">{{ item.date | date: 'dd MMMM yyyy' }}</td>
+          <td class="tabel__tanggal">{{ item.date | date: "dd MMMM yyyy" }}</td>
           <td class="tabel__utama">{{ item.name }}</td>
           <!--
             Faktur tanpa pelanggan bukan data yang hilang — itu penjualan
@@ -151,22 +151,30 @@
           <td>
             <div class="sel-entitas">
               <span class="avatar-inisial" aria-hidden="true">
-                {{ inisial(item.customer?.name ?? ('sales-invoice__retail' | translate)) }}
+                {{
+                  inisial(
+                    item.customer?.name ?? ("sales-invoice__retail" | translate)
+                  )
+                }}
               </span>
               <span class="sel-entitas__teks">
                 <span class="sel-entitas__utama">
-                  {{ item.customer?.name ?? ('sales-invoice__retail' | translate) }}
+                  {{
+                    item.customer?.name ?? ("sales-invoice__retail" | translate)
+                  }}
                 </span>
               </span>
             </div>
           </td>
-          <td class="tabel__redup">{{ item.sales || '—' }}</td>
+          <td class="tabel__redup">{{ item.sales || "—" }}</td>
           <!--
             Total dihitung server dari baris fakturnya dan bisa saja tidak
             ikut terkirim; em dash lebih jujur daripada Rp 0.
           -->
           <td class="tabel__nilai">
-            {{ item.total == null ? '—' : 'Rp ' + (item.total | number: '1.0-0') }}
+            {{
+              item.total == null ? "—" : "Rp " + (item.total | number: "1.2-2")
+            }}
           </td>
           <td>
             <span
@@ -182,8 +190,8 @@
               ></i>
               {{
                 (item.isDelete
-                  ? 'sales-invoice__status__deleted'
-                  : 'sales-invoice__status__active'
+                  ? "sales-invoice__status__deleted"
+                  : "sales-invoice__status__active"
                 ) | translate
               }}
             </span>
@@ -206,8 +214,8 @@
               ></i>
               {{
                 (item.isPaid
-                  ? 'sales-invoice__status__paid'
-                  : 'sales-invoice__status__unpaid'
+                  ? "sales-invoice__status__paid"
+                  : "sales-invoice__status__unpaid"
                 ) | translate
               }}
             </span>
@@ -218,7 +226,7 @@
       <tbody *ngIf="isLoading">
         <tr>
           <td colspan="7" class="tabel__pesan">
-            {{ 'general__loading' | translate }}
+            {{ "general__loading" | translate }}
           </td>
         </tr>
       </tbody>
@@ -226,14 +234,14 @@
       <tbody *ngIf="!isLoading && dataSource.length === 0">
         <tr>
           <td colspan="7">
-          <app-tabel-kosong
-            ikon="ph-receipt"
-            [judul]="'sales-invoice__empty__title' | translate"
-            [penjelasan]="'sales-invoice__empty__desc' | translate"
-            [kataKunci]="keyword"
-            (reset)="resetPencarian()"
-          />
-        </td>
+            <app-tabel-kosong
+              ikon="ph-receipt"
+              [judul]="'sales-invoice__empty__title' | translate"
+              [penjelasan]="'sales-invoice__empty__desc' | translate"
+              [kataKunci]="keyword"
+              (reset)="resetPencarian()"
+            />
+          </td>
         </tr>
       </tbody>
     </table>
