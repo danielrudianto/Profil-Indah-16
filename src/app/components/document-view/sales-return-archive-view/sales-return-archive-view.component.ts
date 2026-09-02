@@ -48,6 +48,7 @@ export class SalesReturnArchiveViewComponent implements OnInit {
   isLoading = true;
 
   dokumen: any = null;
+  jadwal: any = null;
   barang: any[] = [];
 
   ngOnInit(): void {
@@ -74,7 +75,23 @@ export class SalesReturnArchiveViewComponent implements OnInit {
               data.payment_method == null ? 'Cash' : data.payment_method.name,
             createdBy: data.user_sales_return_code_created_byTouser.name,
             createdAt: data.created_at,
+
+            /* Pembagian nilai retur: berapa yang memotong tagihan dan berapa
+               yang jadi kelebihan bayar. */
+            potongTagihan: Number(data.receivable_value ?? 0),
+            jadiKelebihan: Number(data.overpayment_value ?? 0),
           };
+
+          /*
+            Jadwal pengembaliannya — ke mana uangnya dikirim.
+
+            Tersimpan pada baris kelebihan bayar, bukan pada dokumen retur.
+            Petugas mengetik bank, nomor rekening, dan nama penerima di
+            formulir retur, lalu membuka dokumennya dan tidak menemukan satu
+            pun dari itu; yang tergambar hanya "Metode", yang menyebut kas
+            mana yang berkurang, bukan rekening tujuannya.
+          */
+          this.jadwal = (data.overpayment ?? [])[0] ?? null;
 
           this.barang = (data.sales_return ?? []).map((x: any) => ({
             reference: x.sales_invoice.product.reference,

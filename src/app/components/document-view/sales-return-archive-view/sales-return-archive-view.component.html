@@ -116,11 +116,75 @@
       </div>
 
       <dl class="lihat__nilai">
+        <!--
+          Pembagiannya disebut, bukan disimpulkan. Satu retur bisa memotong
+          tagihan sebagian dan sisanya menjadi kelebihan bayar; tanpa dua
+          baris ini pembacanya cuma melihat satu total dan tidak tahu ke mana
+          nilainya pergi.
+        -->
+        <div *ngIf="dokumen.potongTagihan > 0">
+          <dt>{{ "sales-return__view__cut-receivable" | translate }}</dt>
+          <dd>Rp {{ dokumen.potongTagihan | number: "1.2-2" }}</dd>
+        </div>
+        <div *ngIf="dokumen.jadiKelebihan > 0">
+          <dt>{{ "sales-return__view__to-overpayment" | translate }}</dt>
+          <dd>Rp {{ dokumen.jadiKelebihan | number: "1.2-2" }}</dd>
+        </div>
         <div class="lihat__total">
           <dt>{{ "sales-invoice__view__grand-total" | translate }}</dt>
           <dd>Rp {{ subtotal | number: "1.2-2" }}</dd>
         </div>
       </dl>
+
+      <!--
+        Ke mana uangnya dikirim. Digambar hanya bila retur ini memang
+        mengeluarkan uang — retur yang habis memotong tagihan tidak punya
+        jadwal pengembalian, dan bagian kosong berjudul "Pengembalian uang"
+        terbaca seperti data yang hilang.
+      -->
+      <ng-container *ngIf="jadwal">
+        <h3 class="lihat__label">
+          {{ "sales-return__view__refund__title" | translate }}
+        </h3>
+
+        <dl class="lihat__kisi">
+          <div>
+            <dt>{{ "sales-return__view__refund__how" | translate }}</dt>
+            <dd>{{ jadwal.return_payment_method }}</dd>
+          </div>
+          <div>
+            <dt>{{ "overpayment__create__receiver-name" | translate }}</dt>
+            <dd>{{ jadwal.return_payment_name || "—" }}</dd>
+          </div>
+          <div *ngIf="jadwal.return_payment_bank">
+            <dt>
+              {{ "overpayment__create__return-payment-bank" | translate }}
+            </dt>
+            <dd>{{ jadwal.return_payment_bank }}</dd>
+          </div>
+          <div *ngIf="jadwal.return_payment_number">
+            <dt>
+              {{ "overpayment__create__return-payment-number" | translate }}
+            </dt>
+            <dd>{{ jadwal.return_payment_number }}</dd>
+          </div>
+          <div>
+            <dt>{{ "overpayment__create__return-date" | translate }}</dt>
+            <dd>{{ jadwal.return_payment_date | date: "dd MMMM yyyy" }}</dd>
+          </div>
+          <div>
+            <dt>{{ "sales-return__view__refund__state" | translate }}</dt>
+            <dd>
+              {{
+                (jadwal.is_resolved
+                  ? "sales-return__view__refund__done"
+                  : "sales-return__view__refund__pending"
+                ) | translate
+              }}
+            </dd>
+          </div>
+        </dl>
+      </ng-container>
     </div>
 
     <footer class="lihat__kaki">

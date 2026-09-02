@@ -2818,5 +2818,12 @@
   "sales-return__archive__filter__lede": "Narrow the return archive by date range and document state.",
   "sales-return__archive__filter__all": "Nothing selected means everything is shown.",
   "adjustment-case__archive__filter__lede": "Narrow the adjustment archive by date range, state, and document type.",
-  "adjustment-case__archive__filter__all": "Nothing selected means everything is shown."
+  "adjustment-case__archive__filter__all": "Nothing selected means everything is shown.",
+  "sales-return__view__cut-receivable": "Applied to receivable",
+  "sales-return__view__to-overpayment": "Became overpayment",
+  "sales-return__view__refund__title": "Refund",
+  "sales-return__view__refund__state": "State",
+  "sales-return__view__refund__done": "Refunded",
+  "sales-return__view__refund__pending": "Not yet refunded",
+  "sales-return__view__refund__how": "Refund method"
 }

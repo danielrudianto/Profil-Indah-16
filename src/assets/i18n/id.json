@@ -2818,5 +2818,12 @@
   "sales-return__archive__filter__lede": "Persempit arsip retur menurut rentang tanggal dan keadaan dokumennya.",
   "sales-return__archive__filter__all": "Tidak ada yang dipilih berarti semuanya ditampilkan.",
   "adjustment-case__archive__filter__lede": "Persempit arsip penyesuaian menurut rentang tanggal, keadaan, dan jenis dokumennya.",
-  "adjustment-case__archive__filter__all": "Tidak ada yang dipilih berarti semuanya ditampilkan."
+  "adjustment-case__archive__filter__all": "Tidak ada yang dipilih berarti semuanya ditampilkan.",
+  "sales-return__view__cut-receivable": "Memotong tagihan",
+  "sales-return__view__to-overpayment": "Jadi kelebihan bayar",
+  "sales-return__view__refund__title": "Pengembalian uang",
+  "sales-return__view__refund__state": "Keadaan",
+  "sales-return__view__refund__done": "Sudah dikembalikan",
+  "sales-return__view__refund__pending": "Belum dikembalikan",
+  "sales-return__view__refund__how": "Cara pengembalian"
 }
