@@ -375,8 +375,6 @@
   "good-receipt__view-list": "Lihat daftar penerimaan",
   "good-receipt__archive__view__invoice-name": "Faktur pembelian",
   "good-receipt__archive__view__tax-invoice-name": "Faktur pajak",
-  "good-receipt__view__copy-number": "Salin nomor surat jalan",
-  "good-receipt__view__number-copied": "Nomor surat jalan tersalin ke papan klip.",
   "good-receipt__archive__edit": "Perbaharui",
   "good-receipt__archive__delete": "Hapus",
   "sales-invoice__delete__confirmation": "Apakah anda yakin untuk menghapus data nota ini?",
@@ -2825,5 +2823,7 @@
   "sales-return__view__refund__state": "Keadaan",
   "sales-return__view__refund__done": "Sudah dikembalikan",
   "sales-return__view__refund__pending": "Belum dikembalikan",
-  "sales-return__view__refund__how": "Cara pengembalian"
+  "sales-return__view__refund__how": "Cara pengembalian",
+  "general__copy-number": "Salin nomor dokumen",
+  "general__number-copied": "Nomor dokumen tersalin"
 }

@@ -55,6 +55,45 @@
   cursor: text;
 }
 
+/*
+  Nomor dokumen dan tombol salinnya.
+
+  Dulu tinggal di scss milik penerimaan barang, satu-satunya tampilan yang
+  punya tombol ini — dengan catatan bahwa kelas tak terpakai di sembilan
+  berkas lain lebih mahal daripada delapan baris di sana. Sekarang enam
+  dokumen memakainya, dan enam salinan gaya yang sama adalah enam salinan
+  yang cepat atau lambat berbeda.
+*/
+.lihat__nomor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lihat__salin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: inherit;
+  font-size: calc(13px * var(--skala-teks, 1));
+  line-height: 1;
+  opacity: 0.65;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    opacity: 1;
+    color: var(--color-accent);
+  }
+}
+
 .lihat__identitas {
   display: flex;
   align-items: center;

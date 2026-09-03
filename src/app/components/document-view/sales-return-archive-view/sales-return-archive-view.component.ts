@@ -1,4 +1,5 @@
 import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { Clipboard } from '@angular/cdk/clipboard';
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
 import {
@@ -39,6 +40,7 @@ export class SalesReturnArchiveViewComponent implements OnInit {
     private apiService: ApiService,
     private dialog: MatDialog,
     private alertService: AlertService,
+    private clipboard: Clipboard,
     private authService: AuthService,
     private translateService: TranslateService,
   ) {}
@@ -172,5 +174,30 @@ export class SalesReturnArchiveViewComponent implements OnInit {
             });
         }
       });
+  }
+
+  /**
+   * Salin nomor dokumen ke papan klip.
+   *
+   * Nomor inilah yang dicocokkan orang ke dokumen lain, dan selama ini
+   * disorot tangan dari header — mudah meleset satu karakter pada nomor
+   * bertanda hubung. Menyorotnya juga berebut dengan cdkDrag: pegangan geser
+   * memang dibatasi ke header, jadi seretan yang dimaksudkan untuk memilih
+   * teks justru memindahkan dialognya.
+   *
+   * Menyalin nomor kosong tidak dilakukan: papan klip yang berisi string
+   * kosong DIAM-DIAM menghapus isinya yang sebelumnya, dan orang yang menekan
+   * tombol ini menyangka salinannya berhasil.
+   */
+  salinNomor(): void {
+    const nomor = (this.dokumen?.name ?? '').toString().trim();
+    if (!nomor) {
+      return;
+    }
+
+    this.clipboard.copy(nomor);
+    this.alertService.showSuccess(
+      this.translateService.instant('general__number-copied'),
+    );
   }
 }

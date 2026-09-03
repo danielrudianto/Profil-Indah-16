@@ -137,7 +137,7 @@ export class GoodReceiptViewComponent implements OnInit {
 
     this.clipboard.copy(nomor);
     this.alertService.showSuccess(
-      this.translateService.instant('good-receipt__view__number-copied'),
+      this.translateService.instant('general__number-copied'),
     );
   }
 
