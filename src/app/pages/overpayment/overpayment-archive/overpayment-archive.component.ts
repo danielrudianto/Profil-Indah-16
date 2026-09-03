@@ -263,4 +263,31 @@ export class OverpaymentArchiveComponent implements OnInit {
       },
     });
   }
+
+  /**
+   * Sumber sebuah kelebihan bayar, diturunkan dari kolom mana yang terisi.
+   *
+   * Tidak pernah disimpan sebagai keterangan yang diketik: keterangan bisa
+   * berbohong, dan baris bertuliskan "dari retur" yang tidak menunjuk retur
+   * mana pun tidak bisa ditelusuri siapa pun. Kolomnya diisi jalur yang
+   * membuatnya — retur mengisi sales_return_code_id, penghapusan deposit
+   * mengisi sales_deposit_code_id, dan yang dicatat tangan tidak mengisi
+   * keduanya.
+   */
+  kunciSumber(item: any): string {
+    if (item?.sales_return_code_id) {
+      return 'overpayment__source__return';
+    }
+    if (item?.sales_deposit_code_id) {
+      return 'overpayment__source__deposit';
+    }
+    return 'overpayment__source__manual';
+  }
+
+  /** Nomor dokumen asalnya, supaya bisa ditelusuri — bukan sekadar jenisnya. */
+  nomorSumber(item: any): string {
+    return (
+      item?.sales_return_code?.name ?? item?.sales_deposit_code?.name ?? ''
+    );
+  }
 }

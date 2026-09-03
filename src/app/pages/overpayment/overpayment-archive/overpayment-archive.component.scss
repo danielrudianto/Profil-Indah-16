@@ -5,3 +5,16 @@
 .hero__nilai--merah {
   color: #e05260;
 }
+
+/*
+  Nomor dokumen asal, di samping jenis sumbernya.
+
+  Redup dan lebih kecil karena ia keterangan atas sumbernya, bukan kolom
+  tersendiri — "Retur penjualan RJ-2026-22559883" harus terbaca sebagai satu
+  hal, bukan dua.
+*/
+.sumber__nomor {
+  margin-left: 6px;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+  font-size: calc(11.5px * var(--skala-teks, 1));
+}

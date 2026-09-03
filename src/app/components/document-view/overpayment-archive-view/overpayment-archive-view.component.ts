@@ -44,6 +44,18 @@ export class OverpaymentArchiveViewComponent implements OnInit {
             returnName: data.return_payment_name,
             returnBank: data.return_payment_bank,
             returnNumber: data.return_payment_number,
+
+            /* Sumbernya diturunkan dari kolom mana yang terisi — lihat
+               kunciSumber di bawah. */
+            sumber: data.sales_return_code_id
+              ? 'overpayment__source__return'
+              : data.sales_deposit_code_id
+                ? 'overpayment__source__deposit'
+                : 'overpayment__source__manual',
+            nomorSumber:
+              data.sales_return_code?.name ??
+              data.sales_deposit_code?.name ??
+              '',
           };
         },
         error: (error) => {

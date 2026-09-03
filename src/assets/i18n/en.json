@@ -2825,5 +2825,9 @@
   "sales-return__view__refund__pending": "Not yet refunded",
   "sales-return__view__refund__how": "Refund method",
   "general__copy-number": "Copy document number",
-  "general__number-copied": "Document number copied"
+  "general__number-copied": "Document number copied",
+  "overpayment__archive__source": "Source",
+  "overpayment__source__return": "Sales return",
+  "overpayment__source__deposit": "Cancelled deposit",
+  "overpayment__source__manual": "Recorded directly"
 }

@@ -31,6 +31,15 @@
     <div class="lihat__isi">
       <dl class="lihat__kisi">
         <div>
+          <dt>{{ "overpayment__archive__source" | translate }}</dt>
+          <dd>
+            {{ dokumen.sumber | translate }}
+            <span class="sumber__nomor" *ngIf="dokumen.nomorSumber">{{
+              dokumen.nomorSumber
+            }}</span>
+          </dd>
+        </div>
+        <div>
           <dt>{{ "overpayment__view__payment-method" | translate }}</dt>
           <dd>{{ dokumen.paymentMethod }}</dd>
         </div>
