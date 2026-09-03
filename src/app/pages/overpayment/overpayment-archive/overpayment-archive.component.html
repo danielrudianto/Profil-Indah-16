@@ -134,15 +134,15 @@
         <td>
           {{ item.customer?.name ?? ("sales-invoice__retail" | translate) }}
         </td>
+        <td class="tabel__nilai">Rp {{ item.value | number: "1.2-2" }}</td>
+        <td class="tabel__tanggal">
+          {{ item.return_payment_date | date: "dd MMM yyyy" }}
+        </td>
         <td class="tabel__redup">
           {{ kunciSumber(item) | translate
           }}<span class="sumber__nomor" *ngIf="nomorSumber(item)">{{
             nomorSumber(item)
           }}</span>
-        </td>
-        <td class="tabel__nilai">Rp {{ item.value | number: "1.2-2" }}</td>
-        <td class="tabel__tanggal">
-          {{ item.return_payment_date | date: "dd MMM yyyy" }}
         </td>
         <td class="tabel__redup">{{ item.return_payment_method }}</td>
         <td>
