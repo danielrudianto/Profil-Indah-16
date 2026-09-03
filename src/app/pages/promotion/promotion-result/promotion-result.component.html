@@ -1,7 +1,24 @@
 <!-- Tampilan baca hasil promosi — dokumen, bukan formulir. -->
-<div class="lihat">
+<!--
+  Dialognya bisa digeser. cdkDragRootElement menunjuk .cdk-overlay-pane —
+  tanpa itu yang bergerak hanya isi dialog di dalam panel yang diam, dan
+  isinya keluar dari kotaknya sendiri.
+
+  Batasnya .cdk-overlay-container: elemen fixed yang menutup persis seluruh
+  viewport, jadi dialognya tidak bisa digeser sampai keluar layar dan
+  tertinggal di tempat yang tidak bisa diraih lagi.
+
+  Pegangannya cuma header. Kalau seluruh dialog bisa ditarik, menyorot nomor
+  dokumen untuk disalin justru menggeser dialognya.
+-->
+<div
+  class="lihat"
+  cdkDrag
+  cdkDragRootElement=".cdk-overlay-pane"
+  cdkDragBoundary=".cdk-overlay-container"
+>
   <ng-container *ngIf="!isLoading">
-    <header class="lihat__kepala">
+    <header class="lihat__kepala" cdkDragHandle>
       <div class="lihat__identitas">
         <span class="lihat__avatar" aria-hidden="true">
           <i class="ph ph-list-magnifying-glass"></i>
@@ -33,23 +50,23 @@
       </h3>
       <div class="gulir">
         <table class="tabel tabel--rapat">
-        <thead>
-          <tr>
-            <th>{{ "promotion__result__reference" | translate }}</th>
-            <th>{{ "promotion__result__brand" | translate }}</th>
-            <th>{{ "promotion__result__type" | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let b of barang">
-            <td>
-              <span class="barang__ref">{{ b.reference }}</span>
-              <span class="barang__desc">{{ b.description }}</span>
-            </td>
-            <td>{{ b.merek }}</td>
-            <td>{{ b.tipe }}</td>
-          </tr>
-        </tbody>
+          <thead>
+            <tr>
+              <th>{{ "promotion__result__reference" | translate }}</th>
+              <th>{{ "promotion__result__brand" | translate }}</th>
+              <th>{{ "promotion__result__type" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let b of barang">
+              <td>
+                <span class="barang__ref">{{ b.reference }}</span>
+                <span class="barang__desc">{{ b.description }}</span>
+              </td>
+              <td>{{ b.merek }}</td>
+              <td>{{ b.tipe }}</td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>

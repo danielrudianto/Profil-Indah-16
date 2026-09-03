@@ -235,8 +235,21 @@ html {
   sekali, jadi keduanya berhenti di tempat yang benar.
 */
 .cdk-overlay-pane:has(.lihat) {
-  width: var(--lihat-lebar);
-  max-width: none;
+  /*
+    Lebarnya MENGIKUTI kartunya, bukan dipaku ke --lihat-lebar.
+
+    Tidak semua dialog selebar 720px: pengeluaran 480px dan kelebihan bayar
+    520px menimpanya sendiri. Panel yang dipaku lebih lebar daripada kartunya
+    membuat batas geser berhenti jauh sebelum tepi layar — cacat yang sama
+    dengan yang dulu, hanya terbalik arahnya.
+
+    max-content aman di sini karena .lihat selalu punya lebar pasti dan
+    overflow: hidden, jadi ia tidak bisa melar mengikuti tabel di dalamnya.
+    Batas atasnya tetap dipasang supaya panel tidak pernah melampaui layar,
+    yang akan mematahkan cdkDragBoundary.
+  */
+  width: max-content;
+  max-width: calc(100vw - 48px);
 
   /*
     Perpindahannya diberi waktu supaya dialognya meluncur mengikuti kursor,

@@ -1,20 +1,54 @@
 import { DatePipe, NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, Inject } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatDatepickerInput, MatDatepicker } from '@angular/material/datepicker';
+import {
+  MatDatepickerInput,
+  MatDatepicker,
+} from '@angular/material/datepicker';
 import { MatSelect, MatOption } from '@angular/material/select';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-stock-list-report',
-    templateUrl: './stock-list-report.component.html',
-    styleUrls: ['./stock-list-report.component.scss'],
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatSuffix, MatDatepicker, MatSelect, MatOption, NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe]
+  selector: 'app-stock-list-report',
+  templateUrl: './stock-list-report.component.html',
+  styleUrls: ['./stock-list-report.component.scss'],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatDatepickerInput,
+    MatSuffix,
+    MatDatepicker,
+    MatSelect,
+    MatOption,
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    DatePipe,
+    TranslatePipe,
+    CdkDrag,
+    CdkDragHandle,
+  ],
 })
 export class StockListReportComponent {
   constructor(
@@ -23,7 +57,7 @@ export class StockListReportComponent {
     private alertService: AlertService,
     private datePipe: DatePipe,
     private dialog: MatDialogRef<StockListReportComponent>,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {}
 
   stockFormGroup: FormGroup = new FormGroup({
@@ -66,7 +100,7 @@ export class StockListReportComponent {
       .post('product-stock/mutation', {
         date: this.datePipe.transform(
           this.stockFormGroup.controls['date']?.value,
-          'yyyy-MM-dd'
+          'yyyy-MM-dd',
         ),
         viewBy: this.stockFormGroup.controls['viewBy']?.value,
         product_id: this.data.id,
@@ -96,7 +130,7 @@ export class StockListReportComponent {
                     : x.product_unit.unit,
                 ],
                 default_unit: [this.dataSource.unit],
-              })
+              }),
             );
 
             stock += x.quantity;

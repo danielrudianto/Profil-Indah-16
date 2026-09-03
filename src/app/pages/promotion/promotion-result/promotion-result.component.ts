@@ -1,4 +1,5 @@
 import { DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
@@ -19,7 +20,7 @@ import { ExcelService } from 'src/app/services/excel.service';
   selector: 'app-promotion-result',
   templateUrl: './promotion-result.component.html',
   styleUrls: ['./promotion-result.component.scss'],
-  imports: [NgIf, NgFor, DecimalPipe, TranslatePipe],
+  imports: [NgIf, NgFor, DecimalPipe, TranslatePipe, CdkDrag, CdkDragHandle],
 })
 export class PromotionResultComponent implements OnInit {
   constructor(

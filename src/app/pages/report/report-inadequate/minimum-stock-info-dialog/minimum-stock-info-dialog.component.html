@@ -1,6 +1,23 @@
 <!-- Penjelasan hitungan — dokumen, bukan formulir. -->
-<div class="lihat">
-  <header class="lihat__kepala">
+<!--
+  Dialognya bisa digeser. cdkDragRootElement menunjuk .cdk-overlay-pane —
+  tanpa itu yang bergerak hanya isi dialog di dalam panel yang diam, dan
+  isinya keluar dari kotaknya sendiri.
+
+  Batasnya .cdk-overlay-container: elemen fixed yang menutup persis seluruh
+  viewport, jadi dialognya tidak bisa digeser sampai keluar layar dan
+  tertinggal di tempat yang tidak bisa diraih lagi.
+
+  Pegangannya cuma header. Kalau seluruh dialog bisa ditarik, menyorot nomor
+  dokumen untuk disalin justru menggeser dialognya.
+-->
+<div
+  class="lihat"
+  cdkDrag
+  cdkDragRootElement=".cdk-overlay-pane"
+  cdkDragBoundary=".cdk-overlay-container"
+>
+  <header class="lihat__kepala" cdkDragHandle>
     <div class="lihat__identitas">
       <span class="lihat__avatar" aria-hidden="true">
         <i class="ph ph-function"></i>

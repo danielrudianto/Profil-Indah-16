@@ -1,4 +1,5 @@
 import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { forkJoin, Observable } from 'rxjs';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -19,7 +20,15 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './promotion-view.component.html',
   styleUrls: ['./promotion-view.component.scss'],
   providers: [DatePipe],
-  imports: [NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe],
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    DatePipe,
+    TranslatePipe,
+    CdkDrag,
+    CdkDragHandle,
+  ],
 })
 export class PromotionViewComponent implements OnInit {
   constructor(

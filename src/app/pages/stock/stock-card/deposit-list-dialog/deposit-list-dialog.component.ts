@@ -1,4 +1,5 @@
 import { DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -18,7 +19,15 @@ import { ApiService } from 'src/app/services/api.service';
   selector: 'app-deposit-list-dialog',
   templateUrl: './deposit-list-dialog.component.html',
   styleUrls: ['./deposit-list-dialog.component.scss'],
-  imports: [NgIf, NgFor, DecimalPipe, DatePipe, TranslatePipe],
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    DatePipe,
+    TranslatePipe,
+    CdkDrag,
+    CdkDragHandle,
+  ],
 })
 export class DepositListDialogComponent implements OnInit {
   constructor(

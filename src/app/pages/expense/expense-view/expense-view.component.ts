@@ -1,4 +1,5 @@
 import { DatePipe, DecimalPipe, NgIf } from '@angular/common';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -17,7 +18,7 @@ import { AuthService } from 'src/app/services/auth.service';
   selector: 'app-expense-view',
   templateUrl: './expense-view.component.html',
   styleUrls: ['./expense-view.component.scss'],
-  imports: [NgIf, DecimalPipe, DatePipe, TranslatePipe],
+  imports: [NgIf, DecimalPipe, DatePipe, TranslatePipe, CdkDrag, CdkDragHandle],
 })
 export class ExpenseViewComponent implements OnInit {
   constructor(

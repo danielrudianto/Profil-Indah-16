@@ -4,8 +4,25 @@
   urutan); angka awal/masuk/keluar/akhir adalah nilai, bukan kolom isian
   readonly seperti sebelumnya.
 -->
-<div class="lihat kstok">
-  <header class="lihat__kepala">
+<!--
+  Dialognya bisa digeser. cdkDragRootElement menunjuk .cdk-overlay-pane —
+  tanpa itu yang bergerak hanya isi dialog di dalam panel yang diam, dan
+  isinya keluar dari kotaknya sendiri.
+
+  Batasnya .cdk-overlay-container: elemen fixed yang menutup persis seluruh
+  viewport, jadi dialognya tidak bisa digeser sampai keluar layar dan
+  tertinggal di tempat yang tidak bisa diraih lagi.
+
+  Pegangannya cuma header. Kalau seluruh dialog bisa ditarik, menyorot nomor
+  dokumen untuk disalin justru menggeser dialognya.
+-->
+<div
+  class="lihat kstok"
+  cdkDrag
+  cdkDragRootElement=".cdk-overlay-pane"
+  cdkDragBoundary=".cdk-overlay-container"
+>
+  <header class="lihat__kepala" cdkDragHandle>
     <div class="lihat__identitas">
       <span class="lihat__avatar" aria-hidden="true">
         <i class="ph ph-stack"></i>
@@ -20,7 +37,7 @@
   <div class="lihat__isi">
     <form [formGroup]="stockFormGroup" class="kstok__kendali">
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{ 'stock-report__date' | translate }}</mat-label>
+        <mat-label>{{ "stock-report__date" | translate }}</mat-label>
         <input
           formControlName="date"
           matInput
@@ -40,13 +57,13 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>{{ 'stock-report__type' | translate }}</mat-label>
+        <mat-label>{{ "stock-report__type" | translate }}</mat-label>
         <mat-select formControlName="viewBy">
           <mat-option value="date">
-            {{ 'stock-report__document' | translate }}
+            {{ "stock-report__document" | translate }}
           </mat-option>
           <mat-option value="created">
-            {{ 'stock-report__input' | translate }}
+            {{ "stock-report__input" | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -56,34 +73,34 @@
     <div class="kstok__ringkas">
       <div class="kstok__kotak">
         <span class="kstok__kotak-label">
-          {{ 'stock-report__initial-stock' | translate }}
+          {{ "stock-report__initial-stock" | translate }}
         </span>
         <strong class="kstok__kotak-nilai">
-          {{ stockFormGroup.value.previous ?? 0 | number: '1.0-2' }}
+          {{ stockFormGroup.value.previous ?? 0 | number: "1.0-2" }}
         </strong>
       </div>
       <div class="kstok__kotak">
         <span class="kstok__kotak-label">
-          {{ 'stock-report__incoming-stock' | translate }}
+          {{ "stock-report__incoming-stock" | translate }}
         </span>
         <strong class="kstok__kotak-nilai">
-          {{ incoming | number: '1.0-2' }}
+          {{ incoming | number: "1.0-2" }}
         </strong>
       </div>
       <div class="kstok__kotak">
         <span class="kstok__kotak-label">
-          {{ 'stock-report__outgoing-stock' | translate }}
+          {{ "stock-report__outgoing-stock" | translate }}
         </span>
         <strong class="kstok__kotak-nilai kstok__kotak-nilai--minus">
-          {{ outgoing | number: '1.0-2' }}
+          {{ outgoing | number: "1.0-2" }}
         </strong>
       </div>
       <div class="kstok__kotak kstok__kotak--utama">
         <span class="kstok__kotak-label">
-          {{ 'stock-report__final-stock' | translate }}
+          {{ "stock-report__final-stock" | translate }}
         </span>
         <strong class="kstok__kotak-nilai">
-          {{ finalStock | number: '1.0-2' }} {{ dataSource?.unit }}
+          {{ finalStock | number: "1.0-2" }} {{ dataSource?.unit }}
         </strong>
       </div>
     </div>
@@ -94,52 +111,52 @@
 
     <ng-container *ngIf="!isLoading">
       <h3 class="lihat__label">
-        {{ 'stock-report__title' | translate }} ({{ t.length }})
+        {{ "stock-report__title" | translate }} ({{ t.length }})
       </h3>
 
       <div class="lihat__gulir kstok__gulir">
         <table class="tabel">
           <thead>
             <tr>
-              <th>{{ 'stock-report__table__date' | translate }}</th>
-              <th>{{ 'stock-report__table__created-at' | translate }}</th>
-              <th>{{ 'stock-report__table__document' | translate }}</th>
-              <th>{{ 'stock-report__table__opponent' | translate }}</th>
+              <th>{{ "stock-report__table__date" | translate }}</th>
+              <th>{{ "stock-report__table__created-at" | translate }}</th>
+              <th>{{ "stock-report__table__document" | translate }}</th>
+              <th>{{ "stock-report__table__opponent" | translate }}</th>
               <th class="tabel__nilai-kepala">
-                {{ 'stock-report__table__quantity' | translate }}
+                {{ "stock-report__table__quantity" | translate }}
               </th>
               <th class="tabel__nilai-kepala">
-                {{ 'stock-report__table__stock' | translate }}
+                {{ "stock-report__table__stock" | translate }}
               </th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let data of t.controls">
               <td class="tabel__tanggal">
-                {{ data.get('date')?.value | date: 'dd MMM yyyy' }}
+                {{ data.get("date")?.value | date: "dd MMM yyyy" }}
               </td>
               <td class="tabel__tanggal">
-                {{ data.get('created_at')?.value | date: 'dd MMM yyyy HH:mm' }}
+                {{ data.get("created_at")?.value | date: "dd MMM yyyy HH:mm" }}
               </td>
               <td class="tabel__utama">
-                {{ data.get('document_name')?.value }}
+                {{ data.get("document_name")?.value }}
               </td>
-              <td class="kstok__lawan">{{ data.get('opponent')?.value }}</td>
+              <td class="kstok__lawan">{{ data.get("opponent")?.value }}</td>
               <td
                 class="tabel__nilai"
                 [class.kstok__minus]="(data.get('quantity')?.value ?? 0) < 0"
               >
-                {{ data.get('display_quantity')?.value | number: '1.0-2' }}
-                {{ data.get('unit')?.value }}
+                {{ data.get("display_quantity")?.value | number: "1.0-2" }}
+                {{ data.get("unit")?.value }}
               </td>
               <td class="tabel__nilai">
-                {{ data.get('stock')?.value | number: '1.0-2' }}
-                {{ data.get('default_unit')?.value }}
+                {{ data.get("stock")?.value | number: "1.0-2" }}
+                {{ data.get("default_unit")?.value }}
               </td>
             </tr>
             <tr *ngIf="t.length === 0">
               <td colspan="6" class="tabel__pesan">
-                {{ 'stock-report__empty' | translate }}
+                {{ "stock-report__empty" | translate }}
               </td>
             </tr>
           </tbody>
@@ -151,7 +168,7 @@
   <footer class="lihat__kaki">
     <span class="lihat__renggang"></span>
     <button type="button" class="btn btn--kedua" (click)="close()">
-      {{ 'general__close' | translate }}
+      {{ "general__close" | translate }}
     </button>
   </footer>
 </div>

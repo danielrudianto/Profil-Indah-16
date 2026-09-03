@@ -1,35 +1,59 @@
-<div class="lihat jejak-lihat">
-  <header class="lihat__kepala">
+<!--
+  Dialognya bisa digeser. cdkDragRootElement menunjuk .cdk-overlay-pane —
+  tanpa itu yang bergerak hanya isi dialog di dalam panel yang diam, dan
+  isinya keluar dari kotaknya sendiri.
+
+  Batasnya .cdk-overlay-container: elemen fixed yang menutup persis seluruh
+  viewport, jadi dialognya tidak bisa digeser sampai keluar layar dan
+  tertinggal di tempat yang tidak bisa diraih lagi.
+
+  Pegangannya cuma header. Kalau seluruh dialog bisa ditarik, menyorot nomor
+  dokumen untuk disalin justru menggeser dialognya.
+-->
+<div
+  class="lihat jejak-lihat"
+  cdkDrag
+  cdkDragRootElement=".cdk-overlay-pane"
+  cdkDragBoundary=".cdk-overlay-container"
+>
+  <header class="lihat__kepala" cdkDragHandle>
     <div class="lihat__identitas">
       <span class="lihat__avatar" aria-hidden="true">
         {{ inisial(entry.userName) }}
       </span>
       <div>
         <div class="lihat__nama">
-          {{ entry.userName || ('activity__system' | translate) }}
+          {{ entry.userName || ("activity__system" | translate) }}
         </div>
         <div class="lihat__nomor">
-          {{ entry.createdAt | date: 'dd MMMM yyyy HH:mm' }}
+          {{ entry.createdAt | date: "dd MMMM yyyy HH:mm" }}
         </div>
       </div>
     </div>
 
     <span class="pill" [ngClass]="kelasTindakan(entry.action)">
-      <i class="ph-fill" [ngClass]="ikonTindakan(entry.action)" aria-hidden="true"></i>
+      <i
+        class="ph-fill"
+        [ngClass]="ikonTindakan(entry.action)"
+        aria-hidden="true"
+      ></i>
       {{ entry.action }}
     </span>
   </header>
 
   <div class="lihat__isi">
     <dl class="lihat__kisi">
-      <dt>{{ 'activity__entity' | translate }}</dt>
+      <dt>{{ "activity__entity" | translate }}</dt>
       <dd class="jejak-lihat__entitas">
-        {{ entry.entity }}<ng-container *ngIf="entry.entityID">&nbsp;#{{ entry.entityID }}</ng-container>
+        {{ entry.entity
+        }}<ng-container *ngIf="entry.entityID"
+          >&nbsp;#{{ entry.entityID }}</ng-container
+        >
       </dd>
     </dl>
 
     <h3 class="lihat__label">
-      {{ 'activity__changes' | translate }} ({{ daftarPerubahan.length }})
+      {{ "activity__changes" | translate }} ({{ daftarPerubahan.length }})
     </h3>
 
     <ul class="jejak-lihat__daftar" *ngIf="daftarPerubahan.length > 0">
@@ -40,7 +64,7 @@
     </ul>
 
     <p class="lihat__kosong" *ngIf="daftarPerubahan.length === 0">
-      {{ 'activity__view__no-changes' | translate }}
+      {{ "activity__view__no-changes" | translate }}
     </p>
 
     <p class="jejak-lihat__catatan" *ngIf="entry.note">{{ entry.note }}</p>
@@ -49,7 +73,7 @@
   <footer class="lihat__kaki">
     <span class="lihat__renggang"></span>
     <button type="button" class="btn btn--kedua" (click)="tutup()">
-      {{ 'general__close' | translate }}
+      {{ "general__close" | translate }}
     </button>
   </footer>
 </div>

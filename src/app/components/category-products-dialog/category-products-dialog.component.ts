@@ -1,4 +1,5 @@
 import { DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -21,7 +22,15 @@ import { ApiService } from 'src/app/services/api.service';
   selector: 'app-category-products-dialog',
   templateUrl: './category-products-dialog.component.html',
   styleUrls: ['./category-products-dialog.component.scss'],
-  imports: [NgIf, NgFor, DecimalPipe, ReactiveFormsModule, TranslatePipe],
+  imports: [
+    NgIf,
+    NgFor,
+    DecimalPipe,
+    ReactiveFormsModule,
+    TranslatePipe,
+    CdkDrag,
+    CdkDragHandle,
+  ],
 })
 export class CategoryProductsDialogComponent implements OnInit, OnDestroy {
   constructor(

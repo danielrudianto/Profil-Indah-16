@@ -1,4 +1,5 @@
 import { DatePipe, DecimalPipe, NgIf } from '@angular/common';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -14,7 +15,7 @@ import { ApiService } from 'src/app/services/api.service';
   selector: 'app-overpayment-archive-view',
   templateUrl: './overpayment-archive-view.component.html',
   styleUrls: ['./overpayment-archive-view.component.scss'],
-  imports: [NgIf, DecimalPipe, DatePipe, TranslatePipe],
+  imports: [NgIf, DecimalPipe, DatePipe, TranslatePipe, CdkDrag, CdkDragHandle],
 })
 export class OverpaymentArchiveViewComponent implements OnInit {
   constructor(

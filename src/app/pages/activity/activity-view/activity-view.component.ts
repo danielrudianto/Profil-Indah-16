@@ -1,4 +1,5 @@
 import { Component, Inject } from '@angular/core';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -15,7 +16,15 @@ import { ActivityEntry } from 'src/app/models/activity-entry.model';
   selector: 'app-activity-view',
   templateUrl: './activity-view.component.html',
   styleUrls: ['./activity-view.component.scss'],
-  imports: [NgIf, NgFor, NgClass, DatePipe, TranslatePipe],
+  imports: [
+    NgIf,
+    NgFor,
+    NgClass,
+    DatePipe,
+    TranslatePipe,
+    CdkDrag,
+    CdkDragHandle,
+  ],
 })
 export class ActivityViewComponent {
   constructor(

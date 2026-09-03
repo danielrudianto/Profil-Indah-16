@@ -1,4 +1,5 @@
 import { DatePipe, NgIf } from '@angular/common';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -15,7 +16,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'app-minimum-stock-info-dialog',
   templateUrl: './minimum-stock-info-dialog.component.html',
   styleUrls: ['./minimum-stock-info-dialog.component.scss'],
-  imports: [NgIf, DatePipe, TranslatePipe],
+  imports: [NgIf, DatePipe, TranslatePipe, CdkDrag, CdkDragHandle],
 })
 export class MinimumStockInfoDialogComponent {
   constructor(
