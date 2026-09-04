@@ -175,6 +175,9 @@ export class GoodReceiptCreateComponent implements OnDestroy {
         faktur: '',
         document_discount: 0,
       });
+      /* Pendamping persennya ikut, kalau tidak angkanya masih tertulis di
+         kolom yang sudah tidak digambar. */
+      this.discountPercentControl.setValue(0, { emitEvent: false });
     }
   }
 
@@ -472,7 +475,23 @@ export class GoodReceiptCreateComponent implements OnDestroy {
     );
   }
 
+  /**
+   * Diskon dokumen — NOL ketika kolomnya tidak digambar.
+   *
+   * Kolomnya hanya muncul untuk peran yang boleh mengubah harga DAN ketika
+   * dokumennya berkeadaan lengkap. Di luar itu kontrolnya tetap hidup dan
+   * tetap memegang nilai terakhirnya, dan nilai itu ikut dua tempat: dikirim
+   * ke server, dan dikurangkan dari total yang tergambar di layar.
+   *
+   * Angka yang tidak bisa dilihat maupun disunting tidak boleh menentukan
+   * keduanya. Di server ia ditolak sebagai "diskon faktur tidak boleh melebihi
+   * total nilai barang" — pada layar yang tidak punya satu pun kolom harga,
+   * sehingga tidak ada yang bisa dikerjakan petugas untuk melewatinya.
+   */
   get diskonDokumen(): number {
+    if (!this.dokumenLengkap) {
+      return 0;
+    }
     return Number(this.metaFormGroup.get('document_discount')?.value ?? 0) || 0;
   }
 
@@ -523,9 +542,7 @@ export class GoodReceiptCreateComponent implements OnDestroy {
                 invoice_name:
                   this.metaFormGroup.get('invoice_name')?.value ?? '',
                 faktur: this.metaFormGroup.get('faktur')?.value || null,
-                discount: Number(
-                  this.metaFormGroup.get('document_discount')?.value ?? 0,
-                ),
+                discount: this.diskonDokumen,
                 is_confirm: this.dokumenLengkap,
                 date: this.datePipe.transform(
                   this.metaFormGroup.get('date')?.value,
@@ -614,9 +631,7 @@ export class GoodReceiptCreateComponent implements OnDestroy {
                     invoice_name:
                       this.metaFormGroup.get('invoice_name')?.value ?? '',
                     faktur: this.metaFormGroup.get('faktur')?.value || null,
-                    discount: Number(
-                      this.metaFormGroup.get('document_discount')?.value ?? 0,
-                    ),
+                    discount: this.diskonDokumen,
                     is_confirm: this.dokumenLengkap,
                   })
                   .subscribe({
