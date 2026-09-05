@@ -55,6 +55,12 @@ export class GoodReceiptViewComponent implements OnInit {
             faktur: data.faktur,
             date: data.date,
             supplier: data.supplier.name,
+            /*
+              Perusahaan penerima. Ada di balasan sejak dulu — fetchByID
+              menyertakan relasi company — hanya tidak pernah dibaca di sini.
+              Dokumen dari dua perusahaan terlihat sama persis tanpa kolom ini.
+            */
+            company: data.company?.name ?? null,
             isDelete: data.is_delete,
             isConfirm: data.is_confirm,
             discount: Number(data.discount ?? 0),

@@ -119,6 +119,7 @@
               ></i>
             </button>
           </th>
+          <th>{{ "good-receipt__archive__company" | translate }}</th>
           <th>
             {{ "purchase-invoice__archive__view__tax-invoice" | translate }}
           </th>
@@ -155,6 +156,13 @@
               </span>
             </div>
           </td>
+          <!--
+            Perusahaan penerima. Sudah ikut di balasan good-receipt/archives —
+            relasi company disertakan di sana — hanya belum pernah digambar.
+            Tanpa kolom ini, dokumen dari dua perusahaan tidak bisa dibedakan
+            di daftar.
+          -->
+          <td class="tabel__redup">{{ item.company?.name || "—" }}</td>
           <td class="tabel__redup">{{ item.faktur || "—" }}</td>
           <td>
             <span
@@ -192,7 +200,7 @@
 
       <tbody *ngIf="isLoading">
         <tr>
-          <td colspan="7" class="tabel__pesan">
+          <td colspan="8" class="tabel__pesan">
             {{ "general__loading" | translate }}
           </td>
         </tr>
@@ -200,7 +208,7 @@
 
       <tbody *ngIf="!isLoading && dataSource.length === 0">
         <tr>
-          <td colspan="7">
+          <td colspan="8">
             <app-tabel-kosong
               ikon="ph-file-text"
               [judul]="'purchase-invoice__empty__title' | translate"

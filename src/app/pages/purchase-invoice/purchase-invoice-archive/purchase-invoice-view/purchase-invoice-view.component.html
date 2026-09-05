@@ -61,6 +61,10 @@
           <dd>{{ dokumen.date | date: "dd MMMM yyyy" }}</dd>
         </div>
         <div>
+          <dt>{{ "good-receipt__archive__company" | translate }}</dt>
+          <dd>{{ dokumen.company || "—" }}</dd>
+        </div>
+        <div>
           <dt>
             {{ "good-receipt__archive__view__tax-invoice-name" | translate }}
           </dt>
