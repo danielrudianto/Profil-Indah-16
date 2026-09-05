@@ -803,6 +803,92 @@ export class SalesInvoiceCreateComponent {
    * Faktur yang benar-benar kosong tidak sampai ke sini — isValid sudah
    * mematikan tombolnya.
    */
+  /** Sisa yang belum dibayar. Nol atau kurang berarti tidak ada piutang. */
+  get sisaTagihan(): number {
+    return this.totalBill - this.totalPayment;
+  }
+
+  /**
+   * Faktur ini akan meninggalkan piutang.
+   *
+   * Deposit internal DIKECUALIKAN. Ia memang tidak pernah menerima
+   * pembayaran — itu definisinya, bukan kelalaian — sehingga peringatan ini
+   * akan muncul pada setiap dokumen jenis itu tanpa kecuali, dan peringatan
+   * yang selalu muncul berhenti dibaca. Yang dijaga di sini adalah faktur
+   * yang SEHARUSNYA dibayar tetapi tidak, atau baru sebagian.
+   */
+  get piutangTerbentuk(): boolean {
+    return !this.depositInternal && this.sisaTagihan > 0;
+  }
+
+  /**
+   * Peringatan yang perlu dibaca sebelum faktur terbit.
+   *
+   * Dikumpulkan menjadi SATU daftar, lalu ditampilkan dalam satu dialog.
+   * Kalau masing-masing membuka dialognya sendiri, faktur jasa yang juga
+   * berpiutang akan memunculkan dua dialog berurutan — dan yang kedua ditekan
+   * tanpa dibaca karena tangannya sudah bergerak menutup yang pertama.
+   */
+  private get peringatanTerbit(): string[] {
+    const peringatan: string[] = [];
+
+    if (!this.adaBarang) {
+      peringatan.push(
+        this.translateService.instant(
+          'sales-invoice__create__no-item-confirm__body',
+        ),
+      );
+    }
+
+    if (this.piutangTerbentuk) {
+      /*
+        Cicilan dan utang penuh dibedakan. Keduanya sama-sama meninggalkan
+        piutang, tetapi yang pertama disengaja jauh lebih sering daripada yang
+        kedua — menyebutnya dengan kalimat yang sama membuat kasir menganggap
+        keduanya sama biasa.
+      */
+      peringatan.push(
+        this.translateService.instant(
+          this.totalPayment > 0
+            ? 'sales-invoice__create__partial-confirm__body'
+            : 'sales-invoice__create__credit-confirm__body',
+        ),
+      );
+    }
+
+    return peringatan;
+  }
+
+  /** Angka-angka yang perlu dilihat kasir sebelum menekan lanjut. */
+  private get rincianPeringatan(): string {
+    const bagian: string[] = [];
+    const rupiah = (n: number) => `Rp ${Number(n).toLocaleString('id-ID')}`;
+
+    if (!this.adaBarang && this.rincianTanpaBarang) {
+      bagian.push(this.rincianTanpaBarang);
+    }
+
+    if (this.piutangTerbentuk) {
+      bagian.push(
+        `${this.translateService.instant(
+          'sales-invoice__create__total-bill',
+        )}: ${rupiah(this.totalBill)}`,
+      );
+      bagian.push(
+        `${this.translateService.instant(
+          'sales-invoice__create__paid-now',
+        )}: ${rupiah(this.totalPayment)}`,
+      );
+      bagian.push(
+        `${this.translateService.instant(
+          'sales-invoice__create__remaining',
+        )}: ${rupiah(this.sisaTagihan)}`,
+      );
+    }
+
+    return bagian.join(' · ');
+  }
+
   submitForm() {
     if (!this.isValid) {
       console.error(`[errror]: ${this.metaFormGroup.errors}`);
@@ -812,7 +898,8 @@ export class SalesInvoiceCreateComponent {
       return;
     }
 
-    if (this.adaBarang) {
+    const peringatan = this.peringatanTerbit;
+    if (peringatan.length === 0) {
       this.kirimFaktur();
       return;
     }
@@ -820,11 +907,11 @@ export class SalesInvoiceCreateComponent {
     this.dialog
       .open(SubmitConfirmationComponent, {
         data: {
-          header: 'sales-invoice__create__no-item-confirm__title',
-          title: this.translateService.instant(
-            'sales-invoice__create__no-item-confirm__body',
-          ),
-          document: this.rincianTanpaBarang,
+          header: this.piutangTerbentuk
+            ? 'sales-invoice__create__credit-confirm__title'
+            : 'sales-invoice__create__no-item-confirm__title',
+          title: peringatan.join(' '),
+          document: this.rincianPeringatan,
         },
       })
       .afterClosed()
