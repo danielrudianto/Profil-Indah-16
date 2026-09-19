@@ -1,0 +1,228 @@
+<!--
+  Kartu stok satu produk — riwayat mutasi tersimpan (tabel stock_card),
+  berhalaman dari server. Klik baris membuka dokumen sumbernya.
+-->
+<app-list-page
+  [heading]="productDataSource?.reference ?? ('stock-card__title' | translate)"
+  [lede]="productDataSource?.description ?? ''"
+  [page]="page"
+  [pageSize]="pageSize"
+  [total]="dataCount"
+  [loading]="isLoadingCard"
+  [showSearch]="false"
+  (pageChange)="fetchStockCard($event)"
+  (pageSizeChange)="gantiUkuran($event)"
+  (refresh)="fetchStockCard(page)"
+>
+  <ng-container aksi>
+    <button type="button" class="aksi-hantu" (click)="onBackButtonPressed()">
+      <i class="ph ph-arrow-u-up-left" aria-hidden="true"></i>
+      {{ "general__back" | translate }}
+    </button>
+  </ng-container>
+
+  <!-- Identitas produk: merek, tipe, dan posisi stok — stok yang disorot. -->
+  <div hero class="hero" *ngIf="productDataSource">
+    <div class="hero__kartu">
+      <span class="hero__label">{{ "stock-card__brand" | translate }}</span>
+      <strong class="hero__nilai hero__nilai--tanggal">
+        {{ productDataSource.product_brand?.name }}
+      </strong>
+    </div>
+    <div class="hero__kartu">
+      <span class="hero__label">{{ "stock-card__type" | translate }}</span>
+      <strong class="hero__nilai hero__nilai--tanggal">
+        {{ productDataSource.product_type?.name }}
+      </strong>
+    </div>
+    <div class="hero__kartu hero__kartu--utama">
+      <span class="hero__label">{{ "stock-card__stock-now" | translate }}</span>
+      <strong class="hero__nilai" *ngIf="stokKini != null">
+        {{ stokKini | number: "1.0-2" }} {{ productDataSource.unit }}
+      </strong>
+      <strong class="hero__nilai" *ngIf="stokKini == null">—</strong>
+    </div>
+    <!-- Ambang minimum efektif — manual atau rekomendasi, yang tertinggi. -->
+    <div class="hero__kartu">
+      <span class="hero__label">{{ "stock-card__minimum" | translate }}</span>
+      <strong class="hero__nilai" *ngIf="minimumEfektif != null">
+        {{ minimumEfektif | number: "1.0-2" }} {{ productDataSource.unit }}
+      </strong>
+      <strong class="hero__nilai" *ngIf="minimumEfektif == null">—</strong>
+      <span class="hero__sub" *ngIf="minimumEfektif != null">
+        {{
+          (minimumDariRekomendasi
+            ? "stock-card__minimum__recommended"
+            : "stock-card__minimum__manual"
+          ) | translate
+        }}
+      </span>
+    </div>
+    <!-- Angka deposit bisa dirinci: siapa memegang berapa. -->
+    <button
+      type="button"
+      class="hero__kartu hero__kartu--tombol"
+      (click)="bukaDeposit()"
+      [title]="'deposit-list__title' | translate"
+    >
+      <span class="hero__label">{{ "stock-card__deposit" | translate }}</span>
+      <strong class="hero__nilai" *ngIf="depositTerbuka != null">
+        {{ depositTerbuka | number: "1.0-2" }} {{ productDataSource.unit }}
+        <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+      </strong>
+      <strong class="hero__nilai" *ngIf="depositTerbuka == null">—</strong>
+    </button>
+  </div>
+
+  <!-- Sorotan: klaimnya dibatasi jendela mutasi yang benar-benar diperiksa. -->
+  <section hero class="kartu sorotan" *ngIf="sorotan.length > 0">
+    <h2 class="kartu__label">{{ "sorotan-entitas__judul" | translate }}</h2>
+    <ul class="sorotan__daftar">
+      <li *ngFor="let baris of sorotan">
+        <span class="sorotan__ikon" aria-hidden="true">
+          <i [class]="'ph ' + baris.ikon"></i>
+        </span>
+        {{ baris.teks }}
+      </li>
+    </ul>
+  </section>
+
+  <!--
+    Pergerakan saldo — batang per mutasi, tooltip wajib. Akordeon tertutup
+    di awal: batangnya baru digambar saat dibuka.
+  -->
+  <section
+    hero
+    class="kartu akordeon"
+    [class.akordeon--buka]="grafikTerbuka"
+    *ngIf="tren.length > 1"
+  >
+    <button
+      type="button"
+      class="akordeon__kepala"
+      (click)="grafikTerbuka = !grafikTerbuka"
+      [attr.aria-expanded]="grafikTerbuka"
+    >
+      <div>
+        <h2 class="kartu__label">{{ "stock-card__chart" | translate }}</h2>
+        <p class="grafik__sub">
+          {{ "stock-card__chart__sub" | translate: { n: jendela.jumlah } }}
+        </p>
+      </div>
+      <i class="ph ph-caret-down akordeon__panah" aria-hidden="true"></i>
+    </button>
+
+    <ng-container *ngIf="grafikTerbuka">
+      <div class="grafik grafik--nilai">
+        <div class="grafik__hari" *ngFor="let t of tren; index as i">
+          <div class="grafik-tip" role="tooltip">
+            <strong>
+              {{ t.saldo | number: "1.0-2" }} {{ productDataSource?.unit }}
+            </strong>
+            <small>
+              {{ t.tanggal | date: "dd MMM yyyy" }} · {{ t.dokumen }} ({{
+                t.mutasi > 0 ? "+" : ""
+              }}{{ t.mutasi | number: "1.0-2" }})
+            </small>
+          </div>
+          <span
+            class="grafik__nilai"
+            [style.height.%]="tinggiSaldo(t)"
+            aria-hidden="true"
+          ></span>
+          <span class="grafik__tanggal" *ngIf="tampilkanLabel(i)">
+            {{ t.tanggal | date: "dd/M" }}
+          </span>
+        </div>
+      </div>
+
+      <div class="grafik__kaki">
+        <div class="grafik__legenda">
+          <span>
+            <i class="grafik__legenda--nilai" aria-hidden="true"></i>
+            {{ "stock-card__chart__legend" | translate }}
+          </span>
+        </div>
+        <span class="grafik__rentang">{{ rentangTren }}</span>
+      </div>
+    </ng-container>
+  </section>
+
+  <table class="tabel">
+    <thead>
+      <tr>
+        <th>{{ "stock-card__date" | translate }}</th>
+        <th>{{ "stock-card__document" | translate }}</th>
+        <th>{{ "stock-card__counterparty" | translate }}</th>
+        <th class="tabel__nilai-kepala">
+          {{ "stock-card__quantity" | translate }}
+        </th>
+        <th class="tabel__nilai-kepala">
+          {{ "stock-card__stock" | translate }}
+        </th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!isLoadingCard && dataSource.length > 0">
+      <!-- Klik baris membuka dokumen yang mencatat mutasinya. -->
+      <tr
+        *ngFor="let item of dataSource; trackBy: lacak"
+        class="tabel__baris-klik"
+        (click)="viewDocument(item)"
+      >
+        <td class="tabel__tanggal">{{ item.date | date: "dd MMM yyyy" }}</td>
+        <td class="tabel__utama">{{ item.document_name }}</td>
+        <!-- Lawan transaksi beravatar inisial — seanatomi kolom entitas lain. -->
+        <td>
+          <div class="sel-entitas">
+            <span class="avatar-inisial" aria-hidden="true">
+              {{ inisial(lawanBaris(item)) }}
+            </span>
+            <span class="sel-entitas__teks">
+              <span class="sel-entitas__utama">{{ lawanBaris(item) }}</span>
+            </span>
+          </div>
+        </td>
+        <td
+          class="tabel__nilai"
+          [class.kartu-stok__minus]="item.display_quantity < 0"
+        >
+          {{ item.display_quantity | number: "1.0-2" }} {{ satuanBaris(item) }}
+        </td>
+        <td class="tabel__nilai baris__total">
+          <!--
+            NULL berarti saldo barisnya belum dihitung ulang — job antrean
+            sedang berjalan atau menunggu sapuan malam; jujur, bukan nol.
+          -->
+          <span class="kartu-stok__hitung" *ngIf="item.stock == null">
+            {{ "stock-card__calculating" | translate }}
+          </span>
+          <ng-container *ngIf="item.stock != null">
+            {{ item.stock | number: "1.0-2" }} {{ item.defaultUnit }}
+          </ng-container>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="isLoadingCard">
+      <tr>
+        <td colspan="5" class="tabel__pesan">
+          {{ "general__loading" | translate }}
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="!isLoadingCard && dataSource.length === 0">
+      <tr>
+        <td colspan="5">
+          <app-tabel-kosong
+            ikon="ph-stack"
+            [judul]="'stock-card__empty__title' | translate"
+            [penjelasan]="'stock-card__empty__desc' | translate"
+            [kataKunci]="''"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</app-list-page>
