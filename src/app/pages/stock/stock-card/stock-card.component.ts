@@ -112,7 +112,14 @@ export class StockCardComponent implements OnInit {
               saldo: Number(x.stock),
               tanggal: new Date(x.date),
               dokumen: x.document_name,
-              mutasi: Number(x.display_quantity),
+              /*
+                quantity, bukan display_quantity — sebaris dengan `saldo` di
+                atasnya yang bersatuan dasar. Tooltip grafik menuliskan
+                keduanya berdampingan: "1.027,24 METER (-120)". Memakai angka
+                dokumen di sini menghasilkan "(-2)" di sebelah angka meter,
+                dan selisihnya tidak pernah bisa dijelaskan pembacanya.
+              */
+              mutasi: Number(x.quantity),
             }))
             .reverse();
           this.susunLabelTanggal();
@@ -319,6 +326,23 @@ export class StockCardComponent implements OnInit {
     return this.labelTanggal.has(i);
   }
 
+  /**
+   * Satuan yang menyertai jumlah pada satu baris mutasi.
+   *
+   * Barisnya menampilkan display_quantity — jumlah dalam satuan DOKUMEN — jadi
+   * satuannya harus ikut dari dokumen itu, bukan dari produknya. Baris yang
+   * dicatat dalam satuan dasar tidak punya product_unit, dan untuk baris
+   * seperti itu satuan produk memang yang benar.
+   *
+   * Sebelum ini baris menggambar `item.unit`, ruas yang tidak pernah ada di
+   * balasan server. Hasilnya angka telanjang tanpa satuan, bersebelahan
+   * dengan kolom saldo bersatuan meter — dan "-2" terbaca sebagai dua meter
+   * padahal artinya dua roll, yaitu 120 meter.
+   */
+  satuanBaris(item: any): string {
+    return item?.product_unit?.unit ?? this.productDataSource?.unit ?? '';
+  }
+
   get rentangTren(): string {
     if (this.tren.length === 0) {
       return '';
@@ -347,10 +371,22 @@ export class StockCardComponent implements OnInit {
       n.toLocaleString('id-ID', { maximumFractionDigits: 2 });
     const unit = this.productDataSource?.unit ?? '';
 
+    /*
+      DIJUMLAHKAN dari `quantity`, bukan `display_quantity`.
+
+      display_quantity mencatat jumlah dalam satuan DOKUMEN: dua roll
+      tersimpan sebagai 2, sementara quantity di sebelahnya 120 meter.
+      Menjumlahkan keduanya berarti menambahkan roll ke meter seolah satuannya
+      sama, lalu hasilnya dilabeli meter. Angkanya tidak salah sedikit — ia
+      salah sebesar selisih konversinya, dan tidak ada galat yang muncul.
+
+      quantity selalu dalam satuan dasar produk, yaitu satuan yang dipakai
+      label di bawah dan kolom saldo di tabel. Satu satuan untuk satu angka.
+    */
     let masuk = 0;
     let keluar = 0;
     for (const x of baris) {
-      const q = Number(x.display_quantity);
+      const q = Number(x.quantity);
       if (q >= 0) {
         masuk += q;
       } else {

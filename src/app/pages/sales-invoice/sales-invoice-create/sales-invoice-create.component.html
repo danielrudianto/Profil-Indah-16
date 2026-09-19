@@ -42,17 +42,36 @@
               judul, deskripsi, lalu AKIBATNYA beraksen — sebab ketiganya
               berlaku sangat berbeda terhadap uang dan stok.
             -->
+          <!--
+            Deposit internal dimatikan selama faktur belum punya barang.
+            Gunanya menahan stok; tanpa baris barang tidak ada yang ditahan,
+            dan ia juga tidak menerima uang — dokumennya tidak mencatat apa
+            pun sementara nomor fakturnya tetap terpakai.
+
+            Dimatikan berikut ALASANNYA, bukan dihilangkan: kartu yang lenyap
+            membuat orang mencari ke mana perginya, sedangkan kartu mati tanpa
+            keterangan membuat orang menebak sebabnya.
+          -->
           <button
             type="button"
             class="keadaan__kartu"
             *ngFor="let t of tipeTransaksi"
             [class.keadaan__kartu--on]="metaFormGroup.value.type === t.nilai"
+            [disabled]="
+              t.nilai === 'deposit-internal' && !depositInternalTersedia
+            "
             (click)="pilihTipe(t.nilai)"
           >
             <i class="ph" [ngClass]="t.ikon" aria-hidden="true"></i>
             <span class="keadaan__judul">{{ t.kunci | translate }}</span>
             <span class="keadaan__desk">{{ t.desk | translate }}</span>
-            <span class="keadaan__akibat">{{ t.note | translate }}</span>
+            <span class="keadaan__akibat">
+              {{
+                t.nilai === "deposit-internal" && !depositInternalTersedia
+                  ? ("sales-invoice__type__internal__needs-item" | translate)
+                  : (t.note | translate)
+              }}
+            </span>
           </button>
         </div>
       </section>

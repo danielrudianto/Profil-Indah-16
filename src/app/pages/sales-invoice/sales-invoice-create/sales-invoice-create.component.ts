@@ -367,6 +367,7 @@ export class SalesInvoiceCreateComponent {
 
     this.t.valueChanges.subscribe(() => {
       this.perbaruiRingkasanBaris();
+      this.selaraskanTipe();
       this.selaraskanPengembalian();
       this.perbaruiChecklist();
       this.valueFormGroup.patchValue({
@@ -1228,6 +1229,11 @@ export class SalesInvoiceCreateComponent {
       return false;
     }
 
+    /* Deposit internal tanpa barang tidak menahan apa pun. */
+    if (this.depositInternal && !this.depositInternalTersedia) {
+      return false;
+    }
+
     if (
       !this.metaFormGroup.valid ||
       !this.billFormGroup.valid ||
@@ -1337,6 +1343,41 @@ export class SalesInvoiceCreateComponent {
   private selaraskanPengembalian(): void {
     if (!this.pengembalianTersedia && this.perlakuanDiskon === 'kembali') {
       this.pilihPerlakuan('faktur');
+    }
+  }
+
+  /**
+   * Deposit internal MENUNTUT barang.
+   *
+   * Seluruh gunanya adalah menahan stok supaya tidak terjual — itu yang
+   * tertulis di kartunya sendiri: "Barang dititip supaya tidak terjual",
+   * "Stok ditahan — tidak ada uang masuk". Faktur jasa murni tidak punya
+   * baris barang, jadi tidak ada stok yang bisa ditahan; dan deposit internal
+   * juga tidak menerima pembayaran, jadi tidak ada uang yang masuk.
+   *
+   * Dokumen semacam itu tidak mencatat apa pun. Ia bukan sekadar aneh — ia
+   * kosong, sementara nomor fakturnya tetap terpakai.
+   *
+   * Deposit BIASA tidak dijaga di sini. Titipan uang untuk jasa yang belum
+   * dikerjakan — potong CNC minggu depan, misalnya — punya arti: uangnya
+   * masuk, pekerjaannya menyusul.
+   */
+  get depositInternalTersedia(): boolean {
+    return this.adaBarang;
+  }
+
+  /**
+   * Mengembalikan tipe ke penjualan ketika barang terakhir dihapus.
+   *
+   * Kartunya memang dimatikan saat faktur tidak punya barang, tetapi barang
+   * bisa dihapus SETELAH tipenya dipilih. Tanpa penyelaras ini, faktur
+   * bertipe deposit internal tanpa barang tetap bisa terbentuk lewat urutan
+   * itu — dan kartu yang mati tidak memberi tahu siapa pun bahwa tipenya
+   * sudah telanjur salah.
+   */
+  private selaraskanTipe(): void {
+    if (this.depositInternal && !this.depositInternalTersedia) {
+      this.pilihTipe('sales');
     }
   }
 
@@ -1745,6 +1786,14 @@ export class SalesInvoiceCreateComponent {
     if (!this.adaBarang && !this.adaJasaSah) {
       galat.push(
         this.translateService.instant('sales-invoice__create__empty-invoice'),
+      );
+    }
+
+    if (this.depositInternal && !this.depositInternalTersedia) {
+      galat.push(
+        this.translateService.instant(
+          'sales-invoice__create__internal-needs-item',
+        ),
       );
     }
 

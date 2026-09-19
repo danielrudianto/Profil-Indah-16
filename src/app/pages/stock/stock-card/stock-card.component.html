@@ -187,7 +187,7 @@
           class="tabel__nilai"
           [class.kartu-stok__minus]="item.display_quantity < 0"
         >
-          {{ item.display_quantity | number: "1.0-2" }} {{ item.unit }}
+          {{ item.display_quantity | number: "1.0-2" }} {{ satuanBaris(item) }}
         </td>
         <td class="tabel__nilai baris__total">
           <!--
