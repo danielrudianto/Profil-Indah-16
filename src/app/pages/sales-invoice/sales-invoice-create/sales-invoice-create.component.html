@@ -1,0 +1,955 @@
+<!--
+  Buat faktur — bagian `5a` berkas desain.
+
+  TIDAK ADA INPUT NOMOR FAKTUR. Nomornya dibuat server saat faktur diterbitkan;
+  menyediakan kolomnya di sini berarti menawarkan sesuatu yang akan ditimpa.
+
+  Tidak ada simpan draf, dan tidak ada saklar "lunas". Pembayaran dicatat
+  sebagai baris tersendiri — sebuah faktur bisa dibayar sebagian, lewat lebih
+  dari satu metode, dan saklar tidak bisa menyatakan itu.
+-->
+<div class="buat">
+  <div class="kisi">
+    <div class="buat__utama">
+      <!--
+        Kepala DI DALAM kolom kiri, seperti penerimaan barang: kolom
+        ringkasan di kanan mulai sejajar dengan judul, bukan di bawahnya.
+      -->
+      <div class="buat__head">
+        <h1 class="buat__title">
+          {{ "sales-invoice__create__title" | translate }}
+          <span class="tag-otomatis">
+            <i class="ph ph-sparkle" aria-hidden="true"></i>
+            {{ "sales-invoice__create__auto-number" | translate }}
+          </span>
+        </h1>
+        <p class="buat__lede">
+          {{ "sales-invoice__create__lede" | translate }}
+        </p>
+      </div>
+      <!-- ---------------------------------------------------------- -->
+      <!-- Jenis faktur — kartu PERTAMA, persis keadaan dokumen di     -->
+      <!-- penerimaan barang: pilihan yang menentukan seluruh formulir -->
+      <!-- diputuskan sebelum satu kolom pun diisi.                    -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu">
+        <h2 class="kartu__label">
+          {{ "sales-invoice__create__type" | translate }}
+        </h2>
+        <div class="keadaan">
+          <!--
+              Anatomi yang sama dengan "Keadaan dokumen" di penerimaan barang:
+              judul, deskripsi, lalu AKIBATNYA beraksen — sebab ketiganya
+              berlaku sangat berbeda terhadap uang dan stok.
+            -->
+          <!--
+            Deposit internal dimatikan selama faktur belum punya barang.
+            Gunanya menahan stok; tanpa baris barang tidak ada yang ditahan,
+            dan ia juga tidak menerima uang — dokumennya tidak mencatat apa
+            pun sementara nomor fakturnya tetap terpakai.
+
+            Dimatikan berikut ALASANNYA, bukan dihilangkan: kartu yang lenyap
+            membuat orang mencari ke mana perginya, sedangkan kartu mati tanpa
+            keterangan membuat orang menebak sebabnya.
+          -->
+          <button
+            type="button"
+            class="keadaan__kartu"
+            *ngFor="let t of tipeTransaksi"
+            [class.keadaan__kartu--on]="metaFormGroup.value.type === t.nilai"
+            [disabled]="
+              t.nilai === 'deposit-internal' && !depositInternalTersedia
+            "
+            (click)="pilihTipe(t.nilai)"
+          >
+            <i class="ph" [ngClass]="t.ikon" aria-hidden="true"></i>
+            <span class="keadaan__judul">{{ t.kunci | translate }}</span>
+            <span class="keadaan__desk">{{ t.desk | translate }}</span>
+            <span class="keadaan__akibat">
+              {{
+                t.nilai === "deposit-internal" && !depositInternalTersedia
+                  ? ("sales-invoice__type__internal__needs-item" | translate)
+                  : (t.note | translate)
+              }}
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ---------------------------------------------------------- -->
+      <!-- Info faktur                                                 -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu" [formGroup]="metaFormGroup">
+        <h2 class="kartu__label">
+          {{ "sales-invoice__create__info" | translate }}
+        </h2>
+
+        <div class="kartu__baris">
+          <div class="field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-invoice__create__date" | translate
+              }}</mat-label>
+              <input
+                matInput
+                [matDatepicker]="siPicker1"
+                formControlName="date"
+                (click)="siPicker1.open()"
+              />
+              <!--
+                Tombol kalender manual, bukan mat-datepicker-toggle: elemen toggle itu
+                hilang tanpa jejak pada pipeline dev meski utuh di bundel produksi,
+                dan tombol biasa yang memanggil open() berperilaku sama di keduanya.
+              -->
+              <button
+                type="button"
+                matSuffix
+                class="buka-kalender"
+                (click)="siPicker1.open()"
+                [attr.aria-label]="'general__pick-date' | translate"
+              >
+                <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+              </button>
+              <mat-datepicker #siPicker1></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="field">
+            <app-autocomplete-search
+              [label]="'sales-invoice__create__customer' | translate"
+              placeholder="Ex. Bing Jaya"
+              routeName="customer"
+              [defaultValue]="'sales-invoice__retail' | translate"
+              [selected]="metaFormGroup.controls['customer_id'].valid"
+              (onSelectData)="onSelectCustomer($event)"
+              (onUnselectData)="onUnselectCustomer()"
+            />
+            <p class="field__bantu">
+              {{ "sales-invoice__create__customer-hint" | translate }}
+              <button type="button" class="tautan" (click)="tambahPelanggan()">
+                {{ "sales-invoice__create__customer-add" | translate }}
+              </button>
+            </p>
+          </div>
+        </div>
+
+        <div class="field">
+          <!--
+            Huruf besar dipaksakan lewat komponen, bukan atribut oninput pada
+            elemennya: yang kedua tidak pernah memberi tahu Angular bahwa
+            nilainya berubah, sehingga kontrol formulirnya menyimpan ejaan lama.
+          -->
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{
+              "sales-invoice__create__salesman" | translate
+            }}</mat-label
+            ><input
+              matInput
+              #trigger="matAutocompleteTrigger"
+              type="text"
+              formControlName="sales"
+              autocomplete="off"
+              [matAutocomplete]="autoSales"
+              (input)="besarkanSales($event)"
+          /></mat-form-field>
+
+          <!--
+            mat-autocomplete, BUKAN <datalist> bawaan peramban. Datalist hanya
+            memunculkan saran setelah orang mengetik, tampilannya di luar tema,
+            dan pada sebagian peramban tidak muncul sama sekali — daftar sales
+            karenanya terasa hilang. Panel ini terbuka begitu ruasnya difokus
+            dan memakai gaya yang sama dengan pemilih lain di halaman ini.
+          -->
+          <mat-autocomplete #autoSales="matAutocomplete">
+            <mat-option value="INTERNAL">INTERNAL</mat-option>
+            <mat-option *ngFor="let s of salesmen" [value]="s">
+              {{ s }}
+            </mat-option>
+          </mat-autocomplete>
+          <!--
+            Jendela daftar sales — sempat hilang saat halaman ini dirakit
+            ulang; viewSalesman() tinggal tanpa satu pun pemanggil.
+          -->
+          <p class="field__bantu">
+            <button type="button" class="tautan" (click)="viewSalesman()">
+              {{ "sales-invoice__create__view-salesman" | translate }}
+            </button>
+          </p>
+        </div>
+      </section>
+
+      <!-- ---------------------------------------------------------- -->
+      <!-- Item                                                        -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu" [formGroup]="billFormGroup">
+        <div class="kartu__kepala">
+          <h2 class="kartu__label">
+            {{ "sales-invoice__create__items" | translate }}
+          </h2>
+
+          <div class="kartu__kepala-aksi">
+            <button
+              type="button"
+              class="aksi-kecil"
+              (click)="openItemSelector()"
+            >
+              <i class="ph ph-plus" aria-hidden="true"></i>
+              {{ "sales-invoice__create__add-product" | translate }}
+            </button>
+            <button
+              type="button"
+              class="aksi-kecil"
+              (click)="openPackageSelector()"
+            >
+              <i class="ph ph-package" aria-hidden="true"></i>
+              {{ "sales-invoice__create__add-package" | translate }}
+            </button>
+          </div>
+        </div>
+
+        <p class="petunjuk">
+          <i class="ph ph-info" aria-hidden="true"></i>
+          {{ "sales-invoice__create__price-note" | translate }}
+        </p>
+
+        <div class="gulir">
+          <table class="tabel tabel--rapat tabel--muat">
+            <thead>
+              <tr>
+                <th>{{ "sales-invoice__create__item" | translate }}</th>
+                <th class="tabel__nilai-kepala">
+                  {{ "sales-invoice__create__price" | translate }}
+                </th>
+                <th class="tabel__nilai-kepala">
+                  {{ "sales-invoice__create__discount" | translate }}
+                </th>
+                <th>{{ "sales-invoice__create__quantity" | translate }}</th>
+                <th class="tabel__nilai-kepala">
+                  {{ "sales-invoice__create__line-total" | translate }}
+                </th>
+                <th class="tabel__aksi-kepala">
+                  <span class="sr-only">
+                    {{ "general__actions" | translate }}
+                  </span>
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let baris of t.controls; index as i">
+                <td>
+                  <div class="barang__ref">
+                    {{ namaBaris(i) }}
+                    <!--
+                      Barang yang sama boleh muncul lebih dari sekali — bonus
+                      supplier, atau harga berbeda dalam satu faktur. Karena itu
+                      ini PERINGATAN HALUS, bukan larangan.
+                    -->
+                    <span
+                      class="pill-duplikat"
+                      *ngIf="jumlahDuplikat(i) > 1"
+                      [title]="'sales-invoice__create__duplicate' | translate"
+                    >
+                      ×{{ jumlahDuplikat(i) }}
+                    </span>
+                  </div>
+                  <div class="barang__desc">{{ deskripsiBaris(i) }}</div>
+                  <!-- Peringatan stok minus — memberi tahu, tidak menghalangi. -->
+                  <div
+                    class="barang__stok"
+                    [class.barang__stok--minus]="bakalMinus(i)"
+                    *ngIf="stokBaris(i) !== null"
+                  >
+                    <i
+                      class="ph-fill ph-warning"
+                      *ngIf="bakalMinus(i)"
+                      aria-hidden="true"
+                    ></i>
+                    {{ "sales-invoice__create__current-stock" | translate }}:
+                    {{ stokBaris(i) | number: "0.0-2" }}
+                    <span *ngIf="bakalMinus(i)">
+                      ·
+                      {{
+                        "sales-invoice__create__stock-minus"
+                          | translate
+                            : { butuh: (kebutuhanBaris(i) | number: "0.0-2") }
+                      }}
+                    </span>
+                  </div>
+                </td>
+
+                <!--
+                  Harga dan diskon dibuka lewat dialog, bukan diketik langsung
+                  di tabel: keduanya bisa disimpan kembali ke master barang, dan
+                  keputusan itu perlu ruang untuk dinyatakan.
+                -->
+                <td class="tabel__nilai">
+                  <button
+                    type="button"
+                    class="nilai-btn"
+                    (click)="ubahHarga(i)"
+                  >
+                    Rp {{ nilaiBaris(i, "price") | number: "1.2-2" }}
+                  </button>
+                </td>
+                <td class="tabel__nilai">
+                  <button
+                    type="button"
+                    class="nilai-btn"
+                    (click)="ubahHarga(i)"
+                  >
+                    Rp {{ nilaiBaris(i, "discount") | number: "1.2-2" }}
+                  </button>
+                </td>
+
+                <td [formGroup]="getFormGroupAt(i)">
+                  <div class="jumlah">
+                    <mat-form-field appearance="outline" class="w-sempit"
+                      ><input
+                        matInput
+                        type="text"
+                        mask="separator"
+                        thousandSeparator="."
+                        formControlName="quantity"
+                        autocomplete="off"
+                        placeholder="0"
+                    /></mat-form-field>
+                    <span class="jumlah__satuan">{{ satuanBaris(i) }}</span>
+                  </div>
+                  <div class="jumlah__konversi" *ngIf="konversiBaris(i)">
+                    {{ konversiBaris(i) }}
+                  </div>
+                </td>
+
+                <td class="tabel__nilai">
+                  Rp {{ totalBaris(i) | number: "1.2-2" }}
+                </td>
+
+                <td class="tabel__aksi">
+                  <!--
+                    Bookmark = harga baru ikut disimpan ke master barang untuk
+                    penjualan berikutnya. Terisi beraksen berarti disimpan,
+                    garis abu berarti hanya berlaku di faktur ini.
+                  -->
+                  <button
+                    type="button"
+                    class="tabel__aksi-btn"
+                    [class.simpan-harga--on]="simpanHarga(i)"
+                    (click)="toggleSimpanHarga(i)"
+                    [title]="
+                      (simpanHarga(i)
+                        ? 'sales-invoice__price__saved'
+                        : 'sales-invoice__price__discarded'
+                      ) | translate
+                    "
+                  >
+                    <i
+                      [class]="
+                        simpanHarga(i)
+                          ? 'ph-fill ph-bookmark-simple'
+                          : 'ph ph-bookmark-simple'
+                      "
+                      aria-hidden="true"
+                    ></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="tabel__aksi-btn"
+                    (click)="deleteItem(i)"
+                    [title]="'general__delete' | translate"
+                    [attr.aria-label]="'general__delete' | translate"
+                  >
+                    <i class="ph ph-trash" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+
+            <tbody *ngIf="t.controls.length === 0">
+              <tr>
+                <td colspan="6" class="tabel__pesan">
+                  {{ "sales-invoice__create__no-item" | translate }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!--
+          Baris tambah yang sama dengan penerimaan barang, sampai ke pintasan
+          Alt+A — dua formulir yang melakukan hal serupa harus menawarkan
+          jalan yang serupa. Pintasannya sendiri sudah lama terdaftar di
+          komponen ini; barisnya saja yang belum pernah digambar.
+        -->
+        <button type="button" class="tambah" (click)="openItemSelector()">
+          <i class="ph ph-plus-circle" aria-hidden="true"></i>
+          <span>{{ "good-receipt__create__add-item" | translate }}</span>
+          <span class="tambah__kunci">Alt + A</span>
+        </button>
+      </section>
+
+      <!-- ---------------------------------------------------------- -->
+      <!-- Biaya lain                                                  -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu" [formGroup]="valueFormGroup">
+        <h2 class="kartu__label">
+          {{ "sales-invoice__create__charges" | translate }}
+        </h2>
+
+        <div class="kartu__baris">
+          <div class="field">
+            <mat-form-field appearance="outline" class="w-sempit">
+              <mat-label>{{
+                "sales-invoice__create__doc-discount" | translate
+              }}</mat-label>
+              <input
+                matInput
+                type="text"
+                mask="separator.2"
+                thousandSeparator="."
+                decimalMarker=","
+                formControlName="discount"
+                autocomplete="off"
+                placeholder="0"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-invoice__create__delivery" | translate
+              }}</mat-label>
+              <input
+                matInput
+                type="text"
+                mask="separator.2"
+                thousandSeparator="."
+                decimalMarker=","
+                formControlName="delivery"
+                autocomplete="off"
+                placeholder="0"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-invoice__create__service" | translate
+              }}</mat-label>
+              <input
+                matInput
+                type="text"
+                mask="separator.2"
+                thousandSeparator="."
+                decimalMarker=","
+                formControlName="service"
+                autocomplete="off"
+                placeholder="0"
+              />
+            </mat-form-field>
+          </div>
+
+          <!--
+            Nominal, bukan persentase. Angkanya datang dari struk bank apa
+            adanya, jadi menghitungnya ulang dari persen hanya menambah
+            peluang meleset serupiah dua rupiah.
+          -->
+          <div class="field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-invoice__create__admin-fee" | translate
+              }}</mat-label>
+              <input
+                matInput
+                type="text"
+                mask="separator.2"
+                thousandSeparator="."
+                decimalMarker=","
+                formControlName="admin_fee"
+                autocomplete="off"
+                placeholder="0"
+              />
+              <mat-hint>{{
+                "sales-invoice__create__admin-fee__hint" | translate
+              }}</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <!--
+            Mati selama biaya jasanya nol, dan hidup sendiri begitu diisi.
+            Server menolak jenis tanpa biaya maupun biaya tanpa jenis, jadi
+            keadaan kendalinya dibuat mencerminkan aturan itu — bukan
+            menunggu galat muncul setelah tombol simpan ditekan.
+          -->
+          <div class="field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>{{
+                "sales-invoice__create__service-type" | translate
+              }}</mat-label>
+              <mat-select formControlName="service_type">
+                <mat-option
+                  *ngFor="let jenis of jenisJasa"
+                  [value]="jenis.value"
+                >
+                  {{ jenis.label | translate }}
+                </mat-option>
+              </mat-select>
+              <mat-hint>{{
+                "sales-invoice__create__service-type__hint" | translate
+              }}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------------------------------------------------------- -->
+      <!-- Pembayaran                                                  -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu" [formGroup]="paymentsFormGroup">
+        <!--
+          Status di kepala kartu DITURUNKAN dari isi pembayaran, bukan
+          dipilih: dulu tiga kartu lunas/dicicil/tanpa-pembayaran wajib
+          diklik cocok dengan isiannya — pekerjaan ganda yang validatornya
+          sendiri menolak bila tidak sinkron.
+        -->
+        <div class="kartu__kepala">
+          <h2 class="kartu__label">
+            {{ "sales-invoice__create__payment" | translate }}
+          </h2>
+          <span
+            *ngIf="!depositInternal"
+            class="pill"
+            [class.pill--hijau]="statusBayar === 'paid'"
+            [class.pill--amber]="statusBayar === 'underpaid'"
+            [class.pill--garis]="statusBayar === 'unpaid'"
+            [class.pill--merah]="statusBayar === 'over'"
+          >
+            {{
+              (statusBayar === "paid"
+                ? "sales-invoice__create__paid-payment"
+                : statusBayar === "underpaid"
+                  ? "sales-invoice__create__underpaid-payment"
+                  : statusBayar === "over"
+                    ? "sales-invoice__create__overpaid-payment"
+                    : "sales-invoice__create__unpaid-payment"
+              ) | translate
+            }}
+          </span>
+        </div>
+
+        <!--
+          Deposit internal tidak membawa pembayaran — kotak putus-putus
+          seanatomi slot faktur supplier di penerimaan barang, bukan banner.
+        -->
+        <div class="bayar-kosong" *ngIf="depositInternal">
+          <i class="ph ph-hand-deposit" aria-hidden="true"></i>
+          <span>
+            <strong>
+              {{ "sales-invoice__create__payment__internal-title" | translate }}
+            </strong>
+            <span>
+              {{ "sales-invoice__create__payment__internal-note" | translate }}
+            </span>
+          </span>
+        </div>
+
+        <!-- Meja pembayaran seanatomi meja item — kosong pun tetap meja. -->
+        <ng-container *ngIf="!depositInternal">
+          <div class="gulir">
+            <table class="tabel tabel--muat">
+              <thead>
+                <tr>
+                  <th>
+                    {{
+                      "sales-invoice__create__item__payment-method" | translate
+                    }}
+                  </th>
+                  <th class="tabel__nilai-kepala">
+                    {{
+                      "sales-invoice__create__item__payment-method__amount"
+                        | translate
+                    }}
+                  </th>
+                  <th class="tabel__aksi-kepala">
+                    <span class="sr-only">
+                      {{ "general__actions" | translate }}
+                    </span>
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody *ngIf="p.controls.length > 0">
+                <tr *ngFor="let bayar of p.controls; index as i">
+                  <td>
+                    <span class="barang__ref">{{ namaBayar(i) }}</span>
+                    <span class="barang__desc">{{ deskripsiBayar(i) }}</span>
+                  </td>
+                  <td [formGroup]="getFormGroupAtPayment(i)">
+                    <div class="jumlah">
+                      <mat-form-field appearance="outline" class="w-sempit"
+                        ><input
+                          matInput
+                          type="text"
+                          mask="separator.2"
+                          thousandSeparator="."
+                          decimalMarker=","
+                          formControlName="value"
+                          autocomplete="off"
+                          placeholder="0"
+                      /></mat-form-field>
+                    </div>
+                  </td>
+                  <td class="tabel__aksi">
+                    <button
+                      type="button"
+                      class="tabel__aksi-btn"
+                      (click)="deletePayment(i)"
+                      [title]="'general__delete' | translate"
+                      [attr.aria-label]="'general__delete' | translate"
+                    >
+                      <i class="ph ph-x" aria-hidden="true"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+
+              <tbody *ngIf="p.controls.length === 0">
+                <tr>
+                  <td colspan="3" class="tabel__pesan">
+                    {{ "sales-invoice__create__no-payment" | translate }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <button type="button" class="tambah" (click)="openPaymentSelector()">
+            <i class="ph ph-plus" aria-hidden="true"></i>
+            {{ "sales-invoice__create__item__payment-method__add" | translate }}
+          </button>
+        </ng-container>
+
+        <p
+          class="galat"
+          *ngIf="paymentsFormGroup.errors?.['invalidInternalPayment']"
+        >
+          {{ paymentsFormGroup.errors?.["invalidInternalPayment"] }}
+        </p>
+      </section>
+
+      <!-- ---------------------------------------------------------- -->
+      <!-- Pengembalian diskon                                         -->
+      <!-- ---------------------------------------------------------- -->
+      <section class="kartu" [formGroup]="rebateFormGroup">
+        <h2 class="kartu__label">
+          {{ "sales-invoice__rebate" | translate }}
+        </h2>
+
+        <!--
+          Deposit internal tidak menerima pembayaran sama sekali, sehingga
+          tidak ada uang masuk yang bisa dikembalikan. Menawarkan pilihannya
+          berarti menawarkan mengeluarkan uang atas dokumen yang belum
+          menerima sepeser pun — dan itu yang selama ini terjadi.
+
+          Bentuknya sama dengan slot pembayaran di atas: keterangan di
+          tempatnya, bukan bagian yang lenyap tanpa penjelasan.
+        -->
+        <div class="bayar-kosong" *ngIf="depositInternal">
+          <i class="ph ph-hand-deposit" aria-hidden="true"></i>
+          <span>
+            <strong>
+              {{ "sales-invoice__rebate__internal-title" | translate }}
+            </strong>
+            <span>
+              {{ "sales-invoice__rebate__internal-note" | translate }}
+            </span>
+          </span>
+        </div>
+
+        <!--
+          Faktur jasa murni. Diskon di sistem ini melekat pada baris barang,
+          jadi faktur tanpa baris tidak punya diskon untuk dikembalikan.
+
+          Diberi keterangan di tempatnya, bukan dimatikan dan bukan pula
+          dilenyapkan begitu saja — sama seperti deposit internal di atas.
+          Bidang mati masih menuntut orang menebak sebabnya, sedangkan bagian
+          yang hilang tanpa jejak membuat orang mencari-cari ke mana
+          perginya.
+        -->
+        <div class="bayar-kosong" *ngIf="!depositInternal && !adaBarang">
+          <i class="ph ph-wrench" aria-hidden="true"></i>
+          <span>
+            <strong>
+              {{ "sales-invoice__rebate__no-item-title" | translate }}
+            </strong>
+            <span>
+              {{ "sales-invoice__rebate__no-item-note" | translate }}
+            </span>
+          </span>
+        </div>
+
+        <ng-container *ngIf="pengembalianTersedia">
+          <p class="petunjuk">
+            <i class="ph ph-info" aria-hidden="true"></i>
+            {{ "sales-invoice__rebate__note" | translate }}
+          </p>
+
+          <!--
+          Dua kartu pilihan yang setara. Keduanya disebut namanya — yang satu
+          tidak mengeluarkan uang sama sekali, yang lain mengurangi kas — dan
+          akibat sebesar itu tidak boleh diwakili saklar yang hanya menyebut
+          salah satunya.
+        -->
+          <div class="keadaan">
+            <button
+              type="button"
+              class="keadaan__kartu"
+              [class.keadaan__kartu--on]="perlakuanDiskon === 'faktur'"
+              (click)="pilihPerlakuan('faktur')"
+            >
+              <i class="ph ph-receipt" aria-hidden="true"></i>
+              <span class="keadaan__teks">
+                <span class="keadaan__judul">
+                  {{ "sales-invoice__rebate__on-invoice" | translate }}
+                </span>
+                <span class="keadaan__desk">
+                  {{ "sales-invoice__rebate__on-invoice__note" | translate }}
+                </span>
+              </span>
+            </button>
+
+            <button
+              type="button"
+              class="keadaan__kartu"
+              [class.keadaan__kartu--on]="perlakuanDiskon === 'kembali'"
+              (click)="pilihPerlakuan('kembali')"
+            >
+              <i class="ph ph-hand-coins" aria-hidden="true"></i>
+              <span class="keadaan__teks">
+                <span class="keadaan__judul">
+                  {{ "sales-invoice__rebate__returned" | translate }}
+                </span>
+                <span class="keadaan__desk">
+                  {{ "sales-invoice__rebate__returned__note" | translate }}
+                </span>
+              </span>
+            </button>
+          </div>
+
+          <!--
+          Tingginya DIPESAN. Berpindah antara kedua pilihan dan antara cash dan
+          transfer tidak boleh membuat kartu di bawahnya melompat — pola yang
+          sama dengan slot faktur pada penerimaan barang.
+        -->
+          <div class="kembali__slot">
+            <ng-container *ngIf="perlakuanDiskon === 'kembali'">
+              <!--
+              Satu kartu, bukan dua: yang ditanyakan bukan lagi "tunai atau
+              transfer" melainkan metode mana dari daftar yang dipakai
+              membayar. Lembar bawahnya sama dengan baris pembayaran faktur,
+              jadi daftar sepanjang apa pun tetap muat.
+            -->
+              <div class="keadaan">
+                <button
+                  type="button"
+                  class="keadaan__kartu"
+                  [class.keadaan__kartu--on]="
+                    rebateFormGroup.value.payment_method_id
+                  "
+                  (click)="pilihMetodeKembali()"
+                >
+                  <i class="ph ph-wallet" aria-hidden="true"></i>
+                  <span class="keadaan__judul">{{
+                    rebateFormGroup.value.payment_name ||
+                      ("sales-invoice__rebate__method__choose" | translate)
+                  }}</span>
+                </button>
+              </div>
+
+              <div class="kartu__baris">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>
+                    {{ "sales-invoice__rebate__value" | translate }}
+                  </mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    class="input--kanan"
+                    mask="separator.2"
+                    thousandSeparator="."
+                    decimalMarker=","
+                    formControlName="value"
+                    autocomplete="off"
+                    (input)="nominalDiedit()"
+                    (blur)="jepitNominal()"
+                  />
+                  <span matTextPrefix>Rp&nbsp;</span>
+                  <mat-hint>
+                    {{
+                      "sales-invoice__rebate__max"
+                        | translate: { nilai: (totalBill | number) }
+                    }}
+                  </mat-hint>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>
+                    {{ "sales-invoice__rebate__receiver" | translate }}
+                  </mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="receiver_name"
+                    autocomplete="off"
+                  />
+                </mat-form-field>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+      </section>
+    </div>
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- Ringkasan, checklist, aksi                                    -->
+    <!-- ------------------------------------------------------------ -->
+    <aside class="buat__samping">
+      <section class="kartu">
+        <h2 class="kartu__label">
+          {{ "sales-invoice__create__summary" | translate }}
+        </h2>
+
+        <!--
+          Tiap baris dibungkus div, mengikuti anatomi ringkasan penerimaan
+          barang di _form-buat.scss: label kiri, nilai kanan, turun ke bawah.
+        -->
+        <dl class="ringkas">
+          <div>
+            <dt>{{ "sales-invoice__create__subtotal" | translate }}</dt>
+            <dd>Rp {{ subtotal | number: "1.2-2" }}</dd>
+          </div>
+
+          <div *ngIf="diskonItem > 0">
+            <dt>{{ "sales-invoice__create__item-discount" | translate }}</dt>
+            <dd class="ringkas__kurang">
+              – Rp {{ diskonItem | number: "1.2-2" }}
+            </dd>
+          </div>
+
+          <div *ngIf="valueFormGroup.value.discount > 0">
+            <dt>{{ "sales-invoice__create__doc-discount" | translate }}</dt>
+            <dd class="ringkas__kurang">
+              – Rp {{ valueFormGroup.value.discount | number: "1.2-2" }}
+            </dd>
+          </div>
+
+          <div *ngIf="valueFormGroup.value.delivery > 0">
+            <dt>{{ "sales-invoice__create__delivery" | translate }}</dt>
+            <dd>Rp {{ valueFormGroup.value.delivery | number: "1.2-2" }}</dd>
+          </div>
+
+          <div *ngIf="valueFormGroup.value.service > 0">
+            <dt>{{ "sales-invoice__create__service" | translate }}</dt>
+            <dd>Rp {{ valueFormGroup.value.service | number: "1.2-2" }}</dd>
+          </div>
+
+          <!--
+            Biaya admin IKUT total, jadi ia harus punya barisnya sendiri.
+            Tanpa baris ini totalnya lebih besar daripada jumlah yang
+            tertulis di atasnya, dan selisih yang tak dijelaskan membuat
+            seluruh ringkasan ikut diragukan.
+          -->
+          <div *ngIf="valueFormGroup.value.admin_fee > 0">
+            <dt>{{ "sales-invoice__create__admin-fee" | translate }}</dt>
+            <dd>Rp {{ valueFormGroup.value.admin_fee | number: "1.2-2" }}</dd>
+          </div>
+        </dl>
+
+        <div class="ringkas__total">
+          <span>{{ "sales-invoice__create__total" | translate }}</span>
+          <strong>Rp {{ totalBill | number: "1.2-2" }}</strong>
+        </div>
+      </section>
+
+      <section class="kartu">
+        <h2 class="kartu__label">
+          {{ "sales-invoice__create__before-issue" | translate }}
+        </h2>
+
+        <!--
+          Lingkaran kosong bergaris ketika belum terpenuhi, terisi beraksen
+          ketika sudah — bukan centang yang muncul dan hilang. Daftar ini
+          menjelaskan MENGAPA tombol terbitkan belum bisa ditekan.
+        -->
+        <ul class="periksa">
+          <li *ngFor="let c of checklist" [class.periksa--on]="c.selesai">
+            <span class="periksa__bulat" aria-hidden="true">
+              <i class="ph ph-check" *ngIf="c.selesai"></i>
+            </span>
+            {{ c.kunci | translate }}
+          </li>
+        </ul>
+
+        <!--
+          Checklist menjawab "apa yang belum"; daftar ini menjawab "apa yang
+          SALAH" — keadaan yang mematikan tombol terbitkan tanpa terlihat.
+        -->
+        <ul class="periksa periksa--galat" *ngIf="galatTerbit.length > 0">
+          <li *ngFor="let g of galatTerbit">
+            <span
+              class="periksa__bulat periksa__bulat--galat"
+              aria-hidden="true"
+            >
+              <i class="ph ph-warning"></i>
+            </span>
+            {{ g }}
+          </li>
+        </ul>
+      </section>
+
+      <section class="kartu">
+        <h2 class="kartu__label">
+          {{ "sales-invoice__create__actions" | translate }}
+        </h2>
+
+        <button
+          type="button"
+          class="btn btn--primary btn--blok"
+          [disabled]="!isValid || isSubmitting"
+          (click)="submitForm()"
+        >
+          <i class="ph ph-check" aria-hidden="true"></i>
+          {{ "sales-invoice__create__issue" | translate }}
+        </button>
+
+        <button
+          type="button"
+          class="btn btn--kedua btn--blok"
+          (click)="batal()"
+        >
+          {{ "general__cancel" | translate }}
+        </button>
+      </section>
+
+      <!--
+        Navigasi DIPISAH dari tombol yang mengubah data — satu kartu berisi
+        keduanya mengundang salah klik. Kartunya paling bawah supaya
+        ringkasan tetap yang pertama terbaca.
+      -->
+      <section class="kartu">
+        <h2 class="kartu__label">{{ "general__other-actions" | translate }}</h2>
+
+        <button
+          type="button"
+          class="btn btn--kedua btn--blok"
+          (click)="batal()"
+        >
+          <i class="ph ph-list-dashes" aria-hidden="true"></i>
+          {{ "sales-invoice__view-list" | translate }}
+        </button>
+      </section>
+    </aside>
+  </div>
+</div>
