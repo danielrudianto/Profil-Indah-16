@@ -315,9 +315,9 @@ export class ReportPurchaseComponent implements OnInit {
       const akhiran =
         sisa >= 11 && sisa <= 13
           ? 'th'
-          : ({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[
+          : (({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[
               hari % 10
-            ] ?? 'th';
+            ] ?? 'th');
       return `${hari}${akhiran} of ${bulan}`;
     }
     return `${hari} ${bulan}`;
@@ -530,6 +530,14 @@ export class ReportPurchaseComponent implements OnInit {
                   { judul: 'Name', lebar: 24 },
                   { judul: 'Invoice name', lebar: 24 },
                   { judul: 'Faktur', lebar: 20 },
+                  /*
+                    Perusahaan penerima diletakkan SEBELUM supplier: kolom kiri
+                    menjawab "siapa yang membeli", kolom kanan "dari siapa".
+                    Dokumen yang sama bisa berasal dari supplier yang sama
+                    untuk perusahaan berbeda, dan tanpa kolom ini keduanya
+                    terlihat sebagai baris kembar.
+                  */
+                  { judul: 'Perusahaan', lebar: 30 },
                   { judul: 'Supplier name', lebar: 30 },
                   { judul: 'Value', format: 'uang' },
                   { judul: 'Discount', format: 'uang' },
@@ -541,6 +549,7 @@ export class ReportPurchaseComponent implements OnInit {
                   y.name,
                   y.invoice_name,
                   y.faktur,
+                  y.company_name,
                   y.supplier_name,
                   y.value,
                   y.discount,
@@ -552,6 +561,8 @@ export class ReportPurchaseComponent implements OnInit {
                   null,
                   null,
                   null,
+                  null,
+                  /* Satu null lagi sejak kolom Perusahaan disisipkan. */
                   null,
                   jumlah((y) => Number(y.value)),
                   jumlah((y) => Number(y.discount)),
