@@ -35,6 +35,23 @@
       {{ ringkasan.low }} {{ 'stock-list__chip__low' | translate }}
     </button>
 
+    <!--
+      Chip tengah: menipis MENURUT SISTEM. Dipisah dari chip di kirinya
+      karena asal angkanya berbeda — yang satu ambang yang diset orang, yang
+      satu tebakan dari pola penjualan. Bagian pembelian memperlakukan
+      keduanya berbeda, jadi daftarnya pun harus bisa dipisah.
+    -->
+    <button
+      type="button"
+      class="chip-pintas chip-pintas--redup"
+      [class.chip-pintas--on]="kondisi === 'low-theory'"
+      (click)="toggleKondisi('low-theory')"
+    >
+      <i class="ph ph-function" aria-hidden="true"></i>
+      {{ ringkasan.lowTheory }}
+      {{ 'stock-list__chip__low-theory' | translate }}
+    </button>
+
     <button
       type="button"
       class="chip-pintas chip-pintas--merah"

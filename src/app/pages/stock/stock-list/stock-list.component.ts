@@ -58,8 +58,18 @@ export class StockListComponent implements OnInit {
    */
   kondisi: string = '';
 
-  /** Penghitung untuk kedua chip; datang dari server. */
-  ringkasan: { low: number; negative: number } = { low: 0, negative: 0 };
+  /**
+   * Penghitung untuk ketiga chip; datang dari server.
+   *
+   * lowTheory adalah barang yang ambang MANUAL-nya sudah terpenuhi tetapi
+   * masih di bawah rekomendasi sistem. Ketiganya saling lepas, jadi
+   * low + lowTheory + negative tidak pernah melebihi jumlah barang.
+   */
+  ringkasan: { low: number; lowTheory: number; negative: number } = {
+    low: 0,
+    lowTheory: 0,
+    negative: 0,
+  };
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(() => {
@@ -179,10 +189,7 @@ export class StockListComponent implements OnInit {
    * membantah judulnya sendiri.
    */
   private ambang(item: any): number {
-    return Math.max(
-      this.minimumManual(item),
-      this.rekomendasi(item) ?? 0,
-    );
+    return Math.max(this.minimumManual(item), this.rekomendasi(item) ?? 0);
   }
 
   /** Ambang yang diset orang; 0 berarti belum pernah diisi. */
@@ -217,13 +224,11 @@ export class StockListComponent implements OnInit {
    * setiap baris berhenti menjadi penanda.
    */
   manualBerlaku(item: any): boolean {
-    const manual = this.minimumManual(item);
-    return manual > 0 && manual >= (this.rekomendasi(item) ?? 0);
+    return this.kondisiBaris(item) === 'low';
   }
 
   rekomendasiBerlaku(item: any): boolean {
-    const saran = this.rekomendasi(item);
-    return saran != null && saran > this.minimumManual(item);
+    return this.kondisiBaris(item) === 'low-theory';
   }
 
   /**
@@ -240,24 +245,67 @@ export class StockListComponent implements OnInit {
       return 'negative';
     }
 
-    const ambang = this.ambang(item);
-    return ambang > 0 && jumlah < ambang ? 'low' : '';
+    /*
+      URUTANNYA MENENTUKAN, dan urutan ini CERMINAN KLAUSA_KEADAAN di server
+      (constants/minimum-stock.constant.ts). Barang yang di bawah kedua
+      ambang hanya boleh terhitung sekali, dan yang dipilih adalah yang
+      manual: ambang yang diset orang lebih berat daripada tebakan sistem.
+
+      Kalau urutannya dibalik di salah satu sisi saja, angka pada chip dan
+      isi daftar ketika chip itu ditekan akan berbeda.
+    */
+    if (jumlah < this.minimumManual(item)) {
+      return 'low';
+    }
+
+    return jumlah < (this.rekomendasi(item) ?? 0) ? 'low-theory' : '';
+  }
+
+  /*
+    Ketiga keadaan dipetakan dari SATU tabel, bukan dari rantai ternary yang
+    ditulis ulang tiga kali. Dengan rantai, menambah keadaan keempat berarti
+    menyentuh tiga tempat dan melupakan salah satunya tidak menimbulkan galat
+    apa pun — hanya lencana yang warnanya diam-diam salah.
+
+    pill--garis untuk teori, bukan amber kedua. Berkas desain menyimpan merah
+    untuk yang mendesak dan amber untuk yang menunggu; tebakan sistem bukan
+    keduanya, jadi ia memakai lencana bergaris yang memang sudah ada.
+  */
+  private static readonly RUPA: Record<
+    string,
+    { kunci: string; pill: string; ikon: string }
+  > = {
+    negative: {
+      kunci: 'stock-list__status__negative',
+      pill: 'pill--merah',
+      ikon: 'ph-arrow-down',
+    },
+    low: {
+      kunci: 'stock-list__status__low',
+      pill: 'pill--amber',
+      ikon: 'ph-warning',
+    },
+    'low-theory': {
+      kunci: 'stock-list__status__low-theory',
+      pill: 'pill--garis',
+      ikon: 'ph-function',
+    },
+  };
+
+  private rupa(item: any) {
+    return StockListComponent.RUPA[this.kondisiBaris(item)];
   }
 
   kunciKondisi(item: any): string {
-    return this.kondisiBaris(item) === 'negative'
-      ? 'stock-list__status__negative'
-      : 'stock-list__status__low';
+    return this.rupa(item)?.kunci ?? '';
   }
 
   kelasPill(item: any): string {
-    return this.kondisiBaris(item) === 'negative' ? 'pill--merah' : 'pill--amber';
+    return this.rupa(item)?.pill ?? '';
   }
 
   ikonPill(item: any): string {
-    return this.kondisiBaris(item) === 'negative'
-      ? 'ph-arrow-down'
-      : 'ph-warning';
+    return this.rupa(item)?.ikon ?? '';
   }
 
   /** Huruf pertama referensi, untuk avatar bundar pada kolom Barang. */

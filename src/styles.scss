@@ -763,6 +763,23 @@ textarea.medan__input {
   }
 }
 
+/*
+  Varian redup, menjiplak susunan chip-pintas--merah.
+  Dipakai saringan "menipis (teori)": ambangnya tebakan sistem, bukan angka
+  yang diset orang. Amber sudah berarti "ambang yang ditetapkan manusia
+  terlampaui"; memberi warna yang sama kepada tebakan akan menghapus bedanya,
+  dan merah jelas berlebihan — berkas desain menyimpan merah untuk hal yang
+  harus ditindak hari itu juga. Maka keadaan nyalanya netral: terlihat aktif,
+  tetapi tidak menuntut.
+*/
+.chip-pintas--redup {
+  &.chip-pintas--on {
+    color: var(--color-text);
+    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+    border-color: color-mix(in srgb, var(--color-text) 38%, transparent);
+  }
+}
+
 /* Baris yang seluruhnya membuka detail. */
 .tabel__baris-klik {
   cursor: pointer;

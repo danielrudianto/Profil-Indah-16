@@ -2069,6 +2069,8 @@
   "stock-list__minimum__suggested": "Saran",
   "stock-list__minimum__hint": "Ambang yang dipakai adalah yang TERTINGGI antara angka manual dan saran sistem. Angka yang digambar penuh adalah yang sedang berlaku.",
   "stock-list__chip__low": "menipis",
+  "stock-list__chip__low-theory": "menipis (teori)",
+  "stock-list__status__low-theory": "Menipis (teori)",
   "stock-list__chip__negative": "minus",
   "stock-list__status__low": "Menipis",
   "stock-list__status__negative": "Minus",

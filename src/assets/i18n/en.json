@@ -2063,6 +2063,8 @@
   "stock-list__minimum__suggested": "Suggested",
   "stock-list__minimum__hint": "The threshold in use is the HIGHER of the manual figure and the system suggestion. The figure drawn in full is the one in force.",
   "stock-list__chip__low": "low",
+  "stock-list__chip__low-theory": "low (theoretical)",
+  "stock-list__status__low-theory": "Low (theoretical)",
   "stock-list__chip__negative": "negative",
   "stock-list__status__low": "Low",
   "stock-list__status__negative": "Negative",
