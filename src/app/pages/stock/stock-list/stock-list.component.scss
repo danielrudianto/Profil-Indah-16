@@ -38,6 +38,12 @@
   dikembalikan ke warna penuh — satu-satunya pembeda yang dipakai, karena
   lencana per baris pada 4.886 produk berhenti menjadi lencana.
 */
+/*
+  Dipasang pada SPAN di dalam sel, tidak pernah pada <td>-nya sendiri. Sel
+  tabel yang diberi display: flex keluar dari algoritma tabel — browser
+  menggantinya dengan sel bayangan dan seluruh kolom bergeser. Versi pertama
+  kolom ini melakukannya dan tabelnya berantakan di produksi.
+*/
 .ambang {
   display: flex;
   flex-direction: column;

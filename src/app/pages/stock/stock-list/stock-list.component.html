@@ -109,25 +109,35 @@
           bawahnya. Yang BERLAKU digambar penuh, yang tidak diredupkan —
           lihat manualBerlaku() untuk alasannya.
         -->
-        <td class="tabel__nilai ambang">
-          <span
-            class="ambang__manual"
-            [class.ambang--berlaku]="manualBerlaku(item)"
-          >
-            <ng-container *ngIf="minimumManual(item) > 0">
-              {{ minimumManual(item) | number: '0.0-2' }}
+        <td class="tabel__nilai">
+          <!--
+            PEMBUNGKUS INI WAJIB ADA. Penumpukan dua barisnya diatur di
+            dalamnya, BUKAN pada <td>-nya: sel tabel yang diberi
+            `display: flex` berhenti diperlakukan sebagai sel oleh algoritma
+            tabel, browser membuat sel bayangan menggantikannya, dan seluruh
+            kolom bergeser. Itu persis yang terjadi pada versi pertama kolom
+            ini di produksi.
+          -->
+          <span class="ambang">
+            <span
+              class="ambang__manual"
+              [class.ambang--berlaku]="manualBerlaku(item)"
+            >
+              <ng-container *ngIf="minimumManual(item) > 0">
+                {{ minimumManual(item) | number: '0.0-2' }}
+                <span class="stok__satuan">{{ item.unit }}</span>
+              </ng-container>
+              <ng-container *ngIf="minimumManual(item) === 0">—</ng-container>
+            </span>
+            <span
+              class="ambang__saran"
+              *ngIf="rekomendasi(item) !== null"
+              [class.ambang--berlaku]="rekomendasiBerlaku(item)"
+            >
+              {{ 'stock-list__minimum__suggested' | translate }}
+              {{ rekomendasi(item) | number: '0.0-2' }}
               <span class="stok__satuan">{{ item.unit }}</span>
-            </ng-container>
-            <ng-container *ngIf="minimumManual(item) === 0">—</ng-container>
-          </span>
-          <span
-            class="ambang__saran"
-            *ngIf="rekomendasi(item) !== null"
-            [class.ambang--berlaku]="rekomendasiBerlaku(item)"
-          >
-            {{ 'stock-list__minimum__suggested' | translate }}
-            {{ rekomendasi(item) | number: '0.0-2' }}
-            <span class="stok__satuan">{{ item.unit }}</span>
+            </span>
           </span>
         </td>
         <td>
