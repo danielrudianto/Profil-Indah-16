@@ -1514,7 +1514,8 @@
       "nameTooLong": "Nama penerimaan barang maksimal 100 karakter."
     },
     "date": {
-      "required": "Tanggal tidak boleh kosong."
+      "required": "Tanggal tidak boleh kosong.",
+      "unreasonable": "Tanggal di luar rentang yang wajar. Mohon periksa kembali tahunnya."
     },
     "return": {
       "dateRequired": "Tanggal pengembalian tidak boleh kosong",
@@ -2064,6 +2065,9 @@
   "general__edit": "Ubah",
   "stock-list__item": "Barang",
   "stock-list__condition": "Kondisi",
+  "stock-list__minimum": "Stok minimum",
+  "stock-list__minimum__suggested": "Saran",
+  "stock-list__minimum__hint": "Ambang yang dipakai adalah yang TERTINGGI antara angka manual dan saran sistem. Angka yang digambar penuh adalah yang sedang berlaku.",
   "stock-list__chip__low": "menipis",
   "stock-list__chip__negative": "minus",
   "stock-list__status__low": "Menipis",

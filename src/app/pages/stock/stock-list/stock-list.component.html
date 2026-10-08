@@ -58,6 +58,17 @@
         <th>{{ 'product__brand' | translate }}</th>
         <th>{{ 'product__type' | translate }}</th>
         <th class="tabel__nilai-kepala">{{ 'product__stock' | translate }}</th>
+        <!--
+          Ambangnya berdiri PERSIS di sebelah stoknya. Keduanya hanya berarti
+          bila dibandingkan, dan kolom yang terpisah membuat mata berpindah
+          jauh untuk satu pertanyaan: angka ini sudah di bawah batasnya belum.
+        -->
+        <th
+          class="tabel__nilai-kepala"
+          [attr.title]="'stock-list__minimum__hint' | translate"
+        >
+          {{ 'stock-list__minimum' | translate }}
+        </th>
         <th>{{ 'stock-list__condition' | translate }}</th>
         <th class="tabel__aksi-kepala">
           <span class="sr-only">{{ 'general__actions' | translate }}</span>
@@ -92,6 +103,32 @@
         <td class="tabel__nilai" [class.stok--minus]="stok(item) < 0">
           {{ stok(item) | number: '0.0-2' }}
           <span class="stok__satuan">{{ item.unit }}</span>
+        </td>
+        <!--
+          Dua angka bertumpuk: ambang manual di atas, saran sistem di
+          bawahnya. Yang BERLAKU digambar penuh, yang tidak diredupkan —
+          lihat manualBerlaku() untuk alasannya.
+        -->
+        <td class="tabel__nilai ambang">
+          <span
+            class="ambang__manual"
+            [class.ambang--berlaku]="manualBerlaku(item)"
+          >
+            <ng-container *ngIf="minimumManual(item) > 0">
+              {{ minimumManual(item) | number: '0.0-2' }}
+              <span class="stok__satuan">{{ item.unit }}</span>
+            </ng-container>
+            <ng-container *ngIf="minimumManual(item) === 0">—</ng-container>
+          </span>
+          <span
+            class="ambang__saran"
+            *ngIf="rekomendasi(item) !== null"
+            [class.ambang--berlaku]="rekomendasiBerlaku(item)"
+          >
+            {{ 'stock-list__minimum__suggested' | translate }}
+            {{ rekomendasi(item) | number: '0.0-2' }}
+            <span class="stok__satuan">{{ item.unit }}</span>
+          </span>
         </td>
         <td>
           <!--
@@ -134,7 +171,7 @@
 
     <tbody *ngIf="isLoading">
       <tr>
-        <td colspan="6" class="tabel__pesan">
+        <td colspan="7" class="tabel__pesan">
           {{ 'general__loading' | translate }}
         </td>
       </tr>
@@ -142,7 +179,7 @@
 
     <tbody *ngIf="!isLoading && dataSource.length === 0">
       <tr>
-        <td colspan="6">
+        <td colspan="7">
           <app-tabel-kosong
             ikon="ph-stack"
             [judul]="'stock-list__empty__title' | translate"

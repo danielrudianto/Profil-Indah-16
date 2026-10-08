@@ -33,6 +33,46 @@
 }
 
 /*
+  Kolom ambang minimum: dua angka bertumpuk, rata kanan mengikuti kolom
+  nilai lain. Keduanya diredupkan sebagai bawaan dan hanya yang BERLAKU
+  dikembalikan ke warna penuh — satu-satunya pembeda yang dipakai, karena
+  lencana per baris pada 4.886 produk berhenti menjadi lencana.
+*/
+.ambang {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  line-height: 1.35;
+}
+
+.ambang__manual,
+.ambang__saran {
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+  white-space: nowrap;
+}
+
+.ambang__saran {
+  font-size: calc(12px * var(--skala-teks, 1));
+}
+
+/*
+  Satuan di kolom ini MEWARISI warna barisnya, tidak memakai warna redup
+  bawaannya. Kalau tidak, satuan pada baris yang diredupkan justru terbaca
+  lebih terang daripada angkanya sendiri — penandanya terbalik.
+*/
+.ambang .stok__satuan {
+  color: inherit;
+  opacity: 0.72;
+}
+
+/* Yang menentukan baris ini "menipis". */
+.ambang--berlaku {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+/*
   Stok di bawah nol. Warnanya ditulis mentah, sama dengan pill merah: ia
   menyatakan keadaan barang, dan artinya tidak boleh ikut berubah ketika
   pengguna mengganti warna aksennya.

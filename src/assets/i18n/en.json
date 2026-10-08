@@ -1398,7 +1398,8 @@
       "required": "Address required"
     },
     "date": {
-      "required": "Date required"
+      "required": "Date required",
+      "unreasonable": "The date is outside a reasonable range. Please check the year."
     },
     "quantity": {
       "required": "Quantity is required",
@@ -2058,6 +2059,9 @@
   "general__edit": "Edit",
   "stock-list__item": "Item",
   "stock-list__condition": "Condition",
+  "stock-list__minimum": "Minimum stock",
+  "stock-list__minimum__suggested": "Suggested",
+  "stock-list__minimum__hint": "The threshold in use is the HIGHER of the manual figure and the system suggestion. The figure drawn in full is the one in force.",
   "stock-list__chip__low": "low",
   "stock-list__chip__negative": "negative",
   "stock-list__status__low": "Low",

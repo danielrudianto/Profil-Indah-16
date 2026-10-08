@@ -180,9 +180,50 @@ export class StockListComponent implements OnInit {
    */
   private ambang(item: any): number {
     return Math.max(
-      Number(item.minimum_stock ?? 0),
-      Number(item.minimum_stock_recommendation ?? 0),
+      this.minimumManual(item),
+      this.rekomendasi(item) ?? 0,
     );
+  }
+
+  /** Ambang yang diset orang; 0 berarti belum pernah diisi. */
+  minimumManual(item: any): number {
+    return Number(item.minimum_stock ?? 0);
+  }
+
+  /**
+   * Ambang hasil hitungan sistem, atau null.
+   *
+   * null BUKAN nol. Produk dengan kurang dari tiga hari penjualan di jendela
+   * sengaja tidak diberi rekomendasi oleh pekerjaan batch — datanya belum
+   * cukup untuk dipercaya. Menggambarnya sebagai "0" akan menyatakan sesuatu
+   * yang tidak pernah dihitung.
+   */
+  rekomendasi(item: any): number | null {
+    const nilai = item.minimum_stock_recommendation;
+    return nilai == null ? null : Number(nilai);
+  }
+
+  /**
+   * Mana di antara kedua angka itu yang SEDANG BERLAKU.
+   *
+   * Kolomnya menampilkan dua angka, dan tanpa penanda keduanya tampak setara
+   * — padahal yang menentukan sebuah baris "menipis" hanya yang lebih tinggi.
+   * Baris berambang manual 0 dan saran 252 akan terbaca "minimumnya nol" lalu
+   * dilencanai Menipis: daftar yang membantah dirinya sendiri, persis bug
+   * yang dulu diperbaiki pada perhitungan pill-nya.
+   *
+   * Maka yang berlaku digambar penuh dan yang tidak diredupkan. Tidak ada
+   * lencana tambahan per baris: pada 4.886 produk, penanda yang muncul di
+   * setiap baris berhenti menjadi penanda.
+   */
+  manualBerlaku(item: any): boolean {
+    const manual = this.minimumManual(item);
+    return manual > 0 && manual >= (this.rekomendasi(item) ?? 0);
+  }
+
+  rekomendasiBerlaku(item: any): boolean {
+    const saran = this.rekomendasi(item);
+    return saran != null && saran > this.minimumManual(item);
   }
 
   /**
