@@ -104,7 +104,9 @@ export class LoginComponent {
             setiap rute ERP untuk peran ini, dan TerraChat (domain lain) tetap
             meminta login sendiri untuk membuka sesi kerja hariannya.
           */
-          if (data?.user?.role === Role.FieldSales) {
+          const peran = (data as { user?: { role?: number } } | null)?.user
+            ?.role;
+          if (peran === Role.FieldSales) {
             window.location.href = environment.chatUrl;
             return;
           }
