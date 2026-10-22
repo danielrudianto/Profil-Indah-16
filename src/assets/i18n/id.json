@@ -1386,7 +1386,8 @@
     "duplicate": "Data yang anda masukkan sudah ada sebelumnya. Mohon periksa kembali.",
     "unableToDelete": "Tidak dapat menghapus data.",
     "noChanges": "Tidak ada perubahan.",
-    "internalServer": "Terjadi kesalahan pada server. Mohon hubungi administrator."
+    "internalServer": "Terjadi kesalahan pada server. Mohon hubungi administrator.",
+    "salesErpForbidden": "Akun Sales hanya bisa dipakai di TerraChat (chat.profilindah.id)."
   },
   "validation": {
     "id": {

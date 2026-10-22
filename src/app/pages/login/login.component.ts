@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Role } from 'src/app/constants/role.constant';
+import { environment } from 'src/environments/environment';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -97,6 +98,16 @@ export class LoginComponent {
       })
       .subscribe({
         next: (data) => {
+          /*
+            Akun Sales (peran 8) dipakai di TerraChat, jadi diarahkan ke sana
+            alih-alih ditolak. Tokennya sengaja TIDAK disimpan: server menolak
+            setiap rute ERP untuk peran ini, dan TerraChat (domain lain) tetap
+            meminta login sendiri untuk membuka sesi kerja hariannya.
+          */
+          if (data?.user?.role === Role.FieldSales) {
+            window.location.href = environment.chatUrl;
+            return;
+          }
           this.authService.setToken(data);
           /* Gudang tidak punya dashboard — langsung ke halaman satu-satunya. */
           const gudang =

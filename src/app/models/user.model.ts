@@ -60,4 +60,14 @@ export const availableRoles: any[] = [
     name: 'Superadministrator',
     available: true,
   },
+  /*
+    Sales lapangan — hanya memakai TerraChat (chat.profilindah.id), tidak
+    membuka menu ERP mana pun. NIK-nya tampil sebagai footer setiap pesan
+    WhatsApp yang dikirimnya, jadi isi NIK dengan nomor pegawai.
+  */
+  {
+    id: 8,
+    name: 'Sales',
+    available: true,
+  },
 ];

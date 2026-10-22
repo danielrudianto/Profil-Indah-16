@@ -1,6 +1,8 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router, UrlTree } from '@angular/router';
+import { Role } from '../constants/role.constant';
 import { AuthService } from '../services/auth.service';
+import { environment } from 'src/environments/environment';
 
 /**
  * Penjaga sesi.
@@ -26,6 +28,16 @@ export const AuthGuard: CanActivateFn = (): boolean | UrlTree => {
   const router = inject(Router);
 
   if (authService.validateToken()) {
+    /*
+      Sesi Sales yang tersimpan dari sebelum aturan ini berlaku: ERP tidak
+      punya apa pun untuknya (server menjawab 403), jadi dibersihkan lalu
+      diarahkan ke TerraChat.
+    */
+    if (authService.getUserInfo()?.role === Role.FieldSales) {
+      authService.logout();
+      window.location.href = environment.chatUrl;
+      return false;
+    }
     return true;
   }
 

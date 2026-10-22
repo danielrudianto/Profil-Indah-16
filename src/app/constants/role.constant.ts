@@ -26,6 +26,11 @@ export enum Role {
   Warehouse = 6,
   /** Pemilik. Satu-satunya yang boleh menghapus dan menyetujui penyesuaian stok. */
   Owner = 7,
+  /**
+   * Sales lapangan. BUKAN peran 2 (akuntansi penjualan): peran ini hanya
+   * dipakai di TerraChat dan sengaja tidak tercantum di menu ERP mana pun.
+   */
+  FieldSales = 8,
 }
 
 /** Peran yang boleh membuka menu administrator. */
